@@ -13,7 +13,6 @@ import fr.openent.formulaire.service.impl.*;
 import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
-import fr.wseduc.webutils.Either;
 import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.http.response.DefaultResponseHandler;
 import fr.wseduc.webutils.request.RequestUtils;
@@ -569,7 +568,12 @@ public class FormController extends ControllerHelper {
                             neoService.getUsersInfosFromIds(usersIds, groupsIds, eventUsers -> {
                                 if (eventUsers.isRight()) {
                                     JsonArray infos = eventUsers.right().getValue();
-                                    syncDistributions(formId, user, infos);
+                                    JsonArray responders = new JsonArray();
+                                    for (int i = 0; i < infos.size(); i++) {
+                                        JsonArray users = infos.getJsonObject(i).getJsonArray("users");
+                                        responders.addAll(users);
+                                    }
+                                    syncDistributions(formId, user, responders);
                                 } else {
                                     log.error("[Formulaire@getUserIds] Fail to get users' ids from groups' ids");
                                 }
@@ -634,7 +638,7 @@ public class FormController extends ControllerHelper {
     }
 
     private void syncDistributions(String formId, UserInfos user, JsonArray responders) {
-        removeDeletedDistributions(formId, responders, removeEvt -> {
+        deactivateDeletedDistributions(formId, responders, removeEvt -> {
             if (removeEvt.failed()) log.error(removeEvt.cause());
 
             addNewDistributions(formId, user, responders, addEvt -> {
@@ -647,7 +651,7 @@ public class FormController extends ControllerHelper {
         });
     }
 
-    private void removeDeletedDistributions(String formId, JsonArray responders, Handler<AsyncResult<String>> handler) {
+    private void deactivateDeletedDistributions(String formId, JsonArray responders, Handler<AsyncResult<String>> handler) {
         distributionService.getDeactivated(formId, responders, filteringEvent -> {
             if (filteringEvent.isRight()) {
                 JsonArray deactivated = filteringEvent.right().getValue();
