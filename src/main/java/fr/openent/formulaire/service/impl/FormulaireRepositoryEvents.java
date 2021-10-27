@@ -14,7 +14,6 @@ import io.vertx.core.logging.LoggerFactory;
 public class FormulaireRepositoryEvents implements RepositoryEvents {
     private static final Logger log = LoggerFactory.getLogger(FormulaireRepositoryEvents.class);
 
-    @Override
     public void exportResources(JsonArray resourcesIds, String exportId, String userId, JsonArray groups, String exportPath, String locale, String host, final Handler<Boolean> handler) {
         log.info("[Formulaire@FormulaireRepositoryEvents] exportResources event is not implemented");
     }
