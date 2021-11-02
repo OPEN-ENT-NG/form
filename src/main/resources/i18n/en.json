@@ -22,6 +22,8 @@
   "formulaire.cancel": "Cancel",
   "formulaire.return": "Return",
   "formulaire.close": "Close",
+  "formulaire.answered": "answered",
+  "formulaie.notanswered":"notanswered",
   "formulaire.mandatory": "Mandatory",
   "formulaire.sent": "Sent",
   "formulaire.shared": "Shared",
@@ -38,6 +40,7 @@
   "formulaire.results": "Results",
   "formulaire.export": "Export",
   "formulaire.remind": "Remind",
+  "formulaire.checkremind": "follow-up",
   "formulaire.archive": "Delete",
   "formulaire.restore": "Restore",
   "formulaire.delete": "Delete",
@@ -98,6 +101,8 @@
   "formulaire.folder.create": "Create a folder",
   "formulaire.folder.rename": "Rename a folder",
 
+  "formulaire.checkremind.name": "users who have been sent : ",
+
   "formulaire.table.title": "Form title",
   "formulaire.table.author": "Author",
   "formulaire.table.modified": "Last modification",
@@ -120,6 +125,7 @@
   "formulaire.form.create.title.mobile": "Title",
   "formulaire.form.archive.title": "Delete selected forms",
   "formulaire.form.delete.title": "Delete permanently",
+  "formulaire.form.checkremind.title": "follow-up of responses",
   "formulaire.form.download.all.results.pdf": "Download all the results (PDF)",
   "formulaire.form.download.all.results.csv": "Download all the results (CSV)",
   "formulaire.form.download.all.results.lightbox.title": "Téléchargement des résultats ({0})",
@@ -192,6 +198,7 @@
   "formulaire.error.formService.remind": "An error occurred during the sending of the reminder",
   "formulaire.error.formService.unshare": "An error occurred during the suppression of the form's sharing",
   "formulaire.error.formService.image": "An error occurred during the retrieving of the form's image",
+  "formulaire.error.formService.checkremind": "An error occured during the retrieving of the responses",
 
   "formulaire.error.question.reorganization": "Wrong reorganization direction, should be : UP or DOWN",
   "formulaire.error.question.sync": "An error occurred during the questions' synchronisation",

@@ -16,6 +16,7 @@ export interface FormService {
     delete(formId: number) : Promise<AxiosResponse>;
     move(forms : Form[], parentId: number) : Promise<AxiosResponse>;
     sendReminder(formId: number, mail: {}) : Promise<AxiosResponse>;
+    checkremind(formId : number):Promise<AxiosResponse>;
     unshare(formId: number) : Promise<AxiosResponse>;
     getMyFormRights(formId: number) : Promise<AxiosResponse>;
     getAllMyFormRights() : Promise<AxiosResponse>;
@@ -140,6 +141,15 @@ export const formService: FormService = {
             return await http.post(`/formulaire/forms/${formId}/remind`, mail);
         } catch (err) {
             notify.error(idiom.translate('formulaire.error.formService.remind'));
+            throw err;
+        }
+    },
+
+    async checkremind(formId: number) : Promise<AxiosResponse>{
+        try{
+            return await http.post(`/formulaire/forms/${formId}/checkremind`);
+        }catch(err){
+            notify.error(idiom.translate('formulaire.error.formService.checkremind'));
             throw err;
         }
     },
