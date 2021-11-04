@@ -27,6 +27,7 @@ import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.events.EventStore;
 import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.storage.Storage;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
@@ -48,8 +49,9 @@ public class FormController extends ControllerHelper {
     private final FolderService folderService;
     private final RelFormFolderService relFormFolderService;
     private final NeoService neoService;
+    private final NotifyService notifyService;
 
-    public FormController(EventStore eventStore, Storage storage) {
+    public FormController(EventStore eventStore, Storage storage, TimelineHelper timelineHelper) {
         super();
         this.eventStore = eventStore;
         this.storage = storage;
@@ -61,6 +63,7 @@ public class FormController extends ControllerHelper {
         this.folderService = new DefaultFolderService();
         this.relFormFolderService = new DefaultRelFormFolderService();
         this.neoService = new DefaultNeoService();
+        this.notifyService = new DefaultNotifyService(timelineHelper, eb);
     }
 
     // Init rights
@@ -675,7 +678,7 @@ public class FormController extends ControllerHelper {
                                         JsonArray users = infos.getJsonObject(i).getJsonArray("users");
                                         responders.addAll(users);
                                     }
-                                    syncDistributions(formId, user, responders);
+                                    syncDistributions(request, formId, user, responders);
                                 } else {
                                     log.error("[Formulaire@getUserIds] Fail to get users' ids from groups' ids");
                                 }
@@ -739,11 +742,11 @@ public class FormController extends ControllerHelper {
         return filteredMap;
     }
 
-    private void syncDistributions(String formId, UserInfos user, JsonArray responders) {
+    private void syncDistributions(HttpServerRequest request, String formId, UserInfos user, JsonArray responders) {
         deactivateDeletedDistributions(formId, responders, removeEvt -> {
             if (removeEvt.failed()) log.error(removeEvt.cause());
 
-            addNewDistributions(formId, user, responders, addEvt -> {
+            addNewDistributions(request, formId, user, responders, addEvt -> {
                 if (addEvt.failed()) log.error(addEvt.cause());
 
                 updateFormSentProp(formId, updateSentPropEvent -> {
@@ -775,7 +778,7 @@ public class FormController extends ControllerHelper {
         });
     }
 
-    private void addNewDistributions(String formId, UserInfos user, JsonArray responders, Handler<AsyncResult<String>> handler) {
+    private void addNewDistributions(HttpServerRequest request, String formId, UserInfos user, JsonArray responders, Handler<AsyncResult<String>> handler) {
         if (!responders.isEmpty()) {
             distributionService.getDuplicates(formId, responders, filteringEvent -> {
                 if (filteringEvent.isRight()) {
@@ -784,7 +787,16 @@ public class FormController extends ControllerHelper {
                         if (addEvent.isRight()) {
                             distributionService.setActiveValue(true, formId, duplicates, updateEvent -> {
                                 if (updateEvent.isRight()) {
-                                    handler.handle(Future.succeededFuture());
+                                    JsonArray respondersIds = getResponderIds(responders);
+                                    formService.get(formId, getFormEvent -> {
+                                        if (getFormEvent.isLeft()) {
+                                            handler.handle(Future.failedFuture(getFormEvent.left().getValue()));
+                                            log.error("[Formulaire@addNewDistributions] Fail to get infos for form with id " + formId);
+                                        }
+                                        JsonObject form = getFormEvent.right().getValue();
+                                        notifyService.notifyNewForm(request, form, respondersIds);
+                                        handler.handle(Future.succeededFuture());
+                                    });
                                 } else {
                                     handler.handle(Future.failedFuture(updateEvent.left().getValue()));
                                     log.error("[Formulaire@addNewDistributions] Fail to update distributions");
@@ -882,5 +894,13 @@ public class FormController extends ControllerHelper {
             formIds.add(forms.getJsonObject(i).getInteger("id").toString());
         }
         return formIds;
+    }
+
+    private JsonArray getResponderIds(JsonArray responders) {
+        JsonArray responderIds = new JsonArray();
+        for (int i = 0; i < responders.size(); i++) {
+            responderIds.add(responders.getJsonObject(i).getString("id"));
+        }
+        return responderIds;
     }
 }
