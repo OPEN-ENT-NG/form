@@ -23,6 +23,7 @@ interface ViewModel {
     };
     loading: boolean;
 
+    $onInit() : Promise<void>;
     sort(field: FiltersOrders) : void;
     filter(filter: FiltersFilters) : void;
     displayFilterName(name: string) : string;
@@ -58,7 +59,7 @@ export const formsResponsesController = ng.controller('FormsResponsesController'
     };
     vm.loading = true;
 
-    const init = async (): Promise<void> => {
+    vm.$onInit = async (): Promise<void> => {
         await vm.forms.syncSent();
         vm.forms.all = vm.forms.all.filter(form => !form.archived);
         vm.distributions = new Distributions();
@@ -180,6 +181,4 @@ export const formsResponsesController = ng.controller('FormsResponsesController'
         template.close('lightbox');
         vm.display.lightbox.myResponses = false;
     };
-
-    init();
 }]);
