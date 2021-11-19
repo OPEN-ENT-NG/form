@@ -27,7 +27,7 @@ interface ViewModel {
     sort(field: FiltersOrders) : void;
     filter(filter: FiltersFilters) : void;
     displayFilterName(name: string) : string;
-    getMyDistribs(form: Form) : Array<Distribution>;
+    getMyDistribs(form: Form) : Distribution[];
     openDistribution(distrib: Distribution) : void;
     infiniteScroll() : void;
     openForm(form: Form) : void;
@@ -115,7 +115,7 @@ export const formsResponsesController = ng.controller('FormsResponsesController'
 
     // Utils
 
-    vm.getMyDistribs = (form: Form) : Array<Distribution> => {
+    vm.getMyDistribs = (form: Form) : Distribution[] => {
         if (form) {
             return vm.distributions.all.filter(d => d.form_id === form.id && d.status === DistributionStatus.FINISHED);
         }
