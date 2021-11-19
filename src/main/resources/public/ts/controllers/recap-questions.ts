@@ -109,7 +109,7 @@ export const recapQuestionsController = ng.controller('RecapQuestionsController'
 
     vm.doSend = async () : Promise<void> => {
         vm.distribution.status = DistributionStatus.FINISHED;
-        vm.distribution.structure = !!vm.distribution.structure ? vm.distribution.structure : model.me.structureNames[0];
+        vm.distribution.structure = vm.distribution.structure ? vm.distribution.structure : model.me.structureNames[0];
         await responseService.fillResponses(vm.form.id, vm.distribution.id);
         if (vm.distribution.original_id) {
             let questionFileIds: any = vm.questions.all.filter(q => q.question_type === Types.FILE).map(q => q.id);
