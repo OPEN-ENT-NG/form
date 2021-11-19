@@ -101,7 +101,7 @@ interface ViewModel {
     dropped(dragEl, dropEl) : Promise<void>;
     switchAllFolders(value: boolean) : void;
 
-    // Utils functions
+    $onInit() : Promise<void>;
     switchAllForms(value: boolean) : void;
     sort(field: FiltersOrders) : void;
     filter(filter: FiltersFilters) : void;
@@ -166,7 +166,7 @@ export const formsListController = ng.controller('FormsListController', ['$scope
     vm.openedFolder = null;
     vm.selectedFolder = null;
 
-    const init = async () : Promise<void> => {
+    vm.$onInit = async () : Promise<void> => {
         await vm.initFolders();
         vm.openFolder(vm.folder);
 
@@ -318,7 +318,7 @@ export const formsListController = ng.controller('FormsListController', ['$scope
             initMail();
             template.close('lightbox');
             vm.display.lightbox.reminder = false;
-            window.setTimeout(async function () { await init(); }, 100);
+            window.setTimeout(async function () { await vm.$onInit(); }, 100);
         }
     };
 
@@ -698,6 +698,4 @@ export const formsListController = ng.controller('FormsListController', ['$scope
         vm.mail.subject = idiom.translate('formulaire.remind.default.subject');
         vm.mail.body = i18nUtils.getWithParams('formulaire.remind.default.body', [vm.mail.link, vm.mail.link]);
     };
-
-    init();
 }]);
