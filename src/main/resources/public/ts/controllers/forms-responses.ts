@@ -71,7 +71,7 @@ export const formsResponsesController = ng.controller('FormsResponsesController'
         vm.forms.orders.find(o => o.name === FiltersOrders.TITLE).display = true;
 
         try {
-            let allMyDistribs = Mix.castArrayAs(Distribution, $scope.getDataIf200(await distributionService.listByResponder()));
+            let allMyDistribs = Mix.castArrayAs(Distribution, await distributionService.listByResponder());
             for (let form of vm.forms.all) {
                 let distribs = allMyDistribs.filter(d => d.form_id === form.id);
                 vm.distributions.all = vm.distributions.all.concat(distribs);
@@ -154,7 +154,7 @@ export const formsResponsesController = ng.controller('FormsResponsesController'
         else {
             let distribs = vm.distributions.all.filter(d => d.form_id === form.id);
             let distrib = distribs.filter(d => d.status == DistributionStatus.TO_DO)[0];
-            distrib = distrib ? distrib : $scope.getDataIf200(await distributionService.add(form.id, distribs[0]));
+            distrib = distrib ? distrib : await distributionService.add(form.id, distribs[0]);
             $scope.redirectTo(`/form/${form.id}/${distrib.id}/question/1`);
         }
         $scope.safeApply();

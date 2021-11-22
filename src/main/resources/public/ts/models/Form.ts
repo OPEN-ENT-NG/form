@@ -118,7 +118,7 @@ export class Form implements Selectable, Shareable  {
     setInfoImage = async () : Promise<void> => {
         const typesImgNoSend = ["image/png", "image/jpg", "image/jpeg", "image/gif"];
         try {
-            let { data: { metadata } } = await formService.getInfoImage(this);
+            let { metadata } = await formService.getInfoImage(this);
             this.infoImg = {
                 name: metadata.filename,
                 type: metadata["content-type"],
@@ -163,7 +163,7 @@ export class Forms extends Selection<Form> {
     sync = async () : Promise<void> => {
         this.all = [];
         try {
-            let { data } = await formService.list();
+            let data = await formService.list();
             for (let i = 0; i < data.length; i++) {
                 let tempForm = new Form();
                 tempForm.setFromJson(data[i]);
@@ -178,7 +178,7 @@ export class Forms extends Selection<Form> {
 
     syncSent = async () : Promise<void> => {
         try {
-            let { data } = await formService.listSentForms();
+            let data = await formService.listSentForms();
             for (let i = 0; i < data.length; i++) {
                 let tempForm = new Form();
                 tempForm.setFromJson(data[i]);
@@ -192,7 +192,7 @@ export class Forms extends Selection<Form> {
     };
 
     setResourceRights = async () : Promise<void> => {
-        let { data } = await formService.getAllMyFormRights();
+        let data = await formService.getAllMyFormRights();
         let ids = this.all.map(form => form.id);
         for (let i = 0; i < ids.length; i++) {
             let formId = ids[i];
