@@ -620,22 +620,23 @@ export const formsListController = ng.controller('FormsListController', ['$scope
         }
     };
 
-    vm.dropped = async (dragged, target) : Promise<void> => {
-        if (dragged == target) return;
+    vm.dropped = async (dragEl, dropEl) : Promise<void> => {
+        console.log("dropped");
+        if (dragEl == dropEl) return;
 
-        let originalItem = $('#' + dragged);
-        let targetItem = $('#' + target);
+        let originalItem = $('#' + dragEl);
+        let targetItem = $('#' + dropEl);
         let idOriginalItem = parseInt(originalItem[0].children[0].textContent);
         let idTargetItem = parseInt(targetItem[0].children[0].textContent);
         let typeOriginalItem = originalItem[0].classList[0];
 
         if (typeOriginalItem == "folder") {
             let draggedItems = vm.folders.all.filter(f => f.id === idOriginalItem);
-            await folderService.move(draggedItems, idTargetItem ? idTargetItem : 1);
+            await folderService.move(draggedItems, idTargetItem ? idTargetItem : vm.folders.myFormsFolder.id);
         }
         else if (typeOriginalItem == "form") {
             let draggedItems = vm.forms.all.filter(f => f.id === idOriginalItem);
-            await formService.move(draggedItems, idTargetItem ? idTargetItem : 1);
+            await formService.move(draggedItems, idTargetItem ? idTargetItem : vm.folders.myFormsFolder.id);
         }
         await vm.openFolder(vm.folder);
     };

@@ -1,9 +1,9 @@
 <div class="cell folder-article"
      ng-repeat="folder in vm.folders.getChildren(vm.folder.id) | orderBy:'name'"
      ng-click="vm.selectItem(folder)" ng-dblclick="vm.openFolder(folder)"
-     ng-class="{'selected' : folder.selected}">
+     ng-class="{'selected' : folder.selected}"  lvl-draggable="true" lvl-drop-target="true" on-drop="vm.dropped(dragEl,dropEl)">
 
-    <div class="folder" lvl-draggable lvl-drop-target on-drop="vm.dropped(dragEl, dropEl)">
+    <div class="folder">
         <label ng-show="false">[[folder.id]]</label>
         <div class="folder-image three">
             <i class="i-folder hg-icon"></i>

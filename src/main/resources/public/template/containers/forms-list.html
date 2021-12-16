@@ -88,7 +88,6 @@
 
     <!--List of forms-->
     <section class="cell nine twelve-mobile">
-
         <!-- Folder title -->
         <div class="folder-info zero-mobile">
             <div><h4><i class="i-folder lg-icon spaced-right"></i>[[vm.folder.name]]</h4></div>
@@ -105,23 +104,23 @@
         <div class="row folders" ng-include="'/formulaire/public/template/containers/folders.html'"></div>
 
         <!-- Dominos display -->
-        <div class="dominos" ng-if="vm.forms.all.length > 0 && vm.display.grid">
+        <div class="dominos"  ng-if="vm.forms.all.length > 0 && vm.display.grid" lvl-draggable="true" on-drop="vm.dropped(dragEl,dropEl)">
             <div ng-repeat="form in vm.forms.all | filter:vm.searchInput | limitTo:vm.limitTo"
                  ng-if="!vm.forms.all.empty() && vm.display.grid && form.displayed"
                  ng-click="vm.selectItem(form)" ng-dblclick="vm.openForm(form)"
                  class="item" ng-class="{'selected' : form.selected}">
-                <div class="form domino" lvl-draggable on-drop="vm.dropped(dragEl, dropEl)">
+                <div class="form domino">
                     <div class="four picture" ng-class="{'empty': !form.picture}">
                         <img ng-src="[[(form.picture) || '/formulaire/public/img/empty-image.png']]"/>
                     </div>
                     <div class="eight">
                         <div class="data">
-                            <div class="data-text">
+                            <div class="data-text" onmousedown="return false" onselectstart="return false">
                                 <div class="title" title="[[form.title]]">[[form.title]]</div>
                                 <div class="owner">[[form.owner_name]]</div>
                                 <div class="date"><i18n>formulaire.modified</i18n>[[displayDate(form.date_modification)]]</div>
                             </div>
-                            <div class="data-bottom">
+                            <div class="data-bottom" onmousedown="return false" onselectstart="return false">
                                 <div class="count"><i18n>formulaire.responses.count</i18n> : [[form.nb_responses]]</div>
                                 <div class="icons">
                                     <i class="i-send md-icon" ng-if="form.sent && !form.archived" title="[[vm.getTitle('sent')]]"></i>
