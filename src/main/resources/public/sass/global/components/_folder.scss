@@ -2,7 +2,7 @@
   margin: 2% 0;
 
   .folder-article {
-    width: calc(90%/3);
+    width: calc(106%/3);
     height: auto;
     padding: 15px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.26);
@@ -31,7 +31,7 @@
       height: 100%;
 
       .counters {
-        font-size: 12px;
+        margin-left: 10.5%;
         font-style: italic;
         color: $formulaire-grey;
       }

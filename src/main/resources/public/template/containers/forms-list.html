@@ -59,6 +59,7 @@
     <!-- Navigation mobile -->
     <div class="row zero-desktop">
         <i ng-click="vm.openNavMyForms()" class="dropbtn"></i>[[vm.folder.name]]
+
     </div>
 
     <h4 class="zero-desktop"><input type="text" ng-model="vm.searchInput" placeholder="Rechercher"></h4>
@@ -67,23 +68,8 @@
         <div class="vertical-spacing row">
             <i18n class="text-font titleSideNav">formulaire.forms.folders</i18n>
             <a class="closebtn" ng-click="vm.closeNavMyForms()">&times;</a>
+            <li><folder-tree tree-props="vm.folderTree"></folder-tree></li>
         </div>
-        <nav class="vertical row">
-            <ul>
-                <li><a ng-click="vm.openFolder(vm.folders.myFormsFolder)"
-                       ng-class="{selected : vm.folder.id === vm.folders.myFormsFolder.id}">
-                    <i18n>formulaire.forms.mine</i18n>
-                </a></li>
-                <li><a ng-click="vm.openFolder(vm.folders.sharedFormsFolder)"
-                       ng-class="{selected : vm.folder.id === vm.folders.sharedFormsFolder.id}">
-                    <i18n>formulaire.forms.shared</i18n>
-                </a></li>
-                <li><a ng-click="vm.openFolder(vm.folders.archivedFormsFolder)"
-                       ng-class="{selected : vm.folder.id === vm.folders.archivedFormsFolder.id}">
-                    <i18n>formulaire.forms.archived</i18n>
-                </a></li>
-            </ul>
-        </nav>
     </div>
 
     <!--List of forms-->
