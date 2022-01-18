@@ -4,7 +4,7 @@
   .folder-article {
     width: calc(90%/3);
     height: auto;
-    padding: 15px;
+    padding: 10px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.26);
     background: $formulaire-white;
     margin: 0 1% 1%;
@@ -31,9 +31,10 @@
       height: 100%;
 
       .counters {
-        font-size: 12px;
+        font-size: 14px;
         font-style: italic;
         color: $formulaire-grey;
+        margin:5%;
       }
     }
   }
