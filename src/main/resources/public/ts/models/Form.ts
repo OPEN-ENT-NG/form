@@ -31,6 +31,7 @@ export class Form implements Selectable, Shareable  {
     displayed: boolean;
     rgpd: boolean;
     rgpd_goal: string;
+    rgpdLifetimeChoices: number[];
     rgpd_lifetime: number;
     folder_id: number;
     selected: boolean;
@@ -64,9 +65,11 @@ export class Form implements Selectable, Shareable  {
         this.editable = false;
         this.rgpd = false;
         this.rgpd_goal = null;
-        this.rgpd_lifetime = 12;
+        this.rgpdLifetimeChoices = [3, 6, 9, 12];
+        this.rgpd_lifetime =  this.rgpdLifetimeChoices[0];
         this.displayed = true;
         this.selected = null;
+
     }
 
     toJson() : Object {
@@ -91,6 +94,7 @@ export class Form implements Selectable, Shareable  {
             editable: this.editable,
             rgpd: this.rgpd,
             rgpd_goal: this.rgpd_goal,
+            rgpdLifetimeChoices:this.rgpdLifetimeChoices,
             rgpd_lifetime: this.rgpd_lifetime,
             selected: this.selected
         }
