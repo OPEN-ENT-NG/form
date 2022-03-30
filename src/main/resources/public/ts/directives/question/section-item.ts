@@ -33,7 +33,7 @@ export const sectionItem: Directive = ng.directive('sectionItem', () => {
         controllerAs: 'vm',
         bindToController: true,
         template: `
-            <div class="ten section-item" guard-root>
+            <div class="ten section-item" guard-root="formTitle">
                 <div class="domino" ng-class="{'sectionError': !vm.section.title}">
                     <div class="section-top" ng-class="{disabled: vm.hasFormResponses || vm.section.selected}">
                         <!-- Drag and drop icon -->
