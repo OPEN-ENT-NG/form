@@ -71,6 +71,9 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
     };
 
     vm.prev = async () : Promise<void> => {
+        let xCoord = 0;
+        let yCoord = 0;
+        window.scrollTo(xCoord, yCoord);
         if (await saveResponses()) {
             let prevPosition = vm.historicPosition[vm.historicPosition.length - 2];
             if (prevPosition > 0) {
@@ -87,6 +90,9 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
     };
 
     vm.next = async () : Promise<void> => {
+        let xCoord = 0;
+        let yCoord = 0;
+        window.scrollTo(xCoord, yCoord);
         if (await saveResponses()) {
             let nextPosition = getNextPosition();
             if (nextPosition && nextPosition <= vm.nbFormElements) {
