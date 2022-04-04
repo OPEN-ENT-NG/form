@@ -189,6 +189,9 @@ export class FormElementUtils {
         let oldNestedContainerId = evt.from.id.split("-")[2] != "0" ? parseInt(evt.from.id.split("-")[2]) : null;
         let oldSection = oldNestedContainerId ? (formElements.all.filter(e => e instanceof Section && e.id === oldNestedContainerId)[0]) as Section: null;
         let item = null;
+
+
+
         if (scopElem.section) {
             item = formElements.all.filter(e => e.id === itemId)[0] as Section;
         }
