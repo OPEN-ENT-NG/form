@@ -283,8 +283,15 @@ export const formsListController = ng.controller('FormsListController', ['$scope
                     }
                     $scope.safeApply();
                 });
+
+                if (vm.forms.selected[0].is_public) {
+                    let responses = document.querySelectorAll('th:nth-child(4), td:nth-child(4)');
+                    for (let i = 0; i < responses.length; i++) {
+                        responses[i].remove();
+                    }
+                }
             }
-        }, 500);
+        }, 100);
 
     };
 
