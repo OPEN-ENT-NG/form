@@ -19,6 +19,7 @@ import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
 
+import static fr.openent.form.core.constants.Fields.*;
 import static fr.openent.form.core.constants.ShareRights.CONTRIB_RESOURCE_RIGHT;
 import static fr.openent.form.helpers.RenderHelper.renderInternalError;
 import static fr.openent.form.helpers.UtilsHelper.getIds;
@@ -41,7 +42,7 @@ public class QuestionChoiceController extends ControllerHelper {
     @ResourceFilter(AccessRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void list(HttpServerRequest request) {
-        String questionId = request.getParam("questionId");
+        String questionId = request.getParam(PARAM_QUESTION_ID);
         questionChoiceService.list(questionId, arrayResponseHandler(request));
     }
 
@@ -67,7 +68,7 @@ public class QuestionChoiceController extends ControllerHelper {
     @ResourceFilter(AccessRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void get(HttpServerRequest request) {
-        String choiceId = request.getParam("choiceId");
+        String choiceId = request.getParam(PARAM_CHOICE_ID);
         questionChoiceService.get(choiceId, defaultResponseHandler(request));
     }
 
@@ -76,7 +77,7 @@ public class QuestionChoiceController extends ControllerHelper {
     @ResourceFilter(ShareAndOwner.class)
     @SecuredAction(value = CONTRIB_RESOURCE_RIGHT, type = ActionType.RESOURCE)
     public void create(HttpServerRequest request) {
-        String questionId = request.getParam("questionId");
+        String questionId = request.getParam(PARAM_QUESTION_ID);
         RequestUtils.bodyToJson(request, choice -> {
             if (choice == null || choice.isEmpty()) {
                 log.error("[Formulaire@createQuestionChoice] No choice to create.");
@@ -85,14 +86,14 @@ public class QuestionChoiceController extends ControllerHelper {
             }
 
             // Check choice type validity
-            if (!choice.getString("type").equals(ChoiceTypes.TXT.getName())) {
-                String message = "[Formulaire@createQuestionChoice] Invalid choice type : " + choice.getString("type");
+            if (!choice.getString(TYPE).equals(ChoiceTypes.TXT.getName())) {
+                String message = "[Formulaire@createQuestionChoice] Invalid choice type : " + choice.getString(TYPE);
                 log.error(message);
                 badRequest(request, message);
                 return;
             }
 
-            Integer nextSectionId = choice.getInteger("next_section_id", null);
+            Integer nextSectionId = choice.getInteger(NEXT_SECTION_ID, null);
             if (nextSectionId != null) {
                 questionService.getSectionIdsByForm(questionId, sectionsEvt -> {
                     if (sectionsEvt.isLeft()) {
@@ -131,18 +132,18 @@ public class QuestionChoiceController extends ControllerHelper {
                             return;
                         }
 
-                        Integer currentQuestionPosition = positionEvt.right().getValue().getInteger("position");
+                        Integer currentQuestionPosition = positionEvt.right().getValue().getInteger(POSITION);
                         JsonObject targetedSection = null;
                         int i = 0;
                         while (targetedSection == null && i < sections.size()) {
                             JsonObject section = sections.getJsonObject(i);
-                            if (section.getInteger("id").equals(nextSectionId)) {
+                            if (section.getInteger(ID).equals(nextSectionId)) {
                                 targetedSection = section;
                             }
                             i++;
                         }
 
-                        if (targetedSection != null && currentQuestionPosition >= targetedSection.getInteger("position")) {
+                        if (targetedSection != null && currentQuestionPosition >= targetedSection.getInteger(POSITION)) {
                             String message = "[Formulaire@createQuestionChoice] You cannot target a section placed before your question : " + targetedSection;
                             log.error(message);
                             badRequest(request, message);
@@ -164,7 +165,7 @@ public class QuestionChoiceController extends ControllerHelper {
     @ResourceFilter(ShareAndOwner.class)
     @SecuredAction(value = CONTRIB_RESOURCE_RIGHT, type = ActionType.RESOURCE)
     public void update(HttpServerRequest request) {
-        String choiceId = request.getParam("choiceId");
+        String choiceId = request.getParam(PARAM_CHOICE_ID);
         RequestUtils.bodyToJson(request, choice -> {
             if (choice == null || choice.isEmpty()) {
                 log.error("[Formulaire@updateQuestionChoice] No choice to update.");
@@ -173,15 +174,15 @@ public class QuestionChoiceController extends ControllerHelper {
             }
 
             // Check choice type validity
-            if (!choice.getString("type").equals(ChoiceTypes.TXT.getName())) {
-                String message = "[Formulaire@updateQuestionChoice] Invalid choice type : " + choice.getString("type");
+            if (!choice.getString(TYPE).equals(ChoiceTypes.TXT.getName())) {
+                String message = "[Formulaire@updateQuestionChoice] Invalid choice type : " + choice.getString(TYPE);
                 log.error(message);
                 badRequest(request, message);
                 return;
             }
 
-            String questionId = choice.getInteger("question_id").toString();
-            Integer nextSectionId = choice.getInteger("next_section_id", null);
+            String questionId = choice.getInteger(QUESTION_ID).toString();
+            Integer nextSectionId = choice.getInteger(NEXT_SECTION_ID, null);
             if (nextSectionId != null) {
                 questionService.getSectionIdsByForm(questionId, sectionsEvt -> {
                     if (sectionsEvt.isLeft()) {
@@ -220,18 +221,18 @@ public class QuestionChoiceController extends ControllerHelper {
                             return;
                         }
 
-                        Integer currentQuestionPosition = positionEvt.right().getValue().getInteger("position");
+                        Integer currentQuestionPosition = positionEvt.right().getValue().getInteger(POSITION);
                         JsonObject targetedSection = null;
                         int i = 0;
                         while (targetedSection == null && i < sections.size()) {
                             JsonObject section = sections.getJsonObject(i);
-                            if (section.getInteger("id").equals(nextSectionId)) {
+                            if (section.getInteger(ID).equals(nextSectionId)) {
                                 targetedSection = section;
                             }
                             i++;
                         }
 
-                        if (targetedSection != null && currentQuestionPosition >= targetedSection.getInteger("position")) {
+                        if (targetedSection != null && currentQuestionPosition >= targetedSection.getInteger(POSITION)) {
                             String message = "[Formulaire@updateQuestionChoice] You cannot target a section placed before your question : " + targetedSection;
                             log.error(message);
                             badRequest(request, message);
@@ -253,7 +254,7 @@ public class QuestionChoiceController extends ControllerHelper {
     @ResourceFilter(ShareAndOwner.class)
     @SecuredAction(value = CONTRIB_RESOURCE_RIGHT, type = ActionType.RESOURCE)
     public void delete(HttpServerRequest request) {
-        String choiceId = request.getParam("choiceId");
+        String choiceId = request.getParam(PARAM_CHOICE_ID);
         questionChoiceService.delete(choiceId, defaultResponseHandler(request));
     }
 }
