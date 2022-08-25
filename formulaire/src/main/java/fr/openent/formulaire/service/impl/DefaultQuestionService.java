@@ -9,6 +9,7 @@ import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 
+import static fr.openent.form.core.constants.Constants.CONDITIONAL_QUESTIONS;
 import static fr.openent.form.core.constants.Fields.*;
 import static fr.openent.form.core.constants.Tables.QUESTION_TABLE;
 import static fr.openent.form.core.constants.Tables.SECTION_TABLE;
@@ -20,23 +21,32 @@ public class DefaultQuestionService implements QuestionService {
 
     @Override
     public void listForForm(String formId, Handler<Either<String, JsonArray>> handler) {
-        String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE form_id = ? AND section_id IS NULL ORDER BY position;";
+        String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE form_id = ? AND section_id IS NULL AND matrix_id IS NULL " +
+                "ORDER BY position;";
         JsonArray params = new JsonArray().add(formId);
         sql.prepared(query, params, SqlResult.validResultHandler(handler));
     }
 
     @Override
     public void listForSection(String sectionId, Handler<Either<String, JsonArray>> handler) {
-        String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE section_id = ? ORDER BY section_position;";
+        String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE section_id = ? AND matrix_id IS NULL " +
+                "ORDER BY section_position;";
         JsonArray params = new JsonArray().add(sectionId);
         sql.prepared(query, params, SqlResult.validResultHandler(handler));
     }
 
     @Override
     public void listForFormAndSection(String formId, Handler<Either<String, JsonArray>> handler) {
-        String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE form_id = ? " +
+        String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE form_id = ? AND matrix_id IS NULL " +
                 "ORDER BY position, section_id, section_position;";
         JsonArray params = new JsonArray().add(formId);
+        sql.prepared(query, params, SqlResult.validResultHandler(handler));
+    }
+
+    @Override
+    public void listChildren(JsonArray questionIds, Handler<Either<String, JsonArray>> handler) {
+        String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE matrix_id IN " + Sql.listPrepared(questionIds);
+        JsonArray params = new JsonArray().addAll(questionIds);
         sql.prepared(query, params, SqlResult.validResultHandler(handler));
     }
 
@@ -95,17 +105,20 @@ public class DefaultQuestionService implements QuestionService {
     @Override
     public void create(JsonObject question, String formId, Handler<Either<String, JsonObject>> handler) {
         String query = "INSERT INTO " + QUESTION_TABLE + " (form_id, title, position, question_type, statement, " +
-                "mandatory, section_id, section_position, conditional) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *;";
+                "mandatory, section_id, section_position, conditional, matrix_id) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *;";
+
+        boolean isConditional = CONDITIONAL_QUESTIONS.contains(question.getInteger(QUESTION_TYPE)) && question.getBoolean(CONDITIONAL, false);
         JsonArray params = new JsonArray()
                 .add(formId)
                 .add(question.getString(TITLE, ""))
                 .add(question.getInteger(SECTION_POSITION, null) != null ? null : question.getInteger(POSITION, null))
                 .add(question.getInteger(QUESTION_TYPE, 1))
                 .add(question.getString(STATEMENT, ""))
-                .add(question.getBoolean(CONDITIONAL, false) || question.getBoolean(MANDATORY, false))
+                .add(question.getBoolean(MANDATORY, false) || isConditional)
                 .add(question.getInteger(SECTION_ID, null))
                 .add(question.getInteger(SECTION_POSITION, null))
-                .add(question.getBoolean(CONDITIONAL, false));
+                .add(isConditional)
+                .add(question.getInteger(MATRIX_ID, null));
 
         query += getUpdateDateModifFormRequest();
         params.addAll(getParamsForUpdateDateModifFormRequest(formId));
@@ -118,7 +131,8 @@ public class DefaultQuestionService implements QuestionService {
         if (!questions.isEmpty()) {
             SqlStatementsBuilder s = new SqlStatementsBuilder();
             String query = "UPDATE " + QUESTION_TABLE + " SET title = ?, position = ?, question_type = ?, " +
-                    "statement = ?, mandatory = ?, section_id = ?, section_position = ?, conditional = ?  WHERE id = ? RETURNING *;";
+                    "statement = ?, mandatory = ?, section_id = ?, section_position = ?, conditional = ?, matrix_id = ? " +
+                    "WHERE id = ? RETURNING *;";
 
             s.raw("BEGIN;");
             for (int i = 0; i < questions.size(); i++) {
@@ -132,6 +146,7 @@ public class DefaultQuestionService implements QuestionService {
                         .add(question.getInteger(SECTION_ID, null))
                         .add(question.getInteger(SECTION_POSITION, null))
                         .add(question.getBoolean(CONDITIONAL, false))
+                        .add(question.getInteger(MATRIX_ID, null))
                         .add(question.getInteger(ID, null));
                 s.prepared(query, params);
             }
