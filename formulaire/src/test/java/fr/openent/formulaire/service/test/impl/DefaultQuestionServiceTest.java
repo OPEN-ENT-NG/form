@@ -155,7 +155,7 @@ public class DefaultQuestionServiceTest {
                 .put(SECTION_ID, 2)
                 .put(SECTION_POSITION, 2)
                 .put(CONDITIONAL, true)
-                .put(PLACEHOLDER, "placeholder")
+                .put(PLACEHOLDER, "placeholdered")
                 .put(ID, 2);
         JsonArray questions = new JsonArray();
         questions.add(tabQuestion)
@@ -163,7 +163,7 @@ public class DefaultQuestionServiceTest {
 
         String expectedQuery = "[{\"action\":\"raw\",\"command\":\"BEGIN;\"}," +
                 "{\"action\":\"prepared\",\"statement\":\"UPDATE " + QUESTION_TABLE + " SET title = ?, position = ?, question_type = ?, statement = ?, mandatory = ?, section_id = ?, section_position = ?, conditional = ?, placeholder = ?  WHERE id = ? RETURNING *;\",\"values\":[\"title\",null,1,\"statement\",false,1,1,false,\"placeholder\",1]}," +
-                "{\"action\":\"prepared\",\"statement\":\"UPDATE " + QUESTION_TABLE + " SET title = ?, position = ?, question_type = ?, statement = ?, mandatory = ?, section_id = ?, section_position = ?, conditional = ?, placeholder = ?  WHERE id = ? RETURNING *;\",\"values\":[\"titled\",null,2,\"statemented\",true,2,2,true,\"placeholder\",2]}," +
+                "{\"action\":\"prepared\",\"statement\":\"UPDATE " + QUESTION_TABLE + " SET title = ?, position = ?, question_type = ?, statement = ?, mandatory = ?, section_id = ?, section_position = ?, conditional = ?, placeholder = ?  WHERE id = ? RETURNING *;\",\"values\":[\"titled\",null,2,\"statemented\",true,2,2,true,\"placeholdered\",2]}," +
                 "{\"action\":\"prepared\",\"statement\":\"UPDATE " + FORM_TABLE + " SET date_modification = ? WHERE id = ?; \",\"values\":[\"NOW()\",\"form_id\"]}," +
                 "{\"action\":\"raw\",\"command\":\"COMMIT;\"}]";
 
