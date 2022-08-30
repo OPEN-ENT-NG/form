@@ -77,6 +77,7 @@ public class Fields {
     public static final String USER_ID = "user_id";
     public static final String VALUE = "value";
     public static final String ZIPCODE = "zipcode";
+    public static final String PLACEHOLDER = "placeholder";
 
 
     // Request params
