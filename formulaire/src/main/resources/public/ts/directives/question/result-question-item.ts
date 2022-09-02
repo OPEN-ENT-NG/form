@@ -3,24 +3,25 @@ import {
     Distributions,
     DistributionStatus,
     Form,
-    Question,
+    Question, QuestionChoice,
     Responses,
     Types
 } from "../../models";
 import {ColorUtils, DateUtils, UtilsUtils} from "@common/utils";
 import * as ApexCharts from 'apexcharts';
 import {FORMULAIRE_FORM_ELEMENT_EMIT_EVENT} from "@common/core/enums";
+import {Constants} from "@common/core/constants";
 
 interface IViewModel {
     question: Question;
     form: Form;
-    paletteColors: string[];
 
     responses: Responses;
     distributions: Distributions;
     isGraphQuestion: boolean;
     colors: string[];
     singleAnswerResponseChart: any;
+    matrixResponseChart: any;
     results: Map<number, Response[]>;
     hasFiles: boolean;
     nbResponses;
@@ -46,8 +47,7 @@ export const resultQuestionItem: Directive = ng.directive('resultQuestionItem', 
         transclude: true,
         scope: {
             question: '=',
-            form: '=',
-            paletteColors: '='
+            form: '='
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -75,8 +75,7 @@ export const resultQuestionItem: Directive = ng.directive('resultQuestionItem', 
             <div class="choices" ng-if="vm.question.question_type == vm.Types.SINGLEANSWER ||
                                         vm.question.question_type == vm.Types.MULTIPLEANSWER ||
                                         vm.question.question_type == vm.Types.SINGLEANSWERRADIO">
-                
-                <!-- Data and graph for MULTIPLEANSWER -->
+                <!-- Data -->
                 <div class="twelve-mobile" ng-class="vm.question.question_type == vm.Types.MULTIPLEANSWER ? 'twelve' : 'five'">
                     <div ng-repeat="choice in vm.question.choices.all" class="choice">
                         <!-- Data for MULTIPLEANSWER -->
@@ -110,11 +109,15 @@ export const resultQuestionItem: Directive = ng.directive('resultQuestionItem', 
                 </div>
             </div>
 
+            <!-- Graph for MATRIX -->
+            <div class="graph-histogram twelve" ng-if="vm.question.question_type == vm.Types.MATRIX">
+                <div class="eight" style="height: 400px">
+                    <div id="chart-[[vm.question.id]]"></div>
+                </div>
+            </div>
+
             <!-- List of results SHORTANSWER, LONGANSWER, DATE, TIME, FILE -->
-            <div ng-if="vm.question.question_type != vm.Types.SINGLEANSWER &&
-                        vm.question.question_type != vm.Types.MULTIPLEANSWER &&
-                        vm.question.question_type != vm.Types.SINGLEANSWERRADIO &&
-                        vm.question.question_type != vm.Types.FREETEXT">
+            <div ng-if="!vm.question.question_type.isTypeGraphQuestion() && vm.question.question_type != vm.Types.FREETEXT">
                 <div ng-repeat="distrib in vm.distributions.all | orderBy:'date_response':true" class="distrib" ng-if="vm.results.get(distrib.id).length > 0">
                     <div class="infos four twelve-mobile">
                         <div class="four twelve-mobile">[[vm.DateUtils.displayDate(distrib.date_response)]]</div>
@@ -166,12 +169,14 @@ export const resultQuestionItem: Directive = ng.directive('resultQuestionItem', 
 
                     if (vm.isGraphQuestion) {
                         vm.question.fillChoicesInfo(vm.distributions, vm.responses.all);
-                        let choices = vm.question.choices.all.filter(c => c.nbResponses > 0);
-                        vm.colors = ColorUtils.interpolateColors(vm.paletteColors, choices.length);
+                        vm.colors = ColorUtils.interpolateColors(Constants.GRAPH_COLORS, vm.question.choices.all.length);
 
                         // Init charts
                         if (vm.question.question_type == Types.SINGLEANSWER || vm.question.question_type == Types.SINGLEANSWERRADIO) {
                             initSingleAnswerChart();
+                        }
+                        else if (vm.question.question_type == Types.MATRIX) {
+                            initMatrixChart();
                         }
                     }
                     else {
@@ -214,6 +219,53 @@ export const resultQuestionItem: Directive = ng.directive('resultQuestionItem', 
                 newOptions.series = series;
                 vm.singleAnswerResponseChart = new ApexCharts(document.querySelector(`#chart-${vm.question.id}`), newOptions);
                 vm.singleAnswerResponseChart.render();
+            };
+
+            const initMatrixChart = () : void => {
+                let choices = vm.question.choices.all;
+
+                let series = [];
+                for (let choice of choices) {
+                    let serie = {
+                        name: choice.value,
+                        data: []
+                    };
+
+                    // Fill serie data with nb responses of this choice for this child question
+                    for (let child of vm.question.children.all) {
+                        let matchingChoice = child.choices.all.filter(c => c.value === choice.value);
+                        serie.data.push(matchingChoice.length == 1 ? matchingChoice[0].nbResponses : 0);
+                    }
+
+                    series.push(serie); // Fill series
+                }
+
+                // Generate options with labels and colors
+                let options = {
+                    chart: {
+                        type: 'bar',
+                        height: '100%'
+                    },
+                    colors: vm.colors,
+                    dataLabels: {
+                        enabled: false
+                    },
+                    xaxis: {
+                        categories: vm.question.children.all.map(child => child.title),
+                    },
+                    fill: {
+                        opacity: 1
+                    }
+                };
+
+
+                // Generate chart with options and data
+                if (vm.matrixResponseChart) { vm.matrixResponseChart.destroy(); }
+
+                let newOptions = JSON.parse(JSON.stringify(options));
+                newOptions.series = series;
+                vm.matrixResponseChart = new ApexCharts(document.querySelector(`#chart-${vm.question.id}`), newOptions);
+                vm.matrixResponseChart.render();
             };
         },
         link: function ($scope, $element) {

@@ -16,6 +16,7 @@ import {
     FORMULAIRE_BROADCAST_EVENT
 } from "@common/core/enums";
 import {formService, questionChoiceService, utilsService} from "../services";
+import {Constants} from "@common/core/constants";
 
 interface ViewModel {
     formElement: FormElement;
@@ -32,7 +33,6 @@ interface ViewModel {
         }
     }
     loading: boolean;
-    paletteColors: string[];
 
     $onInit() : Promise<void>;
     export(typeExport: Exports) : void;
@@ -60,17 +60,20 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
                 export: false
             }
         };
-        vm.paletteColors = ['#0F2497','#2A9BC7','#77C4E1','#C0E5F2']; // Dark blue to light blue
 
         vm.$onInit = async () : Promise<void> => {
             vm.loading = true;
             vm.form = $scope.form;
-            vm.formElement = $scope.formElement;
+
+            let formElementId: number = $scope.formElement.id;
+            await vm.formElements.sync(vm.form.id);
+            vm.formElement = vm.formElements.all.filter(e => e.id === formElementId)[0];
+
             vm.navigatorValue = vm.formElement.position;
             vm.nbFormElements = $scope.form.nbFormElements;
             vm.last = vm.formElement.position === vm.nbFormElements;
-            await vm.formElements.sync(vm.form.id);
             vm.loading = false;
+
             $scope.safeApply();
         };
 
@@ -122,6 +125,13 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
             $scope.safeApply();
         };
 
+        vm.getGraphQuestions = () : Question[] => {
+            return vm.formElements.getAllQuestions().all.filter(q => q.question_type === Types.SINGLEANSWER ||
+                q.question_type === Types.MULTIPLEANSWER || q.question_type ===Types.SINGLEANSWERRADIO);
+        };
+
+        // Navigation
+
         vm.prev = async () : Promise<void> => {
             let prevPosition: number = vm.formElement.position - 1;
             if (prevPosition > 0) {
@@ -139,11 +149,6 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
         vm.goTo = async (position: number) : Promise<void> => {
             $scope.redirectTo(`/form/${vm.formElement.form_id}/results/${position}`);
             $scope.safeApply();
-        };
-
-        vm.getGraphQuestions = () : Question[] => {
-            return vm.formElements.getAllQuestions().all.filter(q => q.question_type === Types.SINGLEANSWER ||
-                q.question_type === Types.MULTIPLEANSWER || q.question_type ===Types.SINGLEANSWERRADIO);
         };
 
         // PDF
@@ -205,7 +210,7 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
             return {
                 series: series,
                 labels: labels,
-                colors: ColorUtils.interpolateColors(vm.paletteColors, labels.length)
+                colors: ColorUtils.interpolateColors(Constants.GRAPH_COLORS, labels.length)
             };
         }
 
@@ -243,7 +248,7 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
                             horizontal: true,
                         }
                     },
-                    colors: ColorUtils.interpolateColors(vm.paletteColors, 1),
+                    colors: ColorUtils.interpolateColors(Constants.GRAPH_COLORS, 1),
                     xaxis: {
                         categories: dataOptions.labels,
                     }
