@@ -64,7 +64,8 @@ public class DefaultQuestionService implements QuestionService {
                 "FROM " + QUESTION_TABLE + " q " +
                 "LEFT JOIN " + QUESTION_TABLE + " parent ON parent.id = q.matrix_id " +
                 "LEFT JOIN " + SECTION_TABLE + " s ON q.section_id = s.id " +
-                "WHERE q.form_id = ? " + (isPdf ? "" : "AND q.question_type NOT IN " + Sql.listPrepared(QUESTIONS_WITHOUT_RESPONSES)) +
+                "WHERE q.form_id = ? " + (isPdf ? "AND q.matrix_id IS NULL " :
+                    "AND q.question_type NOT IN " + Sql.listPrepared(QUESTIONS_WITHOUT_RESPONSES)) +
                 "ORDER BY element_position, q.section_position, q.id;";
         JsonArray params = new JsonArray().add(formId);
         if (!isPdf) params.addAll(new JsonArray(QUESTIONS_WITHOUT_RESPONSES));

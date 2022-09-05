@@ -83,11 +83,12 @@ export class Question extends FormElement {
         for (let child of this.children.all) {
 
             // Create child choices based on copy of parent choices
+            child.choices.all = [];
             for (let choice of this.choices.all) {
                 child.choices.all.push(new QuestionChoice(this.id, choice.value));
             }
 
-            let matchingResults: Response[] = results.filter(r => r.question_id === child.id);
+            let matchingResults: Response[] = results.filter((r: Response) => r.question_id === child.id);
             for (let result of matchingResults) {
                 for (let choice of this.choices.all) {
                     if (result.choice_id === choice.id) {
