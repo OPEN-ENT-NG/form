@@ -56,10 +56,11 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 		formatResponses();
 		let prevPosition = vm.historicPosition[vm.historicPosition.length - 2];
 		if (prevPosition > 0) {
-			let isSameQuestionType: boolean = vm.formElement.question_type === vm.formElements.all[prevPosition - 1].question_type;
+			let isCursorAgain: boolean = vm.formElement.question_type === Types.CURSOR
+				&& vm.formElements.all[prevPosition - 1].question_type === Types.CURSOR;
 			vm.formElement = vm.formElements.all[prevPosition - 1];
 			vm.historicPosition.pop();
-			goToFormElement(isSameQuestionType);
+			goToFormElement(isCursorAgain);
 		}
 	};
 
@@ -67,10 +68,11 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 		formatResponses();
 		let nextPosition = getNextPositionIfValid();
 		if (nextPosition && nextPosition <= vm.nbFormElements) {
-			let isSameQuestionType: boolean = vm.formElement.question_type === vm.formElements.all[nextPosition - 1].question_type;
+			let isCursorAgain: boolean = vm.formElement.question_type === Types.CURSOR
+				&& vm.formElements.all[nextPosition - 1].question_type === Types.CURSOR;
 			vm.formElement = vm.formElements.all[nextPosition - 1];
 			vm.historicPosition.push(vm.formElement.position);
-			goToFormElement(isSameQuestionType);
+			goToFormElement(isCursorAgain);
 		}
 		else if (nextPosition !== undefined) {
 			updateStorage();
@@ -84,9 +86,9 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 
 	// Utils
 
-	const goToFormElement = (isSameQuestionType: boolean) : void => {
+	const goToFormElement = (isCursorAgain: boolean) : void => {
 		updateStorage();
-		if (isSameQuestionType) $scope.safeApply();
+		if (isCursorAgain) $scope.safeApply();
 		initFormElementResponses();
 		window.scrollTo(0, 0);
 		$scope.safeApply();
@@ -184,6 +186,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 			PublicUtils.formatAllResponsesInfos(vm.formElements, dataResponsesInfos, vm.allResponsesInfos);
 		}
 
+		$scope.safeApply();
 		$scope.$broadcast(FORMULAIRE_FORM_ELEMENT_EMIT_EVENT.REFRESH_QUESTION, vm.allResponsesInfos.get(vm.formElement));
 	};
 
