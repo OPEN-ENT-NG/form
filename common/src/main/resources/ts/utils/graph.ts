@@ -282,7 +282,7 @@ export class GraphUtils {
                 },
                 dataLabels: {
                     enable: true,
-                    formatter: function (val, opt) {
+                    formatter: function (val: number, opt: any): string {
                         return (val + " (" + seriesPercent[opt.dataPointIndex] + "%)")
                     },
                 },
