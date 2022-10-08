@@ -235,6 +235,9 @@ public class ResponseController extends ControllerHelper {
                             try { timeFormatter.parse(response.getString(ANSWER)); }
                             catch (ParseException e) { e.printStackTrace(); }
                         }
+                        if (question.getQuestionType() == 11) {
+                            response.getString(ANSWER);
+                        }
                         createResponse(request, response, user, questionId);
                     }
                 });
@@ -373,6 +376,10 @@ public class ResponseController extends ControllerHelper {
                         if (question_type == 7) {
                             try { timeFormatter.parse(response.getString(ANSWER)); }
                             catch (ParseException e) { e.printStackTrace(); }
+                        }
+                        if (question_type == 11) {
+                            try { (response.getInteger(ANSWER)).toString(); }
+                            catch (Exception e) { e.printStackTrace(); }
                         }
                         responseService.update(user, responseId, response, defaultResponseHandler(request));
                     }
