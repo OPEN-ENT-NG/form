@@ -33,21 +33,21 @@ public class DefaultQuestionServiceTest {
         Sql.getInstance().init(vertx.eventBus(), FORMULAIRE_ADDRESS);
     }
 
-//    @Test
-//    public void testListForForm(TestContext ctx) {
-//        Async async = ctx.async();
-//        String expectedQuery = "SELECT * FROM " + QUESTION_TABLE + " WHERE form_id = ? AND section_id IS NULL AND matrix_id IS NULL ORDER BY position;";
-//        JsonArray expectedParams = new JsonArray().add(FORM_ID);
-//
-//        vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
-//            JsonObject body = (JsonObject) message.body();
-//            ctx.assertEquals(PREPARED, body.getString(ACTION));
-//            ctx.assertEquals(expectedQuery, body.getString(STATEMENT));
-//            ctx.assertEquals(expectedParams.toString(), body.getJsonArray(VALUES).toString());
-//            async.complete();
-//        });
-//        defaultQuestionService.listForForm(FORM_ID, null);
-//    }
+    @Test
+    public void testListForForm(TestContext ctx) {
+        Async async = ctx.async();
+        String expectedQuery = "SELECT * FROM " + QUESTION_TABLE + " WHERE form_id = ? AND section_id IS NULL AND matrix_id IS NULL ORDER BY position;";
+        JsonArray expectedParams = new JsonArray().add(FORM_ID);
+
+        vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
+            JsonObject body = (JsonObject) message.body();
+            ctx.assertEquals(PREPARED, body.getString(ACTION));
+            ctx.assertEquals(expectedQuery, body.getString(STATEMENT));
+            ctx.assertEquals(expectedParams.toString(), body.getJsonArray(VALUES).toString());
+            async.complete();
+        });
+        defaultQuestionService.listForForm(FORM_ID, null);
+    }
 
     @Test
     public void testListForSection(TestContext ctx) {

@@ -10,11 +10,19 @@ import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 
 import static fr.openent.form.core.constants.Fields.*;
-import static fr.openent.form.core.constants.Fields.CURSOR_LABEL_MAX_VAL;
-import static fr.openent.form.core.constants.Tables.QUESTION_SPECIFIC_FIELDS;
+import static fr.openent.form.core.constants.Tables.*;
 
-public class DefaultQuestionSpecificField implements QuestionSpecificFieldService {
+public class DefaultQuestionSpecificFieldService implements QuestionSpecificFieldService {
     private final Sql sql = Sql.getInstance();
+
+
+    @Override
+    public void listByIds(JsonArray questionIds, Handler<Either<String, JsonArray>> handler) {
+        String query = "SELECT * FROM " + QUESTION_SPECIFIC_FIELDS + " WHERE question_id IN " + Sql.listPrepared(questionIds);
+        JsonArray params = new JsonArray().addAll(questionIds);
+
+        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(handler));
+    }
 
     @Override
     public void create(JsonObject question, String questionId, Handler<Either<String, JsonObject>> handler) {
@@ -48,19 +56,12 @@ public class DefaultQuestionSpecificField implements QuestionSpecificFieldServic
                         .add(question.getInteger(CURSOR_STEP, isCursor ? 1 : null))
                         .add(question.getString(CURSOR_LABEL_MIN_VAL, ""))
                         .add(question.getString(CURSOR_LABEL_MAX_VAL, ""))
-                        .add(question.getInteger(ID, null));
+                        .add(question.getInteger(QUESTION_ID, null));
                 sql.prepared(query, params, SqlResult.validResultHandler(handler));
             }
         }
         else {
             handler.handle(new Either.Right<>(new JsonArray()));
         }
-    }
-
-    @Override
-    public void get(String questionId, Handler<Either<String, JsonObject>> handler) {
-        String query = "SELECT * FROM " + QUESTION_SPECIFIC_FIELDS + " WHERE id = ?";
-        JsonArray params = new JsonArray().add(questionId);
-        sql.prepared(query, params, SqlResult.validUniqueResultHandler(handler));
     }
 }
