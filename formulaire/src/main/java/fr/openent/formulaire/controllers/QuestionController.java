@@ -85,7 +85,7 @@ public class QuestionController extends ControllerHelper {
                 renderJson(request, new JsonArray(questionsList));
             });
         }
-        else renderJson(request, new JsonArray());
+        else ok(request);
     }
 
     @Get("/forms/:formId/questions")

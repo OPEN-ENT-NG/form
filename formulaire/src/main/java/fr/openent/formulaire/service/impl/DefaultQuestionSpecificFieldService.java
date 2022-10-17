@@ -1,5 +1,6 @@
 package fr.openent.formulaire.service.impl;
 
+import fr.openent.form.core.constants.Fields;
 import fr.openent.formulaire.service.QuestionSpecificFieldService;
 import fr.wseduc.webutils.Either;
 import io.vertx.core.Handler;
@@ -29,7 +30,7 @@ public class DefaultQuestionSpecificFieldService implements QuestionSpecificFiel
         String query = "INSERT INTO " + QUESTION_SPECIFIC_FIELDS + " (question_id, cursor_min_val, cursor_max_val, cursor_step, " +
                 "cursor_label_min_val, cursor_label_max_val) VALUES (?, ?, ?, ?, ?, ?) RETURNING *;";
 
-        boolean isCursor = question.getInteger("question_type") == 11;
+        boolean isCursor = question.getInteger(Fields.QUESTION_TYPE) == 11;
         JsonArray params = new JsonArray()
                 .add(questionId)
                 .add(question.getInteger(CURSOR_MIN_VAL, isCursor ? 1 : null))
@@ -47,6 +48,8 @@ public class DefaultQuestionSpecificFieldService implements QuestionSpecificFiel
             SqlStatementsBuilder s = new SqlStatementsBuilder();
             String query = "UPDATE " + QUESTION_SPECIFIC_FIELDS + " SET cursor_min_val = ?, cursor_max_val = ?, cursor_step = ?, " +
                     "cursor_label_min_val = ?, cursor_label_max_val = ? WHERE question_id = ? RETURNING *;";
+
+            s.raw("BEGIN;");
             for (int i = 0; i < questions.size(); i++) {
                 JsonObject question = questions.getJsonObject(i);
                 boolean isCursor = question.getInteger("question_type") == 11;
@@ -57,8 +60,11 @@ public class DefaultQuestionSpecificFieldService implements QuestionSpecificFiel
                         .add(question.getString(CURSOR_LABEL_MIN_VAL, ""))
                         .add(question.getString(CURSOR_LABEL_MAX_VAL, ""))
                         .add(question.getInteger(QUESTION_ID, null));
-                sql.prepared(query, params, SqlResult.validResultHandler(handler));
+                s.prepared(query, params);
             }
+            s.raw("COMMIT;");
+
+            sql.transaction(s.build(), SqlResult.validResultHandler(handler));
         }
         else {
             handler.handle(new Either.Right<>(new JsonArray()));
