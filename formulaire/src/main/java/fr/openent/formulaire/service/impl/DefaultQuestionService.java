@@ -160,7 +160,7 @@ public class DefaultQuestionService implements QuestionService {
                     "statement = ?, mandatory = ?, section_id = ?, section_position = ?, conditional = ?, placeholder = ?, " +
                     "matrix_id = ?, matrix_position = ? WHERE id = ? RETURNING *;";
 
-            s.raw("BEGIN;");
+            s.raw(TRANSACTION_BEGIN_QUERY);
             for (int i = 0; i < questions.size(); i++) {
                 JsonObject question = questions.getJsonObject(i);
                 int questionType = question.getInteger(MATRIX_ID, null) != null &&
@@ -185,7 +185,7 @@ public class DefaultQuestionService implements QuestionService {
             }
 
             s.prepared(getUpdateDateModifFormRequest(), getParamsForUpdateDateModifFormRequest(formId));
-            s.raw("COMMIT;");
+            s.raw(TRANSACTION_COMMIT_QUERY);
 
             sql.transaction(s.build(), SqlResult.validResultsHandler(handler));
         }
