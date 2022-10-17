@@ -1,6 +1,5 @@
 package fr.openent.formulaire.controllers;
 
-import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import fr.openent.form.helpers.UtilsHelper;
 import fr.openent.formulaire.security.AccessRight;
 import fr.openent.formulaire.security.CustomShareAndOwner;
@@ -114,7 +113,17 @@ public class QuestionController extends ControllerHelper {
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void listForSection(HttpServerRequest request) {
         String sectionId = request.getParam(PARAM_SECTION_ID);
-        questionService.listForSection(sectionId, arrayResponseHandler(request));
+
+        questionService.listForSection(sectionId, getQuestionEvt -> {
+            if (getQuestionEvt.isLeft()) {
+                log.error("[Formulaire@listQuestions] Fail to list question from form with id : " + sectionId);
+                renderInternalError(request, getQuestionEvt);
+                return;
+            }
+            JsonArray questions = getQuestionEvt.right().getValue();
+
+            syncQuestionSpecs(questions, request);
+        });
     }
 
     @Get("/questions/children")
