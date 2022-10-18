@@ -1,7 +1,7 @@
 package fr.openent.formulaire.service.impl;
 
 import fr.openent.form.helpers.UtilsHelper;
-import fr.openent.formulaire.helpers.FutureHelper;
+import fr.openent.form.helpers.FutureHelper;
 import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.file.FileSystem;
@@ -131,7 +131,7 @@ public class ImportExportService {
         s.raw(TRANSACTION_COMMIT_QUERY);
 
         String errorMessage = "[Formulaire@importForms] Failed to import forms from file : ";
-        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handler(promise, errorMessage)));
+        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handlerEither(promise, errorMessage)));
 
         return promise.future();
     }
@@ -167,7 +167,7 @@ public class ImportExportService {
         s.raw(TRANSACTION_COMMIT_QUERY);
 
         String errorMessage = "[Formulaire@importSections] Failed to import sections from file : ";
-        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handler(promise, errorMessage)));
+        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handlerEither(promise, errorMessage)));
 
         return promise.future();
     }
@@ -211,8 +211,8 @@ public class ImportExportService {
         }
         s.raw(TRANSACTION_COMMIT_QUERY);
 
-        String errorMessage = "[Formulaire@importSections] Failed to import questions from file : ";
-        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handler(promise, errorMessage)));
+        String errorMessage = "[Formulaire@importQuestions] Failed to import questions from file : ";
+        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handlerEither(promise, errorMessage)));
 
         return promise.future();
     }
@@ -240,7 +240,7 @@ public class ImportExportService {
         s.raw(TRANSACTION_COMMIT_QUERY);
 
         String errorMessage = "[Formulaire@updateMatrixChildrenQuestions] Failed to update matrix_id for questions from file : ";
-        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handler(promise, errorMessage)));
+        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handlerEither(promise, errorMessage)));
 
         return promise.future();
     }
@@ -276,7 +276,7 @@ public class ImportExportService {
         s.raw(TRANSACTION_COMMIT_QUERY);
 
         String errorMessage = "[Formulaire@importQuestionChoices] Failed to import question_choices from file : ";
-        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handler(promise, errorMessage)));
+        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handlerEither(promise, errorMessage)));
 
         return promise.future();
     }
@@ -303,7 +303,7 @@ public class ImportExportService {
         s.raw(TRANSACTION_COMMIT_QUERY);
 
         String errorMessage = "[Formulaire@createFolderLinks] Failed to create relations form-folders for forms with id " + formIds + " : ";
-        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handler(promise, errorMessage)));
+        sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handlerEither(promise, errorMessage)));
 
         return promise.future();
     }
