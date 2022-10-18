@@ -116,7 +116,7 @@ public class QuestionController extends ControllerHelper {
 
         questionService.listForSection(sectionId, getQuestionEvt -> {
             if (getQuestionEvt.isLeft()) {
-                log.error("[Formulaire@listQuestions] Fail to list question from form with id : " + sectionId);
+                log.error("[Formulaire@listForSection] Fail to list questions for section with id : " + sectionId);
                 renderInternalError(request, getQuestionEvt);
                 return;
             }

@@ -43,7 +43,6 @@ public class DefaultQuestionSpecificFieldService implements QuestionSpecificFiel
         sql.prepared(query, params, SqlResult.validUniqueResultHandler(handler));
     }
 
-    @Override
     public void update(JsonArray questions, String questionId, Handler<Either<String, JsonArray>> handler) {
         if (!questions.isEmpty()) {
             SqlStatementsBuilder s = new SqlStatementsBuilder();
@@ -53,7 +52,7 @@ public class DefaultQuestionSpecificFieldService implements QuestionSpecificFiel
             s.raw("BEGIN;");
             for (int i = 0; i < questions.size(); i++) {
                 JsonObject question = questions.getJsonObject(i);
-                boolean isCursor = question.getInteger("question_type") == 11;
+                boolean isCursor = question.getInteger(Fields.QUESTION_TYPE) == QuestionTypes.CURSOR.getCode();
                 JsonArray params = new JsonArray()
                         .add(question.getInteger(CURSOR_MIN_VAL, isCursor ? 1 : null))
                         .add(question.getInteger(CURSOR_MAX_VAL, isCursor ? 1 : null))
