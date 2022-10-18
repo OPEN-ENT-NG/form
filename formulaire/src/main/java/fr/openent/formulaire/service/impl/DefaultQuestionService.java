@@ -123,9 +123,8 @@ public class DefaultQuestionService implements QuestionService {
     @Override
     public void create(JsonObject question, String formId, Handler<Either<String, JsonObject>> handler) {
         String query = "INSERT INTO " + QUESTION_TABLE + " (form_id, title, position, question_type, statement, " +
-                "mandatory, section_id, section_position, conditional, placeholder, matrix_id, matrix_position, " +
-                "cursor_min_val, cursor_max_val, cursor_step, cursor_label_min_val, cursor_label_max_val) VALUES " +
-                "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *;";
+                "mandatory, section_id, section_position, conditional, placeholder, matrix_id, matrix_position) VALUES " +
+                "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *;";
 
         int questionType = question.getInteger(MATRIX_ID, null) != null &&
                 !MATRIX_CHILD_QUESTIONS.contains(question.getInteger(QUESTION_TYPE, 1)) ?
@@ -145,12 +144,7 @@ public class DefaultQuestionService implements QuestionService {
                 .add(isConditional)
                 .add(question.getString(PLACEHOLDER, ""))
                 .add(question.getInteger(MATRIX_ID, null))
-                .add(question.getInteger(MATRIX_POSITION, null))
-                .add(question.getInteger(CURSOR_MIN_VAL, null))
-                .add(question.getInteger(CURSOR_MAX_VAL, null))
-                .add(question.getInteger(CURSOR_STEP, null))
-                .add(question.getString(CURSOR_LABEL_MIN_VAL, ""))
-                .add(question.getString(CURSOR_LABEL_MAX_VAL, ""));
+                .add(question.getInteger(MATRIX_POSITION, null));
 
         query += getUpdateDateModifFormRequest();
         params.addAll(getParamsForUpdateDateModifFormRequest(formId));
@@ -164,8 +158,7 @@ public class DefaultQuestionService implements QuestionService {
             SqlStatementsBuilder s = new SqlStatementsBuilder();
             String query = "UPDATE " + QUESTION_TABLE + " SET title = ?, position = ?, question_type = ?, " +
                     "statement = ?, mandatory = ?, section_id = ?, section_position = ?, conditional = ?, placeholder = ?, " +
-                    "matrix_id = ?, matrix_position = ?, cursor_min_val = ?, cursor_max_val = ?, cursor_step = ?, " +
-                    "cursor_label_min_val = ?, cursor_label_max_val = ? WHERE id = ? RETURNING *;";
+                    "matrix_id = ?, matrix_position = ? WHERE id = ? RETURNING *;";
 
             s.raw(TRANSACTION_BEGIN_QUERY);
             for (int i = 0; i < questions.size(); i++) {
@@ -187,11 +180,6 @@ public class DefaultQuestionService implements QuestionService {
                         .add(question.getString(PLACEHOLDER, ""))
                         .add(question.getInteger(MATRIX_ID, null))
                         .add(question.getInteger(MATRIX_POSITION, null))
-                        .add(question.getInteger(CURSOR_MIN_VAL, null))
-                        .add(question.getInteger(CURSOR_MAX_VAL, null))
-                        .add(question.getInteger(CURSOR_STEP, null))
-                        .add(question.getString(CURSOR_LABEL_MIN_VAL, ""))
-                        .add(question.getString(CURSOR_LABEL_MAX_VAL, ""))
                         .add(question.getInteger(ID, null));
                 s.prepared(query, params);
             }
