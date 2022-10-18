@@ -228,11 +228,11 @@ public class ResponseController extends ControllerHelper {
                         });
                     }
                     else {
-                        if (question.getQuestionType() == 6) {
+                        if (question.getQuestionType() == QuestionTypes.DATE.getCode()) {
                             try { dateFormatter.parse(response.getString(ANSWER)); }
                             catch (ParseException e) { e.printStackTrace(); }
                         }
-                        if (question.getQuestionType() == 7) {
+                        if (question.getQuestionType() == QuestionTypes.TIME.getCode()) {
                             try { timeFormatter.parse(response.getString(ANSWER)); }
                             catch (ParseException e) { e.printStackTrace(); }
                         }
@@ -370,11 +370,11 @@ public class ResponseController extends ControllerHelper {
                         });
                     }
                     else {
-                        if (question_type == 6) {
+                        if (question_type == QuestionTypes.DATE.getCode()) {
                             try { dateFormatter.parse(response.getString(ANSWER)); }
                             catch (ParseException e) { e.printStackTrace(); }
                         }
-                        if (question_type == 7) {
+                        if (question_type == QuestionTypes.TIME.getCode()) {
                             try { timeFormatter.parse(response.getString(ANSWER)); }
                             catch (ParseException e) { e.printStackTrace(); }
                         }
