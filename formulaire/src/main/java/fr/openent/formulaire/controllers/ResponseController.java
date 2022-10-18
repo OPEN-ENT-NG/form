@@ -1,5 +1,6 @@
 package fr.openent.formulaire.controllers;
 
+import fr.openent.form.core.enums.QuestionTypes;
 import fr.openent.form.core.model.Question;
 import fr.openent.formulaire.export.FormResponsesExportCSV;
 import fr.openent.formulaire.export.FormResponsesExportPDF;
@@ -235,7 +236,7 @@ public class ResponseController extends ControllerHelper {
                             try { timeFormatter.parse(response.getString(ANSWER)); }
                             catch (ParseException e) { e.printStackTrace(); }
                         }
-                        if (question.getQuestionType() == 11) {
+                        if (question.getQuestionType() == QuestionTypes.CURSOR.getCode()) {
                             response.getString(ANSWER);
                         }
                         createResponse(request, response, user, questionId);
@@ -377,7 +378,7 @@ public class ResponseController extends ControllerHelper {
                             try { timeFormatter.parse(response.getString(ANSWER)); }
                             catch (ParseException e) { e.printStackTrace(); }
                         }
-                        if (question_type == 11) {
+                        if (question_type == QuestionTypes.CURSOR.getCode()) {
                             try { (response.getInteger(ANSWER)).toString(); }
                             catch (Exception e) { e.printStackTrace(); }
                         }
