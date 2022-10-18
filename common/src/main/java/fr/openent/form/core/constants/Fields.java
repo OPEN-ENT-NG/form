@@ -117,16 +117,23 @@ public class Fields {
     public static final String PARAM_PUSH_NOTIF = "pushNotif";
     public static final String PARAM_QUESTION_ID = "questionId";
     public static final String PARAM_QUESTION_IDS = "questionIds";
+    public static final String PARAM_RESOURCES_IDS = "resourcesIds";
     public static final String PARAM_RESPONSE_ID = "responseId";
     public static final String PARAM_SECTION_ID = "sectionId";
     public static final String PARAM_USER_ID = "userId";
     public static final String PARAM_USER_IDS = "userIds";
     public static final String PARAM_USERS_IDS = "usersIds";
+    public static final String PARAM_RESOURCES_NUMBER = "resourcesNumber";
+    public static final String PARAM_ERRORS_NUMBER = "errorsNumber";
+    public static final String PARAM_DUPLICATES_NUMBER = "duplicatesNumber";
+    public static final String PARAM_MAIN_RESOURCE_NAME = "mainResourceName";
 
 
     // Others
     public static final String _ID = "_id";
+    public static final String APPS = "apps";
     public static final String ARCHIVE = "archive";
+    public static final String ARCHIVES = "archives";
     public static final String BODY = "body";
     public static final String BOOKMARKS = "bookmarks";
     public static final String CAPTCHA = "captcha";
@@ -145,6 +152,7 @@ public class Fields {
     public static final String ERROR = "error";
     public static final String FIELDS = "fields";
     public static final String FILE = "file";
+    public static final String FILE_ID = "file_id";
     public static final String FOLDER = "folder";
     public static final String FOLDERS = "folders";
     public static final String FORM_ELEMENTS = "form_elements";
@@ -154,6 +162,7 @@ public class Fields {
     public static final String IMAGES = "images";
     public static final String IS_QUESTION = "is_question";
     public static final String KO = "ko";
+    public static final String LOCALE = "locale";
     public static final String MESSAGE = "message";
     public static final String METADATA = "metadata";
     public static final String NB_LINES = "nb_lines";

@@ -47,6 +47,8 @@ interface ViewModel {
     display: {
         grid: boolean,
         lightbox: {
+            import: boolean,
+            export: boolean,
             move: boolean,
             sending: boolean,
             sharing: boolean,
@@ -59,15 +61,23 @@ interface ViewModel {
                 rename: boolean
             }
         },
+        loading: {
+            list: boolean,
+            export: boolean,
+            import: boolean
+        },
         warning: boolean
     };
-    loading: boolean;
+    files: File[];
     folderTree: any;
     openedFoldersIds: number[];
     selectedFolder: Element;
     draggable : Draggable;
     draggedItem : any;
 
+    importForms() : void;
+    doImportForms(): Promise<void>;
+    closeImportForms(): void;
     createForm() : void;
 
     // Toaster functions
@@ -77,10 +87,12 @@ interface ViewModel {
     shareForm() : void;
     closeShareFormLightbox() : void;
     seeResultsForm() : void;
-    exportForm() : void;
     isFormOpened(): boolean;
     checkRemind() : Promise<void>;
     closeCheckRemind() : Promise<void>;
+    exportForms() : void;
+    doExportForms(): Promise<void>;
+    closeExportForms(): void;
     remind() : Promise<void>;
     doRemind() : Promise<void>;
     filterResponses() : any;
@@ -155,6 +167,8 @@ export const formsListController = ng.controller('FormsListController', ['$scope
     vm.display = {
         grid: true,
         lightbox: {
+            import: false,
+            export: false,
             move: false,
             sending: false,
             sharing: false,
@@ -167,14 +181,23 @@ export const formsListController = ng.controller('FormsListController', ['$scope
                 rename: false
             }
         },
+        loading: {
+            list: false,
+            export: false,
+            import: false
+        },
         warning: false
     };
-    vm.loading = true;
+    vm.files = [];
     vm.folderTree = {};
     vm.openedFoldersIds = null;
     vm.selectedFolder = null;
 
     vm.$onInit = async () : Promise<void> => {
+        await initFormsList();
+    };
+
+    const initFormsList = async () : Promise<void> => {
         await vm.initFolders();
         vm.openFolder(vm.folder);
         vm.forms.filters.find(f => f.name === FiltersFilters.SENT).display = true;
@@ -183,9 +206,33 @@ export const formsListController = ng.controller('FormsListController', ['$scope
         vm.forms.orders.find(o => o.name === FiltersOrders.MODIFICATION_DATE).display = true;
         vm.forms.orders.find(o => o.name === FiltersOrders.TITLE).display = true;
         (window as any).LAZY_MODE = false;
-        vm.loading = false;
+        vm.display.loading.list = false;
         vm.initDragAndDrop();
 
+        $scope.safeApply();
+    }
+
+    // Top main buttons
+
+    vm.importForms = () : void => {
+        template.open('lightbox','lightbox/form-import');
+        vm.display.lightbox.import = true;
+    };
+
+    vm.doImportForms = async () : Promise<void> => {
+        vm.display.loading.import = true;
+        let file: File = vm.files[0];
+        let formData: FormData = new FormData();
+        formData.append('file', file);
+        await formService.import(formData);
+        vm.closeImportForms();
+    };
+
+    vm.closeImportForms = () : void => {
+        vm.files = [];
+        vm.display.loading.import = false;
+        template.close('lightbox');
+        vm.display.lightbox.import = false;
         $scope.safeApply();
     };
 
@@ -302,10 +349,6 @@ export const formsListController = ng.controller('FormsListController', ['$scope
         $scope.safeApply();
     };
 
-    vm.exportForm = () : void => {
-        window.open(window.location.pathname + `/export/${vm.forms.selected[0].id}`);
-    };
-
     vm.isFormOpened = () : boolean => {
         let dateOpeningOk = vm.forms.selected[0].date_opening < new Date();
         let dateEndingOk = (!vm.forms.selected[0].date_ending || vm.forms.selected[0].date_ending > new Date());
@@ -341,6 +384,28 @@ export const formsListController = ng.controller('FormsListController', ['$scope
         vm.limitTable = vm.tableSize;
     };
 
+    vm.exportForms = () : void => {
+        template.open('lightbox','lightbox/form-export');
+        vm.display.lightbox.export = true;
+    };
+
+    vm.doExportForms = async () : Promise<void> => {
+        vm.display.loading.export = true;
+        let exportId: string = await formService.export(vm.forms.selected.map((f: Form) => f.id));
+        window.setTimeout(async () => {
+            if (!exportId) return await initFormsList();
+            await formService.verifyExportAndDownload(exportId);
+            vm.closeExportForms();
+        },5000);
+    };
+
+    vm.closeExportForms = () : void => {
+        vm.display.loading.export = false;
+        template.close('lightbox');
+        vm.display.lightbox.export = false;
+        $scope.safeApply();
+    };
+
     vm.remind = async () : Promise<void> => {
         initMail();
         vm.distributions.all = Mix.castArrayAs(Distribution, await distributionService.listByForm(vm.forms.selected[0].id));
@@ -363,7 +428,7 @@ export const formsListController = ng.controller('FormsListController', ['$scope
         initMail();
         template.close('lightbox');
         vm.display.lightbox.reminder = false;
-        window.setTimeout(async function () { await vm.$onInit(); }, 100);
+        window.setTimeout(async function () { await initFormsList(); }, 100);
     };
 
     vm.filterResponses = () : any => {
