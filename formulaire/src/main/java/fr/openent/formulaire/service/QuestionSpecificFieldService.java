@@ -7,14 +7,14 @@ import io.vertx.core.json.JsonObject;
 
 public interface QuestionSpecificFieldService {
     /**
-     * List all the questions from a list of ids
-     * @param questionIds folder identifiers
-     * @param handler   function handler returning JsonArray data
+     * List all the specifics fields of question from a list of ids
+     * @param questionIds questions identifiers
+     * @param handler function handler returning JsonArray data
      */
     void listByIds(JsonArray questionIds, Handler<Either<String, JsonArray>> handler);
 
     /**
-     * Add question to specific field
+     * Add specific fields to a question
      * @param question JsonObject data
      * @param questionId question identifier
      * @param handler function handler returning JsonObject data

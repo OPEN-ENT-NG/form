@@ -95,13 +95,13 @@ public class QuestionController extends ControllerHelper {
     public void listForForm(HttpServerRequest request) {
         String formId = request.getParam(PARAM_FORM_ID);
 
-        questionService.listForForm(formId, getQuestionEvt -> {
-            if (getQuestionEvt.isLeft()) {
-                log.error("[Formulaire@listQuestions] Fail to list question from form with id : " + formId);
-                renderInternalError(request, getQuestionEvt);
+        questionService.listForForm(formId, listQuestionsEvt -> {
+            if (listQuestionsEvt.isLeft()) {
+                log.error("[Formulaire@listForFrom] Fail to list questions for form with id : " + formId);
+                renderInternalError(request, listQuestionsEvt);
                 return;
             }
-            JsonArray questions = getQuestionEvt.right().getValue();
+            JsonArray questions = listQuestionsEvt.right().getValue();
 
             syncQuestionSpecs(questions, request);
         });

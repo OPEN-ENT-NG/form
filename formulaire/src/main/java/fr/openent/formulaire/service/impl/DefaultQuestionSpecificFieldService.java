@@ -1,5 +1,6 @@
 package fr.openent.formulaire.service.impl;
 
+import fr.openent.form.core.constants.Fields;
 import fr.openent.form.core.enums.QuestionTypes;
 import fr.openent.formulaire.service.QuestionSpecificFieldService;
 import fr.wseduc.webutils.Either;
@@ -30,7 +31,7 @@ public class DefaultQuestionSpecificFieldService implements QuestionSpecificFiel
         String query = "INSERT INTO " + QUESTION_SPECIFIC_FIELDS + " (question_id, cursor_min_val, cursor_max_val, cursor_step, " +
                 "cursor_label_min_val, cursor_label_max_val) VALUES (?, ?, ?, ?, ?, ?) RETURNING *;";
 
-        boolean isCursor = QuestionTypes.CURSOR.getCode() == 11;
+        boolean isCursor = question.getInteger(Fields.QUESTION_TYPE) == QuestionTypes.CURSOR.getCode();
         JsonArray params = new JsonArray()
                 .add(questionId)
                 .add(question.getInteger(CURSOR_MIN_VAL, isCursor ? 1 : null))
