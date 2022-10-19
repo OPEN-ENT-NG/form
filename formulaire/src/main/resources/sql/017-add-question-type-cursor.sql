@@ -1,7 +1,7 @@
 INSERT INTO formulaire.question_type(code, name)
 VALUES (11, 'CURSOR');
 
-CREATE TABLE formulaire.question_specific_field (
+CREATE TABLE formulaire.question_specific_fields (
        id                       bigserial PRIMARY KEY,
        question_id              bigint NOT NULL,
        cursor_min_val           bigint NOT NULL,
