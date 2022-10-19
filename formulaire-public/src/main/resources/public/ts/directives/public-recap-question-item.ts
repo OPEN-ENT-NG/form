@@ -1,18 +1,16 @@
 import {Directive, idiom, ng, template} from "entcore";
 import {
-    Form,
     FormElements,
     Question,
     QuestionChoice,
     Response,
-    Responses,
+    Responses, Section,
     Types
 } from "@common/models";
 
 interface IViewModel {
     question: Question;
     responses: Responses;
-    form: Form;
     formElements: FormElements;
     historicPosition: number[];
     Types: typeof Types;
@@ -29,7 +27,6 @@ export const publicRecapQuestionItem: Directive = ng.directive('publicRecapQuest
         scope: {
             question: '=',
             responses: '=',
-            form: '=',
             formElements: '<',
             historicPosition: '='
         },
@@ -120,25 +117,25 @@ export const publicRecapQuestionItem: Directive = ng.directive('publicRecapQuest
             // Display helper functions
 
             vm.getStringResponse = () : string => {
-                let responses = vm.responses.all.filter(r => r.question_id === vm.question.id);
+                let responses: Response[] = vm.responses.all.filter(r => r.question_id === vm.question.id);
                 if (responses && responses.length > 0) {
-                    let answer = responses[0].answer.toString();
+                    let answer: string = responses[0].answer.toString();
                     return answer ? answer : missingResponse;
                 }
                 return missingResponse;
             };
 
             vm.isSelectedChoice = (choice, child?) : boolean => {
-                let selectedChoices: any = vm.responses.all
+                let selectedChoices: number[] = vm.responses.all
                     .filter((r: Response) => r.question_id === vm.question.id || (child && r.question_id === child.id))
                     .map((r: Response) => r.choice_id);
-                return selectedChoices.includes(choice.id);
+                return (selectedChoices as any).includes(choice.id);
             };
 
             vm.openQuestion = () : void => {
-                let formElementPosition = vm.question.position;
+                let formElementPosition: number = vm.question.position;
                 if (!vm.question.position) {
-                    let sections = vm.formElements.getSections().all.filter(s => s.id === vm.question.section_id);
+                    let sections: Section[] = vm.formElements.getSections().all.filter(s => s.id === vm.question.section_id);
                     formElementPosition = sections.length === 1 ? sections[0].position : null;
                 }
                 vm.historicPosition = vm.historicPosition.slice(0, vm.historicPosition.indexOf(formElementPosition) + 1);

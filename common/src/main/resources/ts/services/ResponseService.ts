@@ -77,20 +77,14 @@ export const responseService: ResponseService = {
             response.answer = "";
         }
         else {
-            if (questionType === Types.TIME) {
-                if (typeof response.answer != "string") {
-                    response.answer = moment(response.answer).format("HH:mm");
-                }
+            if (questionType === Types.TIME && typeof response.answer != "string") {
+                response.answer = moment(response.answer).format("HH:mm");
             }
-            else if (questionType === Types.DATE) {
-                if (typeof response.answer != "string") {
-                    response.answer = moment(response.answer).format("DD/MM/YYYY");
-                }
+            else if (questionType === Types.DATE&& typeof response.answer != "string") {
+                response.answer = moment(response.answer).format("DD/MM/YYYY");
             }
-            else if (questionType === Types.CURSOR) {
-                if (typeof response.answer != "string") {
-                    response.answer = response.answer.toString();
-                }
+            else if (questionType === Types.CURSOR && typeof response.answer != "string") {
+                response.answer = response.answer.toString();
             }
         }
         return response.id ? await this.update(response) : await this.create(response);
