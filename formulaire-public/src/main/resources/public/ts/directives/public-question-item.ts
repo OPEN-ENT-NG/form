@@ -1,18 +1,14 @@
 import {Directive, ng} from "entcore";
-import {
-    Question,
-    Response,
-    Types
-} from "@common/models";
-import { FORMULAIRE_FORM_ELEMENT_EMIT_EVENT} from "@common/core/enums";
+import {Question, QuestionChoice, Response, Responses, Types} from "@common/models";
+import {FORMULAIRE_FORM_ELEMENT_EMIT_EVENT} from "@common/core/enums";
 import {I18nUtils} from "@common/utils";
 
 interface IViewModel {
     question: Question;
-    response: Response;
-    selectedIndexes: boolean[];
+    responses: Responses;
     Types: typeof Types;
     I18n: I18nUtils;
+    mapChoiceResponseIndex: Map<QuestionChoice, number>;
 
     $onInit() : Promise<void>;
 }
@@ -23,8 +19,7 @@ export const publicQuestionItem: Directive = ng.directive('publicQuestionItem', 
         transclude: true,
         scope: {
             question: '=',
-            response: '=',
-            selectedIndexes: '='
+            responses: '='
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -38,67 +33,62 @@ export const publicQuestionItem: Directive = ng.directive('publicQuestionItem', 
                         <div ng-if="vm.question.statement" ng-bind-html="vm.question.statement"></div>
                     </div>
                     <div ng-if="vm.question.question_type == vm.Types.SHORTANSWER">
-                        <textarea ng-model="vm.response.answer" i18n-placeholder="[[vm.question.placeholder]]" input-guard></textarea>
+                        <textarea ng-model="vm.responses.all[0].answer" i18n-placeholder="[[vm.question.placeholder]]" input-guard></textarea>
                     </div>
                     <div ng-if="vm.question.question_type == vm.Types.LONGANSWER">
-                        <textarea ng-model="vm.response.answer" input-guard></textarea>
+                        <textarea ng-model="vm.responses.all[0].answer" input-guard></textarea>
                     </div>
                     <div ng-if="vm.question.question_type == vm.Types.SINGLEANSWER">
-                        <select ng-model="vm.response.choice_id" input-guard>
+                        <select ng-model="vm.responses.all[0].choice_id" input-guard>
                             <option ng-value="">[[vm.I18n.translate('formulaire.public.options.select')]]</option>
                             <option ng-repeat="choice in vm.question.choices.all" ng-value="choice.id">[[choice.value]]</option>
                         </select>
                     </div>
                     <div ng-if="vm.question.question_type == vm.Types.MULTIPLEANSWER">
                         <div ng-repeat="choice in vm.question.choices.all | orderBy:['position', 'id']">
-                            <label for="check-[[choice.id]]">
-                                <input type="checkbox" id="check-[[choice.id]]" ng-model="vm.selectedIndexes[$index]" input-guard>
+                            <label>
+                                <input type="checkbox" ng-model="vm.responses.all[vm.mapChoiceResponseIndex.get(choice)].selected" input-guard>
                                 <span>[[choice.value]]</span>
                             </label>
                         </div>
                     </div>
                     <div ng-if="vm.question.question_type == vm.Types.DATE">
-                        <date-picker ng-model="vm.response.answer" input-guard></date-picker>
+                        <date-picker ng-model="vm.responses.all[0].answer" input-guard></date-picker>
                     </div>
                     <div ng-if="vm.question.question_type == vm.Types.TIME">
-                        <input type="time" ng-model="vm.response.answer" input-guard/>
+                        <input type="time" ng-model="vm.responses.all[0].answer" input-guard/>
                     </div>
                     <div ng-if ="vm.question.question_type == vm.Types.SINGLEANSWERRADIO">
                         <div ng-repeat ="choice in vm.question.choices.all | orderBy:['position', 'id']">
                             <label>
-                                <input type="radio" ng-model="vm.response.choice_id" ng-value="[[choice.id]]" input-guard>[[choice.value]]
+                                <input type="radio" ng-model="vm.responses.all[0].choice_id" ng-value="[[choice.id]]" input-guard>[[choice.value]]
                             </label>
                         </div>
                     </div>
-                        <div ng-if ="vm.question.question_type == vm.Types.CURSOR">
-                            <div class="formulaire-cursor-input-wrapper">
+                    <div ng-if ="vm.question.question_type == vm.Types.CURSOR">
+                        <div class="formulaire-cursor-input-wrapper">
                             <div>
-                                <!-- label minimum value (optionnal) -->
-                                <label>[[vm.question.cursor_label_min_val]]</label>
+                                <label>[[vm.question.cursor_label_min_val]]</label> <!-- label minimum value (optional) -->
                             </div>
                             <div class="formulaire-cursor-input-range">
                                 <!-- input range -->
-                                    <input type="range" min="[[vm.question.cursor_min_val]]" max="[[vm.question.cursor_max_val]]" 
-                                    ng-value="[[vm.question.cursor_min_val]]" value="[[vm.question.cursor_min_val]]" step="[[vm.question.cursor_step]]" 
-                                    ng-model="vm.response.answer" oninput="rangevalue.value=value">
+                                <input type="range" ng-model="vm.responses.all[0].answer"
+                                       ng-value="[[vm.question.cursor_min_val]]" value="[[vm.question.cursor_min_val]]"
+                                       min="[[vm.question.cursor_min_val]]" max="[[vm.question.cursor_max_val]]" 
+                                       step="[[vm.question.cursor_step]]" oninput="rangevalue.value = value">
                                <div class="formulaire-cursor-input-range-values">
-                                    <!-- minimum value -->
-                                    <output>[[vm.question.cursor_min_val]]</output>
-                                     <!-- maximum value -->
-                                    <output>[[vm.question.cursor_max_val]]</output>
+                                    <output>[[vm.question.cursor_min_val]]</output> <!-- minimum value -->
+                                    <output>[[vm.question.cursor_max_val]]</output> <!-- maximum value -->
                                </div>
+                            </div>
+                            <div>
+                                <label>[[vm.question.cursor_label_max_val]]</label> <!-- label maximum value (optional) -->
+                            </div>
                         </div>
-                        <div>
-                            <!-- label maximum value (optionnal) -->     
-                            <label>[[vm.question.cursor_label_max_val]]</label>
-                        </div>
-                    </div>
-                    
-                    <!-- choosen value -->
-                        <label>
-                            <i18n>formulaire.public.question.selected.result</i18n>
-                        </label>
-                            <output id="rangevalue">[[vm.question.cursor_min_val]]</output>
+                        
+                        <!-- chosen value -->
+                        <label><i18n>formulaire.public.question.selected.result</i18n></label>
+                        <output id="rangevalue">[[vm.question.cursor_min_val]]</output>
                     </div>
                 </div>
             </div>
@@ -108,9 +98,17 @@ export const publicQuestionItem: Directive = ng.directive('publicQuestionItem', 
             const vm: IViewModel = <IViewModel> this;
 
             vm.$onInit = async () : Promise<void> => {
-                if (!vm.response.question_id) { vm.response.question_id = vm.question.id; }
-                if (vm.question.question_type === Types.TIME && vm.response.answer) {
-                    vm.response.answer = new Date("January 01 1970 " + vm.response.answer);
+                if (vm.question.question_type === Types.TIME && vm.responses.all[0].answer) {
+                    vm.responses.all[0].answer = new Date("January 01 1970 " + vm.responses.all[0].answer);
+                }
+
+                if (vm.question.question_type == Types.MULTIPLEANSWER || vm.question.question_type == Types.MATRIX) {
+                    vm.mapChoiceResponseIndex = new Map();
+                    for (let choice of vm.question.choices.all) {
+                        let matchingResponses: Response[] = vm.responses.all.filter((r:Response) => r.choice_id == choice.id);
+                        if (matchingResponses.length != 1) console.error("Be careful, 'vm.responses' has been badly implemented !!");
+                        vm.mapChoiceResponseIndex.set(choice, vm.responses.all.indexOf(matchingResponses[0]));
+                    }
                 }
             };
         },
