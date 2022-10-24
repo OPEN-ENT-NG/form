@@ -39,9 +39,9 @@ export const publicQuestionItem: Directive = ng.directive('publicQuestionItem', 
                         <textarea ng-model="vm.responses.all[0].answer" input-guard></textarea>
                     </div>
                     <div ng-if="vm.question.question_type == vm.Types.SINGLEANSWER">
-                        <select ng-model="vm.responses.all[0].choice_id" input-guard>
+                        <select ng-model="vm.responses.all[0].selected" input-guard>
                             <option ng-value="">[[vm.I18n.translate('formulaire.public.options.select')]]</option>
-                            <option ng-repeat="choice in vm.question.choices.all" ng-value="choice.id">[[choice.value]]</option>
+                            <option ng-repeat="choice in vm.question.choices.all" ng-value="true">[[choice.value]]</option>
                         </select>
                     </div>
                     <div ng-if="vm.question.question_type == vm.Types.MULTIPLEANSWER">
@@ -61,7 +61,7 @@ export const publicQuestionItem: Directive = ng.directive('publicQuestionItem', 
                     <div ng-if ="vm.question.question_type == vm.Types.SINGLEANSWERRADIO">
                         <div ng-repeat ="choice in vm.question.choices.all | orderBy:['position', 'id']">
                             <label>
-                                <input type="radio" ng-model="vm.responses.all[0].choice_id" ng-value="[[choice.id]]" input-guard>[[choice.value]]
+                                <input type="radio" ng-model="vm.responses.all[0].selected" ng-value="true" input-guard>[[choice.value]]
                             </label>
                         </div>
                     </div>
@@ -102,7 +102,7 @@ export const publicQuestionItem: Directive = ng.directive('publicQuestionItem', 
                     vm.responses.all[0].answer = new Date("January 01 1970 " + vm.responses.all[0].answer);
                 }
 
-                if (vm.question.question_type == Types.MULTIPLEANSWER || vm.question.question_type == Types.MATRIX) {
+                if (vm.question.question_type == Types.MULTIPLEANSWER) {
                     vm.mapChoiceResponseIndex = new Map();
                     for (let choice of vm.question.choices.all) {
                         let matchingResponses: Response[] = vm.responses.all.filter((r:Response) => r.choice_id == choice.id);

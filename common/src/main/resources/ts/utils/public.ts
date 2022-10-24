@@ -36,7 +36,7 @@ export class PublicUtils {
                     ? (formElement as Section).questions.all.filter((q:Question) => q.id == questionMap[0].id)[0]
                     : (formElement as Question);
                 let questionResponses: Responses = new Responses();
-                questionResponses.all = Mix.castArrayAs(Response, questionMap[1].all);
+                questionResponses.all = Mix.castArrayAs(Response, questionMap[1].arr);
                 allResponsesInfos.get(formElement).set(question, questionResponses);
             }
         }

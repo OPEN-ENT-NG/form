@@ -1,12 +1,5 @@
 import {idiom, ng, notify, template} from "entcore";
-import {
-    Form,
-    FormElement,
-    FormElements, Question, QuestionChoice,
-    Response,
-    Responses,
-    Types
-} from "@common/models";
+import {Form, FormElement, FormElements, Question, Response, Responses, Types} from "@common/models";
 import {Mix} from "entcore-toolkit";
 import {PublicUtils} from "@common/utils";
 
@@ -36,21 +29,24 @@ export const recapController = ng.controller('RecapController', ['$scope',
     vm.responses = new Responses();
 
     vm.$onInit = async () : Promise<void> => {
+        await initRecapController();
+    };
+
+    const initRecapController = async () : Promise<void> => {
         syncWithStorageData();
         vm.formElements.all = vm.formElements.all.filter((e: FormElement) => vm.historicPosition.indexOf(e.position) >= 0);
         let questionIdsToDisplay: number[] = getQuestionIdsFromPositionHistoric();
         vm.allResponsesInfos.forEach((questionsResponsesMap: Map<Question, Responses>) => {
             questionsResponsesMap.forEach((responses: Responses, question: Question) => {
                 if (questionIdsToDisplay.some(id => (responses.all.map((r: Response) => r.question_id) as any).includes(id))) {
-                    let choices : QuestionChoice[] = question.choices.all;
-                    vm.responses.all = vm.responses.all.concat(choices.length > 0 ? responses.selected : responses.all);
+                    vm.responses.all = vm.responses.all.concat(question.choices.all.length > 0 ? responses.selected : responses.all);
                 }
             });
         });
         formatResponsesAnswer();
 
         $scope.safeApply();
-    };
+    }
 
     // Global functions
 
@@ -68,9 +64,9 @@ export const recapController = ng.controller('RecapController', ['$scope',
     // Utils
 
     const syncWithStorageData = () : void => {
+        vm.distributionKey = JSON.parse(sessionStorage.getItem('distributionKey'));
         vm.form = Mix.castAs(Form, JSON.parse(sessionStorage.getItem('form')));
         vm.formKey = JSON.parse(sessionStorage.getItem('formKey'));
-        vm.distributionKey = JSON.parse(sessionStorage.getItem('distributionKey'));
         vm.nbFormElements = JSON.parse(sessionStorage.getItem('nbFormElements'));
         vm.historicPosition = JSON.parse(sessionStorage.getItem('historicPosition'));
         let dataFormElements = JSON.parse(sessionStorage.getItem('formElements'));

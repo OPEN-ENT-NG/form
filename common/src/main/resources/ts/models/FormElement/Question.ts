@@ -136,6 +136,18 @@ export class Question extends FormElement {
             || this.question_type == Types.SINGLEANSWERRADIO
             || this.question_type == Types.MATRIX;
     }
+
+    isMatrixSingle = () : boolean => {
+        return this.question_type == Types.MATRIX
+            && this.children.all.length > 0 &&
+            this.children.all[0].question_type == Types.SINGLEANSWER;
+    }
+
+    isMatrixMultiple = () : boolean => {
+        return this.question_type == Types.MATRIX
+            && this.children.all.length > 0 &&
+            this.children.all[0].question_type == Types.MULTIPLEANSWER;
+    }
 }
 
 export class Questions extends Selection<Question> {
