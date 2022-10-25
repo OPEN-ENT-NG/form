@@ -1,5 +1,5 @@
 import {Directive, ng} from "entcore";
-import {Question, Responses, Types} from "@common/models";
+import {Question, QuestionChoice, Response, Responses, Types} from "@common/models";
 import {FORMULAIRE_FORM_ELEMENT_EMIT_EVENT} from "@common/core/enums";
 import {I18nUtils} from "@common/utils";
 
@@ -8,6 +8,7 @@ interface IViewModel {
     responses: Responses;
     Types: typeof Types;
     I18n: I18nUtils;
+    mapChildChoicesResponseIndex: Map<Question, Map<QuestionChoice, number>>;
 
     $onInit() : Promise<void>;
 }
@@ -40,7 +41,8 @@ export const publicMatrix: Directive = ng.directive('publicMatrix', () => {
                                 <td>[[child.title]]</td>
                                 <td ng-repeat ="choice in vm.question.choices.all | orderBy:['position', 'id']">
                                     <label>
-                                        <input type="radio" ng-model="vm.responses.all[childIndex].choice_id" ng-value="[[choice.id]]" input-guard>
+                                        <input type="radio" ng-value="true" input-guard
+                                               ng-model="vm.responses.all[vm.mapChildChoicesResponseIndex.get(child).get(choice)].selected">
                                     </label>
                                 </td>
                             </tr>
@@ -54,11 +56,20 @@ export const publicMatrix: Directive = ng.directive('publicMatrix', () => {
             const vm: IViewModel = <IViewModel> this;
 
             vm.$onInit = async () : Promise<void> => {
-                for (let child of vm.question.children.all) {
-                    let childIndex: number = vm.question.children.all.map((q: Question) => q.id).indexOf(child.id);
-                    if (!vm.responses.all[childIndex].question_id) { vm.responses.all[childIndex].question_id = child.id; }
-                }
+                await initPublicMatrix();
             };
+
+            const initPublicMatrix = async () : Promise<void> => {
+                vm.mapChildChoicesResponseIndex = new Map();
+                for (let child of vm.question.children.all) {
+                    vm.mapChildChoicesResponseIndex.set(child, new Map());
+                    for (let choice of vm.question.choices.all) {
+                        let matchingResponses: Response[] = vm.responses.all.filter((r:Response) => r.question_id == child.id && r.choice_id == choice.id);
+                        if (matchingResponses.length != 1) console.error("Be careful, 'vm.responses' has been badly implemented !!");
+                        vm.mapChildChoicesResponseIndex.get(child).set(choice, vm.responses.all.indexOf(matchingResponses[0]));
+                    }
+                }
+            }
         },
         link: function ($scope, $element) {
             const vm: IViewModel = $scope.vm;
