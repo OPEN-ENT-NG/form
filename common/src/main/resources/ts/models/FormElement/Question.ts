@@ -176,7 +176,7 @@ export class Questions extends Selection<Question> {
         if (choicesQuestions.length > 0) {
             let data = await questionChoiceService.listChoices(this.all.map((q: Question) => q.id));
             let listChoices: QuestionChoice[] = Mix.castArrayAs(QuestionChoice, data);
-            for (let question of this.all) {
+            for (let question of choicesQuestions) {
                 question.choices.all = listChoices.filter((c: QuestionChoice) => c.question_id === question.id);
                 let nbChoices: number = question.choices.all.length;
                 if (nbChoices <= 0) {
@@ -194,7 +194,7 @@ export class Questions extends Selection<Question> {
         if (matrixQuestions.length > 0) {
             let data = await questionService.listChildren(matrixQuestions);
             let listChildrenQuestions: Question[] = Mix.castArrayAs(Question, data);
-            for (let question of this.all) {
+            for (let question of matrixQuestions) {
                 question.children.all = listChildrenQuestions.filter((q: Question) => q.matrix_id === question.id);
                 let nbChildren: number = question.children.all.length;
                 if (nbChildren <= 0) {

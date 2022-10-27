@@ -11,6 +11,7 @@ interface IViewModel {
     mapChildChoicesResponseIndex: Map<Question, Map<QuestionChoice, number>>;
 
     $onInit() : Promise<void>;
+    switchValue(child: Question, choice: QuestionChoice): void;
 }
 
 export const publicMatrix: Directive = ng.directive('publicMatrix', () => {
@@ -41,7 +42,7 @@ export const publicMatrix: Directive = ng.directive('publicMatrix', () => {
                                 <td>[[child.title]]</td>
                                 <td ng-repeat ="choice in vm.question.choices.all | orderBy:['position', 'id']">
                                     <label>
-                                        <input type="radio" ng-value="true" input-guard
+                                        <input type="radio" name="child-[[child.id]]" ng-change="vm.switchValue(child, choice)" ng-value="true" input-guard
                                                ng-model="vm.responses.all[vm.mapChildChoicesResponseIndex.get(child).get(choice)].selected">
                                     </label>
                                 </td>
@@ -75,6 +76,17 @@ export const publicMatrix: Directive = ng.directive('publicMatrix', () => {
             const vm: IViewModel = $scope.vm;
             vm.Types = Types;
             vm.I18n = I18nUtils;
+
+            vm.switchValue = (child: Question, choice: QuestionChoice) : void => {
+                if (child.question_type == Types.SINGLEANSWERRADIO) {
+                    for (let response of vm.responses.all) {
+                        if (response.question_id == child.id && response.choice_id != choice.id) {
+                            response.selected = false;
+                        }
+                    }
+                }
+                $scope.$apply();
+            }
 
             $scope.$on(FORMULAIRE_FORM_ELEMENT_EMIT_EVENT.REFRESH_QUESTION, () => { vm.$onInit(); });
         }
