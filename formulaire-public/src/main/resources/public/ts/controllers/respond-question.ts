@@ -157,11 +157,11 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 					for (let choice of question.choices.all) {
 						if (question.children.all.length > 0) {
 							for (let child of question.children.all) {
-								questionResponses.all.push(new Response(child.id, choice.id));
+								questionResponses.all.push(new Response(child.id, choice.id, choice.value));
 							}
 						}
 						else {
-							questionResponses.all.push(new Response(question.id, choice.id));
+							questionResponses.all.push(new Response(question.id, choice.id, choice.value));
 						}
 					}
 				}
