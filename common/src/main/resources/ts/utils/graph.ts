@@ -1,5 +1,5 @@
 import {idiom} from 'entcore';
-import {Question, QuestionChoice, Types} from "@common/models";
+import {Question, QuestionChoice, Response, Responses, Types} from "@common/models";
 import {ColorUtils} from "@common/utils/color";
 import * as ApexCharts from 'apexcharts';
 
@@ -7,11 +7,12 @@ export class GraphUtils {
 
     // Results page
     /**
-     *  Generate data, options and render graph of the results of a question according to its type (for result page view)
+     * Generate data, options and render graph of the results of a question according to its type (for result page view)
      * @param question  Question object which we want to display the results
+     * @param responses Array of responses which we want to display the results
      * @param chart     ApexChart to render at the end
      */
-    static generateGraphForResult = (question: Question, chart: any) : void => {
+    static generateGraphForResult = (question: Question, chart: any, responses?: Responses) : void => {
         switch (question.question_type) {
             case Types.SINGLEANSWER:
             case Types.SINGLEANSWERRADIO:
@@ -20,6 +21,8 @@ export class GraphUtils {
             case Types.MATRIX:
                 GraphUtils.generateMatrixChart(question, chart);
                 break;
+            case Types.CURSOR:
+                GraphUtils.generateCursorChart(question, chart, responses);
             default:
                 break;
         }
@@ -90,6 +93,41 @@ export class GraphUtils {
     };
 
     /**
+     * Generate and render graph of the results of a cursor question (for result page view)
+     * @param responses Array of responses which we want to display the results
+     * @param chart     ApexChart to render at the end
+     */
+    private static generateCursorChart = (question: Question, chart: any, responses: Responses) : any => {
+        let reponses: Response[] = responses.all;
+
+        let resp: number[] = [];
+        let cursorAverage: number;
+
+        // build array with all response
+        for (let r of reponses) {
+            resp.sort(function(a: number, b: number) {
+                return a - b
+            })
+            resp.push(Number(r.answer));
+        }
+        cursorAverage = resp.reduce((a: number, b: number) => a + b, 0) / resp.length;
+
+        // map to build object with response and number of each one
+        const map: Map<number, number> = resp.reduce((acc: Map<number, number>, e: number) =>
+            acc.set(e, (acc.get(e) || 0) + 1), new Map());
+
+        let labels: number[] = Array.from(map.keys());
+        let colors: string[] = ColorUtils.generateColorList(labels.length);
+
+        let newOptions: any = GraphUtils.generateOptions(question.question_type, colors, labels,
+            '100%', '100%', null, cursorAverage);
+
+        newOptions.series = [{ name: "Modalité de réponse", data: Array.from(map.values()) }];
+
+        GraphUtils.renderChartForResult(newOptions, chart, question);
+    }
+
+    /**
      * Render graph with ApexChart based on given options (for result page view)
      * @param options   ApexChart options to render the graph
      * @param chart     ApexChart to render at the end
@@ -106,9 +144,10 @@ export class GraphUtils {
     /**
      * Generate data, options and render graph of the results of a question according to its type (for PDF)
      * @param question  Question object which we want to display the results
+     * @param responses Array of responses which we want to display the results
      * @param charts    ApexCharts to store and render at the end
      */
-    static generateGraphForPDF = async (question: Question, charts: any, nbDistribs: number) : Promise<void> => {
+    static generateGraphForPDF = async (question: Question, charts: any, nbDistribs: number, responses: Responses): Promise<void> => {
         switch (question.question_type) {
             case Types.SINGLEANSWER:
             case Types.SINGLEANSWERRADIO:
@@ -119,6 +158,9 @@ export class GraphUtils {
                 break;
             case Types.MATRIX:
                 await GraphUtils.generateMatrixChartForPDF(question, charts);
+                break;
+            case Types.CURSOR:
+                await GraphUtils.generateCursorChartForPDF(question, charts, responses);
                 break;
             default:
                 break;
@@ -226,6 +268,45 @@ export class GraphUtils {
     }
 
     /**
+     * Generate and render graph of the results of a matrix question (for PDF)
+     * @param question  Question object which we want to display the results
+     * @param responses Array of responses which we want to display the results
+     * @param charts    ApexCharts to store and render at the end
+     */
+    static generateCursorChartForPDF = async (question: Question, charts: any,  responses: Responses) : Promise<void> => {
+        if (question.question_type != Types.CURSOR) {
+            return null;
+        }
+
+        let reponses: Response[] = responses.all;
+
+        let resp: number[] = [];
+        let cursorAverage: number;
+
+        // build array with all response
+        for (let r of reponses) {
+            resp.sort(function(a: number, b: number) {
+                return a - b
+            })
+            resp.push(Number(r.answer));
+        }
+        cursorAverage = resp.reduce((a: number, b: number) => a + b, 0) / resp.length;
+
+        // map to build object with response and number of each one
+        const map: Map<number, number> = resp.reduce((acc: Map<number, number>, e: number) =>
+            acc.set(e, (acc.get(e) || 0) + 1), new Map());
+
+        let labels: number[] = Array.from(map.keys());
+        let colors: string[] = ColorUtils.generateColorList(labels.length);
+
+        let newOptions: any = GraphUtils.generateOptions(question.question_type, colors, labels, null, null,
+            null, cursorAverage);
+        newOptions.series = [{ name: "Modalité de réponse", data: Array.from(map.values()) }];
+
+        await GraphUtils.renderChartForPDF(newOptions, charts);
+    }
+
+    /**
      * Render graph with ApexChart based on given options (for PDF)
      * @param options   ApexChart options to render the graph
      * @param charts    ApexCharts to store and render at the end
@@ -246,8 +327,10 @@ export class GraphUtils {
      * @param height    Height of the chart to display (optional)
      * @param width     Width of the chart to display (optional)
      * @param seriesPercent Percentage to use for the graph
+     * @param cursorAverage Average of answers
      */
-    static generateOptions = (type: Types, colors: string[], labels: string[], height?: any, width?: any, seriesPercent?: number[]) : any => {
+    static generateOptions = (type: Types, colors: string[], labels: (string | number)[], height?: any, width?: any,
+                              seriesPercent?: number[], cursorAverage?: number) : any => {
         let options: any;
         if (type === Types.SINGLEANSWER || type === Types.SINGLEANSWERRADIO) {
             options = {
@@ -313,6 +396,55 @@ export class GraphUtils {
                     opacity: 1
                 }
             };
+        }
+        else if (type === Types.CURSOR) {
+            options = {
+                chart: {
+                    type: 'area',
+                    height: height ? height : 400,
+                    width: width ? width : 600,
+                    animations: {
+                        enabled: false
+                    },
+                    toolbar: {
+                        show: false
+                    }
+                },
+                colors: colors,
+                dataLabels: {
+                    enabled: false
+                },
+                grid: {
+                    yaxis: {
+                        lines: {
+                            show: false
+                        }
+                    }
+                },
+                xaxis: {
+                    categories: labels,
+                    title: {
+                        text: 'Modalité de réponses' + ' (' + cursorAverage + ')'
+                    }
+                },
+                yaxis: {
+                    opposite: true,
+                    labels: {
+                        formatter: (value) => {
+                            return Math.floor(value)
+                        }
+                    }
+                },
+                fill: {
+                    type: "gradient",
+                    gradient: {
+                        shadeIntensity: 1,
+                        opacityFrom: 0.7,
+                        opacityTo: 0.9,
+                        stops: [0, 90, 100]
+                    }
+                },
+            }
         }
         return options;
     }

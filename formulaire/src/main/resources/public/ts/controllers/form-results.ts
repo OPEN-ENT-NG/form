@@ -14,7 +14,7 @@ import {
     Exports,
     FORMULAIRE_BROADCAST_EVENT
 } from "@common/core/enums";
-import {formService, questionChoiceService, responseService, utilsService} from "../services";
+import {questionChoiceService, responseService, utilsService} from "../services";
 import {GraphUtils} from "@common/utils/graph";
 
 interface ViewModel {
@@ -158,7 +158,6 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
                 idImagesForRemove : [] // all id images (to remove from storage after export PDF)
             };
             let questions: Question[] = vm.getGraphQuestions();
-
             if (questions.length > 0) {
                 // Sync form responses
                 let results: Responses = new Responses();
@@ -180,7 +179,7 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
                     distribsQuestion.all = distribs.all.filter((d: Distribution) => (resultsQuestionDistribId as any).includes(d.id));
                     question.fillChoicesInfo(distribsQuestion, results.all);
                     // Generate graphs
-                    await GraphUtils.generateGraphForPDF(question, vm.pdfResponseCharts, distribsQuestion.all.length);
+                    await GraphUtils.generateGraphForPDF(question, vm.pdfResponseCharts, distribsQuestion.all.length, results);
                 }
 
                 await storeAllCharts(questions, vm.pdfResponseCharts, images);
