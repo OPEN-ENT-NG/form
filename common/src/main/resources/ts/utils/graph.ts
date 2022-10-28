@@ -414,13 +414,6 @@ export class GraphUtils {
                 dataLabels: {
                     enabled: false
                 },
-                grid: {
-                    yaxis: {
-                        lines: {
-                            show: false
-                        }
-                    }
-                },
                 xaxis: {
                     categories: labels,
                     title: {
