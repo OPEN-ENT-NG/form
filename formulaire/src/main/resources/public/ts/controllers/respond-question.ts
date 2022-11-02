@@ -216,50 +216,31 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
         let responses: Responses = vm.currentResponses.get(question);
         let files: File[] = vm.currentFiles.get(question);
 
-        if (question.question_type === Types.MATRIX && responses instanceof Responses) {
-            // for (let response of responses.all) {
-            //     if (response) {
-            //         if (!response.choice_id) {
-            //             response.answer = "";
-            //         }
-            //         else {
-            //             let matchingChoices: QuestionChoice[] = question.choices.all.filter((c: QuestionChoice) => c.id === response.choice_id);
-            //             if (matchingChoices.length > 0 && matchingChoices[0]) response.answer = matchingChoices[0].value;
-            //         }
-            //     }
-            //     response = await responseService.save(response, question.question_type);
-            // }
+        if (question.isTypeChoicesQuestion()) {
+            await responseService.deleteByQuestionAndDistribution(question.id, vm.distribution.id);
+            if (responses.selected.length > 0) {
+                for (let response of responses.selected) {
+                    await responseService.create(response);
+                }
+            }
+            else if (question.children.all.length > 0) {
+                for (let child of question.children.all) {
+                    await responseService.create(new Response(child.id, null, null, vm.distribution.id));
+                }
+            }
+            else {
+                await responseService.create(new Response(question.id, null, null, vm.distribution.id));
+            }
+            return true;
         }
-        else {
-            if (question.question_type === Types.MULTIPLEANSWER) {
-                await responseService.deleteByQuestionAndDistribution(question.id, vm.distribution.id);
-                if (responses.selected.length > 0) {
-                    for (let response of responses.selected) {
-                        await responseService.create(response);
-                    }
-                }
-                else {
-                    await responseService.create(new Response(question.id, null, null, vm.distribution.id));
-                }
-                return true;
-            }
 
-            if ((question.question_type === Types.SINGLEANSWER || question.question_type === Types.SINGLEANSWERRADIO) && responses.selected.length > 0) {
-                let response: Response = responses.selected[0];
 
-                if (!response.choice_id) response.answer = "";
-                else {
-                    let matchingChoices: QuestionChoice[] = question.choices.all.filter((c: QuestionChoice) => c.id === response.choice_id);
-                    if (matchingChoices.length > 0 && matchingChoices[0]) response.answer = matchingChoices[0].value;
-                }
-            }
+        responses.all[0] = await responseService.save(responses.all[0], question.question_type);
 
-            responses.all[0] = await responseService.save(responses.all[0], question.question_type);
-
-            if (question.question_type === Types.FILE && files) {
-                return (await saveFiles(responses.all[0], files));
-            }
+        if (question.question_type === Types.FILE && files) {
+            return (await saveFiles(responses.all[0], files));
         }
+
         return true;
     };
 

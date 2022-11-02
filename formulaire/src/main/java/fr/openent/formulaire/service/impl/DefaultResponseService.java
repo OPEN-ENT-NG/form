@@ -130,11 +130,12 @@ public class DefaultResponseService implements ResponseService {
     @Override
     public void deleteByQuestionAndDistribution(String questionId, String distributionId, UserInfos user, Handler<Either<String, JsonArray>> handler) {
         String query = "DELETE FROM " + RESPONSE_TABLE + " WHERE id IN (" +
-                "SELECT r.id FROM " + RESPONSE_TABLE + " r " +
-                "JOIN " + DISTRIBUTION_TABLE + " d ON r.distribution_id = d.id " +
-                "WHERE r.question_id = ? AND r.distribution_id = ? AND r.responder_id = ? " +
+                    "SELECT r.id FROM " + RESPONSE_TABLE + " r " +
+                    "JOIN " + DISTRIBUTION_TABLE + " d ON r.distribution_id = d.id " +
+                    "WHERE r.distribution_id = ? AND r.responder_id = ? " +
+                    "AND r.question_id IN (SELECT id FROM " + QUESTION_TABLE + " WHERE matrix_id = ? OR id = ?)" +
                 ")";
-        JsonArray params = new JsonArray().add(questionId).add(distributionId).add(user.getUserId());
+        JsonArray params = new JsonArray().add(distributionId).add(user.getUserId()).add(questionId).add(questionId);
         Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(handler));
     }
 
