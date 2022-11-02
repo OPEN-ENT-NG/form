@@ -39,7 +39,7 @@ export const recapController = ng.controller('RecapController', ['$scope',
         vm.allResponsesInfos.forEach((questionsResponsesMap: Map<Question, Responses>) => {
             questionsResponsesMap.forEach((responses: Responses, question: Question) => {
                 if (questionIdsToDisplay.some(id => (responses.all.map((r: Response) => r.question_id) as any).includes(id))) {
-                    vm.responses.all = vm.responses.all.concat(question.choices.all.length > 0 ? responses.selected : responses.all);
+                    vm.responses.all = vm.responses.all.concat(question.isTypeMultipleRep() ? responses.selected : responses.all);
                 }
             });
         });

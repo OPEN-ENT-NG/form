@@ -76,7 +76,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
             let question: Question = vm.formElement instanceof Question ? vm.formElement : (vm.formElement as Section).questions.all[i];
             let questionResponses: Responses = new Responses();
 
-            if (question.isTypeChoicesQuestion()) {
+            if (question.isTypeMultipleRep()) {
                 for (let choice of question.choices.all) {
                     if (question.children.all.length > 0) {
                         for (let child of question.children.all) {
@@ -103,10 +103,9 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
         let prevPosition: number = vm.historicPosition[vm.historicPosition.length - 2];
         if (prevPosition > 0) {
             await saveResponses();
-            let wasFormElementAQuestion: boolean = vm.formElement instanceof Question;
             vm.formElement = vm.formElements.all[prevPosition - 1];
             vm.historicPosition.pop();
-            goToFormElement(wasFormElementAQuestion);
+            goToFormElement();
         }
     };
 
@@ -115,13 +114,12 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
     };
 
     vm.next = async () : Promise<void> => {
-        let nextPosition = getNextPositionIfValid();
+        let nextPosition: number = getNextPositionIfValid();
         if (nextPosition && nextPosition <= vm.nbFormElements) {
             await saveResponses();
-            let wasFormElementAQuestion: boolean = vm.formElement instanceof Question;
             vm.formElement = vm.formElements.all[nextPosition - 1];
             vm.historicPosition.push(vm.formElement.position);
-            goToFormElement(wasFormElementAQuestion);
+            goToFormElement();
         }
         else if (nextPosition !== undefined) {
             await saveResponses();
@@ -137,12 +135,10 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
         vm.next().then();
     };
 
-    const goToFormElement = (wasFormElementAQuestion: boolean) : void => {
+    const goToFormElement = () : void => {
         initFormElementResponses();
         window.scrollTo(0, 0);
         $scope.safeApply();
-        let isNewFormElementSameType: boolean = wasFormElementAQuestion == vm.formElement instanceof Question;
-        if (isNewFormElementSameType) $scope.$broadcast(FORMULAIRE_FORM_ELEMENT_EMIT_EVENT.REFRESH_QUESTION);
     };
 
     const getNextPositionIfValid = () : number => {
@@ -152,7 +148,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 
         if (vm.formElement instanceof Question && vm.formElement.conditional) {
             conditionalQuestion = vm.formElement;
-            response = vm.currentResponses.get(vm.formElement)[0];
+            response = vm.currentResponses.get(conditionalQuestion)[0];
         }
         else if (vm.formElement instanceof Section) {
             let conditionalQuestions = vm.formElement.questions.all.filter((q: Question) => q.conditional);
@@ -216,7 +212,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
         let responses: Responses = vm.currentResponses.get(question);
         let files: File[] = vm.currentFiles.get(question);
 
-        if (question.isTypeChoicesQuestion()) {
+        if (question.isTypeMultipleRep()) {
             await responseService.deleteByQuestionAndDistribution(question.id, vm.distribution.id);
             if (responses.selected.length > 0) {
                 for (let response of responses.selected) {
@@ -234,7 +230,10 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
             return true;
         }
 
-
+        if (responses.all[0].choice_id) {
+            let matchingChoices: QuestionChoice[] = question.choices.all.filter((c: QuestionChoice) => c.id === responses.all[0].choice_id);
+            if (matchingChoices.length == 1) responses.all[0].answer = matchingChoices[0].value;
+        }
         responses.all[0] = await responseService.save(responses.all[0], question.question_type);
 
         if (question.question_type === Types.FILE && files) {

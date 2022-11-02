@@ -17,6 +17,7 @@ interface IViewModel {
     mapChildChoicesResponseIndex: Map<Question, Map<QuestionChoice, number>>;
 
     $onInit(): Promise<void>;
+    $onChanges(changes: any): Promise<void>;
     switchValue(child: Question, choice: QuestionChoice): void;
 }
 
@@ -25,7 +26,7 @@ export const respondMatrix: Directive = ng.directive('respondMatrix', () => {
         restrict: 'E',
         transclude: true,
         scope: {
-            question: '=',
+            question: '<',
             responses: '=',
             distribution: '=',
         },
@@ -67,32 +68,35 @@ export const respondMatrix: Directive = ng.directive('respondMatrix', () => {
                 await initRespondMatrix();
             };
 
+            vm.$onChanges = async (changes: any) : Promise<void> => {
+                vm.question = changes.question.currentValue;
+                await initRespondMatrix();
+            };
+
             const initRespondMatrix = async () : Promise<void> => {
-                if (vm.distribution) {
-                    vm.mapChildChoicesResponseIndex = new Map();
+                vm.mapChildChoicesResponseIndex = new Map();
 
-                    for (let child of vm.question.children.all) {
-                        vm.mapChildChoicesResponseIndex.set(child, new Map());
-                        let existingResponses: Responses = new Responses();
-                        await existingResponses.syncMine(child.id, vm.distribution.id);
+                for (let child of vm.question.children.all) {
+                    vm.mapChildChoicesResponseIndex.set(child, new Map());
+                    let existingResponses: Responses = new Responses();
+                    if (vm.distribution) await existingResponses.syncMine(child.id, vm.distribution.id);
 
-                        for (let choice of vm.question.choices.all) {
-                            // Get potential existing response for this choice
-                            let existingMatchingResponses: Response[] = existingResponses.all.filter((r:Response) => r.choice_id == choice.id);
+                    for (let choice of vm.question.choices.all) {
+                        // Get potential existing response for this choice
+                        let existingMatchingResponses: Response[] = existingResponses.all.filter((r:Response) => r.choice_id == choice.id);
 
-                            // Get default response matching this choice and child and get its index in list
-                            let matchingResponses: Response[] = vm.responses.all.filter((r:Response) => r.choice_id == choice.id && r.question_id == child.id);
-                            if (matchingResponses.length != 1) console.error("Be careful, 'vm.responses' has been badly implemented !!");
-                            let matchingIndex = vm.responses.all.indexOf(matchingResponses[0]);
+                        // Get default response matching this choice and child and get its index in list
+                        let matchingResponses: Response[] = vm.responses.all.filter((r:Response) => r.choice_id == choice.id && r.question_id == child.id);
+                        if (matchingResponses.length != 1) console.error("Be careful, 'vm.responses' has been badly implemented !!");
+                        let matchingIndex = vm.responses.all.indexOf(matchingResponses[0]);
 
-                            // If there was an existing response we use it to replace the default one
-                            if (existingMatchingResponses.length == 1) {
-                                vm.responses.all[matchingIndex] = existingMatchingResponses[0];
-                                vm.responses.all[matchingIndex].selected = true;
-                            }
-
-                            vm.mapChildChoicesResponseIndex.get(child).set(choice, matchingIndex);
+                        // If there was an existing response we use it to replace the default one
+                        if (existingMatchingResponses.length == 1) {
+                            vm.responses.all[matchingIndex] = existingMatchingResponses[0];
+                            vm.responses.all[matchingIndex].selected = true;
                         }
+
+                        vm.mapChildChoicesResponseIndex.get(child).set(choice, matchingIndex);
                     }
                 }
 
