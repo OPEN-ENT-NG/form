@@ -137,6 +137,11 @@ export class Question extends FormElement {
             || this.question_type == Types.MATRIX;
     }
 
+    isTypeMultipleRep = () : boolean => {
+        return this.question_type == Types.MULTIPLEANSWER
+            || this.question_type == Types.MATRIX;
+    }
+
     isMatrixSingle = () : boolean => {
         return this.question_type == Types.MATRIX
             && this.children.all.length > 0 &&

@@ -2,14 +2,12 @@ import {Directive, ng} from "entcore";
 import {
     Distribution,
     Question, QuestionChoice,
-    QuestionChoices,
     Response,
     ResponseFiles,
     Responses,
     Types
 } from "../../models";
 import {I18nUtils} from "@common/utils";
-import {FORMULAIRE_FORM_ELEMENT_EMIT_EVENT} from "@common/core/enums";
 
 interface IViewModel {
     question: Question;
@@ -20,7 +18,8 @@ interface IViewModel {
     I18n: I18nUtils;
     mapChoiceResponseIndex: Map<QuestionChoice, number>;
 
-    $onInit() : Promise<void>;
+    $onInit(): Promise<void>;
+    $onChanges(changes: any): Promise<void>;
 }
 
 export const respondQuestionItem: Directive = ng.directive('respondQuestionItem', () => {
@@ -28,7 +27,7 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
         restrict: 'E',
         transclude: true,
         scope: {
-            question: '=',
+            question: '<',
             responses: '=',
             distribution: '=',
             files: '='
@@ -51,9 +50,9 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                         <editor ng-model="vm.responses.all[0].answer" input-guard></editor>
                     </div>
                     <div ng-if="vm.question.question_type == vm.Types.SINGLEANSWER">
-                        <select ng-model="vm.responses.all[0].selected" input-guard>
+                        <select ng-model="vm.responses.all[0].choice_id" input-guard>
                             <option ng-value="">[[vm.I18n.translate('formulaire.options.select')]]</option>
-                            <option ng-repeat="choice in vm.question.choices.all" ng-value="true">[[choice.value]]</option>
+                            <option ng-repeat="choice in vm.question.choices.all" ng-value="choice.id">[[choice.value]]</option>
                         </select>
                     </div>
                     <div ng-if="vm.question.question_type == vm.Types.MULTIPLEANSWER">
@@ -76,7 +75,7 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                     <div ng-if ="vm.question.question_type == vm.Types.SINGLEANSWERRADIO">
                         <div ng-repeat ="choice in vm.question.choices.all | orderBy:['position', 'id']">
                             <label>
-                                <input type="radio" ng-model="vm.responses.all[0].selected" ng-value="true" input-guard>[[choice.value]]
+                                <input type="radio" ng-model="vm.responses.all[0].choice_id" ng-value="choice.id" input-guard>[[choice.value]]
                             </label>
                         </div>
                     </div>
@@ -116,10 +115,15 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                 await initRespondQuestionItem();
             };
 
+            vm.$onChanges = async (changes: any) : Promise<void> => {
+                vm.question = changes.question.currentValue;
+                await initRespondQuestionItem();
+            };
+
             const initRespondQuestionItem = async () : Promise<void> => {
-                if (vm.question.isTypeChoicesQuestion() && vm.distribution) {
+                if (vm.question.isTypeMultipleRep()) {
                     let existingResponses: Responses = new Responses();
-                    await existingResponses.syncMine(vm.question.id, vm.distribution.id);
+                    if (vm.distribution) await existingResponses.syncMine(vm.question.id, vm.distribution.id);
                     vm.mapChoiceResponseIndex = new Map();
                     for (let choice of vm.question.choices.all) {
                         // Get potential existing response for this choice
@@ -146,10 +150,9 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                     if (!vm.responses.all[0].question_id) vm.responses.all[0].question_id = vm.question.id;
                     if (!vm.responses.all[0].distribution_id) vm.responses.all[0].distribution_id = vm.distribution.id;
                     console.log("response for ", vm.question, " : ", vm.responses.all[0]);
-                    $scope.$apply();
                 }
 
-                if (vm.question.question_type === Types.TIME && vm.responses.all[0].answer) {
+                if (vm.question.question_type === Types.TIME && typeof vm.responses.all[0].answer == "string") {
                     vm.responses.all[0].answer = new Date("January 01 1970 " + vm.responses.all[0].answer);
                 }
 
@@ -174,8 +177,6 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
             const vm: IViewModel = $scope.vm;
             vm.Types = Types;
             vm.I18n = I18nUtils;
-
-            $scope.$on(FORMULAIRE_FORM_ELEMENT_EMIT_EVENT.REFRESH_QUESTION, () => { vm.$onInit(); });
         }
     };
 });

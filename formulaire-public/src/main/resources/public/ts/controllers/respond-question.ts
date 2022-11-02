@@ -153,7 +153,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 				let question: Question = vm.formElement instanceof Question ? vm.formElement : (vm.formElement as Section).questions.all[i];
 				let questionResponses: Responses = new Responses();
 
-				if (question.isTypeChoicesQuestion()) {
+				if (question.isTypeMultipleRep()) {
 					for (let choice of question.choices.all) {
 						if (question.children.all.length > 0) {
 							for (let child of question.children.all) {
