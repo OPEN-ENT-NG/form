@@ -40,10 +40,10 @@ export const questionTypeMultipleanswer: Directive = ng.directive('questionTypeM
                     <label class="twelve left-spacing-twice">
                         <input type="checkbox" id="check-[[choice.id]]" disabled>
                         <span style="cursor: default"></span>
-                        <input type="text" ng-model="choice.value" ng-if="!vm.question.selected" disabled
-                                class="width95 ten-mobile" placeholder="Choix [[$index + 1]]">
-                        <input type="text" ng-model="choice.value" ng-if="vm.question.selected" input-guard
-                                class="width95 ten-mobile" placeholder="Choix [[$index + 1]]">
+                        <input type="text" class="width95 ten-mobile" ng-model="choice.value" ng-if="!vm.question.selected" disabled
+                                placeholder="[[vm.I18n.getWithParams('formulaire.choice', [$index + 1])]]">
+                        <input type="text" class="width95 ten-mobile" ng-model="choice.value" ng-if="vm.question.selected" input-guard
+                                placeholder="[[vm.I18n.getWithParams('formulaire.choice', [$index + 1])]]">
                     </label>
                     <i class="i-cancel lg-icon dontSave" ng-click="vm.deleteChoice($index)" ng-if="vm.question.selected && !vm.hasFormResponses"></i>
                 </div>
