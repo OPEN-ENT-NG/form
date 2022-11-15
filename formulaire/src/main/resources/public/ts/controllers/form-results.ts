@@ -32,6 +32,7 @@ interface ViewModel {
         }
     }
     loading: boolean;
+    isExportPDF: boolean;
 
     $onInit() : Promise<void>;
     export(typeExport: Exports) : void;
@@ -153,6 +154,8 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
 
         const prepareDataForPDF = async () : Promise<any> => {
             vm.pdfResponseCharts = [];
+            vm.isExportPDF = true;
+
             let images: any = {
                 idImagesPerQuestion : {}, // id image for each id question of Type QCM or QCU
                 idImagesForRemove : [] // all id images (to remove from storage after export PDF)
@@ -179,7 +182,7 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
                     distribsQuestion.all = distribs.all.filter((d: Distribution) => (resultsQuestionDistribId as any).includes(d.id));
                     question.fillChoicesInfo(distribsQuestion, results.all);
                     // Generate graphs
-                    await GraphUtils.generateGraphForPDF(question, vm.pdfResponseCharts, distribsQuestion.all.length, results);
+                    await GraphUtils.generateGraphForResult(question, vm.pdfResponseCharts, results, vm.isExportPDF);
                 }
 
                 await storeAllCharts(questions, vm.pdfResponseCharts, images);
