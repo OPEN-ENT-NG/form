@@ -13,10 +13,13 @@ export class GraphUtils {
      * @param chart     ApexChart to render at the end
      * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
      */
-    static generateGraphForResult = (question: Question, chart: any, responses: Responses = new Responses(),
-                                     isExportPDF: boolean) : void => {
+    static generateGraphForResult = async (question: Question, chart: any, responses: Responses = new Responses(),
+                                     isExportPDF: boolean, charts: any, nbDistribs: number) : Promise<void> => {
         switch (question.question_type) {
             case Types.SINGLEANSWER:
+            case Types.MULTIPLEANSWER:
+                await GraphUtils.generateMultipleAnswerChartForPDF(question, charts, nbDistribs);
+                break;
             case Types.SINGLEANSWERRADIO:
                 GraphUtils.generateSingleAnswerChart(question, chart, isExportPDF);
                 break;
@@ -33,9 +36,11 @@ export class GraphUtils {
 
     /**
      * Generate and render graph of the results of a single answer question (for result page view)
-     * @param question  Question object which we want to display the results
-     * @param chart     ApexChart to render at the end
+     * @param question    Question object which we want to display the results
+     * @param chart       ApexChart to render at the end
      * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
+     * @param charts      ApexCharts to store and render at the end
+     * @param nbDistribs  Distrib's number for each question
      */
     private static generateSingleAnswerChart = async (question: Question, chart: any, isExportPDF: boolean) : Promise<void> => {
         let choices: QuestionChoice[] = question.choices.all.filter((c: QuestionChoice) => c.nbResponses > 0);
@@ -169,26 +174,6 @@ export class GraphUtils {
     static renderChartForResult = (options: any, chart: any, question: Question) : void => {
         chart = new ApexCharts(document.querySelector(`#chart-${question.id}`), options);
         chart.render();
-    };
-
-
-    // PDF export
-
-    /**
-     * Generate data, options and render graph of the results of a question according to its type (for PDF)
-     * @param question   Question object which we want to display the results
-     * @param charts     ApexCharts to store and render at the end
-     * @param nbDistribs Distrib's number for each question
-     */
-    static generateGraphForPDF = async (question: Question, charts: any, nbDistribs: number): Promise<void> => {
-        switch (question.question_type) {
-            case Types.SINGLEANSWER:
-            case Types.MULTIPLEANSWER:
-                await GraphUtils.generateMultipleAnswerChartForPDF(question, charts, nbDistribs);
-                break;
-            default:
-                break;
-        }
     };
 
     /**

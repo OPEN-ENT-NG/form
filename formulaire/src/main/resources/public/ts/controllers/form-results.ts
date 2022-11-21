@@ -182,7 +182,7 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
                     distribsQuestion.all = distribs.all.filter((d: Distribution) => (resultsQuestionDistribId as any).includes(d.id));
                     question.fillChoicesInfo(distribsQuestion, results.all);
                     // Generate graphs
-                    await GraphUtils.generateGraphForResult(question, vm.pdfResponseCharts, results, vm.isExportPDF);
+                    await GraphUtils.generateGraphForResult(question, vm.pdfResponseCharts, results, true, null, null);
                 }
 
                 await storeAllCharts(questions, vm.pdfResponseCharts, images);
