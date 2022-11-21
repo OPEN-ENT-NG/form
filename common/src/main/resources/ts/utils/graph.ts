@@ -8,10 +8,12 @@ export class GraphUtils {
     // Results page
     /**
      * Generate data, options and render graph of the results of a question according to its type (for result page view)
-     * @param question  Question object which we want to display the results
-     * @param responses Array of responses which we want to display the results
-     * @param chart     ApexChart to render at the end
+     * @param question    Question object which we want to display the results
+     * @param responses   Array of responses which we want to display the results
+     * @param chart       ApexChart to render at the end
      * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
+     * @param charts      ApexCharts to store and render at the end
+     * @param nbDistribs  Distrib's number for each question
      */
     static generateGraphForResult = async (question: Question, chart: any, responses: Responses = new Responses(),
                                      isExportPDF: boolean, charts: any, nbDistribs: number) : Promise<void> => {
@@ -39,8 +41,6 @@ export class GraphUtils {
      * @param question    Question object which we want to display the results
      * @param chart       ApexChart to render at the end
      * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
-     * @param charts      ApexCharts to store and render at the end
-     * @param nbDistribs  Distrib's number for each question
      */
     private static generateSingleAnswerChart = async (question: Question, chart: any, isExportPDF: boolean) : Promise<void> => {
         let choices: QuestionChoice[] = question.choices.all.filter((c: QuestionChoice) => c.nbResponses > 0);
