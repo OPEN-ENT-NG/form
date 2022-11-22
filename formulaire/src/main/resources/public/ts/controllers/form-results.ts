@@ -154,7 +154,6 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
 
         const prepareDataForPDF = async () : Promise<any> => {
             vm.pdfResponseCharts = [];
-            vm.isExportPDF = true;
 
             let images: any = {
                 idImagesPerQuestion : {}, // id image for each id question of Type QCM or QCU
@@ -182,7 +181,7 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
                     distribsQuestion.all = distribs.all.filter((d: Distribution) => (resultsQuestionDistribId as any).includes(d.id));
                     question.fillChoicesInfo(distribsQuestion, results.all);
                     // Generate graphs
-                    await GraphUtils.generateGraphForResult(question, [vm.pdfResponseCharts], results, distribs.all.length, true);
+                    await GraphUtils.generateGraphForResult(question, vm.pdfResponseCharts, results, distribs.all.length, true);
                 }
 
                 await storeAllCharts(questions, vm.pdfResponseCharts, images);

@@ -15,14 +15,14 @@ export class GraphUtils {
      * @param distribs  Distrib's number for each question
      */
     static generateGraphForResult = async (question: Question, charts: ApexChart[], responses: Responses = new Responses(),
-                                           distribs: number, isExportPDF: boolean,) : Promise<void> => {
+                                           distribs: number, isExportPDF: boolean) : Promise<void> => {
         switch (question.question_type) {
             case Types.SINGLEANSWER:
-            case Types.MULTIPLEANSWER:
-                await GraphUtils.generateMultipleAnswerChart(question, charts, distribs, isExportPDF);
-                break;
             case Types.SINGLEANSWERRADIO:
                 await GraphUtils.generateSingleAnswerChart(question, charts, isExportPDF);
+                break;
+            case Types.MULTIPLEANSWER:
+                await GraphUtils.generateMultipleAnswerChart(question, charts, distribs, isExportPDF);
                 break;
             case Types.MATRIX:
                 await GraphUtils.generateMatrixChart(question, charts, isExportPDF);
