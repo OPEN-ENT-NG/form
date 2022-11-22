@@ -191,18 +191,18 @@ export const resultQuestionItem: Directive = ng.directive('resultQuestionItem', 
             const generateChart = () : void => {
                 if (vm.question.question_type == Types.SINGLEANSWER || vm.question.question_type == Types.SINGLEANSWERRADIO) {
                     if (vm.singleAnswerResponseChart) { vm.singleAnswerResponseChart.destroy(); }
-                    GraphUtils.generateGraphForResult(vm.question, vm.singleAnswerResponseChart, null,
-                        false, null, null);
+                    GraphUtils.generateGraphForResult(vm.question, [vm.singleAnswerResponseChart], null,
+                        null, false);
                 }
                 else if (vm.question.question_type == Types.MATRIX) {
                     if (vm.matrixResponseChart) { vm.matrixResponseChart.destroy(); }
-                    GraphUtils.generateGraphForResult(vm.question, vm.matrixResponseChart, null, false,
-                        null, null);
+                    GraphUtils.generateGraphForResult(vm.question, [vm.matrixResponseChart], null,
+                        null,false);
                 }
                 else if (vm.question.question_type == Types.CURSOR) {
                     if (vm.cursorResponseChart) { vm.cursorResponseChart.destroy(); }
-                    GraphUtils.generateGraphForResult(vm.question, vm.cursorResponseChart, vm.responses, false,
-                        null, null);
+                    GraphUtils.generateGraphForResult(vm.question, [vm.cursorResponseChart], vm.responses,
+                        null, false);
                 }
             };
         },

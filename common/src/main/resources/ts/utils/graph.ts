@@ -10,26 +10,25 @@ export class GraphUtils {
      * Generate data, options and render graph of the results of a question according to its type (for result page view)
      * @param question    Question object which we want to display the results
      * @param responses   Array of responses which we want to display the results
-     * @param chart       ApexChart to render at the end
      * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
      * @param charts      ApexCharts to store and render at the end
-     * @param nbDistribs  Distrib's number for each question
+     * @param distribs  Distrib's number for each question
      */
-    static generateGraphForResult = async (question: Question, chart: any, responses: Responses = new Responses(),
-                                     isExportPDF: boolean, charts: any, nbDistribs: number) : Promise<void> => {
+    static generateGraphForResult = async (question: Question, charts: ApexChart[], responses: Responses = new Responses(),
+                                           distribs: number, isExportPDF: boolean,) : Promise<void> => {
         switch (question.question_type) {
             case Types.SINGLEANSWER:
             case Types.MULTIPLEANSWER:
-                await GraphUtils.generateMultipleAnswerChartForPDF(question, charts, nbDistribs);
+                await GraphUtils.generateMultipleAnswerChart(question, charts, distribs, isExportPDF);
                 break;
             case Types.SINGLEANSWERRADIO:
-                GraphUtils.generateSingleAnswerChart(question, chart, isExportPDF);
+                await GraphUtils.generateSingleAnswerChart(question, charts, isExportPDF);
                 break;
             case Types.MATRIX:
-                GraphUtils.generateMatrixChart(question, chart, isExportPDF);
+                await GraphUtils.generateMatrixChart(question, charts, isExportPDF);
                 break;
             case Types.CURSOR:
-                GraphUtils.generateCursorChart(question, chart, responses, isExportPDF);
+                await GraphUtils.generateCursorChart(question, charts, responses, isExportPDF);
                 break;
             default:
                 break;
@@ -37,12 +36,12 @@ export class GraphUtils {
     };
 
     /**
-     * Generate and render graph of the results of a single answer question (for result page view)
+     * Generate and render graph of the results of a single answer question
      * @param question    Question object which we want to display the results
-     * @param chart       ApexChart to render at the end
+     * @param charts      ApexChart to render at the end
      * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
      */
-    private static generateSingleAnswerChart = async (question: Question, chart: any, isExportPDF: boolean) : Promise<void> => {
+    private static generateSingleAnswerChart = async (question: Question, charts: ApexChart[], isExportPDF: boolean) : Promise<void> => {
         let choices: QuestionChoice[] = question.choices.all.filter((c: QuestionChoice) => c.nbResponses > 0);
 
         let series: number[] = [];
@@ -62,27 +61,23 @@ export class GraphUtils {
 
         let colors: string[] = ColorUtils.generateColorList(labels.length);
 
-        if (isExportPDF) {
-            let newPDFOptions: any = GraphUtils.generateOptions(question.question_type, colors, labels);
-            newPDFOptions.series = series;
+        let newOptions: any = isExportPDF ?
+            GraphUtils.generateOptions(question.question_type, colors, labels)
+            :
+            GraphUtils.generateOptions(question.question_type, colors, labels, height, '100%');
 
-            await GraphUtils.renderChartForPDF(newPDFOptions, chart);
-        }
-        else {
-            let newOptions: any = GraphUtils.generateOptions(question.question_type, colors, labels, height, '100%');
-            newOptions.series = series;
+        newOptions.series = series;
 
-            GraphUtils.renderChartForResult(newOptions, chart, question);
-        }
+        await GraphUtils.renderChartForResult(newOptions, charts, question, isExportPDF);
     };
 
     /**
-     * Generate and render graph of the results of a matrix question (for result page view)
+     * Generate and render graph of the results of a matrix question
      * @param question  Question object which we want to display the results
-     * @param chart     ApexChart to render at the end
+     * @param charts     ApexChart to render at the end
      * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
      */
-    private static generateMatrixChart = async (question: Question, chart: any, isExportPDF: boolean) : Promise<void> => {
+    private static generateMatrixChart = async (question: Question, charts: ApexChart[], isExportPDF: boolean) : Promise<void> => {
         let choices: QuestionChoice[] = question.choices.all;
 
         let series: any[] = [];
@@ -106,28 +101,24 @@ export class GraphUtils {
         // Generate options with labels and colors
         let colors: string[] = ColorUtils.generateColorList(series.length);
 
-        if (isExportPDF) {
-            let newPDFOptions: any = GraphUtils.generateOptions(question.question_type, colors, labels);
-            newPDFOptions.series = series;
+        let newOptions: any = isExportPDF ?
+            GraphUtils.generateOptions(question.question_type, colors, labels, null, null)
+            :
+            GraphUtils.generateOptions(question.question_type, colors, labels, '100%', '100%');
 
-            await GraphUtils.renderChartForPDF(newPDFOptions, chart);
-        }
-        else {
-            let newOptions: any = GraphUtils.generateOptions(question.question_type, colors, labels, '100%', '100%');
-            newOptions.series = series;
+        newOptions.series = series;
 
-            GraphUtils.renderChartForResult(newOptions, chart, question);
-        }
+        await GraphUtils.renderChartForResult(newOptions, charts, question, isExportPDF);
     };
 
     /**
-     * Generate and render graph of the results of a cursor question (for result page view)
+     * Generate and render graph of the results of a cursor question
      * @param question    Question object which we want to display the results
+     * @param charts      ApexChart to render at the end
      * @param responses   Array of responses which we want to display the results
-     * @param chart       ApexChart to render at the end
      * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
      */
-    private static generateCursorChart = async (question: Question, chart: any, responses: Responses = new Responses(),
+    private static generateCursorChart = async (question: Question, charts: ApexChart[], responses: Responses = new Responses(),
                                                 isExportPDF: boolean) : Promise<void> => {
         let reponses: Response[] = responses.all;
 
@@ -150,39 +141,26 @@ export class GraphUtils {
         let labels: number[] = Array.from(map.keys());
         let colors: string[] = ColorUtils.generateColorList(labels.length);
 
-        if (isExportPDF) {
-            let newPDFOptions: any = GraphUtils.generateOptions(question.question_type, colors, labels, null, null,
-                null, cursorAverage);
-            newPDFOptions.series = [{ name: 'formulaire.response.modality', data: Array.from(map.values()) }];
+        let newPDFOptions: any = isExportPDF ?
+            GraphUtils.generateOptions(question.question_type, colors, labels,
+            null, null, null, cursorAverage)
+            :
+            GraphUtils.generateOptions(question.question_type, colors, labels,
+            '100%', '100%', null, cursorAverage);
 
-            await GraphUtils.renderChartForPDF(newPDFOptions, chart);
-        } else {
-            let newOptions: any = GraphUtils.generateOptions(question.question_type, colors, labels,
-                '100%', '100%', null, cursorAverage);
-            newOptions.series = [{ name: 'formulaire.response.modality', data: Array.from(map.values()) }];
+        newPDFOptions.series = [{ name: 'formulaire.response.modality', data: Array.from(map.values()) }];
 
-            await GraphUtils.renderChartForResult(newOptions, chart, question);
-        }
+        await GraphUtils.renderChartForResult(newPDFOptions, charts, question, isExportPDF);
     }
 
     /**
-     * Render graph with ApexChart based on given options (for result page view)
-     * @param options   ApexChart options to render the graph
-     * @param chart     ApexChart to render at the end
-     * @param question  Question object which we want to display the results
+     * Generate and render graph of the results of a multiple answers question
+     * @param question    Question object which we want to display the results
+     * @param charts      ApexCharts to store and render at the end
+     * @param distribs    Distrib's number for each question
+     * @param isExportPDF Boolean to identify if it's a PDF export case
      */
-    static renderChartForResult = (options: any, chart: any, question: Question) : void => {
-        chart = new ApexCharts(document.querySelector(`#chart-${question.id}`), options);
-        chart.render();
-    };
-
-    /**
-     * Generate and render graph of the results of a multiple answers question (for PDF)
-     * @param question  Question object which we want to display the results
-     * @param charts    ApexCharts to store and render at the end
-     * @param distribs  Distrib's number for each question
-     */
-    static generateMultipleAnswerChartForPDF = async (question: Question, charts: any, distribs: number) : Promise<void> => {
+    static generateMultipleAnswerChart = async (question: Question, charts: ApexChart[], distribs: number, isExportPDF: boolean) : Promise<void> => {
         if (question.question_type != Types.MULTIPLEANSWER) {
             return null;
         }
@@ -207,16 +185,22 @@ export class GraphUtils {
             seriesPercent);
         newOptions.series = [{ data: series }];
 
-        await GraphUtils.renderChartForPDF(newOptions, charts);
+        await GraphUtils.renderChartForResult(newOptions, charts, question, isExportPDF);
     }
 
     /**
-     * Render graph with ApexChart based on given options (for PDF)
-     * @param options   ApexChart options to render the graph
-     * @param charts    ApexCharts to store and render at the end
+     * Render graph with ApexChart based on given options
+     * @param options     ApexChart options to render the graph
+     * @param charts      ApexCharts to store and render at the end
+     * @param question    Question object which we want to display the results
+     * @param isExportPDF Boolean to identify if it's a PDF export case
      */
-    static renderChartForPDF = async (options: any, charts: any) : Promise<void> => {
-        charts.push(new ApexCharts(document.querySelector(`#pdf-response-chart-${charts.length}`), options));
+    static renderChartForResult = async (options: any, charts: any, question: Question, isExportPDF: boolean) : Promise<void> => {
+        if (isExportPDF) {
+            charts.push(new ApexCharts(document.querySelector(`#pdf-response-chart-${charts.length}`), options));
+        } else {
+            charts.push(new ApexCharts(document.querySelector(`#chart-${question.id}`), options));
+        }
         await charts[charts.length - 1].render();
     };
 
