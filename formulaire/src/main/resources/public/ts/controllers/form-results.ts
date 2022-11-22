@@ -32,7 +32,6 @@ interface ViewModel {
         }
     }
     loading: boolean;
-    isExportPDF: boolean;
 
     $onInit() : Promise<void>;
     export(typeExport: Exports) : void;
