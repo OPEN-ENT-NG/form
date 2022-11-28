@@ -16,7 +16,7 @@ interface IViewModel {
     deleteChoice(index: number): Promise<void>;
 }
 
-export const questionTypeScheduling: Directive = ng.directive('questionTypeScheduling', () => {
+export const questionTypeRanking: Directive = ng.directive('questionTypeRanking', () => {
 
     return {
         restrict: 'E',

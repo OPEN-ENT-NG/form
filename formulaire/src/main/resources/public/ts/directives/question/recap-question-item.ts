@@ -114,7 +114,7 @@ export const recapQuestionItem: Directive = ng.directive('recapQuestionItem', ()
                         <div ng-if="vm.question.question_type == vm.Types.CURSOR">
                             <div ng-bind-html="vm.getStringResponse(vm.question)"></div>
                         </div>
-                        <div ng-if="vm.question.question_type == vm.Types.SCHEDULING">
+                        <div ng-if="vm.question.question_type == vm.Types.RANKING">
                             <div ng-repeat="choice in vm.question.choices.all | orderBy:['position', 'id']">
                                 <label>
                                     <span style="cursor: default"></span>

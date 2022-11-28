@@ -15,7 +15,7 @@ public enum QuestionTypes {
   SINGLEANSWERRADIO(9),
   MATRIX(10),
   CURSOR(11),
-  SCHEDULING(12);
+  RANKING(12);
 
   private final int code;
 
@@ -40,7 +40,7 @@ public enum QuestionTypes {
     graphQuestions.add(QuestionTypes.SINGLEANSWERRADIO.getCode());
     graphQuestions.add(QuestionTypes.MATRIX.getCode());
     graphQuestions.add(QuestionTypes.CURSOR.getCode());
-    graphQuestions.add(QuestionTypes.SCHEDULING.getCode());
+    graphQuestions.add(QuestionTypes.RANKING.getCode());
     return graphQuestions;
   }
 

@@ -136,7 +136,7 @@ export class Question extends FormElement {
             || this.question_type == Types.MULTIPLEANSWER
             || this.question_type == Types.SINGLEANSWERRADIO
             || this.question_type == Types.MATRIX
-            || this.question_type == Types.SCHEDULING
+            || this.question_type == Types.RANKING
     }
 
     isTypeMultipleRep = () : boolean => {
@@ -156,8 +156,8 @@ export class Question extends FormElement {
             this.children.all[0].question_type == Types.MULTIPLEANSWER;
     }
 
-    isScheduling = () : boolean => {
-        return this.question_type == Types.SCHEDULING;
+    isRanking = () : boolean => {
+        return this.question_type == Types.RANKING;
     }
 }
 

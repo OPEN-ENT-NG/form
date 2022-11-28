@@ -14,7 +14,7 @@ export enum Types {
     SINGLEANSWERRADIO = 9,
     MATRIX = 10,
     CURSOR = 11,
-    SCHEDULING = 12
+    RANKING = 12
 }
 
 export class QuestionType {
