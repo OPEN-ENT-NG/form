@@ -87,8 +87,6 @@ export const publicQuestionItem: Directive = ng.directive('publicQuestionItem', 
                                     <!-- progress bar -->
                                     <div class="filler"></div>
                                 </div>
-                                
-                            
                                 <!-- Display MIN and MAX -->
                                 <div class="formulaire-cursor-input-range-values">
                                     <div>[[vm.question.cursor_min_val]]</div> <!-- minimum value -->
@@ -99,6 +97,13 @@ export const publicQuestionItem: Directive = ng.directive('publicQuestionItem', 
                                 <label>[[vm.question.cursor_label_max_val]]</label> <!-- label maximum value (optional) -->
                             </div>
                         </div>
+                    </div>
+                    <div ng-if="vm.question.question_type == vm.Types.SCHEDULING">
+                       <div ng-repeat="choice in vm.question.choices.all | orderBy:['position', 'id']">
+                           <label>
+                               <span>[[choice.value]]</span>
+                           </label>
+                       </div>
                     </div>
                 </div>
             </div>

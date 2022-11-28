@@ -76,6 +76,10 @@ export const questionType: Directive = ng.directive('questionType', () => {
                 <question-type-cursor ng-if="vm.question.question_type == vm.types.CURSOR"
                                       question="vm.question">
                 </question-type-cursor>
+                <!-- SCHEDULING -->
+                <question-type-scheduling ng-if="vm.question.question_type == vm.types.SCHEDULING"
+                                      question="vm.question">
+                </question-type-scheduling>
             </div>
         `,
 

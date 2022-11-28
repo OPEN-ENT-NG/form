@@ -99,6 +99,14 @@ export const publicRecapQuestionItem: Directive = ng.directive('publicRecapQuest
                         <div ng-if="vm.question.question_type == vm.Types.CURSOR">
                             <div ng-bind-html="vm.getStringResponse(vm.question)"></div>
                         </div>
+                        <div ng-if="vm.question.question_type == vm.Types.SCHEDULING">
+                            <div ng-repeat="choice in vm.question.choices.all | orderBy:['position', 'id']">
+                                <label>
+                                    <span style="cursor: default"></span>
+                                    <span class="ten eight-mobile">[[choice.value]]</span>
+                                </label>
+                            </div>
+                        </div>
                     </div>
                     <div class="question-edit" ng-if="vm.question.question_type != vm.Types.FREETEXT">
                         <a ng-click="vm.openQuestion()"><i18n>formulaire.public.edit</i18n></a>
