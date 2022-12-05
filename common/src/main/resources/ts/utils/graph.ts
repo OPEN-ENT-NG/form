@@ -14,7 +14,7 @@ export class GraphUtils {
      * @param charts      ApexCharts to store and render at the end
      * @param distribs  Distrib's number for each question
      */
-    static generateGraphForResult = async (question: Question, charts: ApexChart[], responses: Responses = new Responses(),
+    static generateGraphForResult = async (question: Question, charts: ApexChart[], responses: any,
                                            distribs: number, isExportPDF: boolean) : Promise<void> => {
         switch (question.question_type) {
             case Types.SINGLEANSWER:
@@ -120,10 +120,10 @@ export class GraphUtils {
      */
     private static generateCursorChart = async (question: Question, charts: ApexChart[], responses: Responses = new Responses(),
                                                 isExportPDF: boolean) : Promise<void> => {
-        let reponses: Response[] = responses.all;
+        let reponses: any = isExportPDF ? responses : responses.all;
 
         let resp: number[] = [];
-        let cursorAverage: number;
+        let cursorAverage: string;
 
         // build array with all response
         for (let r of reponses) {
@@ -132,7 +132,7 @@ export class GraphUtils {
             })
             resp.push(Number(r.answer));
         }
-        cursorAverage = resp.reduce((a: number, b: number) => a + b, 0) / resp.length;
+        cursorAverage = (resp.reduce((a: number, b: number) => a + b, 0) / resp.length).toFixed(2);
 
         // map to build object with response and number of each one
         const map: Map<number, number> = resp.reduce((acc: Map<number, number>, e: number) =>
@@ -218,7 +218,7 @@ export class GraphUtils {
      * @param cursorAverage Average of answers
      */
     static generateOptions = (type: Types, colors: string[], labels: (string | number)[], height?: any, width?: any,
-                              seriesPercent?: number[], cursorAverage?: number) : any => {
+                              seriesPercent?: number[], cursorAverage?: string) : any => {
         let options: any;
         if (type === Types.SINGLEANSWER || type === Types.SINGLEANSWERRADIO) {
             options = {
