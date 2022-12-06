@@ -14,7 +14,7 @@ export class GraphUtils {
      * @param charts      ApexCharts to store and render at the end
      * @param distribs  Distrib's number for each question
      */
-    static generateGraphForResult = async (question: Question, charts: ApexChart[], responses: any,
+    static generateGraphForResult = async (question: Question, charts: ApexChart[], responses: Responses | Response[],
                                            distribs: number, isExportPDF: boolean) : Promise<void> => {
         switch (question.question_type) {
             case Types.SINGLEANSWER:
@@ -118,9 +118,11 @@ export class GraphUtils {
      * @param responses   Array of responses which we want to display the results
      * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
      */
-    private static generateCursorChart = async (question: Question, charts: ApexChart[], responses: Responses = new Responses(),
+    private static generateCursorChart = async (question: Question, charts: ApexChart[], responses: Responses | Response[],
                                                 isExportPDF: boolean) : Promise<void> => {
-        let reponses: any = isExportPDF ? responses : responses.all;
+
+        let reponses: Responses | Response[] =
+            isExportPDF ? responses : responses instanceof Responses ? responses.all : new Responses();
 
         let resp: number[] = [];
         let cursorAverage: string;
