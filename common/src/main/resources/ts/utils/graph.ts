@@ -14,7 +14,7 @@ export class GraphUtils {
      * @param charts      ApexCharts to store and render at the end
      * @param distribs  Distrib's number for each question
      */
-    static generateGraphForResult = async (question: Question, charts: ApexChart[], responses: Responses | Response[],
+    static generateGraphForResult = async (question: Question, charts: ApexChart[], responses: Response[],
                                            distribs: number, isExportPDF: boolean) : Promise<void> => {
         switch (question.question_type) {
             case Types.SINGLEANSWER:
@@ -118,23 +118,11 @@ export class GraphUtils {
      * @param responses   Array of responses which we want to display the results
      * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
      */
-    private static generateCursorChart = async (question: Question, charts: ApexChart[], responses: Responses | Response[],
+    private static generateCursorChart = async (question: Question, charts: ApexChart[], responses: Response[],
                                                 isExportPDF: boolean) : Promise<void> => {
-
-        let reponses: Responses | Response[] =
-            isExportPDF ? responses : responses instanceof Responses ? responses.all : new Responses();
-
-        let resp: number[] = [];
-        let cursorAverage: string;
-
         // build array with all response
-        for (let r of reponses) {
-            resp.sort(function(a: number, b: number) {
-                return a - b
-            })
-            resp.push(Number(r.answer));
-        }
-        cursorAverage = (resp.reduce((a: number, b: number) => a + b, 0) / resp.length).toFixed(2);
+        let resp: number[] = responses.map((r: Response) => Number(r.answer)).sort((a: number, b: number) => a - b);
+        let cursorAverage: string = (resp.reduce((a: number, b: number) => a + b, 0) / resp.length).toFixed(2);
 
         // map to build object with response and number of each one
         const map: Map<number, number> = resp.reduce((acc: Map<number, number>, e: number) =>
