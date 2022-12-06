@@ -125,6 +125,7 @@ public class Fields {
     public static final String PARAM_USER_IDS = "userIds";
     public static final String PARAM_USERS_IDS = "usersIds";
     public static final String PARAM_RESOURCES_NUMBER = "resourcesNumber";
+    public static final String PARAM_RESOURCE_URI = "resourceUri";
     public static final String PARAM_ERRORS_NUMBER = "errorsNumber";
     public static final String PARAM_DUPLICATES_NUMBER = "duplicatesNumber";
     public static final String PARAM_MAIN_RESOURCE_NAME = "mainResourceName";
