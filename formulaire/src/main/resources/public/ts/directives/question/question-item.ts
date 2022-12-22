@@ -18,6 +18,7 @@ interface IViewModel {
     showConditionalSwitch(): boolean;
     onSwitchMandatory(isMandatory: boolean): void;
     onSwitchConditional(isConditional: boolean): void;
+    cursorChoiceIsConsistent(): boolean;
 }
 
 export const questionItem: Directive = ng.directive('questionItem', () => {
@@ -35,7 +36,8 @@ export const questionItem: Directive = ng.directive('questionItem', () => {
         bindToController: true,
         template: `
             <div class="question-item" ng-class="vm.question.section_id ? 'twelve' : 'nine'">
-                <div class="domino" ng-class="{'questionError': !vm.question.title || vm.question.choices.length === 0, 'disabled': vm.hasFormResponses || vm.question.selected}">
+                <div class="domino" ng-class="{'questionError': !vm.question.title || vm.question.choices.length === 0 || !vm.cursorChoiceIsConsistent, 
+                                               'disabled': vm.hasFormResponses || vm.question.selected}">
                     <div class="question-top grab">
                         <div class="dots" ng-if="vm.reorder || !vm.hasFormResponses">
                             <i class="i-drag xl-icon"></i>
@@ -77,6 +79,9 @@ export const questionItem: Directive = ng.directive('questionItem', () => {
                 
                 <div class="warning" ng-if="!vm.question.title"><i18n>formulaire.question.missing.field.title</i18n></div>
                 <div class="warning" ng-if="vm.question.choices.length <= 0"><i18n>formulaire.question.missing.field.choice</i18n></div>
+                <div class="warning" ng-if="vm.question.question_type == vm.types.CURSOR && vm.cursorChoiceIsConsistent()">
+                    <i18n>formulaire.question.cursor.inconsistency.between.values</i18n>
+                </div>
             </div>
         `,
 
@@ -144,6 +149,12 @@ export const questionItem: Directive = ng.directive('questionItem', () => {
                 vm.question.mandatory = vm.question.conditional;
                 $scope.$apply();
             };
+
+            vm.cursorChoiceIsConsistent = () : boolean => {
+                if ((vm.question.cursor_max_val - vm.question.cursor_min_val) % vm.question.cursor_step == 0) {
+                    return;
+                }
+            }
         }
     };
 });
