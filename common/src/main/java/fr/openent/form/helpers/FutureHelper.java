@@ -26,7 +26,7 @@ public class FutureHelper {
                 return;
             }
             log.error((errorMessage != null ? errorMessage : "") + event.left().getValue());
-            promise.fail(errorMessage != null ? errorMessage : event.left().getValue());
+            promise.fail(event.left().getValue());
         };
     }
 
@@ -44,7 +44,7 @@ public class FutureHelper {
                 return;
             }
             log.error((errorMessage != null ? errorMessage : "") + event.cause().getMessage());
-            promise.fail(errorMessage != null ? errorMessage : event.cause().getMessage());
+            promise.fail(event.cause().getMessage());
         };
     }
 
