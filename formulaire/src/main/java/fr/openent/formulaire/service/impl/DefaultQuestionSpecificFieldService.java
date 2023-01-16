@@ -2,9 +2,12 @@ package fr.openent.formulaire.service.impl;
 
 import fr.openent.form.core.constants.Fields;
 import fr.openent.form.core.enums.QuestionTypes;
+import fr.openent.form.helpers.FutureHelper;
 import fr.openent.formulaire.service.QuestionSpecificFieldService;
 import fr.wseduc.webutils.Either;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.sql.Sql;
@@ -17,13 +20,16 @@ import static fr.openent.form.core.constants.Tables.*;
 public class DefaultQuestionSpecificFieldService implements QuestionSpecificFieldService {
     private final Sql sql = Sql.getInstance();
 
-
     @Override
-    public void listByIds(JsonArray questionIds, Handler<Either<String, JsonArray>> handler) {
+    public Future<JsonArray> listByIds(JsonArray questionIds) {
+        Promise<JsonArray> promise = Promise.promise();
+
         String query = "SELECT * FROM " + QUESTION_SPECIFIC_FIELDS_TABLE + " WHERE question_id IN " + Sql.listPrepared(questionIds);
         JsonArray params = new JsonArray().addAll(questionIds);
 
-        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(handler));
+        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(FutureHelper.handlerJsonArray(promise)));
+
+        return promise.future();
     }
 
     @Override

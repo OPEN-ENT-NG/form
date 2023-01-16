@@ -1,11 +1,14 @@
 package fr.openent.formulaire.controllers;
 
 import fr.openent.form.helpers.BusResultHelper;
+import fr.openent.formulaire.helpers.QuestionHelper;
 import fr.openent.formulaire.service.QuestionChoiceService;
 import fr.openent.formulaire.service.QuestionService;
+import fr.openent.formulaire.service.QuestionSpecificFieldService;
 import fr.openent.formulaire.service.SectionService;
 import fr.openent.formulaire.service.impl.DefaultQuestionChoiceService;
 import fr.openent.formulaire.service.impl.DefaultQuestionService;
+import fr.openent.formulaire.service.impl.DefaultQuestionSpecificFieldService;
 import fr.openent.formulaire.service.impl.DefaultSectionService;
 import fr.wseduc.bus.BusAddress;
 import io.vertx.core.eventbus.Message;
@@ -21,6 +24,8 @@ public class EventBusController extends ControllerHelper {
     private SectionService sectionService = new DefaultSectionService();
     private QuestionService questionService = new DefaultQuestionService();
     private QuestionChoiceService questionChoiceService = new DefaultQuestionChoiceService();
+    private final QuestionSpecificFieldService questionSpecificFieldService = new DefaultQuestionSpecificFieldService();
+    private QuestionHelper questionHelper = new QuestionHelper(questionSpecificFieldService);
 
     @BusAddress(FORMULAIRE_ADDRESS)
     public void bus(final Message<JsonObject> message) {
@@ -33,7 +38,19 @@ public class EventBusController extends ControllerHelper {
                 break;
             case LIST_QUESTION_FOR_FORM_AND_SECTION:
                 formId = body.getString(PARAM_FORM_ID);
-                questionService.listForFormAndSection(formId, BusResultHelper.busResponseHandlerEitherArray(message));
+                questionService.listForFormAndSection(formId, listQuestionsEvt -> {
+                    if (listQuestionsEvt.isLeft()) {
+                        String errMessage = String.format("[Formulaire@%s::listForFormAndSection]:  " +
+                                        "an error has occurred while getting list question event: %s",
+                                this.getClass().getSimpleName(), listQuestionsEvt.left());
+                        log.error(errMessage);
+                    }
+                    else {
+                        JsonArray questions = listQuestionsEvt.right().getValue();
+                        questionHelper.syncQuestionSpecs(questions, null);
+                    }
+                    BusResultHelper.busResponseHandlerEitherArray(message);
+                });
                 break;
             case LIST_QUESTION_CHILDREN:
                 JsonArray questionIds = body.getJsonArray(PARAM_QUESTION_IDS);
