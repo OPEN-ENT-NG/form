@@ -2,7 +2,6 @@ package fr.openent.formulaire.controllers;
 
 import fr.openent.form.core.enums.QuestionTypes;
 import fr.openent.form.helpers.UtilsHelper;
-import fr.openent.formulaire.helpers.QuestionHelper;
 import fr.openent.formulaire.security.AccessRight;
 import fr.openent.formulaire.security.CustomShareAndOwner;
 import fr.openent.formulaire.service.DistributionService;
@@ -40,7 +39,6 @@ public class QuestionController extends ControllerHelper {
     private final QuestionSpecificFieldService questionSpecificFieldService;
     private final FormService formService;
     private final DistributionService distributionService;
-    private final QuestionHelper questionHelper;
 
     public QuestionController() {
         super();
@@ -48,7 +46,6 @@ public class QuestionController extends ControllerHelper {
         this.questionSpecificFieldService = new DefaultQuestionSpecificFieldService();
         this.formService = new DefaultFormService();
         this.distributionService = new DefaultDistributionService();
-        this.questionHelper = new QuestionHelper(questionSpecificFieldService);
     }
 
     @Get("/forms/:formId/questions")
@@ -65,7 +62,7 @@ public class QuestionController extends ControllerHelper {
                 return;
             }
             JsonArray questions = listQuestionsEvt.right().getValue();
-            questionHelper.syncQuestionSpecs(questions)
+            questionSpecificFieldService.syncQuestionSpecs(questions)
                     .onSuccess(result -> renderJson(request, result))
                     .onFailure(error -> renderError(request));
         });
@@ -86,7 +83,7 @@ public class QuestionController extends ControllerHelper {
             }
             JsonArray questions = getQuestionEvt.right().getValue();
 
-            questionHelper.syncQuestionSpecs(questions)
+            questionSpecificFieldService.syncQuestionSpecs(questions)
                     .onSuccess(result -> renderJson(request, result))
                     .onFailure(error -> renderError(request));
         });

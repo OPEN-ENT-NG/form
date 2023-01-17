@@ -1,7 +1,6 @@
 package fr.openent.formulaire.controllers;
 
 import fr.openent.form.helpers.BusResultHelper;
-import fr.openent.formulaire.helpers.QuestionHelper;
 import fr.openent.formulaire.service.QuestionChoiceService;
 import fr.openent.formulaire.service.QuestionService;
 import fr.openent.formulaire.service.QuestionSpecificFieldService;
@@ -25,7 +24,6 @@ public class EventBusController extends ControllerHelper {
     private final QuestionService questionService = new DefaultQuestionService();
     private final QuestionChoiceService questionChoiceService = new DefaultQuestionChoiceService();
     private final QuestionSpecificFieldService questionSpecificFieldService = new DefaultQuestionSpecificFieldService();
-    private final QuestionHelper questionHelper = new QuestionHelper(questionSpecificFieldService);
 
     @BusAddress(FORMULAIRE_ADDRESS)
     public void bus(final Message<JsonObject> message) {
@@ -40,14 +38,14 @@ public class EventBusController extends ControllerHelper {
                 formId = body.getString(PARAM_FORM_ID);
                 questionService.listForFormAndSection(formId)
                         .onSuccess(listQuestionsEvt -> {
-                            BusResultHelper.busArrayHandler(questionHelper.syncQuestionSpecs(listQuestionsEvt), message);
+                            BusResultHelper.busArrayHandler(questionSpecificFieldService.syncQuestionSpecs(listQuestionsEvt), message);
                         })
                         .onFailure(error -> {
-                            String errMessage = String.format("[Formulaire@%s::listForFormAndSection]:  " +
+                            String errMessage = String.format("[Formulaire@%s::bus]:  " +
                                             "an error has occurred while getting list question event: %s",
                                     this.getClass().getSimpleName(), error.getMessage());
                             log.error(errMessage);
-                            BusResultHelper.busResponseHandlerEitherArray(message);
+                            message.reply((new JsonObject()).put(STATUS, ERROR).put(MESSAGE, error.getMessage()));
                         });
                 break;
             case LIST_QUESTION_CHILDREN:
