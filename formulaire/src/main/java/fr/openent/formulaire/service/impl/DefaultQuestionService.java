@@ -1,9 +1,12 @@
 package fr.openent.formulaire.service.impl;
 
 import fr.openent.form.core.enums.QuestionTypes;
+import fr.openent.form.helpers.FutureHelper;
 import fr.openent.formulaire.service.QuestionService;
 import fr.wseduc.webutils.Either;
+import io.vertx.core.Future;
 import io.vertx.core.Handler;
+import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import org.entcore.common.sql.Sql;
@@ -37,11 +40,16 @@ public class DefaultQuestionService implements QuestionService {
     }
 
     @Override
-    public void listForFormAndSection(String formId, Handler<Either<String, JsonArray>> handler) {
+    public Future<JsonArray> listForFormAndSection(String formId) {
+        Promise<JsonArray> promise = Promise.promise();
+
         String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE form_id = ? AND matrix_id IS NULL " +
                 "ORDER BY position, section_id, section_position;";
         JsonArray params = new JsonArray().add(formId);
-        sql.prepared(query, params, SqlResult.validResultHandler(handler));
+
+        sql.prepared(query, params, SqlResult.validResultHandler(FutureHelper.handlerJsonArray(promise)));
+
+        return promise.future();
     }
 
     @Override

@@ -65,8 +65,9 @@ public class QuestionController extends ControllerHelper {
                 return;
             }
             JsonArray questions = listQuestionsEvt.right().getValue();
-
-            questionHelper.syncQuestionSpecs(questions, request);
+            questionHelper.syncQuestionSpecs(questions)
+                    .onSuccess(result -> renderJson(request, result))
+                    .onFailure(error -> renderError(request));
         });
     }
 
@@ -85,7 +86,9 @@ public class QuestionController extends ControllerHelper {
             }
             JsonArray questions = getQuestionEvt.right().getValue();
 
-            questionHelper.syncQuestionSpecs(questions, request);
+            questionHelper.syncQuestionSpecs(questions)
+                    .onSuccess(result -> renderJson(request, result))
+                    .onFailure(error -> renderError(request));
         });
     }
 

@@ -21,11 +21,11 @@ import static fr.openent.form.core.constants.EbFields.ACTION;
 import static fr.openent.form.core.constants.Fields.*;
 
 public class EventBusController extends ControllerHelper {
-    private SectionService sectionService = new DefaultSectionService();
-    private QuestionService questionService = new DefaultQuestionService();
-    private QuestionChoiceService questionChoiceService = new DefaultQuestionChoiceService();
+    private final SectionService sectionService = new DefaultSectionService();
+    private final QuestionService questionService = new DefaultQuestionService();
+    private final QuestionChoiceService questionChoiceService = new DefaultQuestionChoiceService();
     private final QuestionSpecificFieldService questionSpecificFieldService = new DefaultQuestionSpecificFieldService();
-    private QuestionHelper questionHelper = new QuestionHelper(questionSpecificFieldService);
+    private final QuestionHelper questionHelper = new QuestionHelper(questionSpecificFieldService);
 
     @BusAddress(FORMULAIRE_ADDRESS)
     public void bus(final Message<JsonObject> message) {
@@ -38,19 +38,17 @@ public class EventBusController extends ControllerHelper {
                 break;
             case LIST_QUESTION_FOR_FORM_AND_SECTION:
                 formId = body.getString(PARAM_FORM_ID);
-                questionService.listForFormAndSection(formId, listQuestionsEvt -> {
-                    if (listQuestionsEvt.isLeft()) {
-                        String errMessage = String.format("[Formulaire@%s::listForFormAndSection]:  " +
-                                        "an error has occurred while getting list question event: %s",
-                                this.getClass().getSimpleName(), listQuestionsEvt.left());
-                        log.error(errMessage);
-                    }
-                    else {
-                        JsonArray questions = listQuestionsEvt.right().getValue();
-                        questionHelper.syncQuestionSpecs(questions, null);
-                    }
-                    BusResultHelper.busResponseHandlerEitherArray(message);
-                });
+                questionService.listForFormAndSection(formId)
+                        .onSuccess(listQuestionsEvt -> {
+                            BusResultHelper.busArrayHandler(questionHelper.syncQuestionSpecs(listQuestionsEvt), message);
+                        })
+                        .onFailure(error -> {
+                            String errMessage = String.format("[Formulaire@%s::listForFormAndSection]:  " +
+                                            "an error has occurred while getting list question event: %s",
+                                    this.getClass().getSimpleName(), error.getMessage());
+                            log.error(errMessage);
+                            BusResultHelper.busResponseHandlerEitherArray(message);
+                        });
                 break;
             case LIST_QUESTION_CHILDREN:
                 JsonArray questionIds = body.getJsonArray(PARAM_QUESTION_IDS);

@@ -80,7 +80,7 @@ public class DefaultQuestionServiceTest {
             ctx.assertEquals(expectedParams.toString(), body.getJsonArray(VALUES).toString());
             async.complete();
         });
-        defaultQuestionService.listForFormAndSection(FORM_ID, null);
+        defaultQuestionService.listForFormAndSection(FORM_ID);
     }
 
     @Test
