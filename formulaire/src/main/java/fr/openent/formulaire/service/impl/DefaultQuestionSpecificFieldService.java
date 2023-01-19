@@ -25,7 +25,7 @@ import static fr.openent.form.helpers.UtilsHelper.getIds;
 public class DefaultQuestionSpecificFieldService implements QuestionSpecificFieldService {
     private final Sql sql = Sql.getInstance();
 
-    private static final Logger log = LoggerFactory.getLogger(QuestionController.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultQuestionSpecificFieldService.class);
 
     public Future<JsonArray> syncQuestionSpecs(JsonArray questions) {
         Promise<JsonArray> promise = Promise.promise();
