@@ -187,8 +187,8 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                     }
                 }
 
-                if (vm.question.question_type === Types.CURSOR && typeof vm.responses.all[0].answer == "string") {
-                    vm.responses.all[0].answer = Number(vm.question.cursor_min_val);
+                if (vm.question.question_type === Types.CURSOR) {
+                    vm.responses.all[0].answer = vm.question.cursor_min_val;
                 }
 
                 $scope.$apply();
