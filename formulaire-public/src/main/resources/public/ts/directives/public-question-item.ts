@@ -1,8 +1,9 @@
 import {ng} from "entcore";
 import {Question, QuestionChoice, Response, Responses, Types} from "@common/models";
-import {FORMULAIRE_FORM_ELEMENT_EMIT_EVENT} from "@common/core/enums";
-import {I18nUtils} from "@common/utils";
+import {Direction, FORMULAIRE_FORM_ELEMENT_EMIT_EVENT} from "@common/core/enums";
+import {FormElementUtils, I18nUtils} from "@common/utils";
 import {IScope} from "angular";
+import {PropPosition} from "@common/core/enums/prop-position";
 
 interface IPublicQuestionItemProps {
     question: Question;
@@ -10,13 +11,18 @@ interface IPublicQuestionItemProps {
     Types: typeof Types;
     I18n: I18nUtils;
     mapChoiceResponseIndex: Map<QuestionChoice, number>;
+    Direction: typeof Direction;
 }
 
 interface IViewModel extends ng.IController, IPublicQuestionItemProps {
+    question: Question;
+    Direction: typeof Direction;
+
     init(): Promise<void>;
     getHtmlDescription(description: string): string;
     isSelectedChoiceCustom(choiceId: number): boolean;
     deselectIfEmpty(choice: QuestionChoice) : void;
+    moveChoice(choice: QuestionChoice, direction: string): void;
 }
 
 interface IPublicQuestionItemScope extends IScope, IPublicQuestionItemProps {
@@ -29,6 +35,7 @@ class Controller implements IViewModel {
     Types = Types;
     I18n = I18nUtils;
     mapChoiceResponseIndex: Map<QuestionChoice, number>;
+    Direction = Direction;
 
     constructor(private $scope: IPublicQuestionItemScope, private $sce: ng.ISCEService) {}
 
@@ -69,6 +76,11 @@ class Controller implements IViewModel {
     getHtmlDescription = (description: string): string => {
         return !!description ? this.$sce.trustAsHtml(description) : null;
     }
+
+    moveChoice = (choice: QuestionChoice, direction: string) : void => {
+        FormElementUtils.switchPositions(this.question.choices, choice.position - 1, direction, PropPosition.POSITION);
+        this.question.choices.all.sort((a: QuestionChoice, b: QuestionChoice) => a.position - b.position);
+    };
 
     isSelectedChoiceCustom = (choiceId: number) : boolean => {
         let selectedChoice: QuestionChoice = this.question.choices.all.find((c: QuestionChoice) => c.id === choiceId);
@@ -187,12 +199,26 @@ function directive() {
                             </div>
                         </div>
                     </div>
-                    <div ng-if="vm.question.question_type == vm.Types.RANKING">
-                       <div ng-repeat="choice in vm.question.choices.all | orderBy:['position', 'id']">
-                           <label>
-                               <span>[[choice.value]]</span>
-                           </label>
-                       </div>
+                    <div ng-if ="vm.question.question_type == vm.Types.RANKING" class="drag">
+                        <div class="row-shadow-effect"
+                             ng-repeat="choice in vm.question.choices.all | orderBy:['position', 'id']">
+                            <div class="top">
+                                <div class="dots">
+                                    <i class="i-drag lg-icon dark-grey"></i>
+                                    <i class="i-drag lg-icon dark-grey"></i>
+                                </div>
+                            </div>
+                            <div class="main">
+                                <span class="title">[[choice.value]]</span>
+                                <div class="one two-mobile container-arrow">
+                                    <div ng-class="{hidden : $first}" ng-click="vm.moveChoice(choice, vm.Direction.UP)">
+                                        <i class="i-chevron-up lg-icon"></i>
+                                    </div>
+                                    <div ng-class="{hidden : $last}" ng-click="vm.moveChoice(choice, vm.Direction.DOWN)">
+                                        <i class="i-chevron-down lg-icon"></i>
+                                    </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>

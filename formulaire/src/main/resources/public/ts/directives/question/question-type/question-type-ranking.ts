@@ -67,13 +67,11 @@ export const questionTypeRanking: Directive = ng.directive('questionTypeRanking'
 
             vm.createNewChoice = () : void => {
                 vm.question.choices.all.push(new QuestionChoice(vm.question.id, vm.question.choices.all.length + 1));
-                $scope.$apply();
             };
 
             vm.moveChoice = (choice: QuestionChoice, direction: string) : void => {
                 FormElementUtils.switchPositions(vm.question.choices, choice.position - 1, direction, PropPosition.POSITION);
                 vm.question.choices.all.sort((a: QuestionChoice, b: QuestionChoice) => a.position - b.position);
-                $scope.$apply();
             };
 
             vm.deleteChoice = async (index: number) : Promise<void> => {

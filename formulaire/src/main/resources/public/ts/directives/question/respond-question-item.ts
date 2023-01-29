@@ -241,6 +241,7 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
             const vm: IViewModel = $scope.vm;
             vm.Types = Types;
             vm.I18n = I18nUtils;
+            vm.Direction = Direction;
 
             vm.getHtmlDescription = (description: string) : string => {
                 return !!description ? $sce.trustAsHtml(description) : null;
@@ -266,7 +267,6 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
             vm.moveChoice = (choice: QuestionChoice, direction: string) : void => {
                 FormElementUtils.switchPositions(vm.question.choices, choice.position - 1, direction, PropPosition.POSITION);
                 vm.question.choices.all.sort((a: QuestionChoice, b: QuestionChoice) => a.position - b.position);
-                $scope.$apply();
             };
         }
     };

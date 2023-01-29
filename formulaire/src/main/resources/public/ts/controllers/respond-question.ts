@@ -233,6 +233,27 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
                     await responseService.create(new Response(child.id, null, null, vm.distribution.id));
                 }
             }
+            // In case of question type ranking, we need to add a choice index to each Response
+            else if (question.isRanking()) {
+                let questionChoices: QuestionChoice[] = question.choices.all;
+                let idChoice: Array<number> = new Array<number>();
+                let posChoice: Array<number> = new Array<number>();
+                let answerChoice: Array<string> = new Array<string>();
+
+                // Build 3 arrays with respectivly id_choice, position & answer
+                for (let j = 0; j < questionChoices.length; j ++) {
+                    idChoice.push(questionChoices[j].id);
+                    posChoice.push(questionChoices[j].position)
+                    answerChoice.push(questionChoices[j].value)
+                }
+
+                // Build a map to get idChoice & position for each response
+                let map: Map<number, number> = new Map<number, number>();
+                for (let i = 0; i < idChoice.length; i++) {
+                    map.set(idChoice[i], posChoice[i]);
+                    await responseService.create(new Response(question.id, idChoice[i], answerChoice[i], vm.distribution.id,  posChoice[i]));
+                }
+            }
             else {
                 await responseService.create(new Response(question.id, null, null, vm.distribution.id));
             }
