@@ -23,9 +23,9 @@ interface IViewModel {
     mapChoiceResponseIndex: Map<QuestionChoice, number>;
 
     $onInit() : Promise<void>;
-    $onChanges(changes: any): Promise<void>;
-    moveChoice(choice: QuestionChoice, direction: string): void;
+    moveResponse(resp: Response, direction: string): void;
     getHtmlDescription(description: string) : string;
+    $onChanges(changes: any): Promise<void>;
     isSelectedChoiceCustom(choiceId: number): boolean;
     deselectIfEmpty(choice: QuestionChoice) : void;
 }
@@ -139,7 +139,7 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                     </div>
                     <div ng-if ="vm.question.question_type == vm.Types.RANKING" class="drag">
                         <div class="row-shadow-effect"
-                             ng-repeat="choice in vm.question.choices.all | orderBy:['position', 'id']">
+                             ng-repeat="resp in vm.responses.all | orderBy:['choice_index', 'id']">
                             <div class="top">
                                 <div class="dots">
                                     <i class="i-drag lg-icon dark-grey"></i>
@@ -147,12 +147,12 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                                 </div>
                             </div>
                             <div class="main">
-                                <span class="title">[[choice.value]]</span>
+                                <span class="title">[[resp.answer]]</span>
                                 <div class="one two-mobile container-arrow">
-                                    <div ng-class="{hidden : $first}" ng-click="vm.moveChoice(choice, vm.Direction.UP)">
+                                    <div ng-class="{hidden : $first}" ng-click="vm.moveResponse(resp, vm.Direction.UP)">
                                         <i class="i-chevron-up lg-icon"></i>
                                     </div>
-                                    <div ng-class="{hidden : $last}" ng-click="vm.moveChoice(choice, vm.Direction.DOWN)">
+                                    <div ng-class="{hidden : $last}" ng-click="vm.moveReponse(resp, vm.Direction.DOWN)">
                                         <i class="i-chevron-down lg-icon"></i>
                                     </div>
                             </div>
@@ -264,9 +264,9 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
             }
             vm.Direction = Direction;
 
-            vm.moveChoice = (choice: QuestionChoice, direction: string) : void => {
-                FormElementUtils.switchPositions(vm.question.choices, choice.position - 1, direction, PropPosition.POSITION);
-                vm.question.choices.all.sort((a: QuestionChoice, b: QuestionChoice) => a.position - b.position);
+            vm.moveResponse = (resp: Response, direction: string) : void => {
+                FormElementUtils.switchPositions(vm.responses, resp.choice_index - 1, direction, PropPosition.CHOICE_INDEX);
+                vm.responses.all.sort((a: Response, b: Response) => a.choice_index - b.choice_index);
             };
         }
     };

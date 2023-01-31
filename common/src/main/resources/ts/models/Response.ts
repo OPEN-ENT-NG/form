@@ -16,7 +16,7 @@ export class Response implements Selectable {
     files: ResponseFiles;
     selected: boolean;
     selectedIndex: boolean[]; // For multiple answer in preview
-    choice_index: number;
+    choice_index: number; // For question type ranking to order
 
     constructor(question_id?: number, choice_id?: number, answer?: string|Date|number, distribution_id?: number, choice_index?: number) {
         this.id = null;
