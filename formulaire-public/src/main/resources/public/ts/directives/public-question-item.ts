@@ -20,9 +20,9 @@ interface IViewModel extends ng.IController, IPublicQuestionItemProps {
 
     init(): Promise<void>;
     getHtmlDescription(description: string): string;
+    moveResponse(resp: Response, direction: string): void;
     isSelectedChoiceCustom(choiceId: number): boolean;
     deselectIfEmpty(choice: QuestionChoice) : void;
-    moveChoice(choice: QuestionChoice, direction: string): void;
 }
 
 interface IPublicQuestionItemScope extends IScope, IPublicQuestionItemProps {
@@ -77,9 +77,9 @@ class Controller implements IViewModel {
         return !!description ? this.$sce.trustAsHtml(description) : null;
     }
 
-    moveChoice = (choice: QuestionChoice, direction: string) : void => {
-        FormElementUtils.switchPositions(this.question.choices, choice.position - 1, direction, PropPosition.POSITION);
-        this.question.choices.all.sort((a: QuestionChoice, b: QuestionChoice) => a.position - b.position);
+    moveResponse = (resp: Response, direction: string) : void => {
+        FormElementUtils.switchPositions(this.responses, resp.choice_index - 1, direction, PropPosition.CHOICE_INDEX);
+        this.responses.all.sort((a: Response, b: Response) => a.choice_index - b.choice_index);
     };
 
     isSelectedChoiceCustom = (choiceId: number) : boolean => {
@@ -201,7 +201,7 @@ function directive() {
                     </div>
                     <div ng-if ="vm.question.question_type == vm.Types.RANKING" class="drag">
                         <div class="row-shadow-effect"
-                             ng-repeat="choice in vm.question.choices.all | orderBy:['position', 'id']">
+                             ng-repeat="resp in vm.responses.all | orderBy:['choice_index', 'id']">
                             <div class="top">
                                 <div class="dots">
                                     <i class="i-drag lg-icon dark-grey"></i>
@@ -209,12 +209,12 @@ function directive() {
                                 </div>
                             </div>
                             <div class="main">
-                                <span class="title">[[choice.value]]</span>
+                                <span class="title">[[resp.answer]]</span>
                                 <div class="one two-mobile container-arrow">
-                                    <div ng-class="{hidden : $first}" ng-click="vm.moveChoice(choice, vm.Direction.UP)">
+                                    <div ng-class="{hidden : $first}" ng-click="vm.moveResponse(resp, vm.Direction.UP)">
                                         <i class="i-chevron-up lg-icon"></i>
                                     </div>
-                                    <div ng-class="{hidden : $last}" ng-click="vm.moveChoice(choice, vm.Direction.DOWN)">
+                                    <div ng-class="{hidden : $last}" ng-click="vm.moveResponse(resp, vm.Direction.DOWN)">
                                         <i class="i-chevron-down lg-icon"></i>
                                     </div>
                             </div>

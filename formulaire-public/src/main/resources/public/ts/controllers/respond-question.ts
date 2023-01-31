@@ -173,6 +173,26 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 				else if (question.question_type === Types.CURSOR) {
 					questionResponses.all.push(new Response(question.id, null, question.cursor_min_val));
 				}
+				if (question.isRanking()) {
+					let questionChoices: QuestionChoice[] = question.choices.all;
+					let idChoice: Array<number> = new Array<number>();
+					let posChoice: Array<number> = new Array<number>();
+					let answerChoice: Array<string> = new Array<string>();
+
+					// Build 3 arrays with respectivly id_choice, position & answer
+					for (let j = 0; j < questionChoices.length; j ++) {
+						idChoice.push(questionChoices[j].id);
+						posChoice.push(questionChoices[j].position);
+						answerChoice.push(questionChoices[j].value);
+					}
+
+					// Build a map to get idChoice & position for each response
+					let map: Map<number, number> = new Map<number, number>();
+					for (let i = 0; i < idChoice.length; i++) {
+						map.set(idChoice[i], posChoice[i]);
+						questionResponses.all.push(new Response(question.id, idChoice[i], answerChoice[i], null, posChoice[i]));
+					}
+				}
 				else {
 					questionResponses.all.push(new Response(question.id));
 				}
