@@ -139,7 +139,7 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                     </div>
                     <div ng-if ="vm.question.question_type == vm.Types.RANKING" class="drag">
                         <div class="row-shadow-effect"
-                             ng-repeat="resp in vm.responses.all | orderBy:['choice_index', 'id']">
+                             ng-repeat="resp in vm.responses.all | orderBy:['choice_position', 'id']">
                             <div class="top">
                                 <div class="dots">
                                     <i class="i-drag lg-icon dark-grey"></i>
@@ -265,8 +265,8 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
             vm.Direction = Direction;
 
             vm.moveResponse = (resp: Response, direction: string) : void => {
-                FormElementUtils.switchPositions(vm.responses, resp.choice_index - 1, direction, PropPosition.CHOICE_INDEX);
-                vm.responses.all.sort((a: Response, b: Response) => a.choice_index - b.choice_index);
+                FormElementUtils.switchPositions(vm.responses, resp.choice_position - 1, direction, PropPosition.CHOICE_POSITION);
+                vm.responses.all.sort((a: Response, b: Response) => a.choice_position - b.choice_position);
             };
         }
     };

@@ -175,23 +175,10 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 				}
 				if (question.isRanking()) {
 					let questionChoices: QuestionChoice[] = question.choices.all;
-					let idChoice: Array<number> = new Array<number>();
-					let posChoice: Array<number> = new Array<number>();
-					let answerChoice: Array<string> = new Array<string>();
-
-					// Build 3 arrays with respectivly id_choice, position & answer
-					for (let j = 0; j < questionChoices.length; j ++) {
-						idChoice.push(questionChoices[j].id);
-						posChoice.push(questionChoices[j].position);
-						answerChoice.push(questionChoices[j].value);
-					}
-
-					// Build a map to get idChoice & position for each response
-					let map: Map<number, number> = new Map<number, number>();
-					for (let i = 0; i < idChoice.length; i++) {
-						map.set(idChoice[i], posChoice[i]);
-						questionResponses.all.push(new Response(question.id, idChoice[i], answerChoice[i], null, posChoice[i]));
-					}
+						for (let i: number = 0; i < questionChoices.length; i++) {
+							let questionChoice: QuestionChoice = questionChoices[i];
+							questionResponses.all.push(new Response(question.id, questionChoice.id, questionChoice.value, null, questionChoice.position));
+						}
 				}
 				else {
 					questionResponses.all.push(new Response(question.id));
