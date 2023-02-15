@@ -7,6 +7,8 @@ import {FormElement} from "./FormElement";
 import {Distribution, Distributions} from "../Distribution";
 import {Response} from "../Response";
 import {Constants} from "@common/core/constants";
+import {FormElementUtils} from "@common/utils";
+import {PropPosition} from "@common/core/enums/prop-position";
 
 export class Question extends FormElement {
     question_type: number;
@@ -72,6 +74,44 @@ export class Question extends FormElement {
         }
     }
 
+    // Choices functions
+
+    createNewChoice = (isCustom: boolean = false) : void => {
+        let existingCustomChoice: QuestionChoice = this.choices.all.find((c: QuestionChoice) => c.is_custom);
+        if (existingCustomChoice && isCustom) return; // Cannot have two custom choices
+        else if (existingCustomChoice && !isCustom) {
+            // If a custom choice was existing we keep it positioned at the end by making room for the new choice
+            existingCustomChoice.position = this.choices.all.length + 1;
+        }
+
+        let nbNotCustomChoices: number = this.choices.all.filter((c: QuestionChoice) => !c.is_custom).length;
+        let choice: QuestionChoice = new QuestionChoice(this.id, nbNotCustomChoices + 1);
+        if (isCustom) {
+            choice.is_custom = true;
+            choice.value = idiom.translate('formulaire.other');
+        }
+
+        this.choices.all.push(choice);
+        this.choices.all.sort((a, b) => a.position - b.position);
+    }
+
+    moveChoice = (choice: QuestionChoice, direction: string) : void => {
+        FormElementUtils.switchPositions(this.choices, choice.position - 1, direction, PropPosition.POSITION);
+        this.choices.all.sort((a, b) => a.position - b.position);
+    }
+
+    deleteChoice = async (index: number) : Promise<void> => {
+        if (this.choices.all[index].id) {
+            await questionChoiceService.delete(this.choices.all[index].id);
+        }
+        for (let i = index + 1; i < this.choices.all.length; i++) {
+            this.choices.all[i].position--;
+        }
+        this.choices.all.splice(index,1);
+        this.choices.all.sort((a, b) => a.position - b.position);
+        return;
+    }
+
     fillChoicesInfo = (distribs: Distributions, results: Response[]) : void => {
         if (this.question_type === Types.MATRIX) {
             return this.fillChoicesInfoForMatrix(results);
@@ -123,6 +163,12 @@ export class Question extends FormElement {
         }
     }
 
+    hasCustomChoice = () : boolean => {
+        return this.choices.all.filter((c: QuestionChoice) => c.is_custom).length > 0;
+    }
+
+    // Types functions
+
     isTypeGraphQuestion = () : boolean => {
         return this.question_type == Types.SINGLEANSWER
             || this.question_type == Types.MULTIPLEANSWER
@@ -158,6 +204,12 @@ export class Question extends FormElement {
 
     isRanking = () : boolean => {
         return this.question_type == Types.RANKING;
+    }
+
+    canHaveCustomAnswers = () : boolean => {
+        return this.question_type == Types.SINGLEANSWER
+            || this.question_type == Types.MULTIPLEANSWER
+            || this.question_type == Types.SINGLEANSWERRADIO;
     }
 }
 
