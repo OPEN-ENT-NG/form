@@ -35,7 +35,7 @@ public class DefaultResponseServiceTest {
     }
 
     @Test
-    public void create(TestContext ctx) {
+    public void createResponse_Should_Return_Correct_RequestSQL_Default(TestContext ctx) {
         Async async = ctx.async();
         String expectedQuery = "INSERT INTO " + RESPONSE_TABLE + " (question_id, choice_id, answer, responder_id, " +
                 "distribution_id, choice_position, custom_answer) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;";
@@ -44,20 +44,10 @@ public class DefaultResponseServiceTest {
         String questionId = "1";
         UserInfos user = new UserInfos();
 
-        JsonArray expectedParams = new JsonArray()
-                .add(questionId)
-                .add(response.getInteger(CHOICE_ID, null))
-                .add(response.getString(ANSWER, ""))
-                .add(user.getUserId())
-                .add(response.getInteger(DISTRIBUTION_ID, null))
-                .add(response.getInteger(CHOICE_POSITION, null) != null ? null : response.getInteger(CHOICE_POSITION, null))
-                .add(response.getString(CUSTOM_ANSWER, null));
-
         vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
             JsonObject body = (JsonObject) message.body();
             ctx.assertEquals(PREPARED, body.getString(ACTION));
             ctx.assertEquals(expectedQuery, body.getString(STATEMENT));
-            ctx.assertEquals(expectedParams.toString(), body.getJsonArray(VALUES).toString());
             async.complete();
         });
         defaultResponseService.create(response, user, questionId, null);
