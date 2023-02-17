@@ -38,7 +38,7 @@ public class DefaultResponseServiceTest {
     public void create(TestContext ctx) {
         Async async = ctx.async();
         String expectedQuery = "INSERT INTO " + RESPONSE_TABLE + " (question_id, choice_id, answer, responder_id, " +
-                "distribution_id, choice_position) VALUES (?, ?, ?, ?, ?, ?) RETURNING *;";
+                "distribution_id, choice_position, custom_answer) VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;";
 
         JsonObject response = new JsonObject();
         String questionId = "1";
@@ -50,7 +50,8 @@ public class DefaultResponseServiceTest {
                 .add(response.getString(ANSWER, ""))
                 .add(user.getUserId())
                 .add(response.getInteger(DISTRIBUTION_ID, null))
-                .add(response.getInteger(CHOICE_POSITION, null) != null ? null : response.getInteger(CHOICE_POSITION, null));
+                .add(response.getInteger(CHOICE_POSITION, null) != null ? null : response.getInteger(CHOICE_POSITION, null))
+                .add(response.getString(CUSTOM_ANSWER, null));
 
         vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
             JsonObject body = (JsonObject) message.body();
