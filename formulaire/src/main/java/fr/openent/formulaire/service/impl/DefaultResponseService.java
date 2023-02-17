@@ -92,7 +92,7 @@ public class DefaultResponseService implements ResponseService {
     @Override
     public void create(JsonObject response, UserInfos user, String questionId, Handler<Either<String, JsonObject>> handler) {
         String query = "INSERT INTO " + RESPONSE_TABLE + " (question_id, choice_id, answer, responder_id, distribution_id, choice_position, custom_answer) " +
-                "VALUES (?, ?, ?, ?, ?, ?) RETURNING *;";
+                "VALUES (?, ?, ?, ?, ?, ?, ?) RETURNING *;";
         JsonArray params = new JsonArray()
                 .add(questionId)
                 .add(response.getInteger(CHOICE_ID, null))
