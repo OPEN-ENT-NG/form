@@ -78,7 +78,7 @@ public class QuestionChoiceController extends ControllerHelper {
             }
 
             // Check choice type validity
-            if (!choice.getString(TYPE).equals(ChoiceTypes.TXT.getName())) {
+            if (!choice.getString(TYPE).equals(ChoiceTypes.TXT.getValue())) {
                 String message = "[Formulaire@createQuestionChoice] Invalid choice type : " + choice.getString(TYPE);
                 log.error(message);
                 badRequest(request, message);
@@ -167,7 +167,7 @@ public class QuestionChoiceController extends ControllerHelper {
             }
 
             // Check choice type validity
-            if (!choice.getString(TYPE).equals(ChoiceTypes.TXT.getName())) {
+            if (!choice.getString(TYPE).equals(ChoiceTypes.TXT.getValue())) {
                 String message = "[Formulaire@updateQuestionChoice] Invalid choice type : " + choice.getString(TYPE);
                 log.error(message);
                 badRequest(request, message);
