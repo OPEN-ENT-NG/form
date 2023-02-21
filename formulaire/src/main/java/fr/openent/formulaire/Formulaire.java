@@ -55,6 +55,7 @@ public class Formulaire extends BaseServer {
 		SqlConf responseConf = SqlConfs.createConf(ResponseController.class.getName());
 		SqlConf responseFileConf = SqlConfs.createConf(ResponseFileController.class.getName());
 		SqlConf sectionConf = SqlConfs.createConf(SectionController.class.getName());
+		SqlConf sharingConf = SqlConfs.createConf(SharingController.class.getName());
 
 		List<SqlConf> confs = new ArrayList<>();
 		confs.add(distribConf);
@@ -64,6 +65,7 @@ public class Formulaire extends BaseServer {
 		confs.add(responseConf);
 		confs.add(responseFileConf);
 		confs.add(sectionConf);
+		confs.add(sharingConf);
 
 		for (SqlConf conf : confs) {
 			conf.setSchema(DB_SCHEMA);
@@ -71,10 +73,13 @@ public class Formulaire extends BaseServer {
 			conf.setShareTable(Tables.FORM_SHARES);
 		}
 
-		// Set sharing services to formController
-		FormController formController = new FormController(eventStore, storage, vertx, timelineHelper);
-		formController.setShareService(new SqlShareService(DB_SCHEMA, Tables.FORM_SHARES, eb, securedActions, null));
+		// Set crud service
+		FormController formController = new FormController(eventStore, storage);
 		formController.setCrudService(new SqlCrudService(DB_SCHEMA, Tables.FORM, Tables.FORM_SHARES));
+
+		// Set sharing service
+		SharingController sharingController = new SharingController(timelineHelper);
+		sharingController.setShareService(new SqlShareService(DB_SCHEMA, Tables.FORM_SHARES, eb, securedActions, null));
 
 
 		// Init controllers
@@ -91,6 +96,7 @@ public class Formulaire extends BaseServer {
 		addController(new ResponseController(storage));
 		addController(new ResponseFileController(storage));
 		addController(new SectionController());
+		addController(sharingController);
 		addController(new UtilsController(storage));
 
 		// CRON
