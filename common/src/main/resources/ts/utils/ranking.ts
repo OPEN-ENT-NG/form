@@ -1,12 +1,21 @@
 import {Response, Responses} from "@common/models";
+import {angular} from "entcore";
 
 export class RankingUtils {
     static onEndRankingDragAndDrop = (evt: any, responses: Responses): boolean => {
+        let elem = evt.item.firstElementChild.firstElementChild;
+        let scopElem = angular.element(elem).scope().vm;
+        let itemId = scopElem.question.id;
+        let item: Response;
+
+        item = (responses as Responses).all.filter(q => q.question_id === itemId)[0] as Response;
+
         let oldIndex: number = evt.oldIndex;
         let newIndex: number = evt.newIndex;
         let indexes: any = RankingUtils.getStartEndIndexes(newIndex, oldIndex);
 
         RankingUtils.updateChoicePositions(responses, indexes.goUp, indexes.startIndex, indexes.endIndex);
+        item.choice_position = newIndex + 1;
 
         responses.all.sort((a: Response, b: Response) => a.choice_position - b.choice_position);
         return false;

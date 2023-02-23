@@ -304,6 +304,7 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                             }
                         });
                     }
+                    $scope.safeApply();
                 }, 500);
             }
         }
