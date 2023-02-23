@@ -294,14 +294,7 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                             animation: 150,
                             fallbackOnBody: true,
                             swapThreshold: 0.65,
-                            ghostClass: "sortable-ghost",
-                            onEnd: async function (evt) {
-                                let refresh = await RankingUtils.onEndRankingDragAndDrop(evt, vm.responses);
-                                if (refresh) {
-                                    await vm.responses.sync(vm.question, false, null);
-                                    vm.initDrag();
-                                }
-                            }
+                            ghostClass: "sortable-ghost"
                         });
                     }
                     $scope.safeApply();
