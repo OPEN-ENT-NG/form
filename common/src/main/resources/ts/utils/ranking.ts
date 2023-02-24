@@ -6,10 +6,7 @@ export class RankingUtils {
         let elem = evt.item.firstElementChild.firstElementChild;
         let scopElem = angular.element(elem).scope().vm;
         let itemId = scopElem.question.id;
-        let item: Response;
-
-        item = (responses as Responses).all.filter(q => q.question_id === itemId)[0] as Response;
-
+        let item: Response = (responses as Responses).all.filter(q => q.question_id === itemId)[0] as Response;
         let oldIndex: number = evt.oldIndex;
         let newIndex: number = evt.newIndex;
         let indexes: any = RankingUtils.getStartEndIndexes(newIndex, oldIndex);
