@@ -294,10 +294,12 @@ export const respondQuestionItem: Directive = ng.directive('respondQuestionItem'
                             animation: 150,
                             fallbackOnBody: true,
                             swapThreshold: 0.65,
-                            ghostClass: "sortable-ghost"
+                            ghostClass: "sortable-ghost",
+                            onEnd: async function (evt) {
+                                await RankingUtils.onEndRankingDragAndDrop(evt, vm.responses);
+                            }
                         });
                     }
-                    $scope.safeApply();
                 }, 500);
             }
         }
