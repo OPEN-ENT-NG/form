@@ -206,7 +206,7 @@ export class FormElementUtils {
                 item.section_position = null;
                 oldSection.questions.all = oldSection.questions.all.filter(q => q.id != item.id);
                 formElements.all.push(item);
-                oldSection.questions.all.sort((a, b) => a.section_position - b.section_position);
+                oldSection.questions.all.sort((a: Question, b: Question) => a.section_position - b.section_position);
             }
             else { // Item moved FROM vm.formElements TO vm.formElements
                 FormElementUtils.updateSiblingsPositions(formElements, true, indexes.goUp, indexes.startIndex, indexes.endIndex);
@@ -231,9 +231,9 @@ export class FormElementUtils {
                 if (newSection.id != oldSection.id) {
                     oldSection.questions.all = oldSection.questions.all.filter(q => q.id != item.id);
                     newSection.questions.all.push(item);
-                    oldSection.questions.all.sort((a, b) => a.section_position - b.section_position);
+                    oldSection.questions.all.sort((a: Question, b: Question) => a.section_position - b.section_position);
                 }
-                newSection.questions.all.sort((a, b) => a.section_position - b.section_position);
+                newSection.questions.all.sort((a: Question, b: Question) => a.section_position - b.section_position);
             }
             else { // Item moved FROM vm.formElements TO section with id 'newNestedSectionId'
                 FormElementUtils.updateSiblingsPositions(formElements, false, null, oldIndex);
@@ -243,11 +243,11 @@ export class FormElementUtils {
                 item.section_position = newIndex + 1;
                 newSection.questions.all.push(item);
                 formElements.all = formElements.all.filter(e => e.id != item.id);
-                newSection.questions.all.sort((a, b) => a.section_position - b.section_position);
+                newSection.questions.all.sort((a: Question, b: Question) => a.section_position - b.section_position);
             }
         }
 
-        formElements.all.sort((a, b) => a.position - b.position);
+        formElements.all.sort((a: FormElement, b: FormElement) => a.position - b.position);
         return false;
     };
 
