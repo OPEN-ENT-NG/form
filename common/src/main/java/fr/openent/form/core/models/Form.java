@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-import static fr.openent.form.core.constants.Dates.YYYY_MM_DD_T_HH_MM_SS_SSS;
+import static fr.openent.form.core.constants.DateFormats.YYYY_MM_DD_T_HH_MM_SS_SSS;
 import static fr.openent.form.core.constants.Fields.*;
 
 public class Form implements Model<Form> {
