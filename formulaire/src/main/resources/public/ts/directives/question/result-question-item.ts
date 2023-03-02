@@ -173,7 +173,7 @@ export const resultQuestionItem: Directive = ng.directive('resultQuestionItem', 
             </div>
             
                <!-- Graph for RANKING -->
-            <div ng-if="vm.question.question_type == vm.Types.CURSOR">
+            <div ng-if="vm.question.question_type == vm.Types.RANKING">
                  <div class="eight" style="height: 400px">
                     <div id="chart-[[vm.question.id]]"></div>
                 </div>
