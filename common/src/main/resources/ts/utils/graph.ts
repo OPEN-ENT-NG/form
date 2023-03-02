@@ -2,6 +2,7 @@ import {idiom, idiom as lang} from 'entcore';
 import {Question, QuestionChoice, Response, Types} from "@common/models";
 import {ColorUtils} from "@common/utils/color";
 import * as ApexCharts from 'apexcharts';
+import 'core-js/es7/object';
 
 export class GraphUtils {
 
@@ -29,6 +30,9 @@ export class GraphUtils {
                 break;
             case Types.CURSOR:
                 await GraphUtils.generateCursorChart(question, charts, responses, isExportPDF);
+                break;
+            case Types.RANKING:
+                await GraphUtils.generateRankingChart(question, charts, responses, isExportPDF);
                 break;
             default:
                 break;
@@ -144,6 +148,93 @@ export class GraphUtils {
     }
 
     /**
+     * Generate and render graph of the results of a ranking's question
+     * @param question    Question object which we want to display the results
+     * @param charts      ApexChart to render at the end
+     * @param responses   Array of responses which we want to display the results
+     * @param isExportPDF Boolean to determine if we generate a graph for result or for PDF Export
+     */
+    private static generateRankingChart = async (question: Question, charts: ApexChart[], responses: Response[],
+                                                isExportPDF: boolean) : Promise<void> => {
+        let choices: QuestionChoice[] = question.choices.all.filter((c: QuestionChoice) => c.nbResponses > 0);
+        // let series: Data;
+        let labels: string[] = [];
+        let answerChoice: Array<string> = new Array<string>();
+        let colors: string[] = ColorUtils.generateColorList(labels.length);
+        let posChoice: Array<number> = new Array<number>();
+
+        // Build 2 arrays with position & answer
+        for (let j = 0; j < responses.length; j ++) {
+            posChoice.push(responses[j].choice_position)
+            answerChoice.push(<string>responses[j].answer)
+        }
+
+        const answerPosition = posChoice.map((key: number, index: number) => {
+            return { [key]: answerChoice[index] };
+        });
+
+        // Count how many times each value was at one position
+        const count = answerPosition.reduce((acc: {[p: number]: string}, currentObject: {[p: number]: string}) => {
+            const [key, value] = Object.entries(currentObject)[0];
+            if (!acc[key]) {
+                acc[key] = {};
+            }
+            if (!acc[key][value]) {
+                acc[key][value] = 1;
+            } else {
+                acc[key][value] += 1;
+            }
+            // Initialize count for all other values to 0
+            Object.keys(acc).forEach(k => {
+                if (k !== key) {
+                    if (!acc[k][value]) {
+                        acc[k][value] = 0;
+                    }
+                }
+            });
+            return acc;
+        }, {});
+
+        // Build series
+        const series = [];
+        const toto = Object.keys(count);
+
+        // Loop for add each
+        for (const pos of Object.keys(count[toto[0]])) {
+            const values = [];
+            for (const label of toto) {
+                values.push(count[pos][label]);
+            }
+            series.push({
+                name: pos,
+                data: values
+            });
+        }
+        console.log(series)
+
+        for (let choice of choices) {
+            let serie: any = {
+                name: choice.value,
+                data: []
+            };
+            answerChoice.push(choice.value)
+        }
+
+        for (let resp of responses) {
+            labels.push(resp.choice_position.toString());
+        }
+
+        let newPDFOptions: any = isExportPDF ?
+            GraphUtils.generateOptions(question.question_type, colors, labels,
+                null, null, null, null)
+            :
+            GraphUtils.generateOptions(question.question_type, colors, labels,
+                '100%', '100%', null, null, answerChoice);
+
+        await GraphUtils.renderChartForResult(newPDFOptions, charts, question, isExportPDF);
+    }
+
+    /**
      * Generate and render graph of the results of a multiple answers question
      * @param question    Question object which we want to display the results
      * @param charts      ApexCharts to store and render at the end
@@ -199,16 +290,17 @@ export class GraphUtils {
 
     /**
      *  Generate and return ApexCharts options according to the type of the question to display
-     * @param type      Type of the question
-     * @param colors    Colors to use for the graph
-     * @param labels    Labels to display on the cart
-     * @param height    Height of the chart to display (optional)
-     * @param width     Width of the chart to display (optional)
-     * @param seriesPercent Percentage to use for the graph
-     * @param cursorAverage Average of answers
+     * @param type          Type of the question
+     * @param colors        Colors to use for the graph
+     * @param labels        Labels to display on the cart
+     * @param height        Height of the chart to display (optional)
+     * @param width         Width of the chart to display (optional)
+     * @param seriesPercent Percentage to use for the graph (optional)
+     * @param cursorAverage Average of answers (optional)
+     * @param answerChoice      Item to order (optional, only for ranking's question)
      */
     static generateOptions = (type: Types, colors: string[], labels: (string | number)[], height?: any, width?: any,
-                              seriesPercent?: number[], cursorAverage?: string) : any => {
+                              seriesPercent?: number[], cursorAverage?: string, answerChoice?: string[]) : any => {
         let options: any;
         if (type === Types.SINGLEANSWER || type === Types.SINGLEANSWERRADIO) {
             options = {
@@ -318,6 +410,52 @@ export class GraphUtils {
                         stops: [0, 90, 100]
                     }
                 },
+            }
+        }
+        else if (type === Types.RANKING) {
+            options = {
+                chart: {
+                    type: 'bar',
+                    height: height ? height : 400,
+                    width: width ? width : 600,
+                },
+                plotOptions: {
+                    bar: {
+                        horizontal: true,
+                        dataLabels: {
+                            position: 'top',
+                        },
+                    }
+                },
+                colors: colors,
+                dataLabels: {
+                    enabled: true,
+                    offsetX: -6,
+                    style: {
+                        fontSize: '12px',
+                        colors: ['#fff']
+                    }
+                },
+                stroke: {
+                    show: true,
+                    width: 1,
+                    colors: ['#fff']
+                },
+                // tooltip: {
+                //     shared: true,
+                //     intersect: false
+                // },
+                xaxis: {
+                    categories: labels,
+                },
+                legend: {
+                    show: true,
+                    showForSingleSeries: true,
+                    customLegendItems: answerChoice,
+                    markers: {
+                        fillColors: ['#00E396', '#775DD0', '#e3003d']
+                    }
+                }
             }
         }
         return options;
