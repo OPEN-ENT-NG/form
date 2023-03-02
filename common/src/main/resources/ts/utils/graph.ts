@@ -2,7 +2,6 @@ import {idiom, idiom as lang} from 'entcore';
 import {Question, QuestionChoice, Response, Types} from "@common/models";
 import {ColorUtils} from "@common/utils/color";
 import * as ApexCharts from 'apexcharts';
-import 'core-js/es7/object';
 
 export class GraphUtils {
 
@@ -157,79 +156,49 @@ export class GraphUtils {
     private static generateRankingChart = async (question: Question, charts: ApexChart[], responses: Response[],
                                                 isExportPDF: boolean) : Promise<void> => {
         let choices: QuestionChoice[] = question.choices.all.filter((c: QuestionChoice) => c.nbResponses > 0);
-        let series: any = [];
-        let labels: string[] = [];
-        let answerChoice: Array<string> = new Array<string>;
-        let colors: string[] = ColorUtils.generateColorList(labels.length);
-        let posChoice: Array<number> = new Array<number>();
+        let series: any[] = [];
 
-        const uniqueLabels: any = new Set();
-        for (let resp of responses) {
-            if (!uniqueLabels.has(resp.choice_position)) {
-                labels.push(resp.choice_position.toString());
-                uniqueLabels.add(resp.choice_position);
-            }
+        // Initialize labels
+        const labels: string[] = [];
+        for (let i = 1; i <= choices.length; i++) {
+            labels.push(i.toString());
         }
 
-        const uniqueChoices = new Set();
-        for (let choice of choices) {
-            const value = choice.value;
-            if (!uniqueChoices.has(value)) {
-                answerChoice.push(value);
-                uniqueChoices.add(value);
-            }
-        }
+        // Build series
+        const choiceMap: Map<string, any> = new Map();
 
-        // Build 2 arrays with position & answer
-        for (let j = 0; j < responses.length; j ++) {
-            posChoice.push(responses[j].choice_position)
-            // answerChoice.push(<string>responses[j].answer)
-        }
-
-        const answerPosition = posChoice.map((key: number, index: number) => {
-            return { [key]: answerChoice[index] };
+        // Initialize data with zeros for each choice
+        choices.forEach(choice => {
+            const name: string = choice.value;
+            const data: number[] = Array(choices.length).fill(0);
+            choiceMap.set(name, {data});
         });
 
-        // Count how many times each value was at one position
-        const count = answerPosition.reduce((acc: {[p: number]: string}, currentObject: {[p: number]: string}) => {
-            const [key, value] = Object.entries(currentObject)[0];
-            if (!acc[key]) {
-                acc[key] = {};
-            }
-            if (!acc[key][value]) {
-                acc[key][value] = 1;
-            } else {
-                acc[key][value] += 1;
-            }
-            // Initialize count for all other values to 0
-            Object.keys(acc).forEach(k => {
-                if (k !== key) {
-                    if (!acc[k][value]) {
-                        acc[k][value] = 0;
-                    }
-                }
-            });
-            return acc;
-        }, {});
+        // Iterate over responses and increment data for each choice position
+        responses.forEach(response => {
+            const choice: string = choiceMap.get(<string>response.answer);
+            const position: number = response.choice_position - 1;
+            const { data }: any  = choice;
+            data[position]++;
+        });
 
-        const label = Object.keys(count);
-        for (const choice of Object.keys(count[label[0]])) {
-            const values = [];
-            for (const l of label) {
-                values.push(count[l][choice]);
-            }
-            series.push({
-                data: values
-            });
-        }
-        console.log(series);
+        // Iterate over choiceMap and push seriesOptions into series
+        choiceMap.forEach(({ data }, name: string) => {
+            const seriesOptions = {
+                name,
+                data
+            };
+            // Fill series
+            series.push(seriesOptions);
+        });
 
+        let colors: string[] = ColorUtils.generateColorList(choices.length);
         let newOptions: any = isExportPDF ?
             GraphUtils.generateOptions(question.question_type, colors, labels,
-                null, null, null, null)
+                null, null)
             :
             GraphUtils.generateOptions(question.question_type, colors, labels,
-                '100%', '100%', null, null, answerChoice);
+                '100%', '100%');
 
         newOptions.series = series;
         await GraphUtils.renderChartForResult(newOptions, charts, question, isExportPDF);
@@ -298,10 +267,9 @@ export class GraphUtils {
      * @param width         Width of the chart to display (optional)
      * @param seriesPercent Percentage to use for the graph (optional)
      * @param cursorAverage Average of answers (optional)
-     * @param answerChoice      Item to order (optional, only for ranking's question)
      */
     static generateOptions = (type: Types, colors: string[], labels: (string | number)[], height?: any, width?: any,
-                              seriesPercent?: number[], cursorAverage?: string, answerChoice?: string[]) : any => {
+                              seriesPercent?: number[], cursorAverage?: string) : any => {
         let options: any;
         if (type === Types.SINGLEANSWER || type === Types.SINGLEANSWERRADIO) {
             options = {
@@ -419,13 +387,13 @@ export class GraphUtils {
                     type: 'bar',
                     height: height ? height : 400,
                     width: width ? width : 600,
+                    toolbar: {
+                        show: false
+                    },
                 },
                 plotOptions: {
                     bar: {
-                        horizontal: true,
-                        dataLabels: {
-                            position: 'top',
-                        },
+                        horizontal: true
                     }
                 },
                 colors: colors,
@@ -444,14 +412,6 @@ export class GraphUtils {
                 },
                 xaxis: {
                     categories: labels,
-                },
-                legend: {
-                    show: true,
-                    showForSingleSeries: true,
-                    customLegendItems: answerChoice,
-                    markers: {
-                        fillColors: ['#00E396', '#775DD0', '#e3003d']
-                    }
                 }
             }
         }
