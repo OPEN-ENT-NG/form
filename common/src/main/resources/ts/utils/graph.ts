@@ -157,16 +157,33 @@ export class GraphUtils {
     private static generateRankingChart = async (question: Question, charts: ApexChart[], responses: Response[],
                                                 isExportPDF: boolean) : Promise<void> => {
         let choices: QuestionChoice[] = question.choices.all.filter((c: QuestionChoice) => c.nbResponses > 0);
-        // let series: Data;
+        let series: any = [];
         let labels: string[] = [];
-        let answerChoice: Array<string> = new Array<string>();
+        let answerChoice: Array<string> = new Array<string>;
         let colors: string[] = ColorUtils.generateColorList(labels.length);
         let posChoice: Array<number> = new Array<number>();
+
+        const uniqueLabels: any = new Set();
+        for (let resp of responses) {
+            if (!uniqueLabels.has(resp.choice_position)) {
+                labels.push(resp.choice_position.toString());
+                uniqueLabels.add(resp.choice_position);
+            }
+        }
+
+        const uniqueChoices = new Set();
+        for (let choice of choices) {
+            const value = choice.value;
+            if (!uniqueChoices.has(value)) {
+                answerChoice.push(value);
+                uniqueChoices.add(value);
+            }
+        }
 
         // Build 2 arrays with position & answer
         for (let j = 0; j < responses.length; j ++) {
             posChoice.push(responses[j].choice_position)
-            answerChoice.push(<string>responses[j].answer)
+            // answerChoice.push(<string>responses[j].answer)
         }
 
         const answerPosition = posChoice.map((key: number, index: number) => {
@@ -195,43 +212,27 @@ export class GraphUtils {
             return acc;
         }, {});
 
-        // Build series
-        const series = [];
-        const toto = Object.keys(count);
-
-        // Loop for add each
-        for (const pos of Object.keys(count[toto[0]])) {
+        const label = Object.keys(count);
+        for (const choice of Object.keys(count[label[0]])) {
             const values = [];
-            for (const label of toto) {
-                values.push(count[pos][label]);
+            for (const l of label) {
+                values.push(count[l][choice]);
             }
             series.push({
-                name: pos,
                 data: values
             });
         }
-        console.log(series)
+        console.log(series);
 
-        for (let choice of choices) {
-            let serie: any = {
-                name: choice.value,
-                data: []
-            };
-            answerChoice.push(choice.value)
-        }
-
-        for (let resp of responses) {
-            labels.push(resp.choice_position.toString());
-        }
-
-        let newPDFOptions: any = isExportPDF ?
+        let newOptions: any = isExportPDF ?
             GraphUtils.generateOptions(question.question_type, colors, labels,
                 null, null, null, null)
             :
             GraphUtils.generateOptions(question.question_type, colors, labels,
                 '100%', '100%', null, null, answerChoice);
 
-        await GraphUtils.renderChartForResult(newPDFOptions, charts, question, isExportPDF);
+        newOptions.series = series;
+        await GraphUtils.renderChartForResult(newOptions, charts, question, isExportPDF);
     }
 
     /**
@@ -441,10 +442,6 @@ export class GraphUtils {
                     width: 1,
                     colors: ['#fff']
                 },
-                // tooltip: {
-                //     shared: true,
-                //     intersect: false
-                // },
                 xaxis: {
                     categories: labels,
                 },
