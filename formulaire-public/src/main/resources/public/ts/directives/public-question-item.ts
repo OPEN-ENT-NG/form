@@ -1,9 +1,10 @@
 import {ng} from "entcore";
 import {Question, QuestionChoice, Response, Responses, Types} from "@common/models";
 import {Direction, FORMULAIRE_FORM_ELEMENT_EMIT_EVENT} from "@common/core/enums";
-import {FormElementUtils, I18nUtils} from "@common/utils";
+import {FormElementUtils, I18nUtils, RankingUtils} from "@common/utils";
 import {IScope} from "angular";
 import {PropPosition} from "@common/core/enums/prop-position";
+import * as Sortable from "sortablejs";
 
 interface IPublicQuestionItemProps {
     question: Question;
@@ -106,6 +107,25 @@ class Controller implements IViewModel {
 
     resetDate = () : void => {
         this.responses.all[0].answer = new Date();
+    }
+
+    initDrag = () : void => {
+        // Loop through each sortable response for DragAndDrop in view response
+        window.setTimeout(() : void => {
+            let respDrag = document.querySelectorAll(".drag-container");
+            for (let i = 0; i < respDrag.length; i++) {
+                Sortable.create(respDrag[i], {
+                    group: 'drag-container',
+                    animation: 150,
+                    fallbackOnBody: true,
+                    swapThreshold: 0.65,
+                    ghostClass: "sortable-ghost",
+                    onEnd: async (evt) => {
+                        await RankingUtils.onEndRankingDragAndDrop(evt, this.responses);
+                    }
+                });
+            }
+        }, 500);
     }
 }
 
@@ -212,26 +232,30 @@ function directive() {
                             </div>
                         </div>
                     </div>
-                    <div ng-if ="vm.question.question_type == vm.Types.RANKING" class="drag">
-                        <div class="row-shadow-effect"
-                             ng-repeat="resp in vm.responses.all | orderBy:['choice_position', 'id']">
-                            <div class="top">
-                                <div class="dots">
-                                    <i class="i-drag lg-icon dark-grey"></i>
-                                    <i class="i-drag lg-icon dark-grey"></i>
+                    <div class="drag" ng-if ="vm.question.question_type == vm.Types.RANKING">
+                        <ul class="drag-container">
+                            <li class="row-shadow-effect " dragstart="vm.initDrag()"
+                                ng-repeat="resp in vm.responses.all | orderBy:['choice_position']"
+                            >
+                                <div class="top">
+                                    <div class="dots">
+                                        <i class="i-drag lg-icon dark-grey"></i>
+                                        <i class="i-drag lg-icon dark-grey"></i>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="main">
-                                <span class="title">[[resp.answer]]</span>
-                                <div class="one two-mobile container-arrow">
-                                    <div ng-class="{hidden : $first}" ng-click="vm.moveResponse(resp, vm.Direction.UP)">
-                                        <i class="i-chevron-up lg-icon"></i>
+                                <div class="main" is-first="resp.choice_position == 1">
+                                    <span class="title">[[resp.answer]]</span>
+                                    <div class="one two-mobile container-arrow">
+                                        <div ng-class="{hidden : $first}" ng-click="vm.moveResponse(resp, vm.Direction.UP)">
+                                            <i class="i-chevron-up lg-icon"></i>
+                                        </div>
+                                        <div ng-class="{hidden : $last}" ng-click="vm.moveResponse(resp, vm.Direction.DOWN)">
+                                            <i class="i-chevron-down lg-icon"></i>
+                                        </div>
                                     </div>
-                                    <div ng-class="{hidden : $last}" ng-click="vm.moveResponse(resp, vm.Direction.DOWN)">
-                                        <i class="i-chevron-down lg-icon"></i>
-                                    </div>
-                            </div>
-                        </div>
+                                </div>
+                            </li>
+                        </ul>
                     </div>
                 </div>
             </div>
