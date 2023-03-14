@@ -12,12 +12,14 @@ interface IPublicQuestionItemProps {
     Types: typeof Types;
     I18n: I18nUtils;
     mapChoiceResponseIndex: Map<QuestionChoice, number>;
-    Direction: typeof Direction;
+    direction: typeof Direction;
+    isFirst: boolean;
+    isLast: boolean;
 }
 
 interface IViewModel extends ng.IController, IPublicQuestionItemProps {
     question: Question;
-    Direction: typeof Direction;
+    direction: typeof Direction;
 
     init(): Promise<void>;
     getHtmlDescription(description: string): string;
@@ -38,9 +40,14 @@ class Controller implements IViewModel {
     Types = Types;
     I18n = I18nUtils;
     mapChoiceResponseIndex: Map<QuestionChoice, number>;
-    Direction = Direction;
+    direction = Direction;
+    isFirst: boolean;
+    isLast: boolean;
 
-    constructor(private $scope: IPublicQuestionItemScope, private $sce: ng.ISCEService) {}
+    constructor(private $scope: IPublicQuestionItemScope, private $sce: ng.ISCEService) {
+        this.Types = Types;
+        this.direction = Direction;
+    }
 
     $onInit = async () : Promise<void> => {
         await this.init();
@@ -109,24 +116,24 @@ class Controller implements IViewModel {
         this.responses.all[0].answer = new Date();
     }
 
-    initDrag = () : void => {
+    initDrag = (): void => {
         // Loop through each sortable response for DragAndDrop in view response
-        window.setTimeout(() : void => {
+        window.setTimeout((): void => {
             let respDrag = document.querySelectorAll(".drag-container");
             for (let i = 0; i < respDrag.length; i++) {
                 Sortable.create(respDrag[i], {
-                    group: 'drag-container',
+                    group: "drag-container",
                     animation: 150,
                     fallbackOnBody: true,
                     swapThreshold: 0.65,
                     ghostClass: "sortable-ghost",
-                    onEnd: async (evt) => {
+                    onEnd: async (evt): Promise<void> => {
                         await RankingUtils.onEndRankingDragAndDrop(evt, this.responses);
-                    }
+                    },
                 });
             }
         }, 500);
-    }
+    };
 }
 
 function directive() {
@@ -135,7 +142,9 @@ function directive() {
         transclude: true,
         scope: {
             question: '<',
-            responses: '='
+            responses: '=',
+            isFirst: '=',
+            isLast: '='
         },
         controllerAs: 'vm',
         bindToController: true,
@@ -236,20 +245,21 @@ function directive() {
                         <ul class="drag-container">
                             <li class="row-shadow-effect " dragstart="vm.initDrag()"
                                 ng-repeat="resp in vm.responses.all | orderBy:['choice_position']"
-                            >
+                                is-first="resp.choice_position == 1"
+                                is-last="resp.choice_position == vm.responses.all.length">
                                 <div class="top">
                                     <div class="dots">
                                         <i class="i-drag lg-icon dark-grey"></i>
                                         <i class="i-drag lg-icon dark-grey"></i>
                                     </div>
                                 </div>
-                                <div class="main" is-first="resp.choice_position == 1">
+                                <div class="main">
                                     <span class="title">[[resp.answer]]</span>
                                     <div class="one two-mobile container-arrow">
-                                        <div ng-class="{hidden : $first}" ng-click="vm.moveResponse(resp, vm.Direction.UP)">
+                                        <div ng-class="vm.isFirst ? 'hidden' : ''" ng-click="vm.moveResponse(resp, vm.direction.UP)">
                                             <i class="i-chevron-up lg-icon"></i>
                                         </div>
-                                        <div ng-class="{hidden : $last}" ng-click="vm.moveResponse(resp, vm.Direction.DOWN)">
+                                        <div ng-class="vm.isLast ? 'hidden' : ''" ng-click="vm.moveResponse(resp, vm.direction.DOWN)">
                                             <i class="i-chevron-down lg-icon"></i>
                                         </div>
                                     </div>
