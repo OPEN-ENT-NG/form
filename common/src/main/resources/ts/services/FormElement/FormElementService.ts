@@ -84,9 +84,7 @@ export const formElementService: FormElementService = {
             if (formElements.length <= 0) {
                 return [];
             }
-            let updatedQuestions = await questionService.update(formElements.filter(e => e instanceof Question) as Question[]);
-            let updatedSections = await sectionService.update(formElements.filter(e => e instanceof Section) as Section[]);
-            return [].concat(updatedQuestions, updatedSections);
+            return DataUtils.getData(await http.put(`/formulaire/forms/${formElements[0].form_id}/elements`, formElements));
 
         } catch (err) {
             notify.error(idiom.translate('formulaire.error.formElementService.update'));

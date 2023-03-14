@@ -156,7 +156,7 @@ export class FormElementUtils {
                     oldSection.questions.all = oldSection.questions.all.filter(q => q.id != item.id);
                     newSection.questions.all.push(item);
                 }
-                await formElementService.update(newSection.questions.all.concat(oldSection.questions.all));
+                await questionService.update(newSection.questions.all.concat(oldSection.questions.all));
             }
             else { // Item moved FROM vm.formElements TO section with id 'newNestedSectionId'
                 FormElementUtils.updateSiblingsPositions(formElements, false, null, oldIndex);
