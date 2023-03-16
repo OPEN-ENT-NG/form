@@ -25,8 +25,6 @@ interface IRespondQuestionItemScopeProps {
     Types: typeof Types;
     I18n: I18nUtils;
     mapChoiceResponseIndex: Map<QuestionChoice, number>;
-    isFirst: boolean;
-    isLast: boolean;
 }
 
 interface IViewModel extends ng.IController, IRespondQuestionItemScopeProps {
@@ -54,8 +52,6 @@ class Controller implements ng.IController, IViewModel {
     Types: typeof Types;
     I18n: I18nUtils;
     mapChoiceResponseIndex: Map<QuestionChoice, number>;
-    isFirst: boolean;
-    isLast: boolean;
 
     constructor(private $scope: IRespondQuestionItemScope, private $sce: ng.ISCEService) {
         this.Types = Types;
@@ -195,9 +191,7 @@ function directive() {
             question: '<',
             responses: '=',
             distribution: '=',
-            files: '=',
-            isFirst: '=',
-            isLast: '='
+            files: '='
         },
         controllerAs: 'vm',
         bindToController: true,

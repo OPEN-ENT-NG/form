@@ -97,10 +97,8 @@
         </div>
         <div class="drag" ng-if="vm.question.question_type == vm.Types.RANKING">
             <ul class="drag-container">
-                <li class="row-shadow-effect" dragstart="vm.initDrag()"
-                    ng-repeat="resp in vm.responses.all | orderBy:['choice_position', 'id'] as responses"
-                    is-first="resp.choice_position == 1"
-                    is-last="resp.choice_position == vm.responses.all.length">
+                <li class="row-shadow-effect" dragstart="vm.initDrag()" dragend="vm.updateChoicePosition()"
+                    ng-repeat="resp in vm.responses.all | orderBy:['choice_position', 'id'] as responses">
                     <div class="top">
                         <div class="dots">
                             <i class="i-drag lg-icon dark-grey"></i>
@@ -110,10 +108,10 @@
                     <div class="main">
                         <span class="title">[[resp.answer]]</span>
                         <div class="one two-mobile container-arrow">
-                            <div ng-class="vm.isFirst ? 'hidden' : ''" ng-click="vm.moveResponse(resp, vm.direction.UP)">
+                            <div ng-hide="resp.isFirst" ng-click="vm.moveResponse(resp, vm.direction.UP)">
                                 <i class="i-chevron-up lg-icon"></i>
                             </div>
-                            <div ng-class="vm.isLast ? 'hidden' : ''" ng-click="vm.moveResponse(resp, vm.direction.DOWN)">
+                            <div ng-hide="resp.isLast" ng-click="vm.moveResponse(resp, vm.direction.DOWN)">
                                 <i class="i-chevron-down lg-icon"></i>
                             </div>
                         </div>
