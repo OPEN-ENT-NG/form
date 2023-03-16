@@ -12,10 +12,6 @@ export class RankingUtils {
         for (let i = 0; i < responses.all.length; i++) {
             let elt = responses.all[i];
             elt.choice_position = i + 1;
-
-            // Update isFirst and isLast properties to hide arrow
-            elt.isFirst = (i === 0);
-            elt.isLast = (i === responses.all.length - 1);
         }
 
         return false;
