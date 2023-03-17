@@ -1,7 +1,7 @@
 import {Responses} from "@common/models";
 
 export class RankingUtils {
-    static onEndRankingDragAndDrop = (evt: any, responses: Responses): boolean => {
+    static onEndRankingDragAndDrop = (evt: any, responses: Responses): void => {
         let oldIndex: number = evt.oldIndex;
         let newIndex: number = evt.newIndex;
 
@@ -13,7 +13,5 @@ export class RankingUtils {
             let elt = responses.all[i];
             elt.choice_position = i + 1;
         }
-
-        return false;
     }
 }
