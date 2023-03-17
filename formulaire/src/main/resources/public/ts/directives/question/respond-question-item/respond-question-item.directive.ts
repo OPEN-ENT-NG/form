@@ -60,6 +60,9 @@ class Controller implements ng.IController, IViewModel {
 
     $onInit = async () : Promise<void> => {
         await this.initRespondQuestionItem();
+        if (this.question.question_type === Types.RANKING) {
+            this.initDrag();
+        }
     };
 
     $onChanges = async (changes: any) : Promise<void> => {
