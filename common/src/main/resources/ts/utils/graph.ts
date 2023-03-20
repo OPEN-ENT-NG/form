@@ -331,6 +331,16 @@ export class GraphUtils {
                 xaxis: {
                     categories: labels,
                 },
+                yaxis: {
+                    title: {
+                        text: lang.translate('formulaire.nb.responses'),
+                        style: {
+                            fontSize: '14px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 500
+                        },
+                    },
+                },
                 fill: {
                     opacity: 1
                 }
@@ -359,7 +369,12 @@ export class GraphUtils {
                 xaxis: {
                     categories: labels,
                     title: {
-                        text: lang.translate('formulaire.response.average') + ' (' + cursorAverage + ')'
+                        text: lang.translate('formulaire.response.average') + ' (' + cursorAverage + ')',
+                        style: {
+                            fontSize: '14px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 500
+                        }
                     }
                 },
                 yaxis: {
@@ -367,6 +382,14 @@ export class GraphUtils {
                     labels: {
                         formatter: (value) => {
                             return Math.floor(value)
+                        }
+                    },
+                    title: {
+                        text: lang.translate('formulaire.nb.responses'),
+                        style: {
+                            fontSize: '14px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 500
                         }
                     }
                 },
@@ -378,7 +401,7 @@ export class GraphUtils {
                         opacityTo: 0.9,
                         stops: [0, 90, 100]
                     }
-                },
+                }
             }
         }
         else if (type === Types.RANKING) {
@@ -419,7 +442,25 @@ export class GraphUtils {
                     }
                 },
                 xaxis: {
-                    categories: labels
+                    categories: labels,
+                    title: {
+                        text: lang.translate('formulaire.nb.responses'),
+                        style: {
+                            fontSize: '14px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 500
+                        }
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: lang.translate('formulaire.position.selected'),
+                        style: {
+                            fontSize: '14px',
+                            fontFamily: 'Helvetica, Arial, sans-serif',
+                            fontWeight: 500
+                        }
+                    }
                 }
             }
         }
