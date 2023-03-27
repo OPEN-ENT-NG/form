@@ -445,8 +445,7 @@ export class GraphUtils {
                     labels: {
                         formatter: function (val) {
                             return val === Math.round(val) ? val.toFixed() : null;
-                        },
-                        showDuplicates: false,
+                        }
                     },
                     title: {
                         text: lang.translate('formulaire.number.responses'),
