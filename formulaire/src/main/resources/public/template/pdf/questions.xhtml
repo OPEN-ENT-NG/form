@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
+
+<head>
+    <title>{{form_title}}</title>
+    <style type="text/css">
+        body {
+            font-family: "Roboto", sans-serif;
+            color: #5b6472;
+            font-size: 13px;
+        }
+        .page {
+            display: block;
+            margin: 5% 3%;
+        }
+        @page {
+            size: A4;
+            margin: 5% 3%;
+
+            @bottom-center {
+                content: counter(page) ' / ' counter(pages);
+                font-family: "Roboto", sans-serif;
+                font-weight: bold;
+                color: #5b6472;
+                font-size: 13px;
+            }
+        }
+
+
+        .one { width: 8.33333%; }
+        .two { width: 16.66667%; }
+        .three { width: 25%; }
+        .four { width: 33.33333%; }
+        .five { width: 41.66667%; }
+        .six { width: 50%; }
+        .seven { width: 58.33333%; }
+        .eight { width: 66.66667%; }
+        .nine { width: 75%; }
+        .ten { width: 83.33333%; }
+        .eleven { width: 91.66667%; }
+        .twelve { width: 100%; }
+        .flex { display: flex; }
+        h1 {
+            color: #4bafd5;
+            text-align: center;
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 10%;
+        }
+        h4 {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .question, .section {
+            margin-bottom: 10%;
+        }
+        .section {
+            border: thin solid #e9ebef;
+        }
+        .section h4.top {
+            background-color: #2a9bc7;
+            color: white;
+            margin: 0 !important;
+            padding: 5px 10px;
+        }
+        .section .description {
+            padding: 5px 10px;
+        }
+        .response {
+            display: flex;
+            padding: 5px 10px;
+            margin: 5px 0;
+            font-size: 14px;
+            border: thin solid #e9ebef;
+        }
+        h5.graph-subtitle {
+            font-size: 14px;
+            font-style: italic;
+        }
+        .inline {
+            display: inline-block;
+        }
+        .nobreakpage {
+            page-break-inside: avoid;
+        }
+    </style>
+</head>
+
+<body class="page">
+    {{#form_elements}}
+        {{#is_section}}
+            <h2 class="title">{{section_title}}</h2>
+            <span>{{section_description}}</span>
+        {{/is_section}}
+
+        {{#is_question}}
+        <div class="question">
+            <h4>
+                {{title}}{{#mandatory}}<span style="color:red;margin-left:10px">*</span>{{/mandatory}}
+            </h4>
+
+            {{#question_type}}
+                <div class="main">
+                    <!-- Type zone de texte, réponse courte, Paragraphe -->
+                        {{#type_a_definir}}
+                            <div class="freetext-border">
+                                {{#hasCustomPlaceholder}}
+                                    {{custom_placeholder}}
+                                {{#hasCustomPlaceholder}}
+                            </div>
+                        {{/type_a_definir}}
+
+                        <!-- Réponse unique, radio btn -->
+                        {{#radio_btn}}
+                            <input type="radio" value="{{choice}}"></input>
+                            {{#isConditionnal}}
+                                (Aller à : {{formElement_position}}
+                            {{/isConditionnal}}
+                        {{/radio_btn}}
+
+                        <!-- Réponse multiple -->
+                        {{#multiple_choice}}
+                            <input type="checkbox" value="{{choice}}"></input>
+                        {{/multiple_choice}}
+
+                        <!-- Date, heure -->
+                        {{#date_heure}}
+                            <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
+                        {{/date_heure}}
+
+                        <!-- Matrice -->
+                        {{#is_matrice}}
+                            <table class="twelve matrix-table">
+                                <thead>
+                                    <tr>
+                                        <th class="two"></th>
+                                        <th>{{choice.value}}</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{{child_title}}</td>
+                                        <td>
+                                            <label>
+                                                <input type="radio" value="{{choice}}"></input>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        {{/is_matrice}}
+
+                        <!-- Cursor -->
+                        {{#is_cursor}}
+                            {{cursor_min_val}}
+                                <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
+                            {{cursor_max_val}}
+                        {{/is_cursor}}
+
+                        <!-- Ranking -->
+                        {{#is_ranking}}
+                            <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
+                            {{choice}}
+                        {{/is_ranking}}
+                </div>
+            {{/question_type}}
+        </div>
+
+
+</body>
+
+</html>

@@ -13,7 +13,7 @@ import {
     Sections
 } from "../models";
 import {distributionService, formService, questionService, folderService} from "../services";
-import {FiltersFilters, FiltersOrders, FORMULAIRE_EMIT_EVENT} from "@common/core/enums";
+import {Exports, FiltersFilters, FiltersOrders, FORMULAIRE_EMIT_EVENT} from "@common/core/enums";
 import {Mix} from "entcore-toolkit";
 import {Element} from "entcore/types/src/ts/workspace/model";
 import {I18nUtils, UtilsUtils} from "@common/utils";
@@ -76,6 +76,7 @@ interface ViewModel {
     selectedFolder: Element;
     draggable : Draggable;
     draggedItem : any;
+    exportFormat: string;
 
     importForms() : void;
     doImportForms(): Promise<void>;
@@ -398,11 +399,18 @@ export const formsListController = ng.controller('FormsListController', ['$scope
     vm.doExportForms = async () : Promise<void> => {
         vm.display.loading.export = true;
         let exportId: string = await formService.export(vm.forms.selected.map((f: Form) => f.id));
-        window.setTimeout(async () => {
-            if (!exportId) return await initFormsList();
-            await formService.verifyExportAndDownload(exportId);
-            vm.closeExportForms();
-        },5000);
+        if (vm.exportFormat === Exports.ZIP) {
+            window.setTimeout(async () => {
+                if (!exportId) return await initFormsList();
+                await formService.verifyExportAndDownload(exportId);
+                vm.closeExportForms();
+            },5000);
+        }
+       if (vm.exportFormat === Exports.PDF) {
+           console.log("PDF");
+           let exportId: string = await formService.exportPDF(vm.forms.selected.map((f: Form) => f.id));
+           console.log(exportId)
+       }
     };
 
     vm.closeExportForms = () : void => {

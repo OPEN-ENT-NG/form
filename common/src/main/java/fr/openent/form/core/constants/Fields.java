@@ -169,7 +169,7 @@ public class Fields {
     public static final String FOLDERS = "folders";
     public static final String FORMS = "forms";
     public static final String FORM_ELEMENTS = "form_elements";
-    public static final String FORM_TILE = "form_title";
+    public static final String FORM_TITLE = "form_title";
     public static final String GROUPS = "groups";
     public static final String HAS_CUSTOM_ANSWERS = "has_custom_answers";
     public static final String IDS = "ids";

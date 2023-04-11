@@ -1096,11 +1096,12 @@ public class FormController extends ControllerHelper {
 
     // Export / Import
 
-    @Post("/forms/export")
-    @ApiDoc("Export forms in a ZIP file")
+    @Post("/forms/export/:fileType")
+    @ApiDoc("Export forms in a file (ZIP or PDF)")
     @ResourceFilter(CreationRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void exportForm(final HttpServerRequest request) {
+        String fileType = request.getParam(PARAM_FILE_TYPE);
         RequestUtils.bodyToJsonArray(request, formIds -> {
             UserUtils.getUserInfos(eb, request, user -> {
                 if (user == null) {
@@ -1138,21 +1139,36 @@ public class FormController extends ControllerHelper {
                         return;
                     }
 
-                    // Create the directory in the file system
-                    JsonObject ebMessage = new JsonObject()
-                            .put(ACTION, START)
-                            .put(PARAM_USER_ID, user.getUserId())
-                            .put(LOCALE, I18n.acceptLanguage(request))
-                            .put(APPS, new JsonArray().add(DB_SCHEMA))
-                            .put(PARAM_RESOURCES_IDS, new JsonArray().addAll(formIds));
+                    switch (fileType) {
+                        case ZIP:
+                            // Create the directory in the file system
+                            JsonObject ebMessage = new JsonObject()
+                                    .put(ACTION, START)
+                                    .put(PARAM_USER_ID, user.getUserId())
+                                    .put(LOCALE, I18n.acceptLanguage(request))
+                                    .put(APPS, new JsonArray().add(DB_SCHEMA))
+                                    .put(PARAM_RESOURCES_IDS, new JsonArray().addAll(formIds));
 
-                    EventBusHelper.requestJsonObject(EXPORT_ADDRESS, eb, ebMessage)
-                        .onSuccess(res -> renderJson(request, res))
-                        .onFailure(err -> {
-                            String message = "[Formulaire@exportForms] Failed to export data : " + err.getMessage();
+                            EventBusHelper.requestJsonObject(EXPORT_ADDRESS, eb, ebMessage)
+                                    .onSuccess(res -> renderJson(request, res))
+                                    .onFailure(err -> {
+                                        String message = "[Formulaire@exportForms] Failed to export data : " + err.getMessage();
+                                        log.error(message);
+                                        renderInternalError(request, message);
+                                    });
+                            break;
+                        case PDF:
+                            JsonObject form = formIds.right().getValue();
+                            new FormQuestionExportPDF(request, vertx, config, storage, form).launch();
+                            break;
+                        default:
+                            String message = "[Formulaire@exportForms] Wrong export format type : " + fileType;
                             log.error(message);
-                            renderInternalError(request, message);
-                        });
+                            badRequest(request, message);
+                            break;
+                    }
+
+
                 });
             });
         });
