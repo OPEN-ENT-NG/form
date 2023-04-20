@@ -1,9 +1,9 @@
 package fr.openent.formulaire.controllers;
 
 import fr.openent.form.core.enums.RgpdLifetimes;
-import fr.openent.form.core.models.ShareObject;
 import fr.openent.form.helpers.EventBusHelper;
 import fr.openent.form.helpers.UtilsHelper;
+import fr.openent.formulaire.export.FormQuestionsExportPDF;
 import fr.openent.formulaire.helpers.DataChecker;
 import fr.openent.form.helpers.FutureHelper;
 import fr.openent.formulaire.security.*;
@@ -1158,8 +1158,20 @@ public class FormController extends ControllerHelper {
                                     });
                             break;
                         case PDF:
-                            JsonObject form = formIds.right().getValue();
-                            new FormQuestionExportPDF(request, vertx, config, storage, form).launch();
+                            formService.get(String.valueOf(formIds.getInteger(0)), user, formEvt -> {
+                                if (formEvt.isLeft()) {
+                                    log.error("[Formulaire@exportForm] Error in getting form to export questions of form " + formIds);
+                                    renderInternalError(request, formEvt);
+                                    return;
+                                }
+                                if (formEvt.right().getValue().isEmpty()) {
+                                    String errMessage = "[Formulaire@exportForm] No form found for id " + formIds;
+                                    log.error(errMessage);
+                                    notFound(request, errMessage);
+                                }
+                                JsonObject form = formEvt.right().getValue();
+                                new FormQuestionsExportPDF(request, vertx, config, storage, form).launch();
+                            });
                             break;
                         default:
                             String message = "[Formulaire@exportForms] Wrong export format type : " + fileType;

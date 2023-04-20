@@ -163,15 +163,14 @@ export const formService: FormService = {
         }
     },
 
-    async export(formIds: number[], type: string) : Promise<string> {
+    async export(formIds: number[], type: string) : Promise<any> {
         try {
             if (type === Exports.ZIP) {
                 let res = await http.post(`/formulaire/forms/export/zip`, formIds);
                 return res.data.exportId;
             }
             else if (type === Exports.PDF) {
-                let res = await http.post(`/formulaire/forms/export/pdf`, formIds);
-                return res.data.exportId;
+                return await http.post(`/formulaire/forms/export/pdf`, formIds, {responseType: "arraybuffer"});
             }
         } catch (err) {
             notify.error(idiom.translate('formulaire.error.formService.export'));

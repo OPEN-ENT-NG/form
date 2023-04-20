@@ -68,13 +68,6 @@
         .section .description {
             padding: 5px 10px;
         }
-        .response {
-            display: flex;
-            padding: 5px 10px;
-            margin: 5px 0;
-            font-size: 14px;
-            border: thin solid #e9ebef;
-        }
         h5.graph-subtitle {
             font-size: 14px;
             font-style: italic;
@@ -89,7 +82,7 @@
 </head>
 
 <body class="page">
-    {{#form_elements}}
+<!--    {{#form_elements}}-->
         {{#is_section}}
             <h2 class="title">{{section_title}}</h2>
             <span>{{section_description}}</span>
@@ -104,20 +97,20 @@
             {{#question_type}}
                 <div class="main">
                     <!-- Type zone de texte, réponse courte, Paragraphe -->
-                        {{#type_a_definir}}
+                        {{#type_text}}
                             <div class="freetext-border">
-                                {{#hasCustomPlaceholder}}
+                                {{#has_custom_answers}}
                                     {{custom_placeholder}}
-                                {{#hasCustomPlaceholder}}
+                                {{/has_custom_answers}}
                             </div>
-                        {{/type_a_definir}}
+                        {{/type_text}}
 
                         <!-- Réponse unique, radio btn -->
                         {{#radio_btn}}
                             <input type="radio" value="{{choice}}"></input>
-                            {{#isConditionnal}}
-                                (Aller à : {{formElement_position}}
-                            {{/isConditionnal}}
+                            {{#is_conditionnal}}
+                                (Aller à : {{form_element_position}}
+                            {{/is_conditionnal}}
                         {{/radio_btn}}
 
                         <!-- Réponse multiple -->
@@ -126,9 +119,9 @@
                         {{/multiple_choice}}
 
                         <!-- Date, heure -->
-                        {{#date_heure}}
+                        {{#date_hour}}
                             <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
-                        {{/date_heure}}
+                        {{/date_hour}}
 
                         <!-- Matrice -->
                         {{#is_matrice}}
@@ -136,7 +129,7 @@
                                 <thead>
                                     <tr>
                                         <th class="two"></th>
-                                        <th>{{choice.value}}</th>
+                                        <th>{{choice_value}}</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -167,7 +160,8 @@
                 </div>
             {{/question_type}}
         </div>
-
+        {{/is_question}}
+<!--    {{/form_elements}}-->
 
 </body>
 
