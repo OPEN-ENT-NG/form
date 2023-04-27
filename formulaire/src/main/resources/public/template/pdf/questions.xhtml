@@ -3,7 +3,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" lang="fr">
 
 <head>
-    <title>{{form_title}}</title>
+    <title></title>
     <style type="text/css">
         body {
             font-family: "Roboto", sans-serif;
@@ -82,11 +82,103 @@
 </head>
 
 <body class="page">
-<!--    {{#form_elements}}-->
+<h1 class="title">{{form_title}}</h1>
+    {{#form_elements}}
         {{#is_section}}
-            <h2 class="title">{{section_title}}</h2>
-            <span>{{section_description}}</span>
+            <div class="section">
+                <h4 class="top">{{title}}</h4>
+                <span class="description">
+                    {{#description}}{{{description}}}{{/description}}
+                    <em>{{^description}}Pas de description{{/description}}</em>
+                </span>
+            </div>
         {{/is_section}}
+
+        {{#is_question_from_section}}
+            {{#questions}}
+            <div class="question">
+                <h4>
+                    {{title}}{{#mandatory}}<span style="color:red;margin-left:10px">*</span>{{/mandatory}}
+                </h4>
+
+                <div class="main">
+                    <!-- Type zone de texte, réponse courte, Paragraphe -->
+                    {{#type_text}}
+                    <div class="freetext-border" style="border: 1px solid black;">
+                        <!-- rien à voir custom answer et placeholder -->
+                        {{#has_custom_answers}}
+                            {{custom_placeholder}}
+                        {{/has_custom_answers}}
+                    </div>
+                    {{/type_text}}
+
+                    <!-- Réponse unique, radio btn -->
+                    {{#radio_btn}}
+                    {{#choices}}
+                    <input type="radio"/><label>{{value}}</label>
+                    {{#is_conditionnal}}
+                    (Aller à : {{form_element_position}}
+                    {{/is_conditionnal}}
+                    {{/choices}}
+                    {{/radio_btn}}
+
+                    <!-- Réponse multiple -->
+                    {{#multiple_choice}}
+                    {{#choices}}
+                    <input type="checkbox"/><label>{{value}}</label>
+                    {{/choices}}
+                    {{/multiple_choice}}
+
+                    <!-- Date, heure -->
+                    {{#date_hour}}
+                    <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
+                    {{/date_hour}}
+
+                    <!-- Matrice -->
+                    {{#is_matrice}}
+                    <table class="twelve matrix-table">
+                        <thead>
+                        <tr>
+                            <th class="two"></th>
+                            <th>{{#choices}}
+                                <label>{{value}}</label>
+                                {{/choices}}
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>
+                                {{#child}}
+                                <label>
+                                    <input type="radio"/><label>{{title}}</label>
+                                </label>
+                                {{/child}}
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    {{/is_matrice}}
+
+                    <!-- Cursor -->
+                    {{#is_cursor}}
+                    {{cursor_min_val}}
+                    <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
+                    {{cursor_max_val}}
+                    {{/is_cursor}}
+
+                    <!-- Ranking -->
+                    {{#is_ranking}}
+                    {{#choices}}
+                    <div style="border-bottom: 1px solid black; margin-top: 5px;">
+                        {{value}}
+                    </div>
+                    {{/choices}}
+                    {{/is_ranking}}
+                </div>
+            </div>
+            {{/questions}}
+        {{/is_question_from_section}}
 
         {{#is_question}}
         <div class="question">
@@ -94,11 +186,11 @@
                 {{title}}{{#mandatory}}<span style="color:red;margin-left:10px">*</span>{{/mandatory}}
             </h4>
 
-            {{#question_type}}
                 <div class="main">
                     <!-- Type zone de texte, réponse courte, Paragraphe -->
                         {{#type_text}}
-                            <div class="freetext-border">
+                            <div class="freetext-border" style="border: 1px solid black;">
+                                <!-- rien à voir custom answer et placeholder -->
                                 {{#has_custom_answers}}
                                     {{custom_placeholder}}
                                 {{/has_custom_answers}}
@@ -107,15 +199,19 @@
 
                         <!-- Réponse unique, radio btn -->
                         {{#radio_btn}}
-                            <input type="radio" value="{{choice}}"></input>
-                            {{#is_conditionnal}}
-                                (Aller à : {{form_element_position}}
-                            {{/is_conditionnal}}
+                            {{#choices}}
+                                <input type="radio"/><label>{{value}}</label>
+                                {{#is_conditionnal}}
+                                    (Aller à : {{form_element_position}}
+                                {{/is_conditionnal}}
+                            {{/choices}}
                         {{/radio_btn}}
 
                         <!-- Réponse multiple -->
                         {{#multiple_choice}}
-                            <input type="checkbox" value="{{choice}}"></input>
+                            {{#choices}}
+                                <input type="checkbox"/><label>{{value}}</label>
+                            {{/choices}}
                         {{/multiple_choice}}
 
                         <!-- Date, heure -->
@@ -125,24 +221,28 @@
 
                         <!-- Matrice -->
                         {{#is_matrice}}
-                            <table class="twelve matrix-table">
-                                <thead>
-                                    <tr>
-                                        <th class="two"></th>
-                                        <th>{{choice_value}}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{child_title}}</td>
-                                        <td>
-                                            <label>
-                                                <input type="radio" value="{{choice}}"></input>
-                                            </label>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                                <table class="twelve matrix-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="two"></th>
+                                            <th>{{#choices}}
+                                                    <label>{{value}}</label>
+                                                {{/choices}}
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>
+                                                {{#child}}
+                                                    <label>
+                                                        <input type="radio"/><label>{{title}}</label>
+                                                    </label>
+                                                {{/child}}
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                         {{/is_matrice}}
 
                         <!-- Cursor -->
@@ -154,14 +254,16 @@
 
                         <!-- Ranking -->
                         {{#is_ranking}}
-                            <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
-                            {{choice}}
+                            {{#choices}}
+                                <div style="border-bottom: 1px solid black; margin-top: 5px;">
+                                    {{value}}
+                                </div>
+                            {{/choices}}
                         {{/is_ranking}}
                 </div>
-            {{/question_type}}
         </div>
         {{/is_question}}
-<!--    {{/form_elements}}-->
+    {{/form_elements}}
 
 </body>
 

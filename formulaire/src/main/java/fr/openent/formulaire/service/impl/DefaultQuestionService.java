@@ -16,8 +16,8 @@ import org.entcore.common.sql.SqlStatementsBuilder;
 
 import static fr.openent.form.core.constants.Constants.*;
 import static fr.openent.form.core.constants.Fields.*;
-import static fr.openent.form.core.constants.Tables.QUESTION_TABLE;
-import static fr.openent.form.core.constants.Tables.SECTION_TABLE;
+import static fr.openent.form.core.constants.Tables.*;
+import static fr.openent.form.core.constants.Tables.QUESTION_TYPE;
 import static fr.openent.form.helpers.SqlHelper.getParamsForUpdateDateModifFormRequest;
 import static fr.openent.form.helpers.SqlHelper.getUpdateDateModifFormRequest;
 
@@ -60,6 +60,16 @@ public class DefaultQuestionService implements QuestionService {
 
         sql.prepared(query, params, SqlResult.validResultHandler(FutureHelper.handlerJsonArray(promise)));
 
+        return promise.future();
+    }
+
+    @Override
+    public Future<JsonArray> listChildren(JsonArray questionIds) {
+        Promise<JsonArray> promise = Promise.promise();
+
+        String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE matrix_id IN " + Sql.listPrepared(questionIds);
+        JsonArray params = new JsonArray().addAll(questionIds);
+        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(FutureHelper.handlerJsonArray(promise)));
         return promise.future();
     }
 

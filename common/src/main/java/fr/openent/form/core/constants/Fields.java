@@ -12,6 +12,7 @@ public class Fields {
     public static final String ALL = "all";
     public static final String ARR = "arr";
     public static final String CAPTCHA_ID = "captcha_id";
+    public static final String CHILD = "child";
     public static final String CHILD_TITLE = "child_title";
     public static final String CHOICE_ID = "choice_id";
     public static final String CHOICE_VALUE = "choice_value";
@@ -73,6 +74,7 @@ public class Fields {
     public static final String PICTURE = "picture";
     public static final String QUESTION = "question";
     public static final String QUESTION_CHOICES = "question_choices";
+    public static final String QUESTIONS_CHOICES = "questions_choices";
     public static final String QUESTION_ID = "question_id";
     public static final String QUESTION_TYPE = "question_type";
     public static final String PARENT_ID = "parent_id";
@@ -185,6 +187,8 @@ public class Fields {
     public static final String IS_CONDITIONNAL = "is_conditionnal";
     public static final String IS_CURSOR = "is_cursor";
     public static final String IS_QUESTION = "is_question";
+    public static final String IS_QUESTION_FORM_SECTION = "is_question_from_section";
+    public static final String IS_SECTION = "is_section";
     public static final String KO = "ko";
     public static final String LOCALE = "locale";
     public static final String MESSAGE = "message";
@@ -204,6 +208,8 @@ public class Fields {
     public static final String RESULT = "result";
     public static final String RESULTS = "results";
     public static final String ROLE = "role";
+    public static final String SECTION_DESCRIPTION = "description";
+    public static final String SECTION_TITLE = "title";
     public static final String SEND = "send";
     public static final String SIZE = "size";
     public static final String STATEMENTS = "statements";
