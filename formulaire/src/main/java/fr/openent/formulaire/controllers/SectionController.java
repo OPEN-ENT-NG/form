@@ -167,7 +167,6 @@ public class SectionController extends ControllerHelper {
                 return;
             }
 
-            List<Section> sections = new Section().toList(sectionsJson);
             questionService.listForForm(formId)
                 .compose(questions -> {
                     JsonArray questionPositions = UtilsHelper.getByProp(questions, POSITION);
@@ -179,30 +178,7 @@ public class SectionController extends ControllerHelper {
                         return Future.failedFuture(message);
                     }
 
-                    List<Future<Boolean>> futures = new ArrayList<>();
-                    for (Section section : sections) {
-                        futures.add(sectionService.isTargetValid(section));
-                    }
-
-                    Promise<List<Boolean>> promise = Promise.promise();
-                    FutureHelper.all(futures)
-                        .onSuccess(result -> promise.complete(result.list()))
-                        .onFailure(promise::fail);
-                    return promise.future();
-                })
-                .compose(sectionsValidity -> {
-                    if (sectionsValidity.stream().anyMatch(sv -> !sv)) {
-                        String errorMessage = "[Formulaire@SectionController::create] At least one section is invalid.";
-                        return Future.failedFuture(errorMessage);
-                    }
                     return sectionService.update(formId, sectionsJson);
-                })
-                .onSuccess(updatedSectionsInfos -> {
-                    JsonArray updatedSections = new JsonArray();
-                    for (int i = 0; i < updatedSectionsInfos.size(); i++) {
-                        updatedSections.addAll(updatedSectionsInfos.getJsonArray(i));
-                    }
-                    renderJson(request, updatedSections);
                 })
                 .onFailure(err -> {
                     log.error("[Formulaire@SectionController::update] Failed to update sections " + sectionsJson + " : " + err.getMessage());
