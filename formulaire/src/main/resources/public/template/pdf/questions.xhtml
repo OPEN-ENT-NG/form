@@ -27,7 +27,6 @@
             }
         }
 
-
         .one { width: 8.33333%; }
         .two { width: 16.66667%; }
         .three { width: 25%; }
@@ -41,6 +40,7 @@
         .eleven { width: 91.66667%; }
         .twelve { width: 100%; }
         .flex { display: flex; }
+
         h1 {
             color: #4bafd5;
             text-align: center;
@@ -78,6 +78,109 @@
         .nobreakpage {
             page-break-inside: avoid;
         }
+        .ranking-value {
+            position: relative;
+            padding-left: 10px;
+            line-height: 2em;
+        }
+
+        .ranking-value::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+            height: 1px;
+            width: 10px;
+            background-color: black;
+        }
+
+        .is_cursor {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .is_cursor::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+            width: 100%;
+            height: 1px;
+            background-color: black;
+        }
+
+        .is_cursor-label {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            margin-right: auto;
+            margin-left: 10px;
+        }
+
+        .is_cursor-value {
+            margin-left: auto;
+            margin-right: 10px;
+        }
+
+        /*table {*/
+        /*    width: 100%;*/
+        /*    border-collapse: collapse;*/
+        /*}*/
+
+        /*table td, table th {*/
+        /*    border: 1px solid #ccc;*/
+        /*    padding: 5px;*/
+        /*}*/
+
+        /*table th {*/
+        /*    background-color: #f9f9f9;*/
+        /*    border-top: 2px solid orange;*/
+        /*    border-bottom: 2px solid orange;*/
+        /*}*/
+
+        /*table th:first-child {*/
+        /*    border-left: 2px solid orange;*/
+        /*}*/
+
+        /*table td:first-child {*/
+        /*    border-left: 2px solid orange;*/
+        /*}*/
+
+        /*table td:last-child {*/
+        /*    border-right: 2px solid orange;*/
+        /*}*/
+
+        /*table td:not(:first-child) {*/
+        /*    border-left: none;*/
+        /*}*/
+
+        /*table tr:last-child td {*/
+        /*    border-bottom: none;*/
+        /*}*/
+
+        /*table tr:first-child th {*/
+        /*    border-top: none;*/
+        /*}*/
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            border-spacing: 0;
+        }
+
+        th {
+            border-top: 1px solid orange;
+            border-left: 1px solid orange;
+        }
+
+        td {
+            border-bottom: 1px solid lightgray;
+        }
+
+
     </style>
 </head>
 
@@ -92,10 +195,8 @@
                     <em>{{^description}}Pas de description{{/description}}</em>
                 </span>
             </div>
-        {{/is_section}}
 
-        {{#is_question_from_section}}
-            {{#questions}}
+            {{#is_question}}
             <div class="question">
                 <h4>
                     {{title}}{{#mandatory}}<span style="color:red;margin-left:10px">*</span>{{/mandatory}}
@@ -104,80 +205,98 @@
                 <div class="main">
                     <!-- Type zone de texte, réponse courte, Paragraphe -->
                     {{#type_text}}
-                    <div class="freetext-border" style="border: 1px solid black;">
+                    <div class="freetext-border" style="border: 1px solid black; padding: 10px;">
                         <!-- rien à voir custom answer et placeholder -->
                         {{#has_custom_answers}}
-                            {{custom_placeholder}}
+                        {{custom_placeholder}}
                         {{/has_custom_answers}}
                     </div>
                     {{/type_text}}
 
                     <!-- Réponse unique, radio btn -->
-                    {{#radio_btn}}
-                    {{#choices}}
-                    <input type="radio"/><label>{{value}}</label>
-                    {{#is_conditionnal}}
-                    (Aller à : {{form_element_position}}
-                    {{/is_conditionnal}}
-                    {{/choices}}
-                    {{/radio_btn}}
+                    <div class="radio-buttons-container" style="display: flex; flex-direction: column">
+                        {{#radio_btn}}
+                        {{#choices}}
+                        <div class="radio-btn-choice">
+                            <input type="radio"/><label>{{value}}</label>
+                            {{#is_conditionnal}}
+                            (Aller à : {{form_element_position}}
+                            {{/is_conditionnal}}
+                        </div>
+                        {{/choices}}
+                        {{/radio_btn}}
+                    </div>
 
                     <!-- Réponse multiple -->
-                    {{#multiple_choice}}
-                    {{#choices}}
-                    <input type="checkbox"/><label>{{value}}</label>
-                    {{/choices}}
-                    {{/multiple_choice}}
+                    <div class="checkbox-container" style="display: flex; flex-direction: column">
+                        {{#multiple_choice}}
+                        {{#choices}}
+                        <div class="checkbox-choice">
+                            <input type="checkbox"/><label>{{value}}</label>
+                        </div>
+                        {{/choices}}
+                        {{/multiple_choice}}
+                    </div>
 
                     <!-- Date, heure -->
                     {{#date_hour}}
-                    <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
+                    <div style="border-bottom: 1px solid black; margin-top: 5px; width: 20px;"></div>
                     {{/date_hour}}
 
                     <!-- Matrice -->
                     {{#is_matrice}}
-                    <table class="twelve matrix-table">
+                    <table class="matrix-table" style="border-collapse: collapse;">
                         <thead>
                         <tr>
-                            <th class="two"></th>
-                            <th>{{#choices}}
-                                <label>{{value}}</label>
-                                {{/choices}}
-                            </th>
+                            <th></th>
+                            {{#choices}}
+                            <th style="border-bottom: 1px solid black; padding: 5px;">{{value}}</th>
+                            {{/choices}}
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <td>
-                                {{#child}}
-                                <label>
-                                    <input type="radio"/><label>{{title}}</label>
-                                </label>
-                                {{/child}}
+                        {{#child}}
+                        <tr style="border-bottom: 1px solid black;">
+                            <th style="border-right: 1px solid black; padding: 5px;">{{title}}</th>
+                            {{#choices}}
+                            <td style="border-right: 1px solid black; padding: 5px; text-align: center;">
+                                <input type="radio" name="{{../id}}_{{../../id}}_{{../../id}}_{{../id}}" value="{{id}}_{{id}}" />
                             </td>
+                            {{/choices}}
                         </tr>
+                        {{/child}}
                         </tbody>
                     </table>
                     {{/is_matrice}}
 
                     <!-- Cursor -->
                     {{#is_cursor}}
-                    {{cursor_min_val}}
-                    <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
-                    {{cursor_max_val}}
+                    <div style="display: flex; align-items: center;">
+                        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-right: 10px;">
+                            <div>{{cursor_min_label}} {{cursor_min_val}}</div>
+                        </div>
+                        <div style="border-bottom: 1px solid black; flex-grow: 1;"></div>
+                        <div style="display: flex; flex-direction: column; align-items: flex-start; margin-left: 10px;">
+                            <div>{{cursor_max_val}} {{cursor_max_label}}</div>
+                        </div>
+                    </div>
                     {{/is_cursor}}
 
                     <!-- Ranking -->
                     {{#is_ranking}}
                     {{#choices}}
-                    <div style="border-bottom: 1px solid black; margin-top: 5px;">
+                    <div class="ranking-value">
                         {{value}}
                     </div>
                     {{/choices}}
                     {{/is_ranking}}
                 </div>
             </div>
-            {{/questions}}
+            {{/is_question}}
+        {{/is_section}}
+
+        {{#is_question_from_section}}
+
         {{/is_question_from_section}}
 
         {{#is_question}}
@@ -189,7 +308,7 @@
                 <div class="main">
                     <!-- Type zone de texte, réponse courte, Paragraphe -->
                         {{#type_text}}
-                            <div class="freetext-border" style="border: 1px solid black;">
+                            <div class="freetext-border" style="border: 1px solid black; padding: 10px;">
                                 <!-- rien à voir custom answer et placeholder -->
                                 {{#has_custom_answers}}
                                     {{custom_placeholder}}
@@ -198,64 +317,78 @@
                         {{/type_text}}
 
                         <!-- Réponse unique, radio btn -->
-                        {{#radio_btn}}
+                        <div class="radio-buttons-container" style="display: flex; flex-direction: column">
+                            {{#radio_btn}}
                             {{#choices}}
+                            <div class="radio-btn-choice">
                                 <input type="radio"/><label>{{value}}</label>
                                 {{#is_conditionnal}}
                                     (Aller à : {{form_element_position}}
                                 {{/is_conditionnal}}
+                            </div>
                             {{/choices}}
-                        {{/radio_btn}}
+                            {{/radio_btn}}
+                        </div>
 
                         <!-- Réponse multiple -->
-                        {{#multiple_choice}}
-                            {{#choices}}
-                                <input type="checkbox"/><label>{{value}}</label>
-                            {{/choices}}
-                        {{/multiple_choice}}
+                        <div class="checkbox-container" style="display: flex; flex-direction: column">
+                            {{#multiple_choice}}
+                                {{#choices}}
+                                <div class="checkbox-choice">
+                                    <input type="checkbox"/><label>{{value}}</label>
+                                </div>
+                                {{/choices}}
+                            {{/multiple_choice}}
+                        </div>
 
                         <!-- Date, heure -->
                         {{#date_hour}}
-                            <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
+                            <div style="border-bottom: 1px solid black; margin-top: 5px; width: 20px;"></div>
                         {{/date_hour}}
 
                         <!-- Matrice -->
                         {{#is_matrice}}
-                                <table class="twelve matrix-table">
-                                    <thead>
-                                        <tr>
-                                            <th class="two"></th>
-                                            <th>{{#choices}}
-                                                    <label>{{value}}</label>
-                                                {{/choices}}
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>
-                                                {{#child}}
-                                                    <label>
-                                                        <input type="radio"/><label>{{title}}</label>
-                                                    </label>
-                                                {{/child}}
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
+                        <table class="matrix-table" style="border-collapse: collapse;">
+                            <thead>
+                            <tr>
+                                <th></th>
+                                {{#choices}}
+                                <th style="border-bottom: 1px solid black; padding: 5px;">{{value}}</th>
+                                {{/choices}}
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {{#child}}
+                            <tr style="border-bottom: 1px solid black;">
+                                <th style="border-right: 1px solid black; padding: 5px;">{{title}}</th>
+                                {{#choices}}
+                                <td style="border-right: 1px solid black; padding: 5px; text-align: center;">
+                                    <input type="radio" name="{{../id}}_{{../../id}}_{{../../id}}_{{../id}}" value="{{id}}_{{id}}" />
+                                </td>
+                                {{/choices}}
+                            </tr>
+                            {{/child}}
+                            </tbody>
+                        </table>
                         {{/is_matrice}}
 
                         <!-- Cursor -->
                         {{#is_cursor}}
-                            {{cursor_min_val}}
-                                <div style="border-bottom: 1px solid black; margin-top: 5px;"></div>
-                            {{cursor_max_val}}
+                        <div style="display: flex; align-items: center;">
+                            <div style="display: flex; flex-direction: column; align-items: flex-start; margin-right: 10px;">
+                                <div>{{cursor_min_label}} {{cursor_min_val}}</div>
+                            </div>
+                            <div style="border-bottom: 1px solid black; flex-grow: 1;"></div>
+                            <div style="display: flex; flex-direction: column; align-items: flex-start; margin-left: 10px;">
+                                <div>{{cursor_max_val}} {{cursor_max_label}}</div>
+                            </div>
+                        </div>
                         {{/is_cursor}}
 
                         <!-- Ranking -->
                         {{#is_ranking}}
                             {{#choices}}
-                                <div style="border-bottom: 1px solid black; margin-top: 5px;">
+                                <div class="ranking-value">
                                     {{value}}
                                 </div>
                             {{/choices}}

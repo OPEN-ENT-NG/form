@@ -75,9 +75,9 @@ public class DefaultQuestionService implements QuestionService {
 
     @Override
     public void listChildren(JsonArray questionIds, Handler<Either<String, JsonArray>> handler) {
-        String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE matrix_id IN " + Sql.listPrepared(questionIds);
-        JsonArray params = new JsonArray().addAll(questionIds);
-        sql.prepared(query, params, SqlResult.validResultHandler(handler));
+        listChildren(questionIds)
+                .onSuccess(result -> handler.handle(new Either.Right<>(result)))
+                .onFailure(err -> handler.handle(new Either.Left<>(err.getMessage())));
     }
 
     @Override

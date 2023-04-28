@@ -51,7 +51,7 @@ public class DefaultQuestionChoiceService implements QuestionChoiceService {
     @Override
     public void listChoices(JsonArray questionIds, Handler<Either<String, JsonArray>> handler) {
         listChoices(questionIds)
-                .onSuccess(result -> handler.handle(new Either.Right<>(questionIds)))
+                .onSuccess(result -> handler.handle(new Either.Right<>(result)))
                 .onFailure(err -> handler.handle(new Either.Left<>(err.getMessage())));
     }
 

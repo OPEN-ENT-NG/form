@@ -79,7 +79,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                         .compose(listQuestions -> questionSpecificFieldsService.syncQuestionSpecs(questionsInfos))
                         .compose(questionsWithSpecifics -> questionChoiceService.listChoices(questionsIds))
                         .compose(listChoices -> {
-                            promiseInfos.put("questions_choices", listChoices);
+                            promiseInfos.put(QUESTIONS_CHOICES, listChoices);
                             return questionService.listChildren(questionsIds);
                         })
                         .onSuccess(listChildren -> {
@@ -87,7 +87,8 @@ public class FormQuestionsExportPDF extends ControllerHelper {
 
                             for (int i = 0; i < sectionsInfos.size(); i++) {
                                 JsonObject sectionInfo = sectionsInfos.getJsonObject(i);
-                                sectionInfo.put(IS_SECTION, true);
+                                sectionInfo.put(IS_SECTION, true)
+                                           .put(QUESTIONS, new JsonArray());
                                 form_elements.add(sectionInfo);
                             }
 
@@ -97,7 +98,9 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                     question.put(IS_QUESTION, true);
                                 }
                                 if (question.containsKey(SECTION_ID) && question.getInteger(SECTION_ID) != null) {
-                                    question.put(IS_QUESTION_FORM_SECTION, true);
+//                                    retrouver la section qui correspond dans la liste des questions
+                                    // faire un mapping
+                                    // recup l'object question dans la section et l'ajouter dans la liste
                                 }
 
                                 for (int j = 0; j < promiseInfos.getJsonArray(QUESTIONS_CHOICES).size(); j++) {
