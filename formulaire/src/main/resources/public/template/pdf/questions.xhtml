@@ -205,10 +205,11 @@
                     <table class="matrix-table" style="border-collapse: collapse;">
                         <thead>
                         <tr>
-                            <th></th>
-                            {{#choices}}
-                            <th style="border-bottom: 1px solid black; padding: 5px;">{{value}}</th>
-                            {{/choices}}
+                            <th class="two"></th>
+                            <th>{{#choices}}
+                                <label>{{value}}</label>
+                                {{/choices}}
+                            </th>
                         </tr>
                         </thead>
                         <tbody>
