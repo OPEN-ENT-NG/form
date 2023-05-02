@@ -125,46 +125,6 @@
             margin-right: 10px;
         }
 
-        /*table {*/
-        /*    width: 100%;*/
-        /*    border-collapse: collapse;*/
-        /*}*/
-
-        /*table td, table th {*/
-        /*    border: 1px solid #ccc;*/
-        /*    padding: 5px;*/
-        /*}*/
-
-        /*table th {*/
-        /*    background-color: #f9f9f9;*/
-        /*    border-top: 2px solid orange;*/
-        /*    border-bottom: 2px solid orange;*/
-        /*}*/
-
-        /*table th:first-child {*/
-        /*    border-left: 2px solid orange;*/
-        /*}*/
-
-        /*table td:first-child {*/
-        /*    border-left: 2px solid orange;*/
-        /*}*/
-
-        /*table td:last-child {*/
-        /*    border-right: 2px solid orange;*/
-        /*}*/
-
-        /*table td:not(:first-child) {*/
-        /*    border-left: none;*/
-        /*}*/
-
-        /*table tr:last-child td {*/
-        /*    border-bottom: none;*/
-        /*}*/
-
-        /*table tr:first-child th {*/
-        /*    border-top: none;*/
-        /*}*/
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -196,7 +156,7 @@
                 </span>
             </div>
 
-            {{#is_question}}
+            {{#questions}}
             <div class="question">
                 <h4>
                     {{title}}{{#mandatory}}<span style="color:red;margin-left:10px">*</span>{{/mandatory}}
@@ -205,11 +165,8 @@
                 <div class="main">
                     <!-- Type zone de texte, réponse courte, Paragraphe -->
                     {{#type_text}}
-                    <div class="freetext-border" style="border: 1px solid black; padding: 10px;">
-                        <!-- rien à voir custom answer et placeholder -->
-                        {{#has_custom_answers}}
-                        {{custom_placeholder}}
-                        {{/has_custom_answers}}
+                    <div style="border: 1px solid black; padding: 10px;">
+                        {{placeholder}}
                     </div>
                     {{/type_text}}
 
@@ -219,9 +176,9 @@
                         {{#choices}}
                         <div class="radio-btn-choice">
                             <input type="radio"/><label>{{value}}</label>
-                            {{#is_conditionnal}}
-                            (Aller à : {{form_element_position}}
-                            {{/is_conditionnal}}
+                            {{#is_conditional}}
+                                (Aller à : {{next_form_element_id}})
+                            {{/is_conditional}}
                         </div>
                         {{/choices}}
                         {{/radio_btn}}
@@ -240,7 +197,7 @@
 
                     <!-- Date, heure -->
                     {{#date_hour}}
-                    <div style="border-bottom: 1px solid black; margin-top: 5px; width: 20px;"></div>
+                        <div style="border-bottom: 1px solid black; margin-top: 5px; width: 30px;"></div>
                     {{/date_hour}}
 
                     <!-- Matrice -->
@@ -292,12 +249,8 @@
                     {{/is_ranking}}
                 </div>
             </div>
-            {{/is_question}}
+            {{/questions}}
         {{/is_section}}
-
-        {{#is_question_from_section}}
-
-        {{/is_question_from_section}}
 
         {{#is_question}}
         <div class="question">
@@ -310,9 +263,7 @@
                         {{#type_text}}
                             <div class="freetext-border" style="border: 1px solid black; padding: 10px;">
                                 <!-- rien à voir custom answer et placeholder -->
-                                {{#has_custom_answers}}
-                                    {{custom_placeholder}}
-                                {{/has_custom_answers}}
+                                {{placeholder}}
                             </div>
                         {{/type_text}}
 
@@ -322,9 +273,9 @@
                             {{#choices}}
                             <div class="radio-btn-choice">
                                 <input type="radio"/><label>{{value}}</label>
-                                {{#is_conditionnal}}
-                                    (Aller à : {{form_element_position}}
-                                {{/is_conditionnal}}
+                                {{#is_conditional}}
+                                    (Aller à : {{title_next}})
+                                {{/is_conditional}}
                             </div>
                             {{/choices}}
                             {{/radio_btn}}
@@ -343,7 +294,7 @@
 
                         <!-- Date, heure -->
                         {{#date_hour}}
-                            <div style="border-bottom: 1px solid black; margin-top: 5px; width: 20px;"></div>
+                            <div style="border-bottom: 1px solid black; margin-top: 5px; width: 30px;"></div>
                         {{/date_hour}}
 
                         <!-- Matrice -->

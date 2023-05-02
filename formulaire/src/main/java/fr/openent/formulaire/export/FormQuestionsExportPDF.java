@@ -27,10 +27,13 @@ import org.entcore.common.storage.Storage;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 import static fr.openent.form.core.constants.ConfigFields.NODE_PDF_GENERATOR;
 import static fr.openent.form.core.constants.Fields.*;
+import static fr.openent.form.core.enums.QuestionTypes.*;
 import static fr.openent.form.helpers.RenderHelper.renderInternalError;
 import static fr.openent.form.helpers.UtilsHelper.*;
 
@@ -75,8 +78,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                 JsonArray questionsIds = getIds(questionsInfos);
                 JsonObject promiseInfos = new JsonObject();
 
-                questionService.listForFormAndSection(formId)
-                        .compose(listQuestions -> questionSpecificFieldsService.syncQuestionSpecs(questionsInfos))
+                questionSpecificFieldsService.syncQuestionSpecs(questionsInfos)
                         .compose(questionsWithSpecifics -> questionChoiceService.listChoices(questionsIds))
                         .compose(listChoices -> {
                             promiseInfos.put(QUESTIONS_CHOICES, listChoices);
@@ -84,37 +86,51 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                         })
                         .onSuccess(listChildren -> {
                             JsonArray form_elements = new JsonArray();
+                            Map<Integer, Integer> mapSectionIdPositionList = new HashMap<>();
+                            Map<Integer, JsonObject> mapQuestions = new HashMap<>();
 
                             for (int i = 0; i < sectionsInfos.size(); i++) {
                                 JsonObject sectionInfo = sectionsInfos.getJsonObject(i);
                                 sectionInfo.put(IS_SECTION, true)
                                            .put(QUESTIONS, new JsonArray());
                                 form_elements.add(sectionInfo);
+                                mapSectionIdPositionList.put(sectionInfo.getInteger(ID), i);
                             }
 
                             for (int i = 0; i < questionsInfos.size(); i++) {
                                 JsonObject question = questionsInfos.getJsonObject(i);
                                 if (question.containsKey(SECTION_ID) && question.getInteger(SECTION_ID) == null) {
                                     question.put(IS_QUESTION, true);
+                                    int id = question.getInteger(ID);
+                                    mapQuestions.put(id, question);
                                 }
+
                                 if (question.containsKey(SECTION_ID) && question.getInteger(SECTION_ID) != null) {
-//                                    retrouver la section qui correspond dans la liste des questions
-                                    // faire un mapping
-                                    // recup l'object question dans la section et l'ajouter dans la liste
+                                    Integer positionSectionFormElt = mapSectionIdPositionList.get(i);
+                                    JsonObject section = form_elements.getJsonObject(positionSectionFormElt);
+                                    section.getJsonArray(QUESTIONS).add(question);
                                 }
 
                                 for (int j = 0; j < promiseInfos.getJsonArray(QUESTIONS_CHOICES).size(); j++) {
                                     JsonObject choice = promiseInfos.getJsonArray(QUESTIONS_CHOICES).getJsonObject(j);
+
                                     if (Objects.equals(choice.getInteger(QUESTION_ID), question.getInteger(ID))) {
                                         if (!question.containsKey(CHOICES)) {
                                             // If first choice, create new JsonArray
                                             JsonArray choicesArray = new JsonArray();
+                                            // recup id et type du nextFormElt
+                                            // soit section soit question (faire map section la haut)
+                                            //
                                             choicesArray.add(choice);
                                             question.put(CHOICES, choicesArray);
 
+                                            if (question.containsKey(CONDITIONAL) && question.getBoolean(CONDITIONAL)) {
+                                                question.put(IS_CONDITIONAL, true);
+                                            }
                                         } else {
                                             // If already exist, add choice to JsonArray
                                             JsonArray choicesArray = question.getJsonArray(CHOICES);
+                                            // TODO A REPORTER ICI
                                             choicesArray.add(choice);
                                         }
                                     }
@@ -137,36 +153,34 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                     }
                                 }
 
-                                if (question.getInteger(QUESTION_TYPE) == QuestionTypes.FREETEXT.getCode()
-                                        || question.getInteger(QUESTION_TYPE) == QuestionTypes.SHORTANSWER.getCode()
-                                        || question.getInteger(QUESTION_TYPE) == QuestionTypes.LONGANSWER.getCode()) {
-                                    question.put(TYPE_TEXT, true);
-                                }
-
-                                if (question.getInteger(QUESTION_TYPE) == QuestionTypes.SINGLEANSWERRADIO.getCode()
-                                        || question.getInteger(QUESTION_TYPE) == QuestionTypes.SINGLEANSWER.getCode()) {
-                                    question.put(RADIO_BTN, true);
-                                }
-
-                                if (question.getInteger(QUESTION_TYPE) == QuestionTypes.MULTIPLEANSWER.getCode()) {
-                                    question.put(MULTIPLE_CHOICE, true);
-                                }
-
-                                if (question.getInteger(QUESTION_TYPE) == QuestionTypes.DATE.getCode()
-                                    || question.getInteger(QUESTION_TYPE) == QuestionTypes.TIME.getCode()) {
-                                    question.put(DATE_HOUR, true);
-                                }
-
-                                if (question.getInteger(QUESTION_TYPE) == QuestionTypes.MATRIX.getCode()) {
-                                    question.put(IS_MATRICE, true);
-                                }
-
-                                if (question.getInteger(QUESTION_TYPE) == QuestionTypes.CURSOR.getCode()) {
-                                    question.put(IS_CURSOR, true);
-                                }
-
-                                if (question.getInteger(QUESTION_TYPE) == QuestionTypes.RANKING.getCode()) {
-                                    question.put(IS_RANKING, true);
+                                switch (QuestionTypes.values()[question.getInteger(QUESTION_TYPE) - 1]) {
+                                    case FREETEXT:
+                                    case SHORTANSWER:
+                                    case LONGANSWER:
+                                        question.put(TYPE_TEXT, true);
+                                        break;
+                                    case SINGLEANSWERRADIO:
+                                    case SINGLEANSWER:
+                                        question.put(RADIO_BTN, true);
+                                        break;
+                                    case MULTIPLEANSWER:
+                                        question.put(MULTIPLE_CHOICE, true);
+                                        break;
+                                    case DATE:
+                                    case TIME:
+                                        question.put(DATE_HOUR, true);
+                                        break;
+                                    case MATRIX:
+                                        question.put(IS_MATRICE, true);
+                                        break;
+                                    case CURSOR:
+                                        question.put(IS_CURSOR, true);
+                                        break;
+                                    case RANKING:
+                                        question.put(IS_RANKING, true);
+                                        break;
+                                    default:
+                                        break;
                                 }
                                 form_elements.add(question);
                             }

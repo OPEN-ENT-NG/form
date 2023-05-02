@@ -184,7 +184,7 @@ public class Fields {
     public static final String HAS_CUSTOM_ANSWERS = "has_custom_answers";
     public static final String IDS = "ids";
     public static final String IMAGES = "images";
-    public static final String IS_CONDITIONNAL = "is_conditionnal";
+    public static final String IS_CONDITIONAL = "is_conditional";
     public static final String IS_CURSOR = "is_cursor";
     public static final String IS_QUESTION = "is_question";
     public static final String IS_QUESTION_FORM_SECTION = "is_question_from_section";
