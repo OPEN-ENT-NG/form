@@ -33,7 +33,6 @@ import java.util.Objects;
 
 import static fr.openent.form.core.constants.ConfigFields.NODE_PDF_GENERATOR;
 import static fr.openent.form.core.constants.Fields.*;
-import static fr.openent.form.core.enums.QuestionTypes.*;
 import static fr.openent.form.helpers.RenderHelper.renderInternalError;
 import static fr.openent.form.helpers.UtilsHelper.*;
 
@@ -50,6 +49,15 @@ public class FormQuestionsExportPDF extends ControllerHelper {
     private final QuestionSpecificFieldsService questionSpecificFieldsService = new DefaultQuestionSpecificFieldsService();
     private final QuestionChoiceService questionChoiceService = new DefaultQuestionChoiceService();
     private final PdfFactory pdfFactory;
+
+    public FormQuestionsExportPDF(HttpServerRequest request, Vertx vertx, JsonObject config, Storage storage, JsonObject form) {
+        this.request = request;
+        this.config = config;
+        this.vertx = vertx;
+        this.renders = new Renders(this.vertx, config);
+        this.form = form;
+        pdfFactory = new PdfFactory(vertx, new JsonObject().put(NODE_PDF_GENERATOR, config.getJsonObject(NODE_PDF_GENERATOR, new JsonObject())));
+    }
 
     public void launch() {
         String formId = form.getInteger(ID).toString();
@@ -139,16 +147,10 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                 for (int k = 0; k < listChildren.size(); k ++) {
                                     JsonObject child = listChildren.getJsonObject(k);
                                     if (Objects.equals(child.getInteger(MATRIX_ID), question.getInteger(ID))) {
-                                        if (!question.containsKey(CHILD)) {
-                                            // If first choice, create new JsonArray
-                                            JsonArray matrixChild = new JsonArray();
-                                            matrixChild.add(child);
-                                            question.put(CHILD, matrixChild);
-
+                                        if (question.containsKey(CHILDREN)) {
+                                            question.getJsonArray(CHILDREN).add(child);
                                         } else {
-                                            // If already exist, add choice to JsonArray
-                                            JsonArray matrixChild = question.getJsonArray(CHILD);
-                                            matrixChild.add(child);
+                                            question.put(CHILDREN, new JsonArray().add(child));
                                         }
                                     }
                                 }
@@ -171,7 +173,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                         question.put(DATE_HOUR, true);
                                         break;
                                     case MATRIX:
-                                        question.put(IS_MATRICE, true);
+                                        question.put(IS_MATRIX, true);
                                         break;
                                     case CURSOR:
                                         question.put(IS_CURSOR, true);
@@ -206,15 +208,6 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         });
     }
 
-    public FormQuestionsExportPDF(HttpServerRequest request, Vertx vertx, JsonObject config, Storage storage, JsonObject form) {
-        this.request = request;
-        this.config = config;
-        this.vertx = vertx;
-        this.renders = new Renders(this.vertx, config);
-        this.form = form;
-        pdfFactory = new PdfFactory(vertx, new JsonObject().put(NODE_PDF_GENERATOR, config.getJsonObject(NODE_PDF_GENERATOR, new JsonObject())));
-    }
-
     private void generatePDF(HttpServerRequest request, JsonObject templateProps, String templateName, Handler<Buffer> handler) {
         Promise<Pdf> promise = Promise.promise();
         final String templatePath = "./public/template/pdf/";
@@ -239,12 +232,12 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                 byte[] bytes;
                 bytes = processedTemplate.getBytes(StandardCharsets.UTF_8);
 
-                node = (String) vertx.sharedData().getLocalMap("server").get("node");
+                node = (String) vertx.sharedData().getLocalMap(SERVER).get(NODE);
                 if (node == null) {
                     node = "";
                 }
 
-                actionObject.put("content", bytes).put("baseUrl", baseUrl);
+                actionObject.put(CONTENT, bytes).put(BASE_URL, baseUrl);
                 generatePDF(TITLE, processedTemplate)
                         .onSuccess(res -> {
                             handler.handle(res.getContent());

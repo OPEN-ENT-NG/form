@@ -163,28 +163,28 @@
                 </h4>
 
                 <div class="main">
-                    <!-- Type zone de texte, réponse courte, Paragraphe -->
+                    <!-- Type freetext, shortanswer -->
                     {{#type_text}}
-                    <div style="border: 1px solid black; padding: 10px;">
+                    <div class="freetext-border" style="border: 1px solid black; padding: 10px;">
                         {{placeholder}}
                     </div>
                     {{/type_text}}
 
-                    <!-- Réponse unique, radio btn -->
+                    <!-- Single answer, radio btn -->
                     <div class="radio-buttons-container" style="display: flex; flex-direction: column">
                         {{#radio_btn}}
                         {{#choices}}
                         <div class="radio-btn-choice">
                             <input type="radio"/><label>{{value}}</label>
                             {{#is_conditional}}
-                                (Aller à : {{next_form_element_id}})
+                            (Aller à : {{title_next}})
                             {{/is_conditional}}
                         </div>
                         {{/choices}}
                         {{/radio_btn}}
                     </div>
 
-                    <!-- Réponse multiple -->
+                    <!-- Multiple answer -->
                     <div class="checkbox-container" style="display: flex; flex-direction: column">
                         {{#multiple_choice}}
                         {{#choices}}
@@ -195,13 +195,13 @@
                         {{/multiple_choice}}
                     </div>
 
-                    <!-- Date, heure -->
+                    <!-- Date, hour -->
                     {{#date_hour}}
-                        <div style="border-bottom: 1px solid black; margin-top: 5px; width: 30px;"></div>
+                    <div style="border-bottom: 1px solid black; margin-top: 5px; width: 30px;"></div>
                     {{/date_hour}}
 
-                    <!-- Matrice -->
-                    {{#is_matrice}}
+                    <!-- Matrix -->
+                    {{#is_matrix}}
                     <table class="matrix-table" style="border-collapse: collapse;">
                         <thead>
                         <tr>
@@ -212,19 +212,19 @@
                         </tr>
                         </thead>
                         <tbody>
-                        {{#child}}
+                        {{#children}}
                         <tr style="border-bottom: 1px solid black;">
                             <th style="border-right: 1px solid black; padding: 5px;">{{title}}</th>
                             {{#choices}}
                             <td style="border-right: 1px solid black; padding: 5px; text-align: center;">
-                                <input type="radio" name="{{../id}}_{{../../id}}_{{../../id}}_{{../id}}" value="{{id}}_{{id}}" />
+                                <input type="radio"/>
                             </td>
                             {{/choices}}
                         </tr>
-                        {{/child}}
+                        {{/children}}
                         </tbody>
                     </table>
-                    {{/is_matrice}}
+                    {{/is_matrix}}
 
                     <!-- Cursor -->
                     {{#is_cursor}}
@@ -259,15 +259,14 @@
             </h4>
 
                 <div class="main">
-                    <!-- Type zone de texte, réponse courte, Paragraphe -->
+                    <!-- Type freetext, shortanswer -->
                         {{#type_text}}
                             <div class="freetext-border" style="border: 1px solid black; padding: 10px;">
-                                <!-- rien à voir custom answer et placeholder -->
                                 {{placeholder}}
                             </div>
                         {{/type_text}}
 
-                        <!-- Réponse unique, radio btn -->
+                        <!-- Single answer, radio btn -->
                         <div class="radio-buttons-container" style="display: flex; flex-direction: column">
                             {{#radio_btn}}
                             {{#choices}}
@@ -281,7 +280,7 @@
                             {{/radio_btn}}
                         </div>
 
-                        <!-- Réponse multiple -->
+                        <!-- Multiple answer -->
                         <div class="checkbox-container" style="display: flex; flex-direction: column">
                             {{#multiple_choice}}
                                 {{#choices}}
@@ -292,13 +291,13 @@
                             {{/multiple_choice}}
                         </div>
 
-                        <!-- Date, heure -->
+                        <!-- Date, hour -->
                         {{#date_hour}}
                             <div style="border-bottom: 1px solid black; margin-top: 5px; width: 30px;"></div>
                         {{/date_hour}}
 
-                        <!-- Matrice -->
-                        {{#is_matrice}}
+                        <!-- Matrix -->
+                        {{#is_matrix}}
                         <table class="matrix-table" style="border-collapse: collapse;">
                             <thead>
                             <tr>
@@ -309,19 +308,19 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {{#child}}
+                            {{#children}}
                             <tr style="border-bottom: 1px solid black;">
                                 <th style="border-right: 1px solid black; padding: 5px;">{{title}}</th>
                                 {{#choices}}
                                 <td style="border-right: 1px solid black; padding: 5px; text-align: center;">
-                                    <input type="radio" name="{{../id}}_{{../../id}}_{{../../id}}_{{../id}}" value="{{id}}_{{id}}" />
+                                    <input type="radio"/>
                                 </td>
                                 {{/choices}}
                             </tr>
-                            {{/child}}
+                            {{/children}}
                             </tbody>
                         </table>
-                        {{/is_matrice}}
+                        {{/is_matrix}}
 
                         <!-- Cursor -->
                         {{#is_cursor}}

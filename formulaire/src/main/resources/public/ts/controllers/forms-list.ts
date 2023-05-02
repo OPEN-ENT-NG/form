@@ -76,7 +76,7 @@ interface ViewModel {
     selectedFolder: Element;
     draggable : Draggable;
     draggedItem : any;
-    exportFormat: string;
+    exportFormat: Exports;
 
     importForms() : void;
     doImportForms(): Promise<void>;
@@ -401,11 +401,11 @@ export const formsListController = ng.controller('FormsListController', ['$scope
 
         // Generate document PDF and store it in a blob
         if (vm.exportFormat === Exports.PDF) {
-            let doc = await formService.export(vm.forms.selected.map((f: Form) => f.id), vm.exportFormat);
-            let blob = new Blob([doc.data], {type: 'application/pdf; charset=utf-18'});
+            let doc: any = await formService.export(vm.forms.selected.map((f: Form) => f.id), vm.exportFormat);
+            let blob: Blob = new Blob([doc.data], {type: 'application/pdf; charset=utf-18'});
 
             // Download the blob
-            let link = document.createElement('a');
+            let link: any = document.createElement('a');
             link.href = window.URL.createObjectURL(blob);
             link.download =  doc.headers['content-disposition'].split('filename=')[1];
             document.body.appendChild(link);

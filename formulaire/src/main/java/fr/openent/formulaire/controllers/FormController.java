@@ -1152,7 +1152,7 @@ public class FormController extends ControllerHelper {
                             EventBusHelper.requestJsonObject(EXPORT_ADDRESS, eb, ebMessage)
                                     .onSuccess(res -> renderJson(request, res))
                                     .onFailure(err -> {
-                                        String message = "[Formulaire@exportForms] Failed to export data : " + err.getMessage();
+                                        String message = "[Formulaire@FormController::exportForm] Failed to export data : " + err.getMessage();
                                         log.error(message);
                                         renderInternalError(request, message);
                                     });
