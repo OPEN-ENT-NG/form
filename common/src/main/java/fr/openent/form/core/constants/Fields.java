@@ -63,6 +63,7 @@ public class Fields {
     public static final String PICTURE = "picture";
     public static final String QUESTION = "question";
     public static final String QUESTION_CHOICES = "question_choices";
+    public static final String QUESTIONS_CHOICES = "questions_choices";
     public static final String QUESTION_ID = "question_id";
     public static final String QUESTION_TYPE = "question_type";
     public static final String PARENT_ID = "parent_id";
@@ -79,6 +80,7 @@ public class Fields {
     public static final String RGPD_GOAL = "rgpd_goal";
     public static final String RGPD_LIFETIME = "rgpd_lifetime";
     public static final String SEARCH = "search";
+    public static final String SECTION = "section";
     public static final String SECTION_ID = "section_id";
     public static final String SECTION_POSITION = "section_position";
     public static final String SENDER_ID = "sender_id";
