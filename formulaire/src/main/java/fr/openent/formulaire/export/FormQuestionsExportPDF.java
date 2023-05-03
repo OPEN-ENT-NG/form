@@ -106,6 +106,8 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                            .put(QUESTIONS, new JsonArray());
                                 form_elements.add(sectionInfo);
                                 mapSectionIdPositionList.put(sectionInfo.getInteger(ID), i);
+                                int id = sectionInfo.getInteger(ID);
+                                mapSections.put(id, sectionInfo);
                             }
 
                             for (int i = 0; i < questionsInfos.size(); i++) {
@@ -120,8 +122,6 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                     Integer positionSectionFormElt = mapSectionIdPositionList.get(i);
                                     JsonObject section = form_elements.getJsonObject(positionSectionFormElt);
                                     section.getJsonArray(QUESTIONS).add(question);
-                                    int id = section.getInteger(ID);
-                                    mapSections.put(id, section);
                                 }
 
                                 for (int j = 0; j < promiseInfos.getJsonArray(QUESTIONS_CHOICES).size(); j++) {
