@@ -63,7 +63,6 @@ public class Fields {
     public static final String PICTURE = "picture";
     public static final String QUESTION = "question";
     public static final String QUESTION_CHOICES = "question_choices";
-    public static final String QUESTIONS_CHOICES = "questions_choices";
     public static final String QUESTION_ID = "question_id";
     public static final String QUESTION_TYPE = "question_type";
     public static final String PARENT_ID = "parent_id";
@@ -209,6 +208,7 @@ public class Fields {
     public static final String STATEMENTS = "statements";
     public static final String SUBJECT = "subject";
     public static final String SUM_RESPONSES = "sum_responses";
+    public static final String TITLE_NEXT = "title_next";
     public static final String TO = "to";
     public static final String TRANSACTION = "transaction";
     public static final String TYPE_FREETEXT = "type_freetext";
