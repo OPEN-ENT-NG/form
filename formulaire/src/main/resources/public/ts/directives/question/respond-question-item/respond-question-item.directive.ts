@@ -103,14 +103,12 @@ class Controller implements ng.IController, IViewModel {
             let responses: Responses = new Responses();
             await responses.syncMine(this.question.id, this.distribution.id);
             if (responses.all.length > 0) {
-                this.responses.all[0] = responses.all[0];
+                this.responses.all = [...responses.all];
                 if (this.question.question_type === Types.CURSOR) {
                     let answer: number = Number.parseInt(this.responses.all[0].answer.toString());
                     this.responses.all[0].answer = Number.isNaN(answer) ? this.question.cursor_min_val : answer;
                 }
             }
-            if (!this.responses.all[0].question_id) this.responses.all[0].question_id = this.question.id;
-            if (!this.responses.all[0].distribution_id) this.responses.all[0].distribution_id = this.distribution.id;
         }
 
         if (this.question.question_type === Types.TIME && typeof this.responses.all[0].answer == "string") {
