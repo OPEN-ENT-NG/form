@@ -109,6 +109,8 @@ class Controller implements ng.IController, IViewModel {
                     this.responses.all[0].answer = Number.isNaN(answer) ? this.question.cursor_min_val : answer;
                 }
             }
+            if (!this.responses.all[0].question_id) this.responses.all[0].question_id = this.question.id;
+            if (!this.responses.all[0].distribution_id) this.responses.all[0].distribution_id = this.distribution.id;
         }
 
         if (this.question.question_type === Types.TIME && typeof this.responses.all[0].answer == "string") {
