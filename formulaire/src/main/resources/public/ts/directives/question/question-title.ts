@@ -35,12 +35,12 @@ export const questionTitle: Directive = ng.directive('questionTitle', () => {
                             <i18n ng-if="vm.question.question_type != vm.Types.FREETEXT">formulaire.question.title.empty</i18n>
                         </h4>
                         <div ng-if="vm.question.question_type == vm.Types.MATRIX">
-<!--                            <select class="two" ng-model="vm.matrixType" ng-disabled="true">-->
-<!--                                <option ng-repeat="matrixType in vm.matrixTypes" ng-value="matrixType"-->
-<!--                                        ng-attr-selected="[[matrixType === vm.matrixType ? 'selected' : undefined]]">-->
-<!--                                    [[vm.I18n.translate('formulaire.matrix.type.' + vm.Types[matrixType])]]-->
-<!--                                </option>-->
-<!--                            </select>-->
+                            <select class="two" ng-model="vm.matrixType" ng-disabled="true">
+                                <option ng-repeat="matrixType in vm.matrixTypes" ng-value="matrixType"
+                                        ng-attr-selected="[[matrixType === vm.matrixType ? 'selected' : undefined]]">
+                                    [[vm.I18n.translate('formulaire.matrix.type.' + vm.Types[matrixType])]]
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div ng-if="vm.question.selected">
@@ -50,13 +50,13 @@ export const questionTitle: Directive = ng.directive('questionTitle', () => {
                                 ng-model="vm.question.title" i18n-placeholder="formulaire.question.title.empty" input-guard/>
                         <div class="flex-spaced" ng-if="vm.question.question_type == vm.Types.MATRIX">
                             <input type="text" class="nine" ng-model="vm.question.title" i18n-placeholder="formulaire.question.title.empty" input-guard/>
-<!--                            <select class="two" ng-if="!vm.hasFormResponses" ng-model="vm.matrixType" required-->
-<!--                                    ng-change="vm.onChangeMatrixType(vm.matrixType)" input-guard>-->
-<!--                                <option ng-repeat="matrixType in vm.matrixTypes" ng-value="matrixType"-->
-<!--                                        ng-attr-selected="[[matrixType === vm.matrixType ? 'selected' : undefined]]">-->
-<!--                                    [[vm.I18n.translate('formulaire.matrix.type.' + vm.Types[matrixType])]]-->
-<!--                                </option>-->
-<!--                            </select>-->
+                            <select class="two" ng-if="!vm.hasFormResponses" ng-model="vm.matrixType" required
+                                    ng-change="vm.onChangeMatrixType(vm.matrixType)" input-guard>
+                                <option ng-repeat="matrixType in vm.matrixTypes" ng-value="matrixType"
+                                        ng-attr-selected="[[matrixType === vm.matrixType ? 'selected' : undefined]]">
+                                    [[vm.I18n.translate('formulaire.matrix.type.' + vm.Types[matrixType])]]
+                                </option>
+                            </select>
                         </div>
                     </div>
                 </div>
@@ -70,7 +70,7 @@ export const questionTitle: Directive = ng.directive('questionTitle', () => {
             const vm: IViewModel = $scope.vm;
             vm.Types = Types;
             vm.I18n = I18nUtils;
-            vm.matrixTypes = [vm.Types.SINGLEANSWERRADIO];
+            vm.matrixTypes = [vm.Types.SINGLEANSWERRADIO, vm.Types.MULTIPLEANSWER];
 
             vm.onChangeMatrixType = (matrixType: number) : void => {
                 for (let child of vm.question.children.all) {
