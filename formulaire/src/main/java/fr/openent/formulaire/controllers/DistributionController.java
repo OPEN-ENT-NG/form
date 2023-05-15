@@ -316,7 +316,7 @@ public class DistributionController extends ControllerHelper {
                             Renders.renderJson(request, result);
                         })
                         .onFailure(err -> {
-                            Renders.badRequest(request);
+                            Renders.renderError(request);
                             log.error(String.format("[Form@%s::duplicateWithResponses] Failed to create a new distribution with ON_CHANGE status",
                                     this.getClass().getSimpleName()));
                         });
