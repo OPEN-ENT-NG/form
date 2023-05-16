@@ -7,11 +7,13 @@ import {RootsConst} from "../../../core/constants/roots.const";
 interface IQuestionTitleProps {
     question: Question;
     hasFormResponses: boolean;
-    I18n: I18nUtils;
-    types: typeof Types;
+    matrixType: number;
+    matrixTypes: Types[];
 }
 
 interface IViewModel extends ng.IController, IQuestionTitleProps {
+    I18n: I18nUtils;
+    types: typeof Types;
     onChangeMatrixType(matrixType: number): void;
 }
 
@@ -22,6 +24,8 @@ interface IQuestionTitleScope extends IScope, IQuestionTitleProps {
 class Controller implements IViewModel {
     question: Question;
     hasFormResponses: boolean;
+    matrixType: number;
+    matrixTypes: Types[];
     I18n: I18nUtils;
     types: typeof Types;
 
