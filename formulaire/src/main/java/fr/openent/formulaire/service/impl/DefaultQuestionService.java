@@ -155,10 +155,9 @@ public class DefaultQuestionService implements QuestionService {
                 "mandatory, section_id, section_position, conditional, placeholder, matrix_id, matrix_position) VALUES " +
                 "(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING *;";
         int questionType = question.getInteger(MATRIX_ID, null) != null &&
-                question.getInteger(QUESTION_TYPE, 1) != QuestionTypes.SINGLEANSWERRADIO.getCode()
-                && question.getInteger(QUESTION_TYPE, 1) != QuestionTypes.MULTIPLEANSWER.getCode()
-                ? QuestionTypes.SINGLEANSWERRADIO.getCode()
-                : question.getInteger(QUESTION_TYPE, 1);
+                !MATRIX_CHILD_QUESTIONS.contains(question.getInteger(QUESTION_TYPE, 1)) ?
+                QuestionTypes.SINGLEANSWERRADIO.getCode() :
+                question.getInteger(QUESTION_TYPE, 1);
         boolean isConditional = CONDITIONAL_QUESTIONS.contains(question.getInteger(QUESTION_TYPE)) && question.getBoolean(CONDITIONAL, false);
 
         JsonArray params = new JsonArray()
@@ -206,10 +205,9 @@ public class DefaultQuestionService implements QuestionService {
             for (int i = 0; i < questions.size(); i++) {
                 JsonObject question = questions.getJsonObject(i);
                 int questionType = question.getInteger(MATRIX_ID, null) != null &&
-                        question.getInteger(QUESTION_TYPE, 1) != QuestionTypes.SINGLEANSWERRADIO.getCode()
-                        && question.getInteger(QUESTION_TYPE, 1) != QuestionTypes.MULTIPLEANSWER.getCode()
-                        ? QuestionTypes.SINGLEANSWERRADIO.getCode()
-                        : question.getInteger(QUESTION_TYPE, 1);
+                        !MATRIX_CHILD_QUESTIONS.contains(question.getInteger(QUESTION_TYPE, 1)) ?
+                        QuestionTypes.SINGLEANSWERRADIO.getCode() :
+                        question.getInteger(QUESTION_TYPE, 1);
                 boolean isConditional = CONDITIONAL_QUESTIONS.contains(question.getInteger(QUESTION_TYPE)) && question.getBoolean(CONDITIONAL, false);
                 JsonArray params = new JsonArray()
                         .add(question.getString(TITLE, ""))

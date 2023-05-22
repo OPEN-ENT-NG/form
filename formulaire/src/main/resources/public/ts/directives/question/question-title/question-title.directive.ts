@@ -12,7 +12,7 @@ interface IQuestionTitleProps {
 }
 
 interface IViewModel extends ng.IController, IQuestionTitleProps {
-    I18n: I18nUtils;
+    i18n: I18nUtils;
     types: typeof Types;
     onChangeMatrixType(matrixType: number): void;
 }
@@ -26,12 +26,12 @@ class Controller implements IViewModel {
     hasFormResponses: boolean;
     matrixType: number;
     matrixTypes: Types[];
-    I18n: I18nUtils;
+    i18n: I18nUtils;
     types: typeof Types;
 
     constructor(private $scope: IQuestionTitleScope, private $sce: ng.ISCEService) {
         this.types = Types;
-        this.I18n = I18nUtils;
+        this.i18n = I18nUtils;
     }
 
     $onInit = async () : Promise<void> => {}

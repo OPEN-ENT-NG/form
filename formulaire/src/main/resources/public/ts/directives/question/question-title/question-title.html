@@ -10,7 +10,7 @@
                 <select class="two" ng-model="vm.matrixType" ng-disabled="true">
                     <option ng-repeat="matrixType in vm.matrixTypes" ng-value="matrixType"
                             ng-attr-selected="[[matrixType === vm.matrixType ? 'selected' : undefined]]">
-                        [[vm.I18n.translate('formulaire.matrix.type.' + vm.types[matrixType])]]
+                        [[vm.i18n.translate('formulaire.matrix.type.' + vm.types[matrixType])]]
                     </option>
                 </select>
             </div>
@@ -26,7 +26,7 @@
                         ng-change="vm.onChangeMatrixType(vm.matrixType)" input-guard>
                     <option ng-repeat="matrixType in vm.matrixTypes" ng-value="matrixType"
                             ng-attr-selected="[[matrixType === vm.matrixType ? 'selected' : undefined]]">
-                        [[vm.I18n.translate('formulaire.matrix.type.' + vm.types[matrixType])]]
+                        [[vm.i18n.translate('formulaire.matrix.type.' + vm.types[matrixType])]]
                     </option>
                 </select>
             </div>
