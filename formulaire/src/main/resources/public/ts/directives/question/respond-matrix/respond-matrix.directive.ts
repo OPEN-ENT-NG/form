@@ -14,10 +14,10 @@ interface IRespondMatrixProps {
     question: Question;
     responses: Responses;
     distribution: Distribution;
-    mapChildChoicesResponseIndex: Map<Question, Map<QuestionChoice, number>>;
 }
 
 interface IViewModel {
+    mapChildChoicesResponseIndex: Map<Question, Map<QuestionChoice, number>>;
     types: typeof Types;
     i18n: I18nUtils;
 
