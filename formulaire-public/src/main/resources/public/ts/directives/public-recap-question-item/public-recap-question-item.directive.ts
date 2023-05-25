@@ -8,6 +8,7 @@ import {
     Types
 } from "@common/models";
 import {IScope} from "angular";
+import {RootsConst} from "../../core/constants/roots.const";
 
 interface IPublicRecapQuestionItemProps {
     question: Question;
@@ -54,7 +55,7 @@ class Controller implements IViewModel {
     // Display helper functions
 
     getHtmlDescription = (description: string) : string => {
-        return !!description ? $sce.trustAsHtml(description) : null;
+        return !!description ? this.$sce.trustAsHtml(description) : null;
     }
 
     getStringResponse = () : string => {
@@ -107,6 +108,7 @@ class Controller implements IViewModel {
 function directive() {
     return {
         restrict: 'E',
+        templateUrl: `${RootsConst.directive}public-recap-question-item/public-recap-question-item.html`,
         transclude: true,
         scope: {
             question: '=',
@@ -114,7 +116,7 @@ function directive() {
             formElements: '<',
             historicPosition: '='
         },
-        controllerAs: 'this',
+        controllerAs: 'vm',
         bindToController: true,
         controller: ['$scope', '$sce', Controller],
         /* interaction DOM/element */
@@ -122,8 +124,6 @@ function directive() {
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
-            let missingResponseHtml: string = "<em>" + idiom.translate('formulaire.public.response.missing') + "</em>";
-            let otherHtml: string = "<em>" + idiom.translate('formulaire.public.other') + " : </em>";
         }
     }
 }
