@@ -104,10 +104,16 @@ function directive() {
                             <tr ng-repeat="child in vm.question.children.all | orderBy:matrix_position" ng-init="childIndex = $index">
                                 <td>[[child.title]]</td>
                                 <td ng-repeat ="choice in vm.question.choices.all | orderBy:['position', 'id']">
-                                    <label>
-                                        <input type="radio" name="child-[[child.id]]" ng-change="vm.switchValue(child, choice)" ng-value="true" input-guard
-                                               ng-model="vm.responses.all[vm.mapChildChoicesResponseIndex.get(child).get(choice)].selected">
-                                    </label>
+                    <label ng-if="vm.question.isMatrixSingle()">
+                        <input type="radio" name="child-[[child.id]]"
+                               ng-change="vm.switchValue(child, choice)" ng-value="true" input-guard
+                               ng-model="vm.responses.all[vm.mapChildChoicesResponseIndex.get(child).get(choice)].selected">
+                    </label>
+                    <label ng-if="vm.question.isMatrixMultiple()">
+                        <input type="checkbox"
+                               ng-model="vm.responses.all[vm.mapChildChoicesResponseIndex.get(child).get(choice)].selected" input-guard>
+                        <span></span>
+                    </label>
                                 </td>
                                 <td><i class="i-restore md-icon dark-grey spaced-left" ng-click="vm.resetLine(child)"></i></td>
                             </tr>
