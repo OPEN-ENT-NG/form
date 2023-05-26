@@ -139,7 +139,9 @@ function directive() {
         scope: {
             question: '=',
             responses: '=',
+            form: '=',
             formElements: '<',
+            distribution: '=',
             historicPosition: '='
         },
         controllerAs: 'vm',
