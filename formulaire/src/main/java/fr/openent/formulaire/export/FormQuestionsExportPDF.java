@@ -174,6 +174,12 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                     if (Objects.equals(child.getInteger(MATRIX_ID), question.getInteger(ID))) {
                                         if (question.containsKey(CHILDREN)) {
                                             question.getJsonArray(CHILDREN).add(child);
+                                            if (child.getInteger(QUESTION_TYPE).equals(QuestionTypes.SINGLEANSWERRADIO.getCode())) {
+                                                question.put(iS_MATRIX_SINGLE, true);
+                                            }
+                                            if (child.getInteger(QUESTION_TYPE).equals(QuestionTypes.MULTIPLEANSWER.getCode())) {
+                                                question.put(iS_MATRIX_MULTIPLE, true);
+                                            }
                                         } else {
                                             question.put(CHILDREN, new JsonArray().add(child));
                                         }
