@@ -1,4 +1,4 @@
-import {Directive, idiom as lang, ng} from "entcore";
+import {Directive, idiom, ng} from "entcore";
 import {
     Distribution,
     DistributionStatus,
@@ -56,8 +56,8 @@ class Controller implements IViewModel {
     constructor(private $scope: IRecapQuestionItemScope, private $sce: ng.ISCEService) {
         this.types = Types;
         this.distributionStatus = DistributionStatus;
-        this.missingResponseHtml = "<em>" + lang.translate('formulaire.response.missing') + "</em>";
-        this.otherHtml = "<em>" + lang.translate('formulaire.other') + " : </em>";
+        this.missingResponseHtml = "<em>" + idiom.translate('formulaire.response.missing') + "</em>";
+        this.otherHtml = "<em>" + idiom.translate('formulaire.other') + " : </em>";
     }
 
     $onInit = async () : Promise<void> => {}
