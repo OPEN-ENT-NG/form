@@ -15,12 +15,13 @@ import * as dagreD3 from 'dagre-d3';
 import {IconUtils} from "@common/utils/icon";
 import {Mix} from "entcore-toolkit";
 import {TreeUtils} from "@common/utils/tree";
+import {Pages} from "@common/core/enums";
 
 interface ViewModel {
     form: Form;
     formElements: FormElements;
     loading: boolean;
-
+    backToEditor() : void;
     $onInit() : Promise<void>;
 }
 
@@ -44,6 +45,9 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
         };
 
         // Functions
+        vm.backToEditor = () : void => {
+            $scope.redirectTo(`/form/${vm.form.id}/edit`);
+        };
 
         const initD3Dagre = () : void => {
             // Init nodes and edges
@@ -99,19 +103,12 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
             let innerInfos: any = inner._groups[0][0].getBoundingClientRect();
             // Get the current width of the inner SVG element
             let innerWidth: number = innerInfos.width;
-            let offset: number = 800;
+            let offset: number = 100;
             let newWidth: number = innerWidth + offset; // Increase the width by 100 pixels
 
             // Set the new width of the SVG element
             svg.attr("width", newWidth);
-
-            // Calculate the translation offset to center the content
-            let xCenterOffset: number = (newWidth - innerWidth) / 2;
-
-            // Update the transformation of the inner group
-            inner.attr("transform", "translate(" + xCenterOffset + ", 0)");
-
-            svg.attr("height", innerInfos.height + 40);
+            svg.attr("height", innerInfos.height + 100);
 
         }
 
