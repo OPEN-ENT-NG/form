@@ -1,6 +1,6 @@
 export class TreeUtils {
-    static shuffle = (a) : any =>  {
-        let j, x, i;
+    static shuffle = (a: any[]) : any[] =>  {
+        let j: number, x: number, i: number;
         for (i = a.length; i; i -= 1) {
             j = Math.floor(Math.random() * i);
             x = a[i - 1];
@@ -14,8 +14,8 @@ export class TreeUtils {
         let det: number = (x2 - x1) * (y4 - y3) - (x4 - x3) * (y2 - y1);
         if (det === 0) return false;
 
-        let lambda = ((y4 - y3) * (x4 - x1) + (x3 - x4) * (y4 - y1)) / det;
-        let gamma = ((y1 - y2) * (x4 - x1) + (x2 - x1) * (y4 - y1)) / det;
+        let lambda: number = ((y4 - y3) * (x4 - x1) + (x3 - x4) * (y4 - y1)) / det;
+        let gamma: number = ((y1 - y2) * (x4 - x1) + (x2 - x1) * (y4 - y1)) / det;
         return (0 < lambda && lambda < 1) && (0 < gamma && gamma < 1);
     }
 }

@@ -50,17 +50,18 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
         };
 
         const initD3Dagre = () : void => {
-            const vw = window.innerWidth;
-            const vh = window.innerHeight;
+            const vw: number = window.innerWidth;
+            const vh: number = window.innerHeight;
             // Init nodes and edges
             let nodes: any[] = initNodes(); // List of form elements
             let edgeList: any[] = initEdgeList(); // List of links between form elements
 
             // Create/Init a new directed graph
-            let graph = new dagreD3.graphlib.Graph().setGraph({});
+            let graph: any = new dagreD3.graphlib.Graph();
+            graph.setGraph({});
 
             // Create a renderer
-            let render = new dagreD3.render();
+            let render: any = new dagreD3.render();
 
             // Set up an SVG group so that we can translate the final graph.
             let svg: any = d3.select("svg");
@@ -141,11 +142,11 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
         const render_graph = (render, nodes, edgeList, inner, svg) : void => {
             let nbTries: number = 100; // try 100 times, if optimal not found, give up
             let iter_cnt: number = 0;
-            let optimalArray;
-            let best_result;
+            let optimalArray: any[] | undefined;
+            let best_result: number | undefined;
 
             while (nbTries--) {
-                let list = TreeUtils.shuffle(edgeList);
+                let list: any[] = TreeUtils.shuffle(edgeList);
                 if (!optimalArray) optimalArray = list;
                 setNodesAndEdges(nodes, edgeList, render, inner);
 
