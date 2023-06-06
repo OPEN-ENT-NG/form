@@ -89,7 +89,7 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
             let recapElement: any = {
                 id: null,
                 form_id: vm.form.id,
-                title: idiom.translate("formulaire.recap")
+                title: idiom.translate("formulaire.end.form")
             };
             let formElements: FormElement[] = [...vm.formElements.all, Mix.castAs(FormElement, recapElement)];
             for (let formElement of formElements) {
