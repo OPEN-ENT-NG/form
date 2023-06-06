@@ -50,6 +50,8 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
         };
 
         const initD3Dagre = () : void => {
+            const vw = window.innerWidth;
+            const vh = window.innerHeight;
             // Init nodes and edges
             let nodes: any[] = initNodes(); // List of form elements
             let edgeList: any[] = initEdgeList(); // List of links between form elements
@@ -70,32 +72,6 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
             });
             svg.call(zoom);
 
-            // Set up drag support
-            let isDragging = false;
-            let prevX = 0;
-            let prevY = 0;
-
-            svg.on('mousedown', function(e) {
-                isDragging = true;
-                prevX = e.clientX;
-                prevY = e.clientY;
-            });
-
-            svg.on('mousemove', function(e) {
-                if (isDragging) {
-                    let deltaX = e.clientX - prevX;
-                    let deltaY = e.clientY - prevY;
-
-                    inner.attr('transform', `translate(${deltaX},${deltaY})`);
-                    prevX = e.clientX;
-                    prevY = e.clientY;
-                }
-            });
-
-            svg.on('mouseup', function() {
-                isDragging = false;
-            });
-
             // Run the renderer. This is what draws the final graph.
             render_graph(render, nodes, edgeList, inner, svg);
 
@@ -103,12 +79,8 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
             let innerInfos: any = inner._groups[0][0].getBoundingClientRect();
             // Get the current width of the inner SVG element
             let innerWidth: number = innerInfos.width;
-            let offset: number = 100;
-            let newWidth: number = innerWidth + offset; // Increase the width by 100 pixels
-
             // Set the new width of the SVG element
-            svg.attr("width", newWidth);
-            svg.attr("height", innerInfos.height + 100);
+            svg.attr("width", vw - (5 * vw /100) ).attr("height", vh - (20 * vh / 100));
 
         }
 
