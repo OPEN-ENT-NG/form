@@ -62,7 +62,7 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
             let inner: any = svg.select("g");
 
             //Set up zoom support
-            var zoom = d3.zoom().on("zoom", function(e) {
+            let zoom: d3.ZoomBehavior<Element, unknown> = d3.zoom().on("zoom", function(e) {
                 inner.attr("transform", e.transform);
             });
             svg.call(zoom);
@@ -71,9 +71,9 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
             render_graph(render, nodes, edgeList, inner, svg);
 
             // Center the graph
-            const vw = window.innerWidth - (window.innerWidth * 5 / 100);
+            const vw: number = window.innerWidth - (window.innerWidth * 8 / 100);
             svg.attr('width', vw);
-            var initialScale = 0.75;
+            let initialScale: number = 0.75;
             if(mainGraph != null){
                 svg.call(zoom.transform, d3.zoomIdentity.translate((svg.attr("width") - mainGraph.graph().width * initialScale) / 2, 20).scale(initialScale));
                 svg.attr('height', mainGraph.graph().height * initialScale + 300);
