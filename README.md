@@ -44,6 +44,8 @@ Il y aura aussi à ajouter des variables d'environnement dans votre ent-core.jso
 </pre>
 
 
+## Entcore - archive APi import/export
+
 Attention, afin de faire fonctionner les imports d'archives .zip (import gérés par l'entcore),
 il faut ajouter les propriétés suivantes dans l'ent-core.json :
 Dans le module entcore-archive :
