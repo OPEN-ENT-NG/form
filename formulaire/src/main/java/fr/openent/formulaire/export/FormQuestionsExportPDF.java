@@ -1,5 +1,6 @@
 package fr.openent.formulaire.export;
 
+import com.mongodb.util.JSON;
 import fr.openent.form.core.enums.I18nKeys;
 import fr.openent.form.core.enums.QuestionTypes;
 import fr.openent.form.helpers.I18nHelper;
@@ -108,6 +109,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                 mapSections.put(id, sectionInfo);
                             }
 
+
                             for (int i = 0; i < questionsInfos.size(); i++) {
                                 JsonObject question = questionsInfos.getJsonObject(i);
                                 if (question.containsKey(SECTION_ID) && question.getInteger(SECTION_ID) == null) {
@@ -155,8 +157,11 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                                     nextQuestionId = choice.getInteger(NEXT_FORM_ELEMENT_ID);
                                                     if (nextQuestionId != null) {
                                                         JsonObject nextQuestion = mapQuestions.get(nextQuestionId);
+                                                        JsonObject nextSection = mapSections.get(nextQuestionId);
                                                             if (nextQuestion != null) {
                                                                 choice.put(TITLE_NEXT, nextQuestion.getString(TITLE));
+                                                            } else if (nextSection != null) {
+                                                                choice.put(TITLE_NEXT, nextSection.getString(TITLE));
                                                             }
                                                         }
                                                     if (nextQuestionId == null) {
@@ -222,8 +227,69 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                 form_elements.add(question);
                             }
 
+
                             // Sort sections & questions to display it in the right order
                             List<JsonObject> sorted_form_elements = form_elements.getList();
+                            Map<Integer, JsonObject> mapFormElements = new HashMap<>();
+                            Map<Integer, JsonArray> mapQuestionChoices = new HashMap<>();
+                            JsonArray sectionQuestions = new JsonArray();
+                            JsonArray choices = new JsonArray();
+                            Integer nextQuestionId;
+
+                            for(JsonObject elt: sorted_form_elements){
+                                int id = elt.getInteger(ID);
+                                mapFormElements.put(id, elt);
+                                if (elt.containsKey(QUESTIONS)){
+                                    sectionQuestions.addAll(elt.getJsonArray(QUESTIONS));
+                                }
+                            }
+
+                            if(!sectionQuestions.isEmpty()) {
+                                for (int i = 0; i < sectionQuestions.size(); i++) {
+                                    JsonObject question = sectionQuestions.getJsonObject(i);
+                                    if (question.containsKey(CHOICES)) {
+                                        int questionId = question.getInteger(ID);
+                                        mapQuestionChoices.put(questionId, question.getJsonArray(CHOICES));
+                                        choices.addAll(question.getJsonArray(CHOICES));
+                                    }
+                                }
+                            }
+
+                            if(!choices.isEmpty()){
+                                for (int j = 0; j < choices.size(); j++) {
+                                    JsonObject choice = choices.getJsonObject(j);
+                                    if (choice.containsKey(NEXT_FORM_ELEMENT_ID)) {
+                                        nextQuestionId = choice.getInteger(NEXT_FORM_ELEMENT_ID);
+                                        if (nextQuestionId != null) {
+                                            JsonObject nextQuestion = mapQuestions.get(nextQuestionId);
+                                            JsonObject nextSection = mapFormElements.get(nextQuestionId);
+                                            if (nextQuestion != null) {
+                                                choice.put(TITLE_NEXT, nextQuestion.getString(TITLE));
+                                            } else if (nextSection != null) {
+                                                choice.put(TITLE_NEXT, nextSection.getString(TITLE));
+                                            }
+                                        }
+                                        if (nextQuestionId == null) {
+                                            choice.put(TITLE_NEXT, I18nHelper.getI18nValue(I18nKeys.END_FORM, request));
+                                        }
+                                    }
+                                }
+                            }
+
+                            for (JsonObject elt : sorted_form_elements) {
+                                if (elt.containsKey(QUESTIONS)) {
+                                    JsonArray questions = elt.getJsonArray(QUESTIONS);
+                                    for (int i = 0; i < questions.size(); i++) {
+                                        JsonObject question = questions.getJsonObject(i);
+                                        if (question.containsKey(CHOICES)) {
+                                            int questionId = question.getInteger(ID);
+                                            JsonArray choiceToReplace = mapQuestionChoices.get(questionId);
+                                            question.put(CHOICES, choiceToReplace);
+                                        }
+                                    }
+                                }
+                            };
+
                             sorted_form_elements.removeIf(element -> element.getInteger(POSITION) == null);
                             Collections.sort(sorted_form_elements, Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
 
