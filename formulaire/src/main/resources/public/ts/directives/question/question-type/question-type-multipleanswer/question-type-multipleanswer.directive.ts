@@ -13,15 +13,13 @@ interface IViewModel {
     i18n: I18nUtils;
     direction: typeof Direction;
     lightbox: any;
-    // display: {
-    //     lightbox: {
-    //         attachment: boolean
-    //     }
-    // };
+    selectedChoiceIndex: number;
 
     deleteChoice(index: number): Promise<void>;
     openAttachmentLightbox(): Promise<void>;
     cancelAttachment(): void;
+    displayImageSelect(index: number): void;
+    deleteImageSelect(index: number): void;
 }
 
 class Controller implements ng.IController, IViewModel {
@@ -30,6 +28,7 @@ class Controller implements ng.IController, IViewModel {
     i18n: I18nUtils;
     direction: typeof Direction;
     lightbox: any;
+    selectedChoiceIndex: number;
 
     constructor(private $scope: IQuestionTypeMultipleanswerProps, private $sce: ng.ISCEService) {
         this.i18n = I18nUtils;
@@ -37,6 +36,7 @@ class Controller implements ng.IController, IViewModel {
         this.lightbox = {
             attachment: false
         };
+        this.selectedChoiceIndex = -1;
     }
 
     $onInit = async () : Promise<void> => {}
@@ -44,8 +44,10 @@ class Controller implements ng.IController, IViewModel {
     $onDestroy = async () : Promise<void> => {}
 
     deleteChoice = async (index: number) : Promise<void> => {
+        if (index === this.selectedChoiceIndex) {
+            this.selectedChoiceIndex = -1; // Réinitialisez la valeur si le choix supprimé correspond à selectedChoiceIndex
+        }
         await this.question.deleteChoice(index);
-        // $scope.$apply();
     }
 
     openAttachmentLightbox = async () : Promise<void> => {
@@ -57,6 +59,17 @@ class Controller implements ng.IController, IViewModel {
         template.close('lightbox');
         this.lightbox.attachment = false;
     };
+
+    displayImageSelect(index: number): void {
+        this.selectedChoiceIndex = index;
+    }
+
+    deleteImageSelect(index: number): void {
+        if (this.selectedChoiceIndex === index) {
+            this.selectedChoiceIndex = -1;
+        }
+        this.question.choices.all[index].image = null; // Image par défaut à gérer ?
+    }
 }
 
 function directive() {
