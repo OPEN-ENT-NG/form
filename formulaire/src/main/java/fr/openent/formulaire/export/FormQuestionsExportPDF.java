@@ -1,6 +1,5 @@
 package fr.openent.formulaire.export;
 
-import com.mongodb.util.JSON;
 import fr.openent.form.core.enums.I18nKeys;
 import fr.openent.form.core.enums.QuestionTypes;
 import fr.openent.form.helpers.I18nHelper;
@@ -14,7 +13,10 @@ import fr.openent.formulaire.service.impl.DefaultQuestionSpecificFieldsService;
 import fr.openent.formulaire.service.impl.DefaultSectionService;
 import fr.wseduc.webutils.data.FileResolver;
 import fr.wseduc.webutils.http.Renders;
-import io.vertx.core.*;
+import io.vertx.core.Future;
+import io.vertx.core.Handler;
+import io.vertx.core.Promise;
+import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
@@ -35,7 +37,7 @@ import java.util.*;
 import static fr.openent.form.core.constants.ConfigFields.NODE_PDF_GENERATOR;
 import static fr.openent.form.core.constants.Fields.*;
 import static fr.openent.form.helpers.RenderHelper.renderInternalError;
-import static fr.openent.form.helpers.UtilsHelper.*;
+import static fr.openent.form.helpers.UtilsHelper.getIds;
 
 public class FormQuestionsExportPDF extends ControllerHelper {
     private static final Logger log = LoggerFactory.getLogger(FormQuestionsExportPDF.class);
