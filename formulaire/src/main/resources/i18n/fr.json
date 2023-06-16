@@ -256,6 +256,8 @@
   "formulaire.question.missing.field.title": "Attention, la question ci-dessus nécessite un titre pour être valide.",
   "formulaire.question.missing.field.choice": "Attention, la question ci-dessus nécessite au moins un choix pour être valide.",
   "formulaire.question.save.missing.field": "Attention, certaines questions manquent d'informations pour être valides !",
+  "formulaire.question.save.image.missing.field": "Attention, le choix ne peut pas comporter une image seule. Veuillez saisir du texte.",
+  "formulaire.question.save.images.missing.fields": "Attention, les choix ne peuvent pas comporter une image seule. Veuillez saisir du texte.",
   "formulaire.question.rgpd.title": "Collecte de données à caractère personnel",
   "formulaire.question.cursor.default.min.val": "1",
   "formulaire.question.cursor.default.max.val": "10",

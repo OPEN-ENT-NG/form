@@ -34,8 +34,10 @@
                 <i class="i-close lg-icon dontSave"
                    ng-if="vm.selectedChoiceIndex === $index && !vm.hasFormResponses"
                    ng-click="vm.deleteImageSelect($index)">
-
                 </i>
+                <div class="warning ng-scope" ng-if="!choice.value && choice.image">
+                    <p>Attention, le choix ne peut pas comporter une image seule. Veuillez saisir du texte</p>
+                </div>
             </section>
         </label>
         <i class="i-image lg-icon" ng-click="vm.displayImageSelect($index)" ng-if="vm.question.selected && !vm.hasFormResponses"></i>
