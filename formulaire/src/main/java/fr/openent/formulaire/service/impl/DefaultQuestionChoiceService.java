@@ -141,7 +141,7 @@ public class DefaultQuestionChoiceService implements QuestionChoiceService {
         if (!choices.isEmpty()) {
             SqlStatementsBuilder s = new SqlStatementsBuilder();
             String query = "UPDATE " + QUESTION_CHOICE_TABLE + " SET value = ?, position = ?, type = ?, " +
-                    "next_form_element_id = ?, next_form_element_type = ?, is_next_form_element_default = ?, is_custom = ? " +
+                    "next_form_element_id = ?, next_form_element_type = ?, is_next_form_element_default = ?, is_custom = ?, " +
                     "image = ? WHERE id = ? RETURNING *;";
 
             s.raw(TRANSACTION_BEGIN_QUERY);

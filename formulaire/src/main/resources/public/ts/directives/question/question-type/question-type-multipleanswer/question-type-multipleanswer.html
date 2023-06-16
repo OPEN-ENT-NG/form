@@ -18,15 +18,14 @@
              placeholder="[[vm.i18n.getWithParam('formulaire.choice', choice.position)]]" input-guard>
       <input type="text" class="width95 ten-mobile" ng-if="choice.is_custom"
              value="[[vm.i18n.translate('formulaire.other')]] : " disabled>
-      <div class="img-container">
-        <image-select id="img{{$index}}" class="initialFloat cell"
-                      ng-if="vm.selectedChoiceIndex === $index && !vm.hasFormResponses"
-                      default="/img/illustrations/image-default.svg" ng-model="choice.image">
-        </image-select>
-        <i class="i-cancel lg-icon dontSave" ng-click="vm.deleteImageSelect($index)"
-           ng-if="vm.selectedChoiceIndex === $index && !vm.hasFormResponses">
-        </i>
-      </div>
+      <i class="i-cancel lg-icon" ng-click="vm.deleteImageSelect($index)"></i>
+      <image-select id="img{{$index}}" class="initialFloat cell"
+                    ng-if="vm.selectedChoiceIndex === $index && !vm.hasFormResponses"
+                    default="/img/illustrations/image-default.svg" ng-model="choice.image">
+      </image-select>
+      <img data-ng-src="[[choice.image]]"
+           data-ng-if="!choice.displayImage  && choice.image && vm.selectedChoiceIndex !== $index"
+           alt="">
     </label>
     <i class="i-info lg-icon" ng-click="vm.displayImageSelect($index)" ng-if="vm.question.selected && !vm.hasFormResponses"></i>
     <i class="i-cancel lg-icon dontSave" ng-click="vm.deleteChoice($index)" ng-if="vm.question.selected && !vm.hasFormResponses"></i>
