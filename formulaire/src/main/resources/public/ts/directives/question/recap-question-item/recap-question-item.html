@@ -22,6 +22,9 @@
                     <input type="checkbox" disabled ng-if="!vm.isSelectedChoice(choice)">
                     <span style="cursor: default"></span>
                     <span ng-if="!choice.is_custom || !vm.isSelectedChoice(choice)">[[choice.value]]</span>
+                    <<img data-ng-src="[[choice.image]]"
+                          data-ng-if="choice.image !== null && choice.image !== undefined && choice.image !== ''"
+                          alt="choice image">
                     <span ng-if="choice.is_custom && vm.isSelectedChoice(choice)" ng-bind-html="vm.getStringResponse()"></span>
                 </label>
             </div>

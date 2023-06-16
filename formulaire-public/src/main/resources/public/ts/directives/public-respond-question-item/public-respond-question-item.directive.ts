@@ -81,6 +81,16 @@ class Controller implements IViewModel {
                 let matchingResponses: Response[] = this.responses.all.filter((r:Response) => r.choice_id == choice.id);
                 if (matchingResponses.length != 1) console.error("Be careful, 'vm.responses' has been badly implemented !!");
                 this.mapChoiceResponseIndex.set(choice, this.responses.all.indexOf(matchingResponses[0]));
+
+                // If question type multiplanswer, assign image to each choice
+                if (this.question.question_type === Types.MULTIPLEANSWER) {
+                    for (let response of this.responses.all) {
+                        const choice = this.question.choices.all.find(c => c.id === response.choice_id);
+                        if (choice) {
+                            response.image = choice.image;
+                        }
+                    }
+                }
             }
         }
 

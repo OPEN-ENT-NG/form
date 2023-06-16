@@ -27,6 +27,9 @@
                 <label>
                     <input type="checkbox" ng-model="vm.responses.all[vm.mapChoiceResponseIndex.get(choice)].selected" input-guard>
                     <span>[[choice.value]]</span>
+                    <img data-ng-src="[[choice.image]]"
+                         data-ng-if="choice.image !== null && choice.image !== undefined && choice.image !== ''"
+                         alt="choice image">
                     <span ng-if="choice.is_custom"> :
                         <input type="text" ng-model="vm.responses.all[vm.mapChoiceResponseIndex.get(choice)].custom_answer"
                                ng-change="vm.deselectIfEmpty(choice)"

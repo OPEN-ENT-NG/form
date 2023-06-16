@@ -96,6 +96,16 @@ class Controller implements ng.IController, IViewModel {
                     this.responses.all[matchingIndex].selected = true;
                 }
 
+                // If question type multiplanswer, assign image to each choice
+                if (this.question.question_type === Types.MULTIPLEANSWER) {
+                    for (let response of this.responses.all) {
+                        const choice = this.question.choices.all.find(c => c.id === response.choice_id);
+                        if (choice) {
+                            response.image = choice.image;
+                        }
+                    }
+                }
+
                 this.mapChoiceResponseIndex.set(choice, matchingIndex);
             }
         }
