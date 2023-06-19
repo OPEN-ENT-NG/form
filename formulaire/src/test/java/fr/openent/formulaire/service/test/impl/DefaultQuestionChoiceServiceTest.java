@@ -81,7 +81,7 @@ public class DefaultQuestionChoiceServiceTest {
         String locale = "fr";
 
         String expectedQuery = "UPDATE " + QUESTION_CHOICE_TABLE + " SET value = ?, position = ?, type = ?, " +
-                "next_form_element_id = ?, next_form_element_type = ?, is_next_form_element_default = ?, is_custom = ? " +
+                "next_form_element_id = ?, next_form_element_type = ?, is_next_form_element_default = ?, is_custom = ?, " +
                 "image = ? WHERE id = ? RETURNING *;";
         JsonArray expectedParams = new JsonArray("[\"formulaire.other\",2,\"TXT\",29,\"SECTION\",false,true, " +
                 "\"/workspace/document/411e48f3-1965-4487-a81e-98af98211f41\", 1]");
