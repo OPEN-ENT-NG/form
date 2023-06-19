@@ -25,6 +25,7 @@ interface IViewModel extends ng.IController, IQuestionItemProps {
     onSwitchMandatory(isMandatory: boolean): void;
     onSwitchConditional(isConditional: boolean): void;
     cursorChoiceIsConsistent(): boolean;
+    imageHasLabel(): boolean;
 }
 
 interface IQuestionItemScope extends IScope, IQuestionItemProps{
@@ -128,6 +129,18 @@ class Controller implements IViewModel {
         let nextElements: FormElement[] = this.formElements.all.filter((e: FormElement) => e.position === this.getPosition() + 1);
         return nextElements.length > 0 ? nextElements[0].id : null;
     }
+
+    imageHasLabel = () : boolean => {
+        const question = this.question;
+        const choices = question.choices.all;
+
+        for (const choice of choices) {
+            if (choice.image !== null && choice.value === "") {
+                return true;
+            }
+        }
+        return false;
+    };
 }
 
 function directive() {

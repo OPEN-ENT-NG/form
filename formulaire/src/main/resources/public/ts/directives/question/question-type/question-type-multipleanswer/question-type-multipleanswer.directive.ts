@@ -1,4 +1,4 @@
-import {Directive, ng, template} from "entcore";
+import {Directive, ng} from "entcore";
 import {Question} from "@common/models";
 import {I18nUtils} from "@common/utils";
 import {Direction} from "@common/core/enums";
@@ -54,11 +54,11 @@ class Controller implements ng.IController, IViewModel {
         await this.question.deleteChoice(index);
     }
 
-    displayImageSelect(index: number): void {
+    displayImageSelect = (index: number): void => {
         this.selectedChoiceIndex = index;
     };
 
-    deleteImageSelect(index: number): void {
+    deleteImageSelect = (index: number): void => {
         this.selectedChoiceIndex = -1;
         console.log(this.selectedChoiceIndex)
         const choice = this.question.choices.all[index];
