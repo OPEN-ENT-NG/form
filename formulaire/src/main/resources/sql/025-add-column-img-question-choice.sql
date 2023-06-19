@@ -1,2 +1,5 @@
 ALTER TABLE formulaire.question_choice
-    ADD COLUMN image   VARCHAR;
+    ADD COLUMN IF NOT EXISTS image VARCHAR;
+
+ALTER TABLE formulaire.response
+    ADD COLUMN IF NOT EXISTS image VARCHAR;
