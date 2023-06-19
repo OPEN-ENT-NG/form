@@ -33,6 +33,7 @@ interface IViewModel extends ng.IController, IPublicQuestionItemProps {
     deselectIfEmpty(choice: QuestionChoice) : void;
     onClickChoice(choice: QuestionChoice): void;
     resetDate(): void;
+    hasImages(): boolean;
 }
 
 interface IPublicQuestionItemScope extends IScope, IPublicQuestionItemProps {
@@ -131,6 +132,10 @@ class Controller implements IViewModel {
 
     resetDate = () : void => {
         this.responses.all[0].answer = new Date();
+    }
+
+    hasImages = () : boolean => {
+        return this.question.choices.all.some((choice: QuestionChoice) => choice.image !== null && choice.image !== undefined && choice.image !== '');
     }
 
     initDrag = (): void => {
