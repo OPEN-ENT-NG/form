@@ -84,7 +84,7 @@ public class DefaultQuestionChoiceServiceTest {
                 "next_form_element_id = ?, next_form_element_type = ?, is_next_form_element_default = ?, is_custom = ?, " +
                 "image = ? WHERE id = ? RETURNING *;";
         JsonArray expectedParams = new JsonArray("[\"formulaire.other\",2,\"TXT\",29,\"SECTION\",false,true, " +
-                "\"/workspace/document/411e48f3-1965-4487-a81e-98af98211f41\", 1]");
+                "\"/workspace/document/25389fc4-dbd8-4952-b4bd-bce9fb30b559\", 1]");
 
         vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
             JsonObject body = (JsonObject) message.body();

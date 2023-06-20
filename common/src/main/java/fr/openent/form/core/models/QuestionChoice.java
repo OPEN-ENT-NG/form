@@ -109,7 +109,7 @@ public class QuestionChoice implements Model<QuestionChoice> {
         return this;
     }
 
-    public QuestionChoice setImg(String image) {
+    public QuestionChoice setImage(String image) {
         this.image = image;
         return this;
     }

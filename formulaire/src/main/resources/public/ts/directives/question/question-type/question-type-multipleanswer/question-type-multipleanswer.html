@@ -19,16 +19,14 @@
       <input type="text" class="width95 ten-mobile" ng-if="choice.is_custom"
              value="[[vm.i18n.translate('formulaire.other')]] : " disabled>
       <div class="image-container">
-<!--        <div class="image-wrapper">-->
           <i class="i-close lg-icon" ng-click="vm.deleteImageSelect($index)" ng-if="vm.question.selected && !vm.hasFormResponses && choice.image !== ''"></i>
-          <image-select id="img{{$index}}" class="initialFloat cell"
+          <image-select id="img-{{$index}}" class="initialFloat cell"
                         ng-if="vm.selectedChoiceIndex === $index && !vm.hasFormResponses"
                         default="/img/illustrations/image-default.svg" ng-model="choice.image">
           </image-select>
-          <img data-ng-src="[[choice.image]]"
-               data-ng-if="!choice.displayImage  && choice.image && vm.selectedChoiceIndex !== $index"
+          <img ng-src="{{ choice.image || '/formulaire/public/img/empty-image.png' }}"
+               ng-if="choice.image && vm.selectedChoiceIndex !== $index"
                alt="">
-<!--          </div>-->
       </div>
     </label>
     <i class="i-image lg-icon" ng-click="vm.displayImageSelect($index)" ng-if="vm.question.selected && !vm.hasFormResponses"></i>
