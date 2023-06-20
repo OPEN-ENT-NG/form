@@ -86,7 +86,7 @@ class Controller implements IViewModel {
                 // If question type multiplanswer, assign image to each choice
                 if (this.question.question_type === Types.MULTIPLEANSWER) {
                     for (let response of this.responses.all) {
-                        const choice = this.question.choices.all.find(c => c.id === response.choice_id);
+                        const choice: QuestionChoice = this.question.choices.all.find((c: QuestionChoice) => c.id === response.choice_id);
                         if (choice) {
                             response.image = choice.image;
                         }
