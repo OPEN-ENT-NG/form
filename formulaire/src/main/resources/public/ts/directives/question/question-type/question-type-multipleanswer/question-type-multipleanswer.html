@@ -24,7 +24,7 @@
                         ng-if="vm.selectedChoiceIndex === $index && !vm.hasFormResponses"
                         default="/img/illustrations/image-default.svg" ng-model="choice.image">
           </image-select>
-          <img ng-src="{{ choice.image || '/formulaire/public/img/empty-image.png' }}"
+          <img ng-src="[[ choice.image || '/formulaire/public/img/empty-image.png' ]]"
                ng-if="choice.image && vm.selectedChoiceIndex !== $index"
                alt="">
       </div>

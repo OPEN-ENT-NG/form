@@ -139,8 +139,7 @@ class Controller implements IViewModel {
     }
 
     isImageMissingLabel = (): boolean => {
-        const choices = this.question.choices.all;
-        return choices.some((choice: QuestionChoice) => choice.image !== null
+        return this.question.choices.all.some((choice: QuestionChoice) => choice.image !== null
             && (choice.value === "" || choice.value === null || choice.value === undefined));
     };
 }
