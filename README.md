@@ -30,7 +30,7 @@ maxResponsesExportPDF = Integer
 maxUsersSharing = Integer
 </pre>
 
-Dans ce meme fichier inclure "formulaire" dans ressourcesApplications
+Dans ce meme fichier inclure "formulaire" dans la liste "ressourcesApplications"
 
 Il y aura aussi à ajouter des variables d'environnement dans votre ent-core.json afin d'utiliser l'export pdf :
 
