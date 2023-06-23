@@ -1,4 +1,4 @@
-import {Directive, ng, template} from "entcore";
+import {Directive, ng} from "entcore";
 import {FormElement, FormElements, Question, QuestionChoice} from "@common/models";
 import {I18nUtils} from "@common/utils";
 import {Direction} from "@common/core/enums";
@@ -21,7 +21,6 @@ interface IViewModel extends ng.IController, IQuestionTypeSingleanswerProps {
     i18n: I18nUtils;
     direction: typeof Direction;
     selectedChoiceIndex: number;
-    selectedChoiceImageIndexes: number[];
 
     deleteChoice(index: number): Promise<void>;
     displayImageSelect(index: number): void;
@@ -39,7 +38,6 @@ class Controller implements IViewModel {
     i18n: I18nUtils;
     direction: typeof Direction;
     selectedChoiceIndex: number;
-    selectedChoiceImageIndexes: number[];
 
     constructor(private $scope: IQuestionTypeSingleanswerRadioScope, private $sce: ng.ISCEService) {
         this.i18n = I18nUtils;
@@ -48,12 +46,6 @@ class Controller implements IViewModel {
     }
 
     $onInit = async () : Promise<void> => {
-        this.selectedChoiceImageIndexes = [];
-        this.question.choices.all.forEach((choice: any, index: number) => {
-            if (choice.image !== null && choice.image !== undefined) {
-                this.selectedChoiceImageIndexes.push(index);
-            }
-        });
         for (let choice of this.question.choices.all) {
             choice.next_form_element = choice.getNextFormElement(this.formElements);
         }
@@ -100,8 +92,7 @@ function directive() {
             question: '=',
             hasFormResponses: '=',
             formElements: '<',
-            isRadio: '<',
-            form: '<'
+            isRadio: '<'
         },
         controllerAs: 'vm',
         bindToController: true,

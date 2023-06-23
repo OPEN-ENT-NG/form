@@ -147,24 +147,6 @@ export const formEditorController = ng.controller('FormEditorController', ['$sco
                     notify.error(idiom.translate('formulaire.question.save.missing.field'));
                     return;
                 }
-                for(let question of sectionQuestions){
-                    let choices : any[] = question.choices?.all;
-                    let wrongChoices: any[] = choices.filter(choice => choice.image && !choice.value);
-                    if(wrongChoices.length != 0){
-                        notify.error(idiom.translate('formulaire.question.save.images.missing.fields'));
-                        return;
-                    }
-                }
-            }
-
-            let questionsList: Question[] = vm.formElements.getQuestions().all;
-            for(let question of questionsList){
-                let choices : any[] = question.choices?.all;
-                let wrongChoices: any[] = choices.filter(choice => choice.image && !choice.value);
-                if(wrongChoices.length != 0){
-                    notify.error(idiom.translate('formulaire.question.save.images.missing.fields'));
-                    return;
-                }
             }
 
             // Check titles
@@ -188,7 +170,7 @@ export const formEditorController = ng.controller('FormEditorController', ['$sco
                 }
             }
 
-            // Check choice.image and choice.value for questions of type Types.MULTIPLEANSWER
+            // Check choice.image and choice.value for questions of type Types.MULTIPLEANSWER & types.SINGLEANSWER
             let questionTypeMultipleanswers: Question[] = vm.formElements.getAllQuestions().filter((q: Question) => q.question_type == Types.MULTIPLEANSWER);
             const foundChoice = (<any>questionTypeMultipleanswers).flatMap((question: Question) => question.choices.all)
                 .find((choice: QuestionChoice) => (choice.image && !choice.value));

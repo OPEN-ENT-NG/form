@@ -14,7 +14,6 @@ interface IViewModel {
     i18n: I18nUtils;
     direction: typeof Direction;
     selectedChoiceIndex: number;
-    selectedChoiceImageIndexes: number[];
 
     deleteChoice(index: number): Promise<void>;
     displayImageSelect(index: number): void;
@@ -28,7 +27,6 @@ class Controller implements ng.IController, IViewModel {
     i18n: I18nUtils;
     direction: typeof Direction;
     selectedChoiceIndex: number;
-    selectedChoiceImageIndexes: number[];
 
     constructor(private $scope: IQuestionTypeMultipleanswerProps, private $sce: ng.ISCEService) {
         this.i18n = I18nUtils;
@@ -36,14 +34,7 @@ class Controller implements ng.IController, IViewModel {
         this.selectedChoiceIndex = -1;
     }
 
-    $onInit = async (): Promise<void> => {
-        this.selectedChoiceImageIndexes = [];
-        this.question.choices.all.forEach((choice: any, index: number) => {
-            if (choice.image !== null && choice.image !== undefined) {
-                this.selectedChoiceImageIndexes.push(index);
-            }
-        });
-    }
+    $onInit = async (): Promise<void> => {}
 
     $onDestroy = async () : Promise<void> => {}
 
