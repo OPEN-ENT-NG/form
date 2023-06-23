@@ -20,12 +20,10 @@ interface IViewModel extends ng.IController, IQuestionTypeSingleanswerProps {
     followingFormElement: FormElement;
     i18n: I18nUtils;
     direction: typeof Direction;
-    lightbox: any;
     selectedChoiceIndex: number;
+    selectedChoiceImageIndexes: number[];
 
     deleteChoice(index: number): Promise<void>;
-    openAttachmentLightbox(): Promise<void>;
-    cancelAttachment(): void;
     displayImageSelect(index: number): void;
     deleteImageSelect(index: number): void;
     filterNextElements(formElement: FormElement): boolean;
@@ -34,25 +32,28 @@ interface IViewModel extends ng.IController, IQuestionTypeSingleanswerProps {
 
 class Controller implements IViewModel {
     question: Question;
-    lightbox: any;
-    selectedChoiceIndex: number;
     hasFormResponses: boolean;
     formElements: FormElements;
     isRadio: boolean;
     followingFormElement: FormElement;
     i18n: I18nUtils;
     direction: typeof Direction;
+    selectedChoiceIndex: number;
+    selectedChoiceImageIndexes: number[];
 
     constructor(private $scope: IQuestionTypeSingleanswerRadioScope, private $sce: ng.ISCEService) {
         this.i18n = I18nUtils;
         this.direction = Direction;
-        this.lightbox = {
-            attachment: false
-        };
         this.selectedChoiceIndex = -1;
     }
 
     $onInit = async () : Promise<void> => {
+        this.selectedChoiceImageIndexes = [];
+        this.question.choices.all.forEach((choice: any, index: number) => {
+            if (choice.image !== null && choice.image !== undefined) {
+                this.selectedChoiceImageIndexes.push(index);
+            }
+        });
         for (let choice of this.question.choices.all) {
             choice.next_form_element = choice.getNextFormElement(this.formElements);
         }
@@ -79,25 +80,14 @@ class Controller implements IViewModel {
             followingFormElement == null;
     }
 
-    openAttachmentLightbox = async () : Promise<void> => {
-        await template.open('lightbox', 'lightbox/attachment');
-        this.lightbox.attachment = true;
-    }
-
-    cancelAttachment = () : void => {
-        template.close('lightbox');
-        this.lightbox.attachment = false;
-    };
-
     displayImageSelect(index: number): void {
         this.selectedChoiceIndex = index;
     }
 
-    deleteImageSelect(index: number): void {
-        if (this.selectedChoiceIndex === index) {
-            this.selectedChoiceIndex = -1;
-        }
-        this.question.choices.all[index].image = null; // Image par défaut à gérer ?
+    deleteImageSelect = (index: number): void => {
+        this.selectedChoiceIndex = -1;
+        const choice = this.question.choices.all[index];
+        choice.image = null;
     }
 }
 
@@ -110,7 +100,8 @@ function directive() {
             question: '=',
             hasFormResponses: '=',
             formElements: '<',
-            isRadio: '<'
+            isRadio: '<',
+            form: '<'
         },
         controllerAs: 'vm',
         bindToController: true,
