@@ -65,9 +65,10 @@ public class MonitoringController extends ControllerHelper {
             .onSuccess(result -> {
                 if (result.isEmpty()) {
                     String message = "No duplicates found to clean.";
-                    result.add(new JsonObject().put(MESSAGE, message));
+                    renderJson(request,new JsonObject().put(MESSAGE, message));
+                    return;
                 }
-                renderJson(request, result.getJsonArray(2));
+                renderJson(request, result);
             })
             .onFailure(err -> {
                 log.error("[Formulaire@MonitoringController::cleanPositionDuplicates] Fail to clean duplicates : " + err.getMessage());
@@ -84,12 +85,13 @@ public class MonitoringController extends ControllerHelper {
                 .onSuccess(result -> {
                     if (result.isEmpty()) {
                         String message = "No script found.";
-                        result.add(new JsonObject().put(MESSAGE, message));
+                        renderJson(request, new JsonObject().put(MESSAGE, message));
+                        return;
                     }
                     renderJson(request, result);
                 })
                 .onFailure(err -> {
-                    log.error(err.getMessage());
+                    log.error("[Formulaire@MonitoringController::getAllScripts] Fail to get scripts information : " + err.getMessage());
                     renderError(request);
                 });
     }

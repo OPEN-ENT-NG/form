@@ -139,7 +139,7 @@ public class DefaultMonitoringService implements MonitoringService {
     public Future<JsonArray> getScripts() {
         Promise<JsonArray> promise = Promise.promise();
 
-        String query = "SELECT * FROM formulaire.scripts";
+        String query = "SELECT * FROM formulaire.scripts;";
 
         String errorMessage = "[Formulaire@DefaultMonitoringService::getScripts] Fail to get scripts information : ";
         sql.prepared(query, new JsonArray(), SqlResult.validResultHandler(FutureHelper.handlerEither(promise, errorMessage)));
