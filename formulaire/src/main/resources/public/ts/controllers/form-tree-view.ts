@@ -188,30 +188,29 @@ export const formTreeViewController = ng.controller('FormTreeViewController', ['
             render(inner, g);
         }
 
-        // On doit attendre que le svg soit chargé pour retourner les arrows dans la promesse
         const extractArrows = (svg: any): Arrows => {
-                const nn = svg.select(".edgePaths");
-                const paths = nn.node();
-                let fc = paths.firstChild;
-                let arrows: Arrows = new Arrows();
+            let nn: any = svg.select(".edgePaths");
+            let paths: any = nn.node();
+            let fc = paths.firstChild;
+            let arrows: Arrows = new Arrows();
 
-                while (fc) {
-                    let path = fc.firstChild.getAttribute("d");
-                    let coords = path.split(/,|L/).map((c: string) => {
-                        let n: string = c;
-                        if (c[0] === "M" || c[0] === "L") n = c.substring(1);
-                        return parseFloat(n);
-                    });
+            while (fc) {
+                let path = fc.firstChild.getAttribute("d");
+                let coords = path.split(/,|L/).map((c: string) => {
+                    let n: string = c;
+                    if (c[0] === "M" || c[0] === "L") n = c.substring(1);
+                    return parseFloat(n);
+                });
 
-                    let arrow: Arrow = new Arrow();
-                    for (let i = 0; i <= coords.length - 4; i += 2) {
-                        arrow.lines.all.push(new Line(coords[i], coords[i + 1], coords[i + 2], coords[i + 3]));
-                    }
-                    arrows.all.push(arrow);
-                    fc = fc.nextSibling;
+                let arrow: Arrow = new Arrow();
+                for (let i = 0; i <= coords.length - 4; i += 2) {
+                    arrow.lines.all.push(new Line(coords[i], coords[i + 1], coords[i + 2], coords[i + 3]));
                 }
-                return arrows;
-            };
+                arrows.all.push(arrow);
+                fc = fc.nextSibling;
+            }
+            return arrows;
+        };
 
 
 
