@@ -65,7 +65,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
         vm.formElement = vm.formElements.all[$scope.responsePosition - 1];
         vm.nbFormElements = vm.formElements.all.length;
         vm.historicPosition = $scope.historicPosition.length > 0 ? $scope.historicPosition : [1];
-        vm.longestPath = findLongestPath(vm.formElement.id, vm.formElements);
+        vm.longestPath = vm.historicPosition.length + findLongestPath(vm.formElement.id, vm.formElements) - 1;
         initFormElementResponses();
         window.setTimeout(() => vm.loading = false,500);
         $scope.safeApply();
@@ -82,7 +82,8 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 
             if (currentNode.isSection()) {
                 const questions: Question[] = (<Section>currentNode).questions.all;
-                const choices = questions.filter((q: Question) => q.conditional).map(q => q.choices.all);
+                let conditionalQuestions: any = questions.filter((q: Question) => q.conditional);
+                const choices = conditionalQuestions && conditionalQuestions.length > 0 ? conditionalQuestions.flatMap(q => q.choices.all) : null;
 
                 if (!choices || choices.length === 0) {
                     const nextElementId: number = currentNode.getNextFormElementId(nodes);
@@ -94,7 +95,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
                     console.log(currentNode.title, val);
                     return val;
                 } else {
-                    const tab = choices[0].map((choice: any) => {
+                    const tab = choices.map((choice: any) => {
                         if (!choice.next_form_element_id && !currentNode.getNextFormElementId(nodes)) {
                             console.log(currentNode.title, 1);
                             return 1;
@@ -179,8 +180,8 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
         if (prevPosition > 0) {
             await saveResponses();
             vm.formElement = vm.formElements.all[prevPosition - 1];
-            vm.longestPath = findLongestPath(vm.formElement.id, vm.formElements);
             vm.historicPosition.pop();
+            vm.longestPath = vm.historicPosition.length + findLongestPath(vm.formElement.id, vm.formElements) - 1;
             goToFormElement();
         }
     };
@@ -196,6 +197,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
             vm.formElement = vm.formElements.all[nextPosition - 1];
             vm.longestPath = findLongestPath(vm.formElement.id, vm.formElements);
             vm.historicPosition.push(vm.formElement.position);
+            vm.longestPath = vm.historicPosition.length + findLongestPath(vm.formElement.id, vm.formElements) - 1;
             goToFormElement();
         }
         else if (nextPosition !== undefined) {
