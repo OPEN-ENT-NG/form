@@ -24,6 +24,7 @@ interface ViewModel {
     filesList: any;
     form: Form;
     nbFormElements: number;
+    longestPath: number;
     loading : boolean;
     historicPosition: number[];
     currentResponses: Map<Question, Responses>;
@@ -47,6 +48,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
     vm.distribution = new Distribution();
     vm.form = new Form();
     vm.nbFormElements = 1;
+    vm.longestPath = 1;
     vm.loading = true;
     vm.currentResponses = new Map();
     vm.currentFiles = new Map();
@@ -63,12 +65,72 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
         vm.formElement = vm.formElements.all[$scope.responsePosition - 1];
         vm.nbFormElements = vm.formElements.all.length;
         vm.historicPosition = $scope.historicPosition.length > 0 ? $scope.historicPosition : [1];
-
+        vm.longestPath = findLongestPath(vm.formElement.id, vm.formElements);
         initFormElementResponses();
-
         window.setTimeout(() => vm.loading = false,500);
         $scope.safeApply();
     }
+
+
+        const findLongestPath = (nodeId: number, nodes: FormElements): number => {
+            const currentNode: FormElement = nodes.all.find((node: FormElement) => node.id === nodeId);
+
+            if (!currentNode) {
+                console.log("pas de currentNode", 1);
+                return 1;
+            }
+
+            if (currentNode.isSection()) {
+                const questions: Question[] = (<Section>currentNode).questions.all;
+                const choices = questions.filter((q: Question) => q.conditional).map(q => q.choices.all);
+
+                if (!choices || choices.length === 0) {
+                    const nextElementId: number = currentNode.getNextFormElementId(nodes);
+                    if (!nextElementId) {
+                        console.log(currentNode.title, 1);
+                        return 1;
+                    }
+                    const val = findLongestPath(nextElementId, nodes) + 1;
+                    console.log(currentNode.title, val);
+                    return val;
+                } else {
+                    const tab = choices[0].map((choice: any) => {
+                        if (!choice.next_form_element_id && !currentNode.getNextFormElementId(nodes)) {
+                            console.log(currentNode.title, 1);
+                            return 1;
+                        }
+                        if (choice.next_form_element_id){
+                            return findLongestPath(choice.next_form_element_id, nodes);
+                        }
+                    });
+                    console.log(tab, currentNode.title, Math.max(...tab) + 1);
+                    return Math.max(...tab) + 1;
+                }
+            } else {
+                const question: Question = <Question>currentNode;
+                const questionChoices: QuestionChoice[] = question.conditional ? question.choices.all : null;
+                if (!questionChoices || questionChoices.length === 0) {
+                    const nextElementId: number = currentNode.getNextFormElementId(nodes);
+                    if (!nextElementId) {
+                        console.log(currentNode.title, 1);
+                        return 1;
+                    }
+                    const val = findLongestPath(nextElementId, nodes) + 1;
+                    console.log(currentNode.title, val);
+                    return val;
+                } else {
+                    const tab = questionChoices.map((choice: QuestionChoice) => {
+                        if (!choice.next_form_element_id) {
+                            return 1;
+                        }
+                        return findLongestPath(choice.next_form_element_id, nodes);
+                    });
+                    console.log(tab, currentNode.title, Math.max(...tab) + 1);
+                    return Math.max(...tab) + 1;
+                }
+            }
+        };
+
 
     const initFormElementResponses = () : void => {
         let nbQuestions: number = vm.formElement instanceof Question ? 1 : (vm.formElement as Section).questions.all.length;
@@ -117,6 +179,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
         if (prevPosition > 0) {
             await saveResponses();
             vm.formElement = vm.formElements.all[prevPosition - 1];
+            vm.longestPath = findLongestPath(vm.formElement.id, vm.formElements);
             vm.historicPosition.pop();
             goToFormElement();
         }
@@ -131,6 +194,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
         if (nextPosition && nextPosition <= vm.nbFormElements) {
             await saveResponses();
             vm.formElement = vm.formElements.all[nextPosition - 1];
+            vm.longestPath = findLongestPath(vm.formElement.id, vm.formElements);
             vm.historicPosition.push(vm.formElement.position);
             goToFormElement();
         }
