@@ -3,7 +3,8 @@ import {FormElement} from "../models";
 
 interface IViewModel {
     formElement: FormElement,
-    nbFormElements: number
+    nbFormElements: number,
+    historicPosition: number,
     longestPath: number;
 }
 
@@ -12,7 +13,6 @@ export const progressBubbleBar: Directive = ng.directive('progressBubbleBar', ()
         restrict: 'E',
         scope: {
             formElement: '=',
-            nbFormElements: '=',
             longestPath: '=',
             historicPosition: '='
         },

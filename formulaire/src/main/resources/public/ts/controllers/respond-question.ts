@@ -72,29 +72,29 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
     }
 
 
-        const findLongestPathInFormElement = (formElementId: number, formElements: FormElements): number => {
-            const currentNode: FormElement = formElements.all.find((node: FormElement) => node.id === formElementId);
-            if (!currentNode) return 1;
-            if (currentNode.isSection()) {
-                const questions: Question[] = (<Section>currentNode).questions.all;
-                let conditionalQuestions: any = questions.filter((q: Question) => q.conditional);
-                const choices = conditionalQuestions && conditionalQuestions.length > 0 ? conditionalQuestions.flatMap(q => q.choices.all) : null;
-                return findLongestPathInQuestionChoices(choices, currentNode, formElements);
-            } else {
-                const question: Question = <Question>currentNode;
-                const questionChoices: QuestionChoice[] = question.conditional ? question.choices.all : null;
-                return findLongestPathInQuestionChoices(questionChoices, currentNode, formElements);
-            }
-        };
+    const findLongestPathInFormElement = (formElementId: number, formElements: FormElements): number => {
+        let currentNode: FormElement = formElements.all.find((node: FormElement) => node.id === formElementId);
+        if (!currentNode) return 1;
+        if (currentNode.isSection()) {
+            let questions: Question[] = (<Section>currentNode).questions.all;
+            let conditionalQuestions: any = questions.filter((q: Question) => q.conditional);
+            let choices: any = conditionalQuestions && conditionalQuestions.length > 0 ? conditionalQuestions.flatMap(q => q.choices.all) : null;
+            return findLongestPathInQuestionChoices(choices, currentNode, formElements);
+        } else {
+            let question: Question = <Question>currentNode;
+            let questionChoices: QuestionChoice[] = question.conditional ? question.choices.all : null;
+            return findLongestPathInQuestionChoices(questionChoices, currentNode, formElements);
+        }
+    };
 
 
     const findLongestPathInQuestionChoices = (choices: any, currentFormElement: FormElement, formElements: FormElements): number => {
         if (!choices || choices.length === 0) {
-            const nextElementId: number = currentFormElement.getNextFormElementId(formElements);
+            let nextElementId: number = currentFormElement.getNextFormElementId(formElements);
             if (!nextElementId) {return 1;}
             return findLongestPathInFormElement(nextElementId, formElements) + 1;
         } else {
-            const tab = choices.map((choice: any) => {
+            let tab: any[] = choices.map((choice: any) => {
                 if (!choice.next_form_element_id) return 1;
                 return findLongestPathInFormElement(choice.next_form_element_id, formElements);
             });
