@@ -78,7 +78,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
         if (currentNode.isSection()) {
             let questions: Question[] = (<Section>currentNode).questions.all;
             let conditionalQuestions: any = questions.filter((q: Question) => q.conditional);
-            let choices: Question[] = (conditionalQuestions && conditionalQuestions.length > 0) ? conditionalQuestions.flatMap(q => q.choices.all) : null;
+            let choices: Question[] = (conditionalQuestions && conditionalQuestions.length > 0) ? conditionalQuestions.flatMap((q: Question) => q.choices.all) : null;
             return findLongestPathInQuestionChoices(choices, currentNode, formElements);
         } else {
             let question: Question = <Question>currentNode;
