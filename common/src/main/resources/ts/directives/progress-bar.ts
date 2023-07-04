@@ -3,7 +3,6 @@ import {FormElement} from "../models";
 
 interface IViewModel {
     formElement: FormElement,
-    nbFormElements: number,
     historicPosition: number,
     longestPath: number;
 }
