@@ -192,7 +192,7 @@ public class SharingController extends ControllerHelper {
                             String message = "[Formulaire@SharingController::shareResource] " +
                                     "Share to more than " + MAX_USERS_SHARING + " people is not allowed.";
                             log.error(message);
-                            String i18n = I18nHelper.getWithParam(I18nKeys.SHARE_MAX_RECIPIENT_ERROR, MAX_USERS_SHARING, request);
+                            String i18n = I18nHelper.getWithParam(I18nKeys.MAX_USERS_SHARING_ERROR, MAX_USERS_SHARING, request);
                             renderInternalError(request, i18n);
                             return;
                         }
