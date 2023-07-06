@@ -89,7 +89,7 @@ interface ViewModel {
     duplicateForms() : Promise<void>;
     shareForm() : void;
     closeShareFormLightbox() : void;
-    shareFailure(error: any) : void;
+    shareFailure(error: JQueryXHR) : void;
     seeResultsForm() : void;
     isFormOpened(): boolean;
     checkRemind() : Promise<void>;
@@ -354,7 +354,7 @@ export const formsListController = ng.controller('FormsListController', ['$scope
         }
     };
 
-    vm.shareFailure = (error: any) : void => {
+    vm.shareFailure = (error: JQueryXHR) : void => {
         notify.error(error.responseJSON.error);
     }
 
