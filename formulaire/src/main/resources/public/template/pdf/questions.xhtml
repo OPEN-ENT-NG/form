@@ -247,9 +247,9 @@
                                 {{#choices}}
                             <div class="choice">
                                     <input type="radio"/><label>{{value}}</label>
-                                    {{#is_conditional}}
+                                    {{#conditional}}
                                         (Aller à : {{title_next}})
-                                    {{/is_conditional}}
+                                    {{/conditional}}
                                     <div class="image-container">
                                         {{#imageChoice}}<img src="{{imageChoice}}" alt="Img"/>{{/imageChoice}}
                                     </div>
@@ -364,9 +364,9 @@
                                 {{#choices}}
                                 <div class="choice">
                                     <input type="radio"/><label>{{value}}</label>
-                                    {{#is_conditional}}
+                                    {{#conditional}}
                                         (Aller à : {{title_next}})
-                                    {{/is_conditional}}
+                                    {{/conditional}}
                                     <div class="image-container">
                                         {{#imageChoice}}<img src="{{imageChoice}}" alt="Img"/>{{/imageChoice}}
                                     </div>
