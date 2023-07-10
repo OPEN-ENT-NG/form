@@ -32,6 +32,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static fr.openent.form.core.constants.ConfigFields.NODE_PDF_GENERATOR;
 import static fr.openent.form.core.constants.Fields.*;
@@ -191,27 +192,26 @@ public class FormQuestionsExportPDF extends ControllerHelper {
 
                             //Questions matricielles
                             questionsInfos.stream()
-                                    .map(JsonObject.class::cast)
-                                    .filter(question -> question.containsKey(CHILDREN))
-                                    .flatMap(question -> listChildren.stream()
-                                            .map(JsonObject.class::cast)
-                                            .filter(child -> Objects.equals(child.getInteger(MATRIX_ID), question.getInteger(ID)))
-                                    )
-                                    .forEach(child -> {
-                                        JsonObject question = child.getJsonObject(QUESTION);
-                                        if (question.containsKey(CHILDREN)) {
-                                            question.getJsonArray(CHILDREN).add(child);
-                                            if (Integer.valueOf(QuestionTypes.SINGLEANSWERRADIO.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
-                                                question.put(IS_MATRIX_SINGLE, true);
+                                .filter(Objects::nonNull)
+                                .map(JsonObject.class::cast)
+                                .forEach(question -> {
+                                    for (int k = 0; k < listChildren.size(); k++) {
+                                        JsonObject child = listChildren.getJsonObject(k);
+                                        if (Objects.equals(child.getInteger(MATRIX_ID), question.getInteger(ID))) {
+                                            if (question.containsKey(CHILDREN)) {
+                                                question.getJsonArray(CHILDREN).add(child);
+                                                if (Integer.valueOf(QuestionTypes.SINGLEANSWERRADIO.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
+                                                    question.put(IS_MATRIX_SINGLE, true);
+                                                }
+                                                if (Integer.valueOf(QuestionTypes.MULTIPLEANSWER.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
+                                                    question.put(IS_MATRIX_MULTIPLE, true);
+                                                }
+                                            } else {
+                                                question.put(CHILDREN, new JsonArray().add(child));
                                             }
-                                            if (Integer.valueOf(QuestionTypes.MULTIPLEANSWER.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
-                                                question.put(IS_MATRIX_MULTIPLE, true);
-                                            }
-                                        } else {
-                                            question.put(CHILDREN, new JsonArray().add(child));
                                         }
-                                    });
-                            //Mise à jour du questionMap
+                                    }
+                                });
 //                            fillMap(questionsInfos, mapQuestions);
 
 
@@ -235,6 +235,28 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                             form_elements.add(question);
                                         }
                                     });
+
+                            //On prend les sections même si elles n'ont pas de questions
+                            List<Integer> formElementSectionIds = new ArrayList<>();
+                            List<Integer> sectionsId = new ArrayList<>(mapSections.keySet());
+                            form_elements.stream()
+                                    .map(JsonObject.class::cast)
+                                    .filter(element -> element.containsKey(IS_SECTION) && element.getBoolean(IS_SECTION))
+                                    .forEach(section -> {
+                                        formElementSectionIds.add(section.getInteger(ID));
+                                    });
+
+                            if(!sectionsId.isEmpty() && !formElementSectionIds.isEmpty()){
+                                sectionsId.removeAll(formElementSectionIds);
+                                sectionsId.forEach(remainSectionId -> {
+                                            JsonObject section = mapSections.get(remainSectionId);
+                                            section.put(IS_SECTION, true);
+                                            form_elements.add(section);
+                                        });
+                            }
+
+
+
 
                             List<JsonObject> sorted_form_elements = form_elements.getList();
                             sorted_form_elements.removeIf(element -> element.getInteger(POSITION) == null);
