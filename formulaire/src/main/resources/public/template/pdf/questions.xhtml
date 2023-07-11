@@ -225,25 +225,25 @@
 
                     <div class="main">
                         <!-- Type freetext -->
-                        {{#type_freetext}}
+                        {{#is_type_freetext}}
                             {{#statement}}
                                 {{{statement}}}
                             {{/statement}}
-                        {{/type_freetext}}
+                        {{/is_type_freetext}}
 
                         <!-- Type short_answer -->
-                        {{#short_answer}}
+                        {{#is_short_answer}}
                             <div class="shortanswer"></div>
-                        {{/short_answer}}
+                        {{/is_short_answer}}
 
                         <!-- Type long_answer -->
-                        {{#long_answer}}
+                        {{#is_long_answer}}
                             <div class="longanswer"></div>
-                        {{/long_answer}}
+                        {{/is_long_answer}}
 
                         <!-- Single answer, radio btn -->
                         <div class="input-radio-checkbox">
-                            {{#radio_btn}}
+                            {{#is_radio_btn}}
                                 {{#choices}}
                             <div class="choice">
                                     <input type="radio"/><label>{{value}}</label>
@@ -255,12 +255,12 @@
                                     </div>
                                 </div>
                                 {{/choices}}
-                            {{/radio_btn}}
+                            {{/is_radio_btn}}
                         </div>
 
                         <!-- Multiple answer -->
                         <div class="input-radio-checkbox">
-                            {{#multiple_choice}}
+                            {{#is_multiple_choice}}
                                 {{#choices}}
                                 <div class="choice">
                                     <input type="checkbox"/><label>{{value}}</label>
@@ -269,13 +269,13 @@
                                     </div>
                                 </div>
                                 {{/choices}}
-                            {{/multiple_choice}}
+                            {{/is_multiple_choice}}
                         </div>
 
                         <!-- Date, hour -->
-                        {{#date_hour}}
+                        {{#is_date_hour}}
                             <div class="date-and-hour"></div>
-                        {{/date_hour}}
+                        {{/is_date_hour}}
 
                     <!-- Matrix -->
                     {{#is_matrix}}
@@ -342,25 +342,25 @@
 
                 <div class="main">
                         <!-- Type freetext -->
-                        {{#type_freetext}}
+                        {{#is_type_freetext}}
                             {{#statement}}
                                 {{{statement}}}
                             {{/statement}}
-                        {{/type_freetext}}
+                        {{/is_type_freetext}}
 
                         <!-- Type shortanswer -->
-                        {{#short_answer}}
+                        {{#is_short_answer}}
                             <div class="shortanswer"></div>
-                        {{/short_answer}}
+                        {{/is_short_answer}}
 
                         <!-- Type long_answer -->
-                        {{#long_answer}}
+                        {{#is_long_answer}}
                             <div class="longanswer"></div>
-                        {{/long_answer}}
+                        {{/is_long_answer}}
 
                         <!-- Single answer, radio btn -->
                         <div class="input-radio-checkbox">
-                            {{#radio_btn}}
+                            {{#is_radio_btn}}
                                 {{#choices}}
                                 <div class="choice">
                                     <input type="radio"/><label>{{value}}</label>
@@ -372,12 +372,12 @@
                                     </div>
                                 </div>
                                 {{/choices}}
-                            {{/radio_btn}}
+                            {{/is_radio_btn}}
                         </div>
 
                         <!-- Multiple answer -->
                         <div class="input-radio-checkbox">
-                            {{#multiple_choice}}
+                            {{#is_multiple_choice}}
                                 {{#choices}}
                                 <div class="choice">
                                     <input type="checkbox"/><label>{{value}}</label>
@@ -386,13 +386,13 @@
                                     </div>
                                 </div>
                                 {{/choices}}
-                            {{/multiple_choice}}
+                            {{/is_multiple_choice}}
                         </div>
 
                         <!-- Date, hour -->
-                        {{#date_hour}}
+                        {{#is_date_hour}}
                             <div class="date-and-hour"></div>
-                        {{/date_hour}}
+                        {{/is_date_hour}}
 
                         <!-- Matrix -->
                         {{#is_matrix}}
