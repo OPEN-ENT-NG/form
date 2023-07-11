@@ -244,7 +244,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
      * @param questionsInfos all questionsInfos when not filled yet
      * @param choicesInfos all choices infos to put in questions
      * @param mapSections a map with id of section as key and sectionsInfos as value
-     * @param form_elements the datas which will be send to the PDF template
+     * @param form_elements the datas which will be sent to the PDF template
      */
     private void fillQuestionsAndSections(JsonArray questionsInfos, JsonObject choicesInfos, Map<Integer, JsonObject> mapSections, JsonArray form_elements){
         questionsInfos.stream()
@@ -275,7 +275,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                 .filter(Objects::nonNull)
                 .map(JsonObject.class::cast)
                 .forEach(section -> {
-                    section.put(IS_SECTION, true);
+                    section.put(IS_QUESTION, false);
                     form_elements.add(section);
                 });
     }
