@@ -170,17 +170,6 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                 //END CHOICES
 
                                 //START QUESTIONS
-                                //Set isQuestion && is_Conditional && type
-                                questionsInfos.stream()
-                                        .filter(Objects::nonNull)
-                                        .map(JsonObject.class::cast)
-                                        .forEach(q -> {
-                                            if(q.getInteger(SECTION_ID) == null){
-                                                q.put(IS_QUESTION, true);
-                                            }
-                                            setType(q);
-                                        });
-
 
                                 //Matrix questions
                                 questionsInfos.stream()
@@ -239,6 +228,9 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         questionsInfos.stream()
                 .map(JsonObject.class::cast)
                 .forEach(question -> {
+                    //Set isQuestion && is_Conditional && type
+                    if(question.getInteger(SECTION_ID) == null)question.put(IS_QUESTION, true);
+                    setType(question);
                     JsonArray choices = choicesInfos.getJsonArray(QUESTIONS_CHOICES).stream()
                             .map(JsonObject.class::cast)
                             .filter(choice -> Objects.equals(choice.getInteger(QUESTION_ID), question.getInteger(ID)))
