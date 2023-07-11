@@ -96,6 +96,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                 Map<Integer, JsonObject> mapSections = new HashMap<>();
                 List<Future> imageInfos = new ArrayList<>();
                 JsonArray form_elements = new JsonArray();
+                Map<String, String> localChoicesMap = new HashMap<>();
 
                 fillMap(sectionsInfos, mapSections);
                 fillMap(questionsInfos, mapQuestions);
@@ -107,38 +108,8 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                             return questionService.listChildren(questionsIds);
                         })
                         .onSuccess(listChildren -> {
-                            //CHOICES
-                            //Set Title to choices if needed
-                            promiseInfos.getJsonArray(QUESTIONS_CHOICES).stream()
-                                    .filter(Objects::nonNull)
-                                    .map(JsonObject.class::cast)
-                                    .forEach(conditionalChoice -> {
-                                        Integer nextQuestionId = conditionalChoice.getInteger(NEXT_FORM_ELEMENT_ID);
-                                        if (nextQuestionId != null) {
-                                            String titleNext = null;
-                                            JsonObject nextQuestion = mapQuestions.get(nextQuestionId);
-                                            JsonObject nextSection = mapSections.get(nextQuestionId);
-                                            if (nextQuestion != null) {
-                                                titleNext = nextQuestion.getString(TITLE);
-                                            } else if (nextSection != null) {
-                                                titleNext = nextSection.getString(TITLE);
-                                            }
-                                            if (titleNext != null) {
-                                                conditionalChoice.put(TITLE_NEXT, titleNext);
-                                            }
-                                        } else {
-                                            conditionalChoice.put(TITLE_NEXT, I18nHelper.getI18nValue(I18nKeys.END_FORM, request));
-                                        }
-                                    });
 
-
-                            //Add Images to questionChoices
-                            promiseInfos.getJsonArray(QUESTIONS_CHOICES).stream()
-                                    .filter(Objects::nonNull)
-                                    .map(JsonObject.class::cast)
-                                    .filter(choice -> choice.containsKey(IMAGE))
-                                    .forEach(choice -> imageInfos.add(getImageData(choice)));
-
+                           fillChoices(promiseInfos, mapSections, mapQuestions, imageInfos);
 
                              //Get choices images, affect them to their respective choice and send the result
                             CompositeFuture.all(imageInfos).onComplete(evt -> {
@@ -148,54 +119,8 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                     return;
                                 }
 
-                                Map<String, String> localChoicesMap = new HashMap<>();
-                                imageInfos.stream()
-                                        .map(Future::result)
-                                        .map(JsonObject.class::cast)
-                                        .filter(Objects::nonNull)
-                                        .filter(imageInfo -> imageInfo.containsKey(ID) && imageInfo.containsKey(DATA))
-                                        .forEach(imageInfo -> localChoicesMap.put(imageInfo.getString(ID), imageInfo.getString(DATA)));
-
-                              // Affect images to corresponding choices (we have to iterate like previously to keep the same order)
-                                promiseInfos.getJsonArray(QUESTIONS_CHOICES).stream()
-                                    .filter(Objects::nonNull)
-                                    .map(JsonObject.class::cast)
-                                    .filter(choice -> choice.containsKey(IMAGE))
-                                    .forEach(choice -> {
-                                        String choiceImageId = getImageId(choice);
-                                        String imageData = localChoicesMap.get(choiceImageId);
-                                        choice.put(PARAM_CHOICE_IMAGE, imageData);
-                                    });
-
-                                //END CHOICES
-
-                                //START QUESTIONS
-
-                                //Matrix questions
-                                questionsInfos.stream()
-                                    .filter(Objects::nonNull)
-                                    .map(JsonObject.class::cast)
-                                    .forEach(question -> {
-                                        for (int k = 0; k < listChildren.size(); k++) {
-                                            JsonObject child = listChildren.getJsonObject(k);
-                                            if (Objects.equals(child.getInteger(MATRIX_ID), question.getInteger(ID))) {
-                                                if (question.containsKey(CHILDREN)) {
-                                                    question.getJsonArray(CHILDREN).add(child);
-                                                    if (Integer.valueOf(QuestionTypes.SINGLEANSWERRADIO.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
-                                                        question.put(IS_MATRIX_SINGLE, true);
-                                                    }
-                                                    if (Integer.valueOf(QuestionTypes.MULTIPLEANSWER.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
-                                                        question.put(IS_MATRIX_MULTIPLE, true);
-                                                    }
-                                                } else {
-                                                    question.put(CHILDREN, new JsonArray().add(child));
-                                                }
-                                            }
-                                        }
-                                    });
-
-
-                                //Add choices to questions
+                                fillChoicesImages(imageInfos, localChoicesMap, promiseInfos);
+                                fillMatrixQuestions(questionsInfos, listChildren);
                                 fillQuestionsAndSections(questionsInfos, promiseInfos, mapSections, form_elements);
 
                                 List<JsonObject> sorted_form_elements = form_elements.getList();
@@ -224,6 +149,103 @@ public class FormQuestionsExportPDF extends ControllerHelper {
     }
 
 
+    /**
+     * Fill questions with their choices and sections with their questions
+     * @param imageInfos all the datas from the images
+     * @param localChoicesMap a map with id of image as key and image Datas as value
+     * @param choicesInfos all choices infos to put in questions
+     */
+    private void fillChoicesImages(List<Future>imageInfos, Map<String, String> localChoicesMap, JsonObject choicesInfos){
+        imageInfos.stream()
+                .map(Future::result)
+                .map(JsonObject.class::cast)
+                .filter(Objects::nonNull)
+                .filter(imageInfo -> imageInfo.containsKey(ID) && imageInfo.containsKey(DATA))
+                .forEach(imageInfo -> localChoicesMap.put(imageInfo.getString(ID), imageInfo.getString(DATA)));
+
+        // Affect images to corresponding choices (we have to iterate like previously to keep the same order)
+        choicesInfos.getJsonArray(QUESTIONS_CHOICES).stream()
+                .filter(Objects::nonNull)
+                .map(JsonObject.class::cast)
+                .filter(choice -> choice.containsKey(IMAGE))
+                .forEach(choice -> {
+                    String choiceImageId = getImageId(choice);
+                    String imageData = localChoicesMap.get(choiceImageId);
+                    choice.put(PARAM_CHOICE_IMAGE, imageData);
+                });
+    }
+
+
+    /**
+     * Fill questions with their choices and sections with their questions
+     * @param questionChoices all the datas from the choices
+     * @param mapSections a map with id of section as key and sectionsInfos as value
+     * @param mapQuestions a map with id of question as key and questionsInfos as value
+     * @param imageInfos all the datas from the images
+     */
+    private void fillChoices(JsonObject questionChoices, Map<Integer, JsonObject>mapSections, Map<Integer, JsonObject>mapQuestions, List<Future> imageInfos){
+        questionChoices.getJsonArray(QUESTIONS_CHOICES).stream()
+                .filter(Objects::nonNull)
+                .map(JsonObject.class::cast)
+                .forEach(choice -> {
+                    if(choice.containsKey(IMAGE))imageInfos.add(getImageData(choice));
+                    Integer nextQuestionId = choice.getInteger(NEXT_FORM_ELEMENT_ID);
+                    if (nextQuestionId != null) {
+                        String titleNext = null;
+                        JsonObject nextQuestion = mapQuestions.get(nextQuestionId);
+                        JsonObject nextSection = mapSections.get(nextQuestionId);
+                        if (nextQuestion != null) {
+                            titleNext = nextQuestion.getString(TITLE);
+                        } else if (nextSection != null) {
+                            titleNext = nextSection.getString(TITLE);
+                        }
+                        if (titleNext != null) {
+                            choice.put(TITLE_NEXT, titleNext);
+                        }
+                    } else {
+                        choice.put(TITLE_NEXT, I18nHelper.getI18nValue(I18nKeys.END_FORM, request));
+                    }
+                });
+    }
+
+
+    /**
+     * Handle Matrix questions and its children
+     * @param questionsInfos all questionsInfos when not filled yet
+     * @param matrixChildren columns and lines of a matrix question
+     */
+    private void fillMatrixQuestions(JsonArray questionsInfos, JsonArray matrixChildren){
+        questionsInfos.stream()
+                .filter(Objects::nonNull)
+                .map(JsonObject.class::cast)
+                .forEach(question -> {
+                    for (int k = 0; k < matrixChildren.size(); k++) {
+                        JsonObject child = matrixChildren.getJsonObject(k);
+                        if (Objects.equals(child.getInteger(MATRIX_ID), question.getInteger(ID))) {
+                            if (question.containsKey(CHILDREN)) {
+                                question.getJsonArray(CHILDREN).add(child);
+                                if (Integer.valueOf(QuestionTypes.SINGLEANSWERRADIO.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
+                                    question.put(IS_MATRIX_SINGLE, true);
+                                }
+                                if (Integer.valueOf(QuestionTypes.MULTIPLEANSWER.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
+                                    question.put(IS_MATRIX_MULTIPLE, true);
+                                }
+                            } else {
+                                question.put(CHILDREN, new JsonArray().add(child));
+                            }
+                        }
+                    }
+                });
+    }
+
+
+    /**
+     * Fill questions with their choices and sections with their questions
+     * @param questionsInfos all questionsInfos when not filled yet
+     * @param choicesInfos all choices infos to put in questions
+     * @param mapSections a map with id of section as key and sectionsInfos as value
+     * @param form_elements the datas which will be send to the PDF template
+     */
     private void fillQuestionsAndSections(JsonArray questionsInfos, JsonObject choicesInfos, Map<Integer, JsonObject> mapSections, JsonArray form_elements){
         questionsInfos.stream()
                 .map(JsonObject.class::cast)
