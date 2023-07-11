@@ -224,6 +224,9 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                                                 .filter(choice -> Objects.equals(choice.getInteger(QUESTION_ID), question.getInteger(ID)))
                                                 .collect(JsonArray::new, JsonArray::add, JsonArray::addAll);
 
+                                        List<JsonObject> choicesList = choices.getList();
+                                        choicesList.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
+                                        choices = new JsonArray(choicesList);
                                         question.put(CHOICES, choices);
 
                                         if(mapSections.containsKey(question.getInteger(SECTION_ID))){
