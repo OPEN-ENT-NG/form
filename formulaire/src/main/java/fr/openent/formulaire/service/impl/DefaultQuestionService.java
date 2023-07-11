@@ -108,6 +108,14 @@ public class DefaultQuestionService implements QuestionService {
         sql.prepared(query, params, SqlResult.validResultHandler(handler));
     }
 
+
+    @Override
+    public Future<JsonArray> export(String formId, boolean isPdf){
+        Promise<JsonArray> promise = Promise.promise();
+        export(formId, isPdf, FutureHelper.handlerEither(promise));
+        return promise.future();
+    }
+
     @Override
     public void get(String questionId, Handler<Either<String, JsonObject>> handler) {
         String query = "SELECT * FROM " + QUESTION_TABLE + " WHERE id = ?;";

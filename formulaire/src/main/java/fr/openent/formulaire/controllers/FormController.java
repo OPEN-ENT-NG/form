@@ -1168,20 +1168,20 @@ public class FormController extends ControllerHelper {
                                     });
                             break;
                         case PDF:
-                            formService.get(String.valueOf(formIds.getInteger(0)), user, formEvt -> {
-                                if (formEvt.isLeft()) {
-                                    log.error("[Formulaire@FormController::exportForm] Error in getting form to export questions of form " + formIds);
-                                    renderInternalError(request, formEvt);
-                                    return;
-                                }
-                                if (formEvt.right().getValue().isEmpty()) {
-                                    String errMessage = "[Formulaire@FormController::exportForm] No form found for id " + formIds;
-                                    log.error(errMessage);
-                                    notFound(request, errMessage);
-                                }
-                                JsonObject form = formEvt.right().getValue();
-                                new FormQuestionsExportPDF(request, vertx, config, storage, eb, form).launch();
-                            });
+                            formService.get(String.valueOf(formIds.getInteger(0)), user)
+                                    .onSuccess(form -> {
+                                        if(form.isEmpty()){
+                                            String errMessage = "[Formulaire@exportForm] No form found for id " + formIds;
+                                            log.error(errMessage);
+                                            notFound(request, errMessage);
+                                        } else {
+                                            new FormQuestionsExportPDF(request, vertx, config, storage, eb, form).launch();
+                                        }
+                                    })
+                                    .onFailure(err -> {
+                                        log.error("[Formulaire@exportForm] Error in getting form to export questions of form " + formIds);
+                                        renderInternalError(request, err.toString());
+                                    });
                             break;
                         default:
                             String message = "[Formulaire@FormController::exportForms] Wrong export format type : " + fileType;
