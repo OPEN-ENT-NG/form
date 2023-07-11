@@ -112,7 +112,6 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                             promiseInfos.getJsonArray(QUESTIONS_CHOICES).stream()
                                     .filter(Objects::nonNull)
                                     .map(JsonObject.class::cast)
-                                    .filter(choice -> choice.getInteger(NEXT_FORM_ELEMENT_ID) != null)
                                     .forEach(conditionalChoice -> {
                                         Integer nextQuestionId = conditionalChoice.getInteger(NEXT_FORM_ELEMENT_ID);
                                         if (nextQuestionId != null) {
@@ -333,39 +332,6 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         }
     }
 
-    /**
-     * Get all the titles of next form element to add them in JsonArray question choices and then sort choices by position
-     * @param questionChoices choices from conditional questions
-     * @param mapSections map with all sections
-     * @param mapQuestions map with all questions but not in sections
-     */
-    private void addNextTitleToQuestionChoices(JsonArray questionChoices, Map<Integer, JsonObject> mapSections, Map<Integer, JsonObject> mapQuestions){
-        if( questionChoices == null || questionChoices.isEmpty())return;
-        for (int j = 0; j < questionChoices.size(); j++) {
-            JsonObject choice = questionChoices.getJsonObject(j);
-            if (choice != null && choice.containsKey(NEXT_FORM_ELEMENT_ID)) {
-                Integer nextQuestionId = choice.getInteger(NEXT_FORM_ELEMENT_ID);
-                if (nextQuestionId != null) {
-                    String titleNext = null;
-                    JsonObject nextQuestion = mapQuestions.get(nextQuestionId);
-                    JsonObject nextSection = mapSections.get(nextQuestionId);
-                    if (nextQuestion != null) {
-                        titleNext = nextQuestion.getString(TITLE);
-                    } else if (nextSection != null) {
-                        titleNext = nextSection.getString(TITLE);
-                    }
-
-                    if(titleNext != null){
-                        choice.put(TITLE_NEXT, titleNext);
-                    }
-                } else {
-                    choice.put(TITLE_NEXT, I18nHelper.getI18nValue(I18nKeys.END_FORM, request));
-                }
-            }
-        }
-        List<JsonObject> choicesList = questionChoices.getList();
-        choicesList.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
-    }
 
     // Get image data thanks to its id
     public Future<JsonObject> getImageData(JsonObject choice) {
