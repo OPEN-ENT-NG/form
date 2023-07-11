@@ -207,47 +207,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
 
 
                                 //Add choices to questions
-                                questionsInfos.stream()
-                                        .map(JsonObject.class::cast)
-                                        .forEach(question -> {
-                                            JsonArray choices = promiseInfos.getJsonArray(QUESTIONS_CHOICES).stream()
-                                                    .map(JsonObject.class::cast)
-                                                    .filter(choice -> Objects.equals(choice.getInteger(QUESTION_ID), question.getInteger(ID)))
-                                                    .collect(JsonArray::new, JsonArray::add, JsonArray::addAll);
-
-                                            List<JsonObject> choicesList = choices.getList();
-                                            choicesList.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
-                                            choices = new JsonArray(choicesList);
-                                            question.put(CHOICES, choices);
-
-                                            if(mapSections.containsKey(question.getInteger(SECTION_ID))){
-                                                JsonObject section = mapSections.get(question.getInteger(SECTION_ID));
-                                                section.put(IS_SECTION, true);
-                                                section.put("questions", question);
-                                                form_elements.add(section);
-                                            } else {
-                                                form_elements.add(question);
-                                            }
-                                        });
-
-                                //Add sections with no questions
-                                List<Integer> formElementSectionIds = new ArrayList<>();
-                                List<Integer> sectionsId = new ArrayList<>(mapSections.keySet());
-                                form_elements.stream()
-                                        .map(JsonObject.class::cast)
-                                        .filter(element -> element.containsKey(IS_SECTION) && element.getBoolean(IS_SECTION))
-                                        .forEach(section -> {
-                                            formElementSectionIds.add(section.getInteger(ID));
-                                        });
-
-                                if(!sectionsId.isEmpty() && !formElementSectionIds.isEmpty()){
-                                    sectionsId.removeAll(formElementSectionIds);
-                                    sectionsId.forEach(remainSectionId -> {
-                                                JsonObject section = mapSections.get(remainSectionId);
-                                                section.put(IS_SECTION, true);
-                                                form_elements.add(section);
-                                            });
-                                }
+                                fillQuestionsAndSections(questionsInfos, promiseInfos, mapSections, form_elements);
 
                                 List<JsonObject> sorted_form_elements = form_elements.getList();
                                 sorted_form_elements.removeIf(element -> element.getInteger(POSITION) == null);
@@ -273,6 +233,39 @@ public class FormQuestionsExportPDF extends ControllerHelper {
             });
         });
     }
+
+
+    private void fillQuestionsAndSections(JsonArray questionsInfos, JsonObject choicesInfos, Map<Integer, JsonObject> mapSections, JsonArray form_elements){
+        questionsInfos.stream()
+                .map(JsonObject.class::cast)
+                .forEach(question -> {
+                    JsonArray choices = choicesInfos.getJsonArray(QUESTIONS_CHOICES).stream()
+                            .map(JsonObject.class::cast)
+                            .filter(choice -> Objects.equals(choice.getInteger(QUESTION_ID), question.getInteger(ID)))
+                            .collect(JsonArray::new, JsonArray::add, JsonArray::addAll);
+
+                    List<JsonObject> choicesList = choices.getList();
+                    choicesList.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
+                    choices = new JsonArray(choicesList);
+                    question.put(CHOICES, choices);
+
+                    if(mapSections.containsKey(question.getInteger(SECTION_ID))){
+                        JsonObject section = mapSections.get(question.getInteger(SECTION_ID));
+                        section.put("questions", question);
+                    } else {
+                        form_elements.add(question);
+                    }
+                });
+
+        mapSections.values().stream()
+                .filter(Objects::nonNull)
+                .map(JsonObject.class::cast)
+                .forEach(section -> {
+                    section.put(IS_SECTION, true);
+                    form_elements.add(section);
+                });
+    }
+
 
 
 
