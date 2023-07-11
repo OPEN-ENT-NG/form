@@ -134,147 +134,136 @@ public class FormQuestionsExportPDF extends ControllerHelper {
 
 
                             //Add Images to questionChoices
-//                            questionsInfos.stream()
-//                                    .map(JsonObject.class::cast)
-//                                    .map(questionInfos -> questionInfos.getJsonArray(CHOICES))
-//                                    .filter(Objects::nonNull)
-//                                    .flatMap(JsonArray::stream)
-//                                    .map(JsonObject.class::cast)
-//                                    .filter(choice -> choice.containsKey(IMAGE))
-//                                    .forEach(choice -> imageInfos.add(getImageData(choice)));
-//
-//
-//                            // Get choices images, affect them to their respective choice and send the result
-//                            CompositeFuture.all(imageInfos).onComplete(evt -> {
-//                                if (evt.failed()) {
-//                                    log.error("[Formulaire@FormQuestionsExportPDF::FormQuestionsExportPDF] Failed to retrieve choices' image : " + evt.cause());
-//                                    Future.failedFuture(evt.cause());
-//                                    return;
-//                                }
-//
-//                                Map<String, String> localChoicesMap = new HashMap<>();
-//                                imageInfos.stream()
-//                                        .map(Future::result)
-//                                        .map(JsonObject.class::cast)
-//                                        .filter(Objects::nonNull)
-//                                        .filter(imageInfo -> imageInfo.containsKey(ID) && imageInfo.containsKey(DATA))
-//                                        .forEach(imageInfo -> localChoicesMap.put(imageInfo.getString(ID), imageInfo.getString(DATA)));
-//
-//                                // Affect images to corresponding choices (we have to iterate like previously to keep the same order)
-//                                questionsInfos.stream()
-//                                        .map(JsonObject.class::cast)
-//                                        .map(questionInfos -> questionInfos.getJsonArray(CHOICES))
-//                                        .filter(Objects::nonNull)
-//                                        .flatMap(JsonArray::stream)
-//                                        .map(JsonObject.class::cast)
-//                                        .filter(choice -> choice.containsKey(IMAGE))
-//                                        .forEach(choice -> {
-//                                            String choiceImageId = getImageId(choice);
-//                                            String imageData = localChoicesMap.get(choiceImageId);
-//                                            choice.put(PARAM_CHOICE_IMAGE, imageData);
-//                                        });
-//                            });
-
-                            //FIN CHOICES
-
-                            //DEBUT QUESTIONS
-                            //Set isQuestion && is_Conditional && type
-                            questionsInfos.stream()
+                            promiseInfos.getJsonArray(QUESTIONS_CHOICES).stream()
                                     .filter(Objects::nonNull)
                                     .map(JsonObject.class::cast)
-                                    .forEach(q -> {
-                                        if(q.getInteger(SECTION_ID) == null){
-                                            q.put(IS_QUESTION, true);
-                                        }
-                                        setType(q);
+                                    .filter(choice -> choice.containsKey(IMAGE))
+                                    .forEach(choice -> imageInfos.add(getImageData(choice)));
+
+
+                             //Get choices images, affect them to their respective choice and send the result
+                            CompositeFuture.all(imageInfos).onComplete(evt -> {
+                                if (evt.failed()) {
+                                    log.error("[Formulaire@FormQuestionsExportPDF::FormQuestionsExportPDF] Failed to retrieve choices' image : " + evt.cause());
+                                    Future.failedFuture(evt.cause());
+                                    return;
+                                }
+
+                                Map<String, String> localChoicesMap = new HashMap<>();
+                                imageInfos.stream()
+                                        .map(Future::result)
+                                        .map(JsonObject.class::cast)
+                                        .filter(Objects::nonNull)
+                                        .filter(imageInfo -> imageInfo.containsKey(ID) && imageInfo.containsKey(DATA))
+                                        .forEach(imageInfo -> localChoicesMap.put(imageInfo.getString(ID), imageInfo.getString(DATA)));
+
+                              // Affect images to corresponding choices (we have to iterate like previously to keep the same order)
+                                promiseInfos.getJsonArray(QUESTIONS_CHOICES).stream()
+                                    .filter(Objects::nonNull)
+                                    .map(JsonObject.class::cast)
+                                    .filter(choice -> choice.containsKey(IMAGE))
+                                    .forEach(choice -> {
+                                        String choiceImageId = getImageId(choice);
+                                        String imageData = localChoicesMap.get(choiceImageId);
+                                        choice.put(PARAM_CHOICE_IMAGE, imageData);
                                     });
 
+                                //END CHOICES
 
-                            //Questions matricielles
-                            questionsInfos.stream()
-                                .filter(Objects::nonNull)
-                                .map(JsonObject.class::cast)
-                                .forEach(question -> {
-                                    for (int k = 0; k < listChildren.size(); k++) {
-                                        JsonObject child = listChildren.getJsonObject(k);
-                                        if (Objects.equals(child.getInteger(MATRIX_ID), question.getInteger(ID))) {
-                                            if (question.containsKey(CHILDREN)) {
-                                                question.getJsonArray(CHILDREN).add(child);
-                                                if (Integer.valueOf(QuestionTypes.SINGLEANSWERRADIO.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
-                                                    question.put(IS_MATRIX_SINGLE, true);
-                                                }
-                                                if (Integer.valueOf(QuestionTypes.MULTIPLEANSWER.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
-                                                    question.put(IS_MATRIX_MULTIPLE, true);
-                                                }
-                                            } else {
-                                                question.put(CHILDREN, new JsonArray().add(child));
+                                //START QUESTIONS
+                                //Set isQuestion && is_Conditional && type
+                                questionsInfos.stream()
+                                        .filter(Objects::nonNull)
+                                        .map(JsonObject.class::cast)
+                                        .forEach(q -> {
+                                            if(q.getInteger(SECTION_ID) == null){
+                                                q.put(IS_QUESTION, true);
                                             }
-                                        }
-                                    }
-                                });
-//                            fillMap(questionsInfos, mapQuestions);
+                                            setType(q);
+                                        });
 
 
-                            //Ajout des choices dans la question
-                            questionsInfos.stream()
+                                //Matrix questions
+                                questionsInfos.stream()
+                                    .filter(Objects::nonNull)
                                     .map(JsonObject.class::cast)
                                     .forEach(question -> {
-                                        JsonArray choices = promiseInfos.getJsonArray(QUESTIONS_CHOICES).stream()
-                                                .map(JsonObject.class::cast)
-                                                .filter(choice -> Objects.equals(choice.getInteger(QUESTION_ID), question.getInteger(ID)))
-                                                .collect(JsonArray::new, JsonArray::add, JsonArray::addAll);
-
-                                        List<JsonObject> choicesList = choices.getList();
-                                        choicesList.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
-                                        choices = new JsonArray(choicesList);
-                                        question.put(CHOICES, choices);
-
-                                        if(mapSections.containsKey(question.getInteger(SECTION_ID))){
-                                            JsonObject section = mapSections.get(question.getInteger(SECTION_ID));
-                                            section.put(IS_SECTION, true);
-                                            section.put("questions", question);
-                                            form_elements.add(section);
-                                        } else {
-                                            form_elements.add(question);
+                                        for (int k = 0; k < listChildren.size(); k++) {
+                                            JsonObject child = listChildren.getJsonObject(k);
+                                            if (Objects.equals(child.getInteger(MATRIX_ID), question.getInteger(ID))) {
+                                                if (question.containsKey(CHILDREN)) {
+                                                    question.getJsonArray(CHILDREN).add(child);
+                                                    if (Integer.valueOf(QuestionTypes.SINGLEANSWERRADIO.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
+                                                        question.put(IS_MATRIX_SINGLE, true);
+                                                    }
+                                                    if (Integer.valueOf(QuestionTypes.MULTIPLEANSWER.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
+                                                        question.put(IS_MATRIX_MULTIPLE, true);
+                                                    }
+                                                } else {
+                                                    question.put(CHILDREN, new JsonArray().add(child));
+                                                }
+                                            }
                                         }
                                     });
 
-                            //On prend les sections même si elles n'ont pas de questions
-                            List<Integer> formElementSectionIds = new ArrayList<>();
-                            List<Integer> sectionsId = new ArrayList<>(mapSections.keySet());
-                            form_elements.stream()
-                                    .map(JsonObject.class::cast)
-                                    .filter(element -> element.containsKey(IS_SECTION) && element.getBoolean(IS_SECTION))
-                                    .forEach(section -> {
-                                        formElementSectionIds.add(section.getInteger(ID));
-                                    });
 
-                            if(!sectionsId.isEmpty() && !formElementSectionIds.isEmpty()){
-                                sectionsId.removeAll(formElementSectionIds);
-                                sectionsId.forEach(remainSectionId -> {
-                                            JsonObject section = mapSections.get(remainSectionId);
-                                            section.put(IS_SECTION, true);
-                                            form_elements.add(section);
+                                //Add choices to questions
+                                questionsInfos.stream()
+                                        .map(JsonObject.class::cast)
+                                        .forEach(question -> {
+                                            JsonArray choices = promiseInfos.getJsonArray(QUESTIONS_CHOICES).stream()
+                                                    .map(JsonObject.class::cast)
+                                                    .filter(choice -> Objects.equals(choice.getInteger(QUESTION_ID), question.getInteger(ID)))
+                                                    .collect(JsonArray::new, JsonArray::add, JsonArray::addAll);
+
+                                            List<JsonObject> choicesList = choices.getList();
+                                            choicesList.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
+                                            choices = new JsonArray(choicesList);
+                                            question.put(CHOICES, choices);
+
+                                            if(mapSections.containsKey(question.getInteger(SECTION_ID))){
+                                                JsonObject section = mapSections.get(question.getInteger(SECTION_ID));
+                                                section.put(IS_SECTION, true);
+                                                section.put("questions", question);
+                                                form_elements.add(section);
+                                            } else {
+                                                form_elements.add(question);
+                                            }
                                         });
-                            }
 
+                                //Add sections with no questions
+                                List<Integer> formElementSectionIds = new ArrayList<>();
+                                List<Integer> sectionsId = new ArrayList<>(mapSections.keySet());
+                                form_elements.stream()
+                                        .map(JsonObject.class::cast)
+                                        .filter(element -> element.containsKey(IS_SECTION) && element.getBoolean(IS_SECTION))
+                                        .forEach(section -> {
+                                            formElementSectionIds.add(section.getInteger(ID));
+                                        });
 
+                                if(!sectionsId.isEmpty() && !formElementSectionIds.isEmpty()){
+                                    sectionsId.removeAll(formElementSectionIds);
+                                    sectionsId.forEach(remainSectionId -> {
+                                                JsonObject section = mapSections.get(remainSectionId);
+                                                section.put(IS_SECTION, true);
+                                                form_elements.add(section);
+                                            });
+                                }
 
+                                List<JsonObject> sorted_form_elements = form_elements.getList();
+                                sorted_form_elements.removeIf(element -> element.getInteger(POSITION) == null);
+                                sorted_form_elements.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
+                                JsonObject results = new JsonObject()
+                                        .put(FORM_ELEMENTS, sorted_form_elements)
+                                        .put(FORM_TITLE, form.getString(TITLE));
 
-                            List<JsonObject> sorted_form_elements = form_elements.getList();
-                            sorted_form_elements.removeIf(element -> element.getInteger(POSITION) == null);
-                            sorted_form_elements.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
-                            JsonObject results = new JsonObject()
-                                    .put(FORM_ELEMENTS, sorted_form_elements)
-                                    .put(FORM_TITLE, form.getString(TITLE));
-
-                            generatePDF(request, results,"questions.xhtml", pdf ->
-                                    request.response()
-                                            .putHeader("Content-Type", "application/pdf; charset=utf-8")
-                                            .putHeader("Content-Disposition", "attachment; filename=Questions_" + form.getString(TITLE) + ".pdf")
-                                            .end(pdf)
-                            );
-
+                                generatePDF(request, results,"questions.xhtml", pdf ->
+                                        request.response()
+                                                .putHeader("Content-Type", "application/pdf; charset=utf-8")
+                                                .putHeader("Content-Disposition", "attachment; filename=Questions_" + form.getString(TITLE) + ".pdf")
+                                                .end(pdf)
+                                );
+                            });
                         })
                         .onFailure(error -> {
                             String errMessage = String.format("[Formulaire@FormQuestionsExportPDF::launch]  " +
