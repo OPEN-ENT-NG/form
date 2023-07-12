@@ -225,27 +225,31 @@ public class FormQuestionsExportPDF extends ControllerHelper {
      * @param matrixChildren columns and lines of a matrix question
      */
     private void fillMatrixQuestions(JsonArray questionsInfos, JsonArray matrixChildren){
+        List<JsonObject> childrenList = matrixChildren.getList();
+        childrenList.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(MATRIX_POSITION))));
+        JsonArray children = new JsonArray(childrenList);
         questionsInfos.stream()
-                .filter(Objects::nonNull)
-                .map(JsonObject.class::cast)
-                .forEach(question -> {
-                    for (int k = 0; k < matrixChildren.size(); k++) {
-                        JsonObject child = matrixChildren.getJsonObject(k);
-                        if (Objects.equals(child.getInteger(MATRIX_ID), question.getInteger(ID))) {
-                            if (question.containsKey(CHILDREN)) {
-                                question.getJsonArray(CHILDREN).add(child);
-                                if (Integer.valueOf(QuestionTypes.SINGLEANSWERRADIO.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
-                                    question.put(IS_MATRIX_SINGLE, true);
-                                }
-                                if (Integer.valueOf(QuestionTypes.MULTIPLEANSWER.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
-                                    question.put(IS_MATRIX_MULTIPLE, true);
-                                }
-                            } else {
-                                question.put(CHILDREN, new JsonArray().add(child));
+            .filter(Objects::nonNull)
+            .map(JsonObject.class::cast)
+            .forEach(question -> {
+                for (int k = 0; k < children.size(); k++) {
+                    JsonObject child = children.getJsonObject(k);
+                    if (Objects.equals(child.getInteger(MATRIX_ID), question.getInteger(ID))) {
+                        if (question.containsKey(CHILDREN)) {
+                            question.getJsonArray(CHILDREN).add(child);
+                            if (Integer.valueOf(QuestionTypes.SINGLEANSWERRADIO.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
+                                question.put(IS_MATRIX_SINGLE, true);
                             }
+                            if (Integer.valueOf(QuestionTypes.MULTIPLEANSWER.getCode()).equals(child.getInteger(QUESTION_TYPE))) {
+                                question.put(IS_MATRIX_MULTIPLE, true);
+                            }
+
+                        } else {
+                            question.put(CHILDREN, new JsonArray().add(child));
                         }
                     }
-                });
+                }
+            });
     }
 
 
