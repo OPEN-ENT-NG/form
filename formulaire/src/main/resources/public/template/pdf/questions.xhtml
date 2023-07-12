@@ -62,8 +62,9 @@
             padding: 5px 10px;
         }
 
-        .section .description {
+        .section span.description {
             padding: 5px 10px;
+            display: inline-block;
         }
 
         .nobreakpage {
@@ -88,6 +89,7 @@
         .input-radio-checkbox {
             display: flex;
             flex-direction: row;
+            justify-content: space-around;
         }
 
         .input-radio-checkbox .choice {
@@ -246,7 +248,7 @@
                             {{#is_radio_btn}}
                                 {{#choices}}
                             <div class="choice">
-                                    <input type="radio"/><label>{{value}}</label>
+                                    <nput type="radio"i/><label>{{value}}</label>
                                     {{#conditional}}
                                         (Aller à : {{title_next}})
                                     {{/conditional}}
