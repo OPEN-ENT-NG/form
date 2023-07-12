@@ -32,7 +32,7 @@ import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.concurrent.atomic.AtomicReference;
 
 import static fr.openent.form.core.constants.ConfigFields.NODE_PDF_GENERATOR;
 import static fr.openent.form.core.constants.Fields.*;
@@ -54,6 +54,8 @@ public class FormQuestionsExportPDF extends ControllerHelper {
     private final PdfFactory pdfFactory;
     private final Storage storage;
     private final EventBus eb;
+    private JsonArray questionsInfos;
+    private JsonArray sectionsInfos;
 
     public FormQuestionsExportPDF(HttpServerRequest request, Vertx vertx, JsonObject config, Storage storage, EventBus eb, JsonObject form) {
         this.request = request;
@@ -66,87 +68,95 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         pdfFactory = new PdfFactory(vertx, new JsonObject().put(NODE_PDF_GENERATOR, config.getJsonObject(NODE_PDF_GENERATOR, new JsonObject())));
     }
 
+    public JsonArray getQuestionsInfos(){
+        return this.questionsInfos;
+    }
+
+    public void setQuestionsInfos(JsonArray questionsInfos){
+        this.questionsInfos = questionsInfos;
+    }
+
+    public JsonArray getSectionsInfos(){
+        return this.sectionsInfos;
+    }
+
+    public void setSectionsInfos(JsonArray sectionsInfos){
+        this.sectionsInfos = sectionsInfos;
+    }
+
     public void launch() {
         String formId = form.getInteger(ID).toString();
-        questionService.export(formId, true, getQuestionsEvt -> {
-            if (getQuestionsEvt.isLeft()) {
-                log.error("[Formulaire@FormQuestionsExportPDF::launch] Failed to retrieve all questions for the form with id " + formId);
-                renderInternalError(request, getQuestionsEvt);
-                return;
-            }
-            if (getQuestionsEvt.right().getValue().isEmpty()) {
-                String errMessage = "[Formulaire@FormQuestionsExportPDF::launch] No questions found for form with id " + formId;
-                log.error(errMessage);
-                notFound(request, errMessage);
-                return;
-            }
+        AtomicReference<JsonArray> questionsIds = new AtomicReference<>(new JsonArray());
+        JsonObject promiseInfos = new JsonObject();
+        Map<Integer, JsonObject> mapQuestions = new HashMap<>();
+        Map<Integer, JsonObject> mapSections = new HashMap<>();
+        List<Future> imageInfos = new ArrayList<>();
+        JsonArray form_elements = new JsonArray();
+        Map<String, String> localChoicesMap = new HashMap<>();
 
-            sectionService.list(formId, getSectionsEvt -> {
-                if (getSectionsEvt.isLeft()) {
-                    log.error("[Formulaire@FormResponsesExportPDF::launch] Failed to retrieve all sections for the form with id " + formId);
-                    renderInternalError(request, getSectionsEvt);
-                    return;
+        sectionService.list(formId)
+            .compose(sectionData -> {
+                setSectionsInfos(sectionData);
+                return questionService.export(formId, true);
+            })
+            .compose(questionData -> {
+                if(questionData.isEmpty()) {
+                    String errMessage = "[Formulaire@FormQuestionsExportPDF::fetchQuestionsInfos] No questions found for form with id " + formId;
+                    log.error(errMessage);
+                    notFound(request, errMessage);
+                } else {
+                    setQuestionsInfos(questionData);
+                    questionsIds.set(getIds(questionsInfos));
+                    fillMap(sectionsInfos, mapSections);
+                    fillMap(questionsInfos, mapQuestions);
                 }
+                return questionSpecificFieldsService.syncQuestionSpecs(questionsInfos);
+            })
+            .compose(questionsWithSpecifics -> questionChoiceService.listChoices(questionsIds.get()))
+            .compose(listChoices -> {
+                promiseInfos.put(QUESTIONS_CHOICES, listChoices);
+                return questionService.listChildren(questionsIds.get());
+            })
+            .onSuccess(listChildren -> {
 
-                JsonArray sectionsInfos = getSectionsEvt.right().getValue();
-                JsonArray questionsInfos = getQuestionsEvt.right().getValue();
-                JsonArray questionsIds = getIds(questionsInfos);
-                JsonObject promiseInfos = new JsonObject();
-                Map<Integer, JsonObject> mapQuestions = new HashMap<>();
-                Map<Integer, JsonObject> mapSections = new HashMap<>();
-                List<Future> imageInfos = new ArrayList<>();
-                JsonArray form_elements = new JsonArray();
-                Map<String, String> localChoicesMap = new HashMap<>();
+                fillChoices(promiseInfos, mapSections, mapQuestions, imageInfos);
 
-                fillMap(sectionsInfos, mapSections);
-                fillMap(questionsInfos, mapQuestions);
+                 //Get choices images, affect them to their respective choice and send the result
+                CompositeFuture.all(imageInfos).onComplete(evt -> {
+                    if (evt.failed()) {
+                        log.error("[Formulaire@FormQuestionsExportPDF::FormQuestionsExportPDF] Failed to retrieve choices' image : " + evt.cause());
+                        Future.failedFuture(evt.cause());
+                        return;
+                    }
 
-                questionSpecificFieldsService.syncQuestionSpecs(questionsInfos)
-                        .compose(questionsWithSpecifics -> questionChoiceService.listChoices(questionsIds))
-                        .compose(listChoices -> {
-                            promiseInfos.put(QUESTIONS_CHOICES, listChoices);
-                            return questionService.listChildren(questionsIds);
-                        })
-                        .onSuccess(listChildren -> {
+                    fillChoicesImages(imageInfos, localChoicesMap, promiseInfos);
+                    fillMatrixQuestions(questionsInfos, listChildren);
+                    fillQuestionsAndSections(questionsInfos, promiseInfos, mapSections, form_elements);
 
-                           fillChoices(promiseInfos, mapSections, mapQuestions, imageInfos);
+                    List<JsonObject> sorted_form_elements = form_elements.getList();
+                    sorted_form_elements.removeIf(element -> element.getInteger(POSITION) == null);
+                    sorted_form_elements.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
+                    JsonObject results = new JsonObject()
+                            .put(FORM_ELEMENTS, sorted_form_elements)
+                            .put(FORM_TITLE, form.getString(TITLE));
 
-                             //Get choices images, affect them to their respective choice and send the result
-                            CompositeFuture.all(imageInfos).onComplete(evt -> {
-                                if (evt.failed()) {
-                                    log.error("[Formulaire@FormQuestionsExportPDF::FormQuestionsExportPDF] Failed to retrieve choices' image : " + evt.cause());
-                                    Future.failedFuture(evt.cause());
-                                    return;
-                                }
-
-                                fillChoicesImages(imageInfos, localChoicesMap, promiseInfos);
-                                fillMatrixQuestions(questionsInfos, listChildren);
-                                fillQuestionsAndSections(questionsInfos, promiseInfos, mapSections, form_elements);
-
-                                List<JsonObject> sorted_form_elements = form_elements.getList();
-                                sorted_form_elements.removeIf(element -> element.getInteger(POSITION) == null);
-                                sorted_form_elements.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
-                                JsonObject results = new JsonObject()
-                                        .put(FORM_ELEMENTS, sorted_form_elements)
-                                        .put(FORM_TITLE, form.getString(TITLE));
-
-                                generatePDF(request, results,"questions.xhtml", pdf ->
-                                        request.response()
-                                                .putHeader("Content-Type", "application/pdf; charset=utf-8")
-                                                .putHeader("Content-Disposition", "attachment; filename=Questions_" + form.getString(TITLE) + ".pdf")
-                                                .end(pdf)
-                                );
-                            });
-                        })
-                        .onFailure(error -> {
-                            String errMessage = String.format("[Formulaire@FormQuestionsExportPDF::launch]  " +
-                                            "No questions found for form with id: %s" + formId,
-                                    this.getClass().getSimpleName(), error.getMessage());
-                            log.error(errMessage);
-                        });
+                    generatePDF(request, results,"questions.xhtml", pdf ->
+                            request.response()
+                                    .putHeader("Content-Type", "application/pdf; charset=utf-8")
+                                    .putHeader("Content-Disposition", "attachment; filename=Questions_" + form.getString(TITLE) + ".pdf")
+                                    .end(pdf)
+                    );
+                });
+            })
+            .onFailure(error -> {
+                String errMessage = String.format("[Formulaire@FormQuestionsExportPDF::launch]  " +
+                                "No questions found for form with id: %s" + formId,
+                        this.getClass().getSimpleName(), error.getMessage());
+                log.error(errMessage);
             });
-        });
     }
+
+
 
 
     /**
