@@ -56,6 +56,8 @@ public class FormQuestionsExportPDF extends ControllerHelper {
     private final EventBus eb;
     private JsonArray questionsInfos;
     private JsonArray sectionsInfos;
+    private JsonObject choicesInfos;
+    private JsonArray matrixChildren;
 
     public FormQuestionsExportPDF(HttpServerRequest request, Vertx vertx, JsonObject config, Storage storage, EventBus eb, JsonObject form) {
         this.request = request;
@@ -65,6 +67,10 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         this.form = form;
         this.storage = storage;
         this.eb = eb;
+        this.questionsInfos = new JsonArray();
+        this.sectionsInfos = new JsonArray();
+        this.choicesInfos = new JsonObject();
+        this.matrixChildren = new JsonArray();
         pdfFactory = new PdfFactory(vertx, new JsonObject().put(NODE_PDF_GENERATOR, config.getJsonObject(NODE_PDF_GENERATOR, new JsonObject())));
     }
 
@@ -84,10 +90,17 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         this.sectionsInfos = sectionsInfos;
     }
 
+    public JsonObject getChoicesInfos() {return this.choicesInfos;}
+
+    public void setChoicesInfos(JsonObject choicesInfos) {this.choicesInfos = choicesInfos;}
+
+    public JsonArray getMatrixChidren(){ return this.matrixChildren;}
+
+    public void setMatrixChildren(JsonArray matrixChildren){this.matrixChildren = matrixChildren;}
+
     public void launch() {
         String formId = form.getInteger(ID).toString();
         AtomicReference<JsonArray> questionsIds = new AtomicReference<>(new JsonArray());
-        JsonObject promiseInfos = new JsonObject();
         Map<Integer, JsonObject> mapQuestions = new HashMap<>();
         Map<Integer, JsonObject> mapSections = new HashMap<>();
         List<Future> imageInfos = new ArrayList<>();
@@ -97,7 +110,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         sectionService.list(formId)
             .compose(sectionData -> {
                 setSectionsInfos(sectionData);
-                return questionService.export(formId, true);
+                return questionService.getExportInfos(formId, true);
             })
             .compose(questionData -> {
                 if(questionData.isEmpty()) {
@@ -114,12 +127,14 @@ public class FormQuestionsExportPDF extends ControllerHelper {
             })
             .compose(questionsWithSpecifics -> questionChoiceService.listChoices(questionsIds.get()))
             .compose(listChoices -> {
-                promiseInfos.put(QUESTIONS_CHOICES, listChoices);
+                JsonObject listChoicesInfos = new JsonObject();
+                listChoicesInfos.put(QUESTIONS_CHOICES, listChoices);
+                setChoicesInfos(listChoicesInfos);
                 return questionService.listChildren(questionsIds.get());
             })
             .onSuccess(listChildren -> {
-
-                fillChoices(promiseInfos, mapSections, mapQuestions, imageInfos);
+                setMatrixChildren(listChildren);
+                fillChoices(choicesInfos, mapSections, mapQuestions, imageInfos);
 
                  //Get choices images, affect them to their respective choice and send the result
                 CompositeFuture.all(imageInfos).onComplete(evt -> {
@@ -129,9 +144,9 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                         return;
                     }
 
-                    fillChoicesImages(imageInfos, localChoicesMap, promiseInfos);
-                    fillMatrixQuestions(questionsInfos, listChildren);
-                    fillQuestionsAndSections(questionsInfos, promiseInfos, mapSections, form_elements);
+                    fillChoicesImages(imageInfos, localChoicesMap, choicesInfos);
+                    fillMatrixQuestions(questionsInfos, matrixChildren);
+                    fillQuestionsAndSections(questionsInfos, choicesInfos, mapSections, form_elements);
 
                     List<JsonObject> sorted_form_elements = form_elements.getList();
                     sorted_form_elements.removeIf(element -> element.getInteger(POSITION) == null);

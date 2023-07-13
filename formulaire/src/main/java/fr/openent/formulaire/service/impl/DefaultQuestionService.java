@@ -82,14 +82,14 @@ public class DefaultQuestionService implements QuestionService {
 
     @Override
     @Deprecated
-    public void export(String formId, boolean isPdf, Handler<Either<String, JsonArray>> handler) {
-        this.export(formId, isPdf)
+    public void getExportInfos(String formId, boolean isPdf, Handler<Either<String, JsonArray>> handler) {
+        this.getExportInfos(formId, isPdf)
             .onSuccess(res-> handler.handle(new Either.Right<>(res)))
             .onFailure(error -> handler.handle(new Either.Left<>(error.getMessage())));
     }
 
     @Override
-    public Future<JsonArray> export(String formId, boolean isPdf){
+    public Future<JsonArray> getExportInfos(String formId, boolean isPdf){
         Promise<JsonArray> promise = Promise.promise();
         String getElementPosition =
                 "CASE " +

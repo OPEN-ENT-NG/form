@@ -70,7 +70,7 @@ public class FormResponsesExportPDF {
 
     public void launch() {
         String formId = form.getInteger(ID).toString();
-        questionService.export(formId, true, getQuestionsEvt -> {
+        questionService.getExportInfos(formId, true, getQuestionsEvt -> {
             if (getQuestionsEvt.isLeft()) {
                 log.error("[Formulaire@FormResponsesExportPDF::launch] Failed to retrieve all questions for the form with id " + formId);
                 renderInternalError(request, getQuestionsEvt);
