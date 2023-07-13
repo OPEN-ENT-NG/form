@@ -124,7 +124,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                  //Get choices images, affect them to their respective choice and send the result
                 CompositeFuture.all(imageInfos).onComplete(evt -> {
                     if (evt.failed()) {
-                        log.error("[Formulaire@FormQuestionsExportPDF::FormQuestionsExportPDF] Failed to retrieve choices' image : " + evt.cause());
+                        log.error("[Formulaire@FormQuestionsExportPDF::launch] Failed to retrieve choices' image : " + evt.cause());
                         Future.failedFuture(evt.cause());
                         return;
                     }
@@ -279,7 +279,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
 
                     if(mapSections.containsKey(question.getInteger(SECTION_ID))){
                         JsonObject section = mapSections.get(question.getInteger(SECTION_ID));
-                        section.put("questions", question);
+                        section.put(QUESTIONS, question);
                     } else {
                         form_elements.add(question);
                     }
