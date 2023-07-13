@@ -115,8 +115,8 @@ public class FormQuestionsExportPDF extends ControllerHelper {
             .compose(questionData -> {
                 if(questionData.isEmpty()) {
                     String errMessage = "[Formulaire@FormQuestionsExportPDF::fetchQuestionsInfos] No questions found for form with id " + formId;
-                    log.error(errMessage);
-                    notFound(request, errMessage);
+                    notFound(request);
+                    return Future.failedFuture(errMessage);
                 } else {
                     setQuestionsInfos(questionData);
                     questionsIds.set(getIds(questionsInfos));
