@@ -1113,7 +1113,7 @@ public class FormController extends ControllerHelper {
         RequestUtils.bodyToJsonArray(request, formIds -> {
             UserUtils.getUserInfos(eb, request, user -> {
                 if (user == null) {
-                    String message = "[Formulaire@FormController::exportForms] User not found in session.";
+                    String message = "[Formulaire@FormController::exportForm] User not found in session.";
                     log.error(message);
                     unauthorized(request, message);
                     return;
@@ -1127,12 +1127,12 @@ public class FormController extends ControllerHelper {
 
                 formService.checkFormsRights(groupsAndUserIds, user, MANAGER_RESOURCE_BEHAVIOUR, formIds, hasRightsEvt -> {
                     if (hasRightsEvt.isLeft()) {
-                        log.error("[Formulaire@FormController::exportForms] Fail to check rights for method " + hasRightsEvt);
+                        log.error("[Formulaire@FormController::exportForm] Fail to check rights for method " + hasRightsEvt);
                         renderInternalError(request, hasRightsEvt);
                         return;
                     }
                     if (hasRightsEvt.right().getValue().isEmpty()) {
-                        String message = "[Formulaire@FormController::exportForms] No rights found for forms with ids " + formIds;
+                        String message = "[Formulaire@FormController::exportForm] No rights found for forms with ids " + formIds;
                         log.error(message);
                         notFound(request, message);
                         return;
@@ -1141,7 +1141,7 @@ public class FormController extends ControllerHelper {
                     // Check if user is owner or manager to all the forms
                     Long count = hasRightsEvt.right().getValue().getLong(COUNT);
                     if (count == null || count != formIds.size()) {
-                        String message = "[Formulaire@FormController::exportForms] You're missing rights on one form or more.";
+                        String message = "[Formulaire@FormController::exportForm] You're missing rights on one form or more.";
                         log.error(message);
                         unauthorized(request, message);
                         return;
@@ -1171,7 +1171,7 @@ public class FormController extends ControllerHelper {
                             formService.get(String.valueOf(formIds.getInteger(0)), user)
                                     .onSuccess(form -> {
                                         if(form.isEmpty()){
-                                            String errMessage = "[Formulaire@exportForm] No form found for id " + formIds;
+                                            String errMessage = "[Formulaire@FormController::exportForm] No form found for id " + formIds;
                                             log.error(errMessage);
                                             notFound(request, errMessage);
                                         } else {
@@ -1179,12 +1179,12 @@ public class FormController extends ControllerHelper {
                                         }
                                     })
                                     .onFailure(err -> {
-                                        log.error("[Formulaire@exportForm] Error in getting form to export questions of form " + formIds);
+                                        log.error("[Formulaire@FormController::exportForm] Error in getting form to export questions of form " + formIds);
                                         renderInternalError(request, err.toString());
                                     });
                             break;
                         default:
-                            String message = "[Formulaire@FormController::exportForms] Wrong export format type : " + fileType;
+                            String message = "[Formulaire@FormController::exportForm] Wrong export format type : " + fileType;
                             log.error(message);
                             badRequest(request, message);
                             break;
