@@ -180,7 +180,7 @@ public class FormResponsesExportPDF {
                 // type_freetext (FREETEXT), type_text (SHORTANSWER, LONGANSWER, DATE, TIME, FILE), type_graph (SINGLEANSWER, MULTIPLEANSWER, MATRIX)
                 questions.getJsonObject(questions.size() - 1).getJsonObject(QUESTION_TYPE)
                     .put(QUESTION_TYPE_ID, question_type)
-                    .put(TYPE_FREETEXT, question_type == QuestionTypes.FREETEXT.getCode())
+                    .put(IS_TYPE_FREETEXT, question_type == QuestionTypes.FREETEXT.getCode())
                     .put(TYPE_TEXT, question_type != QuestionTypes.FREETEXT.getCode() && !isGraph)
                     .put(TYPE_GRAPH, isGraph)
                     .put(IS_CURSOR, question_type == QuestionTypes.CURSOR.getCode());

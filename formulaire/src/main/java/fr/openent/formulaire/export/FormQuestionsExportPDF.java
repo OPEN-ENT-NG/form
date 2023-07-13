@@ -320,24 +320,24 @@ public class FormQuestionsExportPDF extends ControllerHelper {
     private void setType(JsonObject question){
         switch (QuestionTypes.values()[question.getInteger(QUESTION_TYPE) - 1]) {
             case FREETEXT:
-                question.put(TYPE_FREETEXT, true);
+                question.put(IS_TYPE_FREETEXT, true);
                 break;
             case SHORTANSWER:
-                question.put(SHORT_ANSWER, true);
+                question.put(IS_SHORT_ANSWER, true);
                 break;
             case LONGANSWER:
-                question.put(LONG_ANSWER, true);
+                question.put(IS_LONG_ANSWER, true);
                 break;
             case SINGLEANSWERRADIO:
             case SINGLEANSWER:
-                question.put(RADIO_BTN, true);
+                question.put(IS_RADIO_BTN, true);
                 break;
             case MULTIPLEANSWER:
-                question.put(MULTIPLE_CHOICE, true);
+                question.put(IS_MULTIPLE_CHOICE, true);
                 break;
             case DATE:
             case TIME:
-                question.put(DATE_HOUR, true);
+                question.put(IS_DATE_HOUR, true);
                 break;
             case MATRIX:
                 question.put(IS_MATRIX, true);
