@@ -1171,7 +1171,7 @@ public class FormController extends ControllerHelper {
                             formService.get(String.valueOf(formIds.getInteger(0)), user)
                                     .onSuccess(form -> {
                                         if(form.isEmpty()){
-                                            String errMessage = "[Formulaire@FormController::exportForm] No form found for id " + formIds;
+                                            String errMessage = "[Formulaire@FormController::exportForm] No form found for id " + formIds.getInteger(0);
                                             log.error(errMessage);
                                             notFound(request, errMessage);
                                         } else {
@@ -1179,7 +1179,7 @@ public class FormController extends ControllerHelper {
                                         }
                                     })
                                     .onFailure(err -> {
-                                        log.error("[Formulaire@FormController::exportForm] Error in getting form to export questions of form " + formIds);
+                                        log.error("[Formulaire@FormController::exportForm] Error in getting form to export questions of form " + formIds.getInteger(0));
                                         renderInternalError(request, err.toString());
                                     });
                             break;
