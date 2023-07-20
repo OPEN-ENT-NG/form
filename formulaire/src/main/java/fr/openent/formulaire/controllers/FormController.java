@@ -1127,8 +1127,8 @@ public class FormController extends ControllerHelper {
 
                 formService.checkFormsRights(groupsAndUserIds, user, MANAGER_RESOURCE_BEHAVIOUR, formIds, hasRightsEvt -> {
                     if (hasRightsEvt.isLeft()) {
-                        log.error("[Formulaire@FormController::exportForm] Fail to check rights for method " + hasRightsEvt);
-                        renderInternalError(request, hasRightsEvt);
+                        log.error("[Formulaire@FormController::exportForm] Fail to check rights for method " + hasRightsEvt.left().getValue());
+                        renderError(request);
                         return;
                     }
                     if (hasRightsEvt.right().getValue().isEmpty()) {
@@ -1164,23 +1164,29 @@ public class FormController extends ControllerHelper {
                                     .onFailure(err -> {
                                         String message = "[Formulaire@FormController::exportForm] Failed to export data : " + err.getMessage();
                                         log.error(message);
-                                        renderInternalError(request, message);
+                                        renderError(request);
                                     });
                             break;
                         case PDF:
-                            formService.get(String.valueOf(formIds.getInteger(0)), user)
-                                    .onSuccess(form -> {
-                                        if(form.isEmpty()){
+                            formService.get(String.valueOf(formIds.getInteger(0)))
+                                    .compose(form -> {
+                                        if (!form.isPresent()) {
                                             String errMessage = "[Formulaire@FormController::exportForm] No form found for id " + formIds.getInteger(0);
                                             log.error(errMessage);
-                                            notFound(request, errMessage);
+                                            return Future.failedFuture((String)null);
                                         } else {
-                                            new FormQuestionsExportPDF(request, vertx, config, storage, eb, form).launch();
+                                            return new FormQuestionsExportPDF(request, vertx, config, storage, eb, form.get()).launch();
                                         }
                                     })
+                                    .onSuccess(pdfInfo -> {
+                                        request.response()
+                                                .putHeader("Content-Type", "application/pdf; charset=utf-8")
+                                                .putHeader("Content-Disposition", "attachment; filename=" + pdfInfo.getString(TITLE))
+                                                .end(pdfInfo.getString(BUFFER));
+                                    })
                                     .onFailure(err -> {
-                                        log.error("[Formulaire@FormController::exportForm] Error in getting form to export questions of form " + formIds.getInteger(0));
-                                        renderInternalError(request, err.toString());
+                                        log.error("[Formulaire@FormController::exportForm] Failed to export form " + formIds.getInteger(0) + " : " + err.getMessage());
+                                        renderError(request);
                                     });
                             break;
                         default:

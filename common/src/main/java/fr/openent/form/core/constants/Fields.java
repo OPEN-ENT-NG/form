@@ -144,7 +144,6 @@ public class Fields {
 
 
     // Others
-    public static final String SLASH = "/";
     public static final String _ID = "_id";
     public static final String APPS = "apps";
     public static final String ARCHIVE = "archive";
@@ -152,6 +151,7 @@ public class Fields {
     public static final String BASE_URL = "baseUrl";
     public static final String BODY = "body";
     public static final String BOOKMARKS = "bookmarks";
+    public static final String BUFFER = "buffer";
     public static final String CAPTCHA = "captcha";
     public static final String CCI = "cci";
     public static final String CHARSET = "charset";
@@ -219,6 +219,7 @@ public class Fields {
     public static final String SERVER = "server";
     public static final String IS_SHORT_ANSWER = "is_short_answer";
     public static final String SIZE = "size";
+    public static final String SLASH = "/";
     public static final String STATEMENTS = "statements";
     public static final String SUBJECT = "subject";
     public static final String SUM_RESPONSES = "sum_responses";
