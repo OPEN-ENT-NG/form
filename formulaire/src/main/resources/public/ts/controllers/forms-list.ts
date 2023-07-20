@@ -410,27 +410,20 @@ export const formsListController = ng.controller('FormsListController', ['$scope
         // Generate document PDF and store it in a blob
         try {
             if (vm.exportFormat === Exports.PDF) {
-                let doc: any = await formService.export(vm.forms.selected.map((f: Form) => f.id), vm.exportFormat);
-                let blob: Blob = new Blob([doc.data], {type: 'application/pdf; charset=utf-18'});
-
-                // Download the blob
-                let link: any = document.createElement('a');
-                link.href = window.URL.createObjectURL(blob);
-                link.download =  doc.headers['content-disposition'].split('filename=')[1];
-                document.body.appendChild(link);
-                link.click();
-                setTimeout(function() {
-                    document.body.removeChild(link);
-                    window.URL.revokeObjectURL(link.href);
-                }, 100);
+                let params: string = "";
+                for (let i = 0; i < vm.forms.selected.length; i++) {
+                    params += i + "=" + vm.forms.selected[i].id;
+                    if (i+1 < vm.forms.selected.length) params += "&";
+                }
+                window.open(`/formulaire/forms/export/pdf?${params}`);
                 vm.closeExportForms();
             }
             // Generate ZIP
             else if (vm.exportFormat === Exports.ZIP) {
-                let exportId: string = await formService.export(vm.forms.selected.map((f: Form) => f.id), vm.exportFormat);
-                window.setTimeout(async () => {
+                let exportId: string = await formService.exportZip(vm.forms.selected.map((f: Form) => f.id));
+                setTimeout(async () => {
                     if (!exportId) return await initFormsList();
-                    await formService.verifyExportAndDownload(exportId);
+                    await formService.verifyExportAndDownloadZip(exportId);
                     vm.closeExportForms();
                 },5000);
             }
