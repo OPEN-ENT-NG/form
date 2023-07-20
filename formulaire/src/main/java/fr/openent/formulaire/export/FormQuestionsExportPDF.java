@@ -27,16 +27,17 @@ import org.entcore.common.pdf.Pdf;
 import org.entcore.common.pdf.PdfFactory;
 import org.entcore.common.pdf.PdfGenerator;
 import org.entcore.common.storage.Storage;
+import io.vertx.core.Promise;
 
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.stream.Collectors;
 
 import static fr.openent.form.core.constants.ConfigFields.NODE_PDF_GENERATOR;
 import static fr.openent.form.core.constants.Fields.*;
-import static fr.openent.form.helpers.RenderHelper.renderInternalError;
 import static fr.openent.form.helpers.UtilsHelper.getIds;
 
 public class FormQuestionsExportPDF extends ControllerHelper {
@@ -74,29 +75,35 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         pdfFactory = new PdfFactory(vertx, new JsonObject().put(NODE_PDF_GENERATOR, config.getJsonObject(NODE_PDF_GENERATOR, new JsonObject())));
     }
 
-    public JsonArray getQuestionsInfos(){
+    public JsonArray getQuestionsInfos() {
         return this.questionsInfos;
     }
 
-    public void setQuestionsInfos(JsonArray questionsInfos){
+    public void setQuestionsInfos(JsonArray questionsInfos) {
         this.questionsInfos = questionsInfos;
     }
 
-    public JsonArray getSectionsInfos(){
+    public JsonArray getSectionsInfos() {
         return this.sectionsInfos;
     }
 
-    public void setSectionsInfos(JsonArray sectionsInfos){
+    public void setSectionsInfos(JsonArray sectionsInfos) {
         this.sectionsInfos = sectionsInfos;
     }
 
-    public JsonObject getChoicesInfos() {return this.choicesInfos;}
+    public JsonObject getChoicesInfos() {
+        return this.choicesInfos;
+    }
 
-    public void setChoicesInfos(JsonObject choicesInfos) {this.choicesInfos = choicesInfos;}
+    public void setChoicesInfos(JsonObject choicesInfos) {
+        this.choicesInfos = choicesInfos;
+    }
 
-    public JsonArray getMatrixChidren(){ return this.matrixChildren;}
+    public JsonArray getMatrixChidren() {
+        return this.matrixChildren;
+    }
 
-    public void setMatrixChildren(JsonArray matrixChildren){this.matrixChildren = matrixChildren;}
+    public void setMatrixChildren(JsonArray matrixChildren) {this.matrixChildren = matrixChildren;}
 
     public void launch() {
         String formId = form.getInteger(ID).toString();
@@ -104,7 +111,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         Map<Integer, JsonObject> mapQuestions = new HashMap<>();
         Map<Integer, JsonObject> mapSections = new HashMap<>();
         List<Future> imageInfos = new ArrayList<>();
-        JsonArray form_elements = new JsonArray();
+        JsonArray formElements = new JsonArray();
         Map<String, String> localChoicesMap = new HashMap<>();
 
         sectionService.list(formId)
@@ -113,9 +120,8 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                 return questionService.getExportInfos(formId, true);
             })
             .compose(questionData -> {
-                if(questionData.isEmpty()) {
+                if (questionData.isEmpty()) {
                     String errMessage = "[Formulaire@FormQuestionsExportPDF::fetchQuestionsInfos] No questions found for form with id " + formId;
-                    notFound(request);
                     return Future.failedFuture(errMessage);
                 } else {
                     setQuestionsInfos(questionData);
@@ -137,30 +143,32 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                 fillChoices(choicesInfos, mapSections, mapQuestions, imageInfos);
 
                  //Get choices images, affect them to their respective choice and send the result
-                CompositeFuture.all(imageInfos).onComplete(evt -> {
-                    if (evt.failed()) {
-                        log.error("[Formulaire@FormQuestionsExportPDF::launch] Failed to retrieve choices' image : " + evt.cause());
-                        Future.failedFuture(evt.cause());
-                        return;
-                    }
-
+                CompositeFuture.all(imageInfos).onComplete(success -> {
                     fillChoicesImages(imageInfos, localChoicesMap, choicesInfos);
                     fillMatrixQuestions(questionsInfos, matrixChildren);
-                    fillQuestionsAndSections(questionsInfos, choicesInfos, mapSections, form_elements);
+                    fillQuestionsAndSections(questionsInfos, choicesInfos, mapSections, formElements);
 
-                    List<JsonObject> sorted_form_elements = form_elements.getList();
+                    List<JsonObject> sorted_form_elements = formElements.getList();
                     sorted_form_elements.removeIf(element -> element.getInteger(POSITION) == null);
                     sorted_form_elements.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
                     JsonObject results = new JsonObject()
                             .put(FORM_ELEMENTS, sorted_form_elements)
                             .put(FORM_TITLE, form.getString(TITLE));
 
-                    generatePDF(request, results,"questions.xhtml", pdf ->
+                    generatePDF(request, results, "questions.xhtml", pdfBuffer -> {
+                        if (pdfBuffer != null) {
                             request.response()
                                     .putHeader("Content-Type", "application/pdf; charset=utf-8")
                                     .putHeader("Content-Disposition", "attachment; filename=Questions_" + form.getString(TITLE) + ".pdf")
-                                    .end(pdf)
-                    );
+                                    .end();
+                        } else {
+                            log.error("Échec de la génération du PDF");
+                            request.response().setStatusCode(500).end("Erreur lors de la génération du PDF");
+                        }
+                    });
+                }).onFailure(failure -> {
+                    log.error("[Formulaire@FormQuestionsExportPDF::launch] Failed to retrieve choices' image" + failure.getMessage());
+                    Future.failedFuture(failure);
                 });
             })
             .onFailure(error -> {
@@ -180,7 +188,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
      * @param localChoicesMap a map with id of image as key and image Datas as value
      * @param choicesInfos all choices infos to put in questions
      */
-    private void fillChoicesImages(List<Future>imageInfos, Map<String, String> localChoicesMap, JsonObject choicesInfos){
+    private void fillChoicesImages(List<Future> imageInfos, Map<String, String> localChoicesMap, JsonObject choicesInfos) {
         imageInfos.stream()
                 .map(Future::result)
                 .map(JsonObject.class::cast)
@@ -208,12 +216,12 @@ public class FormQuestionsExportPDF extends ControllerHelper {
      * @param mapQuestions a map with id of question as key and questionsInfos as value
      * @param imageInfos all the datas from the images
      */
-    private void fillChoices(JsonObject questionChoices, Map<Integer, JsonObject>mapSections, Map<Integer, JsonObject>mapQuestions, List<Future> imageInfos){
+    private void fillChoices(JsonObject questionChoices, Map<Integer, JsonObject> mapSections, Map<Integer, JsonObject> mapQuestions, List<Future> imageInfos) {
         questionChoices.getJsonArray(QUESTIONS_CHOICES).stream()
                 .filter(Objects::nonNull)
                 .map(JsonObject.class::cast)
                 .forEach(choice -> {
-                    if(choice.containsKey(IMAGE))imageInfos.add(getImageData(choice));
+                    if (choice.containsKey(IMAGE))imageInfos.add(getImageData(choice));
                     Integer nextQuestionId = choice.getInteger(NEXT_FORM_ELEMENT_ID);
                     if (nextQuestionId != null) {
                         String titleNext = null;
@@ -239,9 +247,12 @@ public class FormQuestionsExportPDF extends ControllerHelper {
      * @param questionsInfos all questionsInfos when not filled yet
      * @param matrixChildren columns and lines of a matrix question
      */
-    private void fillMatrixQuestions(JsonArray questionsInfos, JsonArray matrixChildren){
-        List<JsonObject> childrenList = matrixChildren.getList();
-        childrenList.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(MATRIX_POSITION))));
+    private void fillMatrixQuestions(JsonArray questionsInfos, JsonArray matrixChildren) {
+        List<JsonObject> childrenList = matrixChildren.stream()
+                .filter(JsonObject.class::isInstance)
+                .map(JsonObject.class::cast)
+                .sorted(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(MATRIX_POSITION))))
+                .collect(Collectors.toList());
         JsonArray children = new JsonArray(childrenList);
         questionsInfos.stream()
             .filter(Objects::nonNull)
@@ -273,30 +284,33 @@ public class FormQuestionsExportPDF extends ControllerHelper {
      * @param questionsInfos all questionsInfos when not filled yet
      * @param choicesInfos all choices infos to put in questions
      * @param mapSections a map with id of section as key and sectionsInfos as value
-     * @param form_elements the datas which will be sent to the PDF template
+     * @param formElements the datas which will be sent to the PDF template
      */
-    private void fillQuestionsAndSections(JsonArray questionsInfos, JsonObject choicesInfos, Map<Integer, JsonObject> mapSections, JsonArray form_elements){
+    private void fillQuestionsAndSections(JsonArray questionsInfos, JsonObject choicesInfos, Map<Integer, JsonObject> mapSections, JsonArray formElements) {
         questionsInfos.stream()
                 .map(JsonObject.class::cast)
                 .forEach(question -> {
                     //Set isQuestion && is_Conditional && type
-                    if(question.getInteger(SECTION_ID) == null)question.put(IS_QUESTION, true);
+                    if (question.getInteger(SECTION_ID) == null)question.put(IS_QUESTION, true);
                     setType(question);
                     JsonArray choices = choicesInfos.getJsonArray(QUESTIONS_CHOICES).stream()
                             .map(JsonObject.class::cast)
                             .filter(choice -> Objects.equals(choice.getInteger(QUESTION_ID), question.getInteger(ID)))
                             .collect(JsonArray::new, JsonArray::add, JsonArray::addAll);
 
-                    List<JsonObject> choicesList = choices.getList();
-                    choicesList.sort(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))));
+                    List<JsonObject> choicesList = choices.stream()
+                            .filter(JsonObject.class::isInstance)
+                            .map(JsonObject.class::cast)
+                            .sorted(Comparator.nullsFirst(Comparator.comparingInt(a -> a.getInteger(POSITION))))
+                            .collect(Collectors.toList());
                     choices = new JsonArray(choicesList);
                     question.put(CHOICES, choices);
 
-                    if(mapSections.containsKey(question.getInteger(SECTION_ID))){
+                    if (mapSections.containsKey(question.getInteger(SECTION_ID))) {
                         JsonObject section = mapSections.get(question.getInteger(SECTION_ID));
                         section.put(QUESTIONS, question);
                     } else {
-                        form_elements.add(question);
+                        formElements.add(question);
                     }
                 });
 
@@ -305,21 +319,16 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                 .map(JsonObject.class::cast)
                 .forEach(section -> {
                     section.put(IS_QUESTION, false);
-                    form_elements.add(section);
+                    formElements.add(section);
                 });
     }
-
-
-
-
-
 
     /**
      * Fill a HashMap with the id of JsonObjects as key and JsonObject as value
      * @param jsonArray array to be streamed
      * @param hashMap to be filled
      */
-    private void fillMap(JsonArray jsonArray, Map<Integer, JsonObject> hashMap){
+    private void fillMap(JsonArray jsonArray, Map<Integer, JsonObject> hashMap) {
         jsonArray.stream()
                 .filter(Objects::nonNull)
                 .map(JsonObject.class::cast)
@@ -332,7 +341,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
      * Take a question and add its type corresponding to the question type integer value
      * @param question question which type must be defined
      */
-    private void setType(JsonObject question){
+    private void setType(JsonObject question) {
         switch (QuestionTypes.values()[question.getInteger(QUESTION_TYPE) - 1]) {
             case FREETEXT:
                 question.put(IS_TYPE_FREETEXT, true);
@@ -368,7 +377,6 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         }
     }
 
-
     // Get image data thanks to its id
     public Future<JsonObject> getImageData(JsonObject choice) {
         Promise<JsonObject> promise = Promise.promise();
@@ -403,8 +411,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         return lastSeparator > 0 ? imagePath.substring(lastSeparator + 1) : imagePath;
     }
 
-    private void generatePDF(HttpServerRequest request, JsonObject templateProps, String templateName, Handler<Buffer> handler) {
-        Promise<Pdf> promise = Promise.promise();
+    public void generatePDF(HttpServerRequest request, JsonObject templateProps, String templateName, Handler<Buffer> handler) {
         final String templatePath = "./public/template/pdf/";
         final String baseUrl = getScheme(request) + "://" + Renders.getHost(request) + config.getString("app-address") + "/public/";
 
@@ -423,6 +430,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                     badRequest(request);
                     return;
                 }
+
                 JsonObject actionObject = new JsonObject();
                 byte[] bytes;
                 bytes = processedTemplate.getBytes(StandardCharsets.UTF_8);
@@ -433,15 +441,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                 }
 
                 actionObject.put(CONTENT, bytes).put(BASE_URL, baseUrl);
-                generatePDF(TITLE, processedTemplate)
-                        .onSuccess(res -> {
-                            handler.handle(res.getContent());
-                        })
-                        .onFailure(error -> {
-                            String message = "[Formulaire@FormQuestionsExportPDF::generatePDF] Failed to generatePDF : " + error.getMessage();
-                            log.error(message);
-                            promise.fail(message);
-                        });
+                generatePDF(TITLE, processedTemplate); // Appel à la méthode generatePDF avec le gestionnaire handler
             });
         });
     }
