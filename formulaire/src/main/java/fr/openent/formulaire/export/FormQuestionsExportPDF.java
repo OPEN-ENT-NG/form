@@ -3,6 +3,7 @@ package fr.openent.formulaire.export;
 import fr.openent.form.core.enums.I18nKeys;
 import fr.openent.form.core.enums.QuestionTypes;
 import fr.openent.form.core.models.Form;
+import fr.openent.form.helpers.FutureHelper;
 import fr.openent.form.helpers.I18nHelper;
 import fr.openent.formulaire.service.QuestionChoiceService;
 import fr.openent.formulaire.service.QuestionService;
@@ -112,7 +113,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         AtomicReference<JsonArray> questionsIds = new AtomicReference<>(new JsonArray());
         Map<Integer, JsonObject> mapQuestions = new HashMap<>();
         Map<Integer, JsonObject> mapSections = new HashMap<>();
-        List<Future> imageInfos = new ArrayList<>();
+        List<Future<JsonObject>> imageInfos = new ArrayList<>();
         JsonArray formElements = new JsonArray();
         Map<String, String> localChoicesMap = new HashMap<>();
 
@@ -144,7 +145,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                 setMatrixChildren(listChildren);
                 fillChoices(choicesInfos, mapSections, mapQuestions, imageInfos);
 
-                return CompositeFuture.all(imageInfos);
+                return FutureHelper.all(imageInfos);
             })
             .compose(result -> {
                 //Get choices images, affect them to their respective choice and send the result
@@ -185,7 +186,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
      * @param localChoicesMap a map with id of image as key and image Datas as value
      * @param choicesInfos all choices infos to put in questions
      */
-    private void fillChoicesImages(List<Future> imageInfos, Map<String, String> localChoicesMap, JsonObject choicesInfos) {
+    private void fillChoicesImages(List<Future<JsonObject>> imageInfos, Map<String, String> localChoicesMap, JsonObject choicesInfos) {
         imageInfos.stream()
                 .map(Future::result)
                 .map(JsonObject.class::cast)
@@ -213,7 +214,7 @@ public class FormQuestionsExportPDF extends ControllerHelper {
      * @param mapQuestions a map with id of question as key and questionsInfos as value
      * @param imageInfos all the datas from the images
      */
-    private void fillChoices(JsonObject questionChoices, Map<Integer, JsonObject> mapSections, Map<Integer, JsonObject> mapQuestions, List<Future> imageInfos) {
+    private void fillChoices(JsonObject questionChoices, Map<Integer, JsonObject> mapSections, Map<Integer, JsonObject> mapQuestions, List<Future<JsonObject>> imageInfos) {
         questionChoices.getJsonArray(QUESTIONS_CHOICES).stream()
                 .filter(Objects::nonNull)
                 .map(JsonObject.class::cast)
