@@ -1106,11 +1106,8 @@ public class FormController extends ControllerHelper {
     @ResourceFilter(CreationRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void exportPdf(final HttpServerRequest request) {
-        JsonArray formIds = new JsonArray();
-        for (int i = 0; i < request.params().size(); i++) {
-            formIds.add(request.getParam(Integer.toString(i)));
-        }
-        if (formIds.size() <= 0) {
+        JsonArray formIds = new JsonArray(request.params().getAll(ID));
+        if (formIds.isEmpty()) {
             log.error("[Formulaire@FormController::exportPdf] No form ids to export.");
             noContent(request);
             return;

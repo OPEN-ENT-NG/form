@@ -410,12 +410,9 @@ export const formsListController = ng.controller('FormsListController', ['$scope
         // Generate document PDF and store it in a blob
         try {
             if (vm.exportFormat === Exports.PDF) {
-                let params: string = "";
-                for (let i = 0; i < vm.forms.selected.length; i++) {
-                    params += i + "=" + vm.forms.selected[i].id;
-                    if (i+1 < vm.forms.selected.length) params += "&";
-                }
-                window.open(`/formulaire/forms/export/pdf?${params}`);
+                let urlParams: URLSearchParams = new URLSearchParams();
+                vm.forms.selected.forEach((form: Form) => urlParams.append('id', String(form.id)));
+                window.open(`/formulaire/forms/export/pdf?${urlParams}`);
                 vm.closeExportForms();
             }
             // Generate ZIP
