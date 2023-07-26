@@ -76,6 +76,7 @@ interface ViewModel {
     draggable : Draggable;
     draggedItem : any;
     exportFormat: Exports;
+    isProcessing: boolean;
 
     importForms() : void;
     doImportForms(): Promise<void>;
@@ -195,6 +196,7 @@ export const formsListController = ng.controller('FormsListController', ['$scope
     vm.folderTree = {};
     vm.openedFoldersIds = null;
     vm.selectedFolder = null;
+    vm.isProcessing = false;
 
     vm.$onInit = async () : Promise<void> => {
         await initFormsList();
