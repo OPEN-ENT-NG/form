@@ -11,13 +11,13 @@ public interface IModel<I extends IModel<I>> {
     JsonObject toJson();
 
     /**
-     * @deprecated Should instead use IModelHelper directly
+     * @deprecated Should use IModelHelper instead
      */
     @Deprecated
     I model(JsonObject model);
 
     /**
-     * @deprecated Should instead use IModelHelper directly
+     * @deprecated Should use IModelHelper instead
      */
     @Deprecated
     @SuppressWarnings("unchecked")
@@ -32,7 +32,7 @@ public interface IModel<I extends IModel<I>> {
     }
 
     /**
-     * @deprecated Should instead use IModelHelper directly
+     * @deprecated Should use IModelHelper instead
      */
     @Deprecated
     default JsonArray toJsonArray(List<I> models) {

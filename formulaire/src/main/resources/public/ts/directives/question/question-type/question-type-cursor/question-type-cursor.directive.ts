@@ -10,10 +10,11 @@ interface IQuestionTypeCursorProps {
 }
 
 interface IViewModel extends ng.IController, IQuestionTypeCursorProps {
+    getHtmlDescription(description: string): string;
     onChangeStep(newStep: number): void;
 }
 
-interface IQuestionTypeFreetextScope extends IScope, IQuestionTypeCursorProps {
+interface IQuestionTypeCursorScope extends IScope, IQuestionTypeCursorProps {
     vm: IViewModel;
 }
 
@@ -21,7 +22,7 @@ class Controller implements IViewModel {
     question: Question;
     hasFormResponses: boolean;
 
-    constructor(private $scope: IQuestionTypeFreetextScope, private $sce: ng.ISCEService) {}
+    constructor(private $scope: IQuestionTypeCursorScope, private $sce: ng.ISCEService) {}
 
     $onInit = async () : Promise<void> => {
         this.question.cursor_min_val = this.question.cursor_min_val != null ? this.question.cursor_min_val : Constants.DEFAULT_CURSOR_MIN_VALUE;
@@ -55,7 +56,7 @@ function directive() {
         bindToController: true,
         controller: ['$scope', '$sce', Controller],
         /* interaction DOM/element */
-        link: function ($scope: IQuestionTypeFreetextScope,
+        link: function ($scope: IQuestionTypeCursorScope,
                         element: ng.IAugmentedJQuery,
                         attrs: ng.IAttributes,
                         vm: IViewModel) {
