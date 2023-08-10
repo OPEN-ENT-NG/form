@@ -64,9 +64,9 @@ export const captchaController = ng.controller('CaptchaController', ['$scope',
     };
 
     vm.doSend = async () : Promise<void> => {
+        vm.isProcessing = true;
         let distributionData = await responseService.sendResponses(vm.formKey, vm.distributionKey, vm.responseCaptcha, vm.responses);
         let distribution = Mix.castAs(Question, distributionData);
-        vm.isProcessing = true;
 
         template.close('lightbox');
         vm.display.lightbox.sending = false;

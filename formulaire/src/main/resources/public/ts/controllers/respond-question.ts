@@ -151,13 +151,15 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 
     vm.prev = async () : Promise<void> => {
         let prevPosition: number = vm.historicPosition[vm.historicPosition.length - 2];
+        vm.isProcessing = true;
         if (prevPosition > 0) {
             await saveResponses();
             vm.formElement = vm.formElements.all[prevPosition - 1];
             vm.historicPosition.pop();
             vm.longestPath = vm.historicPosition.length + findLongestPathInFormElement(vm.formElement.id, vm.formElements) - 1;
             goToFormElement();
-        }
+        };
+        vm.isProcessing = false;
     };
 
     vm.prevGuard = () => {

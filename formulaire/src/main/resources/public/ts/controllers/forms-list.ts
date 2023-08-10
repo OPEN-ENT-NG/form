@@ -409,7 +409,6 @@ export const formsListController = ng.controller('FormsListController', ['$scope
 
     vm.doExportForms = async () : Promise<void> => {
         vm.display.loading.export = true;
-        vm.isProcessing = true;
 
         // Generate document PDF and store it in a blob
         try {
@@ -428,7 +427,6 @@ export const formsListController = ng.controller('FormsListController', ['$scope
                     vm.closeExportForms();
                 },5000);
             }
-            vm.isProcessing = false;
         }
         catch (err) {
             vm.display.loading.export = false;

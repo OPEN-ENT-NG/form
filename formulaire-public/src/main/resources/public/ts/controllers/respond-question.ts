@@ -23,6 +23,7 @@ interface ViewModel {
 	form: Form;
 	nbFormElements: number;
 	historicPosition: number[];
+	isProcessing: boolean;
 
 	$onInit(): Promise<void>;
 	prev() : void;
@@ -63,6 +64,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 	};
 
 	vm.next = () : void => {
+		vm.isProcessing = true;
 		formatResponses();
 		let nextPosition = getNextPositionIfValid();
 		if (nextPosition && nextPosition <= vm.nbFormElements) {
@@ -75,6 +77,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 			updateStorage();
 			template.open('main', 'containers/recap');
 		}
+		vm.isProcessing = false;
 	};
 
 	vm.getHtmlDescription = (description: string) : string => {
