@@ -63,7 +63,7 @@
                     </option>
                 </select>
             </div>
-            <button class="cell" ng-click="vm.next()" ng-disabled="vm.last" ng-disabled="vm.isProcessing">
+            <button class="cell" ng-click="vm.next()" ng-disabled="vm.last || vm.isProcessing">
                 <i18n class="zero-mobile">formulaire.next</i18n>
                 <i class="i-chevron-right zero-desktop"></i>
             </button>
