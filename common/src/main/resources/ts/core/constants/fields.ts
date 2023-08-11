@@ -5,6 +5,7 @@ export abstract class Fields {
     static readonly DISTRIBUTION_CAPTCHA: string = "distribution_captcha";
     static readonly DISTRIBUTION_KEY: string = "distribution_key";
     static readonly QUESTIONS: string = "questions";
+    static readonly QUESTION_TYPE: string = "question_type";
 
     // Cookies
     static readonly DOMAIN: string = "domain";
