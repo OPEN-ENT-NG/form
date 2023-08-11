@@ -53,6 +53,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 	}
 
 	vm.prev = () : void => {
+		vm.isProcessing = true;
 		formatResponses();
 		let prevPosition = vm.historicPosition[vm.historicPosition.length - 2];
 		if (prevPosition > 0) {
@@ -61,6 +62,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 			vm.historicPosition.pop();
 			goToFormElement(isCursorAgain);
 		}
+		vm.isProcessing = false;
 	};
 
 	vm.next = () : void => {
