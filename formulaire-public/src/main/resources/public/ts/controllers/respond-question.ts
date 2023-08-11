@@ -63,6 +63,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 			goToFormElement(isCursorAgain);
 		}
 		vm.isProcessing = false;
+		$scope.safeApply();
 	};
 
 	vm.next = () : void => {
@@ -73,13 +74,15 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 			let isCursorAgain: boolean = vm.formElement.isSameQuestionTypeOfType(vm.formElements.all[nextPosition - 1], Types.CURSOR);
 			vm.formElement = vm.formElements.all[nextPosition - 1];
 			vm.historicPosition.push(vm.formElement.position);
+			vm.isProcessing = false;
 			goToFormElement(isCursorAgain);
 		}
 		else if (nextPosition !== undefined) {
 			updateStorage();
+			vm.isProcessing = false;
 			template.open('main', 'containers/recap');
 		}
-		vm.isProcessing = false;
+		$scope.safeApply();
 	};
 
 	vm.getHtmlDescription = (description: string) : string => {
