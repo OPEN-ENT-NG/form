@@ -3,9 +3,10 @@ import {idiom, notify, Rights, Shareable} from "entcore";
 import {formService, utilsService} from "../services";
 import {Distribution, Distributions, DistributionStatus} from "./Distribution";
 import {FiltersFilters, FiltersOrders} from "../core/enums";
-import {FormElement, FormElements, Question, Questions, Section} from "./FormElement";
+import {FormElement, FormElements, IQuestionResponse, Question, Questions, Section} from "./FormElement";
 import {QuestionChoice, QuestionChoices} from "./QuestionChoice";
 import {Fields} from "@common/core/constants";
+import {Types} from "@common/models/QuestionType";
 
 export class Form implements Selectable, Shareable  {
     shared: any;
@@ -157,7 +158,10 @@ export class Form implements Selectable, Shareable  {
             children.all.sort((a, b) => a.matrix_position - b.matrix_position);
         }
 
-        let question: Question = Mix.castAs(Question, e);
+        let question: Question = e[Fields.QUESTION_TYPE] === Types.CURSOR ?
+            new Question().build((e as unknown as IQuestionResponse)) :
+            Mix.castAs(Question, e);
+
         question.choices = choices;
         question.children = children;
         return question;
