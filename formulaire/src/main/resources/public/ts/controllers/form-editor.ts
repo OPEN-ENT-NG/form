@@ -775,7 +775,7 @@ export const formEditorController = ng.controller('FormEditorController', ['$sco
                         for (let choice of formElement.choices.all) {
                             if (!choice.value && choice.id) {
                                 await questionChoiceService.delete(choice.id);
-                            } else if (choice.value && !registeredChoiceValues.find((v: string) => v === choice.value)) {
+                            } else if (choice.value && !registeredChoiceValues.some((v: string) => v === choice.value)) {
                                 choice.position = positionCounter;
                                 choice.question_id = newId;
                                 choice.id = (await questionChoiceService.save(choice)).id;
