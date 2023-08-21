@@ -398,10 +398,16 @@ public class FormQuestionsExportPDF extends ControllerHelper {
 
         WorkspaceHelper workspaceHelper = new WorkspaceHelper(eb, storage);
         workspaceHelper.readDocument(documentId, documentEvt -> {
-            String graph = Base64.getEncoder().encodeToString(documentEvt.getData().getBytes());
-            graph = "data:" + documentEvt.getDocument().getJsonObject(METADATA, new JsonObject()).getString(CONTENT_TYPE, "image/png") + ";base64," + graph;
-            JsonObject imageInfos = new JsonObject().put(ID, documentId).put(DATA, graph);
-            promise.complete(imageInfos);
+            if (documentEvt == null) {
+                // Handle case where documentEvt is null
+                log.error("Some images are corrupted or missing.");
+                promise.complete(null);
+            } else {
+                String graph = Base64.getEncoder().encodeToString(documentEvt.getData().getBytes());
+                graph = "data:" + documentEvt.getDocument().getJsonObject(METADATA, new JsonObject()).getString(CONTENT_TYPE, "image/png") + ";base64," + graph;
+                JsonObject imageInfos = new JsonObject().put(ID, documentId).put(DATA, graph);
+                promise.complete(imageInfos);
+            }
         });
 
         return promise.future();
