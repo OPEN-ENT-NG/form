@@ -400,7 +400,8 @@ public class FormQuestionsExportPDF extends ControllerHelper {
         workspaceHelper.readDocument(documentId, documentEvt -> {
             if (documentEvt == null) {
                 // Handle case where documentEvt is null
-                log.error("Some images are corrupted or missing.");
+                String errorMessage = "[Formulaire@FormQuestionsExportPDF::getImageData] Some images are corrupted or missing.";
+                log.error(errorMessage);
                 promise.complete(null);
             } else {
                 String graph = Base64.getEncoder().encodeToString(documentEvt.getData().getBytes());
