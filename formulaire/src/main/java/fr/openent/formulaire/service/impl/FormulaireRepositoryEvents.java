@@ -210,7 +210,7 @@ public class FormulaireRepositoryEvents extends SqlRepositoryEvents {
             .compose(documentsIdMapping -> {
                 JsonObject questionChoices = tableContents.get(QUESTION_CHOICE);
                 updateImageIds(questionChoices.getJsonArray(FIELDS).getList(), questionChoices.getJsonArray(RESULTS), documentsIdMapping);
-                return importExportService.importQuestionChoices(tableContents.get(QUESTION_CHOICE), tableMappingIds.get(QUESTION), tableMappingIds.get(SECTION));
+                return importExportService.importQuestionChoices(questionChoices, tableMappingIds.get(QUESTION), tableMappingIds.get(SECTION));
             })
             .compose(newQuestionChoices -> importExportService.createFolderLinks(tableMappingIds.get(FORM), userId))
             .onSuccess(result -> {
@@ -240,10 +240,11 @@ public class FormulaireRepositoryEvents extends SqlRepositoryEvents {
     protected void updateImageIds(List<String> fields, JsonArray results, Map<String, String> documentsIdMapping ) {
         for (int i = 0; i < results.size(); ++i) {
             JsonArray entry = results.getJsonArray(i);
-            String imageValue = entry.getString(fields.indexOf(IMAGE));
-            String regexValue = imageValue != null && !imageValue.isEmpty() ? imageValue.replace(IMAGE_PATH_PREFIX, "") : null;
-            if (regexValue != null && documentsIdMapping.containsKey(regexValue)) {
-                entry.set(fields.indexOf(IMAGE), IMAGE_PATH_PREFIX + documentsIdMapping.get(regexValue));
+            int columnImageIndex = fields.indexOf(IMAGE);
+            String imageValue = entry.getString(columnImageIndex);
+            String imageId = imageValue != null && !imageValue.isEmpty() ? imageValue.replace(IMAGE_PATH_PREFIX, "") : null;
+            if (imageId != null && documentsIdMapping.containsKey(imageId)) {
+                entry.set(columnImageIndex, IMAGE_PATH_PREFIX + documentsIdMapping.get(imageId));
             }
         }
     }
