@@ -15,6 +15,8 @@ import {responseFileService, responseService} from "../services";
 import {FORMULAIRE_BROADCAST_EVENT, FORMULAIRE_EMIT_EVENT, FORMULAIRE_FORM_ELEMENT_EMIT_EVENT} from "@common/core/enums";
 import {FormElementType} from "@common/core/enums/form-element-type";
 import {UtilsUtils} from "@common/utils";
+import * as constants from "constants";
+import {Constants} from "@common/core/constants";
 
 interface ViewModel {
     formElements: FormElements;
@@ -316,7 +318,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
     };
 
     const saveFiles = async (question: Question, response: Response, files: Files) : Promise<boolean> => {
-        if (files.all.length > 10) {
+        if (files.all.length > Constants.MAX_FILES_SAVE) {
             notify.info(idiom.translate('formulaire.response.file.tooMany'));
             return false;
         }
