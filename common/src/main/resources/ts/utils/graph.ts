@@ -79,9 +79,18 @@ export class GraphUtils {
      */
     private static generateMatrixChart = async (question: Question, charts: ApexChart[], isExportPDF: boolean) : Promise<void> => {
         let choices: QuestionChoice[] = question.choices.all;
-
         let series: any[] = [];
-        let labels: string[] = question.children.all.map((child: Question) => child.title);
+
+        let labels: (string | [string, string])[] = question.children.all.map((child: Question) => {
+            const title = child.title;
+            if (title.length > 50) {
+                const part1 = title.slice(0, 25);
+                const part2 = title.slice(25, 50);
+                return [part1, part2];
+            } else {
+                return title;
+            }
+        });
 
         for (let choice of choices) {
             let serie: any = {
@@ -130,8 +139,8 @@ export class GraphUtils {
         let colors: string[] = ColorUtils.generateColorList(labels.length);
 
         let newPDFOptions: any = isExportPDF ?
-            GraphUtils.generateOptions(question.question_type, colors, labels,null, null) :
-            GraphUtils.generateOptions(question.question_type, colors, labels,'100%', '100%');
+            GraphUtils.generateOptions(question.question_type, colors, labels, null, null) :
+            GraphUtils.generateOptions(question.question_type, colors, labels, '100%', '100%');
 
         newPDFOptions.series = [{ name: lang.translate('formulaire.number.responses'), data: Array.from(map.values()) }];
 
@@ -223,7 +232,7 @@ export class GraphUtils {
         let baseHeight: number = 50 * choices.length;
         let height: number = baseHeight < 200 ? 200 : (baseHeight > 500 ? 500 : baseHeight);
         let colors: string[] = ColorUtils.generateColorList(labels.length);
-        let newOptions: any = GraphUtils.generateOptions(question.question_type, colors, labels, height, null, seriesPercent);
+        let newOptions: any = GraphUtils.generateOptions(question.question_type, colors, labels, height, null);
         newOptions.series = [{ data: series }];
 
         await GraphUtils.renderChartForResult(newOptions, charts, question, isExportPDF);
@@ -255,10 +264,9 @@ export class GraphUtils {
      * @param labels        Labels to display on the cart
      * @param height        Height of the chart to display (optional)
      * @param width         Width of the chart to display (optional)
-     * @param seriesPercent Percentage to use for the graph (optional)
      */
-    static generateOptions = (type: Types, colors: string[], labels: (string | number)[], height?: any, width?: any,
-                              seriesPercent?: number[]) : any => {
+    static generateOptions = (type: Types, colors: string[], labels: (string | [string, string] | number)[], height?: any,
+                              width?: any) : any => {
         let options: any;
         if (type === Types.SINGLEANSWER || type === Types.SINGLEANSWERRADIO) {
             options = {
