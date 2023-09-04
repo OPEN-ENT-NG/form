@@ -30,7 +30,7 @@ interface IQuestionTypeMatrixScope extends IScope, IQuestionTypeMatrixProps {
     vm: IViewModel;
 }
 
-class Controller implements IViewModel {
+class Controller implements ng.IController, IViewModel {
     question: Question;
     hasFormResponses: boolean;
     formElements: FormElements;
@@ -42,6 +42,10 @@ class Controller implements IViewModel {
         this.i18n = I18nUtils;
         this.direction = Direction;
     }
+
+    $onInit = async (): Promise<void> => {}
+
+    $onDestroy = async () : Promise<void> => {}
 
     createNewChoice = () : void => {
         this.question.choices.all.push(new QuestionChoice(this.question.id, this.question.choices.all.length + 1));
@@ -102,6 +106,7 @@ function directive() {
         },
         controllerAs: 'vm',
         bindToController: true,
+        controller: ['$scope', '$sce', Controller],
         /* interaction DOM/element */
         link: function ($scope: IQuestionTypeMatrixProps,
                         element: ng.IAugmentedJQuery,

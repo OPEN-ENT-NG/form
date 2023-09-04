@@ -82,7 +82,7 @@
   "formulaire.vote": "vote",
   "formulaire.votes": "votes",
   "formulaire.choice": "Choix {0}",
-  "formulaire.option": "Option {0} (maximum 100 caractères)",
+  "formulaire.option": "Option {0} (maximum 100 characters)",
   "formulaire.options.select": "-- Sélectionnez une option --",
   "formulaire.archive.title": "Supprimer les formulaires sélectionnés",
   "formulaire.delete.title": "Supprimer définitivement",
