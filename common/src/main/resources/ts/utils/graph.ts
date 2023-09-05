@@ -79,18 +79,9 @@ export class GraphUtils {
      */
     private static generateMatrixChart = async (question: Question, charts: ApexChart[], isExportPDF: boolean) : Promise<void> => {
         let choices: QuestionChoice[] = question.choices.all;
-        let series: any[] = [];
 
-        let labels: (string | [string, string])[] = question.children.all.map((child: Question) => {
-            const title = child.title;
-            if (title.length > 50) {
-                const part1 = title.slice(0, 25);
-                const part2 = title.slice(25, 50);
-                return [part1, part2];
-            } else {
-                return title;
-            }
-        });
+        let series: any[] = [];
+        let labels: string[] = question.children.all.map((child: Question) => child.title);
 
         for (let choice of choices) {
             let serie: any = {
@@ -265,7 +256,7 @@ export class GraphUtils {
      * @param height        Height of the chart to display (optional)
      * @param width         Width of the chart to display (optional)
      */
-    static generateOptions = (type: Types, colors: string[], labels: (string | [string, string] | number)[], height?: any,
+    static generateOptions = (type: Types, colors: string[], labels: (string | number)[], height?: any,
                               width?: any) : any => {
         let options: any;
         if (type === Types.SINGLEANSWER || type === Types.SINGLEANSWERRADIO) {
@@ -335,6 +326,9 @@ export class GraphUtils {
                 },
                 xaxis: {
                     categories: labels,
+                    labels: {
+                        trim: true,
+                    }
                 },
                 yaxis: {
                     forceNiceScale: true,

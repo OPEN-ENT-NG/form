@@ -34,7 +34,6 @@ interface IViewModel extends ng.IController, IQuestionItemProps {
     onSwitchConditional(isConditional: boolean): void;
     cursorChoiceIsConsistent(): boolean;
     isImageMissingLabel(): boolean;
-    maxLengthReached(): boolean;
 }
 
 interface IQuestionItemScope extends IScope, IQuestionItemProps{
@@ -144,13 +143,6 @@ class Controller implements IViewModel {
     isImageMissingLabel = (): boolean => {
         return this.question.choices.all.some((choice: QuestionChoice) => choice.image !== null
             && (choice.value === "" || choice.value === null || choice.value === undefined));
-    };
-
-    maxLengthReached = (): boolean => {
-        return this.question.choices.all.some((choice: QuestionChoice) =>
-                (choice.value !== "" && choice.value !== null && choice.value !== undefined) && choice.value.length > 100)
-            || this.question.children.all.some((child: Question) =>
-                (child.title !== "" && child.title !== null && child.title !== undefined) && child.title.length > 100);
     };
 }
 
