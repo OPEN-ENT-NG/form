@@ -29,6 +29,9 @@ public class Form implements IModel<Form> {
     private Boolean responseNotified;
     private Boolean editable;
     private Boolean rgpd;
+    private Boolean archived;
+    private Boolean sent;
+    private Boolean collab;
     private String rgpdGoal;
     private RgpdLifetimes rgpdLifetime;
     private String publicKey;
@@ -57,6 +60,9 @@ public class Form implements IModel<Form> {
         this.reminded = form.getBoolean(REMINDED, null);
         this.responseNotified = form.getBoolean(RESPONSE_NOTIFIED, null);
         this.rgpd = form.getBoolean(RGPD, null);
+        this.archived = form.getBoolean(ARCHIVED, null);
+        this.sent = form.getBoolean(SENT, null);
+        this.collab = form.getBoolean(COLLAB, null);
         this.rgpdGoal = form.getString(RGPD_GOAL, null);
         this.rgpdLifetime = RgpdLifetimes.getRgpdLifetimes(form.getInteger(RGPD_LIFETIME, null));
         this.publicKey = form.getString(PUBLIC_KEY, null);
@@ -106,6 +112,9 @@ public class Form implements IModel<Form> {
 
     public Boolean getRgpd() { return rgpd; }
 
+    public Boolean getArchived() { return archived; }
+    public Boolean getSent() { return sent; }
+    public Boolean getCollab() { return collab; }
     public String getRgpdGoal() { return rgpdGoal; }
 
     public Number getRgpdLifetime() { return rgpdLifetime.getValue(); }
@@ -113,6 +122,7 @@ public class Form implements IModel<Form> {
     public String getPublicKey() { return publicKey; }
 
     public Number getOriginalFormId() { return originalFormId; }
+
 
     public List<FormElement> getFormElements() { return formElements; }
 
@@ -186,6 +196,20 @@ public class Form implements IModel<Form> {
 
     public Form setRgpd(Boolean rgpd) {
         this.rgpd = rgpd;
+        return this;
+    }
+
+    public Form setArchived(Boolean archived) {
+        this.archived = archived;
+        return this;
+    }
+    public Form setSent(Boolean sent) {
+        this.sent = sent;
+        return this;
+    }
+
+    public Form setCollab(Boolean collab) {
+        this.collab = collab;
         return this;
     }
 
