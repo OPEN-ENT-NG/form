@@ -127,7 +127,7 @@ public interface FormService {
      * Update multiple forms
      * @param forms List of forms to update
      */
-    Future<JsonArray> updateMultiple(List<Form> forms);
+    Future<List<Form>> updateMultiple(List<Form> forms);
 
     /**
      * Delete a scpecific form

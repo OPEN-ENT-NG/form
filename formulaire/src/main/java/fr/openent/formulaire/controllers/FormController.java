@@ -1,7 +1,6 @@
 package fr.openent.formulaire.controllers;
 
 import fr.openent.form.core.enums.I18nKeys;
-import fr.openent.form.core.enums.RgpdLifetimes;
 import fr.openent.form.core.models.Form;
 import fr.openent.form.helpers.EventBusHelper;
 import fr.openent.form.helpers.FutureHelper;
@@ -788,7 +787,7 @@ public class FormController extends ControllerHelper {
                             formList.forEach(f -> f.setArchived(false));
 
                             formService.updateMultiple(formList)
-                                    .onSuccess(result -> renderJson(request, result))
+                                    .onSuccess(result -> renderJson(request, new JsonArray(result)))
                                     .onFailure(err -> {
                                         log.error("[Formulaire@FormController::restore] Failed to restore forms" + err.getMessage());
                                         renderError(request);

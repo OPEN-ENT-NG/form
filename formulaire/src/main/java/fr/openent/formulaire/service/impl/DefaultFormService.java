@@ -3,9 +3,11 @@ package fr.openent.formulaire.service.impl;
 import fr.openent.form.core.enums.I18nKeys;
 import fr.openent.form.core.models.Form;
 import fr.openent.form.core.models.ShareMember;
+import fr.openent.form.core.models.TransactionElement;
 import fr.openent.form.helpers.FutureHelper;
 import fr.openent.form.helpers.I18nHelper;
 import fr.openent.form.helpers.IModelHelper;
+import fr.openent.form.helpers.TransactionHelper;
 import fr.openent.formulaire.service.FormService;
 import fr.wseduc.webutils.Either;
 import io.vertx.core.Future;
@@ -27,6 +29,8 @@ import static fr.openent.form.core.constants.DistributionStatus.FINISHED;
 import static fr.openent.form.core.constants.Fields.*;
 import static fr.openent.form.core.constants.ShareRights.*;
 import static fr.openent.form.core.constants.Tables.*;
+import static fr.openent.form.helpers.SqlHelper.getParamsForUpdateDateModifFormRequest;
+import static fr.openent.form.helpers.SqlHelper.getUpdateDateModifFormRequest;
 
 public class DefaultFormService implements FormService {
     private final Sql sql = Sql.getInstance();
@@ -481,12 +485,10 @@ public class DefaultFormService implements FormService {
     }
 
     @Override
-    public Future<JsonArray> updateMultiple(List<Form> forms) {
-        Promise<JsonArray> promise = Promise.promise();
+    public Future<List<Form>> updateMultiple(List<Form> forms) {
+        Promise<List<Form>> promise = Promise.promise();
+        List<TransactionElement> transactionElements = new ArrayList<>();
         if (!forms.isEmpty()) {
-            SqlStatementsBuilder s = new SqlStatementsBuilder();
-
-            s.raw(TRANSACTION_BEGIN_QUERY);
             for (int i = 0; i < forms.size(); i++) {
                 Form form = forms.get(i);
                 Number formId = forms.get(i).getId();
@@ -499,7 +501,7 @@ public class DefaultFormService implements FormService {
                         "WHEN false THEN ? WHEN true THEN (SELECT multiple FROM " + FORM_TABLE +" WHERE id = ?) END, " +
                         "anonymous = CASE (SELECT count > 0 FROM nbResponses) " +
                         "WHEN false THEN ? WHEN true THEN (SELECT anonymous FROM " + FORM_TABLE +" WHERE id = ?) END, " +
-                        "response_notified = ?, editable = ?, rgpd = ?, rgpd_goal = ?, rgpd_lifetime = ?" +
+                        "response_notified = ?, editable = ?, rgpd = ?, rgpd_goal = ?, rgpd_lifetime = ? " +
                         "WHERE id = ? RETURNING *;";
 
                 JsonArray params = new JsonArray()
@@ -511,30 +513,33 @@ public class DefaultFormService implements FormService {
                         .add("NOW()")
                         .add(form.getDateOpening() != null ? form.getDateOpening().toString() : "NOW()")
                         .add(form.getDateEnding())
-                        .add(form.getSent() != null ? form.getSent() : false)
-                        .add(form.getCollab() != null ? form.getCollab() : false)
-                        .add(form.getReminded() != null ? form.getReminded() : false)
-                        .add(form.getArchived() != null ? form.getArchived() : false)
-                        .add(form.getMultiple() != null ? form.getMultiple() : false).add(formId)
-                        .add(form.getAnonymous() != null ? form.getAnonymous() : false).add(formId)
-                        .add(form.getResponseNotified() != null ? form.getResponseNotified() : false)
-                        .add(form.getEditable() != null ? form.getEditable() : false)
-                        .add(form.getRgpd() != null ? form.getRgpd() : false)
+                        .add(form.getSent())
+                        .add(form.getCollab())
+                        .add(form.getReminded())
+                        .add(form.getArchived())
+                        .add(form.getMultiple()).add(formId)
+                        .add(form.getAnonymous()).add(formId)
+                        .add(form.getResponseNotified())
+                        .add(form.getEditable())
+                        .add(form.getRgpd())
                         .add(form.getRgpdGoal() != null ? form.getRgpdGoal() : "")
                         .add(form.getRgpdLifetime() != null ? form.getRgpdLifetime() : 12)
                         .add(formId);
 
-                s.prepared(query, params);
+                transactionElements.add(new TransactionElement(query, params));
+                transactionElements.add(new TransactionElement(getUpdateDateModifFormRequest(), getParamsForUpdateDateModifFormRequest(formId.toString())));
             }
-            s.raw(TRANSACTION_COMMIT_QUERY);
-            String errorMessage = "[Formulaire@DefaultFormService::updateMultiple] Fail to update this forms";
-            sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handlerEither(promise, errorMessage)));
-            return promise.future();
+
         }
         else {
             promise.fail("[Formulaire@DefaultFormService::updateMultiple] Empty Forms List, nothing to update");
-            return promise.future();
+            promise.complete(new ArrayList<>());
         }
+        String errorMessage = "[Formulaire@DefaultFormService::updateMultiple] Fail to update this forms";
+        TransactionHelper.executeTransactionAndGetJsonObjectResults(transactionElements, errorMessage)
+                .onSuccess(result -> promise.complete(IModelHelper.toList(result, Form.class)))
+                .onFailure(err -> promise.fail(err.getMessage()));
+        return promise.future();
     }
 
     @Override
