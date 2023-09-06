@@ -52,11 +52,11 @@ public class DateHelper {
     }
 
 
-    public static Date formatDateToModel(String property, String format) {
-            SimpleDateFormat dateFormatter = new SimpleDateFormat(format);
-            Date result = new Date();
+    public static Date formatDateToModel(String inputDateStr, String format) {
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(format);
+        Date result = new Date();
         try {
-            result = property != null ? dateFormatter.parse(property) : null;
+            result = inputDateStr != null ? dateFormatter.parse(inputDateStr) : null;
         }
         catch (ParseException e) { e.printStackTrace(); }
         return result;

@@ -489,18 +489,17 @@ public class DefaultFormService implements FormService {
         Promise<List<Form>> promise = Promise.promise();
         List<TransactionElement> transactionElements = new ArrayList<>();
         if (!forms.isEmpty()) {
-            for (int i = 0; i < forms.size(); i++) {
-                Form form = forms.get(i);
-                Number formId = forms.get(i).getId();
+            forms.forEach(form -> {
+                Number formId = form.getId();
 
                 String query = "WITH nbResponses AS (SELECT COUNT(*) FROM " + DISTRIBUTION_TABLE +
                         " WHERE form_id = ? AND status = ?) " +
                         "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, picture = ?, date_modification = ?, " +
                         "date_opening = ?, date_ending = ?, sent = ?, collab = ?, reminded = ?, archived = ?, " +
                         "multiple = CASE (SELECT count > 0 FROM nbResponses) " +
-                        "WHEN false THEN ? WHEN true THEN (SELECT multiple FROM " + FORM_TABLE +" WHERE id = ?) END, " +
+                        "WHEN false THEN ? WHEN true THEN (SELECT multiple FROM " + FORM_TABLE + " WHERE id = ?) END, " +
                         "anonymous = CASE (SELECT count > 0 FROM nbResponses) " +
-                        "WHEN false THEN ? WHEN true THEN (SELECT anonymous FROM " + FORM_TABLE +" WHERE id = ?) END, " +
+                        "WHEN false THEN ? WHEN true THEN (SELECT anonymous FROM " + FORM_TABLE + " WHERE id = ?) END, " +
                         "response_notified = ?, editable = ?, rgpd = ?, rgpd_goal = ?, rgpd_lifetime = ? " +
                         "WHERE id = ? RETURNING *;";
 
@@ -528,14 +527,13 @@ public class DefaultFormService implements FormService {
 
                 transactionElements.add(new TransactionElement(query, params));
                 transactionElements.add(new TransactionElement(getUpdateDateModifFormRequest(), getParamsForUpdateDateModifFormRequest(formId.toString())));
-            }
-
+            });
         }
         else {
-            promise.fail("[Formulaire@DefaultFormService::updateMultiple] Empty Forms List, nothing to update");
+            promise.fail("[Formulaire@DefaultFormService::updateMultiple] Empty forms list, nothing to update");
             promise.complete(new ArrayList<>());
         }
-        String errorMessage = "[Formulaire@DefaultFormService::updateMultiple] Fail to update this forms";
+        String errorMessage = "[Formulaire@DefaultFormService::updateMultiple] Fail to update these forms";
         TransactionHelper.executeTransactionAndGetJsonObjectResults(transactionElements, errorMessage)
                 .onSuccess(result -> promise.complete(IModelHelper.toList(result, Form.class)))
                 .onFailure(err -> promise.fail(err.getMessage()));

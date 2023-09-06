@@ -789,7 +789,7 @@ public class FormController extends ControllerHelper {
                             formService.updateMultiple(formList)
                                     .onSuccess(result -> renderJson(request, new JsonArray(result)))
                                     .onFailure(err -> {
-                                        log.error("[Formulaire@FormController::restore] Failed to restore forms" + err.getMessage());
+                                        log.error("[Formulaire@FormController::restore] Failed to restore forms : " + err.getMessage());
                                         renderError(request);
                                     });
                         });
