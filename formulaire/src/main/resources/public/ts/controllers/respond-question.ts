@@ -58,6 +58,7 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
     vm.$onInit = async () : Promise<void> => {
         await initRespondQuestionController();
     };
+
     const initRespondQuestionController = async () : Promise<void> => {
         vm.loading = true;
         vm.form = $scope.form;
@@ -114,57 +115,60 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
     };
 
     const fillResponses = async (): Promise<void> => {
-        //If in edit
-        if (!this.distribution)
-            return;
-
-
         //Check if formElement is a Question or a Section
-        const questions: Question[] = vm.formElement instanceof Question ? [vm.formElement] : (vm.formElement as Section).questions.all;
-        const allResponses: Responses = new Responses();
-        await allResponses.syncMineByQuestionIds(questions.map((q: Question) => q.id), vm.distribution.id);
+        let questions: Question[] = vm.formElement instanceof Question ? [vm.formElement] : (vm.formElement as Section).questions.all;
 
-        //Group responses by question id
-        const responsesByQuestionId: Map<Question, Responses> = new Map();
-        for (const question of questions) {
+        // Add questionIds of children to deal with matrix
+        let matrixQuestions: Question[] = questions.filter((q: Question) => q.question_type == Types.MATRIX);
+        let questionsToSyncResponses = questions.concat((matrixQuestions as any).flatMap((q: Question) => q.children.all));
+
+        // Retrieve responses
+        let allResponses: Responses = new Responses();
+        await allResponses.syncMineByQuestionIds(questionsToSyncResponses.map((q: Question) => q.id), vm.distribution.id);
+
+        // Group responses by question id
+        let responsesByQuestionId: Map<Question, Responses> = new Map();
+        for (let question of questions) {
             let responses: Responses = new Responses();
-            responses.all = allResponses.all.filter((response: Response) => response.question_id === question.id);
+            let childrenIds: number[] = question.children.all.map((q: Question) => q.id);
+            responses.all = allResponses.all.filter((response: Response) => response.question_id === question.id || (childrenIds as any).includes(response.question_id));
             responsesByQuestionId.set(question, responses);
         }
 
-        const promises = Array.from(responsesByQuestionId.entries()).map(
-            ([question, responses]: [Question, Responses]) => processResponses(question, responses)
-        );
-
-        await Promise.all(promises);
+        responsesByQuestionId.forEach((responses: Responses, question: Question) => processResponses(question, responses));
     }
 
-    const processResponses = async (question: Question, newResponses: Responses) => {
+    const processResponses = (question: Question, existingResponses: Responses): void => {
         //Contain blank responses initialised in initFormElementResponses for question we are processing
         let blankResponses: Responses = vm.currentResponses.get(question);
 
         if (question.isTypeMultipleRep()) {
-            blankResponses.all.forEach((response: Response) => {
-                // If the response is in the new responses, it means user answered it, so we set it to selected
-                if (newResponses.all.some((newResponse: Response) => newResponse.choice_id == response.choice_id)) {
-                    let newResponse: Response = newResponses.all.find((dataResponse: Response) => dataResponse.choice_id == response.choice_id);
-                    newResponse.selected = true;
+            for (let response of blankResponses.all) {
+                let existingResponse: Response = existingResponses.all.find((existingResponse: Response) => {
+                    let checkChoiceId: boolean = existingResponse.choice_id == response.choice_id;
+                    let checkQuestionId: boolean = question.question_type == Types.MATRIX ? existingResponse.question_id == response.question_id : true;
+                    return checkChoiceId && checkQuestionId;
+                });
+                if (existingResponse) {
+                    existingResponse.selected = true;
                     let index: number = blankResponses.all.indexOf(response);
-                    blankResponses.all[index] = newResponse;
+                    blankResponses.all[index] = existingResponse;
                 }
-            })
-            // replace blankResponses by modified ones
+            }
+
+            // Replace blankResponses by modified ones
             vm.currentResponses.set(question, blankResponses);
-        } else {
-            if (newResponses.all.length >= 1) {
+        }
+        else {
+            if (existingResponses.all.length >= 1) {
                 if (question.question_type == Types.TIME) {
-                    newResponses.all[0].answer = new Date(Fields.JANUARY_01_1970 + newResponses.all[0].answer);
+                    existingResponses.all[0].answer = new Date(Fields.JANUARY_01_1970 + existingResponses.all[0].answer);
                 } else if (question.question_type == Types.CURSOR) {
-                    let answer: number = Number.parseInt(newResponses.all[0].answer.toString());
-                    newResponses.all[0].answer = Number.isNaN(answer) ? this.question.specific_fields.cursor_min_val : answer;
+                    let answer: number = Number.parseInt(existingResponses.all[0].answer.toString());
+                    existingResponses.all[0].answer = Number.isNaN(answer) ? this.question.specific_fields.cursor_min_val : answer;
                 }
                 // replace blankResponses by the one from the user
-                blankResponses.all = newResponses.all;
+                blankResponses.all = existingResponses.all;
                 vm.currentResponses.set(question, blankResponses);
             }
         }
@@ -300,6 +304,8 @@ export const respondQuestionController = ng.controller('RespondQuestionControlle
 
             if (question.isTypeMultipleRep() || question.isRanking()) {
                 questionIdsResponseToDelete.push(question.id);
+                // Add questionIds of children to deal with matrix
+                questionIdsResponseToDelete = questionIdsResponseToDelete.concat(question.children.all.map((q: Question) => q.id));
 
                 if (questionResponses.selected.length > 0) {
                     for (let questionResponse of questionResponses.selected) {
