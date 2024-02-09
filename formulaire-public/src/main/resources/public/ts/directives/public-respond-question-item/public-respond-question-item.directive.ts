@@ -7,7 +7,7 @@ import {
     Types
 } from "@common/models";
 import {Direction, FORMULAIRE_FORM_ELEMENT_EMIT_EVENT} from "@common/core/enums";
-import {FormElementUtils, I18nUtils, RankingUtils} from "@common/utils";
+import {FormElementUtils, I18nUtils, RankingUtils, UtilsUtils} from "@common/utils";
 import {IScope} from "angular";
 import {PropPosition} from "@common/core/enums/prop-position";
 import * as Sortable from "sortablejs";
@@ -158,7 +158,7 @@ class Controller implements IViewModel {
                     ghostClass: "sortable-ghost",
                     onEnd: async (evt): Promise<void> => {
                         await RankingUtils.onEndRankingDragAndDrop(evt, this.responses);
-                        this.$scope.$apply();
+                        UtilsUtils.safeApply(this.$scope);
                     },
                 });
             }
