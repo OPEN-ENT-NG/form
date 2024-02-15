@@ -14,6 +14,7 @@ interface ViewModel {
         date_ending: boolean
     },
     isProcessing: boolean;
+    isCurrentlyPublic: boolean;
 
     $onInit() : Promise<void>;
     saveGuard(): void;
@@ -44,6 +45,7 @@ export const formPropController = ng.controller('FormPropController', ['$scope',
             vm.form.nb_responses = vm.form.id ? (await distributionService.count(vm.form.id)).count : 0;
             vm.form.folder_id = vm.folder.id;
             vm.rgpdLifetimeChoices = [3, 6, 9, 12];
+            vm.isCurrentlyPublic = vm.form.is_public;
             $scope.safeApply();
         };
 
