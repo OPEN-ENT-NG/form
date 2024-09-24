@@ -13,6 +13,7 @@ import fr.wseduc.rs.*;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.I18n;
+import fr.wseduc.webutils.http.Renders;
 import fr.wseduc.webutils.request.RequestUtils;
 import io.vertx.core.*;
 import io.vertx.core.eventbus.DeliveryOptions;
@@ -134,7 +135,15 @@ public class FormController extends ControllerHelper {
             if (user.getGroupsIds() != null) {
                 groupsAndUserIds.addAll(user.getGroupsIds());
             }
-            formService.list(groupsAndUserIds, user, arrayResponseHandler(request));
+            formService.list(groupsAndUserIds, user)
+                    .onSuccess(forms -> {
+                        Renders.renderJson(request, forms);
+                    })
+                    .onFailure(error -> {
+                        String errorMessage = "[Formulaire@listForms] Failed retrieving the forms : " + error.getMessage();
+                        Renders.log.error(errorMessage);
+                        Renders.renderJson(request, new JsonObject().put("error", errorMessage), 400);
+                    });
         });
     }
 
