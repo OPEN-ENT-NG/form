@@ -1,5 +1,6 @@
 package fr.openent.formulaire.service.impl;
 
+import com.google.common.collect.Sets;
 import fr.openent.form.core.enums.I18nKeys;
 import fr.openent.form.core.models.Form;
 import fr.openent.form.core.models.ShareMember;
@@ -45,11 +46,10 @@ public class DefaultFormService implements FormService {
     private final Sql sql = Sql.getInstance();
     private final SimpleDateFormat dateFormatter1 = new SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS_SSS);
     private final SimpleDateFormat dateFormatter2 = new SimpleDateFormat(EEE_MMM_DD_HH_MM_SS_Z_YYYY);
-    private final Set<String> dateFieldsToFormat = new HashSet<>(Arrays.asList("date_creation", "date_modification", "date_opening", "date_ending"));
+    private final Set<String> dateFieldsToFormat = Sets.newHashSet("date_creation", "date_modification", "date_opening", "date_ending");
 
     @Override
     public Future<JsonArray> list(List<String> groupsAndUserIds, UserInfos user) {
-        Promise<JsonArray> formsPromise = Promise.promise();
         StringBuilder query = new StringBuilder();
         JsonArray params = new JsonArray();
 
@@ -75,21 +75,21 @@ public class DefaultFormService implements FormService {
                 .append("ORDER BY f.date_modification DESC;");
         params.add(MANAGER_RESOURCE_BEHAVIOUR).add(CONTRIB_RESOURCE_BEHAVIOUR).add(user.getUserId());
 
-        Sql.getInstance().prepared(query.toString(), params, new DeliveryOptions())
-                .onSuccess(sqlResponseMessage -> {
+        return Sql.getInstance().prepared(query.toString(), params, new DeliveryOptions())
+                .compose(sqlResponseMessage -> {
                     Either<String, JsonArray> sqlResult = SqlResult.validResult(sqlResponseMessage);
+                    final Future<JsonArray> future;
                     if (sqlResult.isLeft()) {
-                        formsPromise.fail(sqlResult.left().getValue());
+                        future = Future.failedFuture(sqlResult.left().getValue());
                     } else {
                         JsonArray formattedForms = new JsonArray();
                         sqlResult.right().getValue().forEach(form -> {
                             formattedForms.add(formatFormDatesWithTimezone((JsonObject) form));
                         });
-                        formsPromise.complete(formattedForms);
+                        future = Future.succeededFuture(formattedForms);
                     }
-                })
-                .onFailure(formsPromise::fail);
-		return formsPromise.future();
+                    return future;
+                });
     }
 
     @Deprecated
@@ -740,17 +740,16 @@ public class DefaultFormService implements FormService {
 
     /**
      * Method enriching form dates with timezone offset of the server.
-     * @param originalForm form whose date fields must be enriched with timezone information
+     * @param form form whose date fields must be enriched with timezone information
      * @return form with its date fields enriched with server timezone information
      */
-    private JsonObject formatFormDatesWithTimezone(JsonObject originalForm) {
-        JsonObject formattedForm = originalForm.copy();
+    private JsonObject formatFormDatesWithTimezone(JsonObject form) {
         dateFieldsToFormat.forEach(dateField -> {
-            if (originalForm.getString(dateField) != null) {
-                OffsetDateTime offsetDateTime = LocalDateTime.parse(formattedForm.getString(dateField)).atZone(ZoneId.systemDefault()).toOffsetDateTime();
-                formattedForm.put(dateField, offsetDateTime.toString());
+            if (form.getString(dateField) != null) {
+                OffsetDateTime offsetDateTime = LocalDateTime.parse(form.getString(dateField)).atZone(ZoneId.systemDefault()).toOffsetDateTime();
+                form.put(dateField, offsetDateTime.toString());
             }
         });
-        return formattedForm;
+        return form;
     }
 }

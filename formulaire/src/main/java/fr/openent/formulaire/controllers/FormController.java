@@ -141,7 +141,7 @@ public class FormController extends ControllerHelper {
                     })
                     .onFailure(error -> {
                         String errorMessage = "[Formulaire@listForms] Failed retrieving the forms : " + error.getMessage();
-                        Renders.log.error(errorMessage);
+                        log.error(errorMessage);
                         Renders.renderJson(request, new JsonObject().put("error", errorMessage), 400);
                     });
         });
