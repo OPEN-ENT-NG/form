@@ -1,16 +1,21 @@
 package fr.openent.formulaire.service.impl;
 
+import com.google.common.collect.Sets;
 import fr.openent.form.core.enums.I18nKeys;
 import fr.openent.form.core.models.Form;
 import fr.openent.form.core.models.ShareMember;
 import fr.openent.form.core.models.TransactionElement;
-import fr.openent.form.helpers.*;
+import fr.openent.form.helpers.FutureHelper;
+import fr.openent.form.helpers.I18nHelper;
+import fr.openent.form.helpers.IModelHelper;
+import fr.openent.form.helpers.TransactionHelper;
 import fr.openent.formulaire.service.FormService;
 import fr.openent.formulaire.service.ServiceFactory;
 import fr.wseduc.webutils.Either;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -23,6 +28,9 @@ import org.entcore.common.user.UserInfos;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import static fr.openent.form.core.constants.Constants.*;
@@ -40,6 +48,7 @@ public class DefaultFormService implements FormService {
     private final Sql sql = Sql.getInstance();
     private final SimpleDateFormat dateFormatter1 = new SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS_SSS);
     private final SimpleDateFormat dateFormatter2 = new SimpleDateFormat(EEE_MMM_DD_HH_MM_SS_Z_YYYY);
+    private final Set<String> dateFieldsToFormat = Sets.newHashSet("date_creation", "date_modification", "date_opening", "date_ending");
     private final ShareNormalizer shareNormalizer;
 
     public DefaultFormService(){
@@ -48,7 +57,6 @@ public class DefaultFormService implements FormService {
 
     @Override
     public Future<JsonArray> list(List<String> groupsAndUserIds, UserInfos user) {
-        Promise<JsonArray> promise = Promise.promise();
         StringBuilder query = new StringBuilder();
         JsonArray params = new JsonArray();
 
@@ -74,10 +82,22 @@ public class DefaultFormService implements FormService {
                 .append("ORDER BY f.date_modification DESC;");
         params.add(MANAGER_RESOURCE_BEHAVIOUR).add(CONTRIB_RESOURCE_BEHAVIOUR).add(user.getUserId());
 
-        String errorMessage = "[Formulaire@DefaultFormService::list] Fail to list forms for user with id " + user.getUserId();
-        Sql.getInstance().prepared(query.toString(), params, SqlResult.validResultHandler(FutureHelper.handlerEither(promise, errorMessage)));
-
-        return promise.future();
+        return Sql.getInstance().prepared(query.toString(), params, new DeliveryOptions())
+                .compose(sqlResponseMessage -> {
+                    Either<String, JsonArray> sqlResult = SqlResult.validResult(sqlResponseMessage);
+                    final Future<JsonArray> future;
+                    if (sqlResult.isLeft()) {
+                        log.error("[Formulaire@DefaultFormService::list] Fail to list forms for user with id " + user.getUserId());
+                        future = Future.failedFuture(sqlResult.left().getValue());
+                    } else {
+                        JsonArray formattedForms = new JsonArray();
+                        sqlResult.right().getValue().forEach(form -> {
+                            formattedForms.add(formatFormDatesWithTimezone((JsonObject) form));
+                        });
+                        future = Future.succeededFuture(formattedForms);
+                    }
+                    return future;
+                });
     }
 
     @Override
@@ -257,8 +277,19 @@ public class DefaultFormService implements FormService {
             .add(formId);
 
         String errorMessage = "[Formulaire@DefaultFormService::get] Fail to get form with id " + formId;
-        Sql.getInstance().prepared(query, params, SqlResult.validUniqueResultHandler(FutureHelper.handlerEither(promise, errorMessage)));
-
+        Sql.getInstance().prepared(query, params, new DeliveryOptions())
+                .onSuccess(sqlResponseMessage -> {
+                    Either<String, JsonObject> sqlResult = SqlResult.validUniqueResult(sqlResponseMessage);
+                    if (sqlResult.isLeft()) {
+                        promise.fail(sqlResult.left().getValue());
+                    } else {
+                        promise.complete(formatFormDatesWithTimezone(sqlResult.right().getValue()));
+                    }
+                })
+                .onFailure(error -> {
+                    log.error(errorMessage + error.getMessage());
+                    promise.fail(error.getMessage());
+                });
         return promise.future();
     }
 
@@ -775,6 +806,21 @@ public class DefaultFormService implements FormService {
                 return promise.future();
             }
         }
+    }
+
+    /**
+     * Method enriching form dates with timezone offset of the server.
+     * @param form form whose date fields must be enriched with timezone information
+     * @return form with its date fields enriched with server timezone information
+     */
+    private JsonObject formatFormDatesWithTimezone(JsonObject form) {
+        dateFieldsToFormat.forEach(dateField -> {
+            if (form.getString(dateField) != null) {
+                OffsetDateTime offsetDateTime = LocalDateTime.parse(form.getString(dateField)).atZone(ZoneId.systemDefault()).toOffsetDateTime();
+                form.put(dateField, offsetDateTime.toString());
+            }
+        });
+        return form;
     }
 
     private Optional<UserInfos> getCreatorForModel(final JsonObject json) {
