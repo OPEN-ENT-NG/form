@@ -17,9 +17,8 @@ public interface FormService {
      * List all forms created by me or shared with me
      * @param groupsAndUserIds list of neo ids including the connected user
      * @param user user connected
-     * @param handler function handler returning JsonArray data
      */
-    void list(List<String> groupsAndUserIds, UserInfos user, Handler<Either<String, JsonArray>> handler);
+    Future<JsonArray> list(List<String> groupsAndUserIds, UserInfos user);
 
     /**
      * @deprecated Should use {@link #listByIds(JsonArray)} instead
