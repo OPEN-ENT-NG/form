@@ -1,16 +1,21 @@
 package fr.openent.formulaire.service.impl;
 
+import com.google.common.collect.Sets;
 import fr.openent.form.core.enums.I18nKeys;
 import fr.openent.form.core.models.Form;
 import fr.openent.form.core.models.ShareMember;
 import fr.openent.form.core.models.TransactionElement;
-import fr.openent.form.helpers.*;
+import fr.openent.form.helpers.FutureHelper;
+import fr.openent.form.helpers.I18nHelper;
+import fr.openent.form.helpers.IModelHelper;
+import fr.openent.form.helpers.TransactionHelper;
 import fr.openent.formulaire.service.FormService;
 import fr.openent.formulaire.service.ServiceFactory;
 import fr.wseduc.webutils.Either;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
+import io.vertx.core.eventbus.DeliveryOptions;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -23,6 +28,9 @@ import org.entcore.common.user.UserInfos;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneId;
 import java.util.*;
 
 import static fr.openent.form.core.constants.Constants.*;
@@ -250,8 +258,19 @@ public class DefaultFormService implements FormService {
         JsonArray params = new JsonArray().add(formId).add(user.getUserId()).add(formId);
 
         String errorMessage = "[Formulaire@DefaultFormService::get] Fail to get form with id " + formId;
-        Sql.getInstance().prepared(query, params, SqlResult.validUniqueResultHandler(FutureHelper.handlerEither(promise, errorMessage)));
-
+        Sql.getInstance().prepared(query, params, new DeliveryOptions())
+                .onSuccess(sqlResponseMessage -> {
+                    Either<String, JsonObject> sqlResult = SqlResult.validUniqueResult(sqlResponseMessage);
+                    if (sqlResult.isLeft()) {
+                        promise.fail(sqlResult.left().getValue());
+                    } else {
+                        promise.complete(formatFormDatesWithTimezone(sqlResult.right().getValue()));
+                    }
+                })
+                .onFailure(error -> {
+                    log.error(errorMessage + error.getMessage());
+                    promise.fail(error.getMessage());
+                });
         return promise.future();
     }
 
