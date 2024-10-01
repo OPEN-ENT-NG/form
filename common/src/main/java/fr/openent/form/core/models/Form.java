@@ -1,19 +1,25 @@
 package fr.openent.form.core.models;
 
+import fr.openent.form.core.constants.DateFormats;
 import fr.openent.form.core.enums.RgpdLifetimes;
-import fr.openent.form.helpers.DateHelper;
 import fr.openent.form.helpers.IModelHelper;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
-import static fr.openent.form.core.constants.DateFormats.*;
+import java.util.Optional;
+
 import static fr.openent.form.core.constants.Fields.*;
 
 public class Form implements IModel<Form> {
-    SimpleDateFormat outputFormat = new SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS_SSS);
+    private static final Logger log = LoggerFactory.getLogger(Form.class);
 
     private Number id;
     private String title;
@@ -21,8 +27,8 @@ public class Form implements IModel<Form> {
     private String picture;
     private String ownerId;
     private String ownerName;
-    private Date dateOpening;
-    private Date dateEnding;
+    private ZonedDateTime dateOpening;
+    private ZonedDateTime dateEnding;
     private Boolean multiple;
     private Boolean anonymous;
     private Boolean reminded;
@@ -51,8 +57,8 @@ public class Form implements IModel<Form> {
         this.picture = form.getString(PICTURE, null);
         this.ownerId = form.getString(OWNER_ID, null);
         this.ownerName = form.getString(OWNER_NAME, null);
-        this.dateOpening = DateHelper.formatDateToModel(form.getString(DATE_OPENING, null), YYYY_MM_DD_T_HH_MM_SS_SSS);
-        this.dateEnding =  DateHelper.formatDateToModel(form.getString(DATE_ENDING, null), YYYY_MM_DD_T_HH_MM_SS_SSS);
+        this.dateOpening = formatDateToModel(form.getString(DATE_OPENING, null)).orElse(null);
+        this.dateEnding =  formatDateToModel(form.getString(DATE_ENDING, null)).orElse(null);
         this.multiple = form.getBoolean(MULTIPLE, false);
         this.anonymous = form.getBoolean(ANONYMOUS, false);
         this.reminded = form.getBoolean(REMINDED, false);
@@ -94,9 +100,9 @@ public class Form implements IModel<Form> {
 
     public String getOwnerName() { return ownerName; }
 
-    public Date getDateOpening() { return dateOpening; }
+    public ZonedDateTime getDateOpening() { return dateOpening; }
 
-    public Date getDateEnding() { return dateEnding; }
+    public ZonedDateTime getDateEnding() { return dateEnding; }
 
     public Boolean getMultiple() { return multiple; }
 
@@ -161,12 +167,12 @@ public class Form implements IModel<Form> {
         return this;
     }
 
-    public Form setDateOpening(Date dateOpening) {
+    public Form setDateOpening(ZonedDateTime dateOpening) {
         this.dateOpening = dateOpening;
         return this;
     }
 
-    public Form setDateEnding(Date dateEnding) {
+    public Form setDateEnding(ZonedDateTime dateEnding) {
         this.dateEnding = dateEnding;
         return this;
     }
@@ -252,8 +258,8 @@ public class Form implements IModel<Form> {
         boolean snakeCase = true;
         Integer rgpdLifetime = this.rgpdLifetime.getValue();
         JsonObject result = IModelHelper.toJson(this, false, snakeCase);
-        result.put(snakeCase ? DATE_OPENING : PARAM_DATE_OPENING, this.dateOpening != null ? outputFormat.format(this.dateOpening) : null)
-                .put(snakeCase ? DATE_ENDING : PARAM_DATE_ENDING, this.dateEnding != null ? outputFormat.format(this.dateEnding) : null);
+        result.put(snakeCase ? DATE_OPENING : PARAM_DATE_OPENING, this.dateOpening != null ? this.dateOpening.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) : null)
+                .put(snakeCase ? DATE_ENDING : PARAM_DATE_ENDING, this.dateEnding != null ? this.dateEnding.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME) : null);
         result.put(snakeCase ? RGPD_LIFETIME : PARAM_RGPD_LIFETIME, rgpdLifetime);
         return result;
     }
@@ -261,6 +267,32 @@ public class Form implements IModel<Form> {
     @Override
     public Form model(JsonObject form){
         return new Form(form);
+    }
+
+
+    /**
+     * Utility method to standardize input date strings and complete with timezone information
+     * @param inputDateStr an input date string received from controller or database
+     * @return a standardized date formatted with server timezone
+     */
+    public Optional<ZonedDateTime> formatDateToModel(String inputDateStr) {
+        Optional<ZonedDateTime> formattedDate = Optional.empty();
+	    if (inputDateStr != null) {
+		    if (inputDateStr.endsWith("Z")) {
+			    try {
+				    formattedDate = Optional.of(ZonedDateTime.parse(inputDateStr));
+			    } catch (DateTimeParseException zonedDateParsingError) {
+				    log.error("[Form] Failed parsing zoned date = " + inputDateStr, zonedDateParsingError);
+			    }
+		    } else {
+			    try {
+				    formattedDate = Optional.of(LocalDateTime.parse(inputDateStr, DateTimeFormatter.ofPattern(DateFormats.YYYY_MM_DD_T_HH_MM_SS_SSS)).atZone(ZoneId.systemDefault()));
+			    } catch (DateTimeParseException localDateParsingError) {
+				    log.error("[Form] Failed parsing local date : " + inputDateStr, localDateParsingError);
+			    }
+		    }
+	    }
+	    return formattedDate;
     }
 }
 
