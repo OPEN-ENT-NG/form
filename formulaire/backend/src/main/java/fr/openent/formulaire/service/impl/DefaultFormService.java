@@ -26,16 +26,14 @@ import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
 import org.entcore.common.user.UserInfos;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 
 import static fr.openent.form.core.constants.Constants.*;
-import static fr.openent.form.core.constants.DateFormats.EEE_MMM_DD_HH_MM_SS_Z_YYYY;
-import static fr.openent.form.core.constants.DateFormats.YYYY_MM_DD_T_HH_MM_SS_SSS;
 import static fr.openent.form.core.constants.DistributionStatus.FINISHED;
 import static fr.openent.form.core.constants.Fields.*;
 import static fr.openent.form.core.constants.ShareRights.*;
@@ -291,16 +289,15 @@ public class DefaultFormService implements FormService {
             }
             else {
                 try {
-                    Date startDate = dateFormatter1.parse(form.getString(DATE_OPENING));
-                    Date endDate = dateFormatter1.parse(form.getString(DATE_ENDING));
-                    if (endDate.after(new Date()) && endDate.after(startDate)) {
+                    ZonedDateTime startDate = ZonedDateTime.parse(form.getString(DATE_OPENING));
+                    ZonedDateTime endDate = ZonedDateTime.parse(form.getString(DATE_ENDING));
+                    if (endDate.isAfter(ZonedDateTime.now()) && endDate.isAfter(startDate)) {
                         public_key = UUID.randomUUID().toString();
                     }
                     else {
                         handler.handle(new Either.Left<>("This form is closed, you cannot access it anymore."));
                     }
-                }
-                catch (ParseException e) {
+                } catch (DateTimeParseException e) {
                     e.printStackTrace();
                     return;
                 }
@@ -350,16 +347,15 @@ public class DefaultFormService implements FormService {
                     }
                     else {
                         try {
-                            Date startDate = dateFormatter1.parse(form.getString(DATE_OPENING));
-                            Date endDate = dateFormatter1.parse(form.getString(DATE_ENDING));
-                            if (endDate.after(new Date()) && endDate.after(startDate)) {
+                            ZonedDateTime startDate = ZonedDateTime.parse(form.getString(DATE_OPENING));
+                            ZonedDateTime endDate = ZonedDateTime.parse(form.getString(DATE_ENDING));
+                            if (endDate.isAfter(ZonedDateTime.now()) && endDate.isAfter(startDate)) {
                                 public_key = UUID.randomUUID().toString();
                             }
                             else {
                                 handler.handle(new Either.Left<>("This form is closed, you cannot access it anymore."));
                             }
-                        }
-                        catch (ParseException e) {
+                        } catch (DateTimeParseException e) {
                             e.printStackTrace();
                             return;
                         }
@@ -642,8 +638,8 @@ public class DefaultFormService implements FormService {
                         .add(form.getIsProgressBarDisplayed())
                         .add(form.getPicture() != null ? form.getPicture() : "")
                         .add("NOW()")
-                        .add(form.getDateOpening() != null ? form.getDateOpening().toString() : "NOW()")
-                        .add(form.getDateEnding() != null ? form.getDateEnding().toString() : null)
+                        .add(form.getDateOpening() != null ? form.getDateOpening() : "NOW()")
+                        .add(form.getDateEnding() != null ? form.getDateEnding() : null)
                         .add(form.getSent())
                         .add(form.getCollab())
                         .add(form.getReminded())
@@ -751,10 +747,10 @@ public class DefaultFormService implements FormService {
         }
 
         try {
-            Date startDate = dateFormatter1.parse(form.getString(DATE_OPENING));
-            Date endDate = dateFormatter1.parse(form.getString(DATE_ENDING));
+            ZonedDateTime startDate = ZonedDateTime.parse(form.getString(DATE_OPENING));
+            ZonedDateTime endDate = ZonedDateTime.parse(form.getString(DATE_ENDING));
 
-            if (endDate.before(new Date()) || endDate.before(startDate)) {
+            if (endDate.isBefore(ZonedDateTime.now()) || endDate.isBefore(startDate)) {
                 String errorMessage = "This form is closed, you cannot access it anymore.";
                 log.error("[Formulaire@DefaultFormService::getFormPublicKey] " + errorMessage);
                 promise.fail(errorMessage);
