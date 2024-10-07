@@ -174,6 +174,7 @@ public class IModelHelper {
             return Optional.of(modelClass.getConstructor(JsonObject.class).newInstance(iModel));
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {
+            log.error("Failure occurred while creating instance of type " + modelClass, e);
             return Optional.empty();
         }
     }
