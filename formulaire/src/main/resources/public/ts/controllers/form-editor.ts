@@ -65,6 +65,7 @@ interface ViewModel {
     nestedSortables: any[];
     iconUtils: IconUtils;
     isProcessing: boolean;
+    isOpeningProcessingModal: boolean;
 
     $onInit() : Promise<void>;
 
@@ -163,11 +164,11 @@ export const formEditorController = ng.controller('FormEditorController', ['$sco
         };
 
         vm.createNewElement = async (parentSection?) : Promise<void> => {
-            vm.isProcessing = true;
+            vm.isOpeningProcessingModal = true;
             vm.parentSection = parentSection ? parentSection : null;
             template.open('lightbox', 'lightbox/new-element');
             vm.display.lightbox.newElement = true;
-            vm.isProcessing = false;
+            vm.isOpeningProcessingModal = false;
             $scope.safeApply();
         };
 
