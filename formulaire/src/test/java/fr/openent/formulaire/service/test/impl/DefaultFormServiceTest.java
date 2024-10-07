@@ -285,7 +285,7 @@ public class DefaultFormServiceTest {
                 "response_notified = ?, editable = ?, rgpd = ?, rgpd_goal = ?, rgpd_lifetime = ?, is_public = ?, public_key = ? " +
                 "WHERE id = ? RETURNING *;";
         JsonArray expectedParams = new JsonArray("[12,\"FINISHED\",\"My amazing form\",\"This is a test form\",\"\",\"NOW()\"," +
-                "\"Sun Dec 08 00:00:00 GMT 2024\",null,false,true,false,false,true,12,false,12,false,true,true,\"This is my goal\",3,false,null,12]");
+                "\"2024-12-08T00:00Z\",null,false,true,false,false,true,12,false,12,false,true,true,\"This is my goal\",3,false,null,12]");
 
         vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
             JsonObject body = (JsonObject) message.body();
