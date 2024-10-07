@@ -1,6 +1,5 @@
 package fr.openent.formulaire_public.controllers;
 
-import fr.openent.form.core.constants.DateFormats;
 import fr.openent.form.core.constants.DistributionStatus;
 import fr.openent.form.helpers.MessageResponseHelper;
 import fr.openent.form.helpers.UtilsHelper;
@@ -22,13 +21,15 @@ import org.entcore.common.notification.TimelineHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.HashMap;
 
 import static fr.openent.form.core.constants.Constants.CHOICES_TYPE_QUESTIONS;
 import static fr.openent.form.core.constants.DateFormats.*;
-import static fr.openent.form.core.constants.EbFields.*;
 import static fr.openent.form.core.constants.EbFields.ACTION;
+import static fr.openent.form.core.constants.EbFields.*;
 import static fr.openent.form.core.constants.Fields.*;
 import static fr.openent.form.helpers.RenderHelper.renderInternalError;
 
@@ -92,20 +93,20 @@ public class FormController extends ControllerHelper {
             }
             else {
                 try {
-                    Date startDate = formDateFormatter.parse(form.getString(DATE_OPENING));
-                    Date endDate = formDateFormatter.parse(form.getString(DATE_ENDING));
-                    if (endDate.before(new Date())) {
+                    ZonedDateTime startDate = ZonedDateTime.parse(form.getString(DATE_OPENING));
+                    ZonedDateTime endDate = ZonedDateTime.parse(form.getString(DATE_ENDING));
+                    if (endDate.isBefore(ZonedDateTime.now())) {
                         log.error("[FormulairePublic@getPublicFormByKey] This form is closed, you cannot access it anymore.");
                         forbidden(request);
                         return;
                     }
-                    if (endDate.before(startDate)) {
+                    if (endDate.isBefore(startDate)) {
                         log.error("[FormulairePublic@getPublicFormByKey] The ending date must be after the opening date.");
                         forbidden(request);
                         return;
                     }
                 }
-                catch (ParseException e) {
+                catch (DateTimeParseException e) {
                     e.printStackTrace();
                     return;
                 }
