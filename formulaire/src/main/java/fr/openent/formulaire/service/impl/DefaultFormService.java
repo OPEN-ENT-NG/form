@@ -708,10 +708,9 @@ public class DefaultFormService implements FormService {
             return promise.future();
         }
         catch (DateTimeParseException e) {
-            e.printStackTrace();
             String errorMessage = "Failed to parse dates";
-            log.error("[Formulaire@DefaultFormService::getFormPublicKey] " + errorMessage);
-            promise.fail(e.getMessage());
+            log.error("[Formulaire@DefaultFormService::getFormPublicKey] " + errorMessage, e);
+            promise.fail(e);
             return promise.future();
         }
     }

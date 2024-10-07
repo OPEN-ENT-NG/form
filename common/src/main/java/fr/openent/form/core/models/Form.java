@@ -20,6 +20,7 @@ import static fr.openent.form.core.constants.Fields.*;
 
 public class Form implements IModel<Form> {
     private static final Logger log = LoggerFactory.getLogger(Form.class);
+    private final DateTimeFormatter dateTimeFormatter = DateTimeFormatter.ofPattern(DateFormats.YYYY_MM_DD_T_HH_MM_SS_SSS);
 
     private Number id;
     private String title;
@@ -286,7 +287,7 @@ public class Form implements IModel<Form> {
 			    }
 		    } else {
 			    try {
-				    formattedDate = Optional.of(LocalDateTime.parse(inputDateStr, DateTimeFormatter.ofPattern(DateFormats.YYYY_MM_DD_T_HH_MM_SS_SSS)).atZone(ZoneId.systemDefault()));
+                    formattedDate = Optional.of(LocalDateTime.parse(inputDateStr, dateTimeFormatter).atZone(ZoneId.systemDefault()));
 			    } catch (DateTimeParseException localDateParsingError) {
 				    log.error("[Form] Failed parsing local date : " + inputDateStr, localDateParsingError);
 			    }
