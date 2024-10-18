@@ -27,10 +27,9 @@ import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import static fr.openent.form.core.constants.Constants.MAX_USERS_SHARING;
 import static fr.openent.form.core.constants.EbFields.ACTION;
@@ -41,7 +40,6 @@ import static fr.openent.form.helpers.UtilsHelper.getStringIds;
 
 public class SharingController extends ControllerHelper {
     private static final Logger log = LoggerFactory.getLogger(SharingController.class);
-    private final SimpleDateFormat formDateFormatter = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
     private final FormService formService;
     private final DistributionService distributionService;
     private final FormSharesService formShareService;
@@ -360,13 +358,13 @@ public class SharingController extends ControllerHelper {
 
             // Check openingDate to send notification or not
             try {
-                Date openingDate = formDateFormatter.parse(form.getString(DATE_OPENING));
-                Date now = new Date();
-                if (openingDate.before(now)) {
+                ZonedDateTime openingDate = ZonedDateTime.parse(form.getString(DATE_OPENING));
+                ZonedDateTime now = ZonedDateTime.now();
+                if (openingDate.isBefore(now)) {
                     notifyService.notifyNewForm(request, form, respondersIds);
                 }
-            } catch (ParseException e) {
-                e.printStackTrace();
+            } catch (DateTimeParseException e) {
+                log.error("Failed parsing date", e);
             }
 
             handler.handle(new Either.Right<>(formEvt.right().getValue()));
