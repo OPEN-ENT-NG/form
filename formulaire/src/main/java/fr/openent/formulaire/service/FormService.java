@@ -126,7 +126,7 @@ public interface FormService {
      * Update a specific form
      * @param form Form data
      */
-    Future<Optional<Form>> update(Form form);
+    Future<Optional<Form>> update(Form form, boolean doesSwitchToPublic);
 
     /**
      * Update multiple forms

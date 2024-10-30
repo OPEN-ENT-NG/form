@@ -516,7 +516,9 @@ public class FormController extends ControllerHelper {
                         form.setRgpd(formRef.getRgpd());
                     }
 
-                    return formService.update(form);
+                    // If form switch from private to public we clean what's needed
+                    boolean doesSwitchToPublic = Boolean.FALSE.equals(composeInfo.getBoolean(PARAM_WAS_FORM_REF_PUBLIC)) && Boolean.TRUE.equals(form.getIsPublic());
+                    return formService.update(form, doesSwitchToPublic);
                 })
                 .compose(updatedFormOpt -> {
                     if (!updatedFormOpt.isPresent()) {
@@ -539,7 +541,7 @@ public class FormController extends ControllerHelper {
 
                     if (!request.isEnded()) {
                         Form formRef = mapInfoForms.get(FORM);
-                        formService.update(formRef)
+                        formService.update(formRef, false)
                             .onSuccess(result -> {
                                 log.error("[Formulaire@FormController::update] Form with id " + formId + " was successfully rollback");
                                 renderError(request);

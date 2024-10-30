@@ -479,7 +479,8 @@ public class DefaultFormService implements FormService {
 
     @Override
     public void update(String formId, JsonObject form, Handler<Either<String, JsonObject>> handler) {
-        this.getFormPublicKey(form)
+        this.checkPublicFormDateValidity(form)
+            .compose(voidResult -> this.getFormPublicKey(form, false))
             .onSuccess(publicKey -> {
                 String query = "WITH nbResponses AS (SELECT COUNT(*) FROM " + DISTRIBUTION_TABLE +
                         " WHERE form_id = ? AND status = ?) " +
@@ -524,11 +525,12 @@ public class DefaultFormService implements FormService {
             });
     }
 
-    @Override
-    public Future<Optional<Form>> update(Form form) {
+    public Future<Optional<Form>> update(Form form, boolean doesSwitchToPublic) {
         Promise<Optional<Form>> promise = Promise.promise();
 
-        this.getFormPublicKey(form.toJson())
+        JsonObject formJson = form.toJson();
+        this.checkPublicFormDateValidity(formJson)
+            .compose(voidResult -> this.getFormPublicKey(formJson, doesSwitchToPublic))
             .onSuccess(publicKey -> {
                 String query =
                         "WITH nbResponses AS (SELECT COUNT(*) FROM " + DISTRIBUTION_TABLE + " WHERE form_id = ? AND status = ?) " +
@@ -678,11 +680,29 @@ public class DefaultFormService implements FormService {
         Sql.getInstance().prepared(query, params, SqlResult.validUniqueResultHandler(handler));
     }
 
-    private Future<String> getFormPublicKey(JsonObject form) {
+    private Future<String> getFormPublicKey(JsonObject form, boolean doesSwitchToPublic) {
         Promise<String> promise = Promise.promise();
 
         if (!form.getBoolean(IS_PUBLIC, false)) {
             promise.complete(null);
+            return promise.future();
+        }
+
+        if (!doesSwitchToPublic) { // If form was already public we just send the existing publicKey
+            promise.complete(form.getString((PUBLIC_KEY)));
+            return promise.future();
+        }
+
+        promise.complete(UUID.randomUUID().toString()); // If form was private and switched to public
+
+        return promise.future();
+    }
+
+    private Future<Void> checkPublicFormDateValidity(JsonObject form) {
+        Promise<Void> promise = Promise.promise();
+
+        if (!form.getBoolean(IS_PUBLIC, false)) {
+            promise.complete(); // These check do not apply for private forms thus we skip
             return promise.future();
         }
 
@@ -704,7 +724,7 @@ public class DefaultFormService implements FormService {
                 return promise.future();
             }
 
-            promise.complete(UUID.randomUUID().toString());
+            promise.complete();
             return promise.future();
         }
         catch (DateTimeParseException e) {
