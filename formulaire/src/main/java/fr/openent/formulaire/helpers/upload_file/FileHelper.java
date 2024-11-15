@@ -80,22 +80,22 @@ public class FileHelper {
             String finalPath = pathIds.get().get(incrementFile.get());
             final JsonObject metadata = FileUtils.metadata(upload);
             listMetadata.add(new Attachment(fileIds.get(incrementFile.get()), new Metadata(metadata)));
-            upload.streamToFileSystem(finalPath);
             incrementFile.set(incrementFile.get() + 1);
-
-            upload.exceptionHandler(err -> {
-                log.error("[Formulaire@uploadMultipleFiles] An exception has occurred during http upload process : " + err.getMessage());
-                promise.fail(err.getMessage());
-            });
-            upload.endHandler(aVoid -> {
-                if (incrementFile.get() == nbFilesToUpload && !responseSent.get()) {
+            
+            upload.streamToFileSystem(finalPath)
+                .onSuccess(e-> {
+                    if (incrementFile.get() == nbFilesToUpload && !responseSent.get()) {
                     responseSent.set(true);
-                    for(Attachment at : listMetadata){
+                    for (Attachment at : listMetadata) {
                         log.info(at.id());
                     }
                     promise.complete(listMetadata);
-                }
-            });
+                }})
+                .onFailure(th -> {
+                    log.error("[Formulaire@uploadMultipleFiles] An exception has occurred during http upload process : " + th.getMessage());
+                    promise.fail(th.getMessage());
+                });
+            upload.handler(buffer -> log.info(buffer.toJson().toString()));
         });
 
         // Folders creation
