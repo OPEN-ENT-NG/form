@@ -41,9 +41,9 @@
     </modules>
 
     <properties>
-        <revision>2.0-SNAPSHOT</revision>
-        <webUtilsVersion>3.0-SNAPSHOT</webUtilsVersion>
-        <entCoreVersion>6.0-SNAPSHOT</entCoreVersion>
+        <revision>2.0.0</revision>
+        <webUtilsVersion>3.0.0</webUtilsVersion>
+        <entCoreVersion>6.0.0</entCoreVersion>
         <toolsVersion>2.0.0-final</toolsVersion>
         <junitVersion>5.1.0</junitVersion>
         <vertxCronTimer>2.0.0</vertxCronTimer>
