@@ -924,33 +924,33 @@ public class FormController extends ControllerHelper {
 
     private void doSendReminder(HttpServerRequest request, String formId, JsonObject form, JsonArray distributions, JsonObject mail, UserInfos user) {
         JsonArray listMails = new JsonArray();
+        int maxRecipients = config.getInteger(ZIMBRA_MAX_RECIPIENTS, 50);
+
         List<JsonObject> distributionsList = new ArrayList<>(distributions.getList());
+        List<String> respondersIds = distributionsList.stream()
+                .filter(d -> (form.getBoolean(MULTIPLE) || form.getBoolean(ANONYMOUS) || d.getString(DATE_RESPONSE) == null))
+                .map(d -> d.getString(RESPONDER_ID))
+                .distinct()
+                .collect(Collectors.toList());
 
-        // Generate list of mails to send
-        for (int i = 0; i < distributions.size(); i++) {
-            List<String> localRespondersIds = distributionsList.stream()
-                    .filter(d -> (form.getBoolean(MULTIPLE) || form.getBoolean(ANONYMOUS) || d.getString(DATE_RESPONSE) == null))
-                    .map(d -> d.getString(RESPONDER_ID))
-                    .collect(Collectors.toList());
+        // Generate new mail object for each group of maxRecipients responders
+        for (int i = 0; i < respondersIds.size(); i += maxRecipients) {
+            List<String> localRespondersIds = respondersIds.subList(i, Math.min(i + maxRecipients, respondersIds.size()));
 
-            // Generate new mail object if limit or end loop are reached
-            if (i == distributions.size() - 1 || localRespondersIds.size() == config.getInteger(ZIMBRA_MAX_RECIPIENTS, 50)) {
-                JsonObject message = new JsonObject()
-                        .put(SUBJECT, mail.getString(SUBJECT, ""))
-                        .put(BODY, mail.getString(BODY, ""))
-                        .put(TO, new JsonArray())
-                        .put(CCI, localRespondersIds);
+            JsonObject message = new JsonObject()
+                    .put(SUBJECT, mail.getString(SUBJECT, ""))
+                    .put(BODY, mail.getString(BODY, ""))
+                    .put(TO, new JsonArray())
+                    .put(CCI, localRespondersIds);
 
-                JsonObject action = new JsonObject()
-                        .put(ACTION, SEND)
-                        .put(PARAM_USER_ID, user.getUserId())
-                        .put(USERNAME, user.getUsername())
-                        .put(MESSAGE, message);
+            JsonObject action = new JsonObject()
+                    .put(ACTION, SEND)
+                    .put(PARAM_USER_ID, user.getUserId())
+                    .put(USERNAME, user.getUsername())
+                    .put(MESSAGE, message);
 
-                listMails.add(action);
-            }
+            listMails.add(action);
         }
-
 
         // Prepare futures to get message responses
         List<Future<JsonObject>> mails = new ArrayList<>();
