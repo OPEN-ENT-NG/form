@@ -160,6 +160,7 @@
   "formulaire.forms.empty.archived": "Votre corbeille est vide.",
 
   "formulaire.folder.name": "Nom du dossier",
+  "formulaire.folder.name.rename": "Renommer le dossier",
   "formulaire.folder.nbFolderChildren" : "Nombre de sous-dossiers",
   "formulaire.folder.nbFormChildren" : "Nombre de formulaires",
   "formulaire.folder.nbItems" : "{0} dossier(s), {1} formulaire(s)",
@@ -420,6 +421,7 @@
   "formulaire.success.responses.save": "Vos réponses ont bien été enregistrées !",
   "formulaire.success.reminder.send": "Votre rappel a bien été envoyé !",
   "formulaire.success.folders.delete": "Tous les dossiers sélectionnés ont bien été supprimés !",
+  "formulaire.success.folders.update": "Tous les dossiers sélectionnés ont bien été renommés !",
   "formulaire.success.move": "Tous les éléments sélectionnés ont bien été déplacés !",
 
   "formulaire.error.duplicate.type": "Vous pouvez seulement dupliquer une question ou une section !",
