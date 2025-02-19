@@ -45,8 +45,9 @@ class Controller implements ng.IController, IViewModel {
     $onDestroy = async () : Promise<void> => {}
 
     createNewChild = () : void => {
-        this.updateSorted();
         this.question.children.all.push(new Question(this.question.id, this.matrixType, this.question.children.all.length + 1));
+        this.question.children.all.sort((a: Question, b: Question) => a.matrix_position - b.matrix_position);
+        this.updateSorted();
         UtilsUtils.safeApply(this.$scope);
     };
 
@@ -71,10 +72,11 @@ class Controller implements ng.IController, IViewModel {
     };
 
     updateSorted = () : void => {
-        let currentChildren: number[] = this.question.children.all
+        let childrenCopy: Question[] = [...this.question.children.all];
+        let currentChildren: number[] = childrenCopy
             .sort((a: Question, b: Question) => a.matrix_position - b.matrix_position)
             .map((q: Question) => q.matrix_position);
-        let sortedQuestions: number[] = this.question.children.all
+        let sortedQuestions: number[] = childrenCopy
             .sort((a: Question, b: Question) => a.title > b.title ? 1 : -1)
             .map((q: Question) => q.matrix_position);
         this.question.children.sorted = UtilsUtils.areArrayEqual(currentChildren, sortedQuestions);
