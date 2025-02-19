@@ -135,7 +135,7 @@
   "formulaire.remind.subject.label": "Objet du rappel : ",
   "formulaire.remind.subject.placeholder": "Titre du rappel",
   "formulaire.remind.default.subject": "Vous avez un formulaire en attente de réponse",
-  "formulaire.remind.default.body": "<div>Bonjour,</br></br>Vous n'avez toujours pas répondu au formulaire suivant : <a href='{0}'>{1}</a></br></br>Cordialement.</div>",
+  "formulaire.remind.default.body": "<div>Bonjour,<br><br>Vous n'avez toujours pas répondu au formulaire suivant : <a href=\"{0}\">{1}</a><br><br>Cordialement.</div>",
   "formulaire.remind.link.label" : "Lien d'accès au formulaire : ",
   "formulaire.remind.noDistrib": "Ce formulaire n'est pas partagé en mode Réponse. Veuillez l'envoyer avant de pouvoir d'effectuer un rappel.",
   "formulaire.remind.notOpen": "Le formulaire n'est actuellement pas ouvert. Veuillez modifier les dates d'ouvertures/fermetures ou envoyer votre rappel dans ces intervalles.",
