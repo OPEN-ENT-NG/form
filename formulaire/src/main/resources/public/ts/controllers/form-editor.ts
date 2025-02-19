@@ -875,6 +875,7 @@ export const formEditorController = ng.controller('FormEditorController', ['$sco
                             await Promise.all(promises);
 
                             let validatedChildren: Question[] = [];
+                            formElement.children.all.sort((a: Question, b: Question) => a.matrix_position - b.matrix_position);
                             for (let child of formElement.children.all) {
                                 if (child.title && !validatedChildren.find((q: Question) => q.title === child.title)) {
                                     child.matrix_position = positionCounter;
