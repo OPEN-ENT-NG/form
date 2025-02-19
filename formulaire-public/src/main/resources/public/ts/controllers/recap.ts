@@ -103,10 +103,14 @@ export const recapController = ng.controller('RecapController', ['$scope', '$sce
                     }
                 }
             }
-            else if (vm.responses.all.filter((r: Response) => r.question_id === question.id && (r.answer || r.custom_answer)).length <= 0) {
+            else if (vm.responses.all.filter((r: Response) => r.question_id === question.id && isResponseStringValid(r)).length <= 0) {
                 return false;
             }
         }
         return true;
     };
+
+    const isResponseStringValid = (response: Response): boolean => {
+        return (response.answer && response.answer.toString().trim().length > 0) || (response.custom_answer && response.custom_answer.toString().trim().length > 0);
+    }
 }]);
