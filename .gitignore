@@ -15,7 +15,6 @@
 */src/main/resources/public/font
 */src/main/resources/public/mdi
 */src/main/resources/public/template/entcore
-/build.sh
 /coverage/front/cobertura-coverage.xml
 /gradle/wrapper/gradle-wrapper.jar
 /gradle/wrapper/gradle-wrapper.properties

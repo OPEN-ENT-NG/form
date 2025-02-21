@@ -1,8 +1,11 @@
 #!/bin/bash
 
+chmod +x angular/build.sh
+chmod +x frontend/build.sh
+chmod +x backend/build.sh
 
 # Angular functions
-buildAngular() {
+build_angular() {
   echo -e '\n---------------'
   echo 'Build AngularJS'
   echo '---------------'
@@ -71,7 +74,7 @@ copy_frontend_files() {
   mv ./src/main/resources/*.html ./src/main/resources/view
   cp -R ./src/main/resources/view-src/notify/ ./src/main/resources/view/notify
 
-  copy_angular_files;
+  copy_angular_files
 
   # Copy all public files from frontend into Backend
   cp -R ../frontend/public/* ./src/main/resources/public
@@ -112,6 +115,7 @@ clean_frontend_folders() {
 # Function to handle the install command
 install() {
   clean_backend
+  build_angular
   build_frontend
   copy_frontend_files
   build_backend
