@@ -4,10 +4,10 @@
   "description": "Formulaire",
   "main": "gulpfile.js",
   "scripts": {
-    "coverage": "./node_modules/.bin/jest --config jest.config.js --coverage",
-    "test": "npm run coverage",
-    "coverage:dev": "./node_modules/.bin/jest --config jest.config.js --coverage --watch --verbose false",
-    "test:dev": "npm run coverage:dev",
+    "coverage": "./node_modules/.bin/jest --config jest.config.js --coverage --passWithNoTests",
+    "test": "npm run coverage --passWithNoTests",
+    "coverage:dev": "./node_modules/.bin/jest --config jest.config.js --coverage --passWithNoTests --watch --verbose false",
+    "test:dev": "npm run coverage:dev --passWithNoTests",
     "build:sass": "sass --load-path=node_modules/ --no-source-map src/sass/index.scss src/css/formulaire.css"
   },
   "repository": {

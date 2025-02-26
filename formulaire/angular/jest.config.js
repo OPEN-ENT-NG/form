@@ -1,6 +1,6 @@
 module.exports = {
     "transform": {
-        ".(ts|tsx)": "/node_modules/ts-jest/preprocessor.js"
+        ".(ts|tsx)": "<rootDir>/node_modules/ts-jest/preprocessor.js"
     },
     "testRegex": "(/__tests__/.*|\\.(test|spec))\\.(ts|tsx|js)$",
     "moduleFileExtensions": [
@@ -10,11 +10,11 @@ module.exports = {
     ],
     "moduleNameMapper": {
         '^axios$': require.resolve('axios'),
+        "^@common(.*)$": "/common/src/main/resources/ts$1"
     },
     "testPathIgnorePatterns": [
-        "/node_modules/",
-        "/build/",
-        "/out/"
+        "<rootDir>/node_modules/",
+        "<rootDir>/../backend/target/"
     ],
     "verbose": true,
     "testURL": "http://localhost/",
@@ -22,8 +22,5 @@ module.exports = {
     "coverageReporters": [
         "text",
         "cobertura"
-    ],
-    "moduleNameMapper": {
-        "^@formulaire(.*)$": "/src/ts$1"
-    }
+    ]
 };
