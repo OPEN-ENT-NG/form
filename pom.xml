@@ -36,8 +36,8 @@
 
     <modules>
         <module>common</module>
-        <module>formulaire</module>
-        <module>formulaire-public</module>
+        <module>formulaire/backend</module>
+        <module>formulaire-public/backend</module>
     </modules>
 
     <properties>

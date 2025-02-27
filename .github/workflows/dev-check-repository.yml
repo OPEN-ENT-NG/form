@@ -1,36 +1,59 @@
 name: dev-check-repository
-
 on: [push]
-
 jobs:
   build-node-test:
     runs-on: ubuntu-latest
-
     container:
-      image: opendigitaleducation/node:16-alpine-pnpm
+      image: opendigitaleducation/node:20-alpine-pnpm
       options: --user root -v ${{ github.workspace }}:/home/node/:rw
-
     steps:
       - uses: actions/checkout@v1
+        # Test Angular Formulaire
       - name: Run npm install
+        working-directory: ./formulaire/angular
         run: yarn install
       - name: Run build node with Gulp
+        working-directory: ./formulaire/angular
         run: node_modules/gulp/bin/gulp.js build
       - name: Run test
-        run: yarn test
+        working-directory: ./formulaire/angular
+        run: yarn test --passWithNoTests
       - name: Run build node sass
+        working-directory: ./formulaire/angular
         run: yarn run build:sass
+        # Test Angular Formulaire-public
+      - name: Run npm install
+        working-directory: ./formulaire-public/angular
+        run: yarn install
+      - name: Run build node with Gulp
+        working-directory: ./formulaire-public/angular
+        run: node_modules/gulp/bin/gulp.js build
+      - name: Run test
+        working-directory: ./formulaire-public/angular
+        run: yarn test --passWithNoTests
 
   build-maven-test:
     runs-on: ubuntu-latest
-
     container:
       image: maven:3.8.6-jdk-8
       options: --user root -v ${{ github.workspace }}:/home/maven/:rw
-
     steps:
       - uses: actions/checkout@v1
+        # Test Maven Formulaire
+      - name: Copy parent POM
+        run: cp pom.xml formulaire/backend/pom-parent.xml
       - name: Run build maven
+        working-directory: ./formulaire/backend
         run: mvn -Duser.home=/var/maven clean install
       - name: Run maven test
+        working-directory: ./formulaire/backend
+        run: mvn -Duser.home=/var/maven test
+        # Test Maven Formulaire-public
+      - name: Copy parent POM
+        run: cp pom.xml formulaire-public/backend/pom-parent.xml
+      - name: Run build maven
+        working-directory: ./formulaire-public/backend
+        run: mvn -Duser.home=/var/maven clean install
+      - name: Run maven test
+        working-directory: ./formulaire-public/backend
         run: mvn -Duser.home=/var/maven test

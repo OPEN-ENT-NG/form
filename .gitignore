@@ -15,7 +15,6 @@
 */src/main/resources/public/font
 */src/main/resources/public/mdi
 */src/main/resources/public/template/entcore
-/build.sh
 /coverage/front/cobertura-coverage.xml
 /gradle/wrapper/gradle-wrapper.jar
 /gradle/wrapper/gradle-wrapper.properties
@@ -30,3 +29,15 @@ target
 */target
 .flattened-pom.xml
 */.flattened-pom.xml
+/formulaire/angular/common/
+/formulaire/angular/src/css/
+/formulaire/angular/src/dist/
+/formulaire/angular/src/js/
+/formulaire/angular/src/mdi/
+/formulaire/angular/src/view/
+/formulaire-public/angular/common/
+/formulaire-public/angular/src/css/
+/formulaire-public/angular/src/dist/
+/formulaire-public/angular/src/js/
+/formulaire-public/angular/src/mdi/
+/formulaire-public/angular/src/view/
