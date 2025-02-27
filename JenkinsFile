@@ -11,11 +11,124 @@ pipeline {
           }
         }
       }
-      stage('Build') {
+
+      stage('Checkout') {
         steps {
           checkout scm
-          sh './build.sh init clean install publish'
         }
+      }
+
+      // Formulaire
+
+      stage('Build Formulaire Angular') {
+        steps {
+          dir('formulaire/angular') {
+            sh 'chmod +x build.sh && ./build.sh buildNode'
+          }
+        }
+      }
+
+      stage('Build Formulaire React') {
+        steps {
+          dir('formulaire/frontend') {
+            sh 'chmod +x build.sh && ./build.sh installDeps build'
+          }
+        }
+      }
+
+      stage('Build Formulaire backend') {
+        steps {
+          dir('formulaire/backend') {
+            // Prepare backend/resources
+            sh 'mkdir -p ./src/main/resources/public/css'
+            sh 'mkdir -p ./src/main/resources/public/img'
+            sh 'mkdir -p ./src/main/resources/public/js'
+            sh 'mkdir -p ./src/main/resources/public/mdi'
+            sh 'mkdir -p ./src/main/resources/public/template'
+            sh 'mkdir -p ./src/main/resources/view'
+
+            // Copy Frontend files
+            sh 'cp -R ../frontend/public/* ./src/main/resources/public'
+            sh 'cp -R ../frontend/dist/* ./src/main/resources/'
+            sh 'mv ./src/main/resources/*.html ./src/main/resources/view'
+            sh 'cp -R ./src/main/resources/view-src/* ./src/main/resources/view'
+
+            // Copy Angular files
+            sh 'cp -R ../angular/src/css/* ./src/main/resources/public/css'
+            sh 'cp -R ../angular/src/img/* ./src/main/resources/public/img'
+            sh 'cp -R ../angular/src/dist/* ./src/main/resources/public/js'
+            sh 'cp -R ../angular/src/mdi/* ./src/main/resources/public/mdi'
+            sh 'cp -R ../angular/src/template/* ./src/main/resources/public/template'
+
+            // Build
+            sh 'chmod +x build.sh && ./build.sh clean build publish'
+
+            // Clean
+            sh 'rm -rf ../frontend/dist'
+          }
+        }
+      }
+
+      // Formulaire-public
+
+      stage('Build Formulaire-public Angular') {
+        steps {
+          dir('formulaire-public/angular') {
+            sh 'chmod +x build.sh && ./build.sh buildNode'
+          }
+        }
+      }
+
+      stage('Build Formulaire-public React') {
+        steps {
+          dir('formulaire-public/frontend') {
+            sh 'chmod +x build.sh && ./build.sh installDeps build'
+          }
+        }
+      }
+
+      stage('Build Formulaire-public backend') {
+        steps {
+          dir('formulaire-public/backend') {
+            // Prepare backend/resources
+            sh 'mkdir -p ./src/main/resources/public/css'
+            sh 'mkdir -p ./src/main/resources/public/img'
+            sh 'mkdir -p ./src/main/resources/public/js'
+            sh 'mkdir -p ./src/main/resources/public/mdi'
+            sh 'mkdir -p ./src/main/resources/public/template'
+            sh 'mkdir -p ./src/main/resources/view'
+
+            // Copy Frontend files
+            sh 'cp -R ../frontend/public/* ./src/main/resources/public'
+            sh 'cp -R ../frontend/dist/* ./src/main/resources/'
+            sh 'mv ./src/main/resources/*.html ./src/main/resources/view'
+            sh 'cp -R ./src/main/resources/view-src/* ./src/main/resources/view'
+
+            // Copy Angular files
+            sh 'cp -R ../angular/src/css/* ./src/main/resources/public/css'
+            sh 'cp -R ../angular/src/img/* ./src/main/resources/public/img'
+            sh 'cp -R ../angular/src/dist/* ./src/main/resources/public/js'
+            sh 'cp -R ../angular/src/mdi/* ./src/main/resources/public/mdi'
+            sh 'cp -R ../angular/src/template/* ./src/main/resources/public/template'
+
+            // Build
+            sh 'chmod +x build.sh && ./build.sh clean build publish'
+
+            // Clean
+            sh 'rm -rf ../frontend/dist'
+          }
+        }
+      }
+    }
+
+    post {
+      cleanup {
+        sh 'cd formulaire/backend && docker-compose down && cd ../..'
+        sh 'cd formulaire/frontend && docker-compose down && cd ../..'
+        sh 'cd formulaire/angular && docker-compose down && cd ../..'
+        sh 'cd formulaire-public/backend && docker-compose down && cd ../..'
+        sh 'cd formulaire-public/frontend && docker-compose down && cd ../..'
+        sh 'cd formulaire-public/angular && docker-compose down && cd ../..'
       }
     }
 }
