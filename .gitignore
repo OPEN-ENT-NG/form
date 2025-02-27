@@ -8,6 +8,12 @@
 /.settings
 .jshintrc
 */rev-manifest.json
+*/src/main/resources/public/dist
+*/src/main/resources/public/js
+*/src/main/resources/view
+*/src/main/resources/public/font
+*/src/main/resources/public/mdi
+*/src/main/resources/public/template/entcore
 /coverage/front/cobertura-coverage.xml
 .env
 /.vscode/
@@ -57,3 +63,16 @@ dist
 */frontend/.turbo
 # Nx
 */frontend/.nx
+*/.flattened-pom.xml
+/formulaire/angular/common/
+/formulaire/angular/src/css/
+/formulaire/angular/src/dist/
+/formulaire/angular/src/js/
+/formulaire/angular/src/mdi/
+/formulaire/angular/src/view/
+/formulaire-public/angular/common/
+/formulaire-public/angular/src/css/
+/formulaire-public/angular/src/dist/
+/formulaire-public/angular/src/js/
+/formulaire-public/angular/src/mdi/
+/formulaire-public/angular/src/view/
