@@ -31,6 +31,38 @@ jobs:
       - name: Run test
         working-directory: ./formulaire-public/angular
         run: yarn test --passWithNoTests
+        # Test React Formulaire
+      - name: Run pnpm install
+        working-directory: ./formulaire/frontend
+        run: pnpm install
+      - name: Check Quality Code
+        working-directory: ./formulaire/frontend
+        run: pnpm run format:check && pnpm run lint
+      - name: Check Lint Fix and Typescript
+        working-directory: ./formulaire/frontend
+        run: pnpm run fix && pnpm run check-types
+      - name: Run Build Vite
+        working-directory: ./formulaire/frontend
+        run: pnpm build
+      - name: Run tests
+        working-directory: ./formulaire/frontend
+        run: pnpm test
+        # Test React Formulaire-public
+      - name: Run pnpm install
+        working-directory: ./formulaire-public/frontend
+        run: pnpm install
+      - name: Check Quality Code
+        working-directory: ./formulaire-public/frontend
+        run: pnpm run format:check && pnpm run lint
+      - name: Check Lint Fix and Typescript
+        working-directory: ./formulaire-public/frontend
+        run: pnpm run fix && pnpm run check-types
+      - name: Run Build Vite
+        working-directory: ./formulaire-public/frontend
+        run: pnpm build
+      - name: Run tests
+        working-directory: ./formulaire-public/frontend
+        run: pnpm test
 
   build-maven-test:
     runs-on: ubuntu-latest
