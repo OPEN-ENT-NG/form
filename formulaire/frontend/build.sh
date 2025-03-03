@@ -44,11 +44,10 @@ done
 
 clean () {
   rm -rf .nx
+  rm -rf .pnpm-store
   rm -rf node_modules
   rm -rf dist
   rm -rf build
-  rm -rf .pnpm-store
-  # rm -f package.json
   rm -f pnpm-lock.yaml
 }
 

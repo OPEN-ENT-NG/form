@@ -1,10 +1,11 @@
 import React from "react";
 
-import { ThemeProvider as ThemeProviderCGI } from "@cgi-learning-hub/theme";
+import {
+  ThemeProvider as ThemeProviderCGI,
+  ThemeProviderProps,
+} from "@cgi-learning-hub/theme";
 import "@edifice.io/bootstrap/dist/index.css";
 import { EdificeClientProvider, EdificeThemeProvider } from "@edifice.io/react";
-import { LocalizationProvider } from "@mui/x-date-pickers";
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import {
   QueryCache,
   QueryClient,
@@ -13,27 +14,23 @@ import {
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import { RouterProvider } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
 
-import "~/i18n";
-
-import "react-toastify/dist/ReactToastify.css";
-
-import dayjs from "dayjs";
-import "dayjs/locale/fr";
-import { APPOINTMENTS, TOAST_CONFIG } from "./core/constants";
-import { AvailabilityProvider } from "./providers/AvailabilityProvider";
-import { BookAppointmentModalProvider } from "./providers/BookAppointmentModalProvider";
-import { FindAppointmentsProvider } from "./providers/FindAppointmentsProvider";
-import { GlobalProvider } from "./providers/GlobalProvider";
-import { GridModalProvider } from "./providers/GridModalProvider";
-import { router } from "./routes";
+import { useTranslation } from "react-i18next";
+import {
+  DEFAULT_THEME,
+  FORMULAIRE_PUBLIC,
+} from "./core/constants";
 import { setupStore } from "./store";
 import { options } from "./styles/theme";
+import { Box } from "@mui/material";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement!);
+
+// Config
+
+const themePlatform = (rootElement?.getAttribute("data-theme") ??
+  DEFAULT_THEME) as ThemeProviderProps["themeId"];
 
 if (process.env.NODE_ENV !== "production") {
   import("@axe-core/react").then((axe) => {
@@ -57,8 +54,31 @@ const queryClient = new QueryClient({
   },
 });
 
-dayjs.locale("fr");
 
-root.render(
+const App = () => {
+  const { t } = useTranslation(FORMULAIRE_PUBLIC);
 
-);
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <EdificeClientProvider
+          params={{
+            app: t("formulaire.public.title"),
+          }}
+        >
+          <EdificeThemeProvider>
+            <ThemeProviderCGI
+              themeId={themePlatform ?? "default"}
+              options={options}
+            >
+            <Box></Box>
+            </ThemeProviderCGI>
+          </EdificeThemeProvider>
+        </EdificeClientProvider>
+      </Provider>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  );
+};
+
+root.render(<App />);

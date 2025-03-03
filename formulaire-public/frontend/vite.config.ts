@@ -14,24 +14,24 @@ export default ({ mode }: { mode: string }) => {
 
   // Proxy variables
   const headers = hasEnvFile
-    ? {
+      ? {
         "set-cookie": [
           `oneSessionId=${envs.VITE_ONE_SESSION_ID}`,
           `XSRF-TOKEN=${envs.VITE_XSRF_TOKEN}`,
         ],
         "Cache-Control": "public, max-age=300",
       }
-    : {};
+      : {};
 
   const proxyObj = hasEnvFile
-    ? {
+      ? {
         target: envs.VITE_RECETTE,
         changeOrigin: true,
         headers: {
           cookie: `oneSessionId=${envs.VITE_ONE_SESSION_ID};authenticated=true; XSRF-TOKEN=${envs.VITE_XSRF_TOKEN}`,
         },
       }
-    : {
+      : {
         target: envs.VITE_LOCALHOST || "http://localhost:8090",
         changeOrigin: false,
       };
@@ -43,17 +43,20 @@ export default ({ mode }: { mode: string }) => {
     "^/(?=assets)": proxyObj,
     "^/(?=theme|locale|i18n|skin)": proxyObj,
     "^/(?=auth|appregistry|cas|userbook|directory|communication|conversation|portal|session|timeline|workspace|infra)":
-      proxyObj,
+    proxyObj,
     "/blog": proxyObj,
     "/explorer": proxyObj,
-    "/mediacentre": proxyObj,
+    "/formulaire-public": proxyObj,
   };
 
-  const base = mode === "production" ? "/mediacentre" : "";
+  const base = mode === "production" ? "/formulaire-public" : "";
 
   const build = {
     assetsDir: "public",
     rollupOptions: {
+      input: {
+        main: resolve(__dirname, "formulaire_public.html"),
+      },
       output: {
         manualChunks: {
           react: [
@@ -94,22 +97,22 @@ export default ({ mode }: { mode: string }) => {
     },
   };
 
+  const optimizeDeps = {
+    include: ["@cgi-learning-hub/ui", "@cgi-learning-hub/theme"],
+  };
+
   return defineConfig({
     base,
     build,
     plugins,
     server,
     test,
+    optimizeDeps,
     resolve: {
       alias: {
-        "@cgi-learning-hub": resolve(
-          __dirname,
-          "node_modules/@cgi-learning-hub",
-        ),
-        "@images": resolve(
-          __dirname,
-          "node_modules/@edifice.io/bootstrap/dist/images",
-        ),
+        "@cgi-learning-hub": resolve(__dirname, "node_modules/@cgi-learning-hub",),
+        "@images": resolve(__dirname, "node_modules/@edifice.io/bootstrap/dist/images",),
+        "@common": resolve(__dirname, "../../common/src/main/resources/ts/*",),
       },
     },
   });
