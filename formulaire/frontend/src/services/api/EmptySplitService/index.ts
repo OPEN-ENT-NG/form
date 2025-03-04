@@ -4,12 +4,15 @@ import { FORMULAIRE } from "~/core/constants";
 const delayBaseQuery = async (args: any, api: any, extraOptions: any) => {
   await new Promise((resolve) => setTimeout(resolve, 0));
 
-  return fetchBaseQuery({ baseUrl: `/${FORMULAIRE}/` })(args, api, extraOptions);
+  return fetchBaseQuery({ baseUrl: `/${FORMULAIRE}/` })(
+    args,
+    api,
+    extraOptions,
+  );
 };
 
 export const emptySplitApi = createApi({
   baseQuery: delayBaseQuery,
-  tagTypes: [
-  ],
+  tagTypes: [],
   endpoints: () => ({}),
 });

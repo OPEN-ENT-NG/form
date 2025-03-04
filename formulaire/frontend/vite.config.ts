@@ -54,9 +54,6 @@ export default ({ mode }: { mode: string }) => {
   const build = {
     assetsDir: "public",
     rollupOptions: {
-      input: {
-        main: resolve(__dirname, "formulaire.html"),
-      },
       output: {
         manualChunks: {
           react: [
