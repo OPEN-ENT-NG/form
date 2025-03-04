@@ -21,6 +21,12 @@ copy_angular_files() {
   cp -R ../angular/src/dist/* ./src/main/resources/public/js
   cp -R ../angular/src/mdi/* ./src/main/resources/public/mdi
   cp -R ../angular/src/template/* ./src/main/resources/public/template
+
+  # Copy '.html' files in 'ts' folder
+  cd ../angular/src/ts || exit 1 # Need to be in targeted directory for rsync command to work
+  shopt -s globstar # Active '**/' for recursivity on next line
+  rsync -R **/*.html ../../../backend/src/main/resources/public/ts --relative --no-implied-dirs
+  cd ../../../backend || exit 1
 }
 
 clean_angular() {
@@ -64,6 +70,7 @@ prepare_backend() {
   mkdir -p ./src/main/resources/public/js
   mkdir -p ./src/main/resources/public/mdi
   mkdir -p ./src/main/resources/public/template
+  mkdir -p ./src/main/resources/public/ts
   mkdir -p ./src/main/resources/view
   cd .. || exit 1
 }
