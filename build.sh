@@ -84,6 +84,23 @@ install() {
   install:formulairePublic
 }
 
+lint:formulaire() {
+  cd formulaire || exit 1
+  ./build.sh lint
+  cd .. || exit 1
+}
+
+lint:formulairePublic() {
+  cd formulaire-public || exit 1
+  ./build.sh lint
+  cd .. || exit 1
+}
+
+lint() {
+  lint:formulaire
+  lint:formulairePublic
+}
+
 
 # Main function to handle multiple arguments
 main() {
@@ -118,6 +135,15 @@ main() {
         ;;
       install)
         install
+        ;;
+      lint:formulaire)
+        lint:formulaire
+        ;;
+      lint:formulairePublic)
+        lint:formulairePublic
+        ;;
+      lint)
+        lint
         ;;
       testFront)
         testFront

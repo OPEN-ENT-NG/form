@@ -25,12 +25,12 @@
       "@cgi-learning-hub/ui": ["node_modules/@cgi-learning-hub/ui"],
       "@cgi-learning-hub/theme": ["node_modules/@cgi-learning-hub/theme"],
       "@cgi-learning-hub/icons": ["node_modules/@cgi-learning-hub/icons"],
-      "@images/*": ["node_modules/@edifice.io/bootstrap/dist/images/*"]
+      "@images/*": ["node_modules/@edifice.io/bootstrap/dist/images/*"],
+      "@common/*": ["../../common/src/main/resources/ts/*"]
     },
 
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
   "include": ["src"],
-  "exclude": ["old"],
-  "references": [{ "path": "./tsconfig.node.json" }]
+  "exclude": ["old"]
 }

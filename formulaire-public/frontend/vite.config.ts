@@ -1,5 +1,4 @@
 /// <reference types="vitest" />
-
 import react from "@vitejs/plugin-react";
 import { resolve } from "path";
 import { defineConfig, loadEnv } from "vite";

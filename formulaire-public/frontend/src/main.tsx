@@ -16,10 +16,7 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 
 import { useTranslation } from "react-i18next";
-import {
-  DEFAULT_THEME,
-  FORMULAIRE_PUBLIC,
-} from "./core/constants";
+import { DEFAULT_THEME, FORMULAIRE_PUBLIC } from "./core/constants";
 import { setupStore } from "./store";
 import { options } from "./styles/theme";
 import { Box } from "@mui/material";
@@ -54,7 +51,6 @@ const queryClient = new QueryClient({
   },
 });
 
-
 const App = () => {
   const { t } = useTranslation(FORMULAIRE_PUBLIC);
 
@@ -71,7 +67,7 @@ const App = () => {
               themeId={themePlatform ?? "default"}
               options={options}
             >
-            <Box></Box>
+              <Box></Box>
             </ThemeProviderCGI>
           </EdificeThemeProvider>
         </EdificeClientProvider>

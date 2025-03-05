@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/OPEN-ENT-NG/form.git"
+    "url": "https://github.com/OPEN-ENT-NG/form.git"
   },
   "license": "GPL-3.0",
   "type": "module",
@@ -22,6 +22,7 @@
     "dev": "vite",
     "test": "vitest",
     "fix": "eslint --fix .",
+    "check-types": "tsc --noEmit",
     "format": "pnpm format:check && pnpm format:write",
     "format:check": "npx prettier --check .",
     "format:write": "npx prettier --write .",
@@ -119,7 +120,7 @@
   },
   "packageManager": "pnpm@9.15.4",
   "engines": {
-    "node": "16 || 18 || 20"
+    "node": "20"
   },
   "nx": {}
 }

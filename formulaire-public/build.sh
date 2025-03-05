@@ -21,6 +21,7 @@ copy_angular_files() {
   cp -R ../angular/src/dist/* ./src/main/resources/public/js
   cp -R ../angular/src/mdi/* ./src/main/resources/public/mdi
   cp -R ../angular/src/template/* ./src/main/resources/public/template
+  cp -R ../angular/src/view/* ./src/main/resources/view
 
   # Copy '.html' files in 'ts' folder
   cd ../angular/src/ts || exit 1 # Need to be in targeted directory for rsync command to work
@@ -86,7 +87,6 @@ copy_frontend_files() {
   cp -R ../frontend/public/* ./src/main/resources/public
   cp -R ../frontend/dist/* ./src/main/resources
   mv ./src/main/resources/*.html ./src/main/resources/view
-  cp -R ./src/main/resources/view-src/* ./src/main/resources/view
 
   copy_angular_files
 
@@ -100,7 +100,7 @@ build_backend() {
   echo 'Build Backend'
   echo '-------------'
   cd backend || exit 1
-  ./build.sh clean build
+  ./build.sh clean install
   cd .. || exit 1
 }
 
@@ -111,6 +111,12 @@ install() {
   prepare_backend
   copy_frontend_files
   build_backend
+}
+
+lint() {
+  cd frontend || exit 1
+  ./build.sh lintFixDocker prettierDocker
+  cd .. || exit 1
 }
 
 test_frontend() {
@@ -152,6 +158,9 @@ main() {
         ;;
       install)
         install
+        ;;
+      lint)
+        lint
         ;;
       testFront)
         test_frontend
