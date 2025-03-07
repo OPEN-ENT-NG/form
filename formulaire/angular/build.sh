@@ -41,31 +41,18 @@ buildNode () {
   esac
 }
 
-formulaire:buildNode() {
-  case $(uname -s) in
-  MINGW*)
-    docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "yarn install --production=false --no-bin-links && node_modules/gulp/bin/gulp.js build --targetModule=formulaire && yarn run build:sass"
-    ;;
-  *)
-    docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "yarn install --production=false && node_modules/gulp/bin/gulp.js build --targetModule=formulaire && yarn run build:sass"
-    ;;
-  esac
+buildCss() {
+    docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "yarn run build:sass"
 }
 
-formulairePublic:buildNode() {
-  case $(uname -s) in
-  MINGW*)
-    docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "yarn install --production=false --no-bin-links && node_modules/gulp/bin/gulp.js build --targetModule=formulaire-public && yarn run build:sass"
-    ;;
-  *)
-    docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "yarn install --production=false && node_modules/gulp/bin/gulp.js build --targetModule=formulaire-public && yarn run build:sass"
-    ;;
-  esac
+buildGulp() {
+  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "node_modules/gulp/bin/gulp.js build"
 }
+
+# Tests
 
 testNode() {
   rm -rf coverage
-  rm -rf */build
   case `uname -s` in
     MINGW*)
       docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "yarn install --no-bin-links && node_modules/gulp/bin/gulp.js drop-cache && yarn test"
@@ -77,7 +64,6 @@ testNode() {
 
 testNodeDev () {
   rm -rf coverage
-  rm -rf */build
   case `uname -s` in
     MINGW*)
       docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "yarn install --no-bin-links && node_modules/gulp/bin/gulp.js drop-cache && yarn run test:dev"
@@ -87,60 +73,7 @@ testNodeDev () {
   esac
 }
 
-# CSS
-
-buildCss() {
-    docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "yarn run build:sass"
-}
-
-# Maven
-
-install () {
-  docker compose run --rm maven mvn $MVN_OPTS clean install -U -DskipTests
-}
-
-test () {
-  docker compose run --rm maven mvn $MVN_OPTS test
-}
-
-# Gulp
-
-buildGulp() {
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "node_modules/gulp/bin/gulp.js build"
-}
-
-formulaire:buildGulp() {
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "node_modules/gulp/bin/gulp.js build --targetModule=formulaire"
-}
-
-formulairePublic:buildGulp() {
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "node_modules/gulp/bin/gulp.js build --targetModule=formulaire-public"
-}
-
-# Publish
-
-publish() {
-  version=`docker compose run --rm maven mvn $MVN_OPTS help:evaluate -Dexpression=project.version -q -DforceStdout`
-  level=`echo $version | cut -d'-' -f3`
-  case "$level" in
-    *SNAPSHOT) export nexusRepository='snapshots' ;;
-    *)         export nexusRepository='releases' ;;
-  esac
-  docker compose run --rm  maven mvn -DrepositoryId=ode-$nexusRepository -DskipTests -Dmaven.test.skip=true --settings /var/maven/.m2/settings.xml deploy
-}
-
-publishNexus() {
-  version=`docker compose run --rm maven mvn $MVN_OPTS help:evaluate -Dexpression=project.version -q -DforceStdout`
-  level=`echo $version | cut -d'-' -f3`
-  case "$level" in
-    *SNAPSHOT) export nexusRepository='snapshots' ;;
-    *)         export nexusRepository='releases' ;;
-  esac
-  docker compose run --rm  maven mvn -DrepositoryId=ode-$nexusRepository -Durl=$repo -DskipTests -Dmaven.test.skip=true --settings /var/maven/.m2/settings.xml deploy
-}
-
 # Commands
-
 for param in "$@"
 do
   case $param in
@@ -153,50 +86,17 @@ do
     buildNode)
       buildNode
       ;;
-    formulaire:buildNode)
-      formulaire:buildNode
+    buildCss)
+      buildCss
       ;;
-    formulairePublic:buildNode)
-      formulairePublic:buildNode
+    buildGulp)
+      buildGulp
       ;;
     testNode)
       testNode
       ;;
     testNodeDev)
       testNodeDev
-      ;;
-    buildCss)
-      buildCss
-      ;;
-    test)
-      test
-      ;;
-    buildGulp)
-      buildGulp
-      ;;
-    formulaire:buildGulp)
-      formulaire:buildGulp
-      ;;
-    formulairePublic:buildGulp)
-      formulairePublic:buildGulp
-      ;;
-    install)
-      buildNode && install
-      ;;
-    publish)
-      publish
-      ;;
-    publishNexus)
-      publishNexus
-      ;;
-    formulaire)
-      formulaire:buildNode && formulaire:buildGradle
-      ;;
-    formulairePublic)
-      formulairePublic:buildNode && formulairePublic:buildGradle
-      ;;
-    test)
-      testNode ; test
       ;;
     *)
       echo "Invalid argument : $param"

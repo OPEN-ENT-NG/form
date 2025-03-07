@@ -31,6 +31,38 @@ jobs:
       - name: Run test
         working-directory: ./formulaire-public/angular
         run: yarn test --passWithNoTests
+        # Test React Formulaire
+      - name: Run pnpm install
+        working-directory: ./formulaire/frontend
+        run: pnpm install
+      - name: Check Lint Fix and Typescript (ESLint)
+        working-directory: ./formulaire/frontend
+        run: pnpm run fix && pnpm run check-types
+      - name: Check Quality Code with (Prettier)
+        working-directory: ./formulaire/frontend
+        run: pnpm run format:check
+      - name: Run Build Vite
+        working-directory: ./formulaire/frontend
+        run: pnpm build
+      - name: Run tests
+        working-directory: ./formulaire/frontend
+        run: pnpm test
+        # Test React Formulaire-public
+      - name: Run pnpm install
+        working-directory: ./formulaire-public/frontend
+        run: pnpm install
+      - name: Check Lint Fix and Typescript (ESLint)
+        working-directory: ./formulaire-public/frontend
+        run: pnpm run fix && pnpm run check-types
+      - name: Check Quality Code with (Prettier)
+        working-directory: ./formulaire-public/frontend
+        run: pnpm run format:check
+      - name: Run Build Vite
+        working-directory: ./formulaire-public/frontend
+        run: pnpm build
+      - name: Run tests
+        working-directory: ./formulaire-public/frontend
+        run: pnpm test
 
   build-maven-test:
     runs-on: ubuntu-latest
@@ -47,7 +79,7 @@ jobs:
         run: mvn -Duser.home=/var/maven clean install
       - name: Run maven test
         working-directory: ./formulaire/backend
-        run: mvn -Duser.home=/var/maven test
+        run: mvn -Duser.home=/var/maven testMaven
         # Test Maven Formulaire-public
       - name: Copy parent POM
         run: cp pom.xml formulaire-public/backend/pom-parent.xml
@@ -56,4 +88,4 @@ jobs:
         run: mvn -Duser.home=/var/maven clean install
       - name: Run maven test
         working-directory: ./formulaire-public/backend
-        run: mvn -Duser.home=/var/maven test
+        run: mvn -Duser.home=/var/maven testMaven
