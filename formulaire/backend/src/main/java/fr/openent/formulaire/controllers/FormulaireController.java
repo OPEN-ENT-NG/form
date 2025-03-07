@@ -40,7 +40,12 @@ public class FormulaireController extends ControllerHelper {
     @ApiDoc("Render view")
     @SecuredAction(ACCESS_RIGHT)
     public void render(HttpServerRequest request) {
-        renderView(request);
+        final String view = request.params().get("view");
+        if ("angular".equals(view)) {
+            renderView(request, new JsonObject(), "formulaire.html", null);
+        } else {
+            renderView(request, new JsonObject(), "index.html", null);
+        }
         eventStore.createAndStoreEvent(ACCESS.name(), request);
     }
 

@@ -21,9 +21,18 @@ copy_angular_files() {
   cp -R ../angular/src/dist/* ./src/main/resources/public/js
   cp -R ../angular/src/mdi/* ./src/main/resources/public/mdi
   cp -R ../angular/src/template/* ./src/main/resources/public/template
+  cp -R ../angular/src/view/* ./src/main/resources/view
+
+  # Copy '.html' files in 'ts' folder
+  cd ../angular/src/ts || exit 1 # Need to be in targeted directory for rsync command to work
+  shopt -s globstar # Active '**/' for recursivity on next line
+  rsync -R **/*.html ../../../backend/src/main/resources/public/ts --relative --no-implied-dirs
+  cd ../../../backend || exit 1
 }
 
 clean_angular() {
+  rm -rf angular/node_modules
+  rm -rf angular/*.lock
   rm -rf angular/src/css
   rm -rf angular/src/dist
   rm -rf angular/src/js
@@ -32,48 +41,39 @@ clean_angular() {
 }
 # End Angular functions
 
-# Function to clean backend files
 clean_backend() {
   echo -e '\n------------------'
   echo 'Clean before build'
   echo '------------------'
   cd backend || exit 1
-  rm -rf ./target
-  rm -rf ./flattened-pom.xml
-  rm -rf ./pom-parent.xml
-  rm -rf ./src/main/resources/public
-  rm -rf ./src/main/resources/view
+  rm -rf .flattened-pom.xml
+  rm -rf pom-parent.xml
+  rm -rf src/main/resources/img
+  rm -rf src/main/resources/public
+  rm -rf src/main/resources/view
   echo 'Repo clean for build !'
   cd .. || exit 1
 }
 
-# Function to build frontend
 build_frontend() {
   echo -e '\n--------------'
   echo 'Build Frontend'
   echo '--------------'
   cd frontend || exit 1
-  ./build.sh installDeps build
-  cd .. || exit 1
-}
-
-test_frontend() {
-  echo -e '\n--------------'
-  echo 'Test Frontend'
-  echo '--------------'
-  cd frontend || exit 1
-  ./build.sh runTest
+  ./build.sh clean installDeps build
   cd .. || exit 1
 }
 
 prepare_backend() {
-  # Prepare backend/resources
+  cd backend || exit 1
   mkdir -p ./src/main/resources/public/css
   mkdir -p ./src/main/resources/public/img
   mkdir -p ./src/main/resources/public/js
   mkdir -p ./src/main/resources/public/mdi
   mkdir -p ./src/main/resources/public/template
+  mkdir -p ./src/main/resources/public/ts
   mkdir -p ./src/main/resources/view
+  cd .. || exit 1
 }
 
 # Function to copy frontend files to backend
@@ -87,7 +87,6 @@ copy_frontend_files() {
   cp -R ../frontend/public/* ./src/main/resources/public
   cp -R ../frontend/dist/* ./src/main/resources
   mv ./src/main/resources/*.html ./src/main/resources/view
-  cp -R ./src/main/resources/view-src/* ./src/main/resources/view
 
   copy_angular_files
 
@@ -101,11 +100,34 @@ build_backend() {
   echo 'Build Backend'
   echo '-------------'
   cd backend || exit 1
-  ./build.sh clean build
+  ./build.sh clean install
   cd .. || exit 1
 }
 
-# Function to test backend
+install() {
+  clean_backend
+  build_angular
+  build_frontend
+  prepare_backend
+  copy_frontend_files
+  build_backend
+}
+
+lint() {
+  cd frontend || exit 1
+  ./build.sh lintFixDocker prettierDocker
+  cd .. || exit 1
+}
+
+test_frontend() {
+  echo -e '\n--------------'
+  echo 'Test Frontend'
+  echo '--------------'
+  cd frontend || exit 1
+  ./build.sh runTest
+  cd .. || exit 1
+}
+
 test_backend() {
   echo -e '\n-------------'
   echo 'Test Backend'
@@ -115,52 +137,39 @@ test_backend() {
   cd .. || exit 1
 }
 
-# Function to clean frontend folders
-clean_frontend_folders() {
-  echo -e '\n-------------'
-  echo 'Clean front folders'
-  echo '-------------'
-  rm -rf frontend/dist
-  clean_angular
-  echo 'Folders cleaned !'
-}
-
-# Function to handle the install command
-install() {
-  clean_backend
-  build_angular
-#  build_frontend
-  prepare_backend
-  copy_frontend_files
-  build_backend
-  clean_frontend_folders
-}
-
 # Main function to handle multiple arguments
 main() {
   for arg in "$@"; do
     case "$arg" in
-      install)
-        install
+      cleanFront)
+        clean_frontend
         ;;
-      buildBack)
-        build_backend
+      cleanBack)
+        clean_backend
+        ;;
+      clean)
+        clean_frontend && clean_backend
         ;;
       buildFront)
         build_frontend
         ;;
-      clean)
-        clean_backend
+      buildBack)
+        build_backend
         ;;
-      testBack)
-        test_backend
+      install)
+        install
+        ;;
+      lint)
+        lint
         ;;
       testFront)
         test_frontend
         ;;
-      test)
-        test_frontend
+      testBack)
         test_backend
+        ;;
+      test)
+        test_frontend && test_backend
         ;;
       *)
         echo "Invalid argument: $arg"
