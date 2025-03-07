@@ -3,41 +3,56 @@
 .DS_Store
 .classpath
 .project
-/.gradle
 /.idea/
 /.settings
 .jshintrc
-/node_modules/
 */rev-manifest.json
-*/src/main/resources/public/dist
-*/src/main/resources/public/js
-*/src/main/resources/view
-*/src/main/resources/public/font
-*/src/main/resources/public/mdi
-*/src/main/resources/public/template/entcore
 /coverage/front/cobertura-coverage.xml
-/gradle/wrapper/gradle-wrapper.jar
-/gradle/wrapper/gradle-wrapper.properties
-/gradlew
-/gradlew.bat
-/rev-manifest.json
-/package-lock.json
-/formulaire/src/main/resources/public/css/
-/yarn.lock
 .env
-target
+/.vscode/
+
+#==== Backend ====#
 */target
-.flattened-pom.xml
 */.flattened-pom.xml
-/formulaire/angular/common/
-/formulaire/angular/src/css/
-/formulaire/angular/src/dist/
-/formulaire/angular/src/js/
-/formulaire/angular/src/mdi/
-/formulaire/angular/src/view/
-/formulaire-public/angular/common/
-/formulaire-public/angular/src/css/
-/formulaire-public/angular/src/dist/
-/formulaire-public/angular/src/js/
-/formulaire-public/angular/src/mdi/
-/formulaire-public/angular/src/view/
+*/pom-parent.xml
+*/backend/src/main/resources/public
+*/backend/src/main/resources/view
+*/backend/src/main/resources/img
+
+#==== Angular ====#
+*/angular/node_modules
+*/angular/common
+*/angular/src/css/
+*/angular/src/dist/
+*/angular/src/js/
+*/angular/src/mdi/
+*/angular/src/view/
+*/angular/*.lock
+
+#==== Frontend ====#
+*/frontend/node_modules
+*/frontend/dist
+*/frontend/*.lock
+*/frontend/.env*
+*/frontend/*.local
+*/frontend/pnpm-lock.yaml
+*/frontend/logs
+*/frontend/*.log*
+*/frontend/dist-ssr
+# Editor directories and files
+*/frontend/.vscode/*
+*/frontend/!.vscode/extensions.json
+*/frontend/.idea
+*/frontend/.DS_Store
+*/frontend/*.suo
+*/frontend/*.ntvs*
+*/frontend/*.njsproj
+*/frontend/*.sln
+*/frontend/*.sw?
+# Google Lighthouse
+*/frontend/.lighthouseci
+*/frontend/.pnpm-store
+# Turborepo
+*/frontend/.turbo
+# Nx
+*/frontend/.nx

@@ -29,20 +29,20 @@ case `uname -s` in
     fi
 esac
 
-function prepare_docker() {
+prepare_docker() {
   # Copie temporaire du pom.xml parent dans le répertoire backend + modif du pom.xml enfant
   cp ../../pom.xml pom-parent.xml
   sed -i 's|<relativePath>../../pom.xml</relativePath>|<relativePath>./pom-parent.xml</relativePath>|' pom.xml
 }
 
-function rollback_docker_preparation() {
+rollback_docker_preparation() {
   # Rollback des opérations pré-build
   sed -i 's|<relativePath>./pom-parent.xml</relativePath>|<relativePath>../../pom.xml</relativePath>|' pom.xml
   rm pom-parent.xml
 }
 
 # Nettoyage du dossier `backend`
-function clean() {
+clean() {
   echo "Cleaning..."
   prepare_docker
   if [ "$NO_DOCKER" = "true" ] ; then
@@ -54,8 +54,7 @@ function clean() {
   echo "Clean done!"
 }
 
-
-function build() {
+build() {
   echo "Building..."
   prepare_docker
   if [ "$NO_DOCKER" = "true" ] ; then
@@ -67,12 +66,11 @@ function build() {
   echo "Build done!"
 }
 
-test() {
+testMaven () {
   prepare_docker
   docker compose run --rm maven mvn $MVN_OPTS test
   rollback_docker_preparation
 }
-
 
 publish() {
   prepare_docker
@@ -109,23 +107,17 @@ publishNexus() {
 for param in "$@"
 do
   case $param in
-    init)
-      init
-      ;;
     clean)
       clean
-      ;;
-    build)
-      build
-      ;;
-    publish)
-      publish
       ;;
     install)
       build
       ;;
     test)
-      test
+      testMaven
+      ;;
+    publish)
+      publish
       ;;
     publishNexus)
       publishNexus
