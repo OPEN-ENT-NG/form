@@ -3,57 +3,157 @@
 chmod +x formulaire/build.sh
 chmod +x formulaire-public/build.sh
 
-install_formulaire() {
+
+clean:formulaire() {
+  cd formulaire || exit 1
+  ./build.sh clean
+  cd .. || exit 1
+}
+
+clean:formulairePublic() {
+  cd formulaire-public || exit 1
+  ./build.sh clean
+  cd .. || exit 1
+}
+
+clean() {
+  clean:formulaire
+  clean:formulairePublic
+}
+
+buildFront:formulaire() {
+  cd formulaire || exit 1
+  ./build.sh buildFront
+  cd .. || exit 1
+}
+
+buildFront:formulairePublic() {
+  cd formulaire-public || exit 1
+  ./build.sh buildFront
+  cd .. || exit 1
+}
+
+buildFront() {
+  buildFront:formulaire
+  buildFront:formulairePublic
+}
+
+buildBack:formulaire() {
+  cd formulaire || exit 1
+  ./build.sh buildBack
+  cd .. || exit 1
+}
+
+buildBack:formulairePublic() {
+  cd formulaire-public || exit 1
+  ./build.sh buildBack
+  cd .. || exit 1
+}
+
+buildBack() {
+  buildBack:formulaire
+  buildBack:formulairePublic
+}
+
+install:formulaire() {
   echo -e '\n------------------'
   echo 'Install Formulaire'
   echo '------------------'
   cd formulaire || exit 1
   ./build.sh install
+  echo -e '\n-------------'
   echo 'Formulaire build !'
+  echo '------------------'
   cd .. || exit 1
 }
 
-install_formulaire_public() {
+install:formulairePublic() {
   echo -e '\n------------------'
   echo 'Install Formulaire-public'
   echo '------------------'
   cd formulaire-public || exit 1
   ./build.sh install
+  echo -e '\n-------------'
   echo 'Formulaire-public  build !'
+  echo '------------------'
   cd .. || exit 1
-
 }
 
 install() {
-  install_formulaire
-  install_formulaire_public
+  install:formulaire
+  install:formulairePublic
 }
+
+lint:formulaire() {
+  cd formulaire || exit 1
+  ./build.sh lint
+  cd .. || exit 1
+}
+
+lint:formulairePublic() {
+  cd formulaire-public || exit 1
+  ./build.sh lint
+  cd .. || exit 1
+}
+
+lint() {
+  lint:formulaire
+  lint:formulairePublic
+}
+
 
 # Main function to handle multiple arguments
 main() {
   for arg in "$@"; do
     case "$arg" in
+      clean)
+        clean
+        ;;
+      buildFront:formulaire)
+        buildFront:formulaire
+        ;;
+      buildFront:formulairePublic)
+        buildFront:formulairePublic
+        ;;
+      buildFront)
+        install
+        ;;
+      buildBack:formulaire)
+        buildBack:formulaire
+        ;;
+      buildBack:formulairePublic)
+        buildBack:formulairePublic
+        ;;
+      buildBack)
+        install
+        ;;
+      install:formulaire)
+        install:formulaire
+        ;;
+      install:formulairePublic)
+        instal:formulairePublic
+        ;;
       install)
         install
         ;;
-      buildBack)
-        build_backend
+      lint:formulaire)
+        lint:formulaire
         ;;
-      buildFront)
-        build_frontend
+      lint:formulairePublic)
+        lint:formulairePublic
         ;;
-        clean)
-        clean_backend
-        ;;
-      testBack)
-        test_backend
+      lint)
+        lint
         ;;
       testFront)
-        test_frontend
+        testFront
+        ;;
+      testBack)
+        testBack
         ;;
       test)
-        test_frontend
-        test_backend
+        testFront
+        testBack
         ;;
     *)
         echo "Invalid argument: $arg"
