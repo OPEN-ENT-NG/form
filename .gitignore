@@ -12,15 +12,15 @@
 /.vscode/
 
 #==== Backend ====#
-*/target
-*/.flattened-pom.xml
+target
+.flattened-pom.xml
 */pom-parent.xml
 */backend/src/main/resources/public
 */backend/src/main/resources/view
 */backend/src/main/resources/img
 
 #==== Angular ====#
-*/angular/node_modules
+node_modules
 */angular/common
 */angular/src/css/
 */angular/src/dist/
@@ -30,8 +30,7 @@
 */angular/*.lock
 
 #==== Frontend ====#
-*/frontend/node_modules
-*/frontend/dist
+dist
 */frontend/*.lock
 */frontend/.env*
 */frontend/*.local
