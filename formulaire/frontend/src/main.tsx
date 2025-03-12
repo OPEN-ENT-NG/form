@@ -16,10 +16,13 @@ import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 
 import { useTranslation } from "react-i18next";
-import { DEFAULT_THEME, FORMULAIRE } from "./core/constants";
+import { DEFAULT_THEME, FORMULAIRE, TOAST_CONFIG } from "./core/constants";
 import { setupStore } from "./store";
 import { options } from "./styles/theme";
 import { Box } from "@mui/material";
+import { ToastContainer } from "react-toastify";
+import { RouterProvider } from "react-router-dom";
+import { router } from "./routes";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement!);
@@ -67,7 +70,8 @@ const App = () => {
               themeId={themePlatform ?? "default"}
               options={options}
             >
-              <Box>//TODO</Box>
+              <ToastContainer {...TOAST_CONFIG} />
+              <RouterProvider router={router} />
             </ThemeProviderCGI>
           </EdificeThemeProvider>
         </EdificeClientProvider>
