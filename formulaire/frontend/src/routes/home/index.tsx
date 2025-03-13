@@ -1,7 +1,6 @@
 import { FC } from "react";
-
-import { Box } from "@cgi-learning-hub/ui";
+import { HomeView } from "~/containers/HomeView/HomeView";
 
 export const Home: FC = () => {
-  return <Box>//TODO</Box>;
+  return <HomeView />;
 };
