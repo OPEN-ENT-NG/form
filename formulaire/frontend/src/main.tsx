@@ -19,7 +19,6 @@ import { useTranslation } from "react-i18next";
 import { DEFAULT_THEME, FORMULAIRE, TOAST_CONFIG } from "./core/constants";
 import { setupStore } from "./store";
 import { options } from "./styles/theme";
-import { Box } from "@mui/material";
 import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes";
