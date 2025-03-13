@@ -4,6 +4,6 @@ import { FORMULAIRE } from "~/core/constants";
 export const emptySplitApi = createApi({
   reducerPath: "api",
   baseQuery: fetchBaseQuery({ baseUrl: `/${FORMULAIRE}/` }),
-  tagTypes: ["Folder", "Folders"],
+  tagTypes: ["Folders"],
   endpoints: () => ({}),
 });

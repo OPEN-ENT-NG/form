@@ -10,10 +10,9 @@ export interface Element {
 }
 
 export interface Folder extends Selectable {
-  id: number | null;
-  parent_id: number | null;
-  parentId?: number | null;
-  user_id: string | null;
+  id: number;
+  parent_id: number;
+  user_id: string;
   nb_folder_children: number;
   nb_form_children: number;
   children: any[];

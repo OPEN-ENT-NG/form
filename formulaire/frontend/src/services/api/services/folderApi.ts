@@ -10,15 +10,6 @@ export const folderApi = emptySplitApi.injectEndpoints({
       providesTags: ["Folders"],
     }),
 
-    // Récupérer un dossier par ID
-    getFolder: builder.query<Folder, number>({
-      query: (folderId) => `folders/${folderId}`,
-      transformResponse: (response: { data: Folder }) => response.data,
-      providesTags: (result, error, folderId) => [
-        { type: "Folder", id: folderId },
-      ],
-    }),
-
     // Créer un dossier
     createFolder: builder.mutation<Folder, Folder>({
       query: (folder) => ({
@@ -46,11 +37,7 @@ export const folderApi = emptySplitApi.injectEndpoints({
         body: folder,
       }),
       transformResponse: (response: { data: Folder }) => response.data,
-      invalidatesTags: (result, error, folder) => [
-        // Utiliser un id défini (non null) pour éviter l'erreur TypeScript
-        { type: "Folder", id: folder.id ?? 0 },
-        "Folders",
-      ],
+      invalidatesTags: () => ["Folders"],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -103,7 +90,6 @@ export const folderApi = emptySplitApi.injectEndpoints({
 // Export des hooks générés automatiquement
 export const {
   useGetFoldersQuery,
-  useGetFolderQuery,
   useCreateFolderMutation,
   useUpdateFolderMutation,
   useDeleteFoldersMutation,
