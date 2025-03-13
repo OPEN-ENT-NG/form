@@ -22,6 +22,7 @@ import { options } from "./styles/theme";
 import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes";
+import "~/i18n";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement!);
