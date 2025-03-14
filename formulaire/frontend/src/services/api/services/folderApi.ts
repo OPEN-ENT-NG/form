@@ -1,4 +1,8 @@
-import { Folder } from "~/core/models/folders/types.ts";
+import {
+  Folder,
+  CreateFolderPayload,
+  UpdateFolderPayload,
+} from "~/core/models/folders/types.ts";
 import { emptySplitApi } from "./emptySplitApi.ts";
 
 export const folderApi = emptySplitApi.injectEndpoints({
@@ -11,7 +15,7 @@ export const folderApi = emptySplitApi.injectEndpoints({
     }),
 
     // Créer un dossier
-    createFolder: builder.mutation<Folder, Folder>({
+    createFolder: builder.mutation<Folder, CreateFolderPayload>({
       query: (folder) => ({
         url: "folders",
         method: "POST",
@@ -30,7 +34,7 @@ export const folderApi = emptySplitApi.injectEndpoints({
     }),
 
     // Mettre à jour un dossier
-    updateFolder: builder.mutation<Folder, Folder>({
+    updateFolder: builder.mutation<Folder, UpdateFolderPayload>({
       query: (folder) => ({
         url: `folders/${folder.id}`,
         method: "PUT",
@@ -95,17 +99,3 @@ export const {
   useDeleteFoldersMutation,
   useMoveFormsMutation,
 } = folderApi;
-
-// Hook personnalisé pour enregistrer (créer ou mettre à jour) un dossier
-export const useSaveFolder = () => {
-  const [createFolder] = useCreateFolderMutation();
-  const [updateFolder] = useUpdateFolderMutation();
-
-  return async (folder: Folder) => {
-    if (folder.id) {
-      return await updateFolder(folder).unwrap();
-    } else {
-      return await createFolder(folder).unwrap();
-    }
-  };
-};
