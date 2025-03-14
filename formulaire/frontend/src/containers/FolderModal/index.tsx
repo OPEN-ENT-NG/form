@@ -97,7 +97,6 @@ export const FolderModal: FC<FolderModalProps> = ({
           </Typography>
           <TextField
             variant="standard"
-            placeholder={t("formulaire.question.label")}
             sx={folderModalTextFieldStyle}
             value={newName}
             onChange={(e) => setNewName(e.target.value)}
