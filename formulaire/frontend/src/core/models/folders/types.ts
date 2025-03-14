@@ -12,17 +12,11 @@ export interface Element {
 export interface Folder extends Selectable {
   id: number;
   parent_id: number;
+  name: string;
   user_id: string;
   nb_folder_children: number;
   nb_form_children: number;
   children: any[];
-}
-
-export interface NewFolder {
-  parentId?: number | null;
-  parent_id?: number | null;
-  name: string;
-  user_id?: string | null;
 }
 
 export interface Folders {
@@ -35,4 +29,15 @@ export interface Folders {
 
 export interface FolderApiResponse {
   data: Folder | Folder[];
+}
+
+export interface CreateFolderPayload {
+  parent_id: number;
+  name: string;
+}
+
+export interface UpdateFolderPayload {
+  id: number;
+  parent_id: number;
+  name: string;
 }
