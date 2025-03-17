@@ -5,7 +5,7 @@ import {
   HomeProviderProps,
 } from "./types";
 import { initialDisplayModalsState } from "./utils";
-import { MODAL_TYPE } from "~/core/enums";
+import { ModalType } from "~/core/enums";
 import { Folder } from "~/core/models/folders/types";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
@@ -24,8 +24,8 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
     initialDisplayModalsState,
   );
 
-  const handleDisplayModal = (modalType: MODAL_TYPE) =>
-    setDisplayModals((prevState) => ({
+  const handleDisplayModal = (modalType: ModalType) =>
+    setDisplayModals((prevState: any) => ({
       ...prevState,
       [modalType]: !prevState[modalType],
     }));

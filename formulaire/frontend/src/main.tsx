@@ -18,11 +18,13 @@ import { Provider } from "react-redux";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_THEME, FORMULAIRE, TOAST_CONFIG } from "./core/constants";
 import { setupStore } from "./store";
-import { options } from "./styles/theme";
+import { options } from "./core/style/theme";
 import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes";
 import "~/i18n";
+import { GlobalStyles } from "@cgi-learning-hub/ui";
+import { globalOverrideStyles } from "./styles/global";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement!);
@@ -70,6 +72,7 @@ const App = () => {
               themeId={themePlatform ?? "default"}
               options={options}
             >
+              <GlobalStyles styles={globalOverrideStyles} />
               <ToastContainer {...TOAST_CONFIG} />
               <RouterProvider router={router} />
             </ThemeProviderCGI>
