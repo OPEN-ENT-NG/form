@@ -42,7 +42,7 @@ export const FolderModal: FC<FolderModalProps> = ({
 
   const modeConfig = useMemo(() => {
     const handleRename = () => {
-      if (!currentFolder) return;
+      if (!currentFolder || !currentFolder.parent_id) return;
       const updatedFolder: UpdateFolderPayload = {
         id: currentFolder.id,
         parent_id: currentFolder.parent_id,
@@ -78,7 +78,7 @@ export const FolderModal: FC<FolderModalProps> = ({
     };
   }, [currentFolder, newName, createFolder, updateFolder, handleClose]);
 
-  const currentConfig = modeConfig[mode] || modeConfig.create;
+  const currentConfig = modeConfig[mode] || modeConfig.CREATE;
 
   return (
     <Modal open={isOpen} onClose={handleClose}>

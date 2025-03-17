@@ -1,12 +1,21 @@
-import { FC, createContext, useContext, useMemo, useState } from "react";
+import {
+  FC,
+  createContext,
+  useContext,
+  useMemo,
+  useState,
+  useEffect,
+} from "react";
 import {
   DisplayModalsState,
   HomeProviderContextType,
   HomeProviderProps,
 } from "./types";
-import { initialDisplayModalsState } from "./utils";
+import { initialDisplayModalsState, useRootFolders } from "./utils";
 import { ModalType } from "~/core/enums";
 import { Folder } from "~/core/models/folders/types";
+import { HomeTabState } from "./enums";
+import { useGetFoldersQuery } from "~/services/api/services/folderApi";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
 
@@ -19,16 +28,35 @@ export const useHomeProvider = () => {
 };
 
 export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
-  const [currentFolder, setCurrentFolder] = useState<Folder | null>(null);
+  const rootFolders = useRootFolders();
+  const [currentFolder, setCurrentFolder] = useState<Folder | null>(
+    rootFolders[0],
+  );
   const [displayModals, setDisplayModals] = useState<DisplayModalsState>(
     initialDisplayModalsState,
   );
+  const [tab, setTab] = useState<HomeTabState>(HomeTabState.FORMS);
+  const [folders, setFolders] = useState<Folder[]>([]);
+
+  const { data: foldersData } = useGetFoldersQuery();
+
+  useEffect(() => {
+    if (foldersData) {
+      setFolders([...rootFolders, ...foldersData]);
+    }
+  }, [foldersData, rootFolders]);
 
   const handleDisplayModal = (modalType: ModalType) =>
     setDisplayModals((prevState: any) => ({
       ...prevState,
       [modalType]: !prevState[modalType],
     }));
+
+  const toggleTab = (tab: HomeTabState) => {
+    setTab((prev) => {
+      return prev === tab ? prev : tab;
+    });
+  };
 
   const value = useMemo<HomeProviderContextType>(
     () => ({
@@ -37,8 +65,11 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
       handleDisplayModal,
       currentFolder,
       setCurrentFolder,
+      tab,
+      toggleTab,
+      folders,
     }),
-    [displayModals, currentFolder],
+    [displayModals, currentFolder, tab, folders],
   );
 
   return (

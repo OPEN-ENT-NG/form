@@ -4,17 +4,35 @@ import { Header } from "~/components/Header";
 import { FORMULAIRE } from "~/core/constants";
 import { Box } from "@cgi-learning-hub/ui";
 import { getHomeHeaderButtons } from "./utils";
+import { FolderModal } from "../FolderModal";
+import { FOLDER_MODAL_MODE } from "../FolderModal/types";
+import { HomeMainLayout } from "../HomeMainLayout";
+import { useHomeProvider } from "~/providers/HomeProvider";
+import { ModalType } from "~/core/enums";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const headerButtons = getHomeHeaderButtons();
+  const { displayModals, handleDisplayModal } = useHomeProvider();
 
   return (
     <Box>
-      <Header
-        stringItems={[t("formulaire.title")]}
-        buttons={headerButtons}
-      ></Header>
+      <Header stringItems={[t("formulaire.title")]} buttons={headerButtons} />
+      <HomeMainLayout />
+      {displayModals.FOLDER_CREATE === true && (
+        <FolderModal
+          isOpen={displayModals.FOLDER_CREATE === true}
+          handleClose={() => handleDisplayModal(ModalType.FOLDER_CREATE)}
+          mode={FOLDER_MODAL_MODE.CREATE}
+        />
+      )}
+      {displayModals.FOLDER_RENAME === true && (
+        <FolderModal
+          isOpen={displayModals.FOLDER_RENAME === true}
+          handleClose={() => handleDisplayModal(ModalType.FOLDER_RENAME)}
+          mode={FOLDER_MODAL_MODE.RENAME}
+        />
+      )}
     </Box>
   );
 };
