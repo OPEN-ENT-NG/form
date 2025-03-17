@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { Header } from "~/components/Header";
 import { FORMULAIRE } from "~/core/constants";
 import { Box } from "@cgi-learning-hub/ui";
-import { getHomeHeaderButtons } from "./utils";
+import { getHomeHeaderButtons, useElementHeight } from "./utils";
 import { FolderModal } from "../FolderModal";
 import { FOLDER_MODAL_MODE } from "../FolderModal/types";
 import { HomeMainLayout } from "../HomeMainLayout";
@@ -14,11 +14,14 @@ export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const headerButtons = getHomeHeaderButtons();
   const { displayModals, handleDisplayModal } = useHomeProvider();
+  const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
   return (
-    <Box>
-      <Header stringItems={[t("formulaire.title")]} buttons={headerButtons} />
-      <HomeMainLayout />
+    <Box sx={{ height: "100%" }}>
+      <Box ref={headerRef}>
+        <Header stringItems={[t("formulaire.title")]} buttons={headerButtons} />
+      </Box>
+      <HomeMainLayout headerHeight={headerHeight} />
       {displayModals.FOLDER_CREATE === true && (
         <FolderModal
           isOpen={displayModals.FOLDER_CREATE === true}

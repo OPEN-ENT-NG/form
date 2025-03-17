@@ -3,7 +3,7 @@ import { useHomeProvider } from "~/providers/HomeProvider";
 import { buildFolderTree } from "./utils";
 import { TreeView, Box, Button } from "@cgi-learning-hub/ui";
 import { HomeTabs } from "~/components/HomeTab";
-import { MODAL_TYPE } from "~/core/enums";
+import { ModalType } from "~/core/enums";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { homeSidebarWrapper } from "./style";
@@ -51,7 +51,7 @@ export const HomeSidebar: FC = () => {
       <Button
         variant="outlined"
         color="primary"
-        onClick={() => handleDisplayModal(MODAL_TYPE.FOLDER_CREATE)}
+        onClick={() => handleDisplayModal(ModalType.FOLDER_CREATE)}
       >
         {t("formulaire.folder.create")}
       </Button>

@@ -1,13 +1,16 @@
-import { SxProps, Theme } from "@mui/material";
+import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
+import { HomeMainLayoutWrapperProps } from "./types";
 
-export const containerStyle: SxProps<Theme> = {
+export const HomeMainLayoutWrapper = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "headerHeight",
+})<HomeMainLayoutWrapperProps>(({ headerHeight = 71 }) => ({
   display: "flex",
   width: "100%",
-  height: "calc(100vh - 71px)",
+  height: `calc(100% - ${headerHeight}px)`,
   boxSizing: "border-box",
   borderTop: "1px solid #ccc",
   overflow: "hidden",
-};
+}));
 
 export const sidebarStyle: SxProps<Theme> = {
   width: 320,

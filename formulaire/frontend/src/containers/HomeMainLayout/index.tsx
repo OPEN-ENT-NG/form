@@ -2,20 +2,21 @@ import { FC } from "react";
 import { Box } from "@mui/material";
 import { useHomeProvider } from "~/providers/HomeProvider";
 import {
-  containerStyle,
   sidebarStyle,
   sidebarContentStyle,
   mainContentStyle,
   mainContentInnerStyle,
+  HomeMainLayoutWrapper,
 } from "./styles";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { HomeSidebar } from "../HomeSidebar";
+import { HomeMainLayoutProps } from "./types";
 
-export const HomeMainLayout: FC = () => {
+export const HomeMainLayout: FC<HomeMainLayoutProps> = ({ headerHeight }) => {
   const { tab } = useHomeProvider();
 
   return (
-    <Box sx={containerStyle}>
+    <HomeMainLayoutWrapper headerHeight={headerHeight}>
       {tab === HomeTabState.FORMS && (
         <Box sx={sidebarStyle}>
           <Box sx={sidebarContentStyle}>
@@ -26,6 +27,6 @@ export const HomeMainLayout: FC = () => {
       <Box sx={mainContentStyle}>
         <Box sx={mainContentInnerStyle}>TODO</Box>
       </Box>
-    </Box>
+    </HomeMainLayoutWrapper>
   );
 };
