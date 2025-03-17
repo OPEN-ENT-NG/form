@@ -33,7 +33,7 @@ export const FormBreadcrumbs: FC<FormBreadcrumbsProps> = ({
           key={stringItem}
           color={isHeader ? FORM_COLOR : TEXT_PRIMARY_COLOR}
           fontSize={isHeader ? "2.4rem" : "2rem"}
-          marginLeft={(separator === null || !displaySeparator) ? "-1rem" : ""}
+          marginLeft={separator === null || !displaySeparator ? "-1rem" : ""}
         >
           {stringItem}
         </Typography>

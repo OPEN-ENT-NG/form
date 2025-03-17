@@ -55,4 +55,3 @@ export const DIVIDER_COLOR = "divider";
 // Background Colors
 export const BACKGROUND_PAPER_COLOR = "background.paper";
 export const BACKGROUND_DEFAULT_COLOR = "background.default";
-

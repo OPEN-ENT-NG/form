@@ -1,5 +1,5 @@
-import type { FC } from 'react';
-import { CustomSVGProps } from './type';
+import type { FC } from "react";
+import { CustomSVGProps } from "./type";
 
 export const FormsIcon: FC<CustomSVGProps> = ({ height = "100%" }) => (
   <svg
@@ -7,7 +7,7 @@ export const FormsIcon: FC<CustomSVGProps> = ({ height = "100%" }) => (
     fill="none"
     viewBox="0 0 24 24"
     width="100%"
-    height={ height }
+    height={height}
     aria-hidden="true"
   >
     <g fill="currentColor" clipPath="url(#icon-forms_svg__a)">

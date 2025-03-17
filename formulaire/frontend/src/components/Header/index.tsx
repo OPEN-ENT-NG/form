@@ -41,14 +41,14 @@ export const Header: FC<HeaderProps> = ({
       <Box>
         {buttons.map((button) => (
           <Button
-              key={button.titleI18nkey}
-              variant={button.variant ?? ButtonVariant.CONTAINED}
-              onClick={() => handleOpenModal(button.modalType)}
-              sx={{ marginLeft: "2rem" }}
-            >
-              {t(button.titleI18nkey)}
-            </Button>
-          ))}
+            key={button.titleI18nkey}
+            variant={button.variant ?? ButtonVariant.CONTAINED}
+            onClick={() => handleOpenModal(button.modalType)}
+            sx={{ marginLeft: "2rem" }}
+          >
+            {t(button.titleI18nkey)}
+          </Button>
+        ))}
       </Box>
     </Box>
   );
