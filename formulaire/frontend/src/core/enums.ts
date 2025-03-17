@@ -1,3 +1,5 @@
-export enum MODAL_TYPE {
+export enum ModalType {
   FOLDER = "FOLDER",
+  CREATE = "CREATE",
+  IMPORT = "IMPORT",
 }
