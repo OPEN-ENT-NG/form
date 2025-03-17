@@ -1,5 +1,5 @@
 import { ReactNode } from "react";
-import { MODAL_TYPE } from "src/core/enums";
+import { ModalType } from "src/core/enums";
 import { Folder } from "~/core/models/folders/types";
 
 export interface HomeProviderProps {
@@ -7,13 +7,13 @@ export interface HomeProviderProps {
 }
 
 export interface DisplayModalsState {
-  [MODAL_TYPE.FOLDER]: boolean;
+  [ModalType.FOLDER]: boolean;
 }
 
 export type HomeProviderContextType = {
   displayModals: DisplayModalsState;
   setDisplayModals: (value: DisplayModalsState) => void;
-  handleDisplayModal: (modalType: MODAL_TYPE) => void;
+  handleDisplayModal: (modalType: ModalType) => void;
   currentFolder: Folder | null;
   setCurrentFolder: (value: Folder | null) => void;
 };
