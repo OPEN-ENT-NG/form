@@ -1,7 +1,8 @@
 import { FC } from "react";
 
 import { FormBreadcrumbsProps } from "./types";
-import { Breadcrumbs, Link, Typography } from "@mui/material";
+import { Breadcrumbs } from "@mui/material";
+import { Link, Typography } from "@cgi-learning-hub/ui";
 import { FormsIcon } from "../SVG/FormsIcon";
 import {
   FORM_COLOR,
@@ -14,7 +15,7 @@ export const FormBreadcrumbs: FC<FormBreadcrumbsProps> = ({
   separator = null,
   isHeader = false,
   displaySeparator = false,
-}) => { 
+}) => {
   return (
     <Breadcrumbs
       separator={displaySeparator && (separator ?? null)}
@@ -27,18 +28,16 @@ export const FormBreadcrumbs: FC<FormBreadcrumbsProps> = ({
       >
         <FormsIcon height={isHeader ? "5rem" : "2.3rem"} />
       </Link>
-      {stringItems.map((stringItem) => {
-        return (
-          <Typography
-            key={stringItem}
-            color={isHeader ? FORM_COLOR : TEXT_PRIMARY_COLOR}
-            fontSize={isHeader ? "2.4rem" : "2rem"}
-            marginLeft={(separator === null || !displaySeparator) ? "-1rem" : ""}
-          >
-            {stringItem}
-          </Typography>
-        );
-      })}
+      {stringItems.map((stringItem) => (
+        <Typography
+          key={stringItem}
+          color={isHeader ? FORM_COLOR : TEXT_PRIMARY_COLOR}
+          fontSize={isHeader ? "2.4rem" : "2rem"}
+          marginLeft={(separator === null || !displaySeparator) ? "-1rem" : ""}
+        >
+          {stringItem}
+        </Typography>
+      ))}
     </Breadcrumbs>
   );
 };

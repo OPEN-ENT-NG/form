@@ -1,9 +1,10 @@
+import { ModalType } from "~/core/enums";
 import { ButtonVariant } from "~/core/style/themeProps";
 
 export interface HeaderButton {
-  title: string;
-  variant?: ButtonVariant | undefined;
-  action: () => void;
+  titleI18nkey: string;
+  variant?: ButtonVariant;
+  modalType: ModalType;
 }
 
 export interface HeaderProps {

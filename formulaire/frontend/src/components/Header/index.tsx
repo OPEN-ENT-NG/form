@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { ButtonVariant } from "~/core/style/themeProps";
 import { headerStyle } from "../Breadcrumbs/style";
+import { ModalType } from "~/core/enums";
 
 export const Header: FC<HeaderProps> = ({
   stringItems,
@@ -15,6 +16,19 @@ export const Header: FC<HeaderProps> = ({
   isCreationPage = false,
 }) => {
   const { t } = useTranslation(FORMULAIRE);
+
+  const handleOpenModal = (mdoalType: ModalType) => {
+    switch (mdoalType) {
+      case ModalType.CREATE:
+        console.log("call modal creation");
+        break;
+      case ModalType.IMPORT:
+        console.log("call modal creation");
+        break;
+      default:
+        console.log("unknown modal type");
+    }
+  };
 
   return (
     <Box sx={headerStyle}>
@@ -25,18 +39,16 @@ export const Header: FC<HeaderProps> = ({
       />
       {isCreationPage && <Box>//TODO</Box>}
       <Box>
-        {buttons.map((button) => {
-          return (
-            <Button
-              key={button.title}
+        {buttons.map((button) => (
+          <Button
+              key={button.titleI18nkey}
               variant={button.variant ?? ButtonVariant.CONTAINED}
-              onClick={button.action}
+              onClick={() => handleOpenModal(button.modalType)}
               sx={{ marginLeft: "2rem" }}
             >
-              {t(button.title)}
+              {t(button.titleI18nkey)}
             </Button>
-          );
-        })}
+          ))}
       </Box>
     </Box>
   );
