@@ -10,7 +10,7 @@ export const folderApi = emptySplitApi.injectEndpoints({
     // Liste des dossiers
     getFolders: builder.query<Folder[], void>({
       query: () => "folders",
-      transformResponse: (response: { data: Folder[] }) => response.data,
+      transformResponse: (response: Folder[]) => response,
       providesTags: ["Folders"],
     }),
 
