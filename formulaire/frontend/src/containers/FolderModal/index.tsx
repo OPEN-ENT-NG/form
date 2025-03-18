@@ -19,7 +19,7 @@ import { modalActionButtonStyle } from "~/core/style/modalStyle";
 import { FOLDER_MODAL_MODE, FolderModalProps } from "./types";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { useHomeProvider } from "~/providers/HomeProvider";
+import { useHome } from "~/providers/HomeProvider";
 import {
   useCreateFolderMutation,
   useUpdateFolderMutation,
@@ -34,7 +34,7 @@ export const FolderModal: FC<FolderModalProps> = ({
   handleClose,
   mode,
 }) => {
-  const { currentFolder } = useHomeProvider();
+  const { currentFolder } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const [newName, setNewName] = useState<string>("");
   const [createFolder] = useCreateFolderMutation();

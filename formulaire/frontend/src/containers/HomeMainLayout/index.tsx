@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { Box } from "@cgi-learning-hub/ui";
-import { useHomeProvider } from "~/providers/HomeProvider";
+import { useHome } from "~/providers/HomeProvider";
 import {
   sidebarStyle,
   sidebarContentStyle,
@@ -13,7 +13,7 @@ import { HomeSidebar } from "../HomeSidebar";
 import { HomeMainLayoutProps } from "./types";
 
 export const HomeMainLayout: FC<HomeMainLayoutProps> = ({ headerHeight }) => {
-  const { tab } = useHomeProvider();
+  const { tab } = useHome();
 
   return (
     <HomeMainLayoutWrapper headerHeight={headerHeight}>

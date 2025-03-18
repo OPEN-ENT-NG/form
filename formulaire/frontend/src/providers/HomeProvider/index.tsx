@@ -19,10 +19,10 @@ import { useGetFoldersQuery } from "~/services/api/services/folderApi";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
 
-export const useHomeProvider = () => {
+export const useHome = () => {
   const context = useContext(HomeProviderContext);
   if (!context) {
-    throw new Error("useHomeProvider must be used within a HomeProvider");
+    throw new Error("useHome must be used within a HomeProvider");
   }
   return context;
 };

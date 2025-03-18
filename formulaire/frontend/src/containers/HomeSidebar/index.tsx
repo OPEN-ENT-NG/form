@@ -1,5 +1,5 @@
-import { FC } from "react";
-import { useHomeProvider } from "~/providers/HomeProvider";
+import { FC, useCallback } from "react";
+import { useHome } from "~/providers/HomeProvider";
 import { buildFolderTree } from "./utils";
 import { TreeView, Box, Button } from "@cgi-learning-hub/ui";
 import { HomeTabs } from "~/components/HomeTab";
@@ -16,27 +16,27 @@ export const HomeSidebar: FC = () => {
     tab,
     toggleTab,
     handleDisplayModal,
-  } = useHomeProvider();
+  } = useHome();
   const treeViewItems = buildFolderTree(folders);
   const { t } = useTranslation(FORMULAIRE);
 
-  const handleSelectedItemChange = (
-    event: React.SyntheticEvent,
-    itemId: string | null,
-  ) => {
-    if (!itemId) {
-      setCurrentFolder(null);
-      return;
-    }
-    const folderId = parseInt(itemId);
-
-    if (!isNaN(folderId)) {
-      const selectedFolder = folders.find((folder) => folder.id === folderId);
-      if (selectedFolder) {
-        setCurrentFolder(selectedFolder);
+  const handleSelectedItemChange = useCallback(
+    (event: React.SyntheticEvent, itemId: string | null) => {
+      if (!itemId) {
+        setCurrentFolder(null);
+        return;
       }
-    }
-  };
+      const folderId = parseInt(itemId);
+
+      if (!isNaN(folderId)) {
+        const selectedFolder = folders.find((folder) => folder.id === folderId);
+        if (selectedFolder) {
+          setCurrentFolder(selectedFolder);
+        }
+      }
+    },
+    [folders, setCurrentFolder],
+  );
 
   return (
     <Box sx={homeSidebarWrapper}>
