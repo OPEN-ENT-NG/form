@@ -1,5 +1,6 @@
 export enum ModalType {
-  FOLDER = "FOLDER",
+  FOLDER_CREATE = "FOLDER_CREATE",
+  FOLDER_RENAME = "FOLDER_RENAME",
   CREATE = "CREATE",
   IMPORT = "IMPORT",
 }
