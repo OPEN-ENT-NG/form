@@ -6,13 +6,8 @@ import {
   useState,
   useEffect,
 } from "react";
-import {
-  DisplayModalsState,
-  HomeProviderContextType,
-  HomeProviderProps,
-} from "./types";
-import { initialDisplayModalsState, useRootFolders } from "./utils";
-import { ModalType } from "~/core/enums";
+import { HomeProviderContextType, HomeProviderProps } from "./types";
+import { useRootFolders } from "./utils";
 import { Folder } from "~/core/models/folders/types";
 import { HomeTabState } from "./enums";
 import { useGetFoldersQuery } from "~/services/api/services/folderApi";
@@ -32,9 +27,6 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
   const [currentFolder, setCurrentFolder] = useState<Folder | null>(
     rootFolders[0],
   );
-  const [displayModals, setDisplayModals] = useState<DisplayModalsState>(
-    initialDisplayModalsState,
-  );
   const [tab, setTab] = useState<HomeTabState>(HomeTabState.FORMS);
   const [folders, setFolders] = useState<Folder[]>([]);
 
@@ -46,12 +38,6 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
     }
   }, [foldersData, rootFolders]);
 
-  const handleDisplayModal = (modalType: ModalType) =>
-    setDisplayModals((prevState: any) => ({
-      ...prevState,
-      [modalType]: !prevState[modalType],
-    }));
-
   const toggleTab = (tab: HomeTabState) => {
     setTab((prev) => {
       return prev === tab ? prev : tab;
@@ -60,16 +46,13 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
 
   const value = useMemo<HomeProviderContextType>(
     () => ({
-      displayModals,
-      setDisplayModals,
-      handleDisplayModal,
       currentFolder,
       setCurrentFolder,
       tab,
       toggleTab,
       folders,
     }),
-    [displayModals, currentFolder, tab, folders],
+    [currentFolder, tab, folders],
   );
 
   return (
