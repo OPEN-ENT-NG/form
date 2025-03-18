@@ -33,7 +33,7 @@
   "formulaire.close": "Fermer",
   "formulaire.edit": "Modifier",
   "formulaire.checkremind.answered": "Répondu",
-  "formulaire.checkremind.notanswered":"Non répondu",
+  "formulaire.checkremind.notanswered": "Non répondu",
   "formulaire.conditional": "Conditionnelle",
   "formulaire.mandatory": "Obligatoire",
   "formulaire.mandatory.explanation": "Impossible de rendre non obligatoire une question conditionnelle",
@@ -115,6 +115,8 @@
   "formulaire.delete.confirmation.formulaire.folder": "Êtes-vous sûr de vouloir supprimer les formulaires/dossiers sélectionnés ?",
 
 
+  "formulaire.prop.create.title": "Créer un formulaire",
+  "formulaire.prop.edit.title": "Propriétés du formulaire",
   "formulaire.prop.public.label": "Formulaire public",
   "formulaire.prop.public.description": "Attention, dans le cas d'un formulaire public est anonyme et doit impérativement comporter une date de fin.",
   "formulaire.prop.public.warning": "Vous vous apprêtez à changer la nature de ce formulaire en un formulaire public. Les questions de type FICHIER seront donc supprimées s'il y en a.",
@@ -149,7 +151,7 @@
   "formulaire.remind.subject.placeholder": "Titre du rappel",
   "formulaire.remind.default.subject": "Vous avez un formulaire en attente de réponse",
   "formulaire.remind.default.body": "<div>Bonjour,<br><br>Vous n'avez toujours pas répondu au formulaire suivant : <a href=\"{0}\">{1}</a><br><br>Cordialement.</div>",
-  "formulaire.remind.link.label" : "Lien d'accès au formulaire : ",
+  "formulaire.remind.link.label": "Lien d'accès au formulaire : ",
   "formulaire.remind.noDistrib": "Ce formulaire n'est pas partagé en mode Réponse. Veuillez l'envoyer avant de pouvoir d'effectuer un rappel.",
   "formulaire.remind.notOpen": "Le formulaire n'est actuellement pas ouvert. Veuillez modifier les dates d'ouvertures/fermetures ou envoyer votre rappel dans ces intervalles.",
   "formulaire.remind.link": "Pour rappel le lien vers le formulaire est : ",
@@ -173,11 +175,11 @@
 
   "formulaire.folder.name": "Nom du dossier",
   "formulaire.folder.name.rename": "Renommer le dossier",
-  "formulaire.folder.nbFolderChildren" : "Nombre de sous-dossiers",
-  "formulaire.folder.nbFormChildren" : "Nombre de formulaires",
-  "formulaire.folder.nbItems" : "{0} dossier(s), {1} formulaire(s)",
-  "formulaire.folder.nbItems.error" : "Compteurs indisponibles",
-  "formulaire.folder.empty" : "Dossier vide",
+  "formulaire.folder.nbFolderChildren": "Nombre de sous-dossiers",
+  "formulaire.folder.nbFormChildren": "Nombre de formulaires",
+  "formulaire.folder.nbItems": "{0} dossier(s), {1} formulaire(s)",
+  "formulaire.folder.nbItems.error": "Compteurs indisponibles",
+  "formulaire.folder.empty": "Dossier vide",
   "formulaire.folder.create": "Créer un dossier",
   "formulaire.folder.rename": "Renommer un dossier",
 
@@ -231,16 +233,16 @@
   "formulaire.element.undo.confirmation": "Êtes-vous sûr(e) de vouloir annuler vos changements ?",
   "formulaire.element.delete.empty.warning": "Suppression impossible : un formulaire déjà envoyé ne peut être vide",
   "formulaire.element.delete.response.fill.warning": "Vous ne pouvez pas supprimer cet élément, des utilisateurs y ont déjà répondu",
-  "formulaire.element.block.sharing.multiple.conditional" : "Un ou plusieurs éléments de votre formulaire ne sont pas valides. Veuillez corriger ces éléments avant d'effectuer le partage.",
+  "formulaire.element.block.sharing.multiple.conditional": "Un ou plusieurs éléments de votre formulaire ne sont pas valides. Veuillez corriger ces éléments avant d'effectuer le partage.",
 
   "formulaire.section.title.empty": "Nom de la section",
   "formulaire.section.missing.field.title": "Attention, la section ci-dessus nécessite un titre pour être valide.",
   "formulaire.section.missing.field.choice": "Attention, la section ci-dessus nécessite au moins un choix pour être valide.",
   "formulaire.section.save.missing.field": "Attention, certaines sections manquent d'informations pour être valides !",
-  "formulaire.section.save.multiple.conditional" : "Attention, une section ne doit comporter qu'une question conditionnelle pour être valide",
+  "formulaire.section.save.multiple.conditional": "Attention, une section ne doit comporter qu'une question conditionnelle pour être valide",
   "formulaire.question.save.image.missing.field": "Attention, le choix ne peut pas comporter une image seule. Veuillez saisir du texte.",
   "formulaire.question.save.images.missing.fields": "Attention, les choix ne peuvent pas comporter une image seule. Veuillez saisir du texte.",
-  "formulaire.element.block.multiple.conditional" : "Attention, la section ci-dessus ne doit comporter qu'une question conditionnelle pour être valide",
+  "formulaire.element.block.multiple.conditional": "Attention, la section ci-dessus ne doit comporter qu'une question conditionnelle pour être valide",
   "formulaire.section.no.description": "Pas de description",
   "formulaire.section.new.question": "+ Ajouter une question",
 
@@ -257,9 +259,9 @@
   "formulaire.question.type.CURSOR": "Curseur",
   "formulaire.question.type.RANKING": "Ordonner",
   "formulaire.question.type.description.FREETEXT": "Saisie d'un texte à afficher au répondant (ex : introduction d'une partie, ...)",
-  "formulaire.question.type.description.SHORTANSWER":" Question permettant une réponse texte courte sans mise en page",
+  "formulaire.question.type.description.SHORTANSWER": " Question permettant une réponse texte courte sans mise en page",
   "formulaire.question.type.description.LONGANSWER": "Question permettant une réponse plus longue avec une mise en page",
-  "formulaire.question.type.description.SINGLEANSWER":"Menu déroulant permettant au répondant de choisir une réponse parmi une liste",
+  "formulaire.question.type.description.SINGLEANSWER": "Menu déroulant permettant au répondant de choisir une réponse parmi une liste",
   "formulaire.question.type.description.MULTIPLEANSWER": "Question à choix multiple permettant au répondant de choisir une ou plusieurs réponses",
   "formulaire.question.type.description.DATE": "Question permettant au répondant de saisir une date",
   "formulaire.question.type.description.TIME": "Question permettant au répondant de saisir une heure",
@@ -296,7 +298,6 @@
   "formulaire.matrix.columns": "Colonnes (Options de réponses)",
   "formulaire.matrix.lines": "Lignes",
 
-
   "formulaire.response": "réponse",
   "formulaire.response.empty": "Sans réponse",
   "formulaire.response.missing": "Non répondu",
@@ -315,7 +316,6 @@
   "formulaire.responses.empty.notif": "Vous recevrez une notification dès qu'un formulaire vous aura été envoyé.",
   "formulaire.response.custom.explanation": "Vous avez saisi le choix 'Autre', veuillez indiquez votre réponse dans le champ suivant : ",
   "formulaire.response.custom.write": "Saisissez votre réponse",
-
 
   "formulaire.error": "Erreur",
   "formulaire.error.403": "Désolé, vous n'avez pas les droits pour accéder à cette page",
