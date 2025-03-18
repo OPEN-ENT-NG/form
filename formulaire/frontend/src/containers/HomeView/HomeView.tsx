@@ -9,12 +9,19 @@ import { FOLDER_MODAL_MODE } from "../FolderModal/types";
 import { HomeMainLayout } from "../HomeMainLayout";
 import { ModalType } from "~/core/enums";
 import { useModal } from "~/providers/ModalProvider";
+import { FormPropModal } from "../FormPropModal";
+import { FormPropModalMode } from "../FormPropModal/enums";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const headerButtons = useGetHomeHeaderButtons();
   const {
-    displayModals: { FOLDER_CREATE, FOLDER_RENAME },
+    displayModals: {
+      FOLDER_CREATE,
+      FOLDER_RENAME,
+      FORM_PROP_CREATE,
+      FORM_PROP_UPDATE,
+    },
     toggleModal,
   } = useModal();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
@@ -37,6 +44,20 @@ export const HomeView: FC = () => {
           isOpen={FOLDER_RENAME}
           handleClose={() => toggleModal(ModalType.FOLDER_RENAME)}
           mode={FOLDER_MODAL_MODE.RENAME}
+        />
+      )}
+      {FORM_PROP_CREATE && (
+        <FormPropModal
+          isOpen={FORM_PROP_CREATE}
+          handleClose={() => toggleModal(ModalType.FORM_PROP_CREATE)}
+          mode={FormPropModalMode.CREATE}
+        />
+      )}
+      {FORM_PROP_UPDATE && (
+        <FormPropModal
+          isOpen={FORM_PROP_UPDATE}
+          handleClose={() => toggleModal(ModalType.FORM_PROP_UPDATE)}
+          mode={FormPropModalMode.UPDATE}
         />
       )}
     </Box>

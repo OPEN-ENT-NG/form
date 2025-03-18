@@ -201,7 +201,8 @@
 
   "formulaire.form.import.button": "Importer un formulaire",
   "formulaire.form.create.button": "Créer un formulaire",
-  "formulaire.form.create.title": "Titre de mon formulaire",
+  "formulaire.form.create.title": "Titre du formulaire",
+  "formulaire.form.create.placeholder": "Titre de mon formulaire",
   "formulaire.form.create.title.mobile": "Titre",
   "formulaire.form.checkremind.title": "Suivi des réponses",
   "formulaire.export.choice.format": "Veuillez choisir le format pour votre export de formulaire :",
