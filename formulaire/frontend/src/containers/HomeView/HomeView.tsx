@@ -3,17 +3,23 @@ import { useTranslation } from "react-i18next";
 import { Header } from "~/components/Header";
 import { FORMULAIRE } from "~/core/constants";
 import { Box } from "@cgi-learning-hub/ui";
-import { getHomeHeaderButtons, useElementHeight } from "./utils";
+import { useGetHomeHeaderButtons, useElementHeight } from "./utils";
 import { FolderModal } from "../FolderModal";
 import { FOLDER_MODAL_MODE } from "../FolderModal/types";
 import { HomeMainLayout } from "../HomeMainLayout";
-import { useHome } from "~/providers/HomeProvider";
 import { ModalType } from "~/core/enums";
+import { useModal } from "~/providers/ModalProvider";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
-  const headerButtons = getHomeHeaderButtons();
-  const { displayModals, handleDisplayModal } = useHome();
+  const headerButtons = useGetHomeHeaderButtons();
+  const {
+    displayModals: {
+      FOLDER_CREATE,
+      FOLDER_RENAME,
+    },
+    toggleModal,
+  } = useModal();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
   return (
@@ -22,20 +28,20 @@ export const HomeView: FC = () => {
         <Header stringItems={[t("formulaire.title")]} buttons={headerButtons} />
       </Box>
       <HomeMainLayout headerHeight={headerHeight} />
-      {displayModals.FOLDER_CREATE && (
+      {FOLDER_CREATE && (
         <FolderModal
-          isOpen={displayModals.FOLDER_CREATE}
-          handleClose={() => handleDisplayModal(ModalType.FOLDER_CREATE)}
+          isOpen={FOLDER_CREATE}
+          handleClose={() => toggleModal(ModalType.FOLDER_CREATE)}
           mode={FOLDER_MODAL_MODE.CREATE}
         />
       )}
-      {displayModals.FOLDER_RENAME && (
+      {FOLDER_RENAME && (
         <FolderModal
-          isOpen={displayModals.FOLDER_RENAME}
-          handleClose={() => handleDisplayModal(ModalType.FOLDER_RENAME)}
+          isOpen={FOLDER_RENAME}
+          handleClose={() => toggleModal(ModalType.FOLDER_RENAME)}
           mode={FOLDER_MODAL_MODE.RENAME}
         />
       )}
-    </Box>
+          </Box>
   );
 };

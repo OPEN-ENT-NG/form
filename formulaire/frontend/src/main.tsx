@@ -25,6 +25,7 @@ import { router } from "./routes";
 import "~/i18n";
 import { GlobalStyles } from "@cgi-learning-hub/ui";
 import { globalOverrideStyles } from "./styles/global";
+import { ModalProvider } from "./providers/ModalProvider";
 
 const rootElement = document.getElementById("root");
 const root = createRoot(rootElement!);
@@ -72,9 +73,11 @@ const App = () => {
               themeId={themePlatform ?? "default"}
               options={options}
             >
-              <GlobalStyles styles={globalOverrideStyles} />
-              <ToastContainer {...TOAST_CONFIG} />
-              <RouterProvider router={router} />
+              <ModalProvider>
+                <GlobalStyles styles={globalOverrideStyles} />
+                <ToastContainer {...TOAST_CONFIG} />
+                <RouterProvider router={router} />
+              </ModalProvider>
             </ThemeProviderCGI>
           </EdificeThemeProvider>
         </EdificeClientProvider>

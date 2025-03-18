@@ -7,16 +7,13 @@ import { ModalType } from "~/core/enums";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { homeSidebarWrapper } from "./style";
+import { useModal } from "~/providers/ModalProvider";
 
 export const HomeSidebar: FC = () => {
-  const {
-    folders,
-    currentFolder,
-    setCurrentFolder,
-    tab,
-    toggleTab,
-    handleDisplayModal,
-  } = useHome();
+  const { folders, currentFolder, setCurrentFolder, tab, toggleTab } =
+    useHome();
+  const { toggleModal } = useModal();
+
   const treeViewItems = buildFolderTree(folders);
   const { t } = useTranslation(FORMULAIRE);
 
@@ -51,7 +48,7 @@ export const HomeSidebar: FC = () => {
       <Button
         variant="outlined"
         color="primary"
-        onClick={() => handleDisplayModal(ModalType.FOLDER_CREATE)}
+        onClick={() => toggleModal(ModalType.FOLDER_CREATE)}
       >
         {t("formulaire.folder.create")}
       </Button>
