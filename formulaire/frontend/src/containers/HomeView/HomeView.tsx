@@ -6,7 +6,7 @@ import { Box } from "@cgi-learning-hub/ui";
 import { useGetHomeHeaderButtons, useElementHeight } from "./utils";
 import { FolderModal } from "../FolderModal";
 import { FOLDER_MODAL_MODE } from "../FolderModal/types";
-import { HomeMainLayout } from "../HomeMainLayout";
+import { HomeLayout } from "../HomeLayout";
 import { ModalType } from "~/core/enums";
 import { useModal } from "~/providers/ModalProvider";
 import { FormPropModal } from "../FormPropModal";
@@ -26,7 +26,7 @@ export const HomeView: FC = () => {
       <Box ref={headerRef}>
         <Header stringItems={[t("formulaire.title")]} buttons={headerButtons} />
       </Box>
-      <HomeMainLayout headerHeight={headerHeight} />
+      <HomeLayout headerHeight={headerHeight} />
       {FOLDER_CREATE && (
         <FolderModal
           isOpen={FOLDER_CREATE}
