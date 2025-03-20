@@ -27,7 +27,7 @@ import {
 import {
   CreateFolderPayload,
   UpdateFolderPayload,
-} from "~/core/models/folders/types";
+} from "~/core/models/folder/types";
 
 export const FolderModal: FC<FolderModalProps> = ({
   isOpen,
