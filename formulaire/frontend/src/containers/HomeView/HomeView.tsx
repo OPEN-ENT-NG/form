@@ -16,12 +16,7 @@ export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const headerButtons = useGetHomeHeaderButtons();
   const {
-    displayModals: {
-      FOLDER_CREATE,
-      FOLDER_RENAME,
-      FORM_PROP_CREATE,
-      FORM_PROP_UPDATE,
-    },
+    displayModals: { FOLDER_CREATE, FOLDER_RENAME, FORM_PROP_CREATE, FORM_PROP_UPDATE },
     toggleModal,
   } = useModal();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
