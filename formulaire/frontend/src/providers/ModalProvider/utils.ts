@@ -6,5 +6,5 @@ export const initialDisplayModalsState: DisplayModalsState = {
   [ModalType.FOLDER_RENAME]: false,
   [ModalType.FORM_PROP_CREATE]: false,
   [ModalType.FORM_PROP_UPDATE]: false,
+  [ModalType.FORM_FOLDER_DELETE]: false,
 };
-
