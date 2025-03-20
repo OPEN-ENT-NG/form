@@ -1,4 +1,4 @@
-import { Folder } from "~/core/models/folders/types";
+import { Folder } from "~/core/models/folder/types";
 import { CustomTreeViewItem, ICON_TYPE } from "@cgi-learning-hub/ui";
 
 const SYSTEM_FOLDERS = {
