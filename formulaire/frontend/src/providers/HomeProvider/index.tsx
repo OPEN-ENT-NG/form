@@ -11,6 +11,7 @@ import { useRootFolders } from "./utils";
 import { Folder } from "~/core/models/folders/types";
 import { HomeTabState } from "./enums";
 import { useGetFoldersQuery } from "~/services/api/services/folderApi";
+import { Form } from "~/core/models/forms/types";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
 
@@ -29,7 +30,8 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
   );
   const [tab, setTab] = useState<HomeTabState>(HomeTabState.FORMS);
   const [folders, setFolders] = useState<Folder[]>([]);
-
+  const [selectedFolders, setSelectedFolders] = useState<Folder[]>([]);
+  const [selectedForms, setSelectedForms] = useState<Form[]>([]);
   const { data: foldersData } = useGetFoldersQuery();
 
   useEffect(() => {
@@ -51,8 +53,12 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
       tab,
       toggleTab,
       folders,
+      selectedFolders,
+      setSelectedFolders,
+      selectedForms,
+      setSelectedForms,
     }),
-    [currentFolder, tab, folders],
+    [currentFolder, tab, folders, selectedFolders, selectedForms],
   );
 
   return (

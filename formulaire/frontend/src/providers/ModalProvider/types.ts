@@ -10,6 +10,7 @@ export interface DisplayModalsState {
   [ModalType.FOLDER_RENAME]: boolean;
   [ModalType.FORM_PROP_CREATE]: boolean;
   [ModalType.FORM_PROP_UPDATE]: boolean;
+  [ModalType.FORM_FOLDER_DELETE]: boolean;
 }
 
 export type ModalProviderContextType = {

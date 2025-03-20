@@ -6,6 +6,7 @@ export const PRIMARY_LIGHT_COLOR = "primary.light";
 export const PRIMARY_MAIN_COLOR = "primary.main";
 export const PRIMARY_DARK_COLOR = "primary.dark";
 export const PRIMARY_DARKER_COLOR = "primary.darker";
+export const PRIMARY = "primary";
 
 // Secondary Colors
 export const SECONDARY_LIGHTER_COLOR = "secondary.lighter";
