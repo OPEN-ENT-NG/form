@@ -26,6 +26,7 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
   const [selectedForms, setSelectedForms] = useState<Form[]>([]);
 
   const [tab, setTab] = useState<HomeTabState>(HomeTabState.FORMS);
+  const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
 
   const { data: foldersData } = useGetFoldersQuery();
   const { data: formsData } = useGetFormsQuery();
@@ -46,6 +47,11 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
     return;
   }, [foldersData, rootFolders]);
 
+  useEffect(() => {
+    if (selectedFolders.length || selectedForms.length) return setIsToasterOpen(true);
+    return setIsToasterOpen(false);
+  }, [selectedFolders, selectedForms]);
+
   const value = useMemo<HomeProviderContextType>(
     () => ({
       currentFolder,
@@ -58,8 +64,9 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
       setSelectedFolders,
       selectedForms,
       setSelectedForms,
+      isToasterOpen,
     }),
-    [currentFolder, tab, folders, selectedFolders, selectedForms, forms],
+    [currentFolder, tab, folders, selectedFolders, selectedForms, forms, isToasterOpen],
   );
 
   return <HomeProviderContext.Provider value={value}>{children}</HomeProviderContext.Provider>;
