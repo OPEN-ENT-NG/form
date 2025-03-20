@@ -1,7 +1,7 @@
-import { Folder } from "~/core/models/folders/types";
-import { Form } from "~/core/models/forms/types";
+import { Form } from "~/core/models/form/types";
 import { DeleteModalVariant } from "./enum";
 import { deleteModalContent } from "./types";
+import { Folder } from "~/core/models/folder/types";
 
 export const getCorrectValue = (
   forms: Form[],
