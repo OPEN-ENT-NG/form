@@ -1,11 +1,4 @@
-import {
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  TextField,
-  Typography,
-} from "@cgi-learning-hub/ui";
+import { Box, Button, IconButton, Modal, TextField, Typography } from "@cgi-learning-hub/ui";
 import CloseIcon from "@mui/icons-material/Close";
 import { FC, useMemo, useState } from "react";
 import { modalBoxStyle, spaceBetweenBoxStyle } from "~/core/style/boxStyles";
@@ -20,20 +13,10 @@ import { FOLDER_MODAL_MODE, FolderModalProps } from "./types";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
-import {
-  useCreateFolderMutation,
-  useUpdateFolderMutation,
-} from "~/services/api/services/folderApi";
-import {
-  CreateFolderPayload,
-  UpdateFolderPayload,
-} from "~/core/models/folder/types";
+import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/folderApi";
+import { CreateFolderPayload, UpdateFolderPayload } from "~/core/models/folder/types";
 
-export const FolderModal: FC<FolderModalProps> = ({
-  isOpen,
-  handleClose,
-  mode,
-}) => {
+export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode }) => {
   const { currentFolder } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const [newName, setNewName] = useState<string>("");
@@ -92,9 +75,7 @@ export const FolderModal: FC<FolderModalProps> = ({
           </IconButton>
         </Box>
         <Box sx={folderModalContentStyle}>
-          <Typography sx={folderModalTextFieldLabelStyle}>
-            {t("formulaire.folder.name")}
-          </Typography>
+          <Typography sx={folderModalTextFieldLabelStyle}>{t("formulaire.folder.name")}</Typography>
           <TextField
             variant="standard"
             sx={folderModalTextFieldStyle}
@@ -106,11 +87,7 @@ export const FolderModal: FC<FolderModalProps> = ({
           <Button variant="outlined" color="primary" onClick={handleClose}>
             {t("formulaire.cancel")}
           </Button>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={currentConfig.handleAction}
-          >
+          <Button variant="contained" color="primary" onClick={currentConfig.handleAction}>
             {t(currentConfig.buttonText)}
           </Button>
         </Box>
