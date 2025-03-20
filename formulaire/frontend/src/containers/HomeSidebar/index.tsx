@@ -20,7 +20,7 @@ export const HomeSidebar: FC = () => {
   const handleSelectedItemChange = useCallback(
     (event: React.SyntheticEvent, itemId: string | null) => {
       if (!itemId) {
-        setCurrentFolder(null);
+        setCurrentFolder(folders[0]);
         return;
       }
       const folderId = parseInt(itemId);
@@ -40,6 +40,7 @@ export const HomeSidebar: FC = () => {
       <HomeTabs value={tab} setValue={toggleTab} />
       <TreeView
         items={treeViewItems}
+        height={"30rem"}
         selectedItemId={
           currentFolder?.id.toString() ?? folders[0].id.toString()
         }

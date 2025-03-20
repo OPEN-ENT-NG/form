@@ -6,29 +6,21 @@ import { FormBreadcrumbs } from "../Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { ButtonVariant } from "~/core/style/themeProps";
 import { headerStyle } from "../Breadcrumbs/style";
+import { ComponentVariant } from "~/core/style/themeProps";
 
-export const Header: FC<HeaderProps> = ({
-  stringItems,
-  buttons,
-  isCreationPage = false,
-}) => {
+export const Header: FC<HeaderProps> = ({ stringItems, buttons, isCreationPage = false }) => {
   const { t } = useTranslation(FORMULAIRE);
 
   return (
     <Box sx={headerStyle}>
-      <FormBreadcrumbs
-        stringItems={stringItems}
-        separator={<NavigateNextIcon sx={{ height: "2.4rem" }} />}
-        isHeader
-      />
+      <FormBreadcrumbs stringItems={stringItems} separator={<NavigateNextIcon sx={{ height: "2.4rem" }} />} isHeader />
       {isCreationPage && <Box>//TODO</Box>}
       <Box>
         {buttons.map((button) => (
           <Button
             key={button.titleI18nkey}
-            variant={button.variant ?? ButtonVariant.CONTAINED}
+            variant={button.variant ?? ComponentVariant.CONTAINED}
             onClick={() => button.action()}
             sx={{ marginLeft: "2rem" }}
           >
