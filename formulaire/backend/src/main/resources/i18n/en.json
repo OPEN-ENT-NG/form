@@ -102,6 +102,17 @@
   "formulaire.visualize.path": "Visualize paths",
   "formulaire.sort": "Sort",
 
+  "formulaire.delete.formulaire.unique": "Delete the form",
+  "formulaire.delete.formulaire.multiple": "Delete the forms",
+  "formulaire.delete.folder.unique": "Delete the folder",
+  "formulaire.delete.folder.multiple": "Delete the folders",
+  "formulaire.delete.formulaire.folder": "Delete forms/folders",
+  "formulaire.delete.confirmation.formulaire.unique": "Are you sure you want to delete the selected form?",
+  "formulaire.delete.confirmation.formulaire.multiple": "Are you sure you want to delete the selected forms?",
+  "formulaire.delete.confirmation.folder.unique": "Are you sure you want to delete the selected folder?",
+  "formulaire.delete.confirmation.folder.multiple": "Are you sure you want to delete the selected folders?",
+  "formulaire.delete.confirmation.formulaire.folder": "Are you sure you want to delete the selected forms/folders?",
+
   "formulaire.prop.public.label": "Public form",
   "formulaire.prop.public.description": "Be careful, for a public form is anonymous and must necessarily have an end date.",
   "formulaire.prop.public.warning": "You are about to change the nature of this form to a public form. Any FILE questions will be removed.",

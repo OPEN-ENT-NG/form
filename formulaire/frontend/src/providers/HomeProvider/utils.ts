@@ -1,16 +1,7 @@
-import { ModalType } from "~/core/enums";
-import { DisplayModalsState } from "./types";
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Folder } from "~/core/models/folders/types";
 import { FORMULAIRE } from "~/core/constants";
-
-export const initialDisplayModalsState: DisplayModalsState = {
-  [ModalType.FOLDER_CREATE]: false,
-  [ModalType.FOLDER_RENAME]: false,
-  [ModalType.FORM_PROP_CREATE]: false,
-  [ModalType.FORM_PROP_UPDATE]: false,
-};
 
 export const useRootFolders = (): Folder[] => {
   const { t } = useTranslation(FORMULAIRE);
