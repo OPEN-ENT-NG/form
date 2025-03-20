@@ -3,7 +3,7 @@ import { HomeProviderContextType, HomeProviderProps } from "./types";
 import { useRootFolders } from "./utils";
 import { Folder } from "~/core/models/folder/types";
 import { HomeTabState } from "./enums";
-import { useGetFoldersQuery } from "~/services/api/services/folderApi";
+import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
 import { Form } from "~/core/models/form/types";
 import { useGetFormsQuery } from "~/services/api/services/formApi";
 
