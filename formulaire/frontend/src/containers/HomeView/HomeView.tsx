@@ -14,10 +14,7 @@ export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const headerButtons = useGetHomeHeaderButtons();
   const {
-    displayModals: {
-      FOLDER_CREATE,
-      FOLDER_RENAME,
-    },
+    displayModals: { FOLDER_CREATE, FOLDER_RENAME },
     toggleModal,
   } = useModal();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
@@ -42,6 +39,6 @@ export const HomeView: FC = () => {
           mode={FOLDER_MODAL_MODE.RENAME}
         />
       )}
-          </Box>
+    </Box>
   );
 };
