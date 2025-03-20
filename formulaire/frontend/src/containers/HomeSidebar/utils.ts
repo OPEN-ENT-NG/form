@@ -17,9 +17,7 @@ export const buildFolderTree = (folders: Folder[]): CustomTreeViewItem[] => {
 
   const buildNestedFolders = (parentId: number): CustomTreeViewItem[] => {
     return folders
-      .filter(
-        (folder) => folder.parent_id === parentId && folder.id !== parentId,
-      )
+      .filter((folder) => folder.parent_id === parentId && folder.id !== parentId)
       .map((folder) => {
         const childFolders = buildNestedFolders(folder.id);
 
