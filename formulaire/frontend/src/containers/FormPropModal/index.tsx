@@ -35,7 +35,7 @@ import { FormPropModalProps } from "./types";
 import { FormPropField, FormPropModalMode } from "./enums";
 import { useFormPropInputValueState } from "./useFormPropValueState";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
+import { FORMULAIRE, IMAGE_PICKER_INFO } from "~/core/constants";
 import dayjs from "dayjs";
 import { buildDelegatesParam, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";
 import { GREY_DARK_COLOR } from "~/core/style/colors";
@@ -44,6 +44,7 @@ import { useGetDelegatesQuery } from "~/services/api/services/delegateApi";
 import { useHome } from "~/providers/HomeProvider";
 import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formApi";
 import { buildFormPayload } from "~/core/models/form/utils";
+import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 
 export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {
@@ -139,33 +140,35 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
     <Modal open={isOpen} onClose={handleClose}>
       <Box sx={formPropModalWrapper}>
         <Box sx={spaceBetweenBoxStyle}>
-          <Typography variant="h2" fontWeight="bold">
+          <Typography variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
             {modalTitle}
           </Typography>
           <IconButton onClick={handleClose}>
             <CloseIcon />
           </IconButton>
         </Box>
-        <Typography variant="h4">{t("formulaire.prop.edit.title")}</Typography>
+        <Typography variant={TypographyVariant.H4}>{t("formulaire.prop.edit.title")}</Typography>
         <Box sx={mainColumnStyle}>
           <Box sx={fileDropZoneWrapper}>
             <ImagePicker
               width="16rem"
               height="16.3rem"
-              information="SVG, PNG, JPG, GIF"
+              information={IMAGE_PICKER_INFO}
               onFileChange={(file) => handleFormPropInputValueChange(FormPropField.PICTURE, file?.name ?? "")}
             />
           </Box>
           <Box sx={mainContentWrapper}>
             <Box sx={subContentColumnWrapper}>
-              <Typography variant="h4">{t("formulaire.form.create.title")}</Typography>
+              <Typography variant={TypographyVariant.H4}>{t("formulaire.form.create.title")}</Typography>
               <TextField
-                variant="standard"
+                variant={ComponentVariant.STANDARD}
                 sx={textFieldStyle}
                 placeholder={t("formulaire.form.create.placeholder")}
                 value={formPropInputValue[FormPropField.TITLE]}
                 onChange={(e) => handleFormPropInputValueChange(FormPropField.TITLE, e.target.value)}
-                inputProps={{ style: { width: "100%" } }}
+                slotProps={{
+                  htmlInput: { style: { width: "100%" } },
+                }}
               />
             </Box>
             <Box sx={subContentRowWrapper}>
@@ -230,7 +233,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                       <Box>
                         <TextField
                           sx={{ maxWidth: "50rem" }}
-                          variant="outlined"
+                          variant={ComponentVariant.OUTLINED}
                           fullWidth
                           multiline
                           rows={4}
@@ -248,7 +251,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                         <Box sx={rgpdContentRowStyle}>
                           <Typography>{t("formulaire.prop.rgpd.goal")}</Typography>
                           <TextField
-                            variant="standard"
+                            variant={ComponentVariant.STANDARD}
                             sx={textFieldStyle}
                             placeholder={t("formulaire.prop.rgpd.goal.input")}
                             value={rgpdGoal}
@@ -266,7 +269,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                           <Typography>{t("formulaire.prop.rgpd.lifetime")}</Typography>
                           <FormControl variant="outlined">
                             <Select
-                              variant="standard"
+                              variant={ComponentVariant.STANDARD}
                               labelId="duration-select-label"
                               id="duration-select"
                               value={rgpdLifeTime}

@@ -19,8 +19,8 @@ import { useDeleteFoldersMutation } from "~/services/api/services/folderApi";
 import { useDeleteFormMutation } from "~/services/api/services/formApi";
 import { PRIMARY } from "~/core/style/colors";
 import {
-  ButtonVariant,
-  TypographyFontWeight,
+  ComponentVariant,
+  TypographyFont,
   TypographyVariant,
 } from "~/core/style/themeProps";
 
@@ -50,7 +50,7 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
         <Box sx={spaceBetweenBoxStyle}>
           <Typography
             variant={TypographyVariant.H2}
-            fontWeight={TypographyFontWeight.BOLD}
+            fontWeight={TypographyFont.BOLD}
           >
             {t(getTitle(selectedForms, selectedFolders))}
           </Typography>
@@ -63,14 +63,14 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
         </Box>
         <Box sx={modalActionButtonStyle}>
           <Button
-            variant={ButtonVariant.OUTLINED}
+            variant={ComponentVariant.OUTLINED}
             color={PRIMARY}
             onClick={handleClose}
           >
             {t("formulaire.close")}
           </Button>
           <Button
-            variant={ButtonVariant.CONTAINED}
+            variant={ComponentVariant.CONTAINED}
             color={PRIMARY}
             onClick={handleDelete}
           >
