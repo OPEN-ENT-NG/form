@@ -2,7 +2,7 @@ import {
   Folder,
   CreateFolderPayload,
   UpdateFolderPayload,
-} from "~/core/models/folders/types.ts";
+} from "~/core/models/folder/types.ts";
 import { emptySplitApi } from "./emptySplitApi.ts";
 
 export const folderApi = emptySplitApi.injectEndpoints({
@@ -91,7 +91,6 @@ export const folderApi = emptySplitApi.injectEndpoints({
   overrideExisting: false,
 });
 
-// Export des hooks générés automatiquement
 export const {
   useGetFoldersQuery,
   useCreateFolderMutation,
