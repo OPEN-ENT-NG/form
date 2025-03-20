@@ -91,7 +91,6 @@ export const folderApi = emptySplitApi.injectEndpoints({
   overrideExisting: false,
 });
 
-// Export des hooks générés automatiquement
 export const {
   useGetFoldersQuery,
   useCreateFolderMutation,

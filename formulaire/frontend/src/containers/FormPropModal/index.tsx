@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
   Box,
   IconButton,
@@ -24,8 +24,13 @@ import {
   subContentColumnWrapper,
   subContentRowWrapper,
   textFieldStyle,
+  checkboxRowStyle,
+  dateEndingCheckboxStyle,
+  rgpdContentRowStyle,
+  modalActionsStyle,
+  datePickerWrapperStyle,
 } from "./style";
-import { flexEndBoxStyle, flexStartBoxStyle, spaceBetweenBoxStyle } from "~/styles/boxStyles";
+import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
 import { FormPropModalProps } from "./types";
 import { FormPropField, FormPropModalMode } from "./enums";
 import { useFormPropInputValueState } from "./useFormPropValueState";
@@ -42,6 +47,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
     formPropInputValue,
     formPropInputValue: { dateOpening, isPublic, description, hasRgpd, rgpdGoal, rgpdLifeTime, title },
     handleFormPropInputValueChange,
+    handleDateChange,
   } = useFormPropInputValueState();
   const { t } = useTranslation(FORMULAIRE);
   const [isEndingDateEditable, setIsEndingDateEditable] = useState<boolean>(false);
@@ -67,26 +73,26 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
     [mode],
   );
 
-  const handleDateChange = (
-    field: FormPropField.DATE_OPENING | FormPropField.DATE_ENDING,
-    value: dayjs.Dayjs | null,
-  ) => {
-    if (value) {
-      handleFormPropInputValueChange(field, value.toDate());
-    }
-  };
-
-  const handleCheckboxChange = (field: FormPropField) => {
-    if (field === FormPropField.DESCRIPTION) {
-      return setIsDescriptionDisplay(!isDescriptionDisplay);
-    }
-    if (field === FormPropField.IS_PUBLIC) {
-      setIsEndingDateEditable(!formPropInputValue[field]);
-      handleFormPropInputValueChange(FormPropField.IS_ANONYMOUS, !formPropInputValue[field]);
+  const handleCheckboxChange = useCallback(
+    (field: FormPropField) => {
+      if (field === FormPropField.DESCRIPTION) {
+        return setIsDescriptionDisplay(!isDescriptionDisplay);
+      }
+      if (field === FormPropField.IS_PUBLIC) {
+        setIsEndingDateEditable(!formPropInputValue[field]);
+        handleFormPropInputValueChange(FormPropField.IS_ANONYMOUS, !formPropInputValue[field]);
+        return handleFormPropInputValueChange(field, !formPropInputValue[field]);
+      }
       return handleFormPropInputValueChange(field, !formPropInputValue[field]);
-    }
-    return handleFormPropInputValueChange(field, !formPropInputValue[field]);
-  };
+    },
+    [
+      formPropInputValue,
+      isDescriptionDisplay,
+      setIsDescriptionDisplay,
+      setIsEndingDateEditable,
+      handleFormPropInputValueChange,
+    ],
+  );
 
   const handleSubmit = () => {
     console.log({ state: formPropInputValue, payload: buildFormPayload(formPropInputValue) });
@@ -102,7 +108,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
       return handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
     }
     return handleFormPropInputValueChange(FormPropField.DATE_ENDING, null);
-  }, [isEndingDateEditable, dateOpening]);
+  }, [isEndingDateEditable, dateOpening, handleFormPropInputValueChange]);
 
   return (
     <Modal open={isOpen} onClose={handleClose}>
@@ -139,20 +145,14 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
             </Box>
             <Box sx={subContentRowWrapper}>
               <Typography>{t("formulaire.date.opening")}</Typography>
-              <Box width={"15rem"}>
+              <Box sx={datePickerWrapperStyle}>
                 <DatePicker
                   minDate={dayjs()}
                   value={dayjs(formPropInputValue[FormPropField.DATE_OPENING])}
                   onChange={(value) => handleDateChange(FormPropField.DATE_OPENING, value)}
                 />
               </Box>
-              <Box
-                sx={{
-                  ...flexStartBoxStyle,
-                  width: "fit-content",
-                  gap: ".5rem",
-                }}
-              >
+              <Box sx={dateEndingCheckboxStyle}>
                 <Checkbox
                   sx={{ padding: "0" }}
                   disabled={isPublic}
@@ -162,7 +162,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                 <Typography>{t("formulaire.date.ending")}</Typography>
               </Box>
               {isEndingDateEditable && (
-                <Box width={"15rem"}>
+                <Box sx={datePickerWrapperStyle}>
                   <DatePicker
                     minDate={dayjs(dateOpening).add(1, "day")}
                     value={dayjs(formPropInputValue[FormPropField.DATE_ENDING])}
@@ -187,14 +187,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                 const showRgpd = item.field === FormPropField.HAS_RGPD && isRgpdPossible && hasRgpd;
                 return (
                   <>
-                    <Box
-                      key={item.field}
-                      sx={{
-                        ...flexStartBoxStyle,
-                        width: "fit-content",
-                        gap: "1rem",
-                      }}
-                    >
+                    <Box key={item.field} sx={checkboxRowStyle}>
                       <Checkbox
                         sx={{ padding: "0" }}
                         disabled={isDisabled}
@@ -227,12 +220,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                     )}
                     {showRgpd && (
                       <Box>
-                        <Box
-                          sx={{
-                            ...subContentRowWrapper,
-                            marginLeft: "3.2rem",
-                          }}
-                        >
+                        <Box sx={rgpdContentRowStyle}>
                           <Typography>{t("formulaire.prop.rgpd.goal")}</Typography>
                           <TextField
                             variant="standard"
@@ -249,12 +237,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                             <InfoOutlinedIcon color="secondary" fontSize="small" />
                           </Tooltip>
                         </Box>
-                        <Box
-                          sx={{
-                            ...subContentRowWrapper,
-                            marginLeft: "3.2rem",
-                          }}
-                        >
+                        <Box sx={rgpdContentRowStyle}>
                           <Typography>{t("formulaire.prop.rgpd.lifetime")}</Typography>
                           <FormControl variant="outlined">
                             <Select
@@ -284,7 +267,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
             </Box>
           </Box>
         </Box>
-        <Box sx={{ ...flexEndBoxStyle, gap: "1rem" }}>
+        <Box sx={modalActionsStyle}>
           <Button onClick={handleClose}>{t("formulaire.cancel")}</Button>
           <Button variant="contained" onClick={handleSubmit} disabled={!title.length}>
             {t("formulaire.save")}

@@ -1,5 +1,5 @@
 import { modalBoxStyle } from "~/core/style/boxStyles";
-import { columnBoxStyle, flexStartBoxStyle } from "~/styles/boxStyles";
+import { columnBoxStyle, flexEndBoxStyle, flexStartBoxStyle } from "~/styles/boxStyles";
 
 export const formPropModalWrapper = {
   ...modalBoxStyle,
@@ -60,4 +60,36 @@ export const subContentRowWrapper = {
 export const textFieldStyle = {
   width: "100%",
   maxWidth: "44rem",
+};
+
+export const tooltipIconBoxStyle = {
+  ...flexStartBoxStyle,
+  width: "fit-content",
+  gap: ".5rem",
+};
+
+export const checkboxRowStyle = {
+  ...flexStartBoxStyle,
+  width: "fit-content",
+  gap: "1rem",
+};
+
+export const dateEndingCheckboxStyle = {
+  ...flexStartBoxStyle,
+  width: "fit-content",
+  gap: ".5rem",
+};
+
+export const rgpdContentRowStyle = {
+  ...subContentRowWrapper,
+  marginLeft: "3.2rem",
+};
+
+export const modalActionsStyle = {
+  ...flexEndBoxStyle,
+  gap: "1rem",
+};
+
+export const datePickerWrapperStyle = {
+  width: "15rem",
 };
