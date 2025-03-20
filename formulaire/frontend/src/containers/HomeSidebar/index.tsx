@@ -10,8 +10,7 @@ import { homeSidebarWrapper } from "./style";
 import { useModal } from "~/providers/ModalProvider";
 
 export const HomeSidebar: FC = () => {
-  const { folders, currentFolder, setCurrentFolder, tab, toggleTab } =
-    useHome();
+  const { folders, currentFolder, setCurrentFolder, tab, toggleTab } = useHome();
   const { toggleModal } = useModal();
 
   const treeViewItems = buildFolderTree(folders);
@@ -41,16 +40,10 @@ export const HomeSidebar: FC = () => {
       <TreeView
         items={treeViewItems}
         height={"30rem"}
-        selectedItemId={
-          currentFolder?.id.toString() ?? folders[0].id.toString()
-        }
+        selectedItemId={currentFolder?.id.toString() ?? folders[0].id.toString()}
         handleSelectedItemChange={handleSelectedItemChange}
       />
-      <Button
-        variant="outlined"
-        color="primary"
-        onClick={() => toggleModal(ModalType.FOLDER_CREATE)}
-      >
+      <Button variant="outlined" color="primary" onClick={() => toggleModal(ModalType.FOLDER_CREATE)}>
         {t("formulaire.folder.create")}
       </Button>
     </Box>
