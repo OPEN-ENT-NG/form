@@ -14,10 +14,7 @@ export const HomeTabs: FC<HomeTabsProps> = ({ value, setValue }) => {
   return (
     <Tabs value={value} onChange={handleChange}>
       <Tab value={HomeTabState.FORMS} label={t("formulaire.tab.list")} />
-      <Tab
-        value={HomeTabState.RESPONSES}
-        label={t("formulaire.tab.responses")}
-      />
+      <Tab value={HomeTabState.RESPONSES} label={t("formulaire.tab.responses")} />
     </Tabs>
   );
 };
