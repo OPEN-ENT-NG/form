@@ -1,0 +1,7 @@
+export enum DeleteModalVariant {
+  FORM_UNIQUE,
+  FORM_MULTIPLE,
+  FOLDER_UNIQUE,
+  FOLDER_MULTIPLE,
+  FORM_FOLDER,
+}
