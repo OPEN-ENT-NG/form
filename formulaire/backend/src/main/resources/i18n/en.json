@@ -126,6 +126,8 @@
   "formulaire.prop.anonymous.description": "Les identifiants, noms, prénoms et établissements des répondants ne seront pas sauvegardés.",
   "formulaire.prop.notified.label": "Recevoir une notification de réponse",
   "formulaire.prop.notified.description": "Vous recevrez une notification à chaque fois qu'un utilisateur aura répondu au formulaire.",
+  "formulaire.prop.progress.label":"Masquer le fil d’ariane pour les répondants",
+  "formulaire.prop.description.label":"Associer une description",
   "formulaire.prop.rgpd.label": "Collecte de données à caractère personnel",
   "formulaire.prop.rgpd.goal": "Finalité",
   "formulaire.prop.rgpd.goal.input": "Saisir la finalité (150 caractères maximum)",

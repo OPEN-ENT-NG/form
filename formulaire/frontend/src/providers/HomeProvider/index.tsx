@@ -8,7 +8,7 @@ import {
 } from "react";
 import { HomeProviderContextType, HomeProviderProps } from "./types";
 import { useRootFolders } from "./utils";
-import { Folder } from "~/core/models/folders/types";
+import { Folder } from "~/core/models/folder/types";
 import { HomeTabState } from "./enums";
 import { useGetFoldersQuery } from "~/services/api/services/folderApi";
 import { Form } from "~/core/models/forms/types";

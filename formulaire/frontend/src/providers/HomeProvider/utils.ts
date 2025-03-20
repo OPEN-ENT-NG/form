@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Folder } from "~/core/models/folders/types";
+import { Folder } from "~/core/models/folder/types";
 import { FORMULAIRE } from "~/core/constants";
 
 export const useRootFolders = (): Folder[] => {

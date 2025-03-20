@@ -40,6 +40,7 @@ export const HomeSidebar: FC = () => {
       <HomeTabs value={tab} setValue={toggleTab} />
       <TreeView
         items={treeViewItems}
+        height={"30rem"}
         selectedItemId={
           currentFolder?.id.toString() ?? folders[0].id.toString()
         }

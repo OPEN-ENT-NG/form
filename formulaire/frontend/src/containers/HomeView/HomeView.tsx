@@ -51,6 +51,7 @@ export const HomeView: FC = () => {
           isOpen={FORM_PROP_CREATE}
           handleClose={() => toggleModal(ModalType.FORM_PROP_CREATE)}
           mode={FormPropModalMode.CREATE}
+          isRgpdPossible
         />
       )}
       {FORM_PROP_UPDATE && (
@@ -58,6 +59,7 @@ export const HomeView: FC = () => {
           isOpen={FORM_PROP_UPDATE}
           handleClose={() => toggleModal(ModalType.FORM_PROP_UPDATE)}
           mode={FormPropModalMode.UPDATE}
+          isRgpdPossible
         />
       )}
     </Box>

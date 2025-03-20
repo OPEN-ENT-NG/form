@@ -1,25 +1,9 @@
 import { ModalProps } from "~/types";
-import { FormPropModalMode } from "./enums";
+import { FormPropField, FormPropModalMode } from "./enums";
 
 export interface FormPropModalProps extends ModalProps {
   mode: FormPropModalMode;
-}
-
-export enum FormPropField {
-  TITLE = "title",
-  DESCRIPTION = "description",
-  PICTURE = "picture",
-  DATE_OPENING = "dateOpening",
-  DATE_ENDING = "dateEnding",
-  IS_MULTIPLE = "isMultiple",
-  IS_ANONYMOUS = "isAnonymous",
-  IS_EDITABLE = "isEditable",
-  IS_PUBLIC = "isPublic",
-  IS_RESPONSE_NOTIFIED = "isResponseNotified",
-  HAS_RGPD = "hasRgpd",
-  IS_PROGRESS_BAR_DISPLAYED = "isProgressBarDisplayed",
-  RGPD_GOAL = "rgpdGoal",
-  RGPD_LIFE_TIME = "rgpdLifeTime",
+  isRgpdPossible: boolean;
 }
 
 export interface FormPropInputValueState {
@@ -27,7 +11,7 @@ export interface FormPropInputValueState {
   [FormPropField.DESCRIPTION]: string;
   [FormPropField.PICTURE]: string;
   [FormPropField.DATE_OPENING]: Date;
-  [FormPropField.DATE_ENDING]: Date;
+  [FormPropField.DATE_ENDING]: Date | null;
   [FormPropField.IS_MULTIPLE]: boolean;
   [FormPropField.IS_ANONYMOUS]: boolean;
   [FormPropField.IS_EDITABLE]: boolean;
@@ -37,4 +21,10 @@ export interface FormPropInputValueState {
   [FormPropField.IS_PROGRESS_BAR_DISPLAYED]: boolean;
   [FormPropField.RGPD_GOAL]: string;
   [FormPropField.RGPD_LIFE_TIME]: number;
+}
+
+export interface FormCheckBoxProp {
+  i18nKey: string;
+  field: FormPropField;
+  tooltip?: string;
 }
