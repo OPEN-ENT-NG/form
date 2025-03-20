@@ -22,34 +22,22 @@ import Grid from "@mui/material/Grid2";
 import { Folder } from "~/core/models/folder/types";
 
 export const HomeMainLayout: FC<HomeMainLayoutProps> = ({ headerHeight }) => {
-  const {
-    tab,
-    selectedFolders,
-    setSelectedFolders,
-    folders,
-    currentFolder,
-    setCurrentFolder,
-  } = useHome();
+  const { tab, selectedFolders, setSelectedFolders, folders, currentFolder, setCurrentFolder } = useHome();
 
   const handleFolderSelect = useCallback(
     (folder: Folder) => {
       if (selectedFolders.some((f) => f.id === folder.id)) {
-        return setSelectedFolders(
-          selectedFolders.filter((f) => f.id !== folder.id),
-        );
+        return setSelectedFolders(selectedFolders.filter((f) => f.id !== folder.id));
       }
       return setSelectedFolders([...selectedFolders, folder]);
     },
     [selectedFolders, setSelectedFolders],
   );
 
-  const filteredFolders = folders.filter(
-    (folder) => folder.parent_id === (currentFolder ? currentFolder.id : null),
-  );
+  const filteredFolders = folders.filter((folder) => folder.parent_id === (currentFolder ? currentFolder.id : null));
   const hasFilteredFolders = !!filteredFolders.length;
   const breadcrumbsText = currentFolder?.name ? [currentFolder.name] : [];
-  const isSelectedFolder = (folder: Folder) =>
-    selectedFolders.some((f) => f.id === folder.id);
+  const isSelectedFolder = (folder: Folder) => selectedFolders.some((f) => f.id === folder.id);
 
   return (
     <HomeMainLayoutWrapper headerHeight={headerHeight}>

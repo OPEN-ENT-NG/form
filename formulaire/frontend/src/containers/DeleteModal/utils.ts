@@ -3,10 +3,7 @@ import { DeleteModalVariant } from "./enum";
 import { deleteModalContent } from "./types";
 import { Folder } from "~/core/models/folder/types";
 
-export const getCorrectValue = (
-  forms: Form[],
-  folders: Folder[],
-): DeleteModalVariant => {
+export const getCorrectValue = (forms: Form[], folders: Folder[]): DeleteModalVariant => {
   if (forms.length === 1 && !folders.length) {
     return DeleteModalVariant.FORM_UNIQUE;
   }

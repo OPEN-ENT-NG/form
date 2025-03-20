@@ -1,12 +1,6 @@
 import { ModalProps } from "~/types";
 import { FC, useCallback } from "react";
-import {
-  Box,
-  Button,
-  IconButton,
-  Modal,
-  Typography,
-} from "@cgi-learning-hub/ui";
+import { Box, Button, IconButton, Modal, Typography } from "@cgi-learning-hub/ui";
 import CloseIcon from "@mui/icons-material/Close";
 import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
 import { modalActionButtonStyle } from "~/core/style/modalStyle";
@@ -18,11 +12,7 @@ import { getText, getTitle } from "./utils";
 import { useDeleteFoldersMutation } from "~/services/api/services/folderApi";
 import { useDeleteFormMutation } from "~/services/api/services/formApi";
 import { PRIMARY } from "~/core/style/colors";
-import {
-  ComponentVariant,
-  TypographyFont,
-  TypographyVariant,
-} from "~/core/style/themeProps";
+import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 
 export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
   const { selectedForms, selectedFolders } = useHome();
@@ -48,10 +38,7 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
     <Modal open={isOpen} onClose={handleClose}>
       <Box sx={deleteModalStyle}>
         <Box sx={spaceBetweenBoxStyle}>
-          <Typography
-            variant={TypographyVariant.H2}
-            fontWeight={TypographyFont.BOLD}
-          >
+          <Typography variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
             {t(getTitle(selectedForms, selectedFolders))}
           </Typography>
           <IconButton onClick={handleClose}>
@@ -62,18 +49,10 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
           <Typography>{t(getText(selectedForms, selectedFolders))}</Typography>
         </Box>
         <Box sx={modalActionButtonStyle}>
-          <Button
-            variant={ComponentVariant.OUTLINED}
-            color={PRIMARY}
-            onClick={handleClose}
-          >
+          <Button variant={ComponentVariant.OUTLINED} color={PRIMARY} onClick={handleClose}>
             {t("formulaire.close")}
           </Button>
-          <Button
-            variant={ComponentVariant.CONTAINED}
-            color={PRIMARY}
-            onClick={handleDelete}
-          >
+          <Button variant={ComponentVariant.CONTAINED} color={PRIMARY} onClick={handleDelete}>
             {t("formulaire.delete")}
           </Button>
         </Box>

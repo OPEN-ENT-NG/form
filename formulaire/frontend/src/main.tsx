@@ -1,16 +1,9 @@
 import React from "react";
 
-import {
-  ThemeProvider as ThemeProviderCGI,
-  ThemeProviderProps,
-} from "@cgi-learning-hub/theme";
+import { ThemeProvider as ThemeProviderCGI, ThemeProviderProps } from "@cgi-learning-hub/theme";
 import "@edifice.io/bootstrap/dist/index.css";
 import { EdificeClientProvider, EdificeThemeProvider } from "@edifice.io/react";
-import {
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
@@ -32,8 +25,7 @@ const root = createRoot(rootElement!);
 
 // Config
 
-const themePlatform = (rootElement?.getAttribute("data-theme") ??
-  DEFAULT_THEME) as ThemeProviderProps["themeId"];
+const themePlatform = (rootElement?.getAttribute("data-theme") ?? DEFAULT_THEME) as ThemeProviderProps["themeId"];
 
 if (process.env.NODE_ENV !== "production") {
   import("@axe-core/react").then((axe) => {
@@ -69,10 +61,7 @@ const App = () => {
           }}
         >
           <EdificeThemeProvider>
-            <ThemeProviderCGI
-              themeId={themePlatform ?? "default"}
-              options={options}
-            >
+            <ThemeProviderCGI themeId={themePlatform ?? "default"} options={options}>
               <ModalProvider>
                 <GlobalStyles styles={globalOverrideStyles} />
                 <ToastContainer {...TOAST_CONFIG} />
