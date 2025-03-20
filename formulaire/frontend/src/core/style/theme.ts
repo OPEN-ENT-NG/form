@@ -130,5 +130,17 @@ export const options: ThemeOptions = {
         },
       },
     },
+    MuiPickersLayout: {
+      styleOverrides: {
+        root: {
+          "& .MuiPickersYear-yearButton": {
+            fontSize: "1.6rem",
+          },
+          "& .css-1ctqu56-MuiPickersYear-yearButton": {
+            fontSize: "1.6rem",
+          },
+        },
+      },
+    },
   },
 };

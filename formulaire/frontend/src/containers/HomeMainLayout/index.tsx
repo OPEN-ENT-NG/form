@@ -19,7 +19,7 @@ import { FormBreadcrumbs } from "~/components/Breadcrumbs";
 import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
 
 import Grid from "@mui/material/Grid2";
-import { Folder } from "~/core/models/folders/types";
+import { Folder } from "~/core/models/folder/types";
 
 export const HomeMainLayout: FC<HomeMainLayoutProps> = ({ headerHeight }) => {
   const {
