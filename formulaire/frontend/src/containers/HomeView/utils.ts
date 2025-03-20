@@ -1,20 +1,20 @@
 import { HeaderButton } from "~/components/Header/types";
 import { ModalType } from "~/core/enums";
-import { ButtonVariant } from "~/core/style/themeProps";
 import { useEffect, useRef, useState, RefObject } from "react";
 import { useModal } from "~/providers/ModalProvider";
+import { ComponentVariant } from "~/core/style/themeProps";
 
 export const useGetHomeHeaderButtons = (): HeaderButton[] => {
   const { toggleModal } = useModal();
   return [
     {
       titleI18nkey: "formulaire.form.import.button",
-      variant: ButtonVariant.OUTLINED,
+      variant: ComponentVariant.OUTLINED,
       action: () => toggleModal(ModalType.FORM_IMPORT),
     },
     {
       titleI18nkey: "formulaire.form.create.button",
-      variant: ButtonVariant.CONTAINED,
+      variant: ComponentVariant.CONTAINED,
       action: () => toggleModal(ModalType.FORM_PROP_CREATE),
     },
   ];
