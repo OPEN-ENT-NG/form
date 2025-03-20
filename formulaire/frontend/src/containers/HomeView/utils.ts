@@ -20,10 +20,7 @@ export const useGetHomeHeaderButtons = (): HeaderButton[] => {
   ];
 };
 
-export const useElementHeight = <T extends HTMLElement>(): [
-  RefObject<T>,
-  number,
-] => {
+export const useElementHeight = <T extends HTMLElement>(): [RefObject<T>, number] => {
   const elementRef = useRef<T>(null);
   const [height, setHeight] = useState<number>(0);
 
