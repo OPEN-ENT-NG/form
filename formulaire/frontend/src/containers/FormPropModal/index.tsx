@@ -37,22 +37,31 @@ import { useFormPropInputValueState } from "./useFormPropValueState";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import dayjs from "dayjs";
-import { buildDelegatesParam, buildFormPayload, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";
+import { buildDelegatesParam, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";
 import { GREY_DARK_COLOR } from "~/core/style/colors";
 import RGPDInfoBox from "~/components/RgpdInfoBox";
 import { useGetDelegatesQuery } from "~/services/api/services/delegateApi";
+import { useHome } from "~/providers/HomeProvider";
+import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formApi";
+import { buildFormPayload } from "~/core/models/form/utils";
 
 export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
+  const {
+    currentFolder: { id: currentFolderId },
+  } = useHome();
   const {
     formPropInputValue,
     formPropInputValue: { dateOpening, isPublic, description, hasRgpd, rgpdGoal, rgpdLifeTime, title },
     handleFormPropInputValueChange,
     handleDateChange,
-  } = useFormPropInputValueState();
+    formId,
+  } = useFormPropInputValueState(mode);
   const { t } = useTranslation(FORMULAIRE);
   const [isEndingDateEditable, setIsEndingDateEditable] = useState<boolean>(false);
   const [isDescriptionDisplay, setIsDescriptionDisplay] = useState<boolean>(false);
   const { data: delegateData } = useGetDelegatesQuery();
+  const [createForm] = useCreateFormMutation();
+  const [updateForm] = useUpdateFormMutation();
 
   const formCheckBoxPropsReady = useMemo(() => {
     return isRgpdPossible
@@ -94,9 +103,25 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
     ],
   );
 
-  const handleSubmit = () => {
-    console.log({ state: formPropInputValue, payload: buildFormPayload(formPropInputValue) });
-  };
+  const handleSubmit = useCallback(async () => {
+    const formPayload = buildFormPayload(formPropInputValue, currentFolderId);
+
+    const submitActions = {
+      [FormPropModalMode.CREATE]: () => createForm(formPayload),
+      [FormPropModalMode.UPDATE]: () =>
+        updateForm({
+          payload: formPayload,
+          formId,
+        }),
+    };
+
+    try {
+      await submitActions[mode]().unwrap();
+      handleClose();
+    } catch (error) {
+      console.error("Submit error:", error);
+    }
+  }, [createForm, updateForm, mode, formId, formPropInputValue, currentFolderId, handleClose]);
 
   useEffect(() => {
     if (isEndingDateEditable) {

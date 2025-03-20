@@ -3,7 +3,6 @@ import { FormPropField } from "./enums";
 import { FormCheckBoxProp, FormPropInputValueState } from "./types";
 import { RGPDI18nParams } from "~/components/RgpdInfoBox/types";
 import dayjs, { Dayjs } from "dayjs";
-import { FormPayload } from "~/core/models/form/types";
 
 export const initialFormPropInputValueState: FormPropInputValueState = {
   [FormPropField.TITLE]: "",
@@ -92,56 +91,5 @@ export const buildDelegatesParam = (
     rectoratCity: "Paris",
     villeName: "de la Ville de Paris",
     villeEmail: "dpd.paris@paris.fr",
-  };
-};
-
-export const buildFormPayload = (formPropValue: FormPropInputValueState, folderId: number ): FormPayload => {
-  return {
-    anonymous: formPropValue[FormPropField.IS_ANONYMOUS],
-    archived: false,
-    collab: false,
-    date_creation: null,
-    date_ending: formPropValue[FormPropField.DATE_ENDING]?.toISOString() ?? null,
-    date_modification: null,
-    date_opening: formPropValue[FormPropField.DATE_OPENING].toISOString(),
-    description: formPropValue[FormPropField.DESCRIPTION] ?? null,
-    displayed: formPropValue[FormPropField.IS_PROGRESS_BAR_DISPLAYED],
-    editable: formPropValue[FormPropField.IS_EDITABLE],
-    folder_id: folderId,
-    id: null,
-    is_public: formPropValue[FormPropField.IS_PUBLIC],
-    multiple: formPropValue[FormPropField.IS_MULTIPLE],
-    nb_responses: 0,
-    owner_id: null,
-    owner_name: null,
-    picture: formPropValue[FormPropField.PICTURE] ?? null,
-    public_key: null,
-    reminded: false,
-    response_notified: formPropValue[FormPropField.IS_RESPONSE_NOTIFIED],
-    rgpd: formPropValue[FormPropField.HAS_RGPD],
-    rgpd_goal: formPropValue[FormPropField.RGPD_GOAL] ?? null,
-    rgpd_lifetime: formPropValue[FormPropField.RGPD_LIFE_TIME],
-    selected: null,
-    sent: false,
-    title: formPropValue[FormPropField.TITLE],
-  };
-};
-
-export const parseFormPayload = (payload: FormPayload): FormPropInputValueState => {
-  return {
-    [FormPropField.TITLE]: payload.title,
-    [FormPropField.DESCRIPTION]: payload.description ?? "",
-    [FormPropField.PICTURE]: payload.picture ?? "",
-    [FormPropField.DATE_OPENING]: payload.date_opening ? new Date(payload.date_opening) : new Date(),
-    [FormPropField.DATE_ENDING]: payload.date_ending ? new Date(payload.date_ending) : null,
-    [FormPropField.IS_MULTIPLE]: payload.multiple,
-    [FormPropField.IS_ANONYMOUS]: payload.anonymous,
-    [FormPropField.IS_EDITABLE]: payload.editable,
-    [FormPropField.IS_PUBLIC]: payload.is_public,
-    [FormPropField.IS_RESPONSE_NOTIFIED]: payload.response_notified,
-    [FormPropField.HAS_RGPD]: payload.rgpd,
-    [FormPropField.IS_PROGRESS_BAR_DISPLAYED]: payload.displayed,
-    [FormPropField.RGPD_GOAL]: payload.rgpd_goal ?? "",
-    [FormPropField.RGPD_LIFE_TIME]: payload.rgpd_lifetime,
   };
 };
