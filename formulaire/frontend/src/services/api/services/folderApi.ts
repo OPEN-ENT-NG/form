@@ -1,8 +1,4 @@
-import {
-  Folder,
-  CreateFolderPayload,
-  UpdateFolderPayload,
-} from "~/core/models/folder/types.ts";
+import { Folder, CreateFolderPayload, UpdateFolderPayload } from "~/core/models/folder/types.ts";
 import { emptySplitApi } from "./emptySplitApi.ts";
 
 export const folderApi = emptySplitApi.injectEndpoints({
