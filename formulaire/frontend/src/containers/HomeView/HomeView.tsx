@@ -11,14 +11,20 @@ import { ModalType } from "~/core/enums";
 import { useModal } from "~/providers/ModalProvider";
 import { FormPropModal } from "../FormPropModal";
 import { FormPropModalMode } from "../FormPropModal/enums";
+import { useHome } from "~/providers/HomeProvider";
+import { Toaster } from "~/components/Toaster";
+import { useMapToasterButtons } from "./useMapToasterButtons";
+import { DeleteModal } from "../DeleteModal";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const headerButtons = useGetHomeHeaderButtons();
   const {
-    displayModals: { FOLDER_CREATE, FOLDER_RENAME, FORM_PROP_CREATE, FORM_PROP_UPDATE },
+    displayModals: { FOLDER_CREATE, FOLDER_RENAME, FORM_PROP_CREATE, FORM_PROP_UPDATE, FORM_FOLDER_DELETE },
     toggleModal,
   } = useModal();
+  const { isToasterOpen } = useHome();
+  const { leftButtons, rightButtons } = useMapToasterButtons();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
   return (
@@ -41,6 +47,9 @@ export const HomeView: FC = () => {
           mode={FOLDER_MODAL_MODE.RENAME}
         />
       )}
+      {FORM_FOLDER_DELETE && (
+        <DeleteModal isOpen={FORM_FOLDER_DELETE} handleClose={() => toggleModal(ModalType.FORM_FOLDER_DELETE)} />
+      )}
       {FORM_PROP_CREATE && (
         <FormPropModal
           isOpen={FORM_PROP_CREATE}
@@ -57,6 +66,7 @@ export const HomeView: FC = () => {
           isRgpdPossible
         />
       )}
+      {isToasterOpen && <Toaster leftButtons={leftButtons} rightButtons={rightButtons} />}
     </Box>
   );
 };

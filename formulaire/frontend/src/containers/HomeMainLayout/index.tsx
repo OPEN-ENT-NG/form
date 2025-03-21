@@ -17,10 +17,8 @@ export const HomeMainLayout: FC = () => {
 
   const { t } = useTranslation(FORMULAIRE);
 
-  const filteredFolders = folders.filter((folder) => folder.parent_id === (currentFolder ? currentFolder.id : null));
-
-  const filteredForms = forms.filter((form) => form.folder_id === (currentFolder ? currentFolder.id : null));
-
+  const filteredFolders = folders.filter((folder) => folder.parent_id === currentFolder.id);
+  const filteredForms = forms.filter((form) => form.folder_id === currentFolder.id);
   const hasFilteredFolders = !!filteredFolders.length;
   const hasFilteredForms = !!filteredForms.length;
   const breadcrumbsText = currentFolder?.name ? [currentFolder.name] : [];
