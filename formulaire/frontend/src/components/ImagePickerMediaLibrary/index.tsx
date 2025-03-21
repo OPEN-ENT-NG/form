@@ -33,18 +33,13 @@ export const ImagePickerMediaLibrary: FC<ImagePickerMediaLibraryProps> = ({
   const mediaLibraryRef = useRef<MediaLibraryRef>(null);
   const { appCode } = useEdificeClient();
 
-  // Trouver l'élément portal une fois au montage du composant
   useEffect(() => {
     const element = document.getElementById("portal");
-    if (element) {
-      setPortalElement(element);
-    } else {
-      // Si l'élément portal n'existe pas, on le crée
-      const newPortalElement = document.createElement("div");
-      newPortalElement.id = "portal";
-      document.body.appendChild(newPortalElement);
-      setPortalElement(newPortalElement);
-    }
+    if (element) return setPortalElement(element);
+    const newPortalElement = document.createElement("div");
+    newPortalElement.id = "portal";
+    document.body.appendChild(newPortalElement);
+    return setPortalElement(newPortalElement);
   }, []);
 
   useEffect(() => {
@@ -129,8 +124,6 @@ export const ImagePickerMediaLibrary: FC<ImagePickerMediaLibraryProps> = ({
           )}
         </Box>
       </Box>
-
-      {/* Utilisez createPortal pour rendre la MediaLibrary dans la div#portal */}
       {isMediaLibraryOpen &&
         portalElement &&
         createPortal(
