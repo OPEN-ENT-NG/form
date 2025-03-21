@@ -1,4 +1,4 @@
-import { Form, FormPayload } from "~/core/models/form/types.ts";
+import { DuplicateFormPayload, Form, FormPayload } from "~/core/models/form/types.ts";
 import { emptySplitApi } from "./emptySplitApi.ts";
 
 export const formApi = emptySplitApi.injectEndpoints({
@@ -77,8 +77,33 @@ export const formApi = emptySplitApi.injectEndpoints({
         }
       },
     }),
+    duplicateForms: builder.mutation<Form[], DuplicateFormPayload>({
+      query: ({ formIds, folderId }) => ({
+        url: `forms/duplicate/${folderId}`,
+        method: "POST",
+        body: formIds,
+      }),
+      invalidatesTags: ["Forms"],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.formService.duplicate", err);
+          throw new Error("formulaire.error.formService.duplicate");
+        }
+      },
+      transformResponse: (response: { data: Form[] }) => {
+        return response?.data || response;
+      },
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useCreateFormMutation, useUpdateFormMutation, useDeleteFormMutation, useGetFormsQuery } = formApi;
+export const {
+  useCreateFormMutation,
+  useUpdateFormMutation,
+  useDeleteFormMutation,
+  useGetFormsQuery,
+  useDuplicateFormsMutation,
+} = formApi;
