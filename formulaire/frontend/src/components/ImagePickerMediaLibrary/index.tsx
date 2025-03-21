@@ -5,6 +5,7 @@ import { Box, Typography } from "@mui/material";
 import { FC, useEffect, useRef, useState } from "react";
 import { MediaLibrary, MediaLibraryRef, MediaLibraryResult } from "@edifice.io/react/multimedia";
 import { useEdificeClient } from "@edifice.io/react";
+import { createPortal } from "react-dom";
 import {
   containerStyle,
   imagePickerContainerStyle,
@@ -15,19 +16,36 @@ import {
   actionsContainerStyle,
   actionButtonStyle,
   imageStyle,
+  mediaLibraryStyle,
 } from "./style";
 import { ImagePickerMediaLibraryProps } from "./types";
 
 export const ImagePickerMediaLibrary: FC<ImagePickerMediaLibraryProps> = ({
   information,
-  onImageChange = (src: string | null) => {},
+  onImageChange = () => {},
   width = "160px",
   height = "160px",
   initialSrc = null,
 }) => {
   const [currentSrc, setCurrentSrc] = useState<string | null>(initialSrc);
+  const [isMediaLibraryOpen, setIsMediaLibraryOpen] = useState(false);
+  const [portalElement, setPortalElement] = useState<HTMLElement | null>(null);
   const mediaLibraryRef = useRef<MediaLibraryRef>(null);
   const { appCode } = useEdificeClient();
+
+  // Trouver l'élément portal une fois au montage du composant
+  useEffect(() => {
+    const element = document.getElementById("portal");
+    if (element) {
+      setPortalElement(element);
+    } else {
+      // Si l'élément portal n'existe pas, on le crée
+      const newPortalElement = document.createElement("div");
+      newPortalElement.id = "portal";
+      document.body.appendChild(newPortalElement);
+      setPortalElement(newPortalElement);
+    }
+  }, []);
 
   useEffect(() => {
     setCurrentSrc(initialSrc);
@@ -45,11 +63,15 @@ export const ImagePickerMediaLibrary: FC<ImagePickerMediaLibraryProps> = ({
   };
 
   const openMediaLibrary = () => {
-    mediaLibraryRef.current?.show("image");
+    setIsMediaLibraryOpen(true);
+    setTimeout(() => {
+      mediaLibraryRef.current?.show("image");
+    }, 0);
   };
 
   const closeMediaLibrary = () => {
     mediaLibraryRef.current?.hide();
+    setIsMediaLibraryOpen(false);
   };
 
   const handleMediaLibrarySuccess = (result: MediaLibraryResult) => {
@@ -67,54 +89,65 @@ export const ImagePickerMediaLibrary: FC<ImagePickerMediaLibraryProps> = ({
   };
 
   return (
-    <Box sx={containerStyle} className="media-library-image-picker">
-      <Box
-        sx={{
-          ...imagePickerContainerStyle(currentSrc),
-          width,
-          height,
-        }}
-        onClick={openMediaLibrary}
-      >
-        {!currentSrc ? (
-          <Box sx={emptyStateContentStyle}>
-            <AddPhotoAlternateIcon color="primary" sx={iconStyle} />
-            <Typography sx={labelTextStyle}>
-              <Box component="span" fontWeight="bold">
-                Glissez-déposez
-              </Box>{" "}
-              ou{" "}
-              <Box component="span" fontWeight="bold">
-                cliquez
-              </Box>{" "}
-              pour choisir une image
-            </Typography>
-            {information && <Typography sx={infoTextStyle}>{information}</Typography>}
-          </Box>
-        ) : (
-          <>
-            <Box sx={actionsContainerStyle}>
-              <Box onClick={handleEdit} sx={actionButtonStyle}>
-                <CreateIcon fontSize="small" />
-              </Box>
-              <Box onClick={handleDelete} sx={actionButtonStyle}>
-                <DeleteIcon fontSize="small" />
-              </Box>
+    <>
+      <Box sx={containerStyle} className="media-library-image-picker">
+        <Box
+          sx={{
+            ...imagePickerContainerStyle(currentSrc),
+            width,
+            height,
+          }}
+          onClick={openMediaLibrary}
+        >
+          {!currentSrc ? (
+            <Box sx={emptyStateContentStyle}>
+              <AddPhotoAlternateIcon color="primary" sx={iconStyle} />
+              <Typography sx={labelTextStyle}>
+                <Box component="span" fontWeight="bold">
+                  Glissez-déposez
+                </Box>{" "}
+                ou{" "}
+                <Box component="span" fontWeight="bold">
+                  cliquez
+                </Box>{" "}
+                pour choisir une image
+              </Typography>
+              {information && <Typography sx={infoTextStyle}>{information}</Typography>}
             </Box>
-            <img src={currentSrc} alt="Selected media" style={imageStyle} />
-          </>
+          ) : (
+            <>
+              <Box sx={actionsContainerStyle}>
+                <Box onClick={handleEdit} sx={actionButtonStyle}>
+                  <CreateIcon fontSize="small" />
+                </Box>
+                <Box onClick={handleDelete} sx={actionButtonStyle}>
+                  <DeleteIcon fontSize="small" />
+                </Box>
+              </Box>
+              <img src={currentSrc} alt="Selected media" style={imageStyle} />
+            </>
+          )}
+        </Box>
+      </Box>
+
+      {/* Utilisez createPortal pour rendre la MediaLibrary dans la div#portal */}
+      {isMediaLibraryOpen &&
+        portalElement &&
+        createPortal(
+          <Box id="media-library-form" sx={mediaLibraryStyle}>
+            <MediaLibrary
+              ref={mediaLibraryRef}
+              onCancel={() => {
+                closeMediaLibrary();
+              }}
+              onSuccess={handleMediaLibrarySuccess}
+              appCode={appCode}
+              multiple={false}
+              visibility="protected"
+            />
+          </Box>,
+          portalElement,
         )}
-      </Box>
-      <Box id="media-library-form">
-        <MediaLibrary
-          ref={mediaLibraryRef}
-          onCancel={() => mediaLibraryRef.current?.hide()}
-          onSuccess={handleMediaLibrarySuccess}
-          appCode={appCode}
-          multiple={false}
-          visibility="protected"
-        />
-      </Box>
-    </Box>
+    </>
   );
 };

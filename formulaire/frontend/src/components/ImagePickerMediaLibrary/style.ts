@@ -77,3 +77,16 @@ export const imageStyle = {
   objectFit: "cover" as const,
   borderRadius: "5px",
 };
+
+// Vous pouvez simplifier le style maintenant que nous utilisons un portail
+export const mediaLibraryStyle = {
+  position: "fixed",
+  top: 0,
+  left: 0,
+  width: "100vw",
+  height: "100vh",
+  zIndex: 9999,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+};
