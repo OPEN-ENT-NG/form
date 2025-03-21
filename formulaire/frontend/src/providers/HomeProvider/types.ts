@@ -19,4 +19,5 @@ export type HomeProviderContextType = {
   selectedForms: Form[];
   setSelectedForms: (value: Form[]) => void;
   forms: Form[];
+  isToasterOpen: boolean;
 };
