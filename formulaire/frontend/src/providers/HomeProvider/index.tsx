@@ -21,9 +21,8 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
   const rootFolders = useRootFolders();
   const [currentFolder, setCurrentFolder] = useState<Folder>(rootFolders[0]);
   const [folders, setFolders] = useState<Folder[]>([]);
-  const [selectedFolders, setSelectedFolders] = useState<Folder[]>([]);
-
   const [forms, setForms] = useState<Form[]>([]);
+  const [selectedFolders, setSelectedFolders] = useState<Folder[]>([]);
   const [selectedForms, setSelectedForms] = useState<Form[]>([]);
 
   const [tab, setTab] = useState<HomeTabState>(HomeTabState.FORMS);
@@ -54,11 +53,11 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
       tab,
       toggleTab,
       folders,
+      forms,
       selectedFolders,
       setSelectedFolders,
       selectedForms,
       setSelectedForms,
-      forms,
     }),
     [currentFolder, tab, folders, selectedFolders, selectedForms, forms],
   );
