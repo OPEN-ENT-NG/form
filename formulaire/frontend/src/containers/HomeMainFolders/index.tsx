@@ -10,7 +10,7 @@ import { useFolderSubtitle } from "./useFolderSubtitle";
 
 export const HomeMainFolders: FC<HomeMainFolderProps> = ({ folders }) => {
   const { setCurrentFolder, selectedFolders, setSelectedFolders } = useHome();
-  const folderSubtitle = useFolderSubtitle;
+  const getFolderSubtitle = useFolderSubtitle();
 
   const handleFolderSelect = useCallback(
     (folder: Folder) => {
@@ -30,7 +30,7 @@ export const HomeMainFolders: FC<HomeMainFolderProps> = ({ folders }) => {
         <Grid size={4} key={folder.id}>
           <FolderCard
             title={folder.name}
-            subtitle={folderSubtitle(folder)}
+            subtitle={getFolderSubtitle(folder)}
             width="100%"
             onSelect={() => handleFolderSelect(folder)}
             onClick={() => setCurrentFolder(folder)}
