@@ -89,6 +89,7 @@ export const FormImportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
             information={t("formulaire.import.dropzone.information")}
             accept={getAcceptedFileType()}
             maxFiles={1}
+            width={"30rem"}
             onDrop={handleDropFile}
           />
           <FileList files={customFiles} onDelete={() => setCustomFiles([])}></FileList>
