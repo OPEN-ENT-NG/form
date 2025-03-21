@@ -4,7 +4,6 @@ import {
   IconButton,
   Modal,
   Typography,
-  ImagePicker,
   TextField,
   DatePicker,
   Checkbox,
@@ -45,6 +44,7 @@ import { useHome } from "~/providers/HomeProvider";
 import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formulaireApi/formApi";
 import { buildFormPayload } from "~/core/models/form/utils";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 
 export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {
@@ -63,6 +63,14 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
   const { data: delegateData } = useGetDelegatesQuery();
   const [createForm] = useCreateFormMutation();
   const [updateForm] = useUpdateFormMutation();
+
+  //MEDIA LIBRARY
+  const handleImageChange = useCallback(
+    (src: string | null) => {
+      handleFormPropInputValueChange(FormPropField.PICTURE, src ?? "");
+    },
+    [handleFormPropInputValueChange],
+  );
 
   const formCheckBoxPropsReady = useMemo(() => {
     return isRgpdPossible
@@ -150,11 +158,12 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
         <Typography variant={TypographyVariant.H4}>{t("formulaire.prop.edit.title")}</Typography>
         <Box sx={mainColumnStyle}>
           <Box sx={fileDropZoneWrapper}>
-            <ImagePicker
+            <ImagePickerMediaLibrary
               width="16rem"
               height="16.3rem"
               information={IMAGE_PICKER_INFO}
-              onFileChange={(file) => handleFormPropInputValueChange(FormPropField.PICTURE, file?.name ?? "")}
+              onImageChange={handleImageChange}
+              initialSrc={formPropInputValue[FormPropField.PICTURE] as string}
             />
           </Box>
           <Box sx={mainContentWrapper}>
