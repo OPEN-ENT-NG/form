@@ -45,14 +45,14 @@ export const useMapToasterButtons = () => {
   const unselectAll = useCallback(() => {
     setSelectedFolders([]);
     return setSelectedForms([]);
-  }, []);
+  }, [setSelectedFolders, setSelectedForms]);
 
   const handleSelectAll = useCallback(() => {
     if (hasOnlyFolders) return setSelectedFolders(filteredFolders);
     if (hasOnlyForms) return setSelectedForms(filteredForms);
     setSelectedFolders(filteredFolders);
     return setSelectedForms(filteredForms);
-  }, [filteredFolders, filteredForms, hasOnlyFolders, hasOnlyForms]);
+  }, [filteredFolders, filteredForms, hasOnlyFolders, hasOnlyForms, setSelectedFolders, setSelectedForms]);
 
   const handleDuplicate = useCallback(async () => {
     if (!hasForms || isDuplicating) return;
@@ -69,64 +69,66 @@ export const useMapToasterButtons = () => {
     } catch (error) {
       return console.error("Error duplicating forms:", error);
     }
-  }, [hasForms, isDuplicating, selectedForms, currentFolder.id, duplicateForms]);
+  }, [hasForms, isDuplicating, selectedForms, currentFolder.id, duplicateForms, unselectAll]);
 
   const ToasterButtonsMap = useMemo(
-    () => [
-      {
+    () => ({
+      [ToasterButtonType.OPEN]: {
         titleI18nkey: "formulaire.open",
         type: ToasterButtonType.OPEN,
         action: () => (hasFolders ? (setCurrentFolder(selectedFolders[0]), unselectAll()) : console.log("open form")),
       },
-      {
+      [ToasterButtonType.RENAME]: {
         titleI18nkey: "formulaire.rename",
         type: ToasterButtonType.RENAME,
         action: () => toggleModal(ModalType.FOLDER_RENAME),
       },
-      {
+      [ToasterButtonType.MOVE]: {
         titleI18nkey: "formulaire.move",
         type: ToasterButtonType.MOVE,
         action: () => toggleModal(ModalType.MOVE),
       },
-      {
+      [ToasterButtonType.DELETE]: {
         titleI18nkey: "formulaire.delete",
         type: ToasterButtonType.DELETE,
         action: () => toggleModal(ModalType.FORM_FOLDER_DELETE),
       },
-      {
+      [ToasterButtonType.PROPS]: {
         titleI18nkey: "formulaire.properties",
         type: ToasterButtonType.PROPS,
         action: () => toggleModal(ModalType.FORM_PROP_UPDATE),
       },
-      {
+      [ToasterButtonType.DUPLICATE]: {
         titleI18nkey: "formulaire.duplicate",
         type: ToasterButtonType.DUPLICATE,
         action: () => handleDuplicate(),
       },
-      {
+      [ToasterButtonType.EXPORT]: {
         titleI18nkey: "formulaire.export",
         type: ToasterButtonType.EXPORT,
         action: () => toggleModal(ModalType.EXPORT),
       },
-    ],
-    [hasFolders, selectedFolders, setCurrentFolder, toggleModal, unselectAll, handleSelectAll, handleDuplicate],
-  );
-  const rightButtons = useMemo(
-    () => [
-      {
+      [ToasterButtonType.UNSELECT_ALL]: {
         titleI18nkey: "formulaire.deselect",
         type: ToasterButtonType.UNSELECT_ALL,
         action: () => unselectAll(),
       },
-      {
+      [ToasterButtonType.SELECT_ALL]: {
         titleI18nkey: "formulaire.selectAll",
         type: ToasterButtonType.SELECT_ALL,
         action: () => handleSelectAll(),
       },
-    ],
-    [unselectAll, handleSelectAll],
+    }),
+    [hasFolders, selectedFolders, setCurrentFolder, toggleModal, unselectAll, handleDuplicate, handleSelectAll],
   );
 
+  // Simplification des boutons de droite
+  const rightButtons = useMemo(
+    () => [ToasterButtonsMap[ToasterButtonType.UNSELECT_ALL], ToasterButtonsMap[ToasterButtonType.SELECT_ALL]],
+    [ToasterButtonsMap],
+  );
+
+  // Fonction simplifiée pour obtenir les boutons de gauche
   const leftButtons = useMemo(() => {
     const getButtonTypes = (): ToasterButtonType[] => {
       // Cas 1: Un seul formulaire
@@ -167,11 +169,7 @@ export const useMapToasterButtons = () => {
 
     const buttonTypes = getButtonTypes();
 
-    return (
-      ToasterButtonsMap.filter((button) => buttonTypes.includes(button.type))
-        // Préserver l'ordre défini dans buttonTypes
-        .sort((a, b) => buttonTypes.indexOf(a.type) - buttonTypes.indexOf(b.type))
-    );
+    return buttonTypes.map((type) => ToasterButtonsMap[type]);
   }, [
     ToasterButtonsMap,
     hasOneForm,
