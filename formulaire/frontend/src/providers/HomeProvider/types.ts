@@ -18,6 +18,5 @@ export type HomeProviderContextType = {
   setSelectedFolders: (value: Folder[]) => void;
   selectedForms: Form[];
   setSelectedForms: (value: Form[]) => void;
-  forms: Form[];
   isToasterOpen: boolean;
 };
