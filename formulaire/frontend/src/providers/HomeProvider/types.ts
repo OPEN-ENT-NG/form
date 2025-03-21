@@ -13,6 +13,7 @@ export type HomeProviderContextType = {
   tab: HomeTabState;
   toggleTab: (tab: HomeTabState) => void;
   folders: Folder[];
+  forms: Form[];
   selectedFolders: Folder[];
   setSelectedFolders: (value: Folder[]) => void;
   selectedForms: Form[];
