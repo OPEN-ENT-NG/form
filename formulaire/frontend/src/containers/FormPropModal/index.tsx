@@ -189,7 +189,13 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                   onChange={(value) => handleDateChange(FormPropField.DATE_OPENING, value)}
                 />
               </Box>
-              <Box sx={dateEndingCheckboxStyle}>
+              <Box
+                sx={{
+                  ...dateEndingCheckboxStyle,
+                  cursor: "pointer",
+                }}
+                onClick={() => setIsEndingDateEditable(!isEndingDateEditable)}
+              >
                 <Checkbox
                   sx={{ padding: "0" }}
                   disabled={isPublic}
@@ -224,17 +230,28 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                 const showRgpd = item.field === FormPropField.HAS_RGPD && isRgpdPossible && hasRgpd;
                 return (
                   <>
-                    <Box key={item.field} sx={checkboxRowStyle}>
+                    <Box
+                      key={item.field}
+                      sx={{
+                        ...checkboxRowStyle,
+                        cursor: isDisabled ? "not-allowed" : "pointer",
+                      }}
+                      onClick={() => !isDisabled && handleCheckboxChange(item.field)}
+                    >
                       <Checkbox
                         sx={{ padding: "0" }}
                         disabled={isDisabled}
                         checked={isChecked}
-                        onChange={() => handleCheckboxChange(item.field)}
+                        onChange={(e) => e.stopPropagation()} // Prevent double firing of the event
                       />
                       <Typography>{t(item.i18nKey)}</Typography>
                       {!!item.tooltip && (
                         <Tooltip title={t(item.tooltip)}>
-                          <InfoOutlinedIcon color="secondary" fontSize="small" />
+                          <InfoOutlinedIcon
+                            color="secondary"
+                            fontSize="small"
+                            onClick={(e) => e.stopPropagation()} // Prevent checkbox toggling when clicking on the info icon
+                          />
                         </Tooltip>
                       )}
                     </Box>

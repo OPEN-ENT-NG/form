@@ -48,16 +48,21 @@ export const ImagePickerMediaLibrary: FC<ImagePickerMediaLibraryProps> = ({
     mediaLibraryRef.current?.show("image");
   };
 
+  const closeMediaLibrary = () => {
+    mediaLibraryRef.current?.hide();
+  };
+
   const handleMediaLibrarySuccess = (result: MediaLibraryResult) => {
     console.log(result);
-    
+
     const mediaItem = Array.isArray(result) ? result[0] : result;
     const fileId = mediaItem?._id;
-    
+
     if (fileId) {
       const src = `/workspace/document/${fileId}`;
       setCurrentSrc(src);
       onImageChange(src);
+      closeMediaLibrary();
     }
   };
 
@@ -100,15 +105,16 @@ export const ImagePickerMediaLibrary: FC<ImagePickerMediaLibraryProps> = ({
           </>
         )}
       </Box>
-
-      <MediaLibrary
-        ref={mediaLibraryRef}
-        onCancel={() => mediaLibraryRef.current?.hide()}
-        onSuccess={handleMediaLibrarySuccess}
-        appCode={appCode}
-        multiple={false}
-        visibility="protected"
-      />
+      <Box id="media-library-form">
+        <MediaLibrary
+          ref={mediaLibraryRef}
+          onCancel={() => mediaLibraryRef.current?.hide()}
+          onSuccess={handleMediaLibrarySuccess}
+          appCode={appCode}
+          multiple={false}
+          visibility="protected"
+        />
+      </Box>
     </Box>
   );
 };
