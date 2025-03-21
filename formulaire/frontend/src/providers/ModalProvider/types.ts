@@ -11,6 +11,8 @@ export interface DisplayModalsState {
   [ModalType.FORM_PROP_CREATE]: boolean;
   [ModalType.FORM_PROP_UPDATE]: boolean;
   [ModalType.FORM_FOLDER_DELETE]: boolean;
+  [ModalType.MOVE]: boolean;
+  [ModalType.EXPORT]: boolean;
 }
 
 export type ModalProviderContextType = {

@@ -64,3 +64,8 @@ export interface FormPayload {
   sent: boolean;
   title: string;
 }
+
+export interface DuplicateFormPayload {
+  formIds: number[];
+  folderId: number;
+}
