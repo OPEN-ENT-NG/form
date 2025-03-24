@@ -21,7 +21,14 @@ export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const headerButtons = useGetHomeHeaderButtons();
   const {
-    displayModals: { FOLDER_CREATE, FOLDER_RENAME, FORM_PROP_CREATE, FORM_PROP_UPDATE, FORM_FOLDER_DELETE, FORM_IMPORT },
+    displayModals: {
+      FOLDER_CREATE,
+      FOLDER_RENAME,
+      FORM_PROP_CREATE,
+      FORM_PROP_UPDATE,
+      FORM_FOLDER_DELETE,
+      FORM_IMPORT,
+    },
     toggleModal,
   } = useModal();
   const { isToasterOpen } = useHome();

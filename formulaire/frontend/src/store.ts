@@ -12,9 +12,7 @@ export const setupStore = () => {
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       // adding the api middleware enables caching, invalidation, polling and other features of `rtk-query`
-      getDefaultMiddleware()
-        .concat(emptySplitFormulaireApi.middleware)
-        .concat(emptySplitArchiveApi.middleware),
+      getDefaultMiddleware().concat(emptySplitFormulaireApi.middleware).concat(emptySplitArchiveApi.middleware),
   });
 };
 
