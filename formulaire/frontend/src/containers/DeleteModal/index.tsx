@@ -29,20 +29,16 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
 
   const archiveForm = useCallback(
     async (form: Form, destinationFolderId: number) => {
-      try {
-        const movedForms = await moveForm({
-          formIds: [form.id],
-          destinationFolderId,
-        }).unwrap();
+      const movedForms = await moveForm({
+        formIds: [form.id],
+        destinationFolderId,
+      }).unwrap();
 
-        if (movedForms.length) {
-          await updateForm({
-            formId: form.id.toString(),
-            payload: { ...(form as unknown as FormPayload), archived: true },
-          });
-        }
-      } catch (error) {
-        console.error("Erreur lors de l'archivage", error);
+      if (movedForms.length) {
+        await updateForm({
+          formId: form.id.toString(),
+          payload: { ...(form as unknown as FormPayload), archived: true },
+        });
       }
     },
     [moveForm, updateForm],
