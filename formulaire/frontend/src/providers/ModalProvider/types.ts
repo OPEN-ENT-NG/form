@@ -8,6 +8,7 @@ export interface ModalProviderProps {
 export interface DisplayModalsState {
   [ModalType.FOLDER_CREATE]: boolean;
   [ModalType.FOLDER_RENAME]: boolean;
+  [ModalType.FORM_IMPORT]: boolean;
   [ModalType.FORM_PROP_CREATE]: boolean;
   [ModalType.FORM_PROP_UPDATE]: boolean;
   [ModalType.FORM_FOLDER_DELETE]: boolean;
