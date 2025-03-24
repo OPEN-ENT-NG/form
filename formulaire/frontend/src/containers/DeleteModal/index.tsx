@@ -5,34 +5,66 @@ import CloseIcon from "@mui/icons-material/Close";
 import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
 import { modalActionButtonStyle } from "~/core/style/modalStyle";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
+import { FORMULAIRE, TRASH_FOLDER_ID } from "~/core/constants";
 import { deleteModalStyle } from "./style";
 import { useHome } from "~/providers/HomeProvider";
 import { getText, getTitle } from "./utils";
 import { useDeleteFoldersMutation } from "~/services/api/services/formulaireApi/folderApi";
-import { useDeleteFormMutation } from "~/services/api/services/formulaireApi/formApi";
+import {
+  useDeleteFormMutation,
+  useMoveFormMutation,
+  useUpdateFormMutation,
+} from "~/services/api/services/formulaireApi/formApi";
 import { PRIMARY } from "~/core/style/colors";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { Form, FormPayload } from "~/core/models/form/types";
 
 export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
-  const { selectedForms, selectedFolders } = useHome();
+  const { selectedForms, selectedFolders, resetSelected } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const [deleteFolders] = useDeleteFoldersMutation();
+  const [moveForm] = useMoveFormMutation();
+  const [updateForm] = useUpdateFormMutation();
   const [deleteForm] = useDeleteFormMutation();
+
+  const archiveForm = useCallback(
+    async (form: Form, destinationFolderId: number) => {
+      const movedForms = await moveForm({
+        formIds: [form.id],
+        destinationFolderId,
+      }).unwrap();
+
+      if (movedForms.length) {
+        await updateForm({
+          formId: form.id.toString(),
+          payload: { ...(form as unknown as FormPayload), archived: true },
+        });
+      }
+    },
+    [moveForm, updateForm],
+  );
 
   const handleDelete = useCallback(() => {
     if (selectedFolders.length) {
       deleteFolders(selectedFolders.map((folder) => folder.id));
     }
-    if (selectedForms.length) {
-      selectedForms.forEach((form) => {
-        if (form.id) {
-          deleteForm(form.id);
-        }
-      });
+    if (!selectedForms.length) {
+      return handleClose();
     }
+
+    selectedForms.forEach((form) => {
+      if (!form.id) return;
+
+      if (form.folder_id === TRASH_FOLDER_ID) {
+        deleteForm(form.id);
+        return;
+      }
+
+      archiveForm(form, TRASH_FOLDER_ID);
+    });
+    resetSelected();
     return handleClose();
-  }, [deleteFolders, deleteForm, handleClose, selectedFolders, selectedForms]);
+  }, [deleteFolders, deleteForm, archiveForm, handleClose, selectedFolders, selectedForms]);
 
   return (
     <Modal open={isOpen} onClose={handleClose}>
