@@ -197,6 +197,8 @@
   "formulaire.image.incompatible": "Seuls les formats d'image suivants sont acceptés : .jpg, .jpeg, .png, .gif",
   "formulaire.import": "Importer",
   "formulaire.import.explanation": "Déposez le dossier compressé (.zip) contenant vos formulaires pour les importer. Vous pourrez retrouver ces derniers dans le dossier racine 'Mes formulaires'.",
+  "formulaire.import.dropzone.information": "ZIP",
+  "formulaire.import.dropzone.label": "Glisser et déposer votre fichier ici, ou cliquer pour sélectionner un fichier",
   "formulaire.link.copy.error": "Une erreur est survenue lors de la copie du lien.",
   "formulaire.link.copy.success": "Le lien est copié dans le presse-papier.",
   "formulaire.manager": "Gérer",
