@@ -1,14 +1,15 @@
 import { DuplicateFormPayload, Form, FormPayload } from "~/core/models/form/types.ts";
-import { emptySplitApi } from "./emptySplitApi.ts";
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
+import { TagName } from "~/core/enums.ts";
 
-export const formApi = emptySplitApi.injectEndpoints({
+export const formApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
     getForms: builder.query<Form[], void>({
       query: () => ({
         url: `forms`,
         method: "GET",
       }),
-      providesTags: ["Forms"],
+      providesTags: [TagName.FORMS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -28,7 +29,7 @@ export const formApi = emptySplitApi.injectEndpoints({
         method: "POST",
         body: form,
       }),
-      invalidatesTags: ["Forms"],
+      invalidatesTags: [TagName.FORMS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -48,7 +49,7 @@ export const formApi = emptySplitApi.injectEndpoints({
         method: "PUT",
         body: payload,
       }),
-      invalidatesTags: ["Forms"],
+      invalidatesTags: [TagName.FORMS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -67,7 +68,7 @@ export const formApi = emptySplitApi.injectEndpoints({
         url: `forms/${formId}`,
         method: "DELETE",
       }),
-      invalidatesTags: ["Forms"],
+      invalidatesTags: [TagName.FORMS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -83,7 +84,7 @@ export const formApi = emptySplitApi.injectEndpoints({
         method: "POST",
         body: formIds,
       }),
-      invalidatesTags: ["Forms"],
+      invalidatesTags: [TagName.FORMS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
