@@ -4,7 +4,7 @@ import { useHome } from "~/providers/HomeProvider";
 import { ToasterButtonType } from "./enums";
 import { useModal } from "~/providers/ModalProvider";
 import { ModalType } from "~/core/enums";
-import { useDuplicateFormsMutation } from "~/services/api/services/formApi";
+import { useDuplicateFormsMutation } from "~/services/api/services/formulaireApi/formApi";
 
 export const useMapToasterButtons = () => {
   const {

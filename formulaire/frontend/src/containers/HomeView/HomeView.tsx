@@ -15,12 +15,20 @@ import { useHome } from "~/providers/HomeProvider";
 import { Toaster } from "~/components/Toaster";
 import { useMapToasterButtons } from "./useMapToasterButtons";
 import { DeleteModal } from "../DeleteModal";
+import { FormImportModal } from "../FormImportModal";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const headerButtons = useGetHomeHeaderButtons();
   const {
-    displayModals: { FOLDER_CREATE, FOLDER_RENAME, FORM_PROP_CREATE, FORM_PROP_UPDATE, FORM_FOLDER_DELETE },
+    displayModals: {
+      FOLDER_CREATE,
+      FOLDER_RENAME,
+      FORM_PROP_CREATE,
+      FORM_PROP_UPDATE,
+      FORM_FOLDER_DELETE,
+      FORM_IMPORT,
+    },
     toggleModal,
   } = useModal();
   const { isToasterOpen } = useHome();
@@ -66,6 +74,7 @@ export const HomeView: FC = () => {
           isRgpdPossible
         />
       )}
+      {FORM_IMPORT && <FormImportModal isOpen={FORM_IMPORT} handleClose={() => toggleModal(ModalType.FORM_IMPORT)} />}
       {isToasterOpen && <Toaster leftButtons={leftButtons} rightButtons={rightButtons} />}
     </Box>
   );

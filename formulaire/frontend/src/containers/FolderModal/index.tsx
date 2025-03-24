@@ -13,7 +13,7 @@ import { FOLDER_MODAL_MODE, FolderModalProps } from "./types";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
-import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/folderApi";
+import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/formulaireApi/folderApi";
 import { CreateFolderPayload, UpdateFolderPayload } from "~/core/models/folder/types";
 
 export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode }) => {
