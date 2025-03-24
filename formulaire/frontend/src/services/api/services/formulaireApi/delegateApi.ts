@@ -1,7 +1,7 @@
 import { Delegate } from "~/core/models/delegate/types.ts";
-import { emptySplitApi } from "./emptySplitApi.ts";
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
-export const delegateApi = emptySplitApi.injectEndpoints({
+export const delegateApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
     getDelegates: builder.query<Delegate, void>({
       query: () => "delegates",

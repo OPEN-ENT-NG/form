@@ -1,9 +1,10 @@
 import { combineReducers, configureStore } from "@reduxjs/toolkit";
-
-import { emptySplitApi } from "./services/api/services/emptySplitApi.ts.ts";
+import { emptySplitFormulaireApi } from "./services/api/services/formulaireApi/emptySplitFormulaireApi";
+import { emptySplitArchiveApi } from "./services/api/services/archiveApi/emptySplitArchiveApi";
 
 const rootReducer = combineReducers({
-  [emptySplitApi.reducerPath]: emptySplitApi.reducer,
+  [emptySplitFormulaireApi.reducerPath]: emptySplitFormulaireApi.reducer,
+  [emptySplitArchiveApi.reducerPath]: emptySplitArchiveApi.reducer,
 });
 
 export const setupStore = () => {
@@ -11,7 +12,7 @@ export const setupStore = () => {
     reducer: rootReducer,
     middleware: (getDefaultMiddleware) =>
       // adding the api middleware enables caching, invalidation, polling and other features of `rtk-query`
-      getDefaultMiddleware().concat(emptySplitApi.middleware),
+      getDefaultMiddleware().concat(emptySplitFormulaireApi.middleware).concat(emptySplitArchiveApi.middleware),
   });
 };
 

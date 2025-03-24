@@ -40,9 +40,9 @@ import dayjs from "dayjs";
 import { buildDelegatesParam, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";
 import { GREY_DARK_COLOR } from "~/core/style/colors";
 import RGPDInfoBox from "~/components/RgpdInfoBox";
-import { useGetDelegatesQuery } from "~/services/api/services/delegateApi";
+import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
 import { useHome } from "~/providers/HomeProvider";
-import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formApi";
+import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formulaireApi/formApi";
 import { buildFormPayload } from "~/core/models/form/utils";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 
