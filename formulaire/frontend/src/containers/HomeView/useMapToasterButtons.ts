@@ -4,7 +4,8 @@ import { useHome } from "~/providers/HomeProvider";
 import { ToasterButtonType } from "./enums";
 import { useModal } from "~/providers/ModalProvider";
 import { ModalType } from "~/core/enums";
-import { useDuplicateFormsMutation } from "~/services/api/services/formulaireApi/formApi";
+import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
+import { TRASH_FOLDER_ID } from "~/core/constants";
 
 export const useMapToasterButtons = () => {
   const {
@@ -19,6 +20,7 @@ export const useMapToasterButtons = () => {
   } = useHome();
   const { toggleModal } = useModal();
   const [duplicateForms, { isLoading: isDuplicating }] = useDuplicateFormsMutation();
+  const [restoreForms, { isLoading: isRestoring }] = useRestoreFormsMutation();
 
   const hasNoFolders = useMemo(() => selectedFolders.length === 0, [selectedFolders]);
   const hasOneFolder = useMemo(() => selectedFolders.length === 1, [selectedFolders]);
@@ -33,6 +35,8 @@ export const useMapToasterButtons = () => {
   const hasOnlyFolders = useMemo(() => hasFolders && hasNoForms, [hasFolders, hasNoForms]);
   const hasOnlyForms = useMemo(() => hasForms && hasNoFolders, [hasForms, hasNoFolders]);
   const hasMixedSelection = useMemo(() => hasFolders && hasForms, [hasFolders, hasForms]);
+  const isInTrash = useMemo(() => currentFolder.id === TRASH_FOLDER_ID, [currentFolder.id]);
+  const hasFormsInTrash = useMemo(() => isInTrash && hasForms, [isInTrash, hasForms]);
 
   const filteredFolders = useMemo(() => {
     return folders.filter((folder) => folder.parent_id === currentFolder.id);
@@ -70,6 +74,18 @@ export const useMapToasterButtons = () => {
       return console.error("Error duplicating forms:", error);
     }
   }, [hasForms, isDuplicating, selectedForms, currentFolder.id, duplicateForms, unselectAll]);
+
+  const handleRestore = useCallback(async () => {
+    if (!hasForms || isRestoring || !isInTrash) return;
+
+    try {
+      const formIds = selectedForms.map((form) => form.id);
+      await restoreForms(formIds).unwrap();
+      return unselectAll();
+    } catch (error) {
+      return console.error("Error restoring forms:", error);
+    }
+  }, [hasForms, isRestoring, isInTrash, selectedForms, restoreForms, unselectAll]);
 
   const ToasterButtonsMap = useMemo(
     () => ({
@@ -118,8 +134,22 @@ export const useMapToasterButtons = () => {
         type: ToasterButtonType.SELECT_ALL,
         action: () => handleSelectAll(),
       },
+      [ToasterButtonType.RESTORE]: {
+        titleI18nkey: "formulaire.restore",
+        type: ToasterButtonType.RESTORE,
+        action: () => handleRestore(),
+      },
     }),
-    [hasFolders, selectedFolders, setCurrentFolder, toggleModal, unselectAll, handleDuplicate, handleSelectAll],
+    [
+      hasFolders,
+      selectedFolders,
+      setCurrentFolder,
+      toggleModal,
+      unselectAll,
+      handleDuplicate,
+      handleSelectAll,
+      handleRestore,
+    ],
   );
 
   // Simplification des boutons de droite
@@ -131,6 +161,11 @@ export const useMapToasterButtons = () => {
   // Fonction simplifiée pour obtenir les boutons de gauche
   const leftButtons = useMemo(() => {
     const getButtonTypes = (): ToasterButtonType[] => {
+      // Cas spécial: Formulaires dans la corbeille
+      if (hasFormsInTrash) {
+        return [ToasterButtonType.RESTORE, ToasterButtonType.DELETE];
+      }
+
       // Cas 1: Un seul formulaire
       if (hasOneForm && !hasFolders) {
         return [
@@ -179,6 +214,7 @@ export const useMapToasterButtons = () => {
     hasFolders,
     hasForms,
     hasMixedSelection,
+    hasFormsInTrash,
   ]);
 
   return { leftButtons, rightButtons };
