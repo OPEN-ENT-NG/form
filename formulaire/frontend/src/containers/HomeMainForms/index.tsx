@@ -77,6 +77,7 @@ export const HomeMainForms: FC<HomeMainFormsProps> = ({ forms }) => {
             <ResourceCard
               width="100%"
               title={form.title}
+              image={form.picture}
               defaultImage={LOGO_PATH}
               isSelected={isSelectedForm(form)}
               onSelect={() => handleFormsSelect(form)}
