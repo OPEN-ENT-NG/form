@@ -13,3 +13,7 @@ export const formImportModalDropZoneStyle = {
   textAlign: "center",
   width: "30rem",
 };
+
+export const dropZoneSlotProps = {
+  root: { sx: { textAlign: "center" } },
+};

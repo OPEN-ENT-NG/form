@@ -1,8 +1,8 @@
-import { Box, Button, Dropzone, FileList, IconButton, Modal, Typography } from "@cgi-learning-hub/ui";
+import { Box, Button, CustomFile, Dropzone, FileList, IconButton, Modal, Typography } from "@cgi-learning-hub/ui";
 import CloseIcon from "@mui/icons-material/Close";
 import { FC, useEffect, useState } from "react";
 import { modalBoxStyle, spaceBetweenBoxStyle } from "~/core/style/boxStyles";
-import { formImportModalContentStyle, formImportModalStyle } from "./style";
+import { dropZoneSlotProps, formImportModalContentStyle, formImportModalStyle } from "./style";
 import { modalActionButtonStyle } from "~/core/style/modalStyle";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
@@ -16,7 +16,6 @@ import { useDispatch } from "react-redux";
 import { TagName } from "~/core/enums";
 import { emptySplitArchiveApi } from "~/services/api/services/archiveApi/emptySplitArchiveApi";
 import { getAcceptedFileType } from "./utils";
-import { CustomFile } from "@cgi-learning-hub/ui";
 import { ImportAnalyzeResponse, ImportUploadResponse } from "~/core/models/import/types";
 
 export const FormImportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
@@ -90,6 +89,7 @@ export const FormImportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
             accept={getAcceptedFileType()}
             maxFiles={1}
             width={"30rem"}
+            slotProps={dropZoneSlotProps}
             onDrop={handleDropFile}
           />
           <FileList files={customFiles} onDelete={() => setCustomFiles([])}></FileList>
