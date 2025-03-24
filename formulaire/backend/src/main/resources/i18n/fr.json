@@ -217,6 +217,8 @@
   "formulaire.format.pdf": "Format PDF",
   "formulaire.export.pdf.questions.title": "Export PDF formulaires",
   "formulaire.import.explanation": "Déposez le dossier compressé (.zip) contenant vos formulaires pour les importer. Vous pourrez retrouver ces derniers dans le dossier racine 'Mes formulaires'.",
+  "formulaire.import.dropzone.label": "Glisser et déposer votre fichier ici, ou cliquer pour sélectionner un fichier",
+  "formulaire.import.dropzone.information": "ZIP",
   "formulaire.form.download.all.results.pdf": "Télécharger tous les résultats (PDF)",
   "formulaire.form.download.all.results.csv": "Télécharger tous les résultats (CSV)",
   "formulaire.form.download.all.results.lightbox.title": "Téléchargement des résultats ({{0}})",

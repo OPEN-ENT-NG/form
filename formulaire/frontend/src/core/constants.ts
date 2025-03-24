@@ -1,6 +1,7 @@
 import { Theme, ToastPosition } from "react-toastify";
 
 export const FORMULAIRE = "formulaire";
+export const ARCHIVE = "archive";
 
 export const DEFAULT_THEME = "default";
 
