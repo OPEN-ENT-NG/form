@@ -37,6 +37,11 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
     });
   }, []);
 
+  const resetSelected = useCallback(() => {
+    setSelectedFolders([]);
+    return setSelectedForms([]);
+  }, []);
+
   useEffect(() => {
     if (formsData) return setForms(formsData);
     return;
@@ -52,6 +57,10 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
     return setIsToasterOpen(false);
   }, [selectedFolders, selectedForms]);
 
+  useEffect(() => {
+    resetSelected();
+  }, [currentFolder]);
+
   const value = useMemo<HomeProviderContextType>(
     () => ({
       currentFolder,
@@ -65,6 +74,7 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
       selectedForms,
       setSelectedForms,
       isToasterOpen,
+      resetSelected,
     }),
     [currentFolder, tab, folders, selectedFolders, selectedForms, forms, isToasterOpen],
   );
