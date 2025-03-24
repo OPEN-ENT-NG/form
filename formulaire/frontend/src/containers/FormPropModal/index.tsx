@@ -4,7 +4,6 @@ import {
   IconButton,
   Modal,
   Typography,
-  ImagePicker,
   TextField,
   DatePicker,
   Checkbox,
@@ -45,6 +44,7 @@ import { useHome } from "~/providers/HomeProvider";
 import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formulaireApi/formApi";
 import { buildFormPayload } from "~/core/models/form/utils";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 
 export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {
@@ -63,6 +63,14 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
   const { data: delegateData } = useGetDelegatesQuery();
   const [createForm] = useCreateFormMutation();
   const [updateForm] = useUpdateFormMutation();
+
+  //MEDIA LIBRARY
+  const handleImageChange = useCallback(
+    (src: string | null) => {
+      handleFormPropInputValueChange(FormPropField.PICTURE, src ?? "");
+    },
+    [handleFormPropInputValueChange],
+  );
 
   const formCheckBoxPropsReady = useMemo(() => {
     return isRgpdPossible
@@ -150,11 +158,12 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
         <Typography variant={TypographyVariant.H4}>{t("formulaire.prop.edit.title")}</Typography>
         <Box sx={mainColumnStyle}>
           <Box sx={fileDropZoneWrapper}>
-            <ImagePicker
+            <ImagePickerMediaLibrary
               width="16rem"
               height="16.3rem"
               information={IMAGE_PICKER_INFO}
-              onFileChange={(file) => handleFormPropInputValueChange(FormPropField.PICTURE, file?.name ?? "")}
+              onImageChange={handleImageChange}
+              initialSrc={formPropInputValue[FormPropField.PICTURE] as string}
             />
           </Box>
           <Box sx={mainContentWrapper}>
@@ -180,7 +189,13 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                   onChange={(value) => handleDateChange(FormPropField.DATE_OPENING, value)}
                 />
               </Box>
-              <Box sx={dateEndingCheckboxStyle}>
+              <Box
+                sx={{
+                  ...dateEndingCheckboxStyle,
+                  cursor: "pointer",
+                }}
+                onClick={() => setIsEndingDateEditable(!isEndingDateEditable)}
+              >
                 <Checkbox
                   sx={{ padding: "0" }}
                   disabled={isPublic}
@@ -215,17 +230,28 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                 const showRgpd = item.field === FormPropField.HAS_RGPD && isRgpdPossible && hasRgpd;
                 return (
                   <>
-                    <Box key={item.field} sx={checkboxRowStyle}>
+                    <Box
+                      key={item.field}
+                      sx={{
+                        ...checkboxRowStyle,
+                        cursor: isDisabled ? "not-allowed" : "pointer",
+                      }}
+                      onClick={() => !isDisabled && handleCheckboxChange(item.field)}
+                    >
                       <Checkbox
                         sx={{ padding: "0" }}
                         disabled={isDisabled}
                         checked={isChecked}
-                        onChange={() => handleCheckboxChange(item.field)}
+                        onChange={(e) => e.stopPropagation()} // Prevent double firing of the event
                       />
                       <Typography>{t(item.i18nKey)}</Typography>
                       {!!item.tooltip && (
                         <Tooltip title={t(item.tooltip)}>
-                          <InfoOutlinedIcon color="secondary" fontSize="small" />
+                          <InfoOutlinedIcon
+                            color="secondary"
+                            fontSize="small"
+                            onClick={(e) => e.stopPropagation()} // Prevent checkbox toggling when clicking on the info icon
+                          />
                         </Tooltip>
                       )}
                     </Box>
