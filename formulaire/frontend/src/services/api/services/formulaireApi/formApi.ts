@@ -78,6 +78,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+
     duplicateForms: builder.mutation<Form[], DuplicateFormPayload>({
       query: ({ formIds, folderId }) => ({
         url: `forms/duplicate/${folderId}`,
@@ -97,6 +98,46 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         return response?.data || response;
       },
     }),
+
+    moveForm: builder.mutation<Form[], { formIds: number[]; destinationFolderId: number }>({
+      query: ({ formIds, destinationFolderId }) => ({
+        url: `forms/move/${destinationFolderId}`,
+        method: "PUT",
+        body: formIds,
+      }),
+      invalidatesTags: [TagName.FORMS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.formService.move", err);
+          throw new Error("formulaire.error.formService.move");
+        }
+      },
+      transformResponse: (response: { data: Form[] }) => {
+        return response?.data || response;
+      },
+    }),
+
+    restoreForms: builder.mutation<Form[], number[]>({
+      query: (formIds) => ({
+        url: `forms/restore`,
+        method: "PUT",
+        body: formIds,
+      }),
+      invalidatesTags: [TagName.FORMS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.formService.restore", err);
+          throw new Error("formulaire.error.formService.restore");
+        }
+      },
+      transformResponse: (response: { data: Form[] }) => {
+        return response?.data || response;
+      },
+    }),
   }),
   overrideExisting: false,
 });
@@ -107,4 +148,6 @@ export const {
   useDeleteFormMutation,
   useGetFormsQuery,
   useDuplicateFormsMutation,
+  useMoveFormMutation,
+  useRestoreFormsMutation,
 } = formApi;
