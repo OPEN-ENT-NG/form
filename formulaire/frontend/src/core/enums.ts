@@ -8,3 +8,15 @@ export enum ModalType {
   MOVE = "MOVE",
   EXPORT = "EXPORT",
 }
+
+export enum TagName {
+  FOLDERS = "FOLDERS",
+  FORMS = "FORMS",
+}
+
+export enum QueryMethod {
+  GET = "GET",
+  POST = "POST",
+  PUT = "PUT",
+  DELETE = "DELETE",
+}
