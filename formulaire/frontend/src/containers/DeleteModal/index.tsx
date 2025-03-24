@@ -9,8 +9,8 @@ import { FORMULAIRE } from "~/core/constants";
 import { deleteModalStyle } from "./style";
 import { useHome } from "~/providers/HomeProvider";
 import { getText, getTitle } from "./utils";
-import { useDeleteFoldersMutation } from "~/services/api/services/folderApi";
-import { useDeleteFormMutation } from "~/services/api/services/formApi";
+import { useDeleteFoldersMutation } from "~/services/api/services/formulaireApi/folderApi";
+import { useDeleteFormMutation } from "~/services/api/services/formulaireApi/formApi";
 import { PRIMARY } from "~/core/style/colors";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 

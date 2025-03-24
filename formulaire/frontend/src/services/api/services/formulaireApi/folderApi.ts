@@ -1,24 +1,25 @@
 import { Folder, CreateFolderPayload, UpdateFolderPayload } from "~/core/models/folder/types.ts";
-import { emptySplitApi } from "./emptySplitApi.ts";
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
+import { QueryMethod, TagName } from "~/core/enums.ts";
 
-export const folderApi = emptySplitApi.injectEndpoints({
+export const folderApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
     // Liste des dossiers
     getFolders: builder.query<Folder[], void>({
       query: () => "folders",
       transformResponse: (response: Folder[]) => response,
-      providesTags: ["Folders"],
+      providesTags: [TagName.FOLDERS],
     }),
 
     // Créer un dossier
     createFolder: builder.mutation<Folder, CreateFolderPayload>({
       query: (folder) => ({
         url: "folders",
-        method: "POST",
+        method: QueryMethod.POST,
         body: folder,
       }),
       transformResponse: (response: { data: Folder }) => response.data,
-      invalidatesTags: ["Folders"],
+      invalidatesTags: [TagName.FOLDERS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -33,11 +34,11 @@ export const folderApi = emptySplitApi.injectEndpoints({
     updateFolder: builder.mutation<Folder, UpdateFolderPayload>({
       query: (folder) => ({
         url: `folders/${folder.id}`,
-        method: "PUT",
+        method: QueryMethod.PUT,
         body: folder,
       }),
       transformResponse: (response: { data: Folder }) => response.data,
-      invalidatesTags: () => ["Folders"],
+      invalidatesTags: () => [TagName.FOLDERS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -52,10 +53,10 @@ export const folderApi = emptySplitApi.injectEndpoints({
     deleteFolders: builder.mutation<void, number[]>({
       query: (folderIds) => ({
         url: "folders",
-        method: "DELETE",
+        method: QueryMethod.DELETE,
         body: folderIds,
       }),
-      invalidatesTags: ["Folders"],
+      invalidatesTags: [TagName.FOLDERS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -70,10 +71,10 @@ export const folderApi = emptySplitApi.injectEndpoints({
     moveForms: builder.mutation<void, { formIds: number[]; parentId: number }>({
       query: ({ formIds, parentId }) => ({
         url: `folders/${parentId}/move`,
-        method: "PUT",
+        method: QueryMethod.PUT,
         body: formIds,
       }),
-      invalidatesTags: ["Folders"],
+      invalidatesTags: [TagName.FOLDERS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
