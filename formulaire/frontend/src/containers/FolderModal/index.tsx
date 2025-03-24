@@ -11,7 +11,7 @@ import {
 import { modalActionButtonStyle } from "~/core/style/modalStyle";
 import { FOLDER_MODAL_MODE, FolderModalProps } from "./types";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
+import { FORMULAIRE, MYFORMS_FOLDER_ID } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
 import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/formulaireApi/folderApi";
 import { CreateFolderPayload, UpdateFolderPayload } from "~/core/models/folder/types";
@@ -37,7 +37,7 @@ export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode })
     };
 
     const handleCreate = () => {
-      const parent_id = currentFolder ? currentFolder.id : 1;
+      const parent_id = currentFolder ? currentFolder.id : MYFORMS_FOLDER_ID;
       const folder: CreateFolderPayload = {
         parent_id: parent_id,
         name: newName,

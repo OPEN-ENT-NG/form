@@ -14,9 +14,9 @@ import {
 } from "~/services/api/services/archiveApi/importExportApi";
 import { useDispatch } from "react-redux";
 import { TagName } from "~/core/enums";
-import { emptySplitArchiveApi } from "~/services/api/services/archiveApi/emptySplitArchiveApi";
 import { getAcceptedFileType } from "./utils";
 import { ImportAnalyzeResponse, ImportUploadResponse } from "~/core/models/import/types";
+import { emptySplitFormulaireApi } from "~/services/api/services/formulaireApi/emptySplitFormulaireApi";
 
 export const FormImportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -43,20 +43,18 @@ export const FormImportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
 
     const isLaunchOk = isUploadOk && isAnalyzeOk && isLaunchSuccess;
     if (isLaunchOk) {
-      dispatch(emptySplitArchiveApi.util.invalidateTags([TagName.FORMS]));
+      dispatch(emptySplitFormulaireApi.util.invalidateTags([TagName.FORMS]));
       handleClose();
     }
   }, [isUploadSuccess, isAnalyzeSuccess, isLaunchSuccess, uploadedForms.importId, analyzedForms.apps, dispatch]);
 
   const handleDropFile = (files: File[]) => {
     if (files) {
-      // Create FormData from File
       const zipFile = files[0];
       const newFormData = new FormData();
       newFormData.append("file", zipFile);
       setFormData(newFormData);
 
-      // Display file in FileList
       const { name, size } = zipFile;
       setCustomFiles([{ name, size, isDeletable: true }]);
     }

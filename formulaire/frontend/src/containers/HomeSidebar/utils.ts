@@ -1,18 +1,10 @@
 import { Folder } from "~/core/models/folder/types";
 import { CustomTreeViewItem, ICON_TYPE } from "@cgi-learning-hub/ui";
-
-const SYSTEM_FOLDERS = {
-  MY_FORMS: 1,
-  SHARED: 2,
-  TRASH: 3,
-};
+import { MYFORMS_FOLDER_ID, SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
 
 export const buildFolderTree = (folders: Folder[]): CustomTreeViewItem[] => {
   const rootFolders = folders.filter(
-    (folder) =>
-      folder.id === SYSTEM_FOLDERS.MY_FORMS ||
-      folder.id === SYSTEM_FOLDERS.SHARED ||
-      folder.id === SYSTEM_FOLDERS.TRASH,
+    (folder) => folder.id === MYFORMS_FOLDER_ID || folder.id === SHARED_FOLDER_ID || folder.id === TRASH_FOLDER_ID,
   );
 
   const buildNestedFolders = (parentId: number): CustomTreeViewItem[] => {
@@ -34,9 +26,9 @@ export const buildFolderTree = (folders: Folder[]): CustomTreeViewItem[] => {
     const childFolders = buildNestedFolders(rootFolder.id);
 
     const iconType =
-      rootFolder.id === SYSTEM_FOLDERS.SHARED
+      rootFolder.id === SHARED_FOLDER_ID
         ? ICON_TYPE.SHARE
-        : rootFolder.id === SYSTEM_FOLDERS.TRASH
+        : rootFolder.id === TRASH_FOLDER_ID
         ? ICON_TYPE.TRASH
         : ICON_TYPE.FOLDER;
 
