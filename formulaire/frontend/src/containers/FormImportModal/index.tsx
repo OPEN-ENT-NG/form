@@ -49,7 +49,7 @@ export const FormImportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
   }, [isUploadSuccess, isAnalyzeSuccess, isLaunchSuccess, uploadedForms.importId, analyzedForms.apps, dispatch]);
 
   const handleDropFile = (files: File[]) => {
-    if (files.length > 0) {
+    if (files) {
       // Create FormData from File
       const zipFile = files[0];
       const newFormData = new FormData();
