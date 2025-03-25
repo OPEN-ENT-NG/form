@@ -43,6 +43,7 @@ public class Fields {
     public static final String ID = "id";
     public static final String IMAGE = "image";
     public static final String IS_CUSTOM = "is_custom";
+    public static final String IS_PROGRESS_BAR_DISPLAYED = "is_progress_bar_displayed";
     public static final String IS_PUBLIC = "is_public";
     public static final String IS_NEXT_FORM_ELEMENT_DEFAULT = "is_next_form_element_default";
     public static final String MAIL = "mail";
