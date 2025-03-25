@@ -8,6 +8,7 @@
         <groupId>fr.openent</groupId>
         <artifactId>form</artifactId>
         <version>${revision}</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>common</artifactId>
