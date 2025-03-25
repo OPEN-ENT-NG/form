@@ -157,6 +157,8 @@
   "formulaire.filter.sent": "Envoyés",
   "formulaire.filter.shared": "Partagés",
   "formulaire.filter.title": "Titre",
+  "formulaire.filter.title.filter": "Filtrer par",
+  "formulaire.filter.title.sort": "Trier par",
   "formulaire.filter.to_do": "À faire",
   "formulaire.finish": "Terminer",
   "formulaire.folder.create": "Créer un dossier",
