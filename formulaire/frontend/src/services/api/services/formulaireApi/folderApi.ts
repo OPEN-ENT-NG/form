@@ -1,6 +1,9 @@
 import { Folder, CreateFolderPayload, UpdateFolderPayload } from "~/core/models/folder/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { QueryMethod, TagName } from "~/core/enums.ts";
+import { toast } from "react-toastify";
+import i18n from "~/i18n";
+import { FORMULAIRE } from "~/core/constants";
 
 export const folderApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -9,6 +12,14 @@ export const folderApi = emptySplitFormulaireApi.injectEndpoints({
       query: () => "folders",
       transformResponse: (response: Folder[]) => response,
       providesTags: [TagName.FOLDERS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.folderService.list", err);
+          toast.error(i18n.t("formulaire.error.folderService.list", { ns: FORMULAIRE }));
+        }
+      },
     }),
 
     // Créer un dossier
@@ -23,9 +34,10 @@ export const folderApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
+          toast.success(i18n.t("formulaire.success.folders.create", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.folderService.create", err);
-          throw new Error("formulaire.error.folderService.create");
+          toast.error(i18n.t("formulaire.error.folderService.create", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -42,9 +54,10 @@ export const folderApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
+          toast.success(i18n.t("formulaire.success.folders.update", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.folderService.update", err);
-          throw new Error("formulaire.error.folderService.update");
+          toast.error(i18n.t("formulaire.error.folderService.update", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -60,9 +73,10 @@ export const folderApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
+          toast.success(i18n.t("formulaire.success.folders.delete", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.folderService.delete", err);
-          throw new Error("formulaire.error.folderService.delete");
+          toast.error(i18n.t("formulaire.error.folderService.delete", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -78,9 +92,10 @@ export const folderApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
+          toast.success(i18n.t("formulaire.success.move", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.folderService.move", err);
-          throw new Error("formulaire.error.folderService.move");
+          toast.error(i18n.t("formulaire.error.folderService.move", { ns: FORMULAIRE }));
         }
       },
     }),
