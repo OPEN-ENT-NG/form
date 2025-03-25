@@ -38,6 +38,7 @@ public class DefaultFormServiceTest {
                 .put(ID, 12)
                 .put(TITLE, "My amazing form")
                 .put(DESCRIPTION, "This is a test form")
+                .put(IS_PROGRESS_BAR_DISPLAYED, true)
                 .put(PICTURE, (String)null)
                 .put(OWNER_ID, "4265605f-3352-4f42-8cef-18e150bbf6bf")
                 .put(OWNER_NAME, "Quentin PERIE")
@@ -276,7 +277,7 @@ public class DefaultFormServiceTest {
 
         String expectedQuery =
                 "WITH nbResponses AS (SELECT COUNT(*) FROM " + DISTRIBUTION_TABLE + " WHERE form_id = ? AND status = ?) " +
-                "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, picture = ?, date_modification = ?, " +
+                "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, is_progress_bar_displayed = ?, picture = ?, date_modification = ?, " +
                 "date_opening = ?, date_ending = ?, sent = ?, collab = ?, reminded = ?, archived = ?, " +
                 "multiple = CASE (SELECT count > 0 FROM nbResponses) " +
                 "WHEN false THEN ? WHEN true THEN (SELECT multiple FROM " + FORM_TABLE +" WHERE id = ?) END, " +
@@ -284,7 +285,7 @@ public class DefaultFormServiceTest {
                 "WHEN false THEN ? WHEN true THEN (SELECT anonymous FROM " + FORM_TABLE +" WHERE id = ?) END, " +
                 "response_notified = ?, editable = ?, rgpd = ?, rgpd_goal = ?, rgpd_lifetime = ?, is_public = ?, public_key = ? " +
                 "WHERE id = ? RETURNING *;";
-        JsonArray expectedParams = new JsonArray("[12,\"FINISHED\",\"My amazing form\",\"This is a test form\",\"\",\"NOW()\"," +
+        JsonArray expectedParams = new JsonArray("[12,\"FINISHED\",\"My amazing form\",true,\"This is a test form\",\"\",\"NOW()\"," +
                 "\"Sun Dec 08 00:00:00 GMT 2024\",null,false,true,false,false,true,12,false,12,false,true,true,\"This is my goal\",3,false,null,12]");
 
         vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
