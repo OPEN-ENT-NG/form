@@ -88,7 +88,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
   }, [delegateData, rgpdGoal, rgpdExpirationDate]);
 
   const modalTitle = useMemo(
-    () => (mode === FormPropModalMode.CREATE ? t("formulaire.prop.create.title") : t("formulaire.prop.update.title")),
+    () => (mode === FormPropModalMode.CREATE ? t("formulaire.prop.create.title") : t("formulaire.prop.edit.title")),
     [mode],
   );
 
