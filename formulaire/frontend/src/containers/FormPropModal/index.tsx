@@ -114,7 +114,8 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
   );
 
   const handleSubmit = useCallback(async () => {
-    const formPayload = buildFormPayload(formPropInputValue, currentFolderId);
+    const formInEdit = mode === FormPropModalMode.UPDATE ? selectedForms[0] : null;
+    const formPayload = buildFormPayload(formPropInputValue, currentFolderId, formInEdit);
 
     const submitActions = {
       [FormPropModalMode.CREATE]: () => createForm(formPayload),
