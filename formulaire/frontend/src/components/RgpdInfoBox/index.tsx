@@ -11,8 +11,12 @@ const RGPDInfoBox: FC<RGPDInfoBoxProps> = ({ params, sx = {} }) => {
   const formattedDate = dayjs(params.expirationDate).format(DD_MM_YYYY);
 
   const formatI18n = (key: string, params: string[]): string => {
-    return params.reduce((translatedText, param, index) => translatedText.replace(`{${index}}`, param), t(key));
+    return params.reduce((translatedText, param, index) => {
+      const placeholder = `{{${index}}}`;
+      return translatedText.replace(placeholder, param);
+    }, t(key));
   };
+  
 
   const introHTML = formatI18n("formulaire.prop.rgpd.description.intro", [params.finalite, formattedDate]);
 
