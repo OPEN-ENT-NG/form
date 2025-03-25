@@ -202,6 +202,8 @@
   "formulaire.filter.sent": "Envoyés",
   "formulaire.filter.to_do": "À faire",
   "formulaire.filter.finished": "Terminé",
+  "formulaire.filter.title.sort": "Trier par",
+  "formulaire.filter.title.filter": "Filtrer par",
 
   "formulaire.form.import.button": "Importer un formulaire",
   "formulaire.form.create.button": "Créer un formulaire",
