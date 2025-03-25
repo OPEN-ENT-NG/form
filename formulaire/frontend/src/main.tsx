@@ -7,7 +7,7 @@ import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-qu
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-
+import "react-toastify/dist/ReactToastify.css";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_THEME, FORMULAIRE, TOAST_CONFIG } from "./core/constants";
 import { setupStore } from "./store";
