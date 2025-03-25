@@ -52,15 +52,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
   } = useHome();
   const {
     formPropInputValue,
-    formPropInputValue: {
-      dateOpening,
-      isPublic,
-      description,
-      hasRgpd,
-      rgpdGoal,
-      rgpdLifeTime,
-      title,
-    },
+    formPropInputValue: { dateOpening, isPublic, description, hasRgpd, rgpdGoal, rgpdLifeTime, title },
     handleFormPropInputValueChange,
     handleDateChange,
     formId,
