@@ -18,6 +18,7 @@ import {
 import { PRIMARY } from "~/core/style/colors";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 import { Form, FormPayload } from "~/core/models/form/types";
+import { toast } from "react-toastify";
 
 export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
   const { selectedForms, selectedFolders, resetSelected } = useHome();
@@ -38,6 +39,7 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
         await updateForm({
           formId: form.id.toString(),
           payload: { ...(form as unknown as FormPayload), archived: true },
+          hasToastDisplay: false,
         });
       }
     },
@@ -62,6 +64,7 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
 
       archiveForm(form, TRASH_FOLDER_ID);
     });
+    toast.success(t("formulaire.success.forms.archive"));
     resetSelected();
     return handleClose();
   }, [deleteFolders, deleteForm, archiveForm, handleClose, selectedFolders, selectedForms]);
