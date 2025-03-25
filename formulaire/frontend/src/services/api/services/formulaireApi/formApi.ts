@@ -1,6 +1,9 @@
 import { DuplicateFormPayload, Form, FormPayload } from "~/core/models/form/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { TagName } from "~/core/enums.ts";
+import { toast } from "react-toastify";
+import i18n from "~/i18n";
+import { FORMULAIRE, TRASH_FOLDER_ID } from "~/core/constants";
 
 export const formApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -15,7 +18,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.list", err);
-          throw new Error("formulaire.error.formService.list");
+          toast.error(i18n.t("formulaire.error.formService.list", { ns: FORMULAIRE }));
         }
       },
       transformResponse: (response: { data: Form[] }) => {
@@ -33,9 +36,10 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
+          toast.success(i18n.t("formulaire.success.form.create", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.create", err);
-          throw new Error("formulaire.error.formService.create");
+          toast.error(i18n.t("formulaire.error.formService.create", { ns: FORMULAIRE }));
         }
       },
       transformResponse: (response: { data: Form }) => {
@@ -43,19 +47,20 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       },
     }),
 
-    updateForm: builder.mutation<any, { payload: FormPayload; formId: string }>({
+    updateForm: builder.mutation<any, { payload: FormPayload; formId: string; hasToastDisplay?: boolean }>({
       query: ({ payload, formId }) => ({
         url: `forms/${formId}`,
         method: "PUT",
         body: payload,
       }),
       invalidatesTags: [TagName.FORMS],
-      async onQueryStarted(_, { queryFulfilled }) {
+      async onQueryStarted({ hasToastDisplay = true }, { queryFulfilled }) {
         try {
           await queryFulfilled;
+          if (hasToastDisplay) toast.success(i18n.t("formulaire.success.form.save", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.update", err);
-          throw new Error("formulaire.error.formService.update");
+          toast.error(i18n.t("formulaire.error.formService.update", { ns: FORMULAIRE }));
         }
       },
       transformResponse: (response: { data: Form }) => {
@@ -72,9 +77,10 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
+          toast.success(i18n.t("formulaire.success.forms.delete", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.delete", err);
-          throw new Error("formulaire.error.formService.delete");
+          toast.error(i18n.t("formulaire.error.formService.delete", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -89,9 +95,10 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
+          toast.success(i18n.t("formulaire.success.forms.duplicate", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.duplicate", err);
-          throw new Error("formulaire.error.formService.duplicate");
+          toast.error(i18n.t("formulaire.error.formService.duplicate", { ns: FORMULAIRE }));
         }
       },
       transformResponse: (response: { data: Form[] }) => {
@@ -106,12 +113,15 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         body: formIds,
       }),
       invalidatesTags: [TagName.FORMS],
-      async onQueryStarted(_, { queryFulfilled }) {
+      async onQueryStarted(params, { queryFulfilled }) {
+        console.log(params.destinationFolderId);
         try {
           await queryFulfilled;
+          if (params.destinationFolderId !== TRASH_FOLDER_ID)
+            toast.success(i18n.t("formulaire.success.move", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.move", err);
-          throw new Error("formulaire.error.formService.move");
+          toast.error(i18n.t("formulaire.error.formService.move", { ns: FORMULAIRE }));
         }
       },
       transformResponse: (response: { data: Form[] }) => {
@@ -129,9 +139,10 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
+          toast.success(i18n.t("formulaire.success.forms.restore", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.restore", err);
-          throw new Error("formulaire.error.formService.restore");
+          toast.error(i18n.t("formulaire.error.formService.restore", { ns: FORMULAIRE }));
         }
       },
       transformResponse: (response: { data: Form[] }) => {
