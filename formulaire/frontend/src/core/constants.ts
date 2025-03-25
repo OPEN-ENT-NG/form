@@ -19,7 +19,7 @@ export const DD_MM_YYYY = "DD/MM/YYYY";
 export const FULL_DATE_WITH_TIME_FORMAT = "DD MMMM YYYY HH:mm";
 
 //IMG PATH
-export const LOGO_PATH = "/img/logo.svg";
+export const LOGO_PATH = "/formulaire/public/img/logo.svg";
 
 //ROOT FOLDERS ID
 export const MYFORMS_FOLDER_ID = 1;
