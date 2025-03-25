@@ -5,6 +5,7 @@ import { Breadcrumbs } from "@mui/material";
 import { Box, Link, Typography } from "@cgi-learning-hub/ui";
 import { FormsIcon } from "../SVG/FormsIcon";
 import { FORM_COLOR, GREY_DARKER_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { FORMULAIRE } from "~/core/constants";
 
 export const FormBreadcrumbs: FC<FormBreadcrumbsProps> = ({
   stringItems,
@@ -15,7 +16,7 @@ export const FormBreadcrumbs: FC<FormBreadcrumbsProps> = ({
   return (
     <Breadcrumbs separator={displaySeparator && (separator ?? null)} maxItems={3}>
       {isHeader ? (
-        <Link underline="hover" color={FORM_COLOR} href="/">
+        <Link underline="hover" color={FORM_COLOR} href={`/${FORMULAIRE}`}>
           <FormsIcon height="5rem" />
         </Link>
       ) : (
