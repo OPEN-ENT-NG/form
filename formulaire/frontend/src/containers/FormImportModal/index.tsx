@@ -17,6 +17,7 @@ import { TagName } from "~/core/enums";
 import { getAcceptedFileType } from "./utils";
 import { ImportAnalyzeResponse, ImportUploadResponse } from "~/core/models/import/types";
 import { emptySplitFormulaireApi } from "~/services/api/services/formulaireApi/emptySplitFormulaireApi";
+import { toast } from "react-toastify";
 
 export const FormImportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -44,6 +45,7 @@ export const FormImportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
     const isLaunchOk = isUploadOk && isAnalyzeOk && isLaunchSuccess;
     if (isLaunchOk) {
       dispatch(emptySplitFormulaireApi.util.invalidateTags([TagName.FORMS]));
+      toast.success(t("formulaire.success.forms.import"));
       handleClose();
     }
   }, [isUploadSuccess, isAnalyzeSuccess, isLaunchSuccess, uploadedForms.importId, analyzedForms.apps, dispatch]);
@@ -65,7 +67,7 @@ export const FormImportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
     try {
       await uploadImportForms(formData);
     } catch (error) {
-      console.error("Erreur lors de l'import:", error);
+      console.error("Error from import:", error);
     }
   };
 
