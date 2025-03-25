@@ -144,6 +144,11 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
     return handleFormPropInputValueChange(FormPropField.DATE_ENDING, null);
   }, [isEndingDateEditable, dateOpening, handleFormPropInputValueChange]);
 
+  useEffect(() => {
+    if (!isDescriptionDisplay) return handleFormPropInputValueChange(FormPropField.DESCRIPTION, "");
+    return;
+  }, [isDescriptionDisplay]);
+
   return (
     <Modal open={isOpen} onClose={handleClose}>
       <Box sx={formPropModalWrapper}>
