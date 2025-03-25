@@ -5,7 +5,7 @@ import { FormPayload, Form } from "./types";
 export const buildFormPayload = (
   formPropValue: FormPropInputValueState,
   folderId: number,
-  form?: Form,
+  form: Form | null,
 ): FormPayload => {
   return {
     anonymous: formPropValue[FormPropField.IS_ANONYMOUS],
