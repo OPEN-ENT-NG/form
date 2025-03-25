@@ -48,6 +48,7 @@ import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 
 export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {
+    selectedForms,
     currentFolder: { id: currentFolderId },
   } = useHome();
   const {
@@ -59,7 +60,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
   } = useFormPropInputValueState(mode);
   const { t } = useTranslation(FORMULAIRE);
   const [isEndingDateEditable, setIsEndingDateEditable] = useState<boolean>(false);
-  const [isDescriptionDisplay, setIsDescriptionDisplay] = useState<boolean>(false);
+  const [isDescriptionDisplay, setIsDescriptionDisplay] = useState<boolean>(!!selectedForms[0]?.description);
   const { data: delegateData } = useGetDelegatesQuery();
   const [createForm] = useCreateFormMutation();
   const [updateForm] = useUpdateFormMutation();
