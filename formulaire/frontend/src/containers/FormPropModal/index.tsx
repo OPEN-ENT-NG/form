@@ -60,7 +60,6 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
       rgpdGoal,
       rgpdLifeTime,
       title,
-      isProgressBarDisplayed,
     },
     handleFormPropInputValueChange,
     handleDateChange,
@@ -154,9 +153,9 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
   }, [isEndingDateEditable, dateOpening, handleFormPropInputValueChange]);
 
   useEffect(() => {
-    if (!isProgressBarDisplayed) return handleFormPropInputValueChange(FormPropField.DESCRIPTION, "");
+    if (!isDescriptionDisplay) return handleFormPropInputValueChange(FormPropField.DESCRIPTION, "");
     return;
-  }, [isProgressBarDisplayed]);
+  }, [isDescriptionDisplay]);
 
   return (
     <Modal open={isOpen} onClose={handleClose}>
