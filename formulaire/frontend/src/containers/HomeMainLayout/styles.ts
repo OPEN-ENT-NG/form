@@ -4,16 +4,17 @@ import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
 export const mainContentInnerStyle: SxProps<Theme> = {
   height: "100%",
   display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
+  justifyContent: "flex-start",
+
   flexDirection: "column",
   gap: "2rem",
-  padding: "2rem",
+  padding: "2rem 2rem 0 2rem",
 };
 
 export const searchStyle: SxProps<Theme> = {
   ...spaceBetweenBoxStyle,
   gap: "2rem",
+  height: "3.5rem",
 };
 
 export const resourceContainerStyle: SxProps<Theme> = {
@@ -28,4 +29,15 @@ export const resourceContainerStyle: SxProps<Theme> = {
 
 export const searchBarStyle: SxProps<Theme> = {
   width: "100%",
+};
+
+export const emptyStateWrapperStyle: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  paddingTop: "2rem",
+  gap: "2rem",
+  height: "calc(100% - 7rem - 4rem - 4rem)",
+  maxHeight: "40rem",
 };
