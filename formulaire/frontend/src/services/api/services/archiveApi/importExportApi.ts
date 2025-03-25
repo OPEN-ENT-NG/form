@@ -6,6 +6,9 @@ import {
   ImportLaunchResponse,
   ImportUploadResponse,
 } from "~/core/models/import/types";
+import { FORMULAIRE } from "~/core/constants";
+import { toast } from "react-toastify";
+import i18n from "~/i18n";
 
 export const importExportApi = emptySplitArchiveApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -22,7 +25,7 @@ export const importExportApi = emptySplitArchiveApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.import", err);
-          throw new Error("formulaire.error.formService.import");
+          toast.error(i18n.t("formulaire.error.formService.import", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -39,7 +42,7 @@ export const importExportApi = emptySplitArchiveApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.import", err);
-          throw new Error("formulaire.error.formService.import");
+          toast.error(i18n.t("formulaire.error.formService.import", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -57,7 +60,7 @@ export const importExportApi = emptySplitArchiveApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.import", err);
-          throw new Error("formulaire.error.formService.import");
+          toast.error(i18n.t("formulaire.error.formService.import", { ns: FORMULAIRE }));
         }
       },
     }),

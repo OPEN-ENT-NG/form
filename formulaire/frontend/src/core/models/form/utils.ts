@@ -31,6 +31,7 @@ export const buildFormPayload = (formPropValue: FormPropInputValueState, folderI
     selected: null,
     sent: false,
     title: formPropValue[FormPropField.TITLE],
+    isProgressBarDisplayed: formPropValue[FormPropField.IS_PROGRESS_BAR_DISPLAYED],
   };
 };
 
