@@ -41,6 +41,10 @@ clean_angular() {
 }
 # End Angular functions
 
+clean_frontend() {
+  echo 'clean_frontend() TODO'
+}
+
 clean_backend() {
   echo -e '\n------------------'
   echo 'Clean before build'
