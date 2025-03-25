@@ -63,7 +63,7 @@ export interface FormPayload {
   selected: unknown | null;
   sent: boolean;
   title: string;
-  isProgressBarDisplayed: boolean;
+  is_progress_bar_displayed: boolean;
 }
 
 export interface DuplicateFormPayload {
