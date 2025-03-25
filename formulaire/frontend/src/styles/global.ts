@@ -7,4 +7,8 @@ export const globalOverrideStyles = {
   "#media-library-form #media-library_ref": {
     maxHeight: "fit-content",
   },
+  ".selected-icon": {
+    width: "3.2rem !important",
+    height: "3.2rem !important",
+  },
 };
