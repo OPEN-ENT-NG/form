@@ -60,7 +60,9 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
   } = useFormPropInputValueState(mode);
   const { t } = useTranslation(FORMULAIRE);
   const [isEndingDateEditable, setIsEndingDateEditable] = useState<boolean>(false);
-  const [isDescriptionDisplay, setIsDescriptionDisplay] = useState<boolean>(!!selectedForms[0]?.description);
+  const [isDescriptionDisplay, setIsDescriptionDisplay] = useState<boolean>(
+    mode === FormPropModalMode.UPDATE && !!selectedForms[0]?.description,
+  );
   const { data: delegateData } = useGetDelegatesQuery();
   const [createForm] = useCreateFormMutation();
   const [updateForm] = useUpdateFormMutation();
