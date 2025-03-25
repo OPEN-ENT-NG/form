@@ -35,7 +35,7 @@ export const buildFormPayload = (
     selected: null,
     sent: form?.sent ?? false,
     title: formPropValue[FormPropField.TITLE],
-    isProgressBarDisplayed: formPropValue[FormPropField.IS_PROGRESS_BAR_DISPLAYED],
+    is_progress_bar_displayed: formPropValue[FormPropField.IS_PROGRESS_BAR_DISPLAYED],
   };
 };
 
