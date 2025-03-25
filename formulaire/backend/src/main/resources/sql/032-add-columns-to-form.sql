@@ -1,1 +1,1 @@
-ALTER TABLE formulaire.form ADD COLUMN is_progress_bar_displayed varchar(256);
+ALTER TABLE formulaire.form ADD COLUMN is_progress_bar_displayed boolean NOT NULL DEFAULT TRUE;
