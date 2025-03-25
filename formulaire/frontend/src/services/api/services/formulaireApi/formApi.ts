@@ -114,7 +114,6 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       }),
       invalidatesTags: [TagName.FORMS],
       async onQueryStarted(params, { queryFulfilled }) {
-        console.log(params.destinationFolderId);
         try {
           await queryFulfilled;
           if (params.destinationFolderId !== TRASH_FOLDER_ID)
