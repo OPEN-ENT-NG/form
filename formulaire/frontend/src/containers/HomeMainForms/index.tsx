@@ -70,10 +70,10 @@ export const HomeMainForms: FC<HomeMainFormsProps> = ({ forms }) => {
 
   return (
     <>
-      <Box display="flex" flexWrap="wrap" gap={2} >
+      <Box display="flex" flexWrap="wrap" gap={2}>
         {forms.slice(0, visibleCount).map((form) => (
           <ResourceCard
-            key={form.id} 
+            key={form.id}
             width="30rem"
             title={form.title}
             image={form.picture}
