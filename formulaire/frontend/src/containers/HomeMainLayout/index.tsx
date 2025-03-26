@@ -20,14 +20,17 @@ import { ChipProps, MenuItemProps } from "~/components/OrganizeFilter/types";
 import { chipData, getEmptyStateDescription, menuItemData } from "./utils";
 import { MenuItemState } from "~/components/OrganizeFilter/enum";
 import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
+import { useEdificeClient } from "@edifice.io/react";
 
 export const HomeMainLayout: FC = () => {
   const { folders, forms, currentFolder } = useHome();
   const theme = useTheme();
   const { t } = useTranslation(FORMULAIRE);
+  const { user } = useEdificeClient();
   const [selectedChips, setSelectedChips] = useState<ChipProps[]>([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItemProps>();
   const [searchText, setSearchText] = useState("");
+  const userId = user?.userId;
 
   const handleSearch = useCallback((searchValue: string) => {
     setSearchText(searchValue);
@@ -38,35 +41,36 @@ export const HomeMainLayout: FC = () => {
   }, [folders, currentFolder.id]);
 
   const filteredForms = useMemo(() => {
-    // Filter by folder
-    let result = forms.filter((form) => form.folder_id === currentFolder.id);
+    const initialFiltered = forms.filter((form) => {
+      const isCurrentUser = form.owner_id === userId;
 
-    // Apply search filter if needed
-    if (searchText.trim()) {
-      const formatedSearchText = searchText.trim().toLowerCase();
-      result = result.filter(
-        (form) =>
-          form.title.toLowerCase().includes(formatedSearchText) ||
-          form.owner_name.toLowerCase().includes(formatedSearchText),
-      );
-    }
+      if (currentFolder.id === 2) {
+        return form.collab && !isCurrentUser;
+      }
 
-    // Apply chip filters if any selected
-    if (selectedChips.length) {
-      result = result.filter((form) =>
-        selectedChips.every((chip) => {
-          return chip.filterFn(form);
-        }),
-      );
-    }
+      return form.folder_id === currentFolder.id && isCurrentUser;
+    });
 
-    // Apply sorting if a menu item is selected
+    const searchFiltered = searchText.trim()
+      ? initialFiltered.filter((form) => {
+          const formattedSearchText = searchText.trim().toLowerCase();
+          return (
+            form.title.toLowerCase().includes(formattedSearchText) ||
+            form.owner_name.toLowerCase().includes(formattedSearchText)
+          );
+        })
+      : initialFiltered;
+
+    const chipFiltered = selectedChips.length
+      ? searchFiltered.filter((form) => selectedChips.every((chip) => chip.filterFn(form)))
+      : searchFiltered;
+
     if (selectedMenuItem) {
       const isAscending = selectedMenuItem.state === MenuItemState.ASCENDING;
-      result.sort((a, b) => selectedMenuItem.sortFn(a, b, isAscending));
+      return [...chipFiltered].sort((a, b) => selectedMenuItem.sortFn(a, b, isAscending));
     }
 
-    return result;
+    return chipFiltered;
   }, [forms, searchText, currentFolder.id, selectedChips, selectedMenuItem]);
 
   const hasFilteredFolders = useMemo(() => !!filteredFolders.length, [filteredFolders]);

@@ -59,7 +59,9 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
     formId,
   } = useFormPropInputValueState(mode);
   const { t } = useTranslation(FORMULAIRE);
-  const [isEndingDateEditable, setIsEndingDateEditable] = useState<boolean>(false);
+  const [isEndingDateEditable, setIsEndingDateEditable] = useState<boolean>(
+    mode === FormPropModalMode.UPDATE && !!selectedForms[0]?.date_ending,
+  );
   const [isDescriptionDisplay, setIsDescriptionDisplay] = useState<boolean>(
     mode === FormPropModalMode.UPDATE && !!selectedForms[0]?.description,
   );
