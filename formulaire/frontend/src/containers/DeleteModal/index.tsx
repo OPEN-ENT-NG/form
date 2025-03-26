@@ -21,7 +21,7 @@ import { Form, FormPayload } from "~/core/models/form/types";
 import { toast } from "react-toastify";
 
 export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
-  const { selectedForms, selectedFolders, resetSelected } = useHome();
+  const { selectedForms, selectedFolders, resetSelected, currentFolder } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const [deleteFolders] = useDeleteFoldersMutation();
   const [moveForm] = useMoveFormMutation();
@@ -57,14 +57,15 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
     selectedForms.forEach((form) => {
       if (!form.id) return;
 
-      if (form.folder_id === TRASH_FOLDER_ID) {
+      if (currentFolder.id === TRASH_FOLDER_ID) {
         deleteForm(form.id);
         return;
       }
 
-      archiveForm(form, TRASH_FOLDER_ID);
+      return archiveForm(form, TRASH_FOLDER_ID);
     });
-    toast.success(t("formulaire.success.forms.archive"));
+
+    if (currentFolder.id !== TRASH_FOLDER_ID) toast.success(t("formulaire.success.forms.archive"));
     resetSelected();
     return handleClose();
   }, [deleteFolders, deleteForm, archiveForm, handleClose, selectedFolders, selectedForms]);
