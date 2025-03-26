@@ -1,4 +1,3 @@
-
 export const globalOverrideStyles = {
   "main.container-fluid": {
     padding: "0 ! important",
