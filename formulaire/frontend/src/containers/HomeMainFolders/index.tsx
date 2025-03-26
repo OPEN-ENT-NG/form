@@ -24,7 +24,7 @@ export const HomeMainFolders: FC<HomeMainFolderProps> = ({ folders }) => {
   const isSelectedFolder = (folder: Folder) => selectedFolders.some((f) => f.id === folder.id);
 
   return (
-    <Box display="flex" flexWrap="wrap" gap={2} >
+    <Box display="flex" flexWrap="wrap" gap={2}>
       {folders.map((folder) => (
         <FolderCard
           key={folder.id}
