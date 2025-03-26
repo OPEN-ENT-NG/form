@@ -17,7 +17,7 @@ import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api
 import { CreateFolderPayload, UpdateFolderPayload } from "~/core/models/folder/types";
 
 export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode }) => {
-  const { currentFolder } = useHome();
+  const { currentFolder, selectedFolders } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const [newName, setNewName] = useState<string>("");
   const [createFolder] = useCreateFolderMutation();
@@ -25,10 +25,10 @@ export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode })
 
   const modeConfig = useMemo(() => {
     const handleRename = () => {
-      if (!currentFolder || !currentFolder.parent_id) return;
+      if (!selectedFolders[0] || !selectedFolders[0].parent_id) return;
       const updatedFolder: UpdateFolderPayload = {
-        id: currentFolder.id,
-        parent_id: currentFolder.parent_id,
+        id: selectedFolders[0].id,
+        parent_id: selectedFolders[0].parent_id,
         name: newName,
       };
       updateFolder(updatedFolder);
