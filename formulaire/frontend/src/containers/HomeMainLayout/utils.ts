@@ -21,7 +21,7 @@ export const menuItemData: MenuItemProps[] = [
   {
     id: MenuItemsID.CREATION,
     i18nKey: "formulaire.filter.creation_date",
-    state: MenuItemState.ASCENDING,
+    state: MenuItemState.DESCENDING,
     sortFn: (a: Form, b: Form, isAscending: boolean) => {
       const direction = isAscending ? 1 : -1;
       return direction * (new Date(a.date_creation).getTime() - new Date(b.date_creation).getTime());
@@ -30,7 +30,7 @@ export const menuItemData: MenuItemProps[] = [
   {
     id: MenuItemsID.MODIFICATION,
     i18nKey: "formulaire.filter.modification_date",
-    state: MenuItemState.ASCENDING,
+    state: MenuItemState.DESCENDING,
     sortFn: (a: Form, b: Form, isAscending: boolean) => {
       const direction = isAscending ? 1 : -1;
       return direction * (new Date(a.date_modification).getTime() - new Date(b.date_modification).getTime());
@@ -39,7 +39,7 @@ export const menuItemData: MenuItemProps[] = [
   {
     id: MenuItemsID.TITLE,
     i18nKey: "formulaire.filter.title",
-    state: MenuItemState.ASCENDING,
+    state: MenuItemState.DESCENDING,
     sortFn: (a: Form, b: Form, isAscending: boolean) => {
       const direction = isAscending ? 1 : -1;
       return direction * a.title.localeCompare(b.title);
