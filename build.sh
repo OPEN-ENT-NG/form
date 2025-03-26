@@ -1,5 +1,6 @@
 #!/bin/bash
 
+chmod +x common/build.sh
 chmod +x formulaire/build.sh
 chmod +x formulaire-public/build.sh
 
@@ -19,6 +20,12 @@ clean:formulairePublic() {
 clean() {
   clean:formulaire
   clean:formulairePublic
+}
+
+buildCommon() {
+  cd common || exit 1
+  ./build.sh install
+  cd .. || exit 1
 }
 
 buildFront:formulaire() {
@@ -108,6 +115,9 @@ main() {
     case "$arg" in
       clean)
         clean
+        ;;
+      buildCommon)
+        buildCommon
         ;;
       buildFront:formulaire)
         buildFront:formulaire
