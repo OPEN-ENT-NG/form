@@ -21,6 +21,7 @@ import { chipData, getEmptyStateDescription, menuItemData } from "./utils";
 import { MenuItemState } from "~/components/OrganizeFilter/enum";
 import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
 import { useEdificeClient } from "@edifice.io/react";
+import { SwitchView } from "~/components/SwitchView";
 
 export const HomeMainLayout: FC = () => {
   const { folders, forms, currentFolder } = useHome();
@@ -30,6 +31,7 @@ export const HomeMainLayout: FC = () => {
   const [selectedChips, setSelectedChips] = useState<ChipProps[]>([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItemProps>();
   const [searchText, setSearchText] = useState("");
+  const [isViewCard, setIsViewMode] = useState(true);
   const userId = user?.userId;
 
   const handleSearch = useCallback((searchValue: string) => {
@@ -77,6 +79,10 @@ export const HomeMainLayout: FC = () => {
   const hasFilteredForms = useMemo(() => !!filteredForms.length, [filteredForms]);
   const breadcrumbsText = useMemo(() => (currentFolder?.name ? [currentFolder.name] : []), [currentFolder?.name]);
 
+  const handleSwitchView = () => {
+
+  }
+
   return (
     <Box sx={mainContentInnerStyle}>
       <Box sx={searchStyle}>
@@ -96,7 +102,8 @@ export const HomeMainLayout: FC = () => {
       </Box>
       <Box sx={searchStyle}>
         <FormBreadcrumbs stringItems={breadcrumbsText} />
-        <Switch />
+        <SwitchView onClick={handleSwitchView}></SwitchView>
+        {/* <Switch onChange={() => {setIsViewMode(!isViewMode)}} /> */}
       </Box>
       {(hasFilteredFolders || hasFilteredForms) && (
         <Box sx={resourceContainerStyle}>
