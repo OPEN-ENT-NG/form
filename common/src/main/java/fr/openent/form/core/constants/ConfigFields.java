@@ -10,6 +10,8 @@ public class ConfigFields {
     public static final String PDF_CONNECTOR_ID = "pdf-connector-id";
     public static final String AUTH = "auth";
     public static final String URL = "url";
+    public static final String HOST = "host";
+    public static final String THEME_PLATFORM = "theme-platform";
 
 
     private ConfigFields() {
