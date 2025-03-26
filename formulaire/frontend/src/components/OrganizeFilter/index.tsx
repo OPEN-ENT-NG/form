@@ -54,7 +54,7 @@ export const OrganizeFilter: FC<OrganizeFilterProps> = ({
     if (menuItemData.length > 0 && !selectedMenuItem && setSelectedMenuItem) {
       setSelectedMenuItem({
         ...menuItemData[0],
-        state: MenuItemState.ASCENDING,
+        state: MenuItemState.DESCENDING,
       });
     }
   }, [menuItemData, selectedMenuItem, setSelectedMenuItem]);
