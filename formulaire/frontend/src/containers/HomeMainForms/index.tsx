@@ -2,7 +2,6 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 
 import { ResourceCard, EllipsisWithTooltip, Box, Loader } from "@cgi-learning-hub/ui";
 
-import Grid from "@mui/material/Grid2";
 import { HomeMainFormsProps } from "./types";
 import { FORM_CHUNK, FORMULAIRE, LOGO_PATH } from "~/core/constants";
 import CalendarIcon from "@mui/icons-material/CalendarToday";
@@ -71,47 +70,46 @@ export const HomeMainForms: FC<HomeMainFormsProps> = ({ forms }) => {
 
   return (
     <>
-      <Grid container spacing={3}>
+      <Box display="flex" flexWrap="wrap" gap={2} >
         {forms.slice(0, visibleCount).map((form) => (
-          <Grid size={4} key={form.id}>
-            <ResourceCard
-              width="100%"
-              title={form.title}
-              image={form.picture}
-              defaultImage={LOGO_PATH}
-              isSelected={isSelectedForm(form)}
-              onSelect={() => handleFormsSelect(form)}
-              propertyItems={[
-                {
-                  icon: <PersonIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
-                  text: (
-                    <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-                      {form.owner_name}
-                    </EllipsisWithTooltip>
-                  ),
-                },
-                {
-                  icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
-                  text: (
-                    <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>{`${
-                      form.nb_responses ?? "0"
-                    } ${t("formulaire.responses.count")}`}</EllipsisWithTooltip>
-                  ),
-                },
-                {
-                  icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
-                  text: (
-                    <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-                      {formatDateWithTime(form.date_creation)}
-                    </EllipsisWithTooltip>
-                  ),
-                },
-              ]}
-              infoIcons={getIcons(form)}
-            />
-          </Grid>
+          <ResourceCard
+            key={form.id} 
+            width="30rem"
+            title={form.title}
+            image={form.picture}
+            defaultImage={LOGO_PATH}
+            isSelected={isSelectedForm(form)}
+            onSelect={() => handleFormsSelect(form)}
+            propertyItems={[
+              {
+                icon: <PersonIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+                text: (
+                  <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+                    {form.owner_name}
+                  </EllipsisWithTooltip>
+                ),
+              },
+              {
+                icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+                text: (
+                  <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+                    {`${form.nb_responses ?? "0"} ${t("formulaire.responses.count")}`}
+                  </EllipsisWithTooltip>
+                ),
+              },
+              {
+                icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+                text: (
+                  <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+                    {formatDateWithTime(form.date_creation)}
+                  </EllipsisWithTooltip>
+                ),
+              },
+            ]}
+            infoIcons={getIcons(form)}
+          />
         ))}
-      </Grid>
+      </Box>
       <Box ref={targetRef}></Box>
       {visibleCount < forms.length && <Loader />}
     </>
