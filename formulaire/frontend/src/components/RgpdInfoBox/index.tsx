@@ -16,7 +16,6 @@ const RGPDInfoBox: FC<RGPDInfoBoxProps> = ({ params, sx = {} }) => {
       return translatedText.replace(placeholder, param);
     }, t(key));
   };
-  
 
   const introHTML = formatI18n("formulaire.prop.rgpd.description.intro", [params.finalite, formattedDate]);
 
