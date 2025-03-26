@@ -1,4 +1,4 @@
-import { columnBoxStyle } from "~/styles/boxStyles";
+import { columnBoxStyle } from "~/core/style/boxStyles";
 
 export const homeSidebarWrapper = {
   ...columnBoxStyle,
