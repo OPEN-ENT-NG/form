@@ -21,6 +21,7 @@
     "notify-cron": "${notifyCron}",
     "max-responses-export-PDF": ${maxResponsesExportPDF},
     "max-users-sharing": ${maxUsersSharing},
+    "theme-platform": "${themePlatform}",
     "node-pdf-generator" : {
         "pdf-connector-id": "exportpdf",
         "auth": "${nodePdfToken}",
