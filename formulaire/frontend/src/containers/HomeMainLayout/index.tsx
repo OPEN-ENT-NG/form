@@ -1,6 +1,6 @@
 import { FC, useCallback, useMemo, useState } from "react";
 import { Box, SearchInput } from "@cgi-learning-hub/ui";
-import { Switch, useTheme } from "@mui/material";
+import { useTheme } from "@mui/material";
 import { FormBreadcrumbs } from "~/components/Breadcrumbs";
 
 import { useHome } from "~/providers/HomeProvider";
@@ -22,6 +22,7 @@ import { MenuItemState } from "~/components/OrganizeFilter/enum";
 import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
 import { useEdificeClient } from "@edifice.io/react";
 import { SwitchView } from "~/components/SwitchView";
+import { HomeMainTable } from "../HomeMainTable";
 
 export const HomeMainLayout: FC = () => {
   const { folders, forms, currentFolder } = useHome();
@@ -31,7 +32,7 @@ export const HomeMainLayout: FC = () => {
   const [selectedChips, setSelectedChips] = useState<ChipProps[]>([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItemProps>();
   const [searchText, setSearchText] = useState("");
-  const [isViewCard, setIsViewMode] = useState(true);
+  const [isViewTable, setIsViewTable] = useState(true);
   const userId = user?.userId;
 
   const handleSearch = useCallback((searchValue: string) => {
@@ -80,8 +81,8 @@ export const HomeMainLayout: FC = () => {
   const breadcrumbsText = useMemo(() => (currentFolder?.name ? [currentFolder.name] : []), [currentFolder?.name]);
 
   const handleSwitchView = () => {
-
-  }
+    setIsViewTable(!isViewTable);
+  };
 
   return (
     <Box sx={mainContentInnerStyle}>
@@ -102,13 +103,13 @@ export const HomeMainLayout: FC = () => {
       </Box>
       <Box sx={searchStyle}>
         <FormBreadcrumbs stringItems={breadcrumbsText} />
-        <SwitchView onClick={handleSwitchView}></SwitchView>
-        {/* <Switch onChange={() => {setIsViewMode(!isViewMode)}} /> */}
+        <SwitchView isViewTable={isViewTable} onClick={handleSwitchView}></SwitchView>
       </Box>
       {(hasFilteredFolders || hasFilteredForms) && (
         <Box sx={resourceContainerStyle}>
           {hasFilteredFolders && <HomeMainFolders folders={filteredFolders} />}
-          {hasFilteredForms && <HomeMainForms forms={filteredForms} />}
+          {hasFilteredForms &&
+            (isViewTable ? <HomeMainForms forms={filteredForms} /> : <HomeMainTable forms={filteredForms} />)}
         </Box>
       )}
       {!hasFilteredFolders && !hasFilteredForms && (
