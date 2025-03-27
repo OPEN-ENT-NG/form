@@ -1,17 +1,22 @@
-export const switchViewStyle = {};
+import { PRIMARY_LIGHT_COLOR } from "~/core/style/colors";
+import { CSS_COMMON_WHITE_COLOR, CSS_PRIMARY_LIGHTER_COLOR, CSS_PRIMARY_MAIN_COLOR, CSS_TEXT_SECONDARY_COLOR } from "~/core/style/cssColors";
 
-export const switchViewLeftItemStyle = {
-  borderTopRightRadius: "0 !important",
-  borderBottomRightRadius: "0 !important",
-  borderRight: "none",
-  padding: "5px",
-  minWidth: "4rem",
+export const switchViewStyle = {
+  boderColor: PRIMARY_LIGHT_COLOR
 };
 
-export const switchViewRightItemStyle = {
-  borderTopLeftRadius: "0 !important",
-  borderBottomLeftRadius: "0 !important",
-  borderLeft: "none",
-  padding: "5px",
-  minWidth: "4rem",
+export const switchViewItemStyle = {
+  "&.Mui-selected": {
+    backgroundColor: CSS_PRIMARY_MAIN_COLOR,
+    color: CSS_COMMON_WHITE_COLOR,
+  },
+  "&:hover": {
+    backgroundColor: CSS_PRIMARY_LIGHTER_COLOR,
+    color: CSS_TEXT_SECONDARY_COLOR,
+  },
+  "&.Mui-selected:hover": {
+    backgroundColor: CSS_PRIMARY_MAIN_COLOR,
+    color: CSS_COMMON_WHITE_COLOR,
+  },
+  color: CSS_TEXT_SECONDARY_COLOR,
 };

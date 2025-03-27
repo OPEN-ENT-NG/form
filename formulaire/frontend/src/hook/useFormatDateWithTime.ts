@@ -1,8 +1,9 @@
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE, FULL_DATE_WITH_TIME_FORMAT } from "~/core/constants";
+import { FORMULAIRE } from "~/core/constants";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import "dayjs/locale/en";
+import { DateFormat } from "~/core/enums";
 
 export const useFormatDateWithTime = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -11,6 +12,6 @@ export const useFormatDateWithTime = () => {
     if (!date) return "";
     const locale = t("formulaire.date.format.locale");
     dayjs.locale(locale);
-    return dayjs(date).format(FULL_DATE_WITH_TIME_FORMAT);
+    return dayjs(date).format(DateFormat.FULL_DATE_WITH_TIME_FORMAT);
   };
 };

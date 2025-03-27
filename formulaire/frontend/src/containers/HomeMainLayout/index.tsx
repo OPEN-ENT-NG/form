@@ -17,22 +17,24 @@ import { HomeMainForms } from "../HomeMainForms";
 import { FORMULAIRE } from "~/core/constants";
 import { OrganizeFilter } from "~/components/OrganizeFilter";
 import { ChipProps, MenuItemProps } from "~/components/OrganizeFilter/types";
-import { chipData, getEmptyStateDescription, menuItemData } from "./utils";
+import { chipData, getEmptyStateDescription, menuItemData, useToggleButtons } from "./utils";
 import { MenuItemState } from "~/components/OrganizeFilter/enum";
 import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
 import { useEdificeClient } from "@edifice.io/react";
 import { SwitchView } from "~/components/SwitchView";
 import { HomeMainTable } from "../HomeMainTable";
+import { ViewMode } from "~/components/SwitchView/enums";
 
 export const HomeMainLayout: FC = () => {
   const { folders, forms, currentFolder } = useHome();
   const theme = useTheme();
   const { t } = useTranslation(FORMULAIRE);
   const { user } = useEdificeClient();
+  const toggleButtonList = useToggleButtons();
   const [selectedChips, setSelectedChips] = useState<ChipProps[]>([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItemProps>();
   const [searchText, setSearchText] = useState("");
-  const [isViewTable, setIsViewTable] = useState(true);
+  const [viewMode, setViewMode] = useState(ViewMode.CARDS);
   const userId = user?.userId;
 
   const handleSearch = useCallback((searchValue: string) => {
@@ -81,7 +83,8 @@ export const HomeMainLayout: FC = () => {
   const breadcrumbsText = useMemo(() => (currentFolder?.name ? [currentFolder.name] : []), [currentFolder?.name]);
 
   const handleSwitchView = () => {
-    setIsViewTable(!isViewTable);
+    if (viewMode === ViewMode.CARDS) setViewMode(ViewMode.TABLE);
+    else if (viewMode === ViewMode.TABLE) setViewMode(ViewMode.CARDS);
   };
 
   return (
@@ -103,13 +106,13 @@ export const HomeMainLayout: FC = () => {
       </Box>
       <Box sx={searchStyle}>
         <FormBreadcrumbs stringItems={breadcrumbsText} />
-        <SwitchView isViewTable={isViewTable} onClick={handleSwitchView}></SwitchView>
+        <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={handleSwitchView}></SwitchView>
       </Box>
       {(hasFilteredFolders || hasFilteredForms) && (
         <Box sx={resourceContainerStyle}>
           {hasFilteredFolders && <HomeMainFolders folders={filteredFolders} />}
           {hasFilteredForms &&
-            (isViewTable ? <HomeMainForms forms={filteredForms} /> : <HomeMainTable forms={filteredForms} />)}
+            (viewMode === ViewMode.CARDS ? <HomeMainForms forms={filteredForms} /> : <HomeMainTable forms={filteredForms} />)}
         </Box>
       )}
       {!hasFilteredFolders && !hasFilteredForms && (

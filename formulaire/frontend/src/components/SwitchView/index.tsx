@@ -1,29 +1,18 @@
 import { FC } from "react";
 
-import { Box, Button } from "@cgi-learning-hub/ui";
+import { ToggleButton, ToggleButtonGroup } from "@cgi-learning-hub/ui";
 import { SwitchViewProps } from "./types";
-import { ComponentVariant } from "~/core/style/themeProps";
-import { switchViewLeftItemStyle, switchViewRightItemStyle, switchViewStyle } from "./style";
-import AppsIcon from "@mui/icons-material/Apps";
-import ListIcon from "@mui/icons-material/List";
+import { switchViewStyle, switchViewItemStyle } from "./style";
+import { ViewMode } from "./enums";
 
-export const SwitchView: FC<SwitchViewProps> = ({ isViewTable = false, onClick }) => {
+export const SwitchView: FC<SwitchViewProps> = ({ viewMode = ViewMode.CARDS, toggleButtonList, onChange }) => {
   return (
-    <Box sx={switchViewStyle}>
-      <Button
-        variant={isViewTable ? ComponentVariant.OUTLINED : ComponentVariant.CONTAINED}
-        onClick={onClick}
-        sx={switchViewLeftItemStyle}
-      >
-        <AppsIcon></AppsIcon>
-      </Button>
-      <Button
-        variant={isViewTable ? ComponentVariant.CONTAINED : ComponentVariant.OUTLINED}
-        onClick={onClick}
-        sx={switchViewRightItemStyle}
-      >
-        <ListIcon></ListIcon>
-      </Button>
-    </Box>
+    <ToggleButtonGroup value={viewMode} exclusive onChange={onChange} size="small" sx={switchViewStyle}>
+      {toggleButtonList.map((button) => (
+        <ToggleButton key={button.value} value={button.value} sx={switchViewItemStyle}>
+          {button.icon}
+        </ToggleButton>
+      ))}
+    </ToggleButtonGroup>
   );
 };

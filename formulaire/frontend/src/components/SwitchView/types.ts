@@ -1,4 +1,12 @@
+import { ViewMode } from "./enums";
+
+export interface ToggleButtonItem {
+  value: ViewMode;
+  icon: JSX.Element;
+}
+
 export interface SwitchViewProps {
-  onClick: () => void;
-  isViewTable?: boolean;
+  onChange: () => void;
+  viewMode: ViewMode;
+  toggleButtonList: ToggleButtonItem[];
 }

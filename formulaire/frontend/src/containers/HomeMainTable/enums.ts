@@ -1,0 +1,9 @@
+export enum ColumnId {
+    SELECT = "SELECT",
+    TITLE = "TITLE",
+    AUTHOR = "AUTHOR",
+    RESPONSE = "RESPONSE",
+    LAST_MODIFICATION = "LAST_MODIFICATION",
+    STATUS = "STATUS",
+  }
+  
