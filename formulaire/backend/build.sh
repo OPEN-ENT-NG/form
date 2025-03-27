@@ -54,25 +54,8 @@ clean() {
   echo "Clean done!"
 }
 
-build_common() {
-  echo "Building Common..."
-  cd ../../common
-  cp ../pom.xml pom-parent.xml
-  sed -i 's|<relativePath>../pom.xml</relativePath>|<relativePath>./pom-parent.xml</relativePath>|' pom.xml
-  if [ "$NO_DOCKER" = "true" ] ; then
-    mvn $MVN_OPTS install -DskipTests
-  else
-    docker compose run --rm maven mvn $MVN_OPTS install -DskipTests
-  fi
-  sed -i 's|<relativePath>./pom-parent.xml</relativePath>|<relativePath>../pom.xml</relativePath>|' pom.xml
-  rm pom-parent.xml
-  cd ../formulaire/backend
-  echo "Build comon done!"
-}
-
 build() {
   echo "Building..."
-  build_common
   prepare_docker
   if [ "$NO_DOCKER" = "true" ] ; then
     mvn $MVN_OPTS install -DskipTests
