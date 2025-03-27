@@ -60,7 +60,7 @@ build() {
   if [ "$NO_DOCKER" = "true" ] ; then
     mvn $MVN_OPTS install -DskipTests
   else
-    docker compose run --rm maven mvn $MVN_OPTS install -am -DskipTests
+    docker compose run --rm maven mvn $MVN_OPTS install -DskipTests
   fi
   rollback_docker_preparation
   echo "Build done!"
