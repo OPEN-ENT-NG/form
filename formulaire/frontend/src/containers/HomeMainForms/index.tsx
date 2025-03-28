@@ -1,26 +1,16 @@
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 
-import { ResourceCard, EllipsisWithTooltip, Box, Loader } from "@cgi-learning-hub/ui";
+import { Box, Loader } from "@cgi-learning-hub/ui";
 
 import { HomeMainFormsProps } from "./types";
-import { FORM_CHUNK, FORMULAIRE, LOGO_PATH } from "~/core/constants";
-import CalendarIcon from "@mui/icons-material/CalendarToday";
-import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import PersonIcon from "@mui/icons-material/Person";
-import { PRIMARY_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
-import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
-import { useTranslation } from "react-i18next";
-import { useFormIcons } from "../HomeMainLayout/useFormIcons";
+import { FORM_CHUNK } from "~/core/constants";
 import { Form } from "~/core/models/form/types";
 import { useHome } from "~/providers/HomeProvider";
+import { DraggableType } from "~/core/enums";
+import { DraggableForm } from "~/components/DraggableForm";
 
-export const HomeMainForms: FC<HomeMainFormsProps> = ({ forms }) => {
+export const HomeMainForms: FC<HomeMainFormsProps> = ({ forms, activeItem }) => {
   const { selectedForms, setSelectedForms } = useHome();
-
-  const { t } = useTranslation(FORMULAIRE);
-  const getIcons = useFormIcons();
-  const formatDateWithTime = useFormatDateWithTime();
-
   const [visibleCount, setVisibleCount] = useState(FORM_CHUNK);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -72,41 +62,15 @@ export const HomeMainForms: FC<HomeMainFormsProps> = ({ forms }) => {
     <>
       <Box display="flex" flexWrap="wrap" gap={2}>
         {forms.slice(0, visibleCount).map((form) => (
-          <ResourceCard
+          <DraggableForm
             key={form.id}
-            width="30rem"
-            title={form.title}
-            image={form.picture}
-            defaultImage={LOGO_PATH}
-            isSelected={isSelectedForm(form)}
-            onSelect={() => handleFormsSelect(form)}
-            propertyItems={[
-              {
-                icon: <PersonIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
-                text: (
-                  <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-                    {form.owner_name}
-                  </EllipsisWithTooltip>
-                ),
-              },
-              {
-                icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
-                text: (
-                  <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-                    {`${form.nb_responses ?? "0"} ${t("formulaire.responses.count")}`}
-                  </EllipsisWithTooltip>
-                ),
-              },
-              {
-                icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
-                text: (
-                  <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-                    {formatDateWithTime(form.date_creation)}
-                  </EllipsisWithTooltip>
-                ),
-              },
-            ]}
-            infoIcons={getIcons(form)}
+            form={form}
+            isSelected={isSelectedForm}
+            onSelect={handleFormsSelect}
+            dragActive={
+              (activeItem.type === DraggableType.FORM || activeItem.type === DraggableType.FOLDER) &&
+              selectedForms.some((f) => f.id === form.id)
+            }
           />
         ))}
       </Box>
