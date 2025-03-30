@@ -114,42 +114,11 @@ clean() {
   clean_formulaire_public
 }
 
-# Fonction pour préparer temporairement le pom.xml pour le build
-prepare_pom() {
-  local module_path=$1
-  if [ -z "$module_path" ]; then
-    # Pour common
-    cp pom.xml common/pom-parent.xml
-    sed -i 's|<relativePath>../pom.xml</relativePath>|<relativePath>./pom-parent.xml</relativePath>|' common/pom.xml
-  else
-    # Pour les modules backend
-    cp pom.xml ${module_path}/backend/pom-parent.xml
-    sed -i 's|<relativePath>../../pom.xml</relativePath>|<relativePath>./pom-parent.xml</relativePath>|' ${module_path}/backend/pom.xml
-  fi
-}
-
-# Fonction pour restaurer le pom.xml après le build
-rollback_pom() {
-  local module_path=$1
-  if [ -z "$module_path" ]; then
-    # Pour common
-    sed -i 's|<relativePath>./pom-parent.xml</relativePath>|<relativePath>../pom.xml</relativePath>|' common/pom.xml
-    rm -f common/pom-parent.xml
-  else
-    # Pour les modules backend
-    sed -i 's|<relativePath>./pom-parent.xml</relativePath>|<relativePath>../../pom.xml</relativePath>|' ${module_path}/backend/pom.xml
-    rm -f ${module_path}/backend/pom-parent.xml
-  fi
-}
-
 # Fonctions de build
 build_common() {
   echo -e "\n------------------"
   echo "Building common"
   echo "------------------"
-
-  # Préparer le pom.xml pour le build
-  prepare_pom
 
   if [ "$NO_DOCKER" = "true" ]; then
     cd common && mvn install -DskipTests
@@ -157,9 +126,6 @@ build_common() {
   else
     docker compose run --rm maven bash -c "cd common && mvn -Duser.home=/var/maven install -DskipTests"
   fi
-
-  # Restaurer le pom.xml
-  rollback_pom
 }
 
 build_angular() {
@@ -287,25 +253,61 @@ build_backend() {
     exit 1
   fi
 
-  # Préparer le pom.xml pour le build
-  prepare_pom ${module}
-
   if [ "$NO_DOCKER" = "true" ]; then
     cd ${module}/backend && mvn install -DskipTests
     cd ../.. || exit 1
   else
     docker compose run --rm maven bash -c "cd ${module}/backend && mvn -Duser.home=/var/maven install -DskipTests"
   fi
+}
 
-  # Restaurer le pom.xml
-  rollback_pom ${module}
+publish_module() {
+  local module="${1:-}"
+  local custom_repo="${2:-}"
+  local path="${module:+$module/backend}"
+
+  # Si module est vide ou "common", utiliser le chemin approprié
+  if [ -z "$module" ] || [ "$module" = "common" ]; then
+    path="common"
+  fi
+
+  # Vérifier si le dossier existe
+  if [ ! -d "$path" ]; then
+    echo "Error: $path directory not found"
+    exit 1
+  fi
+
+  # Déterminer le dépôt Nexus
+  local nexus_repo
+  local maven_cmd_extra=""
+  if [ -z "$custom_repo" ]; then
+    nexus_repo=$(detect_nexus_repository "$module")
+  else
+    nexus_repo="$custom_repo"
+    maven_cmd_extra="-Durl=$custom_repo"
+  fi
+
+  echo -e "\n------------------"
+  echo "Publishing $path to $nexus_repo repository"
+  echo "------------------"
+
+  # Commande Maven de déploiement
+  local maven_deploy_cmd="clean deploy -DrepositoryId=ode-$nexus_repo -DskipTests -Dmaven.test.skip=true --settings /var/maven/.m2/settings.xml $maven_cmd_extra"
+
+  # Exécuter la commande de déploiement Maven
+  if [ "$NO_DOCKER" = "true" ]; then
+    cd $path && mvn $maven_deploy_cmd
+    cd - >/dev/null || exit 1
+  else
+    docker compose run --rm maven bash -c "cd $path && mvn -Duser.home=/var/maven $maven_deploy_cmd"
+  fi
 }
 
 build_module() {
   local module=$1
 
-  # 0. Assurez-vous que common est construit en premier
-  build_common
+  # 0. Publier le module common avant de construire
+  publish_common
 
   # 1. Build front-end components
   build_angular ${module}
@@ -318,7 +320,6 @@ build_module() {
   # 3. Build backend
   build_backend ${module}
 }
-
 build_formulaire() {
   build_module "formulaire"
 }
@@ -487,103 +488,7 @@ detect_nexus_repository() {
   fi
 }
 
-publish_module() {
-  local module=$1
-  local path="${module:+$module/backend}"
-  local custom_repo=$2
-
-  # Si module est vide ou "common", utiliser le chemin approprié
-  if [ -z "$module" ] || [ "$module" = "common" ]; then
-    path="common"
-  fi
-
-  # Vérifier si le dossier existe
-  if [ ! -d "$path" ]; then
-    echo "Error: $path directory not found"
-    exit 1
-  fi
-
-  # Préparer le pom.xml pour le build
-  if [ -z "$module" ] || [ "$module" = "common" ]; then
-    prepare_pom
-  else
-    prepare_pom ${module}
-  fi
-
-  # Déterminer le dépôt Nexus
-  local nexus_repo
-  if [ -z "$custom_repo" ]; then
-    nexus_repo=$(detect_nexus_repository "$module")
-  else
-    nexus_repo=$custom_repo
-  fi
-
-  echo -e "\n------------------"
-  echo "Publishing $path to $nexus_repo repository"
-  echo "------------------"
-
-  # Exécuter la commande de déploiement Maven
-  if [ "$NO_DOCKER" = "true" ]; then
-    cd $path && mvn -DrepositoryId=ode-$nexus_repo -DskipTests -Dmaven.test.skip=true --settings /var/maven/.m2/settings.xml deploy
-    cd - >/dev/null || exit 1
-  else
-    docker compose run --rm maven bash -c "cd $path && mvn -Duser.home=/var/maven -DrepositoryId=ode-$nexus_repo -DskipTests -Dmaven.test.skip=true --settings /var/maven/.m2/settings.xml deploy"
-  fi
-
-  # Restaurer le pom.xml
-  if [ -z "$module" ] || [ "$module" = "common" ]; then
-    rollback_pom
-  else
-    rollback_pom ${module}
-  fi
-}
-
-publish_nexus_module() {
-  local module=$1
-  local repo=$2
-  local path="${module:+$module/backend}"
-
-  # Si module est vide ou "common", utiliser le chemin approprié
-  if [ -z "$module" ] || [ "$module" = "common" ]; then
-    path="common"
-  fi
-
-  # Vérifier si le dossier existe
-  if [ ! -d "$path" ]; then
-    echo "Error: $path directory not found"
-    exit 1
-  fi
-
-  # Préparer le pom.xml pour le build
-  if [ -z "$module" ] || [ "$module" = "common" ]; then
-    prepare_pom
-  else
-    prepare_pom ${module}
-  fi
-
-  # Déterminer le dépôt Nexus
-  local nexus_repo=$(detect_nexus_repository "$module")
-
-  echo -e "\n------------------"
-  echo "Publishing $path to custom Nexus repository"
-  echo "------------------"
-
-  # Exécuter la commande de déploiement Maven avec URL personnalisée
-  if [ "$NO_DOCKER" = "true" ]; then
-    cd $path && mvn -DrepositoryId=ode-$nexus_repo -Durl=$repo -DskipTests -Dmaven.test.skip=true --settings /var/maven/.m2/settings.xml deploy
-    cd - >/dev/null || exit 1
-  else
-    docker compose run --rm maven bash -c "cd $path && mvn -Duser.home=/var/maven -DrepositoryId=ode-$nexus_repo -Durl=$repo -DskipTests -Dmaven.test.skip=true --settings /var/maven/.m2/settings.xml deploy"
-  fi
-
-  # Restaurer le pom.xml
-  if [ -z "$module" ] || [ "$module" = "common" ]; then
-    rollback_pom
-  else
-    rollback_pom ${module}
-  fi
-}
-
+# Les fonctions suivantes restent inchangées
 publish_common() {
   publish_module "common"
 }
@@ -603,22 +508,22 @@ publish_all() {
 }
 
 publish_nexus_common() {
-  publish_nexus_module "common" "$1"
+  publish_module "common" "$1"
 }
 
 publish_nexus_formulaire() {
-  publish_nexus_module "formulaire" "$1"
+  publish_module "formulaire" "$1"
 }
 
 publish_nexus_formulaire_public() {
-  publish_nexus_module "formulaire-public" "$1"
+  publish_module "formulaire-public" "$1"
 }
 
 publish_nexus_all() {
   local repo=$1
-  publish_nexus_common "$repo"
-  publish_nexus_formulaire "$repo"
-  publish_nexus_formulaire_public "$repo"
+  publish_module "common" "$repo"
+  publish_module "formulaire" "$repo"
+  publish_module "formulaire-public" "$repo"
 }
 
 # Fonctions de test
@@ -647,14 +552,12 @@ test_module() {
     echo -e "\n------------------"
     echo "Testing ${module} backend"
     echo "------------------"
-    prepare_pom ${module}
     if [ "$NO_DOCKER" = "true" ]; then
       cd ${module}/backend && mvn test
       cd ../.. || exit 1
     else
       docker compose run --rm maven bash -c "cd ${module}/backend && mvn -Duser.home=/var/maven test"
     fi
-    rollback_pom ${module}
   fi
 }
 
