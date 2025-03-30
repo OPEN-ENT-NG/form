@@ -10,7 +10,7 @@ services:
   # Service Maven pour tous les builds back-end
   maven:
     image: maven:3.8.6-jdk-8
-    user: "${USER_UID:-1000}:${GROUP_GID:-1000}"  # Utiliser root pour éviter les problèmes de permissions
+    user: "root"
     working_dir: /usr/src/maven
     environment:
       <<: *default-environment

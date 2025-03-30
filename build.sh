@@ -466,10 +466,6 @@ detect_nexus_repository() {
     path="common"
   fi
 
-  echo -e "\n------------------"
-  echo "Detecting version type for $path"
-  echo "------------------"
-
   # Récupérer la version
   local version
   if [ "$NO_DOCKER" = "true" ]; then
