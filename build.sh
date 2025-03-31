@@ -44,8 +44,8 @@ clean_common() {
     cd common && mvn clean
     cd .. || exit 1
   else
-    docker compose run --rm maven bash -c "cd common && mvn -Duser.home=/var/maven clean"
-  fi
+    docker compose run --rm --user root maven bash -c "cd common && mvn -Duser.home=/var/maven clean"
+fi
 }
 
 clean_formulaire() {
@@ -70,7 +70,7 @@ clean_formulaire() {
     cd formulaire/backend && mvn clean
     cd ../.. || exit 1
   else
-    docker compose run --rm maven bash -c "cd formulaire/backend && mvn -Duser.home=/var/maven clean"
+    docker compose run --rm --user root maven bash -c "cd formulaire/backend && mvn -Duser.home=/var/maven clean"
   fi
   rm -rf formulaire/backend/.flattened-pom.xml
   rm -rf formulaire/backend/src/main/resources/img
@@ -100,7 +100,7 @@ clean_formulaire_public() {
     cd formulaire-public/backend && mvn clean
     cd ../.. || exit 1
   else
-    docker compose run --rm maven bash -c "cd formulaire-public/backend && mvn -Duser.home=/var/maven clean"
+    docker compose run --rm --user root maven bash -c "cd formulaire-public/backend && mvn -Duser.home=/var/maven clean"
   fi
   rm -rf formulaire-public/backend/.flattened-pom.xml
   rm -rf formulaire-public/backend/src/main/resources/img
@@ -124,7 +124,7 @@ build_common() {
     cd common && mvn -U install -DskipTests
     cd .. || exit 1
   else
-    docker compose run --rm maven bash -c "cd common && mvn -Duser.home=/var/maven -U install -DskipTests"
+    docker compose run --rm --user root maven bash -c "cd common && mvn -Duser.home=/var/maven -U install -DskipTests"
   fi
 }
 
@@ -257,7 +257,7 @@ build_backend() {
     cd ${module}/backend && mvn install -DskipTests
     cd ../.. || exit 1
   else
-    docker compose run --rm maven bash -c "cd ${module}/backend && mvn -Duser.home=/var/maven install -DskipTests"
+    docker compose run --rm --user root maven bash -c "cd ${module}/backend && mvn -Duser.home=/var/maven install -DskipTests"
   fi
 }
 
@@ -303,14 +303,10 @@ publish_module() {
   fi
 }
 
-# Fonction pour installer le POM parent
-# Fonction pour installer le POM parent
-# Fonction pour installer le POM parent
 install_parent_pom() {
   echo -e "\n------------------"
   echo "Installing parent POM"
   echo "------------------"
-
   # Obtenir la version du POM parent
   local version
   if [ "$NO_DOCKER" = "true" ]; then
@@ -318,7 +314,6 @@ install_parent_pom() {
   else
     version=$(docker compose run --rm maven bash -c "cd /usr/src/maven && mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml")
   fi
-
   if [ "$NO_DOCKER" = "true" ]; then
     # Nettoyer le cache du POM parent
     if [ -n "$version" ]; then
@@ -327,13 +322,13 @@ install_parent_pom() {
     # Installer le POM parent
     mvn clean install -N -U -Drevision=$version -f pom.xml
   else
-    # Installer le POM parent dans Docker
-    docker compose run --rm maven bash -c "cd /usr/src/maven && mvn clean install -N -U -Drevision=$version -Duser.home=/var/maven -f pom.xml"
-    
-    # Pas besoin de vérification, si la commande ci-dessus réussit,
-    # cela signifie que l'installation a fonctionné
+    # Nettoyer le cache du POM parent
+    if [ -n "$version" ]; then
+      docker compose run --rm --user root maven bash -c "rm -rf /var/maven/.m2/repository/fr/openent/form/$version"
+    fi
+    # Installer le POM parent dans Docker avec l'utilisateur root
+    docker compose run --rm --user root maven bash -c "cd /usr/src/maven && mvn clean install -N -U -Drevision=$version -Duser.home=/var/maven -f pom.xml"
   fi
-  
   echo "Parent POM installation successful."
 }
 

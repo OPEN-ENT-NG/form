@@ -1,5 +1,3 @@
-version: '3.8'
-
 # Variables d'environnement pour tous les services
 x-default-environment: &default-environment
   USER_UID: ${USER_UID:-1000}
@@ -9,8 +7,12 @@ x-default-environment: &default-environment
 services:
   # Service Maven pour tous les builds back-end
   maven:
-    image: maven:3.8.6-jdk-8
-    user: "root"
+    build:
+      context: .
+      dockerfile: Dockerfile.maven
+      args:
+        USER_UID: ${USER_UID:-1000}
+        GROUP_GID: ${GROUP_GID:-1000}
     working_dir: /usr/src/maven
     environment:
       <<: *default-environment
@@ -19,7 +21,6 @@ services:
       - ~/.m2:/var/maven/.m2
     networks:
       - form-network
-
   # Service Node.js pour les builds front-end Angular
   node-angular:
     image: opendigitaleducation/node:20-alpine-pnpm
