@@ -192,6 +192,7 @@
   "formulaire.table.responses": "Réponses",
   "formulaire.table.modified": "Dernière modification",
   "formulaire.table.sent": "Date d'envoi",
+  "formulaire.table.rows.per.page": "Lignes par page",
 
   "formulaire.filter": "Filtre",
   "formulaire.filter.creation_date": "Date de création",

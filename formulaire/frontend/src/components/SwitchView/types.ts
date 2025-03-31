@@ -6,7 +6,7 @@ export interface ToggleButtonItem {
 }
 
 export interface SwitchViewProps {
-  onChange: () => void;
+  onChange: (viewMode: ViewMode) => void;
   viewMode: ViewMode;
   toggleButtonList: ToggleButtonItem[];
 }

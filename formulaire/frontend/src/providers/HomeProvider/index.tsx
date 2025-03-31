@@ -1,11 +1,12 @@
 import { FC, createContext, useContext, useMemo, useState, useEffect, useCallback } from "react";
-import { HomeProviderContextType, HomeProviderProps } from "./types";
-import { useRootFolders } from "./utils";
+import { HomeProviderContextType, HomeProviderProps, HomeTabViewPref } from "./types";
+import { initTabViewPref, useRootFolders } from "./utils";
 import { Folder } from "~/core/models/folder/types";
 import { HomeTabState } from "./enums";
 import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
 import { Form } from "~/core/models/form/types";
 import { useGetFormsQuery } from "~/services/api/services/formulaireApi/formApi";
+import { ViewMode } from "~/components/SwitchView/enums";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
 
@@ -26,16 +27,19 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
   const [selectedForms, setSelectedForms] = useState<Form[]>([]);
 
   const [tab, setTab] = useState<HomeTabState>(HomeTabState.FORMS);
+  const [tabViewPref, setTabViewPref] = useState<HomeTabViewPref>(initTabViewPref());
   const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
 
   const { data: foldersData } = useGetFoldersQuery();
   const { data: formsData } = useGetFormsQuery();
 
   const toggleTab = useCallback((tab: HomeTabState) => {
-    setTab((prev) => {
-      return prev === tab ? prev : tab;
-    });
+    setTab(tab);
   }, []);
+
+  const toggleTagViewPref = useCallback((viewMode: ViewMode) => {
+    setTabViewPref({ ...tabViewPref, [tab]: viewMode });
+  }, [tabViewPref, tab]);
 
   const resetSelected = useCallback(() => {
     setSelectedFolders([]);
@@ -67,6 +71,8 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
       setCurrentFolder,
       tab,
       toggleTab,
+      tabViewPref,
+      toggleTagViewPref,
       folders,
       forms,
       selectedFolders,
@@ -76,7 +82,7 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
       isToasterOpen,
       resetSelected,
     }),
-    [currentFolder, tab, folders, selectedFolders, selectedForms, forms, isToasterOpen],
+    [currentFolder, tab, folders, selectedFolders, selectedForms, forms, isToasterOpen, tabViewPref, toggleTagViewPref],
   );
 
   return <HomeProviderContext.Provider value={value}>{children}</HomeProviderContext.Provider>;

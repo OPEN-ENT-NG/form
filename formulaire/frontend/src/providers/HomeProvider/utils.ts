@@ -2,6 +2,9 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Folder } from "~/core/models/folder/types";
 import { FORMULAIRE } from "~/core/constants";
+import { HomeTabState, RootFolderIds } from "./enums";
+import { ViewMode } from "~/components/SwitchView/enums";
+import { HomeTabViewPref } from "./types";
 
 export const useRootFolders = (): Folder[] => {
   const { t } = useTranslation(FORMULAIRE);
@@ -9,7 +12,7 @@ export const useRootFolders = (): Folder[] => {
   const rootFolders = useMemo<Folder[]>(
     () => [
       {
-        id: 1,
+        id: RootFolderIds.FOLDER_MY_FORMS_ID,
         parent_id: null,
         name: t("formulaire.forms.mine"),
         user_id: "",
@@ -19,7 +22,7 @@ export const useRootFolders = (): Folder[] => {
         selected: null,
       },
       {
-        id: 2,
+        id: RootFolderIds.FOLDER_SHARED_FORMS_ID,
         parent_id: null,
         name: t("formulaire.forms.shared"),
         user_id: "",
@@ -29,7 +32,7 @@ export const useRootFolders = (): Folder[] => {
         selected: null,
       },
       {
-        id: 3,
+        id: RootFolderIds.FOLDER_ARCHIVED_ID,
         parent_id: null,
         name: t("formulaire.forms.archived"),
         user_id: "",
@@ -43,4 +46,11 @@ export const useRootFolders = (): Folder[] => {
   );
 
   return rootFolders;
+};
+
+export const initTabViewPref = (): HomeTabViewPref => {
+  return {
+    [HomeTabState.FORMS]: ViewMode.CARDS,
+    [HomeTabState.RESPONSES]: ViewMode.CARDS,
+  }
 };

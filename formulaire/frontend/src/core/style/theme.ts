@@ -1,4 +1,5 @@
 import { ThemeOptions } from "@cgi-learning-hub/ui";
+import { CSS_PRIMARY_MAIN_COLOR } from "./cssColors";
 
 export const options: ThemeOptions = {
   typography: {
@@ -115,15 +116,22 @@ export const options: ThemeOptions = {
         },
       },
     },
+    MuiTablePagination: {
+      styleOverrides: {
+        input: {
+          fontSize: "1.4rem",
+        },
+      },
+    },
     MuiPagination: {
       styleOverrides: {
         root: {
           "& .MuiPaginationItem-root": {
             "&.Mui-selected": {
-              backgroundColor: "var(--theme-palette-primary-main)",
+              backgroundColor: CSS_PRIMARY_MAIN_COLOR,
               color: "white",
               "&:hover": {
-                backgroundColor: "var(--theme-palette-primary-main)",
+                backgroundColor: CSS_PRIMARY_MAIN_COLOR,
               },
             },
           },

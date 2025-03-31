@@ -22,7 +22,6 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
       transformResponse: (response: { data: Form[] }) => {
-        console.log(response);
         return response?.data || response;
       },
     }),

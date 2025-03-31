@@ -4,6 +4,14 @@ export const homeSidebarWrapper = {
   ...columnBoxStyle,
   width: "100%",
   height: "100%",
-  gap: "1rem",
-  p: "1.5rem",
+  gap: "2rem",
+  p: "2rem",
 };
+
+export const homeTabsStyle = {
+  height: "3.5rem",
+  display: "flex",
+  alignItems: "center",
+};
+
+

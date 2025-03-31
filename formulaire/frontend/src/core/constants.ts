@@ -23,3 +23,5 @@ export const SHARED_FOLDER_ID = 2;
 export const TRASH_FOLDER_ID = 3;
 
 export const FORM_CHUNK = 9;
+
+export const DEFAULT_PAGINATION_LIMIT = 10;

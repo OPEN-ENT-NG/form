@@ -15,3 +15,8 @@ export type RowItem = {
   id: string;
 };
 
+export type TablePaginationProps = {
+  limit: number;
+  page: number;
+};
+

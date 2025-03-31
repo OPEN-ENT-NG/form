@@ -6,11 +6,12 @@ import { FormBreadcrumbs } from "~/components/Breadcrumbs";
 import { useHome } from "~/providers/HomeProvider";
 import {
   emptyStateWrapperStyle,
+  homeTabsStyle,
   mainContentInnerStyle,
   resourceContainerStyle,
   searchBarStyle,
   searchStyle,
-} from "./styles";
+} from "./style";
 import { HomeMainFolders } from "../HomeMainFolders";
 import { useTranslation } from "react-i18next";
 import { HomeMainForms } from "../HomeMainForms";
@@ -24,9 +25,11 @@ import { useEdificeClient } from "@edifice.io/react";
 import { SwitchView } from "~/components/SwitchView";
 import { HomeMainTable } from "../HomeMainTable";
 import { ViewMode } from "~/components/SwitchView/enums";
+import { HomeTabState, RootFolderIds } from "~/providers/HomeProvider/enums";
+import { HomeTabs } from "~/components/HomeTab";
 
 export const HomeMainLayout: FC = () => {
-  const { folders, forms, currentFolder } = useHome();
+  const { folders, forms, currentFolder, tab, toggleTab, tabViewPref, toggleTagViewPref } = useHome();
   const theme = useTheme();
   const { t } = useTranslation(FORMULAIRE);
   const { user } = useEdificeClient();
@@ -34,8 +37,8 @@ export const HomeMainLayout: FC = () => {
   const [selectedChips, setSelectedChips] = useState<ChipProps[]>([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItemProps>();
   const [searchText, setSearchText] = useState("");
-  const [viewMode, setViewMode] = useState(ViewMode.CARDS);
   const userId = user?.userId;
+  const viewMode = tabViewPref[tab];
 
   const handleSearch = useCallback((searchValue: string) => {
     setSearchText(searchValue);
@@ -49,7 +52,7 @@ export const HomeMainLayout: FC = () => {
     const initialFiltered = forms.filter((form) => {
       const isCurrentUser = form.owner_id === userId;
 
-      if (currentFolder.id === 2) {
+      if (currentFolder.id === RootFolderIds.FOLDER_SHARED_FORMS_ID) {
         return form.collab && !isCurrentUser;
       }
 
@@ -82,14 +85,14 @@ export const HomeMainLayout: FC = () => {
   const hasFilteredForms = useMemo(() => !!filteredForms.length, [filteredForms]);
   const breadcrumbsText = useMemo(() => (currentFolder?.name ? [currentFolder.name] : []), [currentFolder?.name]);
 
-  const handleSwitchView = () => {
-    if (viewMode === ViewMode.CARDS) setViewMode(ViewMode.TABLE);
-    else if (viewMode === ViewMode.TABLE) setViewMode(ViewMode.CARDS);
-  };
-
   return (
     <Box sx={mainContentInnerStyle}>
       <Box sx={searchStyle}>
+        {tab === HomeTabState.RESPONSES && (
+          <Box sx={homeTabsStyle}>
+            <HomeTabs value={tab} setValue={toggleTab} />
+          </Box>
+        )}
         <SearchInput
           placeholder={t("formulaire.search")}
           sx={searchBarStyle}
@@ -106,13 +109,21 @@ export const HomeMainLayout: FC = () => {
       </Box>
       <Box sx={searchStyle}>
         <FormBreadcrumbs stringItems={breadcrumbsText} />
-        <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={handleSwitchView}></SwitchView>
+        <SwitchView
+          viewMode={viewMode}
+          toggleButtonList={toggleButtonList}
+          onChange={toggleTagViewPref}
+        ></SwitchView>
       </Box>
       {(hasFilteredFolders || hasFilteredForms) && (
         <Box sx={resourceContainerStyle}>
           {hasFilteredFolders && <HomeMainFolders folders={filteredFolders} />}
           {hasFilteredForms &&
-            (viewMode === ViewMode.CARDS ? <HomeMainForms forms={filteredForms} /> : <HomeMainTable forms={filteredForms} />)}
+            (viewMode === ViewMode.CARDS ? (
+              <HomeMainForms forms={filteredForms} />
+            ) : (
+              <HomeMainTable forms={filteredForms} />
+            ))}
         </Box>
       )}
       {!hasFilteredFolders && !hasFilteredForms && (

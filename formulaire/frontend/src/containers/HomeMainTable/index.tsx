@@ -1,11 +1,11 @@
-import { ChangeEvent, FC } from "react";
+import { ChangeEvent, FC, useState } from "react";
 
 import { HomeMainTableProps } from "./types";
-import { FORMULAIRE } from "~/core/constants";
+import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
 import { useHome } from "~/providers/HomeProvider";
-import { Box, Checkbox, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-import { useColumns } from "./utils";
+import { Checkbox, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
+import { initTableProps, useColumns } from "./utils";
 import { Typography } from "@cgi-learning-hub/ui";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { Form } from "~/core/models/form/types";
@@ -15,17 +15,38 @@ import PublicIcon from "@mui/icons-material/Public";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import dayjs from "dayjs";
 import { DateFormat } from "~/core/enums";
+import { tablePaginationStyle } from "./style";
 
 export const HomeMainTable: FC<HomeMainTableProps> = ({ forms }) => {
   const { selectedForms, setSelectedForms } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const columns = useColumns();
-  console.log(forms);
+  const totalCount = forms.length ?? 0;
+  const [tablePaginationProps, setTablePaginationProps] = useState(initTableProps());
+  const displayedForms =
+    tablePaginationProps.limit > 0
+      ? forms.slice(
+          tablePaginationProps.page * tablePaginationProps.limit,
+          (tablePaginationProps.page + 1) * tablePaginationProps.limit,
+        )
+      : forms;
 
-  const isSelected = (formId: number) => false;
+  const isSelected = (formId: number) => selectedForms.some((form) => form.id === formId);
 
   const handleClick = (event: ChangeEvent<HTMLInputElement>, form: Form) => {
-    console.log("clicked");
+    const currentSelectedForms = event.target.checked
+      ? [...selectedForms, form]
+      : selectedForms.filter((item: Form) => item.id !== form.id);
+    setSelectedForms(currentSelectedForms);
+  };
+
+  const handleChangePage = (event: unknown, newPage: number) => {
+    setTablePaginationProps({ ...tablePaginationProps, page: newPage });
+  };
+
+  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newLimit = parseInt(event.target.value);
+    setTablePaginationProps({ limit: newLimit, page: 0 });
   };
 
   return (
@@ -41,7 +62,7 @@ export const HomeMainTable: FC<HomeMainTableProps> = ({ forms }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {forms.map((form) => {
+          {displayedForms.map((form) => {
             const isItemSelected = isSelected(form.id);
             return (
               <TableRow
@@ -62,7 +83,7 @@ export const HomeMainTable: FC<HomeMainTableProps> = ({ forms }) => {
                   <Typography variant={TypographyVariant.BODY2}>{form.owner_name}</Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography variant={TypographyVariant.BODY2}>{form.nb_responses}</Typography>
+                  <Typography variant={TypographyVariant.BODY2}>{form.nb_responses ?? 0}</Typography>
                 </TableCell>
                 <TableCell align="center">
                   <Typography variant={TypographyVariant.BODY2}>
@@ -80,7 +101,19 @@ export const HomeMainTable: FC<HomeMainTableProps> = ({ forms }) => {
           })}
         </TableBody>
       </TableContainer>
-      <Box>yo</Box>
+      {totalCount > DEFAULT_PAGINATION_LIMIT && (
+        <TablePagination
+          component={"div"}
+          count={totalCount}
+          page={tablePaginationProps.page}
+          rowsPerPage={tablePaginationProps.limit}
+          rowsPerPageOptions={[10, 25, 50]}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+          labelRowsPerPage={t("formulaire.table.rows.per.page")}
+          sx={tablePaginationStyle}
+        />
+      )}
     </>
   );
 };
