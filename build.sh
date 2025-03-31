@@ -303,23 +303,63 @@ publish_module() {
   fi
 }
 
+# Fonction pour installer le POM parent
+install_parent_pom() {
+  echo -e "\n------------------"
+  echo "Installing parent POM"
+  echo "------------------"
+
+  if [ "$NO_DOCKER" = "true" ]; then
+    mvn clean install -N -U # L'option -U pour forcer la mise à jour
+  else
+    docker compose run --rm maven bash -c "cd /usr/src/maven && mvn clean install -N -U" # L'option -U pour forcer la mise à jour dans Docker
+  fi
+}
+
+# Fonction pour installer une dépendance spécifique
+install_dependency() {
+  local module=$1
+  local version=${revision}  # Utilisation de la variable revision pour la version
+
+  echo -e "\n------------------"
+  echo "Installing dependency: $module"
+  echo "------------------"
+
+  if [ "$NO_DOCKER" = "true" ]; then
+    # Vérifie si form est installé localement dans le répertoire ~/.m2 avec la version dynamique
+    if [ ! -f "$HOME/.m2/repository/fr/openent/form/$version/form-$version.pom" ]; then
+      echo "form is not found in the local repository. Installing..."
+      mvn clean install -pl form -am -U  # Force l'installation de form avec la version spécifique
+    else
+      echo "form is already installed in the local repository."
+    fi
+  else
+    # Dans Docker, vérifier si form est déjà installé dans le répertoire /var/maven/.m2 avec la version dynamique
+    docker compose run --rm maven bash -c "test -f /var/maven/.m2/repository/fr/openent/form/$version/form-$version.pom || mvn clean install -pl form -am -U"
+  fi
+}
+
+
+# Fonction principale pour build un module
 build_module() {
   local module=$1
+  install_parent_pom
 
-  # 0. Publier le module common avant de construire
-  publish_common
+  # 1. Installer la dépendance "form" avant de build formulaire
+  install_dependency "form"
 
-  # 1. Build front-end components
+  # 2. Build front-end components
   build_angular ${module}
   build_frontend ${module}
 
-  # 2. Prepare backend and copy frontend files
+  # 3. Prepare backend and copy frontend files
   prepare_backend_dirs ${module}
   copy_frontend_files ${module}
 
-  # 3. Build backend
+  # 4. Build backend
   build_backend ${module}
 }
+
 build_formulaire() {
   build_module "formulaire"
 }
@@ -373,9 +413,6 @@ build_backend_formulaire() {
   echo "Building formulaire backend only"
   echo "------------------"
 
-  # S'assurer que common est construit en premier
-  build_common
-
   # Construire le backend
   build_backend "formulaire"
 }
@@ -384,9 +421,6 @@ build_backend_formulaire_public() {
   echo -e "\n------------------"
   echo "Building formulaire-public backend only"
   echo "------------------"
-
-  # S'assurer que common est construit en premier
-  build_common
 
   # Construire le backend
   build_backend "formulaire-public"
