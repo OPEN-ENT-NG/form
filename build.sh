@@ -304,16 +304,35 @@ publish_module() {
 }
 
 install_parent_pom() {
+  set -x  # Mode debug détaillé
   echo -e "\n------------------"
   echo "Installing parent POM"
   echo "------------------"
-  # Obtenir la version du POM parent
+  
+  # Vérifier l'existence du pom.xml
+  if [ ! -f pom.xml ]; then
+    echo "ERREUR: fichier pom.xml absent"
+    return 1
+  fi
+  
+  # Obtenir la version du POM parent avec log détaillé
+  echo "DEBUG: Début récupération version POM"
   local version
   if [ "$NO_DOCKER" = "true" ]; then
     version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
+    echo "DEBUG: Version obtenue localement : $version"
   else
     version=$(docker compose run --rm maven bash -c "cd /usr/src/maven && mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml")
+    echo "DEBUG: Version obtenue via Docker : $version"
   fi
+  
+  # Vérifier si la version est vide
+  if [ -z "$version" ]; then
+    echo "ERREUR: Impossible de déterminer la version du POM"
+    return 1
+  fi
+  
+  # Installation du POM
   if [ "$NO_DOCKER" = "true" ]; then
     # Nettoyer le cache du POM parent
     if [ -n "$version" ]; then
@@ -329,7 +348,9 @@ install_parent_pom() {
     # Installer le POM parent dans Docker avec l'utilisateur root
     docker compose run --rm --user root maven bash -c "cd /usr/src/maven && mvn clean install -N -U -Drevision=$version -Duser.home=/var/maven -f pom.xml"
   fi
+  
   echo "Parent POM installation successful."
+  set +x  # Désactiver le mode debug
 }
 
 # Fonction principale pour build un module
