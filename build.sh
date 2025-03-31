@@ -164,7 +164,7 @@ build_frontend() {
     cd ${module}/frontend && pnpm install && pnpm build
     cd ../.. || exit 1
   else
-    docker compose run --rm node-frontend sh -c "cd ${module}/frontend && pnpm install --ignore-scripts && pnpm build"
+    docker compose run --rm --user root node-frontend sh -c "cd ${module}/frontend && pnpm install --ignore-scripts && pnpm build"
   fi
 }
 
