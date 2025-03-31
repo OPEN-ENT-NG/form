@@ -310,43 +310,16 @@ install_parent_pom() {
   echo "------------------"
 
   if [ "$NO_DOCKER" = "true" ]; then
-    mvn clean install -N -U # L'option -U pour forcer la mise à jour
+    mvn clean install -N -U -f pom.xml
   else
-    docker compose run --rm maven bash -c "cd /usr/src/maven && mvn clean install -N -U" # L'option -U pour forcer la mise à jour dans Docker
+    docker compose run --rm maven bash -c "cd /usr/src/maven && mvn clean install -N -U -f pom.xml"
   fi
 }
-
-# Fonction pour installer une dépendance spécifique
-install_dependency() {
-  local module=$1
-  local version=${revision}  # Utilisation de la variable revision pour la version
-
-  echo -e "\n------------------"
-  echo "Installing dependency: $module"
-  echo "------------------"
-
-  if [ "$NO_DOCKER" = "true" ]; then
-    # Vérifie si form est installé localement dans le répertoire ~/.m2 avec la version dynamique
-    if [ ! -f "$HOME/.m2/repository/fr/openent/form/$version/form-$version.pom" ]; then
-      echo "form is not found in the local repository. Installing..."
-      mvn clean install -pl form -am -U  # Force l'installation de form avec la version spécifique
-    else
-      echo "form is already installed in the local repository."
-    fi
-  else
-    # Dans Docker, vérifier si form est déjà installé dans le répertoire /var/maven/.m2 avec la version dynamique
-    docker compose run --rm maven bash -c "test -f /var/maven/.m2/repository/fr/openent/form/$version/form-$version.pom || mvn clean install -pl form -am -U"
-  fi
-}
-
 
 # Fonction principale pour build un module
 build_module() {
   local module=$1
   install_parent_pom
-
-  # 1. Installer la dépendance "form" avant de build formulaire
-  install_dependency "form"
 
   # 2. Build front-end components
   build_angular ${module}
