@@ -359,16 +359,6 @@ build_formulaire_public() {
 }
 
 build_all() {
-  # Nettoyer pour partir d'un état propre
-  clean
-
-  # Installer le POM parent
-  install_parent_pom
-
-  # Construire common
-  build_common
-
-  # Construire formulaire et formulaire-public
   build_formulaire
   build_formulaire_public
 }
