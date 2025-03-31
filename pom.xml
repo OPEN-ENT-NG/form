@@ -46,7 +46,7 @@
     </modules>
 
     <properties>
-        <revision>2.1-SNAPSHOT</revision>
+        <revision>2.2-SNAPSHOT</revision>
         <webUtilsVersion>3.1-SNAPSHOT</webUtilsVersion>
         <entCoreVersion>6.4-SNAPSHOT</entCoreVersion>
         <toolsVersion>2.0.0-final</toolsVersion>
@@ -152,11 +152,27 @@
                 <version>1.2.7</version>
                 <executions>
                     <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
                         <goals>
                             <goal>flatten</goal>
                         </goals>
                     </execution>
+                    <execution>
+                        <id>flatten.clean</id>
+                        <phase>clean</phase>
+                        <goals>
+                            <goal>clean</goal>
+                        </goals>
+                    </execution>
                 </executions>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <flattenMode>resolveCiFriendliesOnly</flattenMode>
+                    <pomElements>
+                        <parent>expand</parent>
+                    </pomElements>
+                </configuration>
             </plugin>
 
             <!-- New maven-deploy-plugin -->

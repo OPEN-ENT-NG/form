@@ -121,10 +121,10 @@ build_common() {
   echo "------------------"
 
   if [ "$NO_DOCKER" = "true" ]; then
-    cd common && mvn install -DskipTests
+    cd common && mvn -U install -DskipTests
     cd .. || exit 1
   else
-    docker compose run --rm maven bash -c "cd common && mvn -Duser.home=/var/maven install -DskipTests"
+    docker compose run --rm maven bash -c "cd common && mvn -Duser.home=/var/maven -U install -DskipTests"
   fi
 }
 
@@ -304,23 +304,45 @@ publish_module() {
 }
 
 # Fonction pour installer le POM parent
+# Fonction pour installer le POM parent
+# Fonction pour installer le POM parent
 install_parent_pom() {
   echo -e "\n------------------"
   echo "Installing parent POM"
   echo "------------------"
 
+  # Obtenir la version du POM parent
+  local version
   if [ "$NO_DOCKER" = "true" ]; then
-    mvn clean install -N -U -f pom.xml
+    version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
   else
-    docker compose run --rm maven bash -c "cd /usr/src/maven && mvn clean install -N -U -f pom.xml"
+    version=$(docker compose run --rm maven bash -c "cd /usr/src/maven && mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml")
   fi
+
+  if [ "$NO_DOCKER" = "true" ]; then
+    # Nettoyer le cache du POM parent
+    if [ -n "$version" ]; then
+      rm -rf "$HOME/.m2/repository/fr/openent/form/$version"
+    fi
+    # Installer le POM parent
+    mvn clean install -N -U -Drevision=$version -f pom.xml
+  else
+    # Installer le POM parent dans Docker
+    docker compose run --rm maven bash -c "cd /usr/src/maven && mvn clean install -N -U -Drevision=$version -Duser.home=/var/maven -f pom.xml"
+    
+    # Pas besoin de vérification, si la commande ci-dessus réussit,
+    # cela signifie que l'installation a fonctionné
+  fi
+  
+  echo "Parent POM installation successful."
 }
 
 # Fonction principale pour build un module
 build_module() {
   local module=$1
+  clean
   install_parent_pom
-
+  build_common
   # 2. Build front-end components
   build_angular ${module}
   build_frontend ${module}
@@ -342,7 +364,16 @@ build_formulaire_public() {
 }
 
 build_all() {
+  # Nettoyer pour partir d'un état propre
+  clean
+
+  # Installer le POM parent
+  install_parent_pom
+
+  # Construire common
   build_common
+
+  # Construire formulaire et formulaire-public
   build_formulaire
   build_formulaire_public
 }
