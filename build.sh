@@ -299,7 +299,7 @@ publish_module() {
     cd $path && mvn $maven_deploy_cmd
     cd - >/dev/null || exit 1
   else
-    docker compose run --rm maven bash -c "cd $path && mvn -Duser.home=/var/maven $maven_deploy_cmd"
+    docker compose run --rm --user root  maven bash -c "cd $path && mvn -Duser.home=/var/maven $maven_deploy_cmd"
   fi
 }
 
