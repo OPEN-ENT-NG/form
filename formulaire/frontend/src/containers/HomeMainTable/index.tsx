@@ -4,8 +4,16 @@ import { HomeMainTableProps } from "./types";
 import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
 import { useHome } from "~/providers/HomeProvider";
-import { Checkbox, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from "@mui/material";
-import { initTableProps, useColumns } from "./utils";
+import {
+  Checkbox,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TablePagination,
+  TableRow,
+} from "@cgi-learning-hub/ui";
+import { getPageForms, initialTableProps, useColumns } from "./utils";
 import { Typography } from "@cgi-learning-hub/ui";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { Form } from "~/core/models/form/types";
@@ -21,15 +29,9 @@ export const HomeMainTable: FC<HomeMainTableProps> = ({ forms }) => {
   const { selectedForms, setSelectedForms } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const columns = useColumns();
-  const totalCount = forms.length ?? 0;
-  const [tablePaginationProps, setTablePaginationProps] = useState(initTableProps());
-  const displayedForms =
-    tablePaginationProps.limit > 0
-      ? forms.slice(
-          tablePaginationProps.page * tablePaginationProps.limit,
-          (tablePaginationProps.page + 1) * tablePaginationProps.limit,
-        )
-      : forms;
+  const totalCount = forms.length;
+  const [tablePaginationProps, setTablePaginationProps] = useState(initialTableProps);
+  const displayedForms = getPageForms(forms, tablePaginationProps);
 
   const isSelected = (formId: number) => selectedForms.some((form) => form.id === formId);
 

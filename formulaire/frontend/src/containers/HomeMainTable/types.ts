@@ -19,4 +19,3 @@ export type TablePaginationProps = {
   limit: number;
   page: number;
 };
-

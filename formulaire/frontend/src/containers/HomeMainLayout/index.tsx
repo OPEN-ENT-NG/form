@@ -6,7 +6,6 @@ import { FormBreadcrumbs } from "~/components/Breadcrumbs";
 import { useHome } from "~/providers/HomeProvider";
 import {
   emptyStateWrapperStyle,
-  homeTabsStyle,
   mainContentInnerStyle,
   resourceContainerStyle,
   searchBarStyle,
@@ -89,7 +88,7 @@ export const HomeMainLayout: FC = () => {
     <Box sx={mainContentInnerStyle}>
       <Box sx={searchStyle}>
         {tab === HomeTabState.RESPONSES && (
-          <Box sx={homeTabsStyle}>
+          <Box flexShrink={0}>
             <HomeTabs value={tab} setValue={toggleTab} />
           </Box>
         )}
@@ -109,11 +108,7 @@ export const HomeMainLayout: FC = () => {
       </Box>
       <Box sx={searchStyle}>
         <FormBreadcrumbs stringItems={breadcrumbsText} />
-        <SwitchView
-          viewMode={viewMode}
-          toggleButtonList={toggleButtonList}
-          onChange={toggleTagViewPref}
-        ></SwitchView>
+        <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref}></SwitchView>
       </Box>
       {(hasFilteredFolders || hasFilteredForms) && (
         <Box sx={resourceContainerStyle}>

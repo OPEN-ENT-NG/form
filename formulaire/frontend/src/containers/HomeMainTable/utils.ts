@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { Column, TablePaginationProps } from "./types";
 import { ColumnId } from "./enums";
 import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
+import { Form } from "~/core/models/form/types";
 
 export const useColumns: () => Column[] = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -15,9 +16,16 @@ export const useColumns: () => Column[] = () => {
   ];
 };
 
-export const initTableProps = (): TablePaginationProps => {
-  return {
-    limit: DEFAULT_PAGINATION_LIMIT,
-    page: 0,
-  }
-}
+export const initialTableProps = {
+  limit: DEFAULT_PAGINATION_LIMIT,
+  page: 0,
+};
+
+export const getPageForms = (forms: Form[], tablePaginationProps: TablePaginationProps): Form[] => {
+  return tablePaginationProps.limit > 0
+    ? forms.slice(
+        tablePaginationProps.page * tablePaginationProps.limit,
+        (tablePaginationProps.page + 1) * tablePaginationProps.limit,
+      )
+    : forms;
+};

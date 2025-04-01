@@ -1,3 +1,3 @@
 export const tablePaginationStyle = {
-    overflow: "unset",
+  overflow: "unset",
 };

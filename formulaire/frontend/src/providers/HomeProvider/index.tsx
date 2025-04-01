@@ -37,9 +37,12 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
     setTab(tab);
   }, []);
 
-  const toggleTagViewPref = useCallback((viewMode: ViewMode) => {
-    setTabViewPref({ ...tabViewPref, [tab]: viewMode });
-  }, [tabViewPref, tab]);
+  const toggleTagViewPref = useCallback(
+    (viewMode: ViewMode) => {
+      setTabViewPref({ ...tabViewPref, [tab]: viewMode });
+    },
+    [tabViewPref, tab],
+  );
 
   const resetSelected = useCallback(() => {
     setSelectedFolders([]);

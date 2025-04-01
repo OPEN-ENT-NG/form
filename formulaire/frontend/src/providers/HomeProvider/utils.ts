@@ -52,5 +52,5 @@ export const initTabViewPref = (): HomeTabViewPref => {
   return {
     [HomeTabState.FORMS]: ViewMode.CARDS,
     [HomeTabState.RESPONSES]: ViewMode.CARDS,
-  }
+  };
 };

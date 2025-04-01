@@ -13,8 +13,8 @@ export type HomeProviderContextType = {
   setCurrentFolder: (value: Folder) => void;
   tab: HomeTabState;
   toggleTab: (tab: HomeTabState) => void;
-  tabViewPref: HomeTabViewPref,
-  toggleTagViewPref: (viewMode: ViewMode) => void,
+  tabViewPref: HomeTabViewPref;
+  toggleTagViewPref: (viewMode: ViewMode) => void;
   folders: Folder[];
   forms: Form[];
   selectedFolders: Folder[];

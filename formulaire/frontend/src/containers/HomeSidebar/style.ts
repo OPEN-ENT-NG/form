@@ -7,11 +7,3 @@ export const homeSidebarWrapper = {
   gap: "2rem",
   p: "2rem",
 };
-
-export const homeTabsStyle = {
-  height: "3.5rem",
-  display: "flex",
-  alignItems: "center",
-};
-
-

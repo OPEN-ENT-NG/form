@@ -1,8 +1,13 @@
 import { PRIMARY_LIGHT_COLOR } from "~/core/style/colors";
-import { CSS_COMMON_WHITE_COLOR, CSS_PRIMARY_LIGHTER_COLOR, CSS_PRIMARY_MAIN_COLOR, CSS_TEXT_SECONDARY_COLOR } from "~/core/style/cssColors";
+import {
+  CSS_COMMON_WHITE_COLOR,
+  CSS_PRIMARY_LIGHTER_COLOR,
+  CSS_PRIMARY_MAIN_COLOR,
+  CSS_TEXT_SECONDARY_COLOR,
+} from "~/core/style/cssColors";
 
 export const switchViewStyle = {
-  boderColor: PRIMARY_LIGHT_COLOR
+  borderColor: PRIMARY_LIGHT_COLOR,
 };
 
 export const switchViewItemStyle = {

@@ -1,4 +1,4 @@
 export enum ViewMode {
-    CARDS = "CARDS",
-    TABLE = "TABLE",
+  CARDS = "CARDS",
+  TABLE = "TABLE",
 }

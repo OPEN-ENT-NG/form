@@ -27,10 +27,6 @@ export const resourceContainerStyle: SxProps<Theme> = {
   gap: "2rem",
 };
 
-export const homeTabsStyle: SxProps<Theme> = {
-  flexShrink: 0,  
-};
-
 export const searchBarStyle: SxProps<Theme> = {
   width: "100%",
 };

@@ -6,7 +6,7 @@ import { HomeTabs } from "~/components/HomeTab";
 import { ModalType } from "~/core/enums";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
-import { homeSidebarWrapper, homeTabsStyle } from "./style";
+import { homeSidebarWrapper } from "./style";
 import { useModal } from "~/providers/ModalProvider";
 
 export const HomeSidebar: FC = () => {
@@ -37,7 +37,7 @@ export const HomeSidebar: FC = () => {
 
   return (
     <Box sx={homeSidebarWrapper}>
-      <Box sx={homeTabsStyle}>
+      <Box height="3.5rem" display="flex" alignItems="center">
         <HomeTabs value={tab} setValue={toggleTab} />
       </Box>
       <TreeView
