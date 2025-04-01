@@ -1,4 +1,5 @@
 import { SxProps } from "@cgi-learning-hub/ui";
+import { CSS_PRIMARY_MAIN_COLOR } from "~/core/style/cssColors";
 
 export const toasterWrapper: SxProps = {
   position: "fixed",
@@ -10,7 +11,7 @@ export const toasterWrapper: SxProps = {
   display: "flex",
   justifyContent: "space-between",
   gap: "1rem",
-  background: "var(--theme-palette-primary-main)",
+  background: CSS_PRIMARY_MAIN_COLOR,
 };
 
 export const toasterButtonStyle: SxProps = {
