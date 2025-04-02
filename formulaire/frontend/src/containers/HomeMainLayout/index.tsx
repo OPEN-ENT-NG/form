@@ -81,7 +81,7 @@ export const HomeMainLayout: FC = () => {
     <Box sx={mainContentInnerStyle}>
       <Box sx={searchStyle}>
         <SearchInput
-          placeholder={t("formulaire.search")}
+          placeholder={t("formulaire.search.placeholder")}
           sx={searchBarStyle}
           onChange={(event) => handleSearch(event.target.value)}
         />
