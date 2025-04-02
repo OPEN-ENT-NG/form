@@ -87,7 +87,7 @@ export const OrganizeFilter: FC<OrganizeFilterProps> = ({
       if (!selectedMenuItem || selectedMenuItem.id !== menuItem.id) {
         return setSelectedMenuItem({
           ...menuItem,
-          state: MenuItemState.ASCENDING,
+          state: MenuItemState.DESCENDING,
         });
       }
 

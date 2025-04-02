@@ -10,4 +10,5 @@ export interface HeaderProps {
   stringItems: string[];
   buttons: HeaderButton[];
   isCreationPage?: boolean;
+  displaySeparator?: boolean;
 }
