@@ -6,7 +6,7 @@ export const toasterWrapper: SxProps = {
   right: 0,
   left: 0,
   zIndex: "100",
-  padding: "2rem",
+  padding: "1rem",
   display: "flex",
   justifyContent: "space-between",
   gap: "1rem",

@@ -195,6 +195,11 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
               <Typography>{t("formulaire.date.opening")}</Typography>
               <Box sx={datePickerWrapperStyle}>
                 <DatePicker
+                  slotProps={{
+                    textField: {
+                      error: false,
+                    },
+                  }}
                   minDate={dayjs()}
                   value={dayjs(formPropInputValue[FormPropField.DATE_OPENING])}
                   onChange={(value) => handleDateChange(FormPropField.DATE_OPENING, value)}
@@ -218,6 +223,11 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
               {isEndingDateEditable && (
                 <Box sx={datePickerWrapperStyle}>
                   <DatePicker
+                    slotProps={{
+                      textField: {
+                        error: false,
+                      },
+                    }}
                     minDate={dayjs(dateOpening).add(1, "day")}
                     value={dayjs(formPropInputValue[FormPropField.DATE_ENDING])}
                     onChange={(value) => handleDateChange(FormPropField.DATE_ENDING, value)}
@@ -269,7 +279,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                     {showDescription && (
                       <Box>
                         <TextField
-                          sx={{ maxWidth: "50rem" }}
+                          sx={{ maxWidth: "51rem !important" }}
                           variant={ComponentVariant.OUTLINED}
                           fullWidth
                           multiline
@@ -284,7 +294,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                       </Box>
                     )}
                     {showRgpd && (
-                      <Box>
+                      <Box sx={subContentColumnWrapper}>
                         <Box sx={rgpdContentRowStyle}>
                           <Typography>{t("formulaire.prop.rgpd.goal")}</Typography>
                           <TextField
