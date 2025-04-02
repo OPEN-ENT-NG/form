@@ -6,3 +6,9 @@ export interface FormBreadcrumbsProps {
   isHeader?: boolean;
   displaySeparator?: boolean;
 }
+
+export interface BreadCrumbItemWrapperProps {
+  textColor: string;
+  isHeader: boolean;
+  hasSeparator: boolean;
+}
