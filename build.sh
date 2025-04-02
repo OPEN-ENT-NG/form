@@ -45,7 +45,7 @@ clean_common() {
     cd .. || exit 1
   else
     docker compose run --rm --user root maven bash -c "cd common && mvn -Duser.home=/var/maven clean"
-fi
+  fi
 }
 
 clean_formulaire() {
@@ -53,29 +53,50 @@ clean_formulaire() {
   echo "Cleaning formulaire"
   echo "------------------"
 
-  # Clean Angular
-  rm -rf formulaire/angular/node_modules
-  rm -rf formulaire/angular/*.lock
-
-  # Clean Frontend
-  rm -rf formulaire/frontend/.nx
-  rm -rf formulaire/frontend/.pnpm-store
-  rm -rf formulaire/frontend/node_modules
-  rm -rf formulaire/frontend/dist
-  rm -rf formulaire/frontend/build
-  rm -f formulaire/frontend/pnpm-lock.yaml
-
-  # Clean Backend
   if [ "$NO_DOCKER" = "true" ]; then
+    # Clean Angular
+    rm -rf formulaire/angular/node_modules
+    rm -rf formulaire/angular/*.lock
+
+    # Clean Frontend
+    rm -rf formulaire/frontend/.nx
+    rm -rf formulaire/frontend/.pnpm-store
+    rm -rf formulaire/frontend/node_modules
+    rm -rf formulaire/frontend/dist
+    rm -rf formulaire/frontend/build
+    rm -f formulaire/frontend/pnpm-lock.yaml
+
+    # Clean Backend
     cd formulaire/backend && mvn clean
     cd ../.. || exit 1
+    rm -rf formulaire/backend/.flattened-pom.xml
+    rm -rf formulaire/backend/src/main/resources/img
+    rm -rf formulaire/backend/src/main/resources/public
+    rm -rf formulaire/backend/src/main/resources/view
   else
-    docker compose run --rm --user root maven bash -c "cd formulaire/backend && mvn -Duser.home=/var/maven clean"
+    # Clean frontend avec Docker
+    echo "Cleaning Angular et Frontend avec Docker"
+    docker compose run --rm --user root node-frontend sh -c "
+      rm -rf /home/node/app/formulaire/angular/node_modules
+      rm -rf /home/node/app/formulaire/angular/*.lock
+      rm -rf /home/node/app/formulaire/frontend/.nx
+      rm -rf /home/node/app/formulaire/frontend/.pnpm-store
+      rm -rf /home/node/app/formulaire/frontend/node_modules
+      rm -rf /home/node/app/formulaire/frontend/dist
+      rm -rf /home/node/app/formulaire/frontend/build
+      rm -f /home/node/app/formulaire/frontend/pnpm-lock.yaml
+    "
+
+    # Clean Backend avec Docker
+    echo "Cleaning Backend avec Docker"
+    docker compose run --rm --user root maven bash -c "
+      cd formulaire/backend && mvn -Duser.home=/var/maven clean
+      rm -rf formulaire/backend/.flattened-pom.xml
+      rm -rf formulaire/backend/src/main/resources/img
+      rm -rf formulaire/backend/src/main/resources/public
+      rm -rf formulaire/backend/src/main/resources/view
+    "
   fi
-  rm -rf formulaire/backend/.flattened-pom.xml
-  rm -rf formulaire/backend/src/main/resources/img
-  rm -rf formulaire/backend/src/main/resources/public
-  rm -rf formulaire/backend/src/main/resources/view
 }
 
 clean_formulaire_public() {
@@ -83,29 +104,50 @@ clean_formulaire_public() {
   echo "Cleaning formulaire-public"
   echo "------------------"
 
-  # Clean Angular
-  rm -rf formulaire-public/angular/node_modules
-  rm -rf formulaire-public/angular/*.lock
-
-  # Clean Frontend
-  rm -rf formulaire-public/frontend/.nx
-  rm -rf formulaire-public/frontend/.pnpm-store
-  rm -rf formulaire-public/frontend/node_modules
-  rm -rf formulaire-public/frontend/dist
-  rm -rf formulaire-public/frontend/build
-  rm -f formulaire-public/frontend/pnpm-lock.yaml
-
-  # Clean Backend
   if [ "$NO_DOCKER" = "true" ]; then
+    # Clean Angular
+    rm -rf formulaire-public/angular/node_modules
+    rm -rf formulaire-public/angular/*.lock
+
+    # Clean Frontend
+    rm -rf formulaire-public/frontend/.nx
+    rm -rf formulaire-public/frontend/.pnpm-store
+    rm -rf formulaire-public/frontend/node_modules
+    rm -rf formulaire-public/frontend/dist
+    rm -rf formulaire-public/frontend/build
+    rm -f formulaire-public/frontend/pnpm-lock.yaml
+
+    # Clean Backend
     cd formulaire-public/backend && mvn clean
     cd ../.. || exit 1
+    rm -rf formulaire-public/backend/.flattened-pom.xml
+    rm -rf formulaire-public/backend/src/main/resources/img
+    rm -rf formulaire-public/backend/src/main/resources/public
+    rm -rf formulaire-public/backend/src/main/resources/view
   else
-    docker compose run --rm --user root maven bash -c "cd formulaire-public/backend && mvn -Duser.home=/var/maven clean"
+    # Clean Frontend avec Docker
+    echo "Cleaning Angular et Frontend avec Docker"
+    docker compose run --rm --user root node-frontend sh -c "
+      rm -rf /home/node/app/formulaire-public/angular/node_modules
+      rm -rf /home/node/app/formulaire-public/angular/*.lock
+      rm -rf /home/node/app/formulaire-public/frontend/.nx
+      rm -rf /home/node/app/formulaire-public/frontend/.pnpm-store
+      rm -rf /home/node/app/formulaire-public/frontend/node_modules
+      rm -rf /home/node/app/formulaire-public/frontend/dist
+      rm -rf /home/node/app/formulaire-public/frontend/build
+      rm -f /home/node/app/formulaire-public/frontend/pnpm-lock.yaml
+    "
+
+    # Clean Backend avec Docker
+    echo "Cleaning Backend avec Docker"
+    docker compose run --rm --user root maven bash -c "
+      cd formulaire-public/backend && mvn -Duser.home=/var/maven clean
+      rm -rf formulaire-public/backend/.flattened-pom.xml
+      rm -rf formulaire-public/backend/src/main/resources/img
+      rm -rf formulaire-public/backend/src/main/resources/public
+      rm -rf formulaire-public/backend/src/main/resources/view
+    "
   fi
-  rm -rf formulaire-public/backend/.flattened-pom.xml
-  rm -rf formulaire-public/backend/src/main/resources/img
-  rm -rf formulaire-public/backend/src/main/resources/public
-  rm -rf formulaire-public/backend/src/main/resources/view
 }
 
 clean() {
@@ -299,58 +341,66 @@ publish_module() {
     cd $path && mvn $maven_deploy_cmd
     cd - >/dev/null || exit 1
   else
-    docker compose run --rm --user root  maven bash -c "cd $path && mvn -Duser.home=/var/maven $maven_deploy_cmd"
+    docker compose run --rm --user root maven bash -c "cd $path && mvn -Duser.home=/var/maven $maven_deploy_cmd"
   fi
 }
 
 install_parent_pom() {
-  set -x  # Mode debug détaillé
   echo -e "\n------------------"
   echo "Installing parent POM"
   echo "------------------"
-  
+
   # Vérifier l'existence du pom.xml
   if [ ! -f pom.xml ]; then
     echo "ERREUR: fichier pom.xml absent"
     return 1
   fi
-  
-  # Obtenir la version du POM parent avec log détaillé
-  echo "DEBUG: Début récupération version POM"
-  local version
+
+  # Obtenir la version du POM parent
+  local version=""
   if [ "$NO_DOCKER" = "true" ]; then
     version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
-    echo "DEBUG: Version obtenue localement : $version"
   else
-    version=$(docker compose run --rm maven bash -c "cd /usr/src/maven && mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml")
-    echo "DEBUG: Version obtenue via Docker : $version"
+    # Capturer la sortie complète
+    local output=$(docker compose run --rm maven bash -c "cd /usr/src/maven && mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml")
+
+    # Technique 1: Utiliser grep avec une expression régulière plus générique pour les versions sémantiques
+    version=$(echo "$output" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+\(-[A-Za-z0-9.+]\+\)*' | tail -1)
+
+    # Technique 2: Si la première méthode échoue, essayer une expression encore plus générique
+    if [ -z "$version" ]; then
+      version=$(echo "$output" | grep -o '[0-9]\+\.[0-9]\+\(-[A-Za-z0-9.+]\+\)*' | tail -1)
+    fi
+
+    # Technique 3: Si les deux premières méthodes échouent, extraire la dernière ligne non-vide
+    if [ -z "$version" ]; then
+      echo "Méthodes d'extraction standard échouées, utilisation de la dernière ligne..."
+      version=$(echo "$output" | grep -v '^\s*$' | tail -1)
+    fi
   fi
-  
+
+  echo "Version détectée: $version"
+
   # Vérifier si la version est vide
   if [ -z "$version" ]; then
     echo "ERREUR: Impossible de déterminer la version du POM"
     return 1
   fi
-  
+
   # Installation du POM
   if [ "$NO_DOCKER" = "true" ]; then
     # Nettoyer le cache du POM parent
-    if [ -n "$version" ]; then
-      rm -rf "$HOME/.m2/repository/fr/openent/form/$version"
-    fi
+    rm -rf "$HOME/.m2/repository/fr/openent/form/$version"
     # Installer le POM parent
     mvn clean install -N -U -Drevision=$version -f pom.xml
   else
     # Nettoyer le cache du POM parent
-    if [ -n "$version" ]; then
-      docker compose run --rm --user root maven bash -c "rm -rf /var/maven/.m2/repository/fr/openent/form/$version"
-    fi
+    docker compose run --rm --user root maven bash -c "rm -rf /var/maven/.m2/repository/fr/openent/form/$version"
     # Installer le POM parent dans Docker avec l'utilisateur root
     docker compose run --rm --user root maven bash -c "cd /usr/src/maven && mvn clean install -N -U -Drevision=$version -Duser.home=/var/maven -f pom.xml"
   fi
-  
+
   echo "Parent POM installation successful."
-  set +x  # Désactiver le mode debug
 }
 
 # Fonction principale pour build un module
