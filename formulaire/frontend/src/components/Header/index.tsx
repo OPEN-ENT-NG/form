@@ -14,7 +14,11 @@ export const Header: FC<HeaderProps> = ({ stringItems, buttons, isCreationPage =
 
   return (
     <Box sx={headerStyle}>
-      <FormBreadcrumbs stringItems={stringItems} separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem" }} />} isHeader />
+      <FormBreadcrumbs
+        stringItems={stringItems}
+        separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem" }} />}
+        isHeader
+      />
       {isCreationPage && <Box>//TODO</Box>}
       <Box>
         {buttons.map((button) => (

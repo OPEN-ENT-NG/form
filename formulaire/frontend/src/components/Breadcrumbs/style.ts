@@ -10,5 +10,5 @@ export const BreadCrumbItemWrapper = styled(Typography, {
   "&:hover": {
     cursor: "pointer",
     textDecoration: "underline",
-  }
+  },
 }));
