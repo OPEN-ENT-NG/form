@@ -16,5 +16,3 @@ services:
       - ~/.pnpm:/.pnpm
       - ~/.npm:/.npm
       - ~/.cache:/.cache
-      - /etc/ssl/certs:/etc/ssl/certs:ro
-      - /usr/local/share/ca-certificates:/usr/local/share/ca-certificates:ro
