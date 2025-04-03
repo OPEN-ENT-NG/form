@@ -91,5 +91,8 @@ export const modalActionsStyle = {
 };
 
 export const datePickerWrapperStyle = {
-  width: "15rem",
+  width: "16rem",
+  "& .MuiInputBase-input": {
+    padding: "1rem",
+  },
 };
