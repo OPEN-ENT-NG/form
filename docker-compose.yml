@@ -1,3 +1,4 @@
+version: '3.8'
 # Variables d'environnement pour tous les services
 x-default-environment: &default-environment
   USER_UID: ${USER_UID:-1000}
