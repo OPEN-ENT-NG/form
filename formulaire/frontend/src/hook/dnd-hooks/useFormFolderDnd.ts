@@ -10,6 +10,7 @@ import { isSelectedForm } from "~/core/models/form/utils";
 import { ActiveDragItemProps } from "./types";
 import { createItemState } from "./utils";
 import { SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
+import { useHome } from "~/providers/HomeProvider";
 
 export const useFormFolderDnd = (
   selectedFolders: Folder[],
@@ -23,6 +24,7 @@ export const useFormFolderDnd = (
   const [moveFolders] = useMoveFoldersMutation();
   const [activeDragItem, setActiveDragItem] = useState<ActiveDragItemProps>(createItemState(DraggableType.NULL, null));
   const [isValidDrop, setIsValidDrop] = useState(false);
+  const { folders, forms, setFolders, setForms } = useHome();
 
   // ===== SENSOR CONFIGURATION =====
   const sensors = useSensors(
@@ -99,11 +101,11 @@ export const useFormFolderDnd = (
         const draggedFolder = event.active.data.current.folder as Folder;
         // Prevent moving a folder onto itself.
         if (destinationId != draggedFolder.id) {
-          moveItemsToFolder(destinationId);
+          handleOptimisticUpdate(destinationId);
         }
       }
       if (event.active.data.current?.type === DraggableType.FORM) {
-        moveItemsToFolder(destinationId);
+        handleOptimisticUpdate(destinationId);
       }
 
       return setActiveDragItem(createItemState(DraggableType.NULL, null));
@@ -157,6 +159,42 @@ export const useFormFolderDnd = (
     }
     return null;
   };
+
+  const handleOptimisticUpdate = useCallback(
+    (destinationFolderId: number) => {
+      const previousFolderState = folders;
+      const previousFormState = forms;
+
+      try {
+        const newFolders: Folder[] = folders.map((folder: Folder) => {
+          if (folder.id !== destinationFolderId && selectedFolders.some((f) => f.id === folder.id)) {
+            return {
+              ...folder,
+              parent_id: destinationFolderId,
+            };
+          }
+          return folder;
+        });
+        setFolders(newFolders);
+        const newForms: Form[] = forms.map((form: Form) => {
+          if (selectedForms.some((f) => f.id === form.id)) {
+            return {
+              ...form,
+              folder_id: destinationFolderId,
+            };
+          }
+          return form;
+        });
+        setForms(newForms);
+        moveItemsToFolder(destinationFolderId);
+      } catch (error) {
+        console.error("Error moving items:", error);
+        setFolders(previousFolderState);
+        setForms(previousFormState);
+      }
+    },
+    [selectedFolders, selectedForms, moveItemsToFolder, setSelectedFolder, setSelectedForm],
+  );
 
   return {
     sensors,
