@@ -39,7 +39,7 @@ export const HomeSidebar: FC = () => {
       <HomeTabs value={tab} setValue={toggleTab} />
       <TreeView
         items={treeViewItems}
-        maxHeight={"80%"}
+        maxHeight={"75%"}
         selectedItemId={currentFolder?.id.toString() ?? folders[0].id.toString()}
         handleSelectedItemChange={handleSelectedItemChange}
       />
