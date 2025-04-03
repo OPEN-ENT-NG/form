@@ -61,8 +61,9 @@ export const DraggableFolder: FC<DraggableFolderProps> = ({
         subtitle={getFolderSubtitle(folder)}
         onSelect={() => onSelect(folder)}
         onClick={() => onClick(folder)}
-        isSelected={isSelected(folder)}
+        isSelected={isSelected}
         iconSize="3.2rem"
+        hasNoButtonOnFocus
       />
     </StyledDraggableFolder>
   );

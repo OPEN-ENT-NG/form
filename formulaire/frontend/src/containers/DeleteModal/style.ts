@@ -1,6 +1,4 @@
-import { modalBoxStyle } from "~/core/style/boxStyles";
-
 export const deleteModalStyle = {
-  ...modalBoxStyle,
+  minWidth: "76rem",
   width: "76rem",
 };

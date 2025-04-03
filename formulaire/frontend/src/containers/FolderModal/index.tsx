@@ -1,14 +1,11 @@
-import { Box, Button, IconButton, Modal, TextField, Typography } from "@cgi-learning-hub/ui";
-import CloseIcon from "@mui/icons-material/Close";
+import { Button, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
 import { FC, useMemo, useState } from "react";
-import { modalBoxStyle, spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import {
   folderModalContentStyle,
   folderModalStyle,
   folderModalTextFieldLabelStyle,
   folderModalTextFieldStyle,
 } from "./style";
-import { modalActionButtonStyle } from "~/core/style/modalStyle";
 import { FOLDER_MODAL_MODE, FolderModalProps } from "./types";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, MYFORMS_FOLDER_ID } from "~/core/constants";
@@ -59,39 +56,44 @@ export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode })
         handleAction: handleRename,
       },
     };
-  }, [currentFolder, newName, createFolder, updateFolder, handleClose]);
+  }, [currentFolder, newName, createFolder, updateFolder, handleClose, selectedFolders]);
 
   const currentConfig = modeConfig[mode] || modeConfig.CREATE;
 
   return (
-    <Modal open={isOpen} onClose={handleClose}>
-      <Box sx={{ ...modalBoxStyle, ...folderModalStyle }}>
-        <Box sx={spaceBetweenBoxStyle}>
-          <Typography variant="h2" fontWeight="bold">
-            {t(currentConfig.title)}
-          </Typography>
-          <IconButton onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-        <Box sx={folderModalContentStyle}>
-          <Typography sx={folderModalTextFieldLabelStyle}>{t("formulaire.folder.name")}</Typography>
-          <TextField
-            variant="standard"
-            sx={folderModalTextFieldStyle}
-            value={newName}
-            onChange={(e) => setNewName(e.target.value)}
-          />
-        </Box>
-        <Box sx={modalActionButtonStyle}>
-          <Button variant="outlined" color="primary" onClick={handleClose}>
-            {t("formulaire.cancel")}
-          </Button>
-          <Button variant="contained" color="primary" onClick={currentConfig.handleAction}>
-            {t(currentConfig.buttonText)}
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
+    <Dialog
+      open={isOpen}
+      onClose={handleClose}
+      slotProps={{
+        paper: {
+          sx: folderModalStyle,
+        },
+      }}
+    >
+      <DialogTitle>
+        <Typography variant="h2" fontWeight="bold">
+          {t(currentConfig.title)}
+        </Typography>
+      </DialogTitle>
+
+      <DialogContent sx={folderModalContentStyle}>
+        <Typography sx={folderModalTextFieldLabelStyle}>{t("formulaire.folder.name")}</Typography>
+        <TextField
+          variant="standard"
+          sx={folderModalTextFieldStyle}
+          value={newName}
+          onChange={(e) => setNewName(e.target.value)}
+        />
+      </DialogContent>
+
+      <DialogActions>
+        <Button variant="outlined" color="primary" onClick={handleClose}>
+          {t("formulaire.cancel")}
+        </Button>
+        <Button variant="contained" color="primary" onClick={currentConfig.handleAction}>
+          {t(currentConfig.buttonText)}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
