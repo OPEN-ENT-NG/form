@@ -40,3 +40,17 @@ export const buildFolderTree = (folders: Folder[]): CustomTreeViewItem[] => {
     };
   });
 };
+
+export const buildFlatFolderTree = (folders: Folder[]): CustomTreeViewItem[] => {
+  const flattenTree = (items: CustomTreeViewItem[]): CustomTreeViewItem[] => {
+    return items.reduce<CustomTreeViewItem[]>((acc, item) => {
+      acc = [...acc, item];
+      if (item.children && item.children.length) {
+        acc = [...acc, ...flattenTree(item.children)];
+      }
+      return acc;
+    }, []);
+  };
+
+  return flattenTree(buildFolderTree(folders));
+};
