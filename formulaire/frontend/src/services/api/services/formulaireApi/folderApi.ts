@@ -81,12 +81,12 @@ export const folderApi = emptySplitFormulaireApi.injectEndpoints({
       },
     }),
 
-    // Déplacer des formulaires vers un dossier
-    moveForms: builder.mutation<void, { formIds: number[]; parentId: number }>({
-      query: ({ formIds, parentId }) => ({
+    // Déplacer des dossiers vers un dossier
+    moveFolders: builder.mutation<void, { folderIds: number[]; parentId: number }>({
+      query: ({ folderIds, parentId }) => ({
         url: `folders/${parentId}/move`,
         method: QueryMethod.PUT,
-        body: formIds,
+        body: JSON.stringify(folderIds),
       }),
       invalidatesTags: [TagName.FOLDERS],
       async onQueryStarted(_, { queryFulfilled }) {
@@ -108,5 +108,5 @@ export const {
   useCreateFolderMutation,
   useUpdateFolderMutation,
   useDeleteFoldersMutation,
-  useMoveFormsMutation,
+  useMoveFoldersMutation,
 } = folderApi;
