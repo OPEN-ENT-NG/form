@@ -1,5 +1,6 @@
 export const folderModalStyle = {
   width: "76rem",
+  minWidth: "76rem",
 };
 
 export const folderModalContentStyle = {
