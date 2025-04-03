@@ -1,5 +1,6 @@
 export const formImportModalStyle = {
   width: "76rem",
+  minWidth: "76rem",
 };
 
 export const formImportModalContentStyle = {

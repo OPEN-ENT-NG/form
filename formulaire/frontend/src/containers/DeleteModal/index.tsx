@@ -1,9 +1,6 @@
 import { ModalProps } from "~/types";
 import { FC, useCallback } from "react";
-import { Box, Button, IconButton, Modal, Typography } from "@cgi-learning-hub/ui";
-import CloseIcon from "@mui/icons-material/Close";
-import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
-import { modalActionButtonStyle } from "~/core/style/modalStyle";
+import { Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, TRASH_FOLDER_ID } from "~/core/constants";
 import { deleteModalStyle } from "./style";
@@ -71,28 +68,33 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
   }, [deleteFolders, deleteForm, archiveForm, handleClose, selectedFolders, selectedForms]);
 
   return (
-    <Modal open={isOpen} onClose={handleClose}>
-      <Box sx={deleteModalStyle}>
-        <Box sx={spaceBetweenBoxStyle}>
-          <Typography variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
-            {t(getTitle(selectedForms, selectedFolders))}
-          </Typography>
-          <IconButton onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-        <Box>
-          <Typography>{t(getText(selectedForms, selectedFolders))}</Typography>
-        </Box>
-        <Box sx={modalActionButtonStyle}>
-          <Button variant={ComponentVariant.OUTLINED} color={PRIMARY} onClick={handleClose}>
-            {t("formulaire.close")}
-          </Button>
-          <Button variant={ComponentVariant.CONTAINED} color={PRIMARY} onClick={handleDelete}>
-            {t("formulaire.delete")}
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
+    <Dialog
+      open={isOpen}
+      onClose={handleClose}
+      slotProps={{
+        paper: {
+          sx: deleteModalStyle,
+        },
+      }}
+    >
+      <DialogTitle>
+        <Typography variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+          {t(getTitle(selectedForms, selectedFolders))}
+        </Typography>
+      </DialogTitle>
+
+      <DialogContent>
+        <Typography>{t(getText(selectedForms, selectedFolders))}</Typography>
+      </DialogContent>
+
+      <DialogActions>
+        <Button variant={ComponentVariant.OUTLINED} color={PRIMARY} onClick={handleClose}>
+          {t("formulaire.close")}
+        </Button>
+        <Button variant={ComponentVariant.CONTAINED} color={PRIMARY} onClick={handleDelete}>
+          {t("formulaire.delete")}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };
