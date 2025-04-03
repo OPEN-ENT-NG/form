@@ -38,6 +38,5 @@ export const emptyStateWrapperStyle: SxProps<Theme> = {
   justifyContent: "center",
   paddingTop: "2rem",
   gap: "2rem",
-  height: "calc(100% - 7rem - 4rem - 4rem)",
-  maxHeight: "40rem",
+  height: "30rem",
 };
