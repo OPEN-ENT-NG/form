@@ -4,6 +4,7 @@
 .classpath
 .project
 /.idea/
+.pnpm-store
 /.settings
 .jshintrc
 */rev-manifest.json
