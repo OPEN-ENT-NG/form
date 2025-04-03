@@ -20,3 +20,15 @@ export enum QueryMethod {
   PUT = "PUT",
   DELETE = "DELETE",
 }
+
+export enum DraggableType {
+  FOLDER = "FOLDER",
+  FORM = "FORM",
+  NULL = "NULL",
+}
+
+export enum CursorStyle {
+  POINTER = "pointer",
+  NO_DROP = "no-drop",
+  DEFAULT = "default",
+}
