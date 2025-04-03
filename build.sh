@@ -3,6 +3,8 @@
 # Configuration des variables d'environnement
 set -e # Arrête le script si une commande échoue
 
+MVN_OPTS="-Duser.home=/var/maven"
+
 # Params (option pour fonctionner sans docker)
 NO_DOCKER=""
 for i in "$@"; do
@@ -29,7 +31,6 @@ MINGW* | Darwin*)
   ;;
 esac
 
-# Définir DEFAULT_DOCKER_USER pour la compatibilité avec l'ancien système
 export DEFAULT_DOCKER_USER="$USER_UID:$GROUP_GID"
 
 # Initialiser le fichier .env utilisé par docker-compose
@@ -41,10 +42,10 @@ clean_common() {
   echo "Cleaning common"
   echo "------------------"
   if [ "$NO_DOCKER" = "true" ]; then
-    cd common && mvn clean
+    cd common && mvn $MVN_OPTS clean
     cd .. || exit 1
   else
-    docker compose run --rm --user root maven bash -c "cd common && mvn -Duser.home=/var/maven clean"
+    docker compose run --rm maven bash -c "cd common && mvn $MVN_OPTS clean"
   fi
 }
 
@@ -67,7 +68,7 @@ clean_formulaire() {
     rm -f formulaire/frontend/pnpm-lock.yaml
 
     # Clean Backend
-    cd formulaire/backend && mvn clean
+    cd formulaire/backend && mvn $MVN_OPTS clean
     cd ../.. || exit 1
     rm -rf formulaire/backend/.flattened-pom.xml
     rm -rf formulaire/backend/src/main/resources/img
@@ -76,7 +77,7 @@ clean_formulaire() {
   else
     # Clean frontend avec Docker
     echo "Cleaning Angular et Frontend avec Docker"
-    docker compose run --rm --user root node-frontend sh -c "
+    docker compose run --rm node-frontend sh -c "
       rm -rf /home/node/app/formulaire/angular/node_modules
       rm -rf /home/node/app/formulaire/angular/*.lock
       rm -rf /home/node/app/formulaire/frontend/.nx
@@ -89,8 +90,8 @@ clean_formulaire() {
 
     # Clean Backend avec Docker
     echo "Cleaning Backend avec Docker"
-    docker compose run --rm --user root maven bash -c "
-      cd formulaire/backend && mvn -Duser.home=/var/maven clean
+    docker compose run --rm maven bash -c "
+      cd formulaire/backend && mvn $MVN_OPTS clean
       rm -rf formulaire/backend/.flattened-pom.xml
       rm -rf formulaire/backend/src/main/resources/img
       rm -rf formulaire/backend/src/main/resources/public
@@ -118,7 +119,7 @@ clean_formulaire_public() {
     rm -f formulaire-public/frontend/pnpm-lock.yaml
 
     # Clean Backend
-    cd formulaire-public/backend && mvn clean
+    cd formulaire-public/backend && mvn $MVN_OPTS clean
     cd ../.. || exit 1
     rm -rf formulaire-public/backend/.flattened-pom.xml
     rm -rf formulaire-public/backend/src/main/resources/img
@@ -127,7 +128,7 @@ clean_formulaire_public() {
   else
     # Clean Frontend avec Docker
     echo "Cleaning Angular et Frontend avec Docker"
-    docker compose run --rm --user root node-frontend sh -c "
+    docker compose run --rm node-frontend sh -c "
       rm -rf /home/node/app/formulaire-public/angular/node_modules
       rm -rf /home/node/app/formulaire-public/angular/*.lock
       rm -rf /home/node/app/formulaire-public/frontend/.nx
@@ -140,8 +141,8 @@ clean_formulaire_public() {
 
     # Clean Backend avec Docker
     echo "Cleaning Backend avec Docker"
-    docker compose run --rm --user root maven bash -c "
-      cd formulaire-public/backend && mvn -Duser.home=/var/maven clean
+    docker compose run --rm maven bash -c "
+      cd formulaire-public/backend && mvn $MVN_OPTS clean
       rm -rf formulaire-public/backend/.flattened-pom.xml
       rm -rf formulaire-public/backend/src/main/resources/img
       rm -rf formulaire-public/backend/src/main/resources/public
@@ -163,10 +164,10 @@ build_common() {
   echo "------------------"
 
   if [ "$NO_DOCKER" = "true" ]; then
-    cd common && mvn -U install -DskipTests
+    cd common && mvn $MVN_OPTS -U install -DskipTests
     cd .. || exit 1
   else
-    docker compose run --rm --user root maven bash -c "cd common && mvn -Duser.home=/var/maven -U install -DskipTests"
+    docker compose run --rm maven bash -c "cd common && mvn $MVN_OPTS -U install -DskipTests"
   fi
 }
 
@@ -206,7 +207,7 @@ build_frontend() {
     cd ${module}/frontend && pnpm install && pnpm build
     cd ../.. || exit 1
   else
-    docker compose run --rm --user root node-frontend sh -c "cd ${module}/frontend && pnpm install --ignore-scripts && pnpm build"
+    docker compose run --rm node-frontend sh -c "cd ${module}/frontend && pnpm install --ignore-scripts && pnpm build"
   fi
 }
 
@@ -296,10 +297,10 @@ build_backend() {
   fi
 
   if [ "$NO_DOCKER" = "true" ]; then
-    cd ${module}/backend && mvn install -DskipTests
+    cd ${module}/backend && mvn $MVN_OPTS install -DskipTests
     cd ../.. || exit 1
   else
-    docker compose run --rm --user root maven bash -c "cd ${module}/backend && mvn -Duser.home=/var/maven install -DskipTests"
+    docker compose run --rm maven bash -c "cd ${module}/backend && mvn $MVN_OPTS install -DskipTests"
   fi
 }
 
@@ -338,10 +339,10 @@ publish_module() {
 
   # Exécuter la commande de déploiement Maven
   if [ "$NO_DOCKER" = "true" ]; then
-    cd $path && mvn $maven_deploy_cmd
+    cd $path && mvn $MVN_OPTS $maven_deploy_cmd
     cd - >/dev/null || exit 1
   else
-    docker compose run --rm --user root maven bash -c "cd $path && mvn -Duser.home=/var/maven $maven_deploy_cmd"
+    docker compose run --rm maven bash -c "cd $path && mvn $MVN_OPTS $maven_deploy_cmd"
   fi
 }
 
@@ -359,10 +360,10 @@ install_parent_pom() {
   # Obtenir la version du POM parent
   local version=""
   if [ "$NO_DOCKER" = "true" ]; then
-    version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
+    version=$(mvn $MVN_OPTS help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
   else
     # Capturer la sortie complète
-    local output=$(docker compose run --rm maven bash -c "cd /usr/src/maven && mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml")
+    local output=$(docker compose run --rm maven bash -c "cd /usr/src/maven && mvn $MVN_OPTS help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml")
 
     # Technique 1: Utiliser grep avec une expression régulière plus générique pour les versions sémantiques
     version=$(echo "$output" | grep -o '[0-9]\+\.[0-9]\+\.[0-9]\+\(-[A-Za-z0-9.+]\+\)*' | tail -1)
@@ -392,12 +393,12 @@ install_parent_pom() {
     # Nettoyer le cache du POM parent
     rm -rf "$HOME/.m2/repository/fr/openent/form/$version"
     # Installer le POM parent
-    mvn clean install -N -U -Drevision=$version -f pom.xml
+    mvn $MVN_OPTS clean install -N -U -Drevision=$version -f pom.xml
   else
     # Nettoyer le cache du POM parent
-    docker compose run --rm --user root maven bash -c "rm -rf /var/maven/.m2/repository/fr/openent/form/$version"
+    docker compose run --rm maven bash -c "rm -rf /var/maven/.m2/repository/fr/openent/form/$version"
     # Installer le POM parent dans Docker avec l'utilisateur root
-    docker compose run --rm --user root maven bash -c "cd /usr/src/maven && mvn clean install -N -U -Drevision=$version -Duser.home=/var/maven -f pom.xml"
+    docker compose run --rm maven bash -c "cd /usr/src/maven && mvn $MVN_OPTS clean install -N -U -Drevision=$version -f pom.xml"
   fi
 
   echo "Parent POM installation successful."
@@ -503,7 +504,7 @@ dev_frontend() {
     cd ${module}/frontend && pnpm install && pnpm dev
     cd ../.. || exit 1
   else
-    docker compose run --rm --user root -p 4200:4200 node-frontend sh -c "cd ${module}/frontend && pnpm install --ignore-scripts && pnpm dev"
+    docker compose run --rm -p 4200:4200 node-frontend sh -c "cd ${module}/frontend && pnpm install --ignore-scripts && pnpm dev"
   fi
 }
 
@@ -564,10 +565,10 @@ detect_nexus_repository() {
   local version
   if [ "$NO_DOCKER" = "true" ]; then
     cd $path
-    version=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+    version=$(mvn $MVN_OPTS help:evaluate -Dexpression=project.version -q -DforceStdout)
     cd - >/dev/null || exit 1
   else
-    version=$(docker compose run --rm maven bash -c "cd $path && mvn -Duser.home=/var/maven help:evaluate -Dexpression=project.version -q -DforceStdout")
+    version=$(docker compose run --rm maven bash -c "cd $path && mvn $MVN_OPTS help:evaluate -Dexpression=project.version -q -DforceStdout")
   fi
 
   # Déterminer le type de dépôt en fonction de SNAPSHOT
@@ -643,10 +644,10 @@ test_module() {
     echo "Testing ${module} backend"
     echo "------------------"
     if [ "$NO_DOCKER" = "true" ]; then
-      cd ${module}/backend && mvn test
+      cd ${module}/backend && mvn $MVN_OPTS test
       cd ../.. || exit 1
     else
-      docker compose run --rm maven bash -c "cd ${module}/backend && mvn -Duser.home=/var/maven test"
+      docker compose run --rm maven bash -c "cd ${module}/backend && mvn $MVN_OPTS test"
     fi
   fi
 }

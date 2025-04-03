@@ -1,22 +1,12 @@
 version: '3.8'
-# Variables d'environnement pour tous les services
-x-default-environment: &default-environment
-  USER_UID: ${USER_UID:-1000}
-  GROUP_GID: ${GROUP_GID:-1000}
-  MAVEN_CONFIG: /var/maven/.m2
 
 services:
   # Service Maven pour tous les builds back-end
   maven:
     build:
       context: .
-      dockerfile: Dockerfile.maven
-      args:
-        USER_UID: ${USER_UID:-1000}
-        GROUP_GID: ${GROUP_GID:-1000}
+    user: "$DEFAULT_DOCKER_USER"
     working_dir: /usr/src/maven
-    environment:
-      <<: *default-environment
     volumes:
       - ./:/usr/src/maven
       - ~/.m2:/var/maven/.m2
@@ -24,10 +14,8 @@ services:
   # Service Node.js pour les builds front-end Angular
   node-angular:
     image: opendigitaleducation/node:20-alpine-pnpm
-    user: "${USER_UID:-1000}:${GROUP_GID:-1000}"
+    user: "$DEFAULT_DOCKER_USER"
     working_dir: /home/node/app
-    environment:
-      <<: *default-environment
     volumes:
       - ./:/home/node/app
       - ~/.npm:/.npm
@@ -38,11 +26,10 @@ services:
   # Service Node.js pour les builds front-end React/moderne
   node-frontend:
     image: opendigitaleducation/node:20-alpine-pnpm
-    user: "node"
+    user: "$DEFAULT_DOCKER_USER"
     working_dir: /home/node/app
     environment:
-      <<: *default-environment
-      TIPTAP_PRO_TOKEN: ${TIPTAP_PRO_TOKEN:-}
+      - TIPTAP_PRO_TOKEN
     tty: true
     stdin_open: true
     ports:
@@ -54,7 +41,3 @@ services:
       - ~/.cache:/.cache
     # En mode développement, on peut activer le mode host
     network_mode: host
-
-networks:
-  form-network:
-    driver: bridge
