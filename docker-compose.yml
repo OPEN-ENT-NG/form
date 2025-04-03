@@ -19,8 +19,7 @@ services:
     volumes:
       - ./:/usr/src/maven
       - ~/.m2:/var/maven/.m2
-    networks:
-      - form-network
+
   # Service Node.js pour les builds front-end Angular
   node-angular:
     image: opendigitaleducation/node:20-alpine-pnpm
@@ -34,8 +33,6 @@ services:
       # Monter common dans les emplacements attendus par les modules Angular
       - ./common/src:/home/node/app/formulaire/angular/common/src
       - ./common/src:/home/node/app/formulaire-public/angular/common/src
-    networks:
-      - form-network
 
   # Service Node.js pour les builds front-end React/moderne
   node-frontend:
@@ -54,10 +51,8 @@ services:
       - ~/.pnpm:/.pnpm
       - ~/.npm:/.npm
       - ~/.cache:/.cache
-    networks:
-      - form-network
     # En mode développement, on peut activer le mode host
-    # network_mode: host
+    network_mode: host
 
 networks:
   form-network:

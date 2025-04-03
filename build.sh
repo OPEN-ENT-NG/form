@@ -503,7 +503,7 @@ dev_frontend() {
     cd ${module}/frontend && pnpm install && pnpm dev
     cd ../.. || exit 1
   else
-    docker compose run --rm -p 4200:4200 node-frontend sh -c "cd ${module}/frontend && pnpm install --ignore-scripts && pnpm dev"
+    docker compose run --rm --user root -p 4200:4200 node-frontend sh -c "cd ${module}/frontend && pnpm install --ignore-scripts && pnpm dev"
   fi
 }
 
