@@ -16,7 +16,6 @@ export const HomeSidebar: FC = () => {
   const treeViewItems = buildFolderTree(folders);
   const { t } = useTranslation(FORMULAIRE);
   const isNotTrashOrShared = currentFolder.id !== SHARED_FOLDER_ID && currentFolder.id !== TRASH_FOLDER_ID;
-
   const handleSelectedItemChange = useCallback(
     (event: React.SyntheticEvent, itemId: string | null) => {
       if (!itemId) {

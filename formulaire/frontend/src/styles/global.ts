@@ -12,4 +12,7 @@ export const globalOverrideStyles = {
     height: "3.2rem !important",
     zIndex: 1,
   },
+  '[data-type="dnd-preview"] [role="button"]': {
+    cursor: `inherit !important`,
+  },
 };

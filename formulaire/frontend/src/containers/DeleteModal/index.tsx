@@ -12,7 +12,7 @@ import { getText, getTitle } from "./utils";
 import { useDeleteFoldersMutation } from "~/services/api/services/formulaireApi/folderApi";
 import {
   useDeleteFormMutation,
-  useMoveFormMutation,
+  useMoveFormsMutation,
   useUpdateFormMutation,
 } from "~/services/api/services/formulaireApi/formApi";
 import { PRIMARY } from "~/core/style/colors";
@@ -24,7 +24,7 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
   const { selectedForms, selectedFolders, resetSelected, currentFolder } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const [deleteFolders] = useDeleteFoldersMutation();
-  const [moveForm] = useMoveFormMutation();
+  const [moveForm] = useMoveFormsMutation();
   const [updateForm] = useUpdateFormMutation();
   const [deleteForm] = useDeleteFormMutation();
 

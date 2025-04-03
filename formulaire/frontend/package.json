@@ -49,6 +49,7 @@
     "@cgi-learning-hub/icons": "develop",
     "@cgi-learning-hub/theme": "develop",
     "@cgi-learning-hub/ui": "develop",
+    "@dnd-kit/core": "^6.3.1",
     "@edifice.io/react": "2.0.2",
     "@edifice.io/bootstrap": "2.0.2",
     "@edifice.io/client": "2.0.2",

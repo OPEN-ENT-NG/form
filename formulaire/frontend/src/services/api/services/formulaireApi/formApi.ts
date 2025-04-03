@@ -32,7 +32,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         method: "POST",
         body: form,
       }),
-      invalidatesTags: [TagName.FORMS],
+      invalidatesTags: [TagName.FORMS, TagName.FOLDERS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -53,7 +53,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         method: "PUT",
         body: payload,
       }),
-      invalidatesTags: [TagName.FORMS],
+      invalidatesTags: [TagName.FORMS, TagName.FOLDERS],
       async onQueryStarted({ hasToastDisplay = true }, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -106,13 +106,13 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       },
     }),
 
-    moveForm: builder.mutation<Form[], { formIds: number[]; destinationFolderId: number }>({
+    moveForms: builder.mutation<Form[], { formIds: number[]; destinationFolderId: number }>({
       query: ({ formIds, destinationFolderId }) => ({
         url: `forms/move/${destinationFolderId}`,
         method: "PUT",
         body: formIds,
       }),
-      invalidatesTags: [TagName.FORMS],
+      invalidatesTags: [TagName.FORMS, TagName.FOLDERS],
       async onQueryStarted(params, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -158,6 +158,6 @@ export const {
   useDeleteFormMutation,
   useGetFormsQuery,
   useDuplicateFormsMutation,
-  useMoveFormMutation,
+  useMoveFormsMutation,
   useRestoreFormsMutation,
 } = formApi;
