@@ -57,3 +57,7 @@ export const parseFormToValueState = (form: Form): FormPropInputValueState => {
     [FormPropField.RGPD_LIFE_TIME]: form.rgpd_lifetime,
   };
 };
+
+export const isSelectedForm = (folder: Form, selectedFolders: Form[]): boolean => {
+  return selectedFolders.some((selectedFolder) => selectedFolder.id === folder.id);
+};
