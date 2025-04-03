@@ -166,7 +166,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
             <CloseIcon />
           </IconButton>
         </Box>
-        <Typography variant={TypographyVariant.H4}>{t("formulaire.prop.edit.title")}</Typography>
+        <Typography>{t("formulaire.prop.edit.title")}</Typography>
         <Box sx={mainColumnStyle}>
           <Box sx={fileDropZoneWrapper}>
             <ImagePickerMediaLibrary
@@ -179,7 +179,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
           </Box>
           <Box sx={mainContentWrapper}>
             <Box sx={subContentColumnWrapper}>
-              <Typography variant={TypographyVariant.H4}>{t("formulaire.form.create.title")}</Typography>
+              <Typography>{t("formulaire.form.create.title")}</Typography>
               <TextField
                 variant={ComponentVariant.STANDARD}
                 sx={textFieldStyle}
