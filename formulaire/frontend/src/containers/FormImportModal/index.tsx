@@ -1,9 +1,18 @@
-import { Box, Button, CustomFile, Dropzone, FileList, IconButton, Modal, Typography } from "@cgi-learning-hub/ui";
-import CloseIcon from "@mui/icons-material/Close";
+import {
+  Button,
+  CustomFile,
+  Dropzone,
+  FileList,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Typography,
+} from "@cgi-learning-hub/ui";
+
 import { FC, useEffect, useState } from "react";
-import { modalBoxStyle, spaceBetweenBoxStyle } from "~/core/style/boxStyles";
+
 import { dropZoneSlotProps, formImportModalContentStyle, formImportModalStyle } from "./style";
-import { modalActionButtonStyle } from "~/core/style/modalStyle";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { ModalProps } from "~/types";
@@ -72,37 +81,42 @@ export const FormImportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
   };
 
   return (
-    <Modal open={isOpen} onClose={handleClose}>
-      <Box sx={{ ...modalBoxStyle, ...formImportModalStyle }}>
-        <Box sx={spaceBetweenBoxStyle}>
-          <Typography variant="h2" fontWeight="bold">
-            {t("formulaire.import")}
-          </Typography>
-          <IconButton onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
-        </Box>
-        <Box sx={formImportModalContentStyle}>
-          <Typography>{t("formulaire.import.explanation")}</Typography>
-          <Dropzone
-            information={t("formulaire.import.dropzone.information")}
-            accept={getAcceptedFileType()}
-            maxFiles={1}
-            width={"30rem"}
-            slotProps={dropZoneSlotProps}
-            onDrop={handleDropFile}
-          />
-          <FileList files={customFiles} onDelete={() => setCustomFiles([])}></FileList>
-        </Box>
-        <Box sx={modalActionButtonStyle}>
-          <Button variant="outlined" color="primary" onClick={handleClose}>
-            {t("formulaire.close")}
-          </Button>
-          <Button variant="contained" color="primary" onClick={() => handleImport()}>
-            {t("formulaire.import")}
-          </Button>
-        </Box>
-      </Box>
-    </Modal>
+    <Dialog
+      open={isOpen}
+      onClose={handleClose}
+      slotProps={{
+        paper: {
+          sx: formImportModalStyle,
+        },
+      }}
+    >
+      <DialogTitle>
+        <Typography variant="h2" fontWeight="bold">
+          {t("formulaire.import")}
+        </Typography>
+      </DialogTitle>
+
+      <DialogContent sx={formImportModalContentStyle}>
+        <Typography>{t("formulaire.import.explanation")}</Typography>
+        <Dropzone
+          information={t("formulaire.import.dropzone.information")}
+          accept={getAcceptedFileType()}
+          maxFiles={1}
+          width={"30rem"}
+          slotProps={dropZoneSlotProps}
+          onDrop={handleDropFile}
+        />
+        <FileList files={customFiles} onDelete={() => setCustomFiles([])}></FileList>
+      </DialogContent>
+
+      <DialogActions>
+        <Button variant="outlined" color="primary" onClick={handleClose}>
+          {t("formulaire.close")}
+        </Button>
+        <Button variant="contained" color="primary" onClick={() => handleImport()}>
+          {t("formulaire.import")}
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 };

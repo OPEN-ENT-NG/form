@@ -28,6 +28,7 @@ export const DraggableForm: FC<DraggableFormProps> = ({ form, isSelected, onSele
         onSelect={() => onSelect(form)}
         propertyItems={getPropertyItems(form)}
         infoIcons={getIcons(form)}
+        hasNoButtonOnFocus
       />
     </Box>
   );
