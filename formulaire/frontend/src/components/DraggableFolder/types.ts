@@ -5,7 +5,7 @@ export interface DraggableFolderProps {
   dragActive?: boolean;
   onSelect: (folder: Folder) => void;
   onClick: (folder: Folder) => void;
-  isSelected: (folder: Folder) => boolean;
+  isSelected: boolean;
   getFolderSubtitle: (folder: Folder) => string;
 }
 

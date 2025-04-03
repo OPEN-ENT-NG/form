@@ -32,7 +32,7 @@ export const HomeMainFolders: FC<HomeMainFolderProps> = ({ folders, activeItem }
           folder={folder}
           onSelect={() => handleFolderSelect(folder)}
           onClick={() => setCurrentFolder(folder)}
-          isSelected={() => isSelectedFolder(folder, selectedFolders)}
+          isSelected={isSelectedFolder(folder, selectedFolders)}
           getFolderSubtitle={getFolderSubtitle}
           dragActive={
             (isDraggedItemForm(activeItem) || isDraggedItemFolder(activeItem)) &&
