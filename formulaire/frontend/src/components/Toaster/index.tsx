@@ -3,10 +3,10 @@ import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { toasterButtonStyle, toasterWrapper } from "./style";
-import { ToasterProps } from "./types";
+import { IToasterProps } from "./types";
 import { flexEndBoxStyle, flexStartBoxStyle } from "~/styles/boxStyles";
 
-export const Toaster: FC<ToasterProps> = ({ leftButtons, rightButtons }) => {
+export const Toaster: FC<IToasterProps> = ({ leftButtons, rightButtons }) => {
   const { t } = useTranslation(FORMULAIRE);
   return (
     <Box sx={toasterWrapper}>

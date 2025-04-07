@@ -1,22 +1,22 @@
 import { ReactNode } from "react";
 import { ModalType } from "src/core/enums";
 
-export interface ModalProviderProps {
+export interface IModalProviderProps {
   children: ReactNode;
 }
 
-export interface DisplayModalsState {
-  [ModalType.FOLDER_CREATE]: boolean;
-  [ModalType.FOLDER_RENAME]: boolean;
-  [ModalType.FORM_IMPORT]: boolean;
-  [ModalType.FORM_PROP_CREATE]: boolean;
-  [ModalType.FORM_PROP_UPDATE]: boolean;
-  [ModalType.FORM_FOLDER_DELETE]: boolean;
-  [ModalType.MOVE]: boolean;
-  [ModalType.EXPORT]: boolean;
+export interface IDisplayModalsState {
+  [ModalType.showFolderCreate]: boolean;
+  [ModalType.showFolderRename]: boolean;
+  [ModalType.showFormImport]: boolean;
+  [ModalType.showFormPropCreate]: boolean;
+  [ModalType.showFormPropUpdate]: boolean;
+  [ModalType.showFormFolderDelete]: boolean;
+  [ModalType.showMove]: boolean;
+  [ModalType.showExport]: boolean;
 }
 
 export type ModalProviderContextType = {
-  displayModals: DisplayModalsState;
+  displayModals: IDisplayModalsState;
   toggleModal: (modalType: ModalType) => void;
 };

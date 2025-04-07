@@ -48,14 +48,20 @@ export const useMapToasterButtons = () => {
 
   const unselectAll = useCallback(() => {
     setSelectedFolders([]);
-    return setSelectedForms([]);
+    setSelectedForms([]);
   }, [setSelectedFolders, setSelectedForms]);
 
   const handleSelectAll = useCallback(() => {
-    if (hasOnlyFolders) return setSelectedFolders(filteredFolders);
-    if (hasOnlyForms) return setSelectedForms(filteredForms);
+    if (hasOnlyFolders) {
+      setSelectedFolders(filteredFolders);
+      return;
+    }
+    if (hasOnlyForms) {
+      setSelectedForms(filteredForms);
+      return;
+    }
     setSelectedFolders(filteredFolders);
-    return setSelectedForms(filteredForms);
+    setSelectedForms(filteredForms);
   }, [filteredFolders, filteredForms, hasOnlyFolders, hasOnlyForms, setSelectedFolders, setSelectedForms]);
 
   const handleDuplicate = useCallback(async () => {
@@ -69,9 +75,11 @@ export const useMapToasterButtons = () => {
         formIds,
         folderId,
       }).unwrap();
-      return unselectAll();
+      unselectAll();
+      return;
     } catch (error) {
-      return console.error("Error duplicating forms:", error);
+      console.error("Error duplicating forms:", error);
+      return;
     }
   }, [hasForms, isDuplicating, selectedForms, currentFolder.id, duplicateForms, unselectAll]);
 
@@ -81,9 +89,11 @@ export const useMapToasterButtons = () => {
     try {
       const formIds = selectedForms.map((form) => form.id);
       await restoreForms(formIds).unwrap();
-      return unselectAll();
+      unselectAll();
+      return;
     } catch (error) {
-      return console.error("Error restoring forms:", error);
+      console.error("Error restoring forms:", error);
+      return;
     }
   }, [hasForms, isRestoring, isInTrash, selectedForms, restoreForms, unselectAll]);
 
@@ -92,27 +102,42 @@ export const useMapToasterButtons = () => {
       [ToasterButtonType.OPEN]: {
         titleI18nkey: "formulaire.open",
         type: ToasterButtonType.OPEN,
-        action: () => (hasFolders ? (setCurrentFolder(selectedFolders[0]), unselectAll()) : console.log("open form")),
+        action: () => {
+          if (hasFolders) {
+            setCurrentFolder(selectedFolders[0]);
+            unselectAll();
+            return;
+          }
+          console.log("open form");
+        },
       },
       [ToasterButtonType.RENAME]: {
         titleI18nkey: "formulaire.rename",
         type: ToasterButtonType.RENAME,
-        action: () => toggleModal(ModalType.FOLDER_RENAME),
+        action: () => {
+          toggleModal(ModalType.showFolderRename);
+        },
       },
       [ToasterButtonType.MOVE]: {
         titleI18nkey: "formulaire.move",
         type: ToasterButtonType.MOVE,
-        action: () => toggleModal(ModalType.MOVE),
+        action: () => {
+          toggleModal(ModalType.showMove);
+        },
       },
       [ToasterButtonType.DELETE]: {
         titleI18nkey: "formulaire.delete",
         type: ToasterButtonType.DELETE,
-        action: () => toggleModal(ModalType.FORM_FOLDER_DELETE),
+        action: () => {
+          toggleModal(ModalType.showFormFolderDelete);
+        },
       },
       [ToasterButtonType.PROPS]: {
         titleI18nkey: "formulaire.properties",
         type: ToasterButtonType.PROPS,
-        action: () => toggleModal(ModalType.FORM_PROP_UPDATE),
+        action: () => {
+          toggleModal(ModalType.showFormPropUpdate);
+        },
       },
       [ToasterButtonType.DUPLICATE]: {
         titleI18nkey: "formulaire.duplicate",
@@ -122,17 +147,23 @@ export const useMapToasterButtons = () => {
       [ToasterButtonType.EXPORT]: {
         titleI18nkey: "formulaire.export",
         type: ToasterButtonType.EXPORT,
-        action: () => toggleModal(ModalType.EXPORT),
+        action: () => {
+          toggleModal(ModalType.showExport);
+        },
       },
       [ToasterButtonType.UNSELECT_ALL]: {
         titleI18nkey: "formulaire.deselect",
         type: ToasterButtonType.UNSELECT_ALL,
-        action: () => unselectAll(),
+        action: () => {
+          unselectAll();
+        },
       },
       [ToasterButtonType.SELECT_ALL]: {
         titleI18nkey: "formulaire.selectAll",
         type: ToasterButtonType.SELECT_ALL,
-        action: () => handleSelectAll(),
+        action: () => {
+          handleSelectAll();
+        },
       },
       [ToasterButtonType.RESTORE]: {
         titleI18nkey: "formulaire.restore",

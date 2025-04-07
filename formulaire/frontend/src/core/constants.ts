@@ -30,9 +30,9 @@ export const TRASH_FOLDER_ID = 3;
 export const FORM_CHUNK = 9;
 
 //EXPORT
-export const PDF_EXTENSION = ".pdf";
-export const ZIP_EXTENSION = ".zip";
-export const LINK_HTML_ELEMENT = "a";
+export const PDF_EXTENSION: string = ".pdf";
+export const ZIP_EXTENSION: string = ".zip";
+export const LINK_HTML_ELEMENT: string = "a";
 
 //MISC
 export const ID = "id";

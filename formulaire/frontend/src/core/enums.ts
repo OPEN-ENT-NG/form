@@ -1,12 +1,12 @@
 export enum ModalType {
-  FOLDER_CREATE = "FOLDER_CREATE",
-  FOLDER_RENAME = "FOLDER_RENAME",
-  FORM_IMPORT = "FORM_IMPORT",
-  FORM_PROP_CREATE = "FORM_PROP_CREATE",
-  FORM_PROP_UPDATE = "FORM_PROP_UPDATE",
-  FORM_FOLDER_DELETE = "FORM_FOLDER_DELETE",
-  MOVE = "MOVE",
-  EXPORT = "EXPORT",
+  showFolderCreate = "showFolderCreate",
+  showFolderRename = "showFolderRename",
+  showFormImport = "showFormImport",
+  showFormPropCreate = "showFormPropCreate",
+  showFormPropUpdate = "showFormPropUpdate",
+  showFormFolderDelete = "showFormFolderDelete",
+  showMove = "showMove",
+  showExport = "showExport",
 }
 
 export enum TagName {
