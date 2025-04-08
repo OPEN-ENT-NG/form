@@ -108,6 +108,7 @@ export const useMapToasterButtons = () => {
             unselectAll();
             return;
           }
+          //TODO
           console.log("open form");
         },
       },
@@ -115,28 +116,28 @@ export const useMapToasterButtons = () => {
         titleI18nkey: "formulaire.rename",
         type: ToasterButtonType.RENAME,
         action: () => {
-          toggleModal(ModalType.showFolderRename);
+          toggleModal(ModalType.FOLDER_RENAME);
         },
       },
       [ToasterButtonType.MOVE]: {
         titleI18nkey: "formulaire.move",
         type: ToasterButtonType.MOVE,
         action: () => {
-          toggleModal(ModalType.showMove);
+          toggleModal(ModalType.MOVE);
         },
       },
       [ToasterButtonType.DELETE]: {
         titleI18nkey: "formulaire.delete",
         type: ToasterButtonType.DELETE,
         action: () => {
-          toggleModal(ModalType.showFormFolderDelete);
+          toggleModal(ModalType.FORM_FOLDER_DELETE);
         },
       },
       [ToasterButtonType.PROPS]: {
         titleI18nkey: "formulaire.properties",
         type: ToasterButtonType.PROPS,
         action: () => {
-          toggleModal(ModalType.showFormPropUpdate);
+          toggleModal(ModalType.FORM_PROP_UPDATE);
         },
       },
       [ToasterButtonType.DUPLICATE]: {
@@ -148,7 +149,7 @@ export const useMapToasterButtons = () => {
         titleI18nkey: "formulaire.export",
         type: ToasterButtonType.EXPORT,
         action: () => {
-          toggleModal(ModalType.showExport);
+          toggleModal(ModalType.EXPORT);
         },
       },
       [ToasterButtonType.UNSELECT_ALL]: {

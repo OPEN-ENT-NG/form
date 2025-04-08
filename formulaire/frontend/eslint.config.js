@@ -10,7 +10,7 @@ import prettierConfig from "eslint-config-prettier";
 
 export default tseslint.config(
   {
-    ignores: ["dist", "node_modules", "coverage", "prettier.config.cjs", "eslint.config.js","vite.config.ts"],
+    ignores: ["dist", "node_modules", "coverage", "prettier.config.cjs", "eslint.config.js", "vite.config.ts"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
@@ -77,6 +77,11 @@ export default tseslint.config(
         {
           selector: "enum",
           format: ["PascalCase"],
+        },
+        // Règle pour forcer les clés des enums à être en UPPER_CASE
+        {
+          selector: "enumMember",
+          format: ["UPPER_CASE"],
         },
         // Variables standards
         {

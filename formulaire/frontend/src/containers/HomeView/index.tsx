@@ -49,7 +49,7 @@ export const HomeView: FC = () => {
         <FolderModal
           isOpen={showFolderCreate}
           handleClose={() => {
-            toggleModal(ModalType.showFolderCreate);
+            toggleModal(ModalType.FOLDER_CREATE);
           }}
           mode={FolderModalMode.CREATE}
         />
@@ -58,7 +58,7 @@ export const HomeView: FC = () => {
         <FolderModal
           isOpen={showFolderRename}
           handleClose={() => {
-            toggleModal(ModalType.showFolderRename);
+            toggleModal(ModalType.FOLDER_RENAME);
           }}
           mode={FolderModalMode.RENAME}
         />
@@ -67,7 +67,7 @@ export const HomeView: FC = () => {
         <DeleteModal
           isOpen={showFormFolderDelete}
           handleClose={() => {
-            toggleModal(ModalType.showFormFolderDelete);
+            toggleModal(ModalType.FORM_FOLDER_DELETE);
           }}
         />
       )}
@@ -75,7 +75,7 @@ export const HomeView: FC = () => {
         <FormPropModal
           isOpen={showFormPropCreate}
           handleClose={() => {
-            toggleModal(ModalType.showFormPropCreate);
+            toggleModal(ModalType.FORM_PROP_CREATE);
           }}
           mode={FormPropModalMode.CREATE}
           isRgpdPossible
@@ -85,7 +85,7 @@ export const HomeView: FC = () => {
         <FormPropModal
           isOpen={showFormPropUpdate}
           handleClose={() => {
-            toggleModal(ModalType.showFormPropUpdate);
+            toggleModal(ModalType.FORM_PROP_UPDATE);
           }}
           mode={FormPropModalMode.UPDATE}
           isRgpdPossible
@@ -95,7 +95,7 @@ export const HomeView: FC = () => {
         <MoveFolderModal
           isOpen={showMove}
           handleClose={() => {
-            toggleModal(ModalType.showMove);
+            toggleModal(ModalType.MOVE);
           }}
         />
       )}
@@ -103,7 +103,7 @@ export const HomeView: FC = () => {
         <FormImportModal
           isOpen={showFormImport}
           handleClose={() => {
-            toggleModal(ModalType.showFormImport);
+            toggleModal(ModalType.FORM_IMPORT);
           }}
         />
       )}
@@ -111,7 +111,7 @@ export const HomeView: FC = () => {
         <ExportModal
           isOpen={showExport}
           handleClose={() => {
-            toggleModal(ModalType.showExport);
+            toggleModal(ModalType.EXPORT);
           }}
         />
       )}

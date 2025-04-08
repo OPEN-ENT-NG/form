@@ -11,14 +11,14 @@ export const useGetHomeHeaderButtons = (): IHeaderButton[] => {
       titleI18nkey: "formulaire.form.import.button",
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        toggleModal(ModalType.showFormImport);
+        toggleModal(ModalType.FORM_IMPORT);
       },
     },
     {
       titleI18nkey: "formulaire.form.create.button",
       variant: ComponentVariant.CONTAINED,
       action: () => {
-        toggleModal(ModalType.showFormPropCreate);
+        toggleModal(ModalType.FORM_PROP_CREATE);
       },
     },
   ];

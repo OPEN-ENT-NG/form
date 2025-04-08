@@ -50,7 +50,7 @@ export const HomeSidebar: FC = () => {
           variant="outlined"
           color="primary"
           onClick={() => {
-            toggleModal(ModalType.showFolderCreate);
+            toggleModal(ModalType.FOLDER_CREATE);
           }}
         >
           {t("formulaire.folder.create")}

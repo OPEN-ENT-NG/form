@@ -62,7 +62,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     deleteForm: builder.mutation<void, number>({
       query: (formId) => ({
         url: `forms/${formId.toString()}`,
-        method: "DELETE",
+        method: QueryMethod.DELETE,
       }),
       invalidatesTags: [TagName.FORMS],
       async onQueryStarted(_, { queryFulfilled }) {
@@ -79,7 +79,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     duplicateForms: builder.mutation<IForm[], IDuplicateFormPayload>({
       query: ({ formIds, folderId }) => ({
         url: `forms/duplicate/${folderId.toString()}`,
-        method: "POST",
+        method: QueryMethod.POST,
         body: formIds,
       }),
       invalidatesTags: [TagName.FORMS],
@@ -97,7 +97,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     moveForms: builder.mutation<IForm[], { formIds: number[]; destinationFolderId: number }>({
       query: ({ formIds, destinationFolderId }) => ({
         url: `forms/move/${destinationFolderId.toString()}`,
-        method: "PUT",
+        method: QueryMethod.PUT,
         body: formIds,
       }),
       invalidatesTags: [TagName.FORMS, TagName.FOLDERS],
@@ -137,7 +137,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           params.append(ID, form.id.toString());
         });
         return {
-          url: `forms/export/pdf?${params.toString()}`,
+          url: `forms/export/pdf?${params}`,
           method: QueryMethod.GET,
           responseHandler: (response) => response.blob(),
         };
