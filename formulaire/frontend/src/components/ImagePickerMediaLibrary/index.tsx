@@ -3,7 +3,7 @@ import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Typography } from "@mui/material";
 import { FC, useEffect, useRef, useState } from "react";
-import { MediaLibrary, MediaLibraryRef, MediaLibraryResult } from "@edifice.io/react/multimedia";
+import { MediaLibrary, MediaLibraryRef } from "@edifice.io/react/multimedia";
 import { useEdificeClient } from "@edifice.io/react";
 import { createPortal } from "react-dom";
 import {
@@ -18,9 +18,9 @@ import {
   imageStyle,
   mediaLibraryStyle,
 } from "./style";
-import { ImagePickerMediaLibraryProps } from "./types";
+import { IImagePickerMediaLibraryProps, MediaLibraryResult } from "./types";
 
-export const ImagePickerMediaLibrary: FC<ImagePickerMediaLibraryProps> = ({
+export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   information,
   onImageChange = () => {},
   width = "160px",
@@ -35,24 +35,27 @@ export const ImagePickerMediaLibrary: FC<ImagePickerMediaLibraryProps> = ({
 
   useEffect(() => {
     const element = document.getElementById("portal");
-    if (element) return setPortalElement(element);
+    if (element) {
+      setPortalElement(element);
+      return;
+    }
     const newPortalElement = document.createElement("div");
     newPortalElement.id = "portal";
     document.body.appendChild(newPortalElement);
-    return setPortalElement(newPortalElement);
+    setPortalElement(newPortalElement);
   }, []);
 
   useEffect(() => {
     setCurrentSrc(initialSrc);
   }, [initialSrc]);
 
-  const handleDelete = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleDelete = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     setCurrentSrc(null);
     onImageChange(null);
   };
 
-  const handleEdit = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
+  const handleEdit = (e: React.MouseEvent<HTMLDivElement>) => {
     e.stopPropagation();
     openMediaLibrary();
   };
@@ -72,8 +75,8 @@ export const ImagePickerMediaLibrary: FC<ImagePickerMediaLibraryProps> = ({
   const handleMediaLibrarySuccess = (result: MediaLibraryResult) => {
     console.log(result);
 
-    const mediaItem = Array.isArray(result) ? result[0] : result;
-    const fileId = mediaItem?._id;
+    const mediaItem: MediaLibraryResult = Array.isArray(result) ? result[0] : result;
+    const fileId: string = mediaItem._id ?? "";
 
     if (fileId) {
       const src = `/workspace/document/${fileId}`;

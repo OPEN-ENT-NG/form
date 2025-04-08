@@ -1,11 +1,11 @@
-import { Delegate } from "~/core/models/delegate/types.ts";
+import { IDelegate } from "~/core/models/delegate/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
 export const delegateApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
-    getDelegates: builder.query<Delegate, void>({
+    getDelegates: builder.query<IDelegate, void>({
       query: () => "delegates",
-      transformResponse: (response: Delegate[]) => response[0],
+      transformResponse: (response: IDelegate[]) => response[0],
     }),
   }),
   overrideExisting: false,
