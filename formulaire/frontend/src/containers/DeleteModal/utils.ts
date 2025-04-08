@@ -1,9 +1,8 @@
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 import { DeleteModalVariant } from "./enum";
+import { IFolder } from "~/core/models/folder/types";
 
-import { Folder } from "~/core/models/folder/types";
-
-export const getCorrectValue = (forms: Form[], folders: Folder[]): DeleteModalVariant => {
+export const getCorrectValue = (forms: IForm[], folders: IFolder[]): DeleteModalVariant => {
   if (forms.length === 1 && !folders.length) {
     return DeleteModalVariant.FORM_UNIQUE;
   }
@@ -42,12 +41,12 @@ const deleteModalContent = {
   },
 };
 
-export const getTitle = (forms: Form[], folders: Folder[]) => {
+export const getTitle = (forms: IForm[], folders: IFolder[]) => {
   const enumValue = getCorrectValue(forms, folders);
   return deleteModalContent[enumValue].i18nTitleKey;
 };
 
-export const getText = (forms: Form[], folders: Folder[]) => {
+export const getText = (forms: IForm[], folders: IFolder[]) => {
   const enumValue = getCorrectValue(forms, folders);
   return deleteModalContent[enumValue].i18nTextKey;
 };

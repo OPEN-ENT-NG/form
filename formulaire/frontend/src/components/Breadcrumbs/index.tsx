@@ -1,6 +1,6 @@
 import { FC } from "react";
 
-import { FormBreadcrumbsProps } from "./types";
+import { IFormBreadcrumbsProps } from "./types";
 import { Breadcrumbs } from "@mui/material";
 import { Box, Link } from "@cgi-learning-hub/ui";
 import { FormsIcon } from "../SVG/FormsIcon";
@@ -9,7 +9,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { BreadCrumbItemWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
 
-export const FormBreadcrumbs: FC<FormBreadcrumbsProps> = ({ stringItems, separator = null, isHeader = false }) => {
+export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({ stringItems, separator = null, isHeader = false }) => {
   const textColor = isHeader ? FORM_COLOR : TEXT_PRIMARY_COLOR;
   const navigate = useNavigate();
 

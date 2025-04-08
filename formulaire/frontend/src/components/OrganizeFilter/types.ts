@@ -1,28 +1,28 @@
 import { PopoverOrigin } from "@mui/material";
 import { MenuItemState } from "./enum";
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 
-export interface OrganizeFilterProps {
-  chipData?: ChipProps[];
-  setSelectedChips?: (selectedChips: ChipProps[]) => void;
-  selectedChips?: ChipProps[];
+export interface IOrganizeFilterProps {
+  chipDatas?: IChipProps[];
+  setSelectedChips?: (selectedChips: IChipProps[]) => void;
+  selectedChips?: IChipProps[];
 
-  menuItemData?: MenuItemProps[];
-  setSelectedMenuItem?: (menuItem: MenuItemProps) => void;
-  selectedMenuItem?: MenuItemProps;
+  menuItemDatas?: IMenuItemProps[];
+  setSelectedMenuItem?: (menuItem: IMenuItemProps) => void;
+  selectedMenuItem?: IMenuItemProps;
 }
 
-export interface ChipProps {
+export interface IChipProps {
   id: number | string;
   i18nKey: string;
-  filterFn: (form: Form) => boolean;
+  filterFn: (form: IForm) => boolean;
 }
 
-export interface MenuItemProps {
+export interface IMenuItemProps {
   id: string;
   i18nKey: string;
   state: MenuItemState;
-  sortFn: (a: Form, b: Form, isAscending: boolean) => number;
+  sortFn: (a: IForm, b: IForm, isAscending: boolean) => number;
 }
 
 export const menuAnchorOrigin: PopoverOrigin = {

@@ -1,14 +1,14 @@
 import { DraggableType } from "~/core/enums";
-import { ItemData, ActiveDragItemProps } from "./types";
+import { ItemData, IActiveDragItemProps } from "./types";
 
-export const createItemState = (type: DraggableType, data: ItemData): ActiveDragItemProps => {
+export const createItemState = (type: DraggableType, data: ItemData): IActiveDragItemProps => {
   return { type, data };
 };
 
-export const isDraggedItemFolder = (activeDragItem: ActiveDragItemProps): boolean => {
-  return activeDragItem && activeDragItem.type === DraggableType.FOLDER;
+export const isDraggedItemFolder = (activeDragItem: IActiveDragItemProps): boolean => {
+  return activeDragItem.type === DraggableType.FOLDER;
 };
 
-export const isDraggedItemForm = (activeDragItem: ActiveDragItemProps): boolean => {
-  return activeDragItem && activeDragItem.type === DraggableType.FORM;
+export const isDraggedItemForm = (activeDragItem: IActiveDragItemProps): boolean => {
+  return activeDragItem.type === DraggableType.FORM;
 };

@@ -3,11 +3,11 @@ import { Box, ResourceCard } from "@cgi-learning-hub/ui";
 import { LOGO_PATH } from "~/core/constants";
 import { isSelectedForm } from "~/core/models/form/utils";
 import { useHome } from "~/providers/HomeProvider";
-import { FormPreviewProps } from "./types";
+import { IFormPreviewProps } from "./types";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
 import { cardPreviewStyle } from "~/core/style/dndStyle";
 
-export const FormPreview: FC<FormPreviewProps> = ({ form }) => {
+export const FormPreview: FC<IFormPreviewProps> = ({ form }) => {
   const { selectedForms } = useHome();
   const { getIcons, getPropertyItems } = useFormItemsIcons();
 

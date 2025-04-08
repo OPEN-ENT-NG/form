@@ -1,8 +1,8 @@
-export interface DroppableTreeItemProps {
+export interface IDroppableTreeItemProps {
   treeItemId: string;
 }
 
-export interface StyledDroppableTreeItemProps {
+export interface IStyledDroppableTreeItemProps {
   rect: DOMRect;
   isOverDroppable: boolean;
 }

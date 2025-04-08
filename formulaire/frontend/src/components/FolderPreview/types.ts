@@ -1,5 +1,5 @@
-import { Folder } from "~/core/models/folder/types";
+import { IFolder } from "~/core/models/folder/types";
 
-export interface FolderPreviewProps {
-  folder: Folder;
+export interface IFolderPreviewProps {
+  folder: IFolder;
 }

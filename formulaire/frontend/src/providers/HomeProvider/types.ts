@@ -1,33 +1,33 @@
 import { ReactNode } from "react";
-import { Folder } from "~/core/models/folder/types";
+import { IFolder } from "~/core/models/folder/types";
 import { HomeTabState } from "./enums";
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 import { ViewMode } from "~/components/SwitchView/enums";
 
-export interface HomeProviderProps {
+export interface IHomeProviderProps {
   children: ReactNode;
 }
 
 export type HomeProviderContextType = {
-  currentFolder: Folder;
-  setCurrentFolder: (value: Folder) => void;
+  currentFolder: IFolder;
+  setCurrentFolder: (value: IFolder) => void;
   tab: HomeTabState;
   toggleTab: (tab: HomeTabState) => void;
-  tabViewPref: HomeTabViewPref;
+  tabViewPref: IHomeTabViewPref;
   toggleTagViewPref: (viewMode: ViewMode) => void;
-  folders: Folder[];
-  setFolders: (value: Folder[]) => void;
-  forms: Form[];
-  setForms: (value: Form[]) => void;
-  selectedFolders: Folder[];
-  setSelectedFolders: (value: Folder[]) => void;
-  selectedForms: Form[];
-  setSelectedForms: (value: Form[]) => void;
+  folders: IFolder[];
+  setFolders: (value: IFolder[]) => void;
+  forms: IForm[];
+  setForms: (value: IForm[]) => void;
+  selectedFolders: IFolder[];
+  setSelectedFolders: (value: IFolder[]) => void;
+  selectedForms: IForm[];
+  setSelectedForms: (value: IForm[]) => void;
   isToasterOpen: boolean;
   resetSelected: () => void;
 };
 
-export interface HomeTabViewPref {
+export interface IHomeTabViewPref {
   [HomeTabState.FORMS]: ViewMode;
   [HomeTabState.RESPONSES]: ViewMode;
 }

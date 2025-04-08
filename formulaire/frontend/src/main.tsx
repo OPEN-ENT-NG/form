@@ -21,15 +21,18 @@ import { globalOverrideStyles } from "./styles/global";
 import { ModalProvider } from "./providers/ModalProvider";
 
 const rootElement = document.getElementById("root");
-const root = createRoot(rootElement!);
+if (!rootElement) {
+  throw new Error("Root element not found");
+}
+const root = createRoot(rootElement);
 
 // Config
 
-const themePlatform = (rootElement?.getAttribute("data-theme") ?? DEFAULT_THEME) as ThemeProviderProps["themeId"];
+const themePlatform = (rootElement.getAttribute("data-theme") ?? DEFAULT_THEME) as ThemeProviderProps["themeId"];
 
 if (process.env.NODE_ENV !== "production") {
-  import("@axe-core/react").then((axe) => {
-    axe.default(React, root, 1000);
+  void import("@axe-core/react").then((axe) => {
+    void axe.default(React, root, 1000);
   });
 }
 

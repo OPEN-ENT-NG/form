@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { FormPropInputValueState } from "./types";
+import { IFormPropInputValueState } from "./types";
 import { initialFormPropInputValueState } from "./utils";
 import { FormPropField, FormPropModalMode } from "./enums";
 import dayjs from "dayjs";
@@ -7,12 +7,13 @@ import { useHome } from "~/providers/HomeProvider";
 import { parseFormToValueState } from "~/core/models/form/utils";
 
 export const useFormPropInputValueState = (mode: FormPropModalMode) => {
-  const [formPropInputValue, setFormPropInputValue] = useState<FormPropInputValueState>(initialFormPropInputValueState);
+  const [formPropInputValue, setFormPropInputValue] =
+    useState<IFormPropInputValueState>(initialFormPropInputValueState);
   const [formId, setFormId] = useState<string>("");
   const { selectedForms } = useHome();
 
   const handleFormPropInputValueChange = useCallback(
-    (key: FormPropField, value: FormPropInputValueState[FormPropField]) => {
+    (key: FormPropField, value: IFormPropInputValueState[FormPropField]) => {
       setFormPropInputValue((prev) => ({
         ...prev,
         [key]: value,
@@ -43,8 +44,9 @@ export const useFormPropInputValueState = (mode: FormPropModalMode) => {
   useEffect(() => {
     if (mode === FormPropModalMode.UPDATE) {
       const parsedState = parseFormToValueState(selectedForms[0]);
-      setFormId(selectedForms[0].id.toString() ?? "");
-      return setFormPropInputValue(parsedState);
+      setFormId(selectedForms[0].id.toString());
+      setFormPropInputValue(parsedState);
+      return;
     }
     return;
   }, [mode, selectedForms]);

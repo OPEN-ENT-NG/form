@@ -2,14 +2,14 @@ import { FC, useCallback, useEffect, useRef, useState } from "react";
 
 import { Box, Loader } from "@cgi-learning-hub/ui";
 
-import { HomeMainFormsProps } from "./types";
+import { IHomeMainFormsProps } from "./types";
 import { FORM_CHUNK } from "~/core/constants";
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 import { useHome } from "~/providers/HomeProvider";
 import { DraggableType } from "~/core/enums";
 import { DraggableForm } from "~/components/DraggableForm";
 
-export const HomeMainForms: FC<HomeMainFormsProps> = ({ forms, activeItem }) => {
+export const HomeMainForms: FC<IHomeMainFormsProps> = ({ forms, activeItem }) => {
   const { selectedForms, setSelectedForms } = useHome();
   const [visibleCount, setVisibleCount] = useState(FORM_CHUNK);
 
@@ -17,16 +17,17 @@ export const HomeMainForms: FC<HomeMainFormsProps> = ({ forms, activeItem }) => 
   const targetRef = useRef<HTMLDivElement | null>(null);
 
   const handleFormsSelect = useCallback(
-    (form: Form) => {
+    (form: IForm) => {
       if (selectedForms.some((f) => f.id === form.id)) {
-        return setSelectedForms(selectedForms.filter((f) => f.id !== form.id));
+        setSelectedForms(selectedForms.filter((f) => f.id !== form.id));
+        return;
       }
-      return setSelectedForms([...selectedForms, form]);
+      setSelectedForms([...selectedForms, form]);
     },
     [selectedForms, setSelectedForms],
   );
 
-  const isSelectedForm = (form: Form) => selectedForms.some((f) => f.id === form.id);
+  const isSelectedForm = (form: IForm) => selectedForms.some((f) => f.id === form.id);
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
