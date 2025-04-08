@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useState } from "react";
 
-import { HomeMainTableProps } from "./types";
+import { IHomeMainTableProps } from "./types";
 import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
 import { useHome } from "~/providers/HomeProvider";
@@ -16,7 +16,7 @@ import {
 import { getPageForms, initialTableProps, useColumns } from "./utils";
 import { Typography } from "@cgi-learning-hub/ui";
 import { TypographyVariant } from "~/core/style/themeProps";
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 import ShareIcon from "@mui/icons-material/Share";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import PublicIcon from "@mui/icons-material/Public";
@@ -25,7 +25,7 @@ import dayjs from "dayjs";
 import { DateFormat } from "~/core/enums";
 import { tablePaginationStyle } from "./style";
 
-export const HomeMainTable: FC<HomeMainTableProps> = ({ forms }) => {
+export const HomeMainTable: FC<IHomeMainTableProps> = ({ forms }) => {
   const { selectedForms, setSelectedForms } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const columns = useColumns();
@@ -35,10 +35,10 @@ export const HomeMainTable: FC<HomeMainTableProps> = ({ forms }) => {
 
   const isSelected = (formId: number) => selectedForms.some((form) => form.id === formId);
 
-  const handleClick = (event: ChangeEvent<HTMLInputElement>, form: Form) => {
+  const handleClick = (event: ChangeEvent<HTMLInputElement>, form: IForm) => {
     const currentSelectedForms = event.target.checked
       ? [...selectedForms, form]
-      : selectedForms.filter((item: Form) => item.id !== form.id);
+      : selectedForms.filter((item: IForm) => item.id !== form.id);
     setSelectedForms(currentSelectedForms);
   };
 
@@ -76,7 +76,12 @@ export const HomeMainTable: FC<HomeMainTableProps> = ({ forms }) => {
                 hover
               >
                 <TableCell sx={{ padding: 0 }} padding="checkbox">
-                  <Checkbox checked={isItemSelected} onChange={(event) => handleClick(event, form)} />
+                  <Checkbox
+                    checked={isItemSelected}
+                    onChange={(event) => {
+                      handleClick(event, form);
+                    }}
+                  />
                 </TableCell>
                 <TableCell align="center">
                   <Typography variant={TypographyVariant.BODY2}>{form.title}</Typography>

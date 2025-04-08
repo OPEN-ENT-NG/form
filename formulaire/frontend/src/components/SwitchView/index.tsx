@@ -1,16 +1,18 @@
 import { FC } from "react";
 
 import { ToggleButton, ToggleButtonGroup } from "@cgi-learning-hub/ui";
-import { SwitchViewProps } from "./types";
+import { ISwitchViewProps } from "./types";
 import { switchViewStyle, switchViewItemStyle } from "./style";
 import { ViewMode } from "./enums";
 
-export const SwitchView: FC<SwitchViewProps> = ({ viewMode = ViewMode.CARDS, toggleButtonList, onChange }) => {
+export const SwitchView: FC<ISwitchViewProps> = ({ viewMode = ViewMode.CARDS, toggleButtonList, onChange }) => {
   return (
     <ToggleButtonGroup
       value={viewMode}
       exclusive
-      onChange={(event, value) => onChange(value)}
+      onChange={(event, value: ViewMode) => {
+        onChange(value);
+      }}
       size="small"
       sx={switchViewStyle}
     >
