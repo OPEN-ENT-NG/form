@@ -1,6 +1,6 @@
 import { Form } from "~/core/models/form/types";
 import { DeleteModalVariant } from "./enum";
-import { deleteModalContent } from "./types";
+
 import { Folder } from "~/core/models/folder/types";
 
 export const getCorrectValue = (forms: Form[], folders: Folder[]): DeleteModalVariant => {
@@ -19,12 +19,35 @@ export const getCorrectValue = (forms: Form[], folders: Folder[]): DeleteModalVa
   return DeleteModalVariant.FORM_FOLDER;
 };
 
+const deleteModalContent = {
+  [DeleteModalVariant.FORM_UNIQUE]: {
+    i18nTitleKey: "formulaire.delete.formulaire.unique",
+    i18nTextKey: "formulaire.delete.confirmation.formulaire.unique",
+  },
+  [DeleteModalVariant.FORM_MULTIPLE]: {
+    i18nTitleKey: "formulaire.delete.formulaire.multiple",
+    i18nTextKey: "formulaire.delete.confirmation.formulaire.multiple",
+  },
+  [DeleteModalVariant.FOLDER_UNIQUE]: {
+    i18nTitleKey: "formulaire.delete.folder.unique",
+    i18nTextKey: "formulaire.delete.confirmation.folder.unique",
+  },
+  [DeleteModalVariant.FOLDER_MULTIPLE]: {
+    i18nTitleKey: "formulaire.delete.folder.multiple",
+    i18nTextKey: "formulaire.delete.confirmation.folder.multiple",
+  },
+  [DeleteModalVariant.FORM_FOLDER]: {
+    i18nTitleKey: "formulaire.delete.formulaire.folder",
+    i18nTextKey: "formulaire.delete.confirmation.formulaire.folder",
+  },
+};
+
 export const getTitle = (forms: Form[], folders: Folder[]) => {
   const enumValue = getCorrectValue(forms, folders);
-  return deleteModalContent[enumValue].titleKey;
+  return deleteModalContent[enumValue].i18nTitleKey;
 };
 
 export const getText = (forms: Form[], folders: Folder[]) => {
   const enumValue = getCorrectValue(forms, folders);
-  return deleteModalContent[enumValue].textKey;
+  return deleteModalContent[enumValue].i18nTextKey;
 };

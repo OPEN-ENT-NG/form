@@ -6,12 +6,13 @@ import {
   folderModalTextFieldLabelStyle,
   folderModalTextFieldStyle,
 } from "./style";
-import { FOLDER_MODAL_MODE, FolderModalProps } from "./types";
+import { FolderModalProps } from "./types";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, MYFORMS_FOLDER_ID } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
 import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/formulaireApi/folderApi";
 import { CreateFolderPayload, UpdateFolderPayload } from "~/core/models/folder/types";
+import { FOLDER_MODAL_MODE } from "./enum";
 
 export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode }) => {
   const { currentFolder, selectedFolders } = useHome();
@@ -46,13 +47,13 @@ export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode })
 
     return {
       [FOLDER_MODAL_MODE.CREATE]: {
-        title: "formulaire.folder.create",
-        buttonText: "formulaire.create",
+        i18nTitle: "formulaire.folder.create",
+        i18nButtonText: "formulaire.create",
         handleAction: handleCreate,
       },
       [FOLDER_MODAL_MODE.RENAME]: {
-        title: "formulaire.folder.rename",
-        buttonText: "formulaire.rename",
+        i18nTitle: "formulaire.folder.rename",
+        i18nButtonText: "formulaire.rename",
         handleAction: handleRename,
       },
     };
@@ -72,7 +73,7 @@ export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode })
     >
       <DialogTitle>
         <Typography variant="h2" fontWeight="bold">
-          {t(currentConfig.title)}
+          {t(currentConfig.i18nTitle)}
         </Typography>
       </DialogTitle>
 
@@ -91,7 +92,7 @@ export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode })
           {t("formulaire.cancel")}
         </Button>
         <Button variant="contained" color="primary" onClick={currentConfig.handleAction}>
-          {t(currentConfig.buttonText)}
+          {t(currentConfig.i18nButtonText)}
         </Button>
       </DialogActions>
     </Dialog>
