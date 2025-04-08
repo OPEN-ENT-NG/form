@@ -16,6 +16,7 @@ import { Toaster } from "~/components/Toaster";
 import { useMapToasterButtons } from "./useMapToasterButtons";
 import { DeleteModal } from "../DeleteModal";
 import { FormImportModal } from "../FormImportModal";
+import { MoveFolderModal } from "../MoveFolderModal";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -28,6 +29,7 @@ export const HomeView: FC = () => {
       FORM_PROP_UPDATE,
       FORM_FOLDER_DELETE,
       FORM_IMPORT,
+      MOVE,
     },
     toggleModal,
   } = useModal();
@@ -74,6 +76,7 @@ export const HomeView: FC = () => {
           isRgpdPossible
         />
       )}
+      {MOVE && <MoveFolderModal isOpen={MOVE} handleClose={() => toggleModal(ModalType.MOVE)} />}
       {FORM_IMPORT && <FormImportModal isOpen={FORM_IMPORT} handleClose={() => toggleModal(ModalType.FORM_IMPORT)} />}
       {isToasterOpen && <Toaster leftButtons={leftButtons} rightButtons={rightButtons} />}
     </Box>
