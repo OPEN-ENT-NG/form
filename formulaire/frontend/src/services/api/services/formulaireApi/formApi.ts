@@ -1,9 +1,9 @@
 import { DuplicateFormPayload, Form, FormPayload } from "~/core/models/form/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
-import { TagName } from "~/core/enums.ts";
+import { QueryMethod, TagName } from "~/core/enums.ts";
 import { toast } from "react-toastify";
 import i18n from "~/i18n";
-import { FORMULAIRE, TRASH_FOLDER_ID } from "~/core/constants";
+import { FORMULAIRE, ID, LINK_HTML_ELEMENT, PDF_EXTENSION, TRASH_FOLDER_ID, ZIP_EXTENSION } from "~/core/constants";
 
 export const formApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -148,6 +148,59 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         return response?.data || response;
       },
     }),
+    exportPdfForm: builder.query<Blob, Form[]>({
+      query: (forms) => {
+        const params = new URLSearchParams();
+        forms.forEach((form) => params.append(ID, form.id.toString()));
+        return {
+          url: `forms/export/pdf?${params.toString()}`,
+          method: QueryMethod.GET,
+          responseHandler: (response) => response.blob(),
+        };
+      },
+      async onQueryStarted(forms, { queryFulfilled }) {
+        try {
+          if (!forms || !forms.length) return;
+          const { data: blob } = await queryFulfilled;
+
+          const fileName =
+            forms.length > 1
+              ? i18n.t("formulaire.export.pdf.questions.title") + ZIP_EXTENSION
+              : forms[0].title.replace(/\s+/g, "_") + PDF_EXTENSION;
+
+          // Create a download link and trigger the download
+          const downloadUrl = URL.createObjectURL(blob);
+          const link = document.createElement(LINK_HTML_ELEMENT);
+          link.href = downloadUrl;
+          link.download = fileName;
+          document.body.appendChild(link);
+          link.click();
+          link.remove();
+          URL.revokeObjectURL(downloadUrl);
+        } catch (err) {
+          console.error("formulaire.error.formService.export", err);
+          toast.error(i18n.t("formulaire.error.formService.export", { ns: FORMULAIRE }));
+        }
+      },
+    }),
+    exportZip: builder.mutation<string, number[]>({
+      query: (formIds) => ({
+        url: "forms/export/zip",
+        method: QueryMethod.POST,
+        body: formIds,
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.formService.export", err);
+          toast.error(i18n.t("formulaire.error.formService.export", { ns: FORMULAIRE }));
+        }
+      },
+      transformResponse: (response: { status: string; exportId: string; exportPath: string }) => {
+        return response.exportId;
+      },
+    }),
   }),
   overrideExisting: false,
 });
@@ -160,4 +213,7 @@ export const {
   useDuplicateFormsMutation,
   useMoveFormsMutation,
   useRestoreFormsMutation,
+  useExportPdfFormQuery,
+  useLazyExportPdfFormQuery,
+  useExportZipMutation,
 } = formApi;

@@ -1,0 +1,4 @@
+export enum FOLDER_MODAL_MODE {
+  CREATE = "CREATE",
+  RENAME = "RENAME",
+}

@@ -5,7 +5,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { Box } from "@cgi-learning-hub/ui";
 import { useGetHomeHeaderButtons, useElementHeight } from "./utils";
 import { FolderModal } from "../FolderModal";
-import { FOLDER_MODAL_MODE } from "../FolderModal/types";
+import { FOLDER_MODAL_MODE } from "../FolderModal/enum";
 import { HomeLayout } from "../HomeLayout";
 import { ModalType } from "~/core/enums";
 import { useModal } from "~/providers/ModalProvider";
@@ -17,6 +17,7 @@ import { useMapToasterButtons } from "./useMapToasterButtons";
 import { DeleteModal } from "../DeleteModal";
 import { FormImportModal } from "../FormImportModal";
 import { MoveFolderModal } from "../MoveFolderModal";
+import { ExportModal } from "../ExportModal";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -30,6 +31,7 @@ export const HomeView: FC = () => {
       FORM_FOLDER_DELETE,
       FORM_IMPORT,
       MOVE,
+      EXPORT,
     },
     toggleModal,
   } = useModal();
@@ -78,6 +80,7 @@ export const HomeView: FC = () => {
       )}
       {MOVE && <MoveFolderModal isOpen={MOVE} handleClose={() => toggleModal(ModalType.MOVE)} />}
       {FORM_IMPORT && <FormImportModal isOpen={FORM_IMPORT} handleClose={() => toggleModal(ModalType.FORM_IMPORT)} />}
+      {EXPORT && <ExportModal isOpen={EXPORT} handleClose={() => toggleModal(ModalType.EXPORT)} />}
       {isToasterOpen && <Toaster leftButtons={leftButtons} rightButtons={rightButtons} />}
     </Box>
   );
