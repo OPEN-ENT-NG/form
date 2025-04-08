@@ -1,11 +1,11 @@
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 import { ColumnId } from "./enums";
 
-export interface HomeMainTableProps {
-  forms: Form[];
+export interface IHomeMainTableProps {
+  forms: IForm[];
 }
 
-export interface Column {
+export interface IColumn {
   id: ColumnId;
   label: string;
   width?: string;

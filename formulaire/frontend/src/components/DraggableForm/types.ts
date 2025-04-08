@@ -1,8 +1,8 @@
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 
-export interface DraggableFormProps {
-  form: Form;
-  isSelected: (form: Form) => boolean;
-  onSelect: (form: Form) => void;
+export interface IDraggableFormProps {
+  form: IForm;
+  isSelected: (form: IForm) => boolean;
+  onSelect: (form: IForm) => void;
   dragActive?: boolean;
 }

@@ -1,12 +1,12 @@
 import { FormPropField } from "~/containers/FormPropModal/enums";
-import { FormPropInputValueState } from "~/containers/FormPropModal/types";
-import { FormPayload, Form } from "./types";
+import { IFormPropInputValueState } from "~/containers/FormPropModal/types";
+import { IFormPayload, IForm } from "./types";
 
 export const buildFormPayload = (
-  formPropValue: FormPropInputValueState,
+  formPropValue: IFormPropInputValueState,
   folderId: number,
-  form: Form | null,
-): FormPayload => {
+  form: IForm | null,
+): IFormPayload => {
   return {
     anonymous: formPropValue[FormPropField.IS_ANONYMOUS],
     archived: form?.archived ?? false,
@@ -15,7 +15,7 @@ export const buildFormPayload = (
     date_ending: formPropValue[FormPropField.DATE_ENDING]?.toISOString() ?? null,
     date_modification: form?.date_modification ?? null,
     date_opening: formPropValue[FormPropField.DATE_OPENING].toISOString(),
-    description: formPropValue[FormPropField.DESCRIPTION] ?? null,
+    description: formPropValue[FormPropField.DESCRIPTION],
     displayed: formPropValue[FormPropField.IS_PROGRESS_BAR_DISPLAYED],
     editable: formPropValue[FormPropField.IS_EDITABLE],
     folder_id: folderId,
@@ -25,12 +25,12 @@ export const buildFormPayload = (
     nb_responses: form?.nb_responses ?? 0,
     owner_id: form?.owner_id ?? null,
     owner_name: form?.owner_name ?? null,
-    picture: formPropValue[FormPropField.PICTURE] ?? null,
+    picture: formPropValue[FormPropField.PICTURE],
     public_key: form?.public_key ?? null,
     reminded: form?.reminded ?? false,
     response_notified: formPropValue[FormPropField.IS_RESPONSE_NOTIFIED],
     rgpd: formPropValue[FormPropField.HAS_RGPD],
-    rgpd_goal: formPropValue[FormPropField.RGPD_GOAL] ?? null,
+    rgpd_goal: formPropValue[FormPropField.RGPD_GOAL],
     rgpd_lifetime: formPropValue[FormPropField.RGPD_LIFE_TIME],
     selected: null,
     sent: form?.sent ?? false,
@@ -39,7 +39,7 @@ export const buildFormPayload = (
   };
 };
 
-export const parseFormToValueState = (form: Form): FormPropInputValueState => {
+export const parseFormToValueState = (form: IForm): IFormPropInputValueState => {
   return {
     [FormPropField.TITLE]: form.title,
     [FormPropField.DESCRIPTION]: form.description ?? "",
@@ -58,6 +58,6 @@ export const parseFormToValueState = (form: Form): FormPropInputValueState => {
   };
 };
 
-export const isSelectedForm = (folder: Form, selectedFolders: Form[]): boolean => {
+export const isSelectedForm = (folder: IForm, selectedFolders: IForm[]): boolean => {
   return selectedFolders.some((selectedFolder) => selectedFolder.id === folder.id);
 };
