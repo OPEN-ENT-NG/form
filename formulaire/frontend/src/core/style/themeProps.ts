@@ -17,3 +17,11 @@ export enum TypographyVariant {
 export enum TypographyFont {
   BOLD = "bold",
 }
+
+export enum BreakpointVariant {
+  XS = "xs",
+  SM = "sm",
+  MD = "md",
+  LG = "lg",
+  XL = "xl",
+}
