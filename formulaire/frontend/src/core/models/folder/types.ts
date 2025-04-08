@@ -1,42 +1,40 @@
-export interface Selectable {
+export interface ISelectable {
   selected: boolean | null;
 }
 
-export interface Element {
+export interface IElement {
   id: number;
   name: string;
-  data: any;
   children: Element[];
 }
 
-export interface Folder extends Selectable {
+export interface IFolder extends ISelectable {
   id: number;
   parent_id: number | null;
   name: string;
   user_id: string;
   nb_folder_children: number;
   nb_form_children: number;
-  children: any[];
 }
 
-export interface Folders {
-  all: Folder[];
-  myFormsFolder?: Folder;
-  sharedFormsFolder?: Folder;
-  archivedFormsFolder?: Folder;
-  trees: Element[];
+export interface IFolders {
+  all: IFolder[];
+  myFormsFolder?: IFolder;
+  sharedFormsFolder?: IFolder;
+  archivedFormsFolder?: IFolder;
+  trees: IElement[];
 }
 
-export interface FolderApiResponse {
-  data: Folder | Folder[];
+export interface IFolderApiResponse {
+  data: IFolder | IFolder[];
 }
 
-export interface CreateFolderPayload {
+export interface ICreateFolderPayload {
   parent_id: number;
   name: string;
 }
 
-export interface UpdateFolderPayload {
+export interface IUpdateFolderPayload {
   id: number;
   parent_id: number;
   name: string;

@@ -1,15 +1,15 @@
-import { Folder } from "~/core/models/folder/types";
+import { IFolder } from "~/core/models/folder/types";
 
-export interface DraggableFolderProps {
-  folder: Folder;
+export interface IDraggableFolderProps {
+  folder: IFolder;
   dragActive?: boolean;
-  onSelect: (folder: Folder) => void;
-  onClick: (folder: Folder) => void;
+  onSelect: (folder: IFolder) => void;
+  onClick: (folder: IFolder) => void;
   isSelected: boolean;
-  getFolderSubtitle: (folder: Folder) => string;
+  getFolderSubtitle: (folder: IFolder) => string;
 }
 
-export interface StyledDraggableFolderProps {
+export interface IStyledDraggableFolderProps {
   dragActive: boolean;
   isOvered: boolean;
 }

@@ -1,4 +1,4 @@
-import { Form } from "~/core/models/form/types";
-export interface FormPreviewProps {
-  form: Form;
+import { IForm } from "~/core/models/form/types";
+export interface IFormPreviewProps {
+  form: IForm;
 }

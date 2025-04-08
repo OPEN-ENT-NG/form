@@ -1,28 +1,28 @@
 import { DragEndEvent, DragOverEvent, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { Folder } from "~/core/models/folder/types";
-import { Form } from "~/core/models/form/types";
+import { IFolder } from "~/core/models/folder/types";
+import { IForm } from "~/core/models/form/types";
 import { useCallback, useState } from "react";
 import { isSelectedFolder } from "~/core/models/folder/utils";
 import { DraggableType } from "~/core/enums";
 import { useMoveFormsMutation } from "~/services/api/services/formulaireApi/formApi";
 import { useMoveFoldersMutation } from "~/services/api/services/formulaireApi/folderApi";
 import { isSelectedForm } from "~/core/models/form/utils";
-import { ActiveDragItemProps } from "./types";
+import { IActiveDragItemProps } from "./types";
 import { createItemState } from "./utils";
 import { SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
 
 export const useFormFolderDnd = (
-  selectedFolders: Folder[],
-  selectedForms: Form[],
-  setSelectedFolder: (value: Folder[]) => void,
-  setSelectedForm: (value: Form[]) => void,
-  currentFolder: Folder,
+  selectedFolders: IFolder[],
+  selectedForms: IForm[],
+  setSelectedFolder: (value: IFolder[]) => void,
+  setSelectedForm: (value: IForm[]) => void,
+  currentFolder: IFolder,
 ) => {
   // ===== STATE AND API HOOKS =====
   const [moveForms] = useMoveFormsMutation();
   const [moveFolders] = useMoveFoldersMutation();
-  const [activeDragItem, setActiveDragItem] = useState<ActiveDragItemProps>(createItemState(DraggableType.NULL, null));
+  const [activeDragItem, setActiveDragItem] = useState<IActiveDragItemProps>(createItemState(DraggableType.NULL, null));
   const [isValidDrop, setIsValidDrop] = useState(false);
   const { folders, forms, setFolders, setForms } = useHome();
 
@@ -41,7 +41,7 @@ export const useFormFolderDnd = (
       }
 
       if (event.active.data.current?.type === DraggableType.FOLDER) {
-        const folder = event.active.data.current.folder as Folder;
+        const folder = event.active.data.current.folder as IFolder;
         setActiveDragItem(createItemState(DraggableType.FOLDER, folder));
         if (!isSelectedFolder(folder, selectedFolders)) {
           setSelectedFolder([folder]);
@@ -49,7 +49,7 @@ export const useFormFolderDnd = (
         }
       }
       if (event.active.data.current?.type === DraggableType.FORM) {
-        const form = event.active.data.current.form as Form;
+        const form = event.active.data.current.form as IForm;
         setActiveDragItem(createItemState(DraggableType.FORM, form));
         if (!isSelectedForm(form, selectedForms)) {
           setSelectedForm([form]);
@@ -63,21 +63,28 @@ export const useFormFolderDnd = (
 
   const handleDragOver = useCallback(
     (event: DragOverEvent) => {
-      if (event.over?.data.current) {
+      const overData = event.over?.data.current as { folder?: IFolder | null | undefined } | null | undefined;
+
+      if (overData) {
+        const activeData = event.active.data.current as
+          | { type: DraggableType; folder?: IFolder | null | undefined }
+          | null
+          | undefined;
+
         const isValidDrop =
           !!event.over &&
-          !!event.active.data.current &&
-          [DraggableType.FORM, DraggableType.FOLDER].includes(event.active.data.current.type) &&
-          event.active.data.current.folder?.id != event.over.data.current.folder?.id;
-        setIsValidDrop(isValidDrop);
-      }
-
-      if (!event.over?.data.current) {
-        const isValidDrop = !!event.over && !(event.over.id == TRASH_FOLDER_ID || event.over.id == SHARED_FOLDER_ID);
+          !!activeData &&
+          [DraggableType.FORM, DraggableType.FOLDER].includes(activeData.type) &&
+          activeData.folder?.id !== overData.folder?.id;
 
         setIsValidDrop(isValidDrop);
       }
 
+      if (!overData) {
+        const over = event.over as { id: string } | null | undefined;
+        const isValidDrop = !!over && !(Number(over.id) === TRASH_FOLDER_ID || Number(over.id) === SHARED_FOLDER_ID);
+        setIsValidDrop(isValidDrop);
+      }
       return;
     },
     [selectedFolders, selectedForms],
@@ -85,7 +92,7 @@ export const useFormFolderDnd = (
 
   const handleDragCancel = useCallback(() => {
     setIsValidDrop(false);
-    return setActiveDragItem(createItemState(DraggableType.NULL, null));
+    setActiveDragItem(createItemState(DraggableType.NULL, null));
   }, [selectedFolders, selectedForms]);
 
   const handleDragEnd = useCallback(
@@ -98,7 +105,7 @@ export const useFormFolderDnd = (
       }
 
       if (event.active.data.current?.type === DraggableType.FOLDER) {
-        const draggedFolder = event.active.data.current.folder as Folder;
+        const draggedFolder = event.active.data.current.folder as IFolder;
         // Prevent moving a folder onto itself.
         if (destinationId != draggedFolder.id) {
           handleOptimisticUpdate(destinationId);
@@ -108,7 +115,7 @@ export const useFormFolderDnd = (
         handleOptimisticUpdate(destinationId);
       }
 
-      return setActiveDragItem(createItemState(DraggableType.NULL, null));
+      setActiveDragItem(createItemState(DraggableType.NULL, null));
     },
     [selectedFolders, selectedForms],
   );
@@ -120,26 +127,27 @@ export const useFormFolderDnd = (
         return;
       }
 
-      const foldersToMove = selectedFolders
+      const foldersToMoveList = selectedFolders
         .filter((folder) => folder.id !== destinationFolderId)
         .map((folder) => folder.id);
-      const formsToMove = selectedForms.map((form) => form.id);
+      const formsToMoveList = selectedForms.map((form) => form.id);
 
       try {
-        if (foldersToMove.length) {
-          moveFolders({
-            folderIds: foldersToMove,
+        if (foldersToMoveList.length) {
+          void moveFolders({
+            folderIds: foldersToMoveList,
             parentId: destinationFolderId,
           });
         }
-        if (formsToMove.length) {
-          moveForms({
-            formIds: formsToMove,
+        if (formsToMoveList.length) {
+          void moveForms({
+            formIds: formsToMoveList,
             destinationFolderId: destinationFolderId,
           });
         }
         setSelectedForm([]);
-        return setSelectedFolder([]);
+        setSelectedFolder([]);
+        return;
       } catch (error) {
         console.error("Error moving items:", error);
         return;
@@ -152,7 +160,8 @@ export const useFormFolderDnd = (
     const { active, over } = event;
     if (!over || !active.data.current) return null;
     if (over.data.current) {
-      return over.data.current.folder.id;
+      const folder = over.data.current.folder as IFolder;
+      return folder.id;
     }
     if (over.id) {
       return over.id as number;
@@ -162,11 +171,11 @@ export const useFormFolderDnd = (
 
   const handleOptimisticUpdate = useCallback(
     (destinationFolderId: number) => {
-      const previousFolderState = folders;
-      const previousFormState = forms;
+      const previousFolderStates = folders;
+      const previousFormStates = forms;
 
       try {
-        const newFolders: Folder[] = folders.map((folder: Folder) => {
+        const newFolders: IFolder[] = folders.map((folder: IFolder) => {
           if (folder.id !== destinationFolderId && selectedFolders.some((f) => f.id === folder.id)) {
             return {
               ...folder,
@@ -176,7 +185,7 @@ export const useFormFolderDnd = (
           return folder;
         });
         setFolders(newFolders);
-        const newForms: Form[] = forms.map((form: Form) => {
+        const newForms: IForm[] = forms.map((form: IForm) => {
           if (selectedForms.some((f) => f.id === form.id)) {
             return {
               ...form,
@@ -189,8 +198,8 @@ export const useFormFolderDnd = (
         moveItemsToFolder(destinationFolderId);
       } catch (error) {
         console.error("Error moving items:", error);
-        setFolders(previousFolderState);
-        setForms(previousFormState);
+        setFolders(previousFolderStates);
+        setForms(previousFormStates);
       }
     },
     [selectedFolders, selectedForms, moveItemsToFolder, setSelectedFolder, setSelectedForm],

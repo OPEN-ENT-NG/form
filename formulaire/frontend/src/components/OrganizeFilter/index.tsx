@@ -5,7 +5,7 @@ import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 
 import { FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
-import { ChipProps, menuAnchorOrigin, MenuItemProps, menuTransformOrigin, OrganizeFilterProps } from "./types";
+import { IChipProps, menuAnchorOrigin, IMenuItemProps, menuTransformOrigin, IOrganizeFilterProps } from "./types";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -23,9 +23,9 @@ import {
 import { MenuItemState } from "./enum";
 import { getNextMenuItemState } from "./utils";
 
-export const OrganizeFilter: FC<OrganizeFilterProps> = ({
-  chipData = [],
-  menuItemData = [],
+export const OrganizeFilter: FC<IOrganizeFilterProps> = ({
+  chipDatas = [],
+  menuItemDatas = [],
   setSelectedChips,
   selectedChips = [],
   setSelectedMenuItem,
@@ -34,30 +34,30 @@ export const OrganizeFilter: FC<OrganizeFilterProps> = ({
   const { t } = useTranslation(FORMULAIRE);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
 
-  const chipsEnabled = useMemo(() => chipData.length > 0 && !!setSelectedChips, [chipData, setSelectedChips]);
+  const chipsEnabled = useMemo(() => chipDatas.length > 0 && !!setSelectedChips, [chipDatas, setSelectedChips]);
   const menuItemsEnabled = useMemo(
-    () => menuItemData.length > 0 && !!setSelectedMenuItem,
-    [menuItemData, setSelectedMenuItem],
+    () => menuItemDatas.length > 0 && !!setSelectedMenuItem,
+    [menuItemDatas, setSelectedMenuItem],
   );
   const selectedMenuItemAscending = useMemo(
     () => selectedMenuItem?.state === MenuItemState.ASCENDING,
     [selectedMenuItem],
   );
   const isCurrentItemSelected = useCallback(
-    (item: MenuItemProps) => {
+    (item: IMenuItemProps) => {
       return selectedMenuItem?.id === item.id;
     },
     [selectedMenuItem],
   );
 
   useEffect(() => {
-    if (menuItemData.length > 0 && !selectedMenuItem && setSelectedMenuItem) {
+    if (menuItemDatas.length > 0 && !selectedMenuItem && setSelectedMenuItem) {
       setSelectedMenuItem({
-        ...menuItemData[0],
+        ...menuItemDatas[0],
         state: MenuItemState.DESCENDING,
       });
     }
-  }, [menuItemData, selectedMenuItem, setSelectedMenuItem]);
+  }, [menuItemDatas, selectedMenuItem, setSelectedMenuItem]);
 
   const handleClick = useCallback((event: MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -68,7 +68,7 @@ export const OrganizeFilter: FC<OrganizeFilterProps> = ({
   }, []);
 
   const handleChipClick = useCallback(
-    (chip: ChipProps) => {
+    (chip: IChipProps) => {
       if (!setSelectedChips) return;
 
       const updatedChips = selectedChips.some((c) => c.id === chip.id)
@@ -81,19 +81,20 @@ export const OrganizeFilter: FC<OrganizeFilterProps> = ({
   );
 
   const handleMenuItemClick = useCallback(
-    (menuItem: MenuItemProps) => {
+    (menuItem: IMenuItemProps) => {
       if (!setSelectedMenuItem) return;
 
       if (!selectedMenuItem || selectedMenuItem.id !== menuItem.id) {
-        return setSelectedMenuItem({
+        setSelectedMenuItem({
           ...menuItem,
           state: MenuItemState.DESCENDING,
         });
+        return;
       }
 
       const nextState = getNextMenuItemState(selectedMenuItem.state);
 
-      return setSelectedMenuItem({
+      setSelectedMenuItem({
         ...menuItem,
         state: nextState,
       });
@@ -121,12 +122,14 @@ export const OrganizeFilter: FC<OrganizeFilterProps> = ({
               {t("formulaire.filter.title.sort")}
             </Typography>
             <Box sx={sortContainerStyle}>
-              {menuItemData.map((item) => (
+              {menuItemDatas.map((item) => (
                 <MenuItem
                   sx={sortMenuItem}
                   key={item.id}
                   selected={isCurrentItemSelected(item)}
-                  onClick={() => handleMenuItemClick(item)}
+                  onClick={() => {
+                    handleMenuItemClick(item);
+                  }}
                 >
                   {isCurrentItemSelected(item) &&
                     (selectedMenuItemAscending ? (
@@ -148,13 +151,21 @@ export const OrganizeFilter: FC<OrganizeFilterProps> = ({
             <Typography variant={TypographyVariant.H6} sx={filterTitleStyle}>
               {t("formulaire.filter.title.filter")}
             </Typography>
-            <MenuItem disableRipple={true} onClick={(e) => e.stopPropagation()} sx={chipMenuItemStyle}>
+            <MenuItem
+              disableRipple={true}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              sx={chipMenuItemStyle}
+            >
               <Box sx={chipContainerStyle}>
-                {chipData.map((chip, index) => (
+                {chipDatas.map((chip, index) => (
                   <Chip
                     key={index}
                     label={<Typography variant={TypographyVariant.BODY2}>{t(chip.i18nKey)}</Typography>}
-                    onClick={() => handleChipClick(chip)}
+                    onClick={() => {
+                      handleChipClick(chip);
+                    }}
                     color={selectedChips.some((c) => c.id === chip.id) ? "primary" : "default"}
                   />
                 ))}

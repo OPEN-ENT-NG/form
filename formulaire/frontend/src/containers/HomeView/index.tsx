@@ -5,7 +5,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { Box } from "@cgi-learning-hub/ui";
 import { useGetHomeHeaderButtons, useElementHeight } from "./utils";
 import { FolderModal } from "../FolderModal";
-import { FOLDER_MODAL_MODE } from "../FolderModal/enum";
+import { FolderModalMode } from "../FolderModal/types";
 import { HomeLayout } from "../HomeLayout";
 import { ModalType } from "~/core/enums";
 import { useModal } from "~/providers/ModalProvider";
@@ -24,14 +24,14 @@ export const HomeView: FC = () => {
   const headerButtons = useGetHomeHeaderButtons();
   const {
     displayModals: {
-      FOLDER_CREATE,
-      FOLDER_RENAME,
-      FORM_PROP_CREATE,
-      FORM_PROP_UPDATE,
-      FORM_FOLDER_DELETE,
-      FORM_IMPORT,
-      MOVE,
-      EXPORT,
+      showFolderCreate,
+      showFolderRename,
+      showFormPropCreate,
+      showFormPropUpdate,
+      showFormFolderDelete,
+      showFormImport,
+      showMove,
+      showExport,
     },
     toggleModal,
   } = useModal();
@@ -45,42 +45,76 @@ export const HomeView: FC = () => {
         <Header stringItems={[t("formulaire.title")]} buttons={headerButtons} />
       </Box>
       <HomeLayout headerHeight={headerHeight} />
-      {FOLDER_CREATE && (
+      {showFolderCreate && (
         <FolderModal
-          isOpen={FOLDER_CREATE}
-          handleClose={() => toggleModal(ModalType.FOLDER_CREATE)}
-          mode={FOLDER_MODAL_MODE.CREATE}
+          isOpen={showFolderCreate}
+          handleClose={() => {
+            toggleModal(ModalType.FOLDER_CREATE);
+          }}
+          mode={FolderModalMode.CREATE}
         />
       )}
-      {FOLDER_RENAME && (
+      {showFolderRename && (
         <FolderModal
-          isOpen={FOLDER_RENAME}
-          handleClose={() => toggleModal(ModalType.FOLDER_RENAME)}
-          mode={FOLDER_MODAL_MODE.RENAME}
+          isOpen={showFolderRename}
+          handleClose={() => {
+            toggleModal(ModalType.FOLDER_RENAME);
+          }}
+          mode={FolderModalMode.RENAME}
         />
       )}
-      {FORM_FOLDER_DELETE && (
-        <DeleteModal isOpen={FORM_FOLDER_DELETE} handleClose={() => toggleModal(ModalType.FORM_FOLDER_DELETE)} />
+      {showFormFolderDelete && (
+        <DeleteModal
+          isOpen={showFormFolderDelete}
+          handleClose={() => {
+            toggleModal(ModalType.FORM_FOLDER_DELETE);
+          }}
+        />
       )}
-      {FORM_PROP_CREATE && (
+      {showFormPropCreate && (
         <FormPropModal
-          isOpen={FORM_PROP_CREATE}
-          handleClose={() => toggleModal(ModalType.FORM_PROP_CREATE)}
+          isOpen={showFormPropCreate}
+          handleClose={() => {
+            toggleModal(ModalType.FORM_PROP_CREATE);
+          }}
           mode={FormPropModalMode.CREATE}
           isRgpdPossible
         />
       )}
-      {FORM_PROP_UPDATE && (
+      {showFormPropUpdate && (
         <FormPropModal
-          isOpen={FORM_PROP_UPDATE}
-          handleClose={() => toggleModal(ModalType.FORM_PROP_UPDATE)}
+          isOpen={showFormPropUpdate}
+          handleClose={() => {
+            toggleModal(ModalType.FORM_PROP_UPDATE);
+          }}
           mode={FormPropModalMode.UPDATE}
           isRgpdPossible
         />
       )}
-      {MOVE && <MoveFolderModal isOpen={MOVE} handleClose={() => toggleModal(ModalType.MOVE)} />}
-      {FORM_IMPORT && <FormImportModal isOpen={FORM_IMPORT} handleClose={() => toggleModal(ModalType.FORM_IMPORT)} />}
-      {EXPORT && <ExportModal isOpen={EXPORT} handleClose={() => toggleModal(ModalType.EXPORT)} />}
+      {showMove && (
+        <MoveFolderModal
+          isOpen={showMove}
+          handleClose={() => {
+            toggleModal(ModalType.MOVE);
+          }}
+        />
+      )}
+      {showFormImport && (
+        <FormImportModal
+          isOpen={showFormImport}
+          handleClose={() => {
+            toggleModal(ModalType.FORM_IMPORT);
+          }}
+        />
+      )}
+      {showExport && (
+        <ExportModal
+          isOpen={showExport}
+          handleClose={() => {
+            toggleModal(ModalType.EXPORT);
+          }}
+        />
+      )}
       {isToasterOpen && <Toaster leftButtons={leftButtons} rightButtons={rightButtons} />}
     </Box>
   );
