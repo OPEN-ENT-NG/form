@@ -1,10 +1,10 @@
-import { Delegate } from "~/core/models/delegate/types";
+import { IDelegate } from "~/core/models/delegate/types";
 import { FormPropField } from "./enums";
-import { FormCheckBoxProp, FormPropInputValueState } from "./types";
-import { RGPDI18nParams } from "~/components/RgpdInfoBox/types";
+import { IFormCheckBoxProp, IFormPropInputValueState } from "./types";
+import { IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
 import dayjs, { Dayjs } from "dayjs";
 
-export const initialFormPropInputValueState: FormPropInputValueState = {
+export const initialFormPropInputValueState: IFormPropInputValueState = {
   [FormPropField.TITLE]: "",
   [FormPropField.DESCRIPTION]: "",
   [FormPropField.PICTURE]: "",
@@ -21,7 +21,7 @@ export const initialFormPropInputValueState: FormPropInputValueState = {
   [FormPropField.RGPD_LIFE_TIME]: 3,
 };
 
-export const formCheckBoxProps: FormCheckBoxProp[] = [
+export const formCheckBoxProps: IFormCheckBoxProp[] = [
   {
     i18nKey: "formulaire.prop.public.label",
     field: FormPropField.IS_PUBLIC,
@@ -62,10 +62,10 @@ export const formCheckBoxProps: FormCheckBoxProp[] = [
 export const rgpdGoalDurationOptions = [3, 6, 9, 12];
 
 export const buildDelegatesParam = (
-  delegate: Delegate | null,
+  delegate: IDelegate | null,
   rgpdGoal: string,
   expirationDate: Dayjs = dayjs(),
-): RGPDI18nParams => {
+): IRGPDI18nParams => {
   if (delegate) {
     return {
       finalite: rgpdGoal.length ? rgpdGoal : "[Finalité]",

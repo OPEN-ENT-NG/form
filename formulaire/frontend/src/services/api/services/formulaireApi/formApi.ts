@@ -1,4 +1,4 @@
-import { DuplicateFormPayload, Form, FormPayload } from "~/core/models/form/types.ts";
+import { IDuplicateFormPayload, IForm, IFormPayload } from "~/core/models/form/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { QueryMethod, TagName } from "~/core/enums.ts";
 import { toast } from "react-toastify";
@@ -7,7 +7,7 @@ import { FORMULAIRE, ID, LINK_HTML_ELEMENT, PDF_EXTENSION, TRASH_FOLDER_ID, ZIP_
 
 export const formApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
-    getForms: builder.query<Form[], void>({
+    getForms: builder.query<IForm[], void>({
       query: () => ({
         url: `forms`,
         method: QueryMethod.GET,
@@ -21,12 +21,9 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           toast.error(i18n.t("formulaire.error.formService.list", { ns: FORMULAIRE }));
         }
       },
-      transformResponse: (response: { data: Form[] }) => {
-        return response?.data || response;
-      },
     }),
 
-    createForm: builder.mutation<Form, FormPayload>({
+    createForm: builder.mutation<IForm, IFormPayload>({
       query: (form) => ({
         url: `forms`,
         method: QueryMethod.POST,
@@ -42,12 +39,9 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           toast.error(i18n.t("formulaire.error.formService.create", { ns: FORMULAIRE }));
         }
       },
-      transformResponse: (response: { data: Form }) => {
-        return response?.data || response;
-      },
     }),
 
-    updateForm: builder.mutation<any, { payload: FormPayload; formId: string; hasToastDisplay?: boolean }>({
+    updateForm: builder.mutation<IForm, { payload: IFormPayload; formId: string; hasToastDisplay?: boolean }>({
       query: ({ payload, formId }) => ({
         url: `forms/${formId}`,
         method: QueryMethod.PUT,
@@ -63,14 +57,11 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           toast.error(i18n.t("formulaire.error.formService.update", { ns: FORMULAIRE }));
         }
       },
-      transformResponse: (response: { data: Form }) => {
-        return response?.data || response;
-      },
     }),
 
     deleteForm: builder.mutation<void, number>({
       query: (formId) => ({
-        url: `forms/${formId}`,
+        url: `forms/${formId.toString()}`,
         method: QueryMethod.DELETE,
       }),
       invalidatesTags: [TagName.FORMS],
@@ -85,9 +76,9 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       },
     }),
 
-    duplicateForms: builder.mutation<Form[], DuplicateFormPayload>({
+    duplicateForms: builder.mutation<IForm[], IDuplicateFormPayload>({
       query: ({ formIds, folderId }) => ({
-        url: `forms/duplicate/${folderId}`,
+        url: `forms/duplicate/${folderId.toString()}`,
         method: QueryMethod.POST,
         body: formIds,
       }),
@@ -101,14 +92,11 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           toast.error(i18n.t("formulaire.error.formService.duplicate", { ns: FORMULAIRE }));
         }
       },
-      transformResponse: (response: { data: Form[] }) => {
-        return response?.data || response;
-      },
     }),
 
-    moveForms: builder.mutation<Form[], { formIds: number[]; destinationFolderId: number }>({
+    moveForms: builder.mutation<IForm[], { formIds: number[]; destinationFolderId: number }>({
       query: ({ formIds, destinationFolderId }) => ({
-        url: `forms/move/${destinationFolderId}`,
+        url: `forms/move/${destinationFolderId.toString()}`,
         method: QueryMethod.PUT,
         body: formIds,
       }),
@@ -123,12 +111,9 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           toast.error(i18n.t("formulaire.error.formService.move", { ns: FORMULAIRE }));
         }
       },
-      transformResponse: (response: { data: Form[] }) => {
-        return response?.data || response;
-      },
     }),
 
-    restoreForms: builder.mutation<Form[], number[]>({
+    restoreForms: builder.mutation<IForm[], number[]>({
       query: (formIds) => ({
         url: `forms/restore`,
         method: QueryMethod.PUT,
@@ -144,23 +129,22 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           toast.error(i18n.t("formulaire.error.formService.restore", { ns: FORMULAIRE }));
         }
       },
-      transformResponse: (response: { data: Form[] }) => {
-        return response?.data || response;
-      },
     }),
-    exportPdfForm: builder.query<Blob, Form[]>({
+    exportPdfForm: builder.query<Blob, IForm[]>({
       query: (forms) => {
         const params = new URLSearchParams();
-        forms.forEach((form) => params.append(ID, form.id.toString()));
+        forms.forEach((form) => {
+          params.append(ID, form.id.toString());
+        });
         return {
-          url: `forms/export/pdf?${params.toString()}`,
+          url: `forms/export/pdf?${params}`,
           method: QueryMethod.GET,
           responseHandler: (response) => response.blob(),
         };
       },
       async onQueryStarted(forms, { queryFulfilled }) {
         try {
-          if (!forms || !forms.length) return;
+          if (!forms.length) return;
           const { data: blob } = await queryFulfilled;
 
           const fileName =

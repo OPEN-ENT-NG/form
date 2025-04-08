@@ -1,7 +1,7 @@
 import { odeServices } from "@edifice.io/client";
 
 export const getApp = async (url: string): Promise<void> => {
-  return await odeServices.http().get(url);
+  await odeServices.http().get(url);
 };
 
 /**
