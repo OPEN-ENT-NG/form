@@ -36,7 +36,9 @@ export const HomeSidebar: FC = () => {
 
   return (
     <Box sx={homeSidebarWrapper}>
-      <HomeTabs value={tab} setValue={toggleTab} />
+      <Box height="3.5rem" display="flex" alignItems="center">
+        <HomeTabs value={tab} setValue={toggleTab} />
+      </Box>
       <TreeView
         items={treeViewItems}
         maxHeight={"75%"}

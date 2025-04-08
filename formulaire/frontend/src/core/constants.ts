@@ -36,3 +36,4 @@ export const LINK_HTML_ELEMENT = "a";
 
 //MISC
 export const ID = "id";
+export const DEFAULT_PAGINATION_LIMIT = 10;
