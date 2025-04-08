@@ -1,5 +1,5 @@
-import { Folder } from "./types";
+import { IFolder } from "./types";
 
-export const isSelectedFolder = (folder: Folder, selectedFolders: Folder[]): boolean => {
+export const isSelectedFolder = (folder: IFolder, selectedFolders: IFolder[]): boolean => {
   return selectedFolders.some((selectedFolder) => selectedFolder.id === folder.id);
 };

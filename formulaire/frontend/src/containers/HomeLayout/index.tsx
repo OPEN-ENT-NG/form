@@ -4,10 +4,10 @@ import { useHome } from "~/providers/HomeProvider";
 import { sidebarStyle, sidebarContentStyle, mainContentStyle, HomeLayoutWrapper } from "./styles";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { HomeSidebar } from "../HomeSidebar";
-import { HomeLayoutProps } from "./types";
+import { IHomeLayoutProps } from "./types";
 import { HomeMainLayout } from "../HomeMainLayout";
 
-export const HomeLayout: FC<HomeLayoutProps> = ({ headerHeight }) => {
+export const HomeLayout: FC<IHomeLayoutProps> = ({ headerHeight }) => {
   const { tab } = useHome();
 
   return (

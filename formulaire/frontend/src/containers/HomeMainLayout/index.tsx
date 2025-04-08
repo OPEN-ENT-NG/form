@@ -16,8 +16,8 @@ import { useTranslation } from "react-i18next";
 import { HomeMainForms } from "../HomeMainForms";
 import { FORMULAIRE } from "~/core/constants";
 import { OrganizeFilter } from "~/components/OrganizeFilter";
-import { ChipProps, MenuItemProps } from "~/components/OrganizeFilter/types";
-import { chipData, getDragCursorStyle, getEmptyStateDescription, menuItemData, useToggleButtons } from "./utils";
+import { IChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
+import { chipDatas, getDragCursorStyle, getEmptyStateDescription, menuItemDatas, useToggleButtons } from "./utils";
 import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
 import { useEdificeClient } from "@edifice.io/react";
 import { DndContext, DragOverlay, pointerWithin } from "@dnd-kit/core";
@@ -27,14 +27,15 @@ import { FolderPreview } from "~/components/FolderPreview";
 import { buildFlatFolderTree } from "../HomeSidebar/utils";
 import { DroppableTreeItem } from "~/components/DroppableTreeItem";
 import { useSearchAndOrganize } from "./useSearchAndOrganize";
-import { Form } from "~/core/models/form/types";
-import { Folder } from "~/core/models/folder/types";
+import { IForm } from "~/core/models/form/types";
+import { IFolder } from "~/core/models/folder/types";
 import { FormPreview } from "~/components/FormPreview";
 import { SwitchView } from "~/components/SwitchView";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { HomeTabs } from "~/components/HomeTab";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { HomeMainTable } from "../HomeMainTable";
+import { IToggleButtonItem } from "~/components/SwitchView/types";
 
 export const HomeMainLayout: FC = () => {
   const {
@@ -53,9 +54,8 @@ export const HomeMainLayout: FC = () => {
   const theme = useTheme();
   const { t } = useTranslation(FORMULAIRE);
   const { user } = useEdificeClient();
-  const toggleButtonList = useToggleButtons();
-  const [selectedChips, setSelectedChips] = useState<ChipProps[]>([]);
-  const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItemProps>();
+  const [selectedChips, setSelectedChips] = useState<IChipProps[]>([]);
+  const [selectedMenuItem, setSelectedMenuItem] = useState<IMenuItemProps>();
   const userId = user?.userId;
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, sensors, activeDragItem, isValidDrop } =
     useFormFolderDnd(selectedFolders, selectedForms, setSelectedFolders, setSelectedForms, currentFolder);
@@ -72,7 +72,9 @@ export const HomeMainLayout: FC = () => {
     selectedMenuItem,
   );
 
-  const breadcrumbsText = useMemo(() => (currentFolder?.name ? [currentFolder.name] : []), [currentFolder?.name]);
+  const toggleButtonList: IToggleButtonItem[] = useToggleButtons();
+
+  const breadcrumbsTexts = useMemo(() => (currentFolder.name ? [currentFolder.name] : []), [currentFolder.name]);
 
   return (
     <Box sx={{ ...mainContentInnerStyle, ...getDragCursorStyle(activeDragItem, isValidDrop) }}>
@@ -85,11 +87,13 @@ export const HomeMainLayout: FC = () => {
         <SearchInput
           placeholder={t("formulaire.search.placeholder")}
           sx={searchBarStyle}
-          onChange={(event) => handleSearch(event.target.value)}
+          onChange={(event) => {
+            handleSearch(event.target.value);
+          }}
         />
         <OrganizeFilter
-          chipData={chipData}
-          menuItemData={menuItemData}
+          chipDatas={chipDatas}
+          menuItemDatas={menuItemDatas}
           setSelectedChips={setSelectedChips}
           selectedChips={selectedChips}
           setSelectedMenuItem={setSelectedMenuItem}
@@ -97,7 +101,7 @@ export const HomeMainLayout: FC = () => {
         />
       </Box>
       <Box sx={searchStyle}>
-        <FormBreadcrumbs stringItems={breadcrumbsText} />
+        <FormBreadcrumbs stringItems={breadcrumbsTexts} />
         <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref}></SwitchView>
       </Box>
       <DndContext
@@ -112,11 +116,11 @@ export const HomeMainLayout: FC = () => {
           <Box sx={resourceContainerStyle}>
             {hasFilteredFolders && <HomeMainFolders folders={filteredFolders} activeItem={activeDragItem} />}
             {hasFilteredForms &&
-            (viewMode === ViewMode.CARDS ? (
-              <HomeMainForms forms={filteredForms} activeItem={activeDragItem} />
-            ) : (
-              <HomeMainTable forms={filteredForms} />
-            ))}
+              (viewMode === ViewMode.CARDS ? (
+                <HomeMainForms forms={filteredForms} activeItem={activeDragItem} />
+              ) : (
+                <HomeMainTable forms={filteredForms} />
+              ))}
           </Box>
         )}
         {flatTreeViewItems.map((item) => (
@@ -124,9 +128,9 @@ export const HomeMainLayout: FC = () => {
         ))}
         <DragOverlay>
           {isDraggedItemForm(activeDragItem) ? (
-            <FormPreview form={activeDragItem.data as Form} />
+            <FormPreview form={activeDragItem.data as IForm} />
           ) : isDraggedItemFolder(activeDragItem) ? (
-            <FolderPreview folder={activeDragItem.data as Folder} />
+            <FolderPreview folder={activeDragItem.data as IFolder} />
           ) : null}
         </DragOverlay>
         {!hasFilteredFolders && !hasFilteredForms && (

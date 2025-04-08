@@ -1,6 +1,6 @@
-export interface HomeLayoutProps {
+export interface IHomeLayoutProps {
   headerHeight: number;
 }
-export interface HomeLayoutWrapperProps {
+export interface IHomeLayoutWrapperProps {
   headerHeight?: number;
 }
