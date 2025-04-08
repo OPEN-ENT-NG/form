@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
 import { ViewMode } from "./enums";
 
-export interface ToggleButtonItem {
+export interface IToggleButtonItem {
   value: ViewMode;
   icon: ReactNode;
 }
 
-export interface SwitchViewProps {
+export interface ISwitchViewProps {
   onChange: (viewMode: ViewMode) => void;
   viewMode: ViewMode;
-  toggleButtonList: ToggleButtonItem[];
+  toggleButtonList: IToggleButtonItem[];
 }

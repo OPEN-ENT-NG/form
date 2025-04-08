@@ -1,13 +1,13 @@
 import { ReactNode } from "react";
 
-export interface FormBreadcrumbsProps {
+export interface IFormBreadcrumbsProps {
   stringItems: string[];
   separator?: ReactNode;
   isHeader?: boolean;
   displaySeparator?: boolean;
 }
 
-export interface BreadCrumbItemWrapperProps {
+export interface IBreadCrumbItemWrapperProps {
   textColor: string;
   isHeader: boolean;
   hasSeparator: boolean;

@@ -1,4 +1,4 @@
-import { ModalProps } from "~/types";
+import { IModalProps } from "~/types";
 import { FC, useCallback } from "react";
 import { Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
@@ -14,10 +14,10 @@ import {
 } from "~/services/api/services/formulaireApi/formApi";
 import { PRIMARY } from "~/core/style/colors";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
-import { Form, FormPayload } from "~/core/models/form/types";
+import { IForm, IFormPayload } from "~/core/models/form/types";
 import { toast } from "react-toastify";
 
-export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
+export const DeleteModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { selectedForms, selectedFolders, resetSelected, currentFolder } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const [deleteFolders] = useDeleteFoldersMutation();
@@ -26,7 +26,7 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
   const [deleteForm] = useDeleteFormMutation();
 
   const archiveForm = useCallback(
-    async (form: Form, destinationFolderId: number) => {
+    async (form: IForm, destinationFolderId: number) => {
       const movedForms = await moveForm({
         formIds: [form.id],
         destinationFolderId,
@@ -35,7 +35,7 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
       if (movedForms.length) {
         await updateForm({
           formId: form.id.toString(),
-          payload: { ...(form as unknown as FormPayload), archived: true },
+          payload: { ...(form as unknown as IFormPayload), archived: true },
           hasToastDisplay: false,
         });
       }
@@ -45,26 +45,26 @@ export const DeleteModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
 
   const handleDelete = useCallback(() => {
     if (selectedFolders.length) {
-      deleteFolders(selectedFolders.map((folder) => folder.id));
+      void deleteFolders(selectedFolders.map((folder) => folder.id));
     }
     if (!selectedForms.length) {
-      return handleClose();
+      handleClose();
+      return;
     }
 
     selectedForms.forEach((form) => {
       if (!form.id) return;
 
       if (currentFolder.id === TRASH_FOLDER_ID) {
-        deleteForm(form.id);
-        return;
+        return void deleteForm(form.id);
       }
 
-      return archiveForm(form, TRASH_FOLDER_ID);
+      return void archiveForm(form, TRASH_FOLDER_ID);
     });
 
     if (currentFolder.id !== TRASH_FOLDER_ID) toast.success(t("formulaire.success.forms.archive"));
     resetSelected();
-    return handleClose();
+    handleClose();
   }, [deleteFolders, deleteForm, archiveForm, handleClose, selectedFolders, selectedForms]);
 
   return (

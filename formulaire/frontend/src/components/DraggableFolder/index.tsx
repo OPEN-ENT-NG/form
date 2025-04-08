@@ -3,10 +3,10 @@ import { FC, useState } from "react";
 import { DraggableType } from "~/core/enums";
 
 import { FolderCard } from "@cgi-learning-hub/ui";
-import { DraggableFolderProps } from "./types";
+import { IDraggableFolderProps } from "./types";
 import { StyledDraggableFolder } from "./style";
 
-export const DraggableFolder: FC<DraggableFolderProps> = ({
+export const DraggableFolder: FC<IDraggableFolderProps> = ({
   folder,
   dragActive = false,
   onSelect,
@@ -21,12 +21,12 @@ export const DraggableFolder: FC<DraggableFolderProps> = ({
     listeners,
     setNodeRef: setDraggableNodeRef,
   } = useDraggable({
-    id: `draggable-folder-${folder.id}`,
+    id: `draggable-folder-${folder.id.toString()}`,
     data: { type: DraggableType.FOLDER, folder },
   });
 
   const { setNodeRef: setDroppableNodeRef } = useDroppable({
-    id: `droppable-folder-${folder.id}`,
+    id: `droppable-folder-${folder.id.toString()}`,
     data: { type: DraggableType.FOLDER, folder },
   });
 
@@ -39,9 +39,9 @@ export const DraggableFolder: FC<DraggableFolderProps> = ({
     onDragOver(event) {
       const isOvered =
         !!event.over &&
-        event.over.id === `droppable-folder-${folder.id}` &&
+        event.over.id === `droppable-folder-${folder.id.toString()}` &&
         !!event.active.data.current &&
-        [DraggableType.FORM, DraggableType.FOLDER].includes(event.active.data.current.type);
+        [DraggableType.FORM, DraggableType.FOLDER].includes(event.active.data.current.type as DraggableType);
       setIsOvered(isOvered);
     },
     onDragEnd() {
@@ -59,8 +59,12 @@ export const DraggableFolder: FC<DraggableFolderProps> = ({
         width="30rem"
         title={folder.name}
         subtitle={getFolderSubtitle(folder)}
-        onSelect={() => onSelect(folder)}
-        onClick={() => onClick(folder)}
+        onSelect={() => {
+          onSelect(folder);
+        }}
+        onClick={() => {
+          onClick(folder);
+        }}
         isSelected={isSelected}
         iconSize="3.2rem"
         hasNoButtonOnFocus

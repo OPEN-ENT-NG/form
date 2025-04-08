@@ -1,4 +1,4 @@
-export interface ModalProps {
+export interface IModalProps {
   isOpen: boolean;
   handleClose: () => void;
 }

@@ -1,10 +1,10 @@
 import { useDroppable } from "@dnd-kit/core";
 import { FC } from "react";
-import { DroppableTreeItemProps } from "./types";
+import { IDroppableTreeItemProps } from "./types";
 import { SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
 import { StyledDroppableTreeItem } from "./style";
 
-export const DroppableTreeItem: FC<DroppableTreeItemProps> = ({ treeItemId }) => {
+export const DroppableTreeItem: FC<IDroppableTreeItemProps> = ({ treeItemId }) => {
   const { setNodeRef, isOver } = useDroppable({
     id: treeItemId,
   });
