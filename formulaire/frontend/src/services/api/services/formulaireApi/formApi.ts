@@ -10,7 +10,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     getForms: builder.query<Form[], void>({
       query: () => ({
         url: `forms`,
-        method: "GET",
+        method: QueryMethod.GET,
       }),
       providesTags: [TagName.FORMS],
       async onQueryStarted(_, { queryFulfilled }) {
@@ -29,7 +29,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     createForm: builder.mutation<Form, FormPayload>({
       query: (form) => ({
         url: `forms`,
-        method: "POST",
+        method: QueryMethod.POST,
         body: form,
       }),
       invalidatesTags: [TagName.FORMS, TagName.FOLDERS],
@@ -50,7 +50,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     updateForm: builder.mutation<any, { payload: FormPayload; formId: string; hasToastDisplay?: boolean }>({
       query: ({ payload, formId }) => ({
         url: `forms/${formId}`,
-        method: "PUT",
+        method: QueryMethod.PUT,
         body: payload,
       }),
       invalidatesTags: [TagName.FORMS, TagName.FOLDERS],
@@ -71,7 +71,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     deleteForm: builder.mutation<void, number>({
       query: (formId) => ({
         url: `forms/${formId}`,
-        method: "DELETE",
+        method: QueryMethod.DELETE,
       }),
       invalidatesTags: [TagName.FORMS],
       async onQueryStarted(_, { queryFulfilled }) {
@@ -88,7 +88,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     duplicateForms: builder.mutation<Form[], DuplicateFormPayload>({
       query: ({ formIds, folderId }) => ({
         url: `forms/duplicate/${folderId}`,
-        method: "POST",
+        method: QueryMethod.POST,
         body: formIds,
       }),
       invalidatesTags: [TagName.FORMS],
@@ -109,7 +109,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     moveForms: builder.mutation<Form[], { formIds: number[]; destinationFolderId: number }>({
       query: ({ formIds, destinationFolderId }) => ({
         url: `forms/move/${destinationFolderId}`,
-        method: "PUT",
+        method: QueryMethod.PUT,
         body: formIds,
       }),
       invalidatesTags: [TagName.FORMS, TagName.FOLDERS],
@@ -131,7 +131,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     restoreForms: builder.mutation<Form[], number[]>({
       query: (formIds) => ({
         url: `forms/restore`,
-        method: "PUT",
+        method: QueryMethod.PUT,
         body: formIds,
       }),
       invalidatesTags: [TagName.FORMS],
