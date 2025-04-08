@@ -1,3 +1,4 @@
+import { CSS_PRIMARY_LIGHT_COLOR } from "~/core/style/cssColors";
 import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
 
 export const menuStyle = {
@@ -33,9 +34,9 @@ export const sortMenuItem = {
   borderRadius: ".5rem",
   backgroundColor: "transparent",
   "&.Mui-selected": {
-    backgroundColor: "var(--theme-palette-primary-light)",
+    backgroundColor: CSS_PRIMARY_LIGHT_COLOR,
     "&:hover": {
-      backgroundColor: "var(--theme-palette-primary-light)",
+      backgroundColor: CSS_PRIMARY_LIGHT_COLOR,
     },
   },
 };
