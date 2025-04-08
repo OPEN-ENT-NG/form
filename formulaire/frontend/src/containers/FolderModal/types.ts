@@ -1,9 +1,5 @@
 import { ModalProps } from "~/types";
-export enum FOLDER_MODAL_MODE {
-  CREATE = "CREATE",
-  RENAME = "RENAME",
-}
-
+import { FOLDER_MODAL_MODE } from "./enum";
 export interface FolderModalProps extends ModalProps {
   mode: FOLDER_MODAL_MODE;
 }
