@@ -188,10 +188,12 @@
   "formulaire.folder.create": "Créer un dossier",
   "formulaire.folder.rename": "Renommer un dossier",
 
-  "formulaire.table.title": "Titre du formulaire",
+  "formulaire.table.title": "Titre",
   "formulaire.table.author": "Auteur",
+  "formulaire.table.responses": "Réponses",
   "formulaire.table.modified": "Dernière modification",
   "formulaire.table.sent": "Date d'envoi",
+  "formulaire.table.rows.per.page": "Lignes par page",
 
   "formulaire.filter": "Filtre",
   "formulaire.filter.creation_date": "Date de création",

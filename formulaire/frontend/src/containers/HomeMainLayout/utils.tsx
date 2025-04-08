@@ -1,11 +1,15 @@
 import { ChipsID, MenuItemsID, MenuItemState } from "~/components/OrganizeFilter/enum";
 import { ChipProps, MenuItemProps } from "~/components/OrganizeFilter/types";
+import { ViewMode } from "~/components/SwitchView/enums";
+import { ToggleButtonItem } from "~/components/SwitchView/types";
 import { MYFORMS_FOLDER_ID, SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
 import { CursorStyle } from "~/core/enums";
 import { Folder } from "~/core/models/folder/types";
 import { Form } from "~/core/models/form/types";
 import { ActiveDragItemProps } from "~/hook/dnd-hooks/types";
 import { isDraggedItemFolder, isDraggedItemForm } from "~/hook/dnd-hooks/utils";
+import AppsIcon from "@mui/icons-material/Apps";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 
 export const chipData: ChipProps[] = [
   {
@@ -72,4 +76,11 @@ export const getDragCursorStyle = (activeDragItem: ActiveDragItemProps, isValidD
           : CursorStyle.NO_DROP
         : CursorStyle.DEFAULT,
   };
+};
+
+export const useToggleButtons: () => ToggleButtonItem[] = () => {
+  return [
+    { value: ViewMode.CARDS, icon: <AppsIcon /> },
+    { value: ViewMode.TABLE, icon: <FormatListBulletedIcon /> },
+  ];
 };

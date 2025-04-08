@@ -3,12 +3,13 @@ import { Box } from "@mui/material";
 import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
 import { RGPDInfoBoxProps } from "./types";
-import { DD_MM_YYYY, FORMULAIRE } from "~/core/constants";
+import { FORMULAIRE } from "~/core/constants";
+import { DateFormat } from "~/core/enums";
 
 const RGPDInfoBox: FC<RGPDInfoBoxProps> = ({ params, sx = {} }) => {
   const { t } = useTranslation(FORMULAIRE);
 
-  const formattedDate = dayjs(params.expirationDate).format(DD_MM_YYYY);
+  const formattedDate = dayjs(params.expirationDate).format(DateFormat.DAY_MONTH_YEAR);
 
   const formatI18n = (key: string, params: string[]): string => {
     return params.reduce((translatedText, param, index) => {
