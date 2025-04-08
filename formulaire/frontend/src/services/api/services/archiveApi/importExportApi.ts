@@ -64,9 +64,29 @@ export const importExportApi = emptySplitArchiveApi.injectEndpoints({
         }
       },
     }),
+
+    verifyExportAndDownloadZip: builder.mutation<void, string>({
+      query: (exportId) => ({
+        url: `export/verify/${exportId}`,
+        method: QueryMethod.GET,
+      }),
+      async onQueryStarted(exportId, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          window.location.href = `/archive/export/${exportId}`;
+        } catch (err) {
+          console.error("Error verifying export and downloading zip:", err);
+          toast.error(i18n.t("formulaire.error.formService.export", { ns: FORMULAIRE }));
+        }
+      },
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useUploadImportFormsMutation, useLazyAnalyzeImportFormsQuery, useLazyLaunchImportFormsQuery } =
-  importExportApi;
+export const {
+  useUploadImportFormsMutation,
+  useLazyAnalyzeImportFormsQuery,
+  useLazyLaunchImportFormsQuery,
+  useVerifyExportAndDownloadZipMutation,
+} = importExportApi;
