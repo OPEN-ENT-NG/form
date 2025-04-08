@@ -1,4 +1,4 @@
-import { Folder, CreateFolderPayload, UpdateFolderPayload } from "~/core/models/folder/types.ts";
+import { IFolder, ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { QueryMethod, TagName } from "~/core/enums.ts";
 import { toast } from "react-toastify";
@@ -8,9 +8,9 @@ import { FORMULAIRE } from "~/core/constants";
 export const folderApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
     // Liste des dossiers
-    getFolders: builder.query<Folder[], void>({
+    getFolders: builder.query<IFolder[], void>({
       query: () => "folders",
-      transformResponse: (response: Folder[]) => response,
+      transformResponse: (response: IFolder[]) => response,
       providesTags: [TagName.FOLDERS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -23,13 +23,13 @@ export const folderApi = emptySplitFormulaireApi.injectEndpoints({
     }),
 
     // Créer un dossier
-    createFolder: builder.mutation<Folder, CreateFolderPayload>({
+    createFolder: builder.mutation<IFolder, ICreateFolderPayload>({
       query: (folder) => ({
         url: "folders",
         method: QueryMethod.POST,
         body: folder,
       }),
-      transformResponse: (response: { data: Folder }) => response.data,
+      transformResponse: (response: { data: IFolder }) => response.data,
       invalidatesTags: [TagName.FOLDERS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -43,13 +43,13 @@ export const folderApi = emptySplitFormulaireApi.injectEndpoints({
     }),
 
     // Mettre à jour un dossier
-    updateFolder: builder.mutation<Folder, UpdateFolderPayload>({
+    updateFolder: builder.mutation<IFolder, IUpdateFolderPayload>({
       query: (folder) => ({
-        url: `folders/${folder.id}`,
+        url: `folders/${folder.id.toString()}`,
         method: QueryMethod.PUT,
         body: folder,
       }),
-      transformResponse: (response: { data: Folder }) => response.data,
+      transformResponse: (response: { data: IFolder }) => response.data,
       invalidatesTags: () => [TagName.FOLDERS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -84,7 +84,7 @@ export const folderApi = emptySplitFormulaireApi.injectEndpoints({
     // Déplacer des dossiers vers un dossier
     moveFolders: builder.mutation<void, { folderIds: number[]; parentId: number }>({
       query: ({ folderIds, parentId }) => ({
-        url: `folders/${parentId}/move`,
+        url: `folders/${parentId.toString()}/move`,
         method: QueryMethod.PUT,
         body: JSON.stringify(folderIds),
       }),

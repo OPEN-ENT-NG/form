@@ -1,14 +1,14 @@
-export interface Form {
+export interface IForm {
   id: number;
   title: string;
-  description: string;
-  picture: string;
+  description: string | null;
+  picture: string | null;
   owner_id: string;
   owner_name: string;
   date_creation: Date;
   date_modification: Date;
-  date_opening: Date;
-  date_ending: Date;
+  date_opening: Date | null;
+  date_ending: Date | null;
   sent: boolean;
   collab: boolean;
   reminded: boolean;
@@ -21,21 +21,21 @@ export interface Form {
   editable: boolean;
   is_progress_bar_displayed: boolean;
   rgpd: boolean;
-  rgpd_goal: string;
+  rgpd_goal: string | null;
   rgpd_lifetime: number;
   folder_id: number;
   nb_elements: number;
-  nb_responses: number;
-  infoImg: InfoImg;
+  nb_responses: number | null;
+  infoImg: IInfoImg;
 }
 
-export interface InfoImg {
+export interface IInfoImg {
   name: string;
   type: string;
   compatible: boolean;
 }
 
-export interface FormPayload {
+export interface IFormPayload {
   anonymous: boolean;
   archived: boolean;
   collab: boolean;
@@ -50,7 +50,7 @@ export interface FormPayload {
   id: number | null;
   is_public: boolean;
   multiple: boolean;
-  nb_responses: number;
+  nb_responses: number | null;
   owner_id: string | null;
   owner_name: string | null;
   picture: string | null;
@@ -60,13 +60,13 @@ export interface FormPayload {
   rgpd: boolean;
   rgpd_goal: string | null;
   rgpd_lifetime: number;
-  selected: unknown | null;
+  selected: null;
   sent: boolean;
   title: string;
   is_progress_bar_displayed: boolean;
 }
 
-export interface DuplicateFormPayload {
+export interface IDuplicateFormPayload {
   formIds: number[];
   folderId: number;
 }

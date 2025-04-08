@@ -1,15 +1,15 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { Folder } from "~/core/models/folder/types";
+import { IFolder } from "~/core/models/folder/types";
 import { FORMULAIRE } from "~/core/constants";
 import { HomeTabState, RootFolderIds } from "./enums";
 import { ViewMode } from "~/components/SwitchView/enums";
-import { HomeTabViewPref } from "./types";
+import { IHomeTabViewPref } from "./types";
 
-export const useRootFolders = (): Folder[] => {
+export const useRootFolders = (): IFolder[] => {
   const { t } = useTranslation(FORMULAIRE);
 
-  const rootFolders = useMemo<Folder[]>(
+  const rootFolders = useMemo<IFolder[]>(
     () => [
       {
         id: RootFolderIds.FOLDER_MY_FORMS_ID,
@@ -48,7 +48,7 @@ export const useRootFolders = (): Folder[] => {
   return rootFolders;
 };
 
-export const initTabViewPref = (): HomeTabViewPref => {
+export const initTabViewPref = (): IHomeTabViewPref => {
   return {
     [HomeTabState.FORMS]: ViewMode.CARDS,
     [HomeTabState.RESPONSES]: ViewMode.CARDS,

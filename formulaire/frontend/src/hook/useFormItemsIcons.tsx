@@ -4,7 +4,7 @@ import PublicIcon from "@mui/icons-material/Public";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ShareIcon from "@mui/icons-material/Share";
 import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 import CalendarIcon from "@mui/icons-material/CalendarToday";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import PersonIcon from "@mui/icons-material/Person";
@@ -17,8 +17,8 @@ export const useFormItemsIcons = () => {
   const { t } = useTranslation(FORMULAIRE);
   const formatDateWithTime = useFormatDateWithTime();
 
-  const getIcons = useCallback((form: Form) => {
-    const iconsConfig = [
+  const getIcons = useCallback((form: IForm) => {
+    const iconsConfigList = [
       {
         condition: form.collab,
         textKey: "formulaire.shared",
@@ -41,16 +41,19 @@ export const useFormItemsIcons = () => {
       },
     ];
 
-    return iconsConfig
-      .filter(({ condition }) => condition)
-      .map(({ textKey, IconComponent }) => ({
-        text: t(textKey),
-        icon: <IconComponent sx={{ color: (theme) => theme.palette.grey.darker }} />,
-      }));
+    return (
+      iconsConfigList
+        .filter(({ condition }) => condition)
+        // eslint-disable-next-line @typescript-eslint/naming-convention
+        .map(({ textKey, IconComponent }) => ({
+          text: t(textKey),
+          icon: <IconComponent sx={{ color: (theme) => theme.palette.grey.darker }} />,
+        }))
+    );
   }, []);
 
   const getPropertyItems = useCallback(
-    (form: Form) => {
+    (form: IForm) => {
       return [
         {
           icon: <PersonIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
@@ -64,7 +67,7 @@ export const useFormItemsIcons = () => {
           icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
           text: (
             <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-              {`${form.nb_responses ?? "0"} ${t("formulaire.responses.count")}`}
+              {`${(form.nb_responses ?? 0).toString()} ${t("formulaire.responses.count")}`}
             </EllipsisWithTooltip>
           ),
         },

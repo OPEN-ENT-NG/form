@@ -6,15 +6,14 @@ import {
   folderModalTextFieldLabelStyle,
   folderModalTextFieldStyle,
 } from "./style";
-import { FolderModalProps } from "./types";
+import { FolderModalMode, IFolderModalProps } from "./types";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE, MYFORMS_FOLDER_ID } from "~/core/constants";
+import { FORMULAIRE } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
 import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/formulaireApi/folderApi";
-import { CreateFolderPayload, UpdateFolderPayload } from "~/core/models/folder/types";
-import { FOLDER_MODAL_MODE } from "./enum";
+import { ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder/types";
 
-export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode }) => {
+export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }) => {
   const { currentFolder, selectedFolders } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const [newName, setNewName] = useState<string>("");
@@ -24,34 +23,34 @@ export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode })
   const modeConfig = useMemo(() => {
     const handleRename = () => {
       if (!selectedFolders[0] || !selectedFolders[0].parent_id) return;
-      const updatedFolder: UpdateFolderPayload = {
+      const updatedFolder: IUpdateFolderPayload = {
         id: selectedFolders[0].id,
         parent_id: selectedFolders[0].parent_id,
         name: newName,
       };
-      updateFolder(updatedFolder);
+      void updateFolder(updatedFolder);
       setNewName("");
       handleClose();
     };
 
     const handleCreate = () => {
-      const parent_id = currentFolder ? currentFolder.id : MYFORMS_FOLDER_ID;
-      const folder: CreateFolderPayload = {
+      const parent_id = currentFolder.id;
+      const folder: ICreateFolderPayload = {
         parent_id: parent_id,
         name: newName,
       };
-      createFolder(folder);
+      void createFolder(folder);
       setNewName("");
       handleClose();
     };
 
     return {
-      [FOLDER_MODAL_MODE.CREATE]: {
+      [FolderModalMode.CREATE]: {
         i18nTitle: "formulaire.folder.create",
         i18nButtonText: "formulaire.create",
         handleAction: handleCreate,
       },
-      [FOLDER_MODAL_MODE.RENAME]: {
+      [FolderModalMode.RENAME]: {
         i18nTitle: "formulaire.folder.rename",
         i18nButtonText: "formulaire.rename",
         handleAction: handleRename,
@@ -59,7 +58,7 @@ export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode })
     };
   }, [currentFolder, newName, createFolder, updateFolder, handleClose, selectedFolders]);
 
-  const currentConfig = modeConfig[mode] || modeConfig.CREATE;
+  const currentConfig = modeConfig[mode];
 
   return (
     <Dialog
@@ -83,7 +82,9 @@ export const FolderModal: FC<FolderModalProps> = ({ isOpen, handleClose, mode })
           variant="standard"
           sx={folderModalTextFieldStyle}
           value={newName}
-          onChange={(e) => setNewName(e.target.value)}
+          onChange={(e) => {
+            setNewName(e.target.value);
+          }}
         />
       </DialogContent>
 
