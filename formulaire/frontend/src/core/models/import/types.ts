@@ -1,21 +1,21 @@
-export interface ImportUploadResponse {
+export interface IImportUploadResponse {
   importId: string;
 }
 
-export interface ImportAnalyseResponseApp {
+export interface IImportAnalyseResponseApp {
   formulaire: {
     folder: string;
     size: number;
   };
 }
 
-export interface ImportAnalyzeResponse {
+export interface IImportAnalyzeResponse {
   importId: string;
-  apps: ImportAnalyseResponseApp[];
+  apps: IImportAnalyseResponseApp[];
   quota: number;
 }
 
-export interface ImportLaunchResponse {
+export interface IImportLaunchResponse {
   formulaire: {
     status: string;
     resourcesNumber: string;

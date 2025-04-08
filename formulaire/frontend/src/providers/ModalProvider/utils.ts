@@ -1,7 +1,7 @@
 import { ModalType } from "~/core/enums";
-import { DisplayModalsState } from "./types";
+import { IDisplayModalsState } from "./types";
 
-export const initialDisplayModalsState: DisplayModalsState = {
+export const initialDisplayModalsState: IDisplayModalsState = {
   [ModalType.FOLDER_CREATE]: false,
   [ModalType.FOLDER_RENAME]: false,
   [ModalType.FORM_IMPORT]: false,

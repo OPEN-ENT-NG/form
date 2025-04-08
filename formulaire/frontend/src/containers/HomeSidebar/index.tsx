@@ -42,11 +42,17 @@ export const HomeSidebar: FC = () => {
       <TreeView
         items={treeViewItems}
         maxHeight={"75%"}
-        selectedItemId={currentFolder?.id.toString() ?? folders[0].id.toString()}
+        selectedItemId={currentFolder.id.toString()}
         handleSelectedItemChange={handleSelectedItemChange}
       />
       {isNotTrashOrShared && (
-        <Button variant="outlined" color="primary" onClick={() => toggleModal(ModalType.FOLDER_CREATE)}>
+        <Button
+          variant="outlined"
+          color="primary"
+          onClick={() => {
+            toggleModal(ModalType.FOLDER_CREATE);
+          }}
+        >
           {t("formulaire.folder.create")}
         </Button>
       )}

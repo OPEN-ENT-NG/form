@@ -1,14 +1,14 @@
 import { ComponentVariant } from "~/core/style/themeProps";
 
-export interface HeaderButton {
+export interface IHeaderButton {
   titleI18nkey: string;
   variant?: ComponentVariant.TEXT | ComponentVariant.OUTLINED | ComponentVariant.CONTAINED;
   action: () => void;
 }
 
-export interface HeaderProps {
+export interface IHeaderProps {
   stringItems: string[];
-  buttons: HeaderButton[];
+  buttons: IHeaderButton[];
   isCreationPage?: boolean;
   displaySeparator?: boolean;
 }

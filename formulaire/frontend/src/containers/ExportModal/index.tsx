@@ -1,4 +1,4 @@
-import { ModalProps } from "~/types";
+import { IModalProps } from "~/types";
 import { ChangeEvent, FC, useState } from "react";
 import {
   Box,
@@ -22,7 +22,7 @@ import { useExportZipMutation, useLazyExportPdfFormQuery } from "~/services/api/
 import { useHome } from "~/providers/HomeProvider";
 import { useVerifyExportAndDownloadZipMutation } from "~/services/api/services/archiveApi/importExportApi";
 
-export const ExportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
+export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
   const { selectedForms } = useHome();
   const [selectedFormat, setSelectedFormat] = useState<ExportFormat>(ExportFormat.ZIP);
@@ -47,13 +47,13 @@ export const ExportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
         setIsLoading(false);
       }
       if (selectedFormat === ExportFormat.PDF) {
-        exportPdf(selectedForms);
+        await exportPdf(selectedForms);
       }
     } catch (error) {
       setIsLoading(false);
       console.error("Error exporting form:", error);
     }
-    return handleClose();
+    handleClose();
   };
 
   return (
@@ -68,7 +68,11 @@ export const ExportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
         <RadioGroup value={selectedFormat} onChange={handleFormatChange} sx={radioGroupStyle}>
           <Box sx={exportContainerStyle}>
             <Radio value={ExportFormat.ZIP} />
-            <Box onClick={() => setSelectedFormat(ExportFormat.ZIP)}>
+            <Box
+              onClick={() => {
+                setSelectedFormat(ExportFormat.ZIP);
+              }}
+            >
               <Typography variant={TypographyVariant.BODY1} fontWeight={TypographyFont.BOLD}>
                 {t("formulaire.format.zip")}
               </Typography>
@@ -77,7 +81,11 @@ export const ExportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
           </Box>
           <Box sx={exportContainerStyle}>
             <Radio value={ExportFormat.PDF} />
-            <Box onClick={() => setSelectedFormat(ExportFormat.PDF)}>
+            <Box
+              onClick={() => {
+                setSelectedFormat(ExportFormat.PDF);
+              }}
+            >
               <Typography variant={TypographyVariant.BODY1} fontWeight={TypographyFont.BOLD}>
                 {t("formulaire.format.pdf")}
               </Typography>
@@ -91,7 +99,12 @@ export const ExportModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
         <Button variant={ComponentVariant.OUTLINED} onClick={handleClose}>
           {t("formulaire.cancel")}
         </Button>
-        <Button variant={ComponentVariant.CONTAINED} onClick={handleExport}>
+        <Button
+          variant={ComponentVariant.CONTAINED}
+          onClick={() => {
+            void handleExport();
+          }}
+        >
           {t("formulaire.export")}
         </Button>
       </DialogActions>

@@ -1,17 +1,17 @@
-import { Form } from "~/core/models/form/types";
-import { Folder } from "~/core/models/folder/types";
-import { ChipProps, MenuItemProps } from "~/components/OrganizeFilter/types";
+import { IForm } from "~/core/models/form/types";
+import { IFolder } from "~/core/models/folder/types";
+import { IChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
 import { useCallback, useMemo, useState } from "react";
 import { MenuItemState } from "~/components/OrganizeFilter/enum";
 import { SHARED_FOLDER_ID } from "~/core/constants";
 
 export const useSearchAndOrganize = (
-  folders: Folder[],
-  forms: Form[],
-  currentFolder: Folder,
+  folders: IFolder[],
+  forms: IForm[],
+  currentFolder: IFolder,
   userId: string | undefined,
-  selectedChips: ChipProps[],
-  selectedMenuItem?: MenuItemProps,
+  selectedChips: IChipProps[],
+  selectedMenuItem?: IMenuItemProps,
 ) => {
   const [searchText, setSearchText] = useState("");
 
@@ -24,7 +24,7 @@ export const useSearchAndOrganize = (
   }, [folders, currentFolder.id]);
 
   const filteredForms = useMemo(() => {
-    const initialFiltered = forms.filter((form) => {
+    const initialFilteredList = forms.filter((form) => {
       const isCurrentUser = form.owner_id === userId;
       if (currentFolder.id === SHARED_FOLDER_ID) {
         return form.collab && !isCurrentUser;
@@ -32,26 +32,26 @@ export const useSearchAndOrganize = (
       return form.folder_id === currentFolder.id && isCurrentUser;
     });
 
-    const searchFiltered = searchText.trim()
-      ? initialFiltered.filter((form) => {
+    const searchFilteredList = searchText.trim()
+      ? initialFilteredList.filter((form) => {
           const formattedSearchText = searchText.trim().toLowerCase();
           return (
             form.title.toLowerCase().includes(formattedSearchText) ||
             form.owner_name.toLowerCase().includes(formattedSearchText)
           );
         })
-      : initialFiltered;
+      : initialFilteredList;
 
-    const chipFiltered = selectedChips.length
-      ? searchFiltered.filter((form) => selectedChips.every((chip) => chip.filterFn(form)))
-      : searchFiltered;
+    const chipFilteredList = selectedChips.length
+      ? searchFilteredList.filter((form) => selectedChips.every((chip) => chip.filterFn(form)))
+      : searchFilteredList;
 
     if (selectedMenuItem) {
       const isAscending = selectedMenuItem.state === MenuItemState.ASCENDING;
-      return [...chipFiltered].sort((a, b) => selectedMenuItem.sortFn(a, b, isAscending));
+      return [...chipFilteredList].sort((a, b) => selectedMenuItem.sortFn(a, b, isAscending));
     }
 
-    return chipFiltered;
+    return chipFilteredList;
   }, [forms, searchText, currentFolder.id, selectedChips, selectedMenuItem, userId]);
 
   const hasFilteredFolders = useMemo(() => !!filteredFolders.length, [filteredFolders]);

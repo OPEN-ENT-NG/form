@@ -1,12 +1,12 @@
-import { ModalProps } from "~/types";
+import { IModalProps } from "~/types";
 import { FormPropField, FormPropModalMode } from "./enums";
 
-export interface FormPropModalProps extends ModalProps {
+export interface IFormPropModalProps extends IModalProps {
   mode: FormPropModalMode;
   isRgpdPossible: boolean;
 }
 
-export interface FormPropInputValueState {
+export interface IFormPropInputValueState {
   [FormPropField.TITLE]: string;
   [FormPropField.DESCRIPTION]: string;
   [FormPropField.PICTURE]: string;
@@ -23,7 +23,7 @@ export interface FormPropInputValueState {
   [FormPropField.RGPD_LIFE_TIME]: number;
 }
 
-export interface FormCheckBoxProp {
+export interface IFormCheckBoxProp {
   i18nKey: string;
   field: FormPropField;
   tooltip?: string;

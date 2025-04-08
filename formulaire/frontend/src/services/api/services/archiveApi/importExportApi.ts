@@ -1,10 +1,10 @@
 import { QueryMethod } from "~/core/enums";
 import { emptySplitArchiveApi } from "./emptySplitArchiveApi";
 import {
-  ImportAnalyseResponseApp,
-  ImportAnalyzeResponse,
-  ImportLaunchResponse,
-  ImportUploadResponse,
+  IImportAnalyseResponseApp,
+  IImportAnalyzeResponse,
+  IImportLaunchResponse,
+  IImportUploadResponse,
 } from "~/core/models/import/types";
 import { FORMULAIRE } from "~/core/constants";
 import { toast } from "react-toastify";
@@ -13,13 +13,13 @@ import i18n from "~/i18n";
 export const importExportApi = emptySplitArchiveApi.injectEndpoints({
   endpoints: (builder) => ({
     // Upload forms
-    uploadImportForms: builder.mutation<ImportUploadResponse, FormData>({
+    uploadImportForms: builder.mutation<IImportUploadResponse, FormData>({
       query: (formData) => ({
         url: "import/upload",
         method: QueryMethod.POST,
         body: formData,
       }),
-      transformResponse: (response: ImportUploadResponse) => response,
+      transformResponse: (response: IImportUploadResponse) => response,
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -31,12 +31,12 @@ export const importExportApi = emptySplitArchiveApi.injectEndpoints({
     }),
 
     // AnalyzeImport
-    analyzeImportForms: builder.query<ImportAnalyzeResponse, string>({
+    analyzeImportForms: builder.query<IImportAnalyzeResponse, string>({
       query: (importId) => ({
         url: `import/analyze/${importId}`,
         method: QueryMethod.GET,
       }),
-      transformResponse: (response: ImportAnalyzeResponse) => response,
+      transformResponse: (response: IImportAnalyzeResponse) => response,
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -48,13 +48,13 @@ export const importExportApi = emptySplitArchiveApi.injectEndpoints({
     }),
 
     // LaunchImport
-    launchImportForms: builder.query<ImportLaunchResponse, { importId: string; apps: ImportAnalyseResponseApp[] }>({
+    launchImportForms: builder.query<IImportLaunchResponse, { importId: string; apps: IImportAnalyseResponseApp[] }>({
       query: ({ importId, apps }) => ({
         url: `import/${importId}/launch`,
         method: QueryMethod.POST,
         body: { apps: apps },
       }),
-      transformResponse: (response: ImportLaunchResponse) => response,
+      transformResponse: (response: IImportLaunchResponse) => response,
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;

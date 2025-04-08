@@ -1,10 +1,10 @@
 import { FC, createContext, useContext, useMemo, useState, useEffect, useCallback } from "react";
-import { HomeProviderContextType, HomeProviderProps, HomeTabViewPref } from "./types";
+import { HomeProviderContextType, IHomeProviderProps, IHomeTabViewPref } from "./types";
 import { initTabViewPref, useRootFolders } from "./utils";
-import { Folder } from "~/core/models/folder/types";
+import { IFolder } from "~/core/models/folder/types";
 import { HomeTabState } from "./enums";
 import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 import { useGetFormsQuery } from "~/services/api/services/formulaireApi/formApi";
 import { ViewMode } from "~/components/SwitchView/enums";
 
@@ -18,20 +18,20 @@ export const useHome = () => {
   return context;
 };
 
-export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
+export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const rootFolders = useRootFolders();
-  const [currentFolder, setCurrentFolder] = useState<Folder>(rootFolders[0]);
-  const [folders, setFolders] = useState<Folder[]>([]);
-  const [forms, setForms] = useState<Form[]>([]);
-  const [selectedFolders, setSelectedFolders] = useState<Folder[]>([]);
-  const [selectedForms, setSelectedForms] = useState<Form[]>([]);
+  const [currentFolder, setCurrentFolder] = useState<IFolder>(rootFolders[0]);
+  const [folders, setFolders] = useState<IFolder[]>([]);
+  const [forms, setForms] = useState<IForm[]>([]);
+  const [selectedFolders, setSelectedFolders] = useState<IFolder[]>([]);
+  const [selectedForms, setSelectedForms] = useState<IForm[]>([]);
 
   const [tab, setTab] = useState<HomeTabState>(HomeTabState.FORMS);
-  const [tabViewPref, setTabViewPref] = useState<HomeTabViewPref>(initTabViewPref());
+  const [tabViewPref, setTabViewPref] = useState<IHomeTabViewPref>(initTabViewPref());
   const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
 
-  const { data: foldersData } = useGetFoldersQuery();
-  const { data: formsData } = useGetFormsQuery();
+  const { data: foldersDatas } = useGetFoldersQuery();
+  const { data: formsDatas } = useGetFormsQuery();
 
   const toggleTab = useCallback((tab: HomeTabState) => {
     setTab(tab);
@@ -46,22 +46,31 @@ export const HomeProvider: FC<HomeProviderProps> = ({ children }) => {
 
   const resetSelected = useCallback(() => {
     setSelectedFolders([]);
-    return setSelectedForms([]);
+    setSelectedForms([]);
   }, []);
 
   useEffect(() => {
-    if (formsData) return setForms(formsData);
+    if (formsDatas) {
+      setForms(formsDatas);
+      return;
+    }
     return;
-  }, [formsData]);
+  }, [formsDatas]);
 
   useEffect(() => {
-    if (foldersData) return setFolders([...rootFolders, ...foldersData]);
+    if (foldersDatas) {
+      setFolders([...rootFolders, ...foldersDatas]);
+      return;
+    }
     return;
-  }, [foldersData, rootFolders]);
+  }, [foldersDatas, rootFolders]);
 
   useEffect(() => {
-    if (selectedFolders.length || selectedForms.length) return setIsToasterOpen(true);
-    return setIsToasterOpen(false);
+    if (selectedFolders.length || selectedForms.length) {
+      setIsToasterOpen(true);
+      return;
+    }
+    setIsToasterOpen(false);
   }, [selectedFolders, selectedForms]);
 
   useEffect(() => {

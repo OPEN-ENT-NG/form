@@ -1,6 +1,6 @@
-import { ToasterButton } from "~/containers/HomeView/types";
+import { IToasterButton } from "~/containers/HomeView/types";
 
-export interface ToasterProps {
-  leftButtons: ToasterButton[];
-  rightButtons: ToasterButton[];
+export interface IToasterProps {
+  leftButtons: IToasterButton[];
+  rightButtons: IToasterButton[];
 }

@@ -1,10 +1,10 @@
 import { DraggableType } from "~/core/enums";
-import { Folder } from "~/core/models/folder/types";
-import { Form } from "~/core/models/form/types";
+import { IFolder } from "~/core/models/folder/types";
+import { IForm } from "~/core/models/form/types";
 
-export interface ActiveDragItemProps {
+export interface IActiveDragItemProps {
   type: DraggableType;
   data: ItemData;
 }
 
-export type ItemData = Form | Folder | null;
+export type ItemData = IForm | IFolder | null;

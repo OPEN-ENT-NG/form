@@ -1,6 +1,6 @@
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 
-export interface HomeTabsProps {
+export interface IHomeTabsProps {
   value: HomeTabState;
   setValue: (value: HomeTabState) => void;
 }

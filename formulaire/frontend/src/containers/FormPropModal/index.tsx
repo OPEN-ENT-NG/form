@@ -31,7 +31,7 @@ import {
   datePickerWrapperStyle,
 } from "./style";
 import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
-import { FormPropModalProps } from "./types";
+import { IFormPropModalProps } from "./types";
 import { FormPropField, FormPropModalMode } from "./enums";
 import { useFormPropInputValueState } from "./useFormPropValueState";
 import { useTranslation } from "react-i18next";
@@ -47,7 +47,7 @@ import { buildFormPayload } from "~/core/models/form/utils";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 
-export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
+export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {
     selectedForms,
     currentFolder: { id: currentFolderId },
@@ -78,7 +78,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
     [handleFormPropInputValueChange],
   );
 
-  const formCheckBoxPropsReady = useMemo(() => {
+  const formCheckBoxPropsReadyList = useMemo(() => {
     return isRgpdPossible
       ? formCheckBoxProps
       : formCheckBoxProps.filter((item) => item.field !== FormPropField.HAS_RGPD);
@@ -100,14 +100,16 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
   const handleCheckboxChange = useCallback(
     (field: FormPropField) => {
       if (field === FormPropField.DESCRIPTION) {
-        return setIsDescriptionDisplay(!isDescriptionDisplay);
+        setIsDescriptionDisplay(!isDescriptionDisplay);
+        return;
       }
       if (field === FormPropField.IS_PUBLIC) {
         setIsEndingDateEditable(!formPropInputValue[field]);
         handleFormPropInputValueChange(FormPropField.IS_ANONYMOUS, !formPropInputValue[field]);
-        return handleFormPropInputValueChange(field, !formPropInputValue[field]);
+        handleFormPropInputValueChange(field, !formPropInputValue[field]);
+        return;
       }
-      return handleFormPropInputValueChange(field, !formPropInputValue[field]);
+      handleFormPropInputValueChange(field, !formPropInputValue[field]);
     },
     [
       formPropInputValue,
@@ -146,13 +148,17 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
       const endingDate = new Date(openingDate);
       endingDate.setFullYear(openingDate.getFullYear() + 1);
 
-      return handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
+      handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
+      return;
     }
-    return handleFormPropInputValueChange(FormPropField.DATE_ENDING, null);
+    handleFormPropInputValueChange(FormPropField.DATE_ENDING, null);
   }, [isEndingDateEditable, dateOpening, handleFormPropInputValueChange]);
 
   useEffect(() => {
-    if (!isDescriptionDisplay) return handleFormPropInputValueChange(FormPropField.DESCRIPTION, "");
+    if (!isDescriptionDisplay) {
+      handleFormPropInputValueChange(FormPropField.DESCRIPTION, "");
+      return;
+    }
     return;
   }, [isDescriptionDisplay, handleFormPropInputValueChange]);
 
@@ -166,7 +172,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
             height="16.3rem"
             information={IMAGE_PICKER_INFO}
             onImageChange={handleImageChange}
-            initialSrc={formPropInputValue[FormPropField.PICTURE] as string}
+            initialSrc={formPropInputValue[FormPropField.PICTURE]}
           />
         </Box>
         <Box sx={mainContentWrapper}>
@@ -179,7 +185,9 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
               sx={textFieldStyle}
               placeholder={t("formulaire.form.create.placeholder")}
               value={formPropInputValue[FormPropField.TITLE]}
-              onChange={(e) => handleFormPropInputValueChange(FormPropField.TITLE, e.target.value)}
+              onChange={(e) => {
+                handleFormPropInputValueChange(FormPropField.TITLE, e.target.value);
+              }}
               slotProps={{
                 htmlInput: { style: { width: "100%" } },
               }}
@@ -196,7 +204,9 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                 }}
                 minDate={dayjs()}
                 value={dayjs(formPropInputValue[FormPropField.DATE_OPENING])}
-                onChange={(value) => handleDateChange(FormPropField.DATE_OPENING, value)}
+                onChange={(value) => {
+                  handleDateChange(FormPropField.DATE_OPENING, value);
+                }}
               />
             </Box>
             <Box
@@ -204,13 +214,17 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                 ...dateEndingCheckboxStyle,
                 cursor: "pointer",
               }}
-              onClick={() => setIsEndingDateEditable(!isEndingDateEditable)}
+              onClick={() => {
+                setIsEndingDateEditable(!isEndingDateEditable);
+              }}
             >
               <Checkbox
                 sx={{ padding: "0" }}
                 disabled={isPublic}
                 checked={isEndingDateEditable}
-                onChange={() => setIsEndingDateEditable(!isEndingDateEditable)}
+                onChange={() => {
+                  setIsEndingDateEditable(!isEndingDateEditable);
+                }}
               />
               <Typography>{t("formulaire.date.ending")}</Typography>
             </Box>
@@ -224,13 +238,15 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                   }}
                   minDate={dayjs(dateOpening).add(1, "day")}
                   value={dayjs(formPropInputValue[FormPropField.DATE_ENDING])}
-                  onChange={(value) => handleDateChange(FormPropField.DATE_ENDING, value)}
+                  onChange={(value) => {
+                    handleDateChange(FormPropField.DATE_ENDING, value);
+                  }}
                 />
               </Box>
             )}
           </Box>
           <Box sx={subContentColumnWrapper}>
-            {formCheckBoxPropsReady.map((item) => {
+            {formCheckBoxPropsReadyList.map((item) => {
               const isDisabled =
                 item.field === FormPropField.IS_ANONYMOUS ||
                 item.field === FormPropField.IS_MULTIPLE ||
@@ -251,13 +267,19 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                       ...checkboxRowStyle,
                       cursor: isDisabled ? "not-allowed" : "pointer",
                     }}
-                    onClick={() => !isDisabled && handleCheckboxChange(item.field)}
+                    onClick={() => {
+                      if (!isDisabled) {
+                        handleCheckboxChange(item.field);
+                      }
+                    }}
                   >
                     <Checkbox
                       sx={{ padding: "0" }}
                       disabled={isDisabled}
                       checked={isChecked}
-                      onChange={(e) => e.stopPropagation()} // Prevent double firing of the event
+                      onChange={(e) => {
+                        e.stopPropagation();
+                      }} // Prevent double firing of the event
                     />
                     <Typography>{t(item.i18nKey)}</Typography>
                     {!!item.tooltip && (
@@ -265,7 +287,9 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                         <InfoOutlinedIcon
                           color="secondary"
                           fontSize="small"
-                          onClick={(e) => e.stopPropagation()} // Prevent checkbox toggling when clicking on the info icon
+                          onClick={(e) => {
+                            e.stopPropagation();
+                          }} // Prevent checkbox toggling when clicking on the info icon
                         />
                       </Tooltip>
                     )}
@@ -280,7 +304,9 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                         rows={4}
                         placeholder={t("formulaire.prop.description.placeholder")}
                         value={description}
-                        onChange={(e) => handleFormPropInputValueChange(FormPropField.DESCRIPTION, e.target.value)}
+                        onChange={(e) => {
+                          handleFormPropInputValueChange(FormPropField.DESCRIPTION, e.target.value);
+                        }}
                       />
                       <Typography color={GREY_DARK_COLOR} fontStyle="italic">
                         {t("formulaire.prop.description.description")}
@@ -296,10 +322,11 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                           sx={textFieldStyle}
                           placeholder={t("formulaire.prop.rgpd.goal.input")}
                           value={rgpdGoal}
-                          onChange={(e) => handleFormPropInputValueChange(FormPropField.RGPD_GOAL, e.target.value)}
-                          inputProps={{
-                            maxLength: 150,
-                            style: { width: "100%" },
+                          onChange={(e) => {
+                            handleFormPropInputValueChange(FormPropField.RGPD_GOAL, e.target.value);
+                          }}
+                          slotProps={{
+                            htmlInput: { maxLength: 150, style: { width: "100%" } },
                           }}
                         />
                         <Tooltip title={t("formulaire.prop.rgpd.goal.description")}>
@@ -314,14 +341,14 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
                             labelId="duration-select-label"
                             id="duration-select"
                             value={rgpdLifeTime}
-                            onChange={(e) =>
-                              handleFormPropInputValueChange(FormPropField.RGPD_LIFE_TIME, e.target.value)
-                            }
+                            onChange={(e) => {
+                              handleFormPropInputValueChange(FormPropField.RGPD_LIFE_TIME, e.target.value);
+                            }}
                             label={t("common.duration.label")}
                           >
                             {rgpdGoalDurationOptions.map((option) => (
                               <MenuItem key={option} value={option}>
-                                {`${option} ${t("formulaire.months")}`}
+                                {`${option.toString()} ${t("formulaire.months")}`}
                               </MenuItem>
                             ))}
                           </Select>
@@ -361,7 +388,7 @@ export const FormPropModal: FC<FormPropModalProps> = ({ isOpen, handleClose, mod
 
       <DialogActions sx={modalActionsStyle}>
         <Button onClick={handleClose}>{t("formulaire.cancel")}</Button>
-        <Button variant="contained" onClick={handleSubmit} disabled={!title.length}>
+        <Button variant="contained" onClick={() => void handleSubmit()} disabled={!title.length}>
           {t("formulaire.save")}
         </Button>
       </DialogActions>

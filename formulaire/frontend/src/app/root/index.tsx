@@ -5,11 +5,11 @@ function Root() {
 
   if (!init) return <LoadingScreen position={false} />;
 
-  return init ? (
+  return (
     <Layout>
       <Outlet />
     </Layout>
-  ) : null;
+  );
 }
 
 export default Root;

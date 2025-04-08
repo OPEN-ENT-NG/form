@@ -1,13 +1,13 @@
 import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
-import { HomeLayoutWrapperProps } from "./types";
+import { IHomeLayoutWrapperProps } from "./types";
 import { CSS_DIVIDER_COLOR } from "~/core/style/cssColors";
 
 export const HomeLayoutWrapper = styled(Box, {
   shouldForwardProp: (prop) => prop !== "headerHeight",
-})<HomeLayoutWrapperProps>(({ headerHeight = 71 }) => ({
+})<IHomeLayoutWrapperProps>(({ headerHeight = 71 }) => ({
   display: "flex",
   width: "100%",
-  height: `calc(100% - ${headerHeight}px)`,
+  height: `calc(100% - ${headerHeight.toString()}px)`,
   boxSizing: "border-box",
   borderTop: `1px solid ${CSS_DIVIDER_COLOR}`,
   overflow: "hidden",

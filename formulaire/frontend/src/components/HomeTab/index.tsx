@@ -1,11 +1,11 @@
 import { FC } from "react";
 import { Tab, Tabs } from "@cgi-learning-hub/ui";
-import { HomeTabsProps } from "./types";
+import { IHomeTabsProps } from "./types";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 
-export const HomeTabs: FC<HomeTabsProps> = ({ value, setValue }) => {
+export const HomeTabs: FC<IHomeTabsProps> = ({ value, setValue }) => {
   const { t } = useTranslation(FORMULAIRE);
   const handleChange = (_: React.SyntheticEvent, newValue: HomeTabState) => {
     setValue(newValue);

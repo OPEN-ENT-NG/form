@@ -1,4 +1,4 @@
-export interface Delegate {
+export interface IDelegate {
   id: number;
   entity: string;
   mail: string;

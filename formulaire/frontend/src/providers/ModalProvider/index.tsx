@@ -1,5 +1,5 @@
 import { FC, createContext, useContext, useMemo, useState } from "react";
-import { DisplayModalsState, ModalProviderContextType, ModalProviderProps } from "./types";
+import { IDisplayModalsState, ModalProviderContextType, IModalProviderProps } from "./types";
 import { initialDisplayModalsState } from "./utils";
 import { ModalType } from "~/core/enums";
 
@@ -13,14 +13,15 @@ export const useModal = () => {
   return context;
 };
 
-export const ModalProvider: FC<ModalProviderProps> = ({ children }) => {
-  const [displayModals, setDisplayModals] = useState<DisplayModalsState>(initialDisplayModalsState);
+export const ModalProvider: FC<IModalProviderProps> = ({ children }) => {
+  const [displayModals, setDisplayModals] = useState<IDisplayModalsState>(initialDisplayModalsState);
 
-  const toggleModal = (modalType: ModalType) =>
-    setDisplayModals((prevState: any) => ({
+  const toggleModal = (modalType: ModalType) => {
+    setDisplayModals((prevState) => ({
       ...prevState,
       [modalType]: !prevState[modalType],
     }));
+  };
 
   const value = useMemo<ModalProviderContextType>(
     () => ({
