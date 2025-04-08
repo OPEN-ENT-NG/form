@@ -1,6 +1,6 @@
 import { FC, useMemo, useState } from "react";
 import { Box, SearchInput } from "@cgi-learning-hub/ui";
-import { Switch, Typography, useTheme } from "@mui/material";
+import { Typography, useTheme } from "@mui/material";
 import { FormBreadcrumbs } from "~/components/Breadcrumbs";
 
 import { useHome } from "~/providers/HomeProvider";
@@ -10,14 +10,14 @@ import {
   resourceContainerStyle,
   searchBarStyle,
   searchStyle,
-} from "./styles";
+} from "./style";
 import { HomeMainFolders } from "../HomeMainFolders";
 import { useTranslation } from "react-i18next";
 import { HomeMainForms } from "../HomeMainForms";
 import { FORMULAIRE } from "~/core/constants";
 import { OrganizeFilter } from "~/components/OrganizeFilter";
 import { ChipProps, MenuItemProps } from "~/components/OrganizeFilter/types";
-import { chipData, getDragCursorStyle, getEmptyStateDescription, menuItemData } from "./utils";
+import { chipData, getDragCursorStyle, getEmptyStateDescription, menuItemData, useToggleButtons } from "./utils";
 import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
 import { useEdificeClient } from "@edifice.io/react";
 import { DndContext, DragOverlay, pointerWithin } from "@dnd-kit/core";
@@ -30,18 +30,36 @@ import { useSearchAndOrganize } from "./useSearchAndOrganize";
 import { Form } from "~/core/models/form/types";
 import { Folder } from "~/core/models/folder/types";
 import { FormPreview } from "~/components/FormPreview";
+import { SwitchView } from "~/components/SwitchView";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
+import { HomeTabs } from "~/components/HomeTab";
+import { ViewMode } from "~/components/SwitchView/enums";
+import { HomeMainTable } from "../HomeMainTable";
 
 export const HomeMainLayout: FC = () => {
-  const { folders, forms, currentFolder, selectedFolders, selectedForms, setSelectedFolders, setSelectedForms } =
-    useHome();
+  const {
+    folders,
+    forms,
+    currentFolder,
+    selectedFolders,
+    selectedForms,
+    tab,
+    tabViewPref,
+    setSelectedFolders,
+    setSelectedForms,
+    toggleTab,
+    toggleTagViewPref,
+  } = useHome();
   const theme = useTheme();
   const { t } = useTranslation(FORMULAIRE);
   const { user } = useEdificeClient();
+  const toggleButtonList = useToggleButtons();
   const [selectedChips, setSelectedChips] = useState<ChipProps[]>([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItemProps>();
   const userId = user?.userId;
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, sensors, activeDragItem, isValidDrop } =
     useFormFolderDnd(selectedFolders, selectedForms, setSelectedFolders, setSelectedForms, currentFolder);
+  const viewMode = tabViewPref[tab];
 
   const flatTreeViewItems = buildFlatFolderTree(folders);
 
@@ -59,6 +77,11 @@ export const HomeMainLayout: FC = () => {
   return (
     <Box sx={{ ...mainContentInnerStyle, ...getDragCursorStyle(activeDragItem, isValidDrop) }}>
       <Box sx={searchStyle}>
+        {tab === HomeTabState.RESPONSES && (
+          <Box flexShrink={0}>
+            <HomeTabs value={tab} setValue={toggleTab} />
+          </Box>
+        )}
         <SearchInput
           placeholder={t("formulaire.search.placeholder")}
           sx={searchBarStyle}
@@ -75,7 +98,7 @@ export const HomeMainLayout: FC = () => {
       </Box>
       <Box sx={searchStyle}>
         <FormBreadcrumbs stringItems={breadcrumbsText} />
-        <Switch />
+        <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref}></SwitchView>
       </Box>
       <DndContext
         sensors={sensors}
@@ -88,7 +111,12 @@ export const HomeMainLayout: FC = () => {
         {(hasFilteredFolders || hasFilteredForms) && (
           <Box sx={resourceContainerStyle}>
             {hasFilteredFolders && <HomeMainFolders folders={filteredFolders} activeItem={activeDragItem} />}
-            {hasFilteredForms && <HomeMainForms forms={filteredForms} activeItem={activeDragItem} />}
+            {hasFilteredForms &&
+            (viewMode === ViewMode.CARDS ? (
+              <HomeMainForms forms={filteredForms} activeItem={activeDragItem} />
+            ) : (
+              <HomeMainTable forms={filteredForms} />
+            ))}
           </Box>
         )}
         {flatTreeViewItems.map((item) => (
