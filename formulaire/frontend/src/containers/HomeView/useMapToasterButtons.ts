@@ -26,6 +26,7 @@ export const useMapToasterButtons = () => {
   const hasOneFolder = useMemo(() => selectedFolders.length === 1, [selectedFolders]);
   const hasMultipleFolders = useMemo(() => selectedFolders.length > 1, [selectedFolders]);
   const hasFolders = useMemo(() => selectedFolders.length > 0, [selectedFolders]);
+  const hasQuestionsInForms = useMemo(() => selectedForms.every((form) => form.nb_elements > 0), [selectedForms]);
 
   const hasNoForms = useMemo(() => selectedForms.length === 0, [selectedForms]);
   const hasOneForm = useMemo(() => selectedForms.length === 1, [selectedForms]);
@@ -171,6 +172,11 @@ export const useMapToasterButtons = () => {
         type: ToasterButtonType.RESTORE,
         action: () => handleRestore(),
       },
+      [ToasterButtonType.SHARE]: {
+        titleI18nkey: "formulaire.share",
+        type: ToasterButtonType.SHARE,
+        action: () => toggleModal(ModalType.FORM_SHARE),
+      },
     }),
     [
       hasFolders,
@@ -200,7 +206,7 @@ export const useMapToasterButtons = () => {
 
       // Cas 1: Un seul formulaire
       if (hasOneForm && !hasFolders) {
-        return [
+        const buttons = [
           ToasterButtonType.OPEN,
           ToasterButtonType.PROPS,
           ToasterButtonType.DUPLICATE,
@@ -208,6 +214,8 @@ export const useMapToasterButtons = () => {
           ToasterButtonType.EXPORT,
           ToasterButtonType.DELETE,
         ];
+
+        return hasQuestionsInForms ? [...buttons, ToasterButtonType.SHARE] : buttons;
       }
       // Cas 2: Plusieurs formulaires
       if (hasMultipleForms && !hasFolders) {

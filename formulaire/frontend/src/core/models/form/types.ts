@@ -27,6 +27,7 @@ export interface IForm {
   nb_elements: number;
   nb_responses: number | null;
   infoImg: IInfoImg;
+  rights: string[];
 }
 
 export interface IInfoImg {

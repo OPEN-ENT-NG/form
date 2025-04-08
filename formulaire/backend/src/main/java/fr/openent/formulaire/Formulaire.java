@@ -5,6 +5,7 @@ import fr.openent.form.core.constants.Tables;
 import fr.openent.formulaire.controllers.*;
 import fr.openent.formulaire.cron.NotifyCron;
 import fr.openent.formulaire.cron.RgpdCron;
+import fr.openent.formulaire.service.ServiceFactory;
 import fr.openent.formulaire.service.impl.FormulaireApplicationStorage;
 import fr.openent.formulaire.service.impl.FormulaireRepositoryEvents;
 import io.vertx.core.Promise;
@@ -37,17 +38,20 @@ public class Formulaire extends BaseServer {
 	public void start(Promise<Void> startPromise) throws Exception {
 		super.start(startPromise);
 
+		ServiceFactory.initialize(securedActions);
 		Constants.MAX_RESPONSES_EXPORT_PDF = config.getInteger(MAX_RESPONSE_EXPORT_PDF, 100);
 		Constants.MAX_USERS_SHARING = config.getInteger(MAX_USERS_SHARING, 65000);
 
 		final EventBus eb = getEventBus(vertx);
 		final TimelineHelper timelineHelper = new TimelineHelper(vertx, eb, config);
 		final EventStore eventStore = EventStoreFactory.getFactory().getEventStore(Formulaire.class.getSimpleName());
-		final PostgresqlApplicationStorage applicationStorage = new FormulaireApplicationStorage(timelineHelper, eb);
+		final PostgresqlApplicationStorage applicationStorage = new FormulaireApplicationStorage(timelineHelper);
 		final Storage storage = new StorageFactory(vertx, config, applicationStorage).getStorage();
+
 
 		// Set RepositoryEvents implementation used to process events published for transition
 		setRepositoryEvents(new FormulaireRepositoryEvents(vertx));
+
 
 
 		// Create and parameter confs for all controllers using sharing system
