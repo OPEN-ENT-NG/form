@@ -1,6 +1,6 @@
 import { ShareRight, ShareRightAction, ShareRightActionDisplayName, ShareRightWithVisibles } from "@edifice.io/client";
-import { Avatar, Button, IconButton } from "@edifice.io/react";
-import { Box, Checkbox } from "@cgi-learning-hub/ui";
+import { Avatar, Button, IconButton, Checkbox } from "@edifice.io/react";
+import { Box } from "@cgi-learning-hub/ui";
 import { IconBookmark, IconClose, IconRafterDown } from "@edifice.io/react/icons";
 import { useTranslation } from "react-i18next";
 
@@ -79,12 +79,6 @@ export const ShareBookmarkLine = ({
                 <Checkbox
                   checked={hasRight(shareRight, shareRightAction)}
                   onChange={() => toggleRight(shareRight, shareRightAction.id)}
-                  sx={{
-                    "&.Mui-checked": {
-                      color: "var(--theme-palette-primary-main)",
-                    },
-                    "& .MuiSvgIcon-root": { fontSize: 24 },
-                  }}
                 />
               </Box>
             ))}

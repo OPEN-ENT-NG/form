@@ -5,16 +5,8 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 
-import { Avatar, Button, Combobox, LoadingScreen, Tooltip, VisuallyHidden } from "@edifice.io/react";
-import {
-  Box,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogContentText,
-  DialogTitle,
-  Checkbox,
-} from "@cgi-learning-hub/ui";
+import { Avatar, Button, Checkbox, Combobox, Heading, LoadingScreen, Modal, Tooltip, VisuallyHidden } from "@edifice.io/react";
+import { Box } from "@cgi-learning-hub/ui";
 import { IconBookmark, IconInfoCircle, IconRafterDown } from "@edifice.io/react/icons";
 import { ShareBookmark } from "./ShareBookmark";
 import { ShareBookmarkLine } from "./ShareBookmarkLine";
@@ -23,7 +15,6 @@ import useShare from "./hooks/useShare";
 import { useShareBookmark } from "./hooks/useShareBookmark";
 import { userHasRight } from "./utils/hasRight";
 import { FORMULAIRE } from "~/core/constants";
-import { BreakpointVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 import { useShareModal } from "~/providers/ShareModalProvider";
 
 export type ShareOptions = {
@@ -134,14 +125,14 @@ export default function ShareResourceModal({
     : tEdifice("explorer.modal.share.search.placeholder");
 
   return createPortal(
-    <Dialog id="share_modal" maxWidth={BreakpointVariant.MD} open={isOpen} onClose={onCancel} fullWidth>
-      <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+    <Modal id="share_modal" size="lg" isOpen={isOpen} onModalClose={onCancel}>
+      <Modal.Header onModalClose={onCancel}>
         {tEdifice("share.title")}
-      </DialogTitle>
-      <DialogContent>
-        <DialogContentText variant={TypographyVariant.H3} sx={{ mb: 2 }}>
+      </Modal.Header>
+      <Modal.Body>
+      <Heading headingStyle="h4" level="h3" className="mb-16">
           {tEdifice("explorer.modal.share.usersWithAccess")}
-        </DialogContentText>
+      </Heading>
         <Box className="table-responsive">
           {isLoading ? (
             <LoadingScreen />
@@ -149,9 +140,8 @@ export default function ShareResourceModal({
             <Box
               component="table"
               className="table border align-middle mb-0"
-              sx={{ borderCollapse: "collapse !important" }}
             >
-              <Box component="thead" sx={{ backgroundColor: "var(--theme-palette-primary-main) !important" }}>
+              <Box component="thead" className="bg-secondary">
                 <Box component="tr">
                   <Box component="th" scope="col" className="w-32">
                     <VisuallyHidden>{tEdifice("explorer.modal.share.avatar.shared.alt")}</VisuallyHidden>
@@ -195,13 +185,6 @@ export default function ShareResourceModal({
                           checked={
                             currentIsAuthor() || userHasRight(userFormsRight, parseInt(resourceId), shareRightAction.id)
                           }
-                          sx={{
-                            "&.Mui-checked": {
-                              color: "var(--theme-palette-primary-main)",
-                              opacity: 0.5,
-                            },
-                            "& .MuiSvgIcon-root": { fontSize: 24 },
-                          }}
                           disabled
                         />
                       </Box>
@@ -251,7 +234,11 @@ export default function ShareResourceModal({
           )}
         </Box>
         <Box component="hr" />
-        <DialogContentText variant={TypographyVariant.H3} sx={{ alignItems: "center", display: "flex", mb: 2 }}>
+        <Heading
+          headingStyle="h4"
+          level="h3"
+          className="mb-16 d-flex align-items-center"
+        >
           <Box className="me-8">{tEdifice("explorer.modal.share.search")}</Box>
           <Tooltip
             message={
@@ -261,7 +248,7 @@ export default function ShareResourceModal({
           >
             <IconInfoCircle className="c-pointer" height="18" />
           </Tooltip>
-        </DialogContentText>
+        </Heading>
         <Box className="row">
           <Box className="col-10">
             <Combobox
@@ -277,8 +264,8 @@ export default function ShareResourceModal({
           </Box>
         </Box>
         {children}
-      </DialogContent>
-      <DialogActions>
+      </Modal.Body>
+      <Modal.Footer>
         <Button type="button" color="tertiary" variant="ghost" onClick={onCancel}>
           {tEdifice("explorer.cancel")}
         </Button>
@@ -290,15 +277,11 @@ export default function ShareResourceModal({
           isLoading={isSharing}
           onClick={handleShare}
           disabled={isSharing}
-          style={{
-            backgroundColor: "var(--theme-palette-primary-main)",
-            borderColor: "var(--theme-palette-primary-main)",
-          }}
         >
           {tEdifice("share")}
         </Button>
-      </DialogActions>
-    </Dialog>,
+      </Modal.Footer>
+    </Modal>,
     document.getElementById("portal") as HTMLElement,
   );
 }
