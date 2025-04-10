@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { headerStyle } from "./style";
 import { ComponentVariant } from "~/core/style/themeProps";
+import { FormsIcon } from "../SVG/FormsIcon";
 
 export const Header: FC<IHeaderProps> = ({
   stringItems,
@@ -20,6 +21,7 @@ export const Header: FC<IHeaderProps> = ({
   return (
     <Box sx={headerStyle}>
       <FormBreadcrumbs
+        icon = {FormsIcon}
         stringItems={stringItems}
         separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem" }} />}
         isHeader

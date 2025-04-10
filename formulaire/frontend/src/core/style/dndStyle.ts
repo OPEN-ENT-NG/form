@@ -5,14 +5,10 @@ export const cardPreviewStyle: SxProps = {
   width: "30rem",
 };
 
-export const droppableStyle: SxProps = {
-  boxSizing: "border-box",
-  border: "2px solid transparent",
-  borderRadius: ".8rem",
-};
-
 export const overedStyle: SxProps = {
-  border: "2px solid #e4e4e4",
+  "& .MuiPaper-root": {
+    border: "2px solid #e4e4e4",
+  },
 };
 
 export const dragActiveStyle: SxProps = {

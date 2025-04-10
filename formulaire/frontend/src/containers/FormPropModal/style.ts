@@ -84,11 +84,6 @@ export const rgpdContentRowStyle = {
   marginLeft: "3.2rem",
 };
 
-export const modalActionsStyle = {
-  ...flexEndBoxStyle,
-  gap: "1rem",
-};
-
 export const datePickerWrapperStyle = {
   width: "16rem",
   "& .MuiInputBase-input": {

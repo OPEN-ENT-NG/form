@@ -10,6 +10,7 @@ import {
   resourceContainerStyle,
   searchBarStyle,
   searchStyle,
+  viewTitleStyle,
 } from "./style";
 import { HomeMainFolders } from "../HomeMainFolders";
 import { useTranslation } from "react-i18next";
@@ -40,6 +41,8 @@ import { SwitchView } from "~/components/SwitchView";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { HomeMainTable } from "../HomeMainTable";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
+import { centerBoxStyle } from "~/styles/boxStyles";
+import FolderIcon from '@mui/icons-material/Folder';
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 
 export const HomeMainLayout: FC = () => {
@@ -84,6 +87,8 @@ export const HomeMainLayout: FC = () => {
 
   const breadcrumbsTexts = useMemo(() => (currentFolder.name ? [currentFolder.name] : []), [currentFolder.name]);
 
+  console.log("currentFolder", currentFolder);
+
   return (
     <Box sx={{ ...mainContentInnerStyle, ...getDragCursorStyle(activeDragItem, isValidDrop) }}>
       <Box sx={searchStyle}>
@@ -103,8 +108,8 @@ export const HomeMainLayout: FC = () => {
           selectedMenuItem={selectedMenuItem}
         />
       </Box>
-      <Box sx={searchStyle}>
-        <FormBreadcrumbs stringItems={breadcrumbsTexts} />
+      <Box sx={viewTitleStyle}>
+        <FormBreadcrumbs icon={currentFolder.icon ?? FolderIcon} stringItems={breadcrumbsTexts} />
         <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
       </Box>
       <DndContext
@@ -139,9 +144,13 @@ export const HomeMainLayout: FC = () => {
           ) : null}
         </DragOverlay>
         {!hasFilteredFolders && !hasFilteredForms && (
-          <Box sx={emptyStateWrapperStyle}>
-            <ResourcesEmptyState fill={theme.palette.primary.main} />
-            <Typography>{t(getEmptyStateDescription(currentFolder))}</Typography>
+          <Box sx={centerBoxStyle} height="100%">
+            <Box sx={emptyStateWrapperStyle}>
+              <Box height="25rem">
+                <ResourcesEmptyState fill={theme.palette.primary.main} />
+              </Box>
+              <Typography>{t(getEmptyStateDescription(currentFolder))}</Typography>
+            </Box>
           </Box>
         )}
       </DndContext>

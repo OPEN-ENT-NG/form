@@ -12,6 +12,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
 import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/formulaireApi/folderApi";
 import { ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder/types";
+import { KeyName } from "~/core/enums";
 
 export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }) => {
   const { currentFolder, selectedFolders } = useHome();
@@ -60,6 +61,13 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
 
   const currentConfig = modeConfig[mode];
 
+  const handleOnKeyDown = (e: React.KeyboardEvent) => {
+    if (e.code === KeyName.ENTER) {
+      e.preventDefault();
+      currentConfig.handleAction();
+    }
+  };
+
   return (
     <Dialog
       open={isOpen}
@@ -85,6 +93,7 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
           onChange={(e) => {
             setNewName(e.target.value);
           }}
+          onKeyDown={handleOnKeyDown}
         />
       </DialogContent>
 
