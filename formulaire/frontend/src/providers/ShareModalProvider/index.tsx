@@ -26,7 +26,7 @@ export const ShareModalProvider: FC<ShareModalProviderProps> = ({ children }) =>
       setUserFormsRight(data);
     }
     return;
-  }, [shareData]);
+  }, [shareData, forms]);
 
   const value = useMemo<ShareModalProviderContextType>(
     () => ({
