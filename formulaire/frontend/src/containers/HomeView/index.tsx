@@ -33,6 +33,7 @@ export const HomeView: FC = () => {
       showFormImport,
       showMove,
       showExport,
+      showShare
     },
     toggleModal,
   } = useModal();
@@ -116,7 +117,7 @@ export const HomeView: FC = () => {
           }}
         />
       )}
-      {FORM_SHARE && <FormShareModal isOpen={FORM_SHARE} handleClose={() => toggleModal(ModalType.FORM_SHARE)} />}
+      {showShare && <FormShareModal isOpen={showShare} handleClose={() => toggleModal(ModalType.FORM_SHARE)} />}
       {isToasterOpen && <Toaster leftButtons={leftButtons} rightButtons={rightButtons} />}
     </Box>
   );

@@ -1,10 +1,10 @@
 import { ReactNode } from "react";
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 
 export type RightStringified = "read" | "contrib" | "manager" | "comment";
 
 export interface UserFormsRight {
-  form: Form;
+  form: IForm;
   rights: RightStringified[];
 }
 

@@ -1,7 +1,7 @@
-import { Form } from "~/core/models/form/types";
+import { IForm } from "~/core/models/form/types";
 import { RightStringified, UserFormsRight } from "./types";
 
-export const buildUserFormsRight = (datas: any[], forms: Form[]) => {
+export const buildUserFormsRight = (datas: any[], forms: IForm[]) => {
   // Mapping object from raw action identifiers to our RightStringified values
   const rightsMapping: Record<string, RightStringified> = {
     initManagerResourceRight: "manager",
