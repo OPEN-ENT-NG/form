@@ -1,12 +1,13 @@
 import { IForm, IFormRight } from "~/core/models/form/types";
 import { RightStringified, IUserFormsRight } from "./types";
+import { COMMENT_RIGHT, CONTRIB_RIGHT, MANAGER_RIGHT } from "~/core/constants";
 
 export const buildUserFormsRight = (datas: IFormRight[], forms: IForm[]) => {
   // Mapping object from raw action identifiers to our RightStringified values
   const rightsMapping: Record<string, RightStringified> = {
-    initManagerResourceRight: "manager",
-    initContribResourceRight: "contrib",
-    initResponderResourceRight: "comment",
+    initManagerResourceRight: MANAGER_RIGHT,
+    initContribResourceRight: CONTRIB_RIGHT,
+    initResponderResourceRight: COMMENT_RIGHT,
   };
 
   // First, group rights by form id (resource_id)

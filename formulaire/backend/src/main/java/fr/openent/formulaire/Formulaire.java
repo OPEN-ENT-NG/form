@@ -48,10 +48,8 @@ public class Formulaire extends BaseServer {
 		final PostgresqlApplicationStorage applicationStorage = new FormulaireApplicationStorage(timelineHelper);
 		final Storage storage = new StorageFactory(vertx, config, applicationStorage).getStorage();
 
-
 		// Set RepositoryEvents implementation used to process events published for transition
 		setRepositoryEvents(new FormulaireRepositoryEvents(vertx));
-
 
 
 		// Create and parameter confs for all controllers using sharing system

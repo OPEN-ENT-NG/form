@@ -15,11 +15,6 @@ export const FormShareModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   };
 
   return (
-    <ShareModal
-      isOpen={isOpen}
-      shareOptions={shareOptions}
-      onCancel={handleClose}
-      onSuccess={handleShareSuccess}
-    ></ShareModal>
+    <ShareModal isOpen={isOpen} shareOptions={shareOptions} onCancel={handleClose} onSuccess={handleShareSuccess} />
   );
 };

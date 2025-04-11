@@ -9,7 +9,7 @@ const ShareModalProviderContext = createContext<ShareModalProviderContextType | 
 export const useShareModal = () => {
   const context = useContext(ShareModalProviderContext);
   if (!context) {
-    throw new Error("useHome must be used within a HomeProvider");
+    throw new Error("useShareModal must be used within a ShareModalProvider");
   }
   return context;
 };

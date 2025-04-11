@@ -51,7 +51,6 @@ import static fr.openent.form.helpers.UtilsHelper.getStringIds;
 import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
 import static org.entcore.common.http.response.DefaultResponseHandler.defaultResponseHandler;
 
-
 public class FormController extends ControllerHelper {
     private static final Logger log = LoggerFactory.getLogger(FormController.class);
     private final EventStore eventStore;
