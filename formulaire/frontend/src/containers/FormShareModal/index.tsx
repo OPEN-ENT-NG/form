@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { ModalProps } from "~/types";
+import { IModalProps } from "~/types";
 import { useHome } from "~/providers/HomeProvider";
 import { ShareModal } from "~/common/ShareModal";
 
-export const FormShareModal: FC<ModalProps> = ({ isOpen, handleClose }) => {
+export const FormShareModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { selectedForms } = useHome();
   const handleShareSuccess = () => {
     handleClose();

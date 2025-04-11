@@ -24,7 +24,7 @@ export const ShareBookmarkLine = ({
 }) => {
   console.log("ShareBookmarkLine", shareRights);
   const { t } = useTranslation();
-  return shareRights?.rights.map((shareRight: ShareRight) => {
+  return shareRights.rights.map((shareRight: ShareRight) => {
     return (
       showShareRightLine(shareRight, showBookmark) && (
         <Box component="tr" key={shareRight.id} className={shareRight.isBookmarkMember ? "bg-light" : ""}>
@@ -78,7 +78,9 @@ export const ShareBookmarkLine = ({
               >
                 <Checkbox
                   checked={hasRight(shareRight, shareRightAction)}
-                  onChange={() => toggleRight(shareRight, shareRightAction.id)}
+                  onChange={() => {
+                    toggleRight(shareRight, shareRightAction.id);
+                  }}
                 />
               </Box>
             ))}
@@ -91,7 +93,9 @@ export const ShareBookmarkLine = ({
                 type="button"
                 variant="ghost"
                 title={t("close")}
-                onClick={() => onDeleteRow(shareRight)}
+                onClick={() => {
+                  onDeleteRow(shareRight);
+                }}
               />
             )}
           </Box>

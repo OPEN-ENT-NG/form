@@ -23,9 +23,7 @@ export const useMapToasterButtons = () => {
 
   const { user } = useEdificeClient();
 
-  const {
-    userFormsRight,
-  } = useShareModal();
+  const { userFormsRights } = useShareModal();
 
   const { toggleModal } = useModal();
   const [duplicateForms, { isLoading: isDuplicating }] = useDuplicateFormsMutation();
@@ -38,10 +36,10 @@ export const useMapToasterButtons = () => {
   const hasQuestionsInForms = useMemo(() => selectedForms.every((form) => form.nb_elements > 0), [selectedForms]);
   const hasShareRightManager = useMemo(() => {
     return selectedForms.every((form) => {
-      const formRight = userFormsRight.find((right) => right.form.id === form.id);
+      const formRight = userFormsRights.find((right) => right.form.id === form.id);
       return (formRight ? formRight.rights.includes(MANAGER_RIGHT) : false) || user?.userId === form.owner_id;
     });
-  }, [selectedForms, userFormsRight]);
+  }, [selectedForms, userFormsRights]);
 
   const hasNoForms = useMemo(() => selectedForms.length === 0, [selectedForms]);
   const hasOneForm = useMemo(() => selectedForms.length === 1, [selectedForms]);
@@ -190,7 +188,9 @@ export const useMapToasterButtons = () => {
       [ToasterButtonType.SHARE]: {
         titleI18nkey: "formulaire.share",
         type: ToasterButtonType.SHARE,
-        action: () => toggleModal(ModalType.FORM_SHARE),
+        action: () => {
+          toggleModal(ModalType.FORM_SHARE);
+        },
       },
     }),
     [

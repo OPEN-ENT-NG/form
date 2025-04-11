@@ -1,5 +1,5 @@
 import { FC, useContext, useEffect, useMemo, useState, createContext } from "react";
-import { ShareModalProviderContextType, ShareModalProviderProps, UserFormsRight } from "./types";
+import { ShareModalProviderContextType, IShareModalProviderProps, IUserFormsRight } from "./types";
 import { useGetUserFormsRightsQuery } from "~/services/api/services/formulaireApi/formApi";
 import { buildUserFormsRight } from "./utils";
 import { useHome } from "../HomeProvider";
@@ -14,25 +14,25 @@ export const useShareModal = () => {
   return context;
 };
 
-export const ShareModalProvider: FC<ShareModalProviderProps> = ({ children }) => {
+export const ShareModalProvider: FC<IShareModalProviderProps> = ({ children }) => {
   const { forms } = useHome();
 
-  const [userFormsRight, setUserFormsRight] = useState<UserFormsRight[]>([]);
-  const { data: shareData } = useGetUserFormsRightsQuery();
+  const [userFormsRights, setUserFormsRight] = useState<IUserFormsRight[]>([]);
+  const { data: rightsDataList } = useGetUserFormsRightsQuery();
 
   useEffect(() => {
-    if (shareData) {
-      const data = buildUserFormsRight(shareData, forms);
+    if (rightsDataList) {
+      const data = buildUserFormsRight(rightsDataList, forms);
       setUserFormsRight(data);
     }
     return;
-  }, [shareData, forms]);
+  }, [rightsDataList, forms]);
 
   const value = useMemo<ShareModalProviderContextType>(
     () => ({
-      userFormsRight,
+      userFormsRights: userFormsRights,
     }),
-    [userFormsRight],
+    [userFormsRights],
   );
 
   return <ShareModalProviderContext.Provider value={value}>{children}</ShareModalProviderContext.Provider>;

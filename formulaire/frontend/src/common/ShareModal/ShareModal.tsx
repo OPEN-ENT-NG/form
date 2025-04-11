@@ -5,7 +5,17 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 
-import { Avatar, Button, Checkbox, Combobox, Heading, LoadingScreen, Modal, Tooltip, VisuallyHidden } from "@edifice.io/react";
+import {
+  Avatar,
+  Button,
+  Checkbox,
+  Combobox,
+  Heading,
+  LoadingScreen,
+  Modal,
+  Tooltip,
+  VisuallyHidden,
+} from "@edifice.io/react";
 import { Box } from "@cgi-learning-hub/ui";
 import { IconBookmark, IconInfoCircle, IconRafterDown } from "@edifice.io/react/icons";
 import { ShareBookmark } from "./ShareBookmark";
@@ -29,11 +39,10 @@ export type ShareResourceMutation = UseMutationResult<
   {
     resourceId: string;
     rights: ShareRight[];
-  },
-  unknown
+  }
 >;
 
-interface ShareResourceModalProps {
+interface IShareResourceModalProps {
   /** Handle open/close state */
   isOpen: boolean;
   /**
@@ -68,10 +77,10 @@ export default function ShareResourceModal({
   children,
   onSuccess,
   onCancel,
-}: ShareResourceModalProps) {
+}: IShareResourceModalProps) {
   const { resourceId, resourceCreatorId, resourceRights } = shareOptions;
   console.log(shareOptions);
-  const { userFormsRight } = useShareModal();
+  const { userFormsRights } = useShareModal();
   const [isLoading, setIsLoading] = useState(true);
 
   const {
@@ -126,21 +135,16 @@ export default function ShareResourceModal({
 
   return createPortal(
     <Modal id="share_modal" size="lg" isOpen={isOpen} onModalClose={onCancel}>
-      <Modal.Header onModalClose={onCancel}>
-        {tEdifice("share.title")}
-      </Modal.Header>
+      <Modal.Header onModalClose={onCancel}>{tEdifice("share.title")}</Modal.Header>
       <Modal.Body>
-      <Heading headingStyle="h4" level="h3" className="mb-16">
+        <Heading headingStyle="h4" level="h3" className="mb-16">
           {tEdifice("explorer.modal.share.usersWithAccess")}
-      </Heading>
+        </Heading>
         <Box className="table-responsive">
           {isLoading ? (
             <LoadingScreen />
           ) : (
-            <Box
-              component="table"
-              className="table border align-middle mb-0"
-            >
+            <Box component="table" className="table border align-middle mb-0">
               <Box component="thead" className="bg-secondary">
                 <Box component="tr">
                   <Box component="th" scope="col" className="w-32">
@@ -183,7 +187,8 @@ export default function ShareResourceModal({
                       >
                         <Checkbox
                           checked={
-                            currentIsAuthor() || userHasRight(userFormsRight, parseInt(resourceId), shareRightAction.id)
+                            currentIsAuthor() ||
+                            userHasRight(userFormsRights, parseInt(resourceId), shareRightAction.id)
                           }
                           disabled
                         />
@@ -220,7 +225,9 @@ export default function ShareResourceModal({
             type="button"
             variant="ghost"
             className="fw-normal"
-            onClick={() => toggleBookmarkInput(!showBookmarkInput)}
+            onClick={() => {
+              toggleBookmarkInput(!showBookmarkInput);
+            }}
           >
             {tEdifice("share.save.sharebookmark")}
           </Button>
@@ -234,11 +241,7 @@ export default function ShareResourceModal({
           )}
         </Box>
         <Box component="hr" />
-        <Heading
-          headingStyle="h4"
-          level="h3"
-          className="mb-16 d-flex align-items-center"
-        >
+        <Heading headingStyle="h4" level="h3" className="mb-16 d-flex align-items-center">
           <Box className="me-8">{tEdifice("explorer.modal.share.search")}</Box>
           <Tooltip
             message={
@@ -259,7 +262,9 @@ export default function ShareResourceModal({
               options={searchResults}
               searchMinLength={getSearchMinLength()}
               onSearchInputChange={handleSearchInputChange}
-              onSearchResultsChange={handleSearchResultsChange}
+              onSearchResultsChange={(results) => {
+                void handleSearchResultsChange(results);
+              }}
             />
           </Box>
         </Box>
@@ -275,7 +280,7 @@ export default function ShareResourceModal({
           color="primary"
           variant="filled"
           isLoading={isSharing}
-          onClick={handleShare}
+          onClick={() => void handleShare()}
           disabled={isSharing}
         >
           {tEdifice("share")}

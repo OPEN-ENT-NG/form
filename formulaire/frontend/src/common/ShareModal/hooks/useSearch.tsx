@@ -1,6 +1,14 @@
 import { ChangeEvent, Dispatch, useEffect, useReducer } from "react";
 
-import { ShareRight, ShareRightAction, ShareRightWithVisibles, ShareSubject, odeServices } from "@edifice.io/client";
+import {
+  Group,
+  ShareRight,
+  ShareRightAction,
+  ShareRightWithVisibles,
+  ShareSubject,
+  User,
+  odeServices,
+} from "@edifice.io/client";
 import { OptionListItemType, useDebounce, useEdificeClient, useIsAdml } from "@edifice.io/react";
 import { IconBookmark } from "@edifice.io/react/icons";
 import { useTranslation } from "react-i18next";
@@ -18,10 +26,10 @@ type State = {
 type Action =
   | { type: "onChange"; payload: string }
   | { type: "isSearching"; payload: boolean }
-  | { type: "addResult"; payload: OptionListItemType[] }
-  | { type: "addApiResult"; payload: ShareSubject[] }
-  | { type: "updateSearchResult"; payload: OptionListItemType[] }
-  | { type: "emptyResult"; payload: OptionListItemType[] };
+  | { type: "addResult"; payloads: OptionListItemType[] }
+  | { type: "addApiResult"; payloads: ShareSubject[] }
+  | { type: "updateSearchResult"; payloads: OptionListItemType[] }
+  | { type: "emptyResult"; payloads: OptionListItemType[] };
 
 const initialState = {
   searchInputValue: "",
@@ -37,13 +45,13 @@ function reducer(state: State, action: Action) {
     case "isSearching":
       return { ...state, isSearching: action.payload };
     case "addResult":
-      return { ...state, searchResults: action.payload };
+      return { ...state, searchResults: action.payloads };
     case "addApiResult":
-      return { ...state, searchAPIResults: action.payload };
+      return { ...state, searchAPIResults: action.payloads };
     case "updateSearchResult":
-      return { ...state, searchResults: action.payload };
+      return { ...state, searchResults: action.payloads };
     case "emptyResult":
-      return { ...state, searchResults: action.payload };
+      return { ...state, searchResults: action.payloads };
     default:
       throw new Error(`Unhandled action type`);
   }
@@ -81,7 +89,7 @@ export const useSearch = ({
   const { t } = useTranslation();
 
   useEffect(() => {
-    search(debouncedSearchInputValue);
+    void search(debouncedSearchInputValue);
   }, [debouncedSearchInputValue]);
 
   const handleSearchInputChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -107,41 +115,50 @@ export const useSearch = ({
 
       dispatch({
         type: "addApiResult",
-        payload: resSearchShareSubjects,
+        payloads: resSearchShareSubjects,
       });
 
       const adaptedResults = resSearchShareSubjects
         // exclude subjects that are already in the share table
         .filter(
-          (right: { id: any }) => !shareRights.rights.find((shareRight: { id: any }) => shareRight.id === right.id),
+          (right: { id: string }) =>
+            !shareRights.rights.find((shareRight: { id: string }) => shareRight.id === right.id),
         )
         // exclude owner from results
-        .filter((right: { type: string; id: any }) => !(right.type === "user" && right.id === resourceCreatorId))
-        .map((searchResult: { id: any; displayName: any; type: string; profile?: string; structureName?: string }) => {
-          let label: string = searchResult.displayName;
-          if (searchResult.type === "user" && searchResult.profile) {
-            label = `${label} (${t(searchResult.profile)})`;
-          } else if (searchResult.type === "group" && searchResult.structureName) {
-            label = `${label} (${searchResult.structureName})`;
-          }
+        .filter((right: { type: string; id: string }) => !(right.type === "user" && right.id === resourceCreatorId))
+        .map(
+          (searchResult: {
+            id: string;
+            displayName: string;
+            type: string;
+            profile?: string;
+            structureName?: string;
+          }) => {
+            let label: string = searchResult.displayName;
+            if (searchResult.type === "user" && searchResult.profile) {
+              label = `${label} (${t(searchResult.profile)})`;
+            } else if (searchResult.type === "group" && searchResult.structureName) {
+              label = `${label} (${searchResult.structureName})`;
+            }
 
-          return {
-            value: searchResult.id,
-            label,
-            icon: searchResult.type === "sharebookmark" ? <IconBookmark /> : null,
-          };
-        });
+            return {
+              value: searchResult.id,
+              label,
+              icon: searchResult.type === "sharebookmark" ? <IconBookmark /> : null,
+            };
+          },
+        );
 
       dispatch({
         type: "addResult",
-        payload: adaptedResults,
+        payloads: adaptedResults,
       });
     } else {
       dispatch({
         type: "emptyResult",
-        payload: [],
+        payloads: [],
       });
-      Promise.resolve();
+      void Promise.resolve();
     }
 
     dispatch({
@@ -150,16 +167,16 @@ export const useSearch = ({
     });
   };
 
-  const handleSearchResultsChange = async (model: Array<string | number>) => {
-    const shareSubject = state.searchAPIResults.find((searchAPIResult) => searchAPIResult.id === model[0]);
+  const handleSearchResultsChange = async (models: Array<string | number>) => {
+    const shareSubject = state.searchAPIResults.find((searchAPIResult) => searchAPIResult.id === models[0]);
 
     if (shareSubject) {
-      let rightsToAdd: ShareRight[] = [];
+      let rightsToAddList: ShareRight[] = [];
 
       if (shareSubject.type === "sharebookmark") {
         const bookmarkRes = await odeServices.directory().getBookMarkById(shareSubject.id);
 
-        rightsToAdd.push({
+        rightsToAddList.push({
           ...bookmarkRes,
           type: "sharebookmark",
           avatarUrl: "",
@@ -167,10 +184,10 @@ export const useSearch = ({
           actions: defaultActions,
         });
 
-        bookmarkRes?.users
-          .filter((user: { id: any }) => !shareRights.rights.find((right: { id: any }) => right.id === user.id))
-          .forEach((user: any) => {
-            rightsToAdd.push({
+        bookmarkRes.users
+          .filter((user: { id: string }) => !shareRights.rights.find((right: { id: string }) => right.id === user.id))
+          .forEach((user: User) => {
+            rightsToAddList.push({
               ...user,
               type: "user",
               avatarUrl: "",
@@ -180,9 +197,9 @@ export const useSearch = ({
             });
           });
         bookmarkRes.groups
-          .filter((group: { id: any }) => !shareRights.rights.find((right: { id: any }) => right.id === group.id))
-          .forEach((group: any) => {
-            rightsToAdd.push({
+          .filter((group: { id: string }) => !shareRights.rights.find((right: { id: string }) => right.id === group.id))
+          .forEach((group: Group) => {
+            rightsToAddList.push({
               ...group,
               type: "group",
               avatarUrl: "",
@@ -192,7 +209,7 @@ export const useSearch = ({
             });
           });
       } else {
-        rightsToAdd = [
+        rightsToAddList = [
           {
             ...shareSubject,
             actions: [
@@ -213,13 +230,13 @@ export const useSearch = ({
         type: "updateShareRights",
         payload: {
           ...shareRights,
-          rights: [...shareRights.rights, ...rightsToAdd],
+          rights: [...shareRights.rights, ...rightsToAddList],
         },
       });
 
       dispatch({
         type: "updateSearchResult",
-        payload: state.searchResults.filter((result) => result.value !== model[0]),
+        payloads: state.searchResults.filter((result) => result.value !== models[0]),
       });
     }
   };

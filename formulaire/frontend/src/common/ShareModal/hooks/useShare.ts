@@ -13,7 +13,7 @@ import { useTranslation } from "react-i18next";
 
 import { ShareOptions, ShareResourceMutation } from "../ShareModal";
 
-interface UseShareResourceModalProps {
+interface IUseShareResourceModalProps {
   /**
    * Resource ID (assetId)
    */
@@ -79,7 +79,7 @@ export default function useShare({
   shareResource,
   setIsLoading,
   onSuccess,
-}: UseShareResourceModalProps) {
+}: IUseShareResourceModalProps) {
   const { appCode } = useEdificeClient();
   const { user, avatar } = useUser();
 
@@ -91,7 +91,7 @@ export default function useShare({
   useEffect(() => {
     if (!resourceId) return;
 
-    (async () => {
+    void (async () => {
       try {
         const [shareRightActions, shareRights] = await Promise.all([
           odeServices.share().getActionsForApp(appCode),
@@ -153,7 +153,7 @@ export default function useShare({
 
     // if bookmark then apply right to users and groups
     if (shareRight.type === "sharebookmark") {
-      newShareRights[index].users?.forEach((user: { id: any }) => {
+      newShareRights[index].users?.forEach((user: { id: string }) => {
         const userIndex = newShareRights.findIndex((item) => item.id === user.id);
         newShareRights[userIndex] = {
           ...newShareRights[userIndex],
@@ -161,7 +161,7 @@ export default function useShare({
         };
       });
 
-      newShareRights[index].groups?.forEach((user: { id: any }) => {
+      newShareRights[index].groups?.forEach((user: { id: string }) => {
         const userIndex = newShareRights.findIndex((item) => item.id === user.id);
         newShareRights[userIndex] = {
           ...newShareRights[userIndex],
@@ -204,7 +204,7 @@ export default function useShare({
 
       const shares = [...state.shareRights.rights];
 
-      if (myRights.length > 0) {
+      if (myRights.length > 0 && user) {
         const actions: ShareRightAction[] = myRights.map((right) => {
           return {
             displayName: right,
@@ -215,8 +215,8 @@ export default function useShare({
           actions,
           avatarUrl: "",
           directoryUrl: "",
-          displayName: user!.username,
-          id: user!.userId,
+          displayName: user.username,
+          id: user.userId,
           type: "user",
         });
       }
@@ -250,10 +250,10 @@ export default function useShare({
       payload: {
         ...state.shareRights,
         rights: state.shareRights.rights.filter(
-          (right: { id: any }) =>
+          (right: { id: string }) =>
             right.id !== shareRight.id &&
-            !shareRight.users?.find((user: { id: any }) => user.id === right.id) &&
-            !shareRight.groups?.find((group: { id: any }) => group.id === right.id),
+            !shareRight.users?.find((user: { id: string }) => user.id === right.id) &&
+            !shareRight.groups?.find((group: { id: string }) => group.id === right.id),
         ),
       },
     });

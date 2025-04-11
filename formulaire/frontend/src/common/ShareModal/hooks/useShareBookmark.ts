@@ -26,7 +26,7 @@ export const useShareBookmark = ({ shareRights, shareDispatch }: UseShareBookmar
     name: "",
     id: useId(),
   });
-  const [showBookmark, setShowBookmark] = useToggle(false);
+  const [showBookmark, setShowBookmark] = useToggle(false) as [boolean, () => void];
   const [showBookmarkInput, toggleBookmarkInput] = useState<boolean>(false);
 
   const toggleBookmark = () => {
@@ -45,13 +45,13 @@ export const useShareBookmark = ({ shareRights, shareDispatch }: UseShareBookmar
       const res = await odeServices.directory().saveBookmarks(name, {
         users: shareRights.rights
           .filter((right: { type: string }) => right.type === "user")
-          .map((u: { id: any }) => u.id),
+          .map((u: { id: string }) => u.id),
         groups: shareRights.rights
           .filter((right: { type: string }) => right.type === "group")
-          .map((u: { id: any }) => u.id),
+          .map((u: { id: string }) => u.id),
         bookmarks: shareRights.rights
           .filter((right: { type: string }) => right.type === "sharebookmark")
-          .map((u: { id: any }) => u.id),
+          .map((u: { id: string }) => u.id),
       });
 
       toast.success(t("explorer.bookmarked.status.saved"));
@@ -83,7 +83,7 @@ export const useShareBookmark = ({ shareRights, shareDispatch }: UseShareBookmar
 
   const handleOnSave = () => {
     const inputValue = refBookmark.current?.value || "";
-    saveBookmark(inputValue);
+    void saveBookmark(inputValue);
   };
 
   return {

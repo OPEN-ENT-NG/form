@@ -3,15 +3,15 @@ import { IForm } from "~/core/models/form/types";
 
 export type RightStringified = "read" | "contrib" | "manager" | "comment";
 
-export interface UserFormsRight {
+export interface IUserFormsRight {
   form: IForm;
   rights: RightStringified[];
 }
 
-export interface ShareModalProviderProps {
+export interface IShareModalProviderProps {
   children: ReactNode;
 }
 
 export type ShareModalProviderContextType = {
-  userFormsRight: UserFormsRight[];
+  userFormsRights: IUserFormsRight[];
 };

@@ -1,4 +1,4 @@
-import { IDuplicateFormPayload, IForm, IFormPayload } from "~/core/models/form/types.ts";
+import { IDuplicateFormPayload, IForm, IFormPayload, IFormRight } from "~/core/models/form/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { QueryMethod, TagName } from "~/core/enums.ts";
 import { toast } from "react-toastify";
@@ -185,7 +185,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         return response.exportId;
       },
     }),
-    getUserFormsRights: builder.query<any, void>({
+    getUserFormsRights: builder.query<IFormRight[], void>({
       query: () => ({
         url: `forms/rights/all`,
         method: QueryMethod.GET,

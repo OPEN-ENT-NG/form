@@ -71,3 +71,8 @@ export interface IDuplicateFormPayload {
   formIds: number[];
   folderId: number;
 }
+
+export interface IFormRight {
+  resource_id: number;
+  action: string;
+}

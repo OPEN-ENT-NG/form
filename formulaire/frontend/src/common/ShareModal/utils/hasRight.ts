@@ -1,12 +1,12 @@
 import { ShareRight, ShareRightAction, ShareRightActionDisplayName } from "@edifice.io/client";
-import { UserFormsRight } from "~/providers/ShareModalProvider/types";
+import { IUserFormsRight } from "~/providers/ShareModalProvider/types";
 
 export const hasRight = (shareRight: ShareRight, shareAction: ShareRightAction): boolean => {
-  return shareRight.actions.filter((a: { id: any }) => shareAction.id === a.id).length > 0;
+  return shareRight.actions.filter((a: { id: ShareRightActionDisplayName }) => shareAction.id === a.id).length > 0;
 };
 
 export const userHasRight = (
-  userFormsRights: UserFormsRight[],
+  userFormsRights: IUserFormsRight[],
   formId: number,
   rightId: ShareRightActionDisplayName,
 ) => {
