@@ -55,4 +55,11 @@ export enum DateFormat {
 
 export enum KeyName {
   ENTER = "Enter",
+  SPACE = " ",
+  DELETE = "Delete",
+  BACKSPACE = "Backspace",
+  ARROW_UP = "ArrowUp",
+  ARROW_DOWN = "ArrowDown",
+  ARROW_LEFT = "ArrowLeft",
+  ARROW_RIGHT = "ArrowRight",
 }
