@@ -22,7 +22,6 @@ export const ShareBookmarkLine = ({
   toggleBookmark: () => void;
   onDeleteRow: (shareRight: ShareRight) => void;
 }) => {
-  console.log("ShareBookmarkLine", shareRights);
   const { t } = useTranslation();
   return shareRights.rights.map((shareRight: ShareRight) => {
     return (
