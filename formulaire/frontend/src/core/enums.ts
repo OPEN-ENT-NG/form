@@ -7,6 +7,7 @@ export enum ModalType {
   FORM_FOLDER_DELETE = "showFormFolderDelete",
   MOVE = "showMove",
   EXPORT = "showExport",
+  FORM_SHARE = "showShare",
 }
 
 export enum TagName {

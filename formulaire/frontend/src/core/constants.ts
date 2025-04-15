@@ -37,3 +37,8 @@ export const LINK_HTML_ELEMENT = "a";
 //MISC
 export const ID = "id";
 export const DEFAULT_PAGINATION_LIMIT = 10;
+
+//RIGHTS
+export const MANAGER_RIGHT = "manager";
+export const CONTRIB_RIGHT = "contrib";
+export const COMMENT_RIGHT = "comment";
