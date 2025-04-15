@@ -1,229 +1,88 @@
 #!/bin/bash
 
-# Options
-NO_DOCKER=""
-for i in "$@"
-do
-case $i in
-  --no-docker*)
-  NO_DOCKER="true"
-  shift
-  ;;
-  *)
-  ;;
-esac
-done
+# Get main script path and current directory
+MAIN_SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/build.sh"
+CURRENT_DIR="$(pwd)"
 
-if [ "$#" -lt 1 ]; then
-  echo "Usage: $0 <clean|init|localDep|build|install|watch>"
-  echo "Example: $0 clean"
-  echo "Example: $0 init"
-  echo "Example: $0 build"
-  exit 1
-fi
-
-if [ -z ${USER_UID:+x} ]
-then
-  export USER_UID=1000
-  export GROUP_GID=1000
-fi
-
-# options
-SPRINGBOARD="recette"
-for i in "$@"
-do
-case $i in
-    -s=*|--springboard=*)
-    SPRINGBOARD="${i#*=}"
-    shift
-    ;;
-    *)
-    ;;
-esac
-done
-
-clean () {
-  rm -rf .nx
-  rm -rf .pnpm-store
-  rm -rf node_modules
-  rm -rf dist
-  rm -rf build
-  rm -f pnpm-lock.yaml
-}
-
-doInit () {
-  echo "[init] Get branch name from jenkins env..."
-  BRANCH_NAME=`echo $GIT_BRANCH | sed -e "s|origin/||g"`
-  if [ "$BRANCH_NAME" = "" ]; then
-    echo "[init] Get branch name from git..."
-    BRANCH_NAME=`git branch | sed -n -e "s/^\* \(.*\)/\1/p"`
-  fi
-
-  echo "[init] Generate package.json from package.json.template..."
-  NPM_VERSION_SUFFIX=`date +"%Y%m%d%H%M"`
-  cp package.json.template package.json
-  sed -i "s/%branch%/${BRANCH_NAME}/" package.json
-  sed -i "s/%generateVersion%/${NPM_VERSION_SUFFIX}/" package.json
-
-  if [ "$1" == "Dev" ]
-  then
-    sed -i "s/%packageVersion%/link:..\/..\/edifice-ts-client\//" package.json
-  else
-    sed -i "s/%packageVersion%/${BRANCH_NAME}/" package.json
-  fi
-}
-
-init(){
-  if [ "$NO_DOCKER" = "true" ] ; then
-    pnpm install
-  else
-    docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "pnpm install"
-  fi
-
-}
-
-installDeps() {
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "pnpm install"
-}
-
-runTest() {
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "pnpm test"
-}
-
-runDev() {
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "pnpm run dev"
-}
-
-prettierDocker() {
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "pnpm run format:write"
-}
-
-lintFixDocker() {
-  docker-compose run --rm node sh -c "pnpm run fix && pnpm run check-types"
-}
-
-checkQualityCode() {
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "pnpm run format:check && pnpm run lint"
-}
-
-runLocal() {
-  docker-compose run --rm -u "$USER_UID:$GROUP_GID" node pnpm dev
-}
-
-build () {
-  if [ "$NO_DOCKER" = "true" ] ; then
-    pnpm run build
-  else
-    docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "pnpm build"
-  fi
-  status=$?
-  if [ $status != 0 ];
-  then
-    exit $status
-  fi
-}
-
-linkDependencies () {
-  # Check if the edifice-frontend-framework directory exists
-  if [ ! -d "$PWD/../../edifice-frontend-framework/packages" ]; then
-    echo "Directory edifice-frontend-framework/packages does not exist."
+# Check if main script exists
+if [ ! -f "$MAIN_SCRIPT_PATH" ]; then
+    echo "Error: Main script not found at $MAIN_SCRIPT_PATH"
     exit 1
-  else
-    echo "Directory edifice-frontend-framework/packages exists."
-  fi
+fi
 
-  # # Extract dependencies from package.json using sed
-  DEPENDENCIES=$(sed -n '/"dependencies": {/,/}/p' package.json | sed -n 's/ *"@edifice\.io\/\([^"]*\)":.*/\1/p')
-  # # Link each dependency if it exists in the edifice-frontend-framework
-  for dep in $DEPENDENCIES; do
-    # Handle special case for ts-client
-    package_path="$PWD/../../edifice-frontend-framework/packages/$dep"
-    if [ -d "$package_path" ]; then
-      echo "Linking package: $dep"
-      (cd "$package_path" && pnpm link --global)
-    else
-      echo "Package $dep not found in edifice-frontend-framework."
-    fi
-  done
-  # Check if ode-explorer exists in package.json using sed
-  if [ -n "$(sed -n '/"ode-explorer":/p' package.json)" ]; then
-    echo "ode-explorer found in package.json"
+# Get module name from directory path
+MODULE_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+MODULE_NAME="$(basename "$MODULE_PATH")"
 
-    # Check if explorer frontend path exists
-    if [ -d "$PWD/../../explorer/frontend" ]; then
-      echo "explorer/frontend directory exists"
-      echo "Linking ode-explorer globally..."
-      (cd "$PWD/../../explorer/frontend" && pnpm link --global)
-      pnpm link --global ode-explorer
-    else
-      echo "explorer/frontend directory not found"
-      exit 1
-    fi
-  else
-    echo "ode-explorer not found in package.json"
-  fi
-  # # Link the packages in the current application
-  echo "Linking packages in the current application..."
-  Link each dependency from package.json
-  for dep in $DEPENDENCIES; do
-    pnpm link --global "@edifice.io/$dep"
-  done
-  echo "All specified packages have been linked successfully."
+# Help function
+show_help() {
+    echo "Usage: ./build.sh [options]"
+    echo "Options:"
+    echo "  installDeps   - Install frontend dependencies"
+    echo "  runDev        - Start development server"
+    echo "  build         - Build frontend for production"
+    echo "  lint          - Run lint tools"
+    echo "  test          - Run tests"
+    echo "  --no-docker   - Run without Docker"
+    echo ""
+    echo "Examples:"
+    echo "  ./build.sh install       - Install dependencies"
+    echo "  ./build.sh runDev           - Start development server"
+    echo "  ./build.sh --no-docker runDev - Run dev mode without Docker"
 }
 
-cleanDependencies() {
-  rm -rf node_modules && rm -f pnpm-lock.yaml && pnpm install
-}
+# Check arguments
+if [ $# -eq 0 ]; then
+    show_help
+    exit 1
+fi
 
-for param in "$@"
-do
-  case $param in
-    clean)
-      clean
-      ;;
-    init)
-      init
-      ;;
-    initLocal)
-      runLocal
-      ;;
-    runLocal)
-      runLocal
-      ;;
-    runDev)
-      runDev
-      ;;
+# Process arguments
+NO_DOCKER_ARG=""
+COMMAND=""
+
+for arg in "$@"; do
+    case $arg in
+    --no-docker)
+        NO_DOCKER_ARG="--no-docker"
+        ;;
     installDeps)
-      installDeps
-      ;;
-    runTest)
-      runTest
-      ;;
+        COMMAND="installDeps"
+        ;;
     runDev)
-      runDev
-      ;;
-    prettierDocker)
-      prettierDocker
-      ;;
-    lintFixDocker)
-      lintFixDocker
-      ;;
-    checkQualityCode)
-      checkQualityCode
-      ;;
+        COMMAND="runDev"
+        ;;
     build)
-      build
-      ;;
-    linkDependencies)
-      linkDependencies
-      ;;
-    cleanDependencies)
-      cleanDependencies
-      ;;
+        COMMAND="buildFront"
+        ;;
+    lint)
+        COMMAND="lint"
+        ;;
+    test)
+        COMMAND="test"
+        ;;
+    -h | --help)
+        show_help
+        exit 0
+        ;;
     *)
-      echo "Invalid argument : $param"
-  esac
-  if [ ! $? -eq 0 ]; then
-    exit 1
-  fi
+        echo "Unrecognized option: $arg"
+        show_help
+        exit 1
+        ;;
+    esac
 done
+
+# Execute command via main script
+if [ -n "$COMMAND" ]; then
+    echo "Executing $COMMAND for module $MODULE_NAME"
+    # Change to the root directory before executing the main script
+    cd "$(dirname "$MAIN_SCRIPT_PATH")"
+    ./build.sh $NO_DOCKER_ARG $COMMAND "$MODULE_NAME"
+    # Return to the original directory
+    cd "$CURRENT_DIR"
+else
+    echo "No valid command specified"
+    show_help
+    exit 1
+fi
