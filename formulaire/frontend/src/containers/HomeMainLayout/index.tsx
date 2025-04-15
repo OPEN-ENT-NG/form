@@ -41,8 +41,8 @@ import { SwitchView } from "~/components/SwitchView";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { HomeMainTable } from "../HomeMainTable";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
-import { centerBoxStyle } from "~/styles/boxStyles";
 import FolderIcon from "@mui/icons-material/Folder";
+import { centerBoxStyle } from "~/core/style/boxStyles";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 
 export const HomeMainLayout: FC = () => {
@@ -86,8 +86,6 @@ export const HomeMainLayout: FC = () => {
   const toggleButtonList: IToggleButtonItem[] = useToggleButtons();
 
   const breadcrumbsTexts = useMemo(() => (currentFolder.name ? [currentFolder.name] : []), [currentFolder.name]);
-
-  console.log("currentFolder", currentFolder);
 
   return (
     <Box sx={{ ...mainContentInnerStyle, ...getDragCursorStyle(activeDragItem, isValidDrop) }}>

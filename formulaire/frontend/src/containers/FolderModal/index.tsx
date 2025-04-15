@@ -12,7 +12,6 @@ import { FORMULAIRE } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
 import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/formulaireApi/folderApi";
 import { ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder/types";
-import { KeyName } from "~/core/enums";
 import { isEnterPressed } from "~/core/utils";
 
 export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }) => {
@@ -92,7 +91,9 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
           onChange={(e) => {
             setNewName(e.target.value);
           }}
-          onKeyDown={(e) => isEnterPressed(e) && handleOnEnterPressed(e)}
+          onKeyDown={(e) => {
+            if (isEnterPressed(e)) handleOnEnterPressed(e);
+          }}
         />
       </DialogContent>
 

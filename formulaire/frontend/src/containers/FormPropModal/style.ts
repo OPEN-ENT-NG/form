@@ -1,4 +1,4 @@
-import { columnBoxStyle, flexEndBoxStyle, flexStartBoxStyle, modalBoxStyle } from "~/core/style/boxStyles";
+import { columnBoxStyle, flexStartBoxStyle, modalBoxStyle } from "~/core/style/boxStyles";
 
 export const formPropModalWrapper = {
   ...modalBoxStyle,

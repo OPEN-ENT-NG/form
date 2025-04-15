@@ -36,7 +36,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
           isHeader={isHeader}
           hasSeparator={!separator}
           onClick={() => {
-            isHeader && navigate("/");
+            if (isHeader) navigate("/");
           }}
         >
           {stringItem}
