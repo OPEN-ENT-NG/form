@@ -34,9 +34,9 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
     };
 
     const handleCreate = () => {
-      const parent_id = currentFolder.id;
+      const parentId = currentFolder.id;
       const folder: ICreateFolderPayload = {
-        parent_id: parent_id,
+        parent_id: parentId,
         name: newName,
       };
       void createFolder(folder);

@@ -9,4 +9,5 @@ export enum ToasterButtonType {
   UNSELECT_ALL,
   RENAME,
   RESTORE,
+  SHARE,
 }

@@ -1,4 +1,4 @@
-import { IDuplicateFormPayload, IForm, IFormPayload } from "~/core/models/form/types.ts";
+import { IDuplicateFormPayload, IForm, IFormPayload, IFormRight } from "~/core/models/form/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { QueryMethod, TagName } from "~/core/enums.ts";
 import { toast } from "react-toastify";
@@ -185,6 +185,21 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         return response.exportId;
       },
     }),
+    getUserFormsRights: builder.query<IFormRight[], void>({
+      query: () => ({
+        url: `forms/rights/all`,
+        method: QueryMethod.GET,
+      }),
+      providesTags: [TagName.FORMS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.formService.rights", err);
+          toast.error(i18n.t("formulaire.error.formService.rights", { ns: FORMULAIRE }));
+        }
+      },
+    }),
   }),
   overrideExisting: false,
 });
@@ -200,4 +215,5 @@ export const {
   useExportPdfFormQuery,
   useLazyExportPdfFormQuery,
   useExportZipMutation,
+  useGetUserFormsRightsQuery,
 } = formApi;
