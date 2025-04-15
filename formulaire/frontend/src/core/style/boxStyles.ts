@@ -23,4 +23,4 @@ export const cardWrapperStyle = {
   flexWrap: "wrap",
   rowGap: "1.6rem",
   columnGap: "calc((100% - 3 * 30rem) / 2)",
-}
+};

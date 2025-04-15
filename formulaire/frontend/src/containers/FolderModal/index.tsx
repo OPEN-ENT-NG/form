@@ -92,7 +92,7 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
           onChange={(e) => {
             setNewName(e.target.value);
           }}
-          onKeyDown={e => isEnterPressed(e) && handleOnEnterPressed(e)}
+          onKeyDown={(e) => isEnterPressed(e) && handleOnEnterPressed(e)}
         />
       </DialogContent>
 

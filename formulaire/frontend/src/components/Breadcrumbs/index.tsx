@@ -9,7 +9,12 @@ import { BreadCrumbItemWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 
-export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({ icon: Icon, stringItems, separator = null, isHeader = false }) => {
+export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
+  icon: Icon,
+  stringItems,
+  separator = null,
+  isHeader = false,
+}) => {
   const textColor = isHeader ? FORM_COLOR : CSS_TEXT_PRIMARY_COLOR;
   const navigate = useNavigate();
 
@@ -30,7 +35,9 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({ icon: Icon, stringI
           textColor={textColor}
           isHeader={isHeader}
           hasSeparator={!separator}
-          onClick={() => {isHeader && navigate("/");}}
+          onClick={() => {
+            isHeader && navigate("/");
+          }}
         >
           {stringItem}
         </BreadCrumbItemWrapper>

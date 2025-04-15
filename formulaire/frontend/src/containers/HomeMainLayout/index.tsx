@@ -42,7 +42,7 @@ import { ViewMode } from "~/components/SwitchView/enums";
 import { HomeMainTable } from "../HomeMainTable";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
 import { centerBoxStyle } from "~/styles/boxStyles";
-import FolderIcon from '@mui/icons-material/Folder';
+import FolderIcon from "@mui/icons-material/Folder";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 
 export const HomeMainLayout: FC = () => {

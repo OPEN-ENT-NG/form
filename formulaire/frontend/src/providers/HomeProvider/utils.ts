@@ -5,9 +5,9 @@ import { FORMULAIRE } from "~/core/constants";
 import { HomeTabState, RootFolderIds } from "./enums";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { IHomeTabViewPref } from "./types";
-import FolderIcon from '@mui/icons-material/Folder';
-import ShareIcon from '@mui/icons-material/Share';
-import DeleteIcon from '@mui/icons-material/Delete';
+import FolderIcon from "@mui/icons-material/Folder";
+import ShareIcon from "@mui/icons-material/Share";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 export const useRootFolders = (): IFolder[] => {
   const { t } = useTranslation(FORMULAIRE);

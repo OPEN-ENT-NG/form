@@ -21,7 +21,7 @@ export const Header: FC<IHeaderProps> = ({
   return (
     <Box sx={headerStyle}>
       <FormBreadcrumbs
-        icon = {FormsIcon}
+        icon={FormsIcon}
         stringItems={stringItems}
         separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem" }} />}
         isHeader
