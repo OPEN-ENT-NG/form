@@ -1,5 +1,5 @@
 import { SxProps, Theme } from "@cgi-learning-hub/ui";
-import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
+import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 
 export const mainContentInnerStyle: SxProps<Theme> = {
   height: "100%",

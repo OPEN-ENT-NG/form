@@ -45,6 +45,7 @@ export const useMapToasterButtons = () => {
   const hasOneForm = useMemo(() => selectedForms.length === 1, [selectedForms]);
   const hasMultipleForms = useMemo(() => selectedForms.length > 1, [selectedForms]);
   const hasForms = useMemo(() => selectedForms.length > 0, [selectedForms]);
+  const hasElements = useMemo(() => !!selectedForms[0]?.nb_elements, [selectedForms]);
 
   const hasOnlyFolders = useMemo(() => hasFolders && hasNoForms, [hasFolders, hasNoForms]);
   const hasOnlyForms = useMemo(() => hasForms && hasNoFolders, [hasForms, hasNoFolders]);
@@ -192,6 +193,13 @@ export const useMapToasterButtons = () => {
           toggleModal(ModalType.FORM_SHARE);
         },
       },
+      [ToasterButtonType.REMIND]: {
+        titleI18nkey: "formulaire.checkremind",
+        type: ToasterButtonType.REMIND,
+        action: () => {
+          toggleModal(ModalType.REMIND);
+        },
+      },
     }),
     [
       hasFolders,
@@ -220,7 +228,7 @@ export const useMapToasterButtons = () => {
       }
 
       // Cas 1: Un seul formulaire
-      if (hasOneForm && !hasFolders) {
+      if (hasOneForm && !hasFolders && !hasElements) {
         const buttons = [
           ToasterButtonType.OPEN,
           ToasterButtonType.PROPS,
@@ -251,6 +259,18 @@ export const useMapToasterButtons = () => {
       // Cas 5: Mélange dossiers + formulaires
       if (hasMixedSelection) {
         return [ToasterButtonType.MOVE, ToasterButtonType.DELETE];
+      }
+      //cas 6: Un formulaire avec des éléments
+      if (hasOneForm && !hasFolders && hasElements) {
+        return [
+          ToasterButtonType.OPEN,
+          ToasterButtonType.PROPS,
+          ToasterButtonType.DUPLICATE,
+          ToasterButtonType.MOVE,
+          ToasterButtonType.REMIND,
+          ToasterButtonType.EXPORT,
+          ToasterButtonType.DELETE,
+        ];
       }
 
       return [];

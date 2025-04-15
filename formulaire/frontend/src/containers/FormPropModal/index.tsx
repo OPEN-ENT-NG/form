@@ -30,7 +30,7 @@ import {
   modalActionsStyle,
   datePickerWrapperStyle,
 } from "./style";
-import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
+
 import { IFormPropModalProps } from "./types";
 import { FormPropField, FormPropModalMode } from "./enums";
 import { useFormPropInputValueState } from "./useFormPropValueState";
@@ -46,6 +46,7 @@ import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/ser
 import { buildFormPayload } from "~/core/models/form/utils";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
+import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 
 export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {

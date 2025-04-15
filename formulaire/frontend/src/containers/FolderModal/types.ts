@@ -1,4 +1,4 @@
-import { IModalProps } from "~/types";
+import { IModalProps } from "~/core/types";
 export enum FolderModalMode {
   CREATE = "CREATE",
   RENAME = "RENAME",

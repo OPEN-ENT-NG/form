@@ -1,4 +1,4 @@
-import { IModalProps } from "~/types";
+import { IModalProps } from "~/core/types";
 import { FC, useCallback } from "react";
 import { Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
