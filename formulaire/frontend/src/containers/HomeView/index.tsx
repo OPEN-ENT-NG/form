@@ -18,6 +18,7 @@ import { DeleteModal } from "../DeleteModal";
 import { FormImportModal } from "../FormImportModal";
 import { MoveFolderModal } from "../MoveFolderModal";
 import { ExportModal } from "../ExportModal";
+import { FormShareModal } from "../FormShareModal";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -32,6 +33,7 @@ export const HomeView: FC = () => {
       showFormImport,
       showMove,
       showExport,
+      showShare,
     },
     toggleModal,
   } = useModal();
@@ -112,6 +114,14 @@ export const HomeView: FC = () => {
           isOpen={showExport}
           handleClose={() => {
             toggleModal(ModalType.EXPORT);
+          }}
+        />
+      )}
+      {showShare && (
+        <FormShareModal
+          isOpen={showShare}
+          handleClose={() => {
+            toggleModal(ModalType.FORM_SHARE);
           }}
         />
       )}
