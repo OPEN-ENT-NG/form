@@ -50,6 +50,8 @@ export default tseslint.config(
       "react-hooks/exhaustive-deps": "off",
       "@typescript-eslint/no-invalid-void-type": "off",
       "react-refresh/only-export-components": "off",
+      "no-unused-expressions": "off",
+      "@typescript-eslint/no-unused-expressions": "error",
       // Règle Prettier
       "prettier/prettier": ["warn"],
 

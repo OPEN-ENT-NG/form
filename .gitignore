@@ -11,7 +11,7 @@
 /coverage/front/cobertura-coverage.xml
 .env
 /.vscode/
-
+.pnpm-store
 #==== Backend ====#
 target
 .flattened-pom.xml
