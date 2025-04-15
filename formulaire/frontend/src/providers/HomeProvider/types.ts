@@ -3,6 +3,7 @@ import { IFolder } from "~/core/models/folder/types";
 import { HomeTabState } from "./enums";
 import { IForm } from "~/core/models/form/types";
 import { ViewMode } from "~/components/SwitchView/enums";
+import { IDistribution } from "~/core/models/distribution/types";
 
 export interface IHomeProviderProps {
   children: ReactNode;
@@ -25,6 +26,8 @@ export type HomeProviderContextType = {
   setSelectedForms: (value: IForm[]) => void;
   isToasterOpen: boolean;
   resetSelected: () => void;
+  distributions: IDistribution[];
+  sentForms: IForm[];
 };
 
 export interface IHomeTabViewPref {

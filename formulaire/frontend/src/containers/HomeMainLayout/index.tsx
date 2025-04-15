@@ -16,8 +16,15 @@ import { useTranslation } from "react-i18next";
 import { HomeMainForms } from "../HomeMainForms";
 import { FORMULAIRE } from "~/core/constants";
 import { OrganizeFilter } from "~/components/OrganizeFilter";
-import { IChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
-import { chipDatas, getDragCursorStyle, getEmptyStateDescription, menuItemDatas, useToggleButtons } from "./utils";
+import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
+import {
+  formsChipDatas,
+  sentFormsChipDatas,
+  getDragCursorStyle,
+  getEmptyStateDescription,
+  menuItemDatas,
+  useToggleButtons,
+} from "./utils";
 import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
 import { useEdificeClient } from "@edifice.io/react";
 import { DndContext, DragOverlay, pointerWithin } from "@dnd-kit/core";
@@ -36,6 +43,8 @@ import { HomeTabs } from "~/components/HomeTab";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { HomeMainTable } from "../HomeMainTable";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
+import { HomeMainSentForms } from "../HomeMainSentForms";
+import { HomeMainSentFormTable } from "../HomeMainSentFormTable";
 
 export const HomeMainLayout: FC = () => {
   const {
@@ -46,6 +55,8 @@ export const HomeMainLayout: FC = () => {
     selectedForms,
     tab,
     tabViewPref,
+    sentForms,
+    distributions,
     setSelectedFolders,
     setSelectedForms,
     toggleTab,
@@ -54,7 +65,7 @@ export const HomeMainLayout: FC = () => {
   const theme = useTheme();
   const { t } = useTranslation(FORMULAIRE);
   const { user } = useEdificeClient();
-  const [selectedChips, setSelectedChips] = useState<IChipProps[]>([]);
+  const [selectedChips, setSelectedChips] = useState<IFormChipProps[]>([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState<IMenuItemProps>();
   const userId = user?.userId;
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, sensors, activeDragItem, isValidDrop } =
@@ -63,27 +74,67 @@ export const HomeMainLayout: FC = () => {
 
   const flatTreeViewItems = buildFlatFolderTree(folders);
 
-  const { handleSearch, filteredFolders, hasFilteredFolders, filteredForms, hasFilteredForms } = useSearchAndOrganize(
-    folders,
-    forms,
-    currentFolder,
-    userId,
-    selectedChips,
-    selectedMenuItem,
-  );
+  const { handleSearch, filteredFolders, hasFilteredFolders, filteredForms, filteredSentForms, hasFilteredForms } =
+    useSearchAndOrganize(
+      folders,
+      forms,
+      currentFolder,
+      userId,
+      selectedChips,
+      sentForms,
+      distributions,
+      selectedMenuItem,
+    );
 
   const toggleButtonList: IToggleButtonItem[] = useToggleButtons();
 
   const breadcrumbsTexts = useMemo(() => (currentFolder.name ? [currentFolder.name] : []), [currentFolder.name]);
 
-  return (
-    <Box sx={{ ...mainContentInnerStyle, ...getDragCursorStyle(activeDragItem, isValidDrop) }}>
-      <Box sx={searchStyle}>
-        {tab === HomeTabState.RESPONSES && (
+  if (tab === HomeTabState.RESPONSES) {
+    return (
+      <Box sx={mainContentInnerStyle}>
+        <Box sx={searchStyle}>
           <Box flexShrink={0}>
             <HomeTabs value={tab} setValue={toggleTab} />
           </Box>
+          <SearchInput
+            placeholder={t("formulaire.search.placeholder")}
+            sx={searchBarStyle}
+            onChange={(event) => {
+              handleSearch(event.target.value);
+            }}
+          />
+          <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref}></SwitchView>
+          <OrganizeFilter
+            chipDatas={sentFormsChipDatas}
+            menuItemDatas={menuItemDatas}
+            setSelectedChips={setSelectedChips}
+            selectedChips={selectedChips}
+            setSelectedMenuItem={setSelectedMenuItem}
+            selectedMenuItem={selectedMenuItem}
+          />
+        </Box>
+        {sentForms.length > 0 ? (
+          <Box sx={resourceContainerStyle}>
+            {viewMode === ViewMode.CARDS ? (
+              <HomeMainSentForms sentForms={filteredSentForms} distributions={distributions} />
+            ) : (
+              <HomeMainSentFormTable forms={filteredSentForms} distributions={distributions} />
+            )}
+          </Box>
+        ) : (
+          <Box sx={emptyStateWrapperStyle}>
+            <ResourcesEmptyState fill={theme.palette.primary.main} />
+            <Typography>{t(getEmptyStateDescription(currentFolder))}</Typography>
+          </Box>
         )}
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ ...mainContentInnerStyle, ...getDragCursorStyle(activeDragItem, isValidDrop) }}>
+      <Box sx={searchStyle}>
         <SearchInput
           placeholder={t("formulaire.search.placeholder")}
           sx={searchBarStyle}
@@ -92,7 +143,7 @@ export const HomeMainLayout: FC = () => {
           }}
         />
         <OrganizeFilter
-          chipDatas={chipDatas}
+          chipDatas={formsChipDatas}
           menuItemDatas={menuItemDatas}
           setSelectedChips={setSelectedChips}
           selectedChips={selectedChips}
@@ -114,9 +165,7 @@ export const HomeMainLayout: FC = () => {
       >
         {(hasFilteredFolders || hasFilteredForms) && (
           <Box sx={resourceContainerStyle}>
-            {hasFilteredFolders && tab === HomeTabState.FORMS && (
-              <HomeMainFolders folders={filteredFolders} activeItem={activeDragItem} />
-            )}
+            {hasFilteredFolders && <HomeMainFolders folders={filteredFolders} activeItem={activeDragItem} />}
             {hasFilteredForms &&
               (viewMode === ViewMode.CARDS ? (
                 <HomeMainForms forms={filteredForms} activeItem={activeDragItem} />

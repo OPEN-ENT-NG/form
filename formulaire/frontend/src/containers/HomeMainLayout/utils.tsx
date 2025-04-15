@@ -1,5 +1,5 @@
 import { ChipsID, MenuItemsID, MenuItemState } from "~/components/OrganizeFilter/enum";
-import { IChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
+import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
 import { MYFORMS_FOLDER_ID, SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
 import { CursorStyle } from "~/core/enums";
 import { IFolder } from "~/core/models/folder/types";
@@ -10,8 +10,9 @@ import AppsIcon from "@mui/icons-material/Apps";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
 import { ViewMode } from "~/components/SwitchView/enums";
+import { IDistribution } from "~/core/models/distribution/types";
 
-export const chipDatas: IChipProps[] = [
+export const formsChipDatas: IFormChipProps[] = [
   {
     id: ChipsID.SHARED,
     i18nKey: "formulaire.filter.shared",
@@ -21,6 +22,19 @@ export const chipDatas: IChipProps[] = [
     id: ChipsID.SENT,
     i18nKey: "formulaire.filter.sent",
     filterFn: (form: IForm) => form.sent,
+  },
+];
+
+export const sentFormsChipDatas: IFormChipProps[] = [
+  {
+    id: ChipsID.TODO,
+    i18nKey: "formulaire.filter.to_do",
+    filterFn: (form: IForm, distributions?: IDistribution[]) => true,
+  },
+  {
+    id: ChipsID.FINISHED,
+    i18nKey: "formulaire.filter.finished",
+    filterFn: (form: IForm, distributions?: IDistribution[]) => true,
   },
 ];
 

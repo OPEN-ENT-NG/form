@@ -1,16 +1,19 @@
 import { IForm } from "~/core/models/form/types";
 import { IFolder } from "~/core/models/folder/types";
-import { IChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
+import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
 import { useCallback, useMemo, useState } from "react";
 import { MenuItemState } from "~/components/OrganizeFilter/enum";
 import { SHARED_FOLDER_ID } from "~/core/constants";
+import { IDistribution } from "~/core/models/distribution/types";
 
 export const useSearchAndOrganize = (
   folders: IFolder[],
   forms: IForm[],
   currentFolder: IFolder,
   userId: string | undefined,
-  selectedChips: IChipProps[],
+  selectedChips: IFormChipProps[],
+  sentForms: IForm[],
+  distributions: IDistribution[],
   selectedMenuItem?: IMenuItemProps,
 ) => {
   const [searchText, setSearchText] = useState("");
@@ -43,7 +46,30 @@ export const useSearchAndOrganize = (
       : initialFilteredList;
 
     const chipFilteredList = selectedChips.length
-      ? searchFilteredList.filter((form) => selectedChips.every((chip) => chip.filterFn(form)))
+      ? searchFilteredList.filter((form) => selectedChips.every((chip: IFormChipProps) => chip.filterFn(form)))
+      : searchFilteredList;
+
+    if (selectedMenuItem) {
+      const isAscending = selectedMenuItem.state === MenuItemState.ASCENDING;
+      return [...chipFilteredList].sort((a, b) => selectedMenuItem.sortFn(a, b, isAscending));
+    }
+
+    return chipFilteredList;
+  }, [forms, searchText, currentFolder.id, selectedChips, selectedMenuItem, userId]);
+
+  const filteredSentForms = useMemo(() => {
+    const searchFilteredList = searchText.trim()
+      ? sentForms.filter((form) => {
+          const formattedSearchText = searchText.trim().toLowerCase();
+          return (
+            form.title.toLowerCase().includes(formattedSearchText) ||
+            form.owner_name.toLowerCase().includes(formattedSearchText)
+          );
+        })
+      : sentForms;
+
+    const chipFilteredList = selectedChips.length
+      ? searchFilteredList.filter((form) => selectedChips.every((chip) => chip.filterFn(form, distributions)))
       : searchFilteredList;
 
     if (selectedMenuItem) {
@@ -62,6 +88,7 @@ export const useSearchAndOrganize = (
     handleSearch,
     filteredFolders,
     filteredForms,
+    filteredSentForms,
     hasFilteredFolders,
     hasFilteredForms,
   };

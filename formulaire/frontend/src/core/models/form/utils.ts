@@ -1,6 +1,7 @@
 import { FormPropField } from "~/containers/FormPropModal/enums";
 import { IFormPropInputValueState } from "~/containers/FormPropModal/types";
-import { IFormPayload, IForm } from "./types";
+import { IFormPayload, IForm, IFormDistributionsCouple } from "./types";
+import { IDistribution } from "../distribution/types";
 
 export const buildFormPayload = (
   formPropValue: IFormPropInputValueState,
@@ -60,4 +61,15 @@ export const parseFormToValueState = (form: IForm): IFormPropInputValueState => 
 
 export const isSelectedForm = (folder: IForm, selectedFolders: IForm[]): boolean => {
   return selectedFolders.some((selectedFolder) => selectedFolder.id === folder.id);
+};
+
+export const getLatestDistribution = (formDistributionsCouple: IFormDistributionsCouple): IDistribution | null => {
+  return formDistributionsCouple.distributions.reduce((latest, current) => {
+    return new Date(current.date_sending) > new Date(latest.date_sending) ? current : latest;
+  });
+};
+
+export const getLatestResponse = (formDistributionsCouple: IFormDistributionsCouple): Date => {
+  const latestDistrib = getLatestDistribution(formDistributionsCouple);
+  return latestDistrib ? new Date(latestDistrib.date_response) : new Date();
 };
