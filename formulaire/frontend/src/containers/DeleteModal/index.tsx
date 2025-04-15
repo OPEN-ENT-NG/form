@@ -43,29 +43,40 @@ export const DeleteModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
     [moveForm, updateForm],
   );
 
-  const handleDelete = useCallback(() => {
-    if (selectedFolders.length) {
-      void deleteFolders(selectedFolders.map((folder) => folder.id));
-    }
-    if (!selectedForms.length) {
-      handleClose();
-      return;
-    }
-
-    selectedForms.forEach((form) => {
-      if (!form.id) return;
-
-      if (currentFolder.id === TRASH_FOLDER_ID) {
-        return void deleteForm(form.id);
+  const handleDelete = async () => {
+    try {
+      if (selectedFolders.length) {
+        await deleteFolders(selectedFolders.map((folder) => folder.id));
       }
 
-      return void archiveForm(form, TRASH_FOLDER_ID);
-    });
+      if (!selectedForms.length) {
+        resetSelected();
+        handleClose();
+        return;
+      }
 
-    if (currentFolder.id !== TRASH_FOLDER_ID) toast.success(t("formulaire.success.forms.archive"));
-    resetSelected();
-    handleClose();
-  }, [deleteFolders, deleteForm, archiveForm, handleClose, selectedFolders, selectedForms]);
+      const promises = selectedForms
+        .filter((form) => form.id)
+        .map((form) => {
+          if (currentFolder.id === TRASH_FOLDER_ID) {
+            return deleteForm(form.id);
+          }
+          return archiveForm(form, TRASH_FOLDER_ID);
+        });
+
+      await Promise.allSettled(promises);
+
+      if (currentFolder.id !== TRASH_FOLDER_ID) {
+        toast.success(t("formulaire.success.forms.archive"));
+      }
+
+      resetSelected();
+      handleClose();
+    } catch (error) {
+      console.error("Erreur lors de la suppression:", error);
+      toast.error(t("formulaire.error.delete"));
+    }
+  };
 
   return (
     <Dialog
@@ -91,7 +102,7 @@ export const DeleteModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
         <Button variant={ComponentVariant.OUTLINED} color={PRIMARY} onClick={handleClose}>
           {t("formulaire.close")}
         </Button>
-        <Button variant={ComponentVariant.CONTAINED} color={PRIMARY} onClick={handleDelete}>
+        <Button variant={ComponentVariant.CONTAINED} color={PRIMARY} onClick={() => void handleDelete()}>
           {t("formulaire.delete")}
         </Button>
       </DialogActions>
