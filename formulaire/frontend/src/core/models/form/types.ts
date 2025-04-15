@@ -76,3 +76,7 @@ export interface IFormRight {
   resource_id: number;
   action: string;
 }
+export interface IFormReminderPayload {
+  formId: string;
+  mail: { link: string; subject: string; body: string };
+}
