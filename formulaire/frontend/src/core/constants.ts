@@ -1,4 +1,5 @@
 import { Theme, ToastPosition } from "react-toastify";
+import { RightStringified } from "~/providers/ShareModalProvider/types";
 
 export const FORMULAIRE = "formulaire";
 export const ARCHIVE = "archive";
@@ -39,6 +40,6 @@ export const ID = "id";
 export const DEFAULT_PAGINATION_LIMIT = 10;
 
 //RIGHTS
-export const MANAGER_RIGHT = "manager";
-export const CONTRIB_RIGHT = "contrib";
-export const COMMENT_RIGHT = "comment";
+export const MANAGER_RIGHT: RightStringified = "manager";
+export const CONTRIB_RIGHT: RightStringified = "contrib";
+export const COMMENT_RIGHT: RightStringified = "comment";

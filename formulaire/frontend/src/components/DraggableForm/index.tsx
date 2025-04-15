@@ -22,7 +22,7 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
         key={form.id}
         width="30rem"
         title={form.title}
-        image={form.picture}
+        image={form.picture ?? undefined}
         defaultImage={LOGO_PATH}
         isSelected={isSelected(form)}
         onSelect={() => {

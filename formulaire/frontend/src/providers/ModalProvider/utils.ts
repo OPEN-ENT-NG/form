@@ -10,4 +10,5 @@ export const initialDisplayModalsState: IDisplayModalsState = {
   [ModalType.FORM_FOLDER_DELETE]: false,
   [ModalType.MOVE]: false,
   [ModalType.EXPORT]: false,
+  [ModalType.REMIND]: false,
 };

@@ -15,7 +15,7 @@ import { FC, useEffect, useState } from "react";
 import { dropZoneSlotProps, formImportModalContentStyle, formImportModalStyle } from "./style";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { IModalProps } from "~/types";
+import { IModalProps } from "~/core/types";
 import {
   useLazyAnalyzeImportFormsQuery,
   useLazyLaunchImportFormsQuery,

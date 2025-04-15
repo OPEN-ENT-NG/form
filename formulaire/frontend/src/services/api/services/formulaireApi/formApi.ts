@@ -1,4 +1,10 @@
-import { IDuplicateFormPayload, IForm, IFormPayload, IFormRight } from "~/core/models/form/types.ts";
+import {
+  IDuplicateFormPayload,
+  IForm,
+  IFormPayload,
+  IFormReminderPayload,
+  IFormRight,
+} from "~/core/models/form/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { QueryMethod, TagName } from "~/core/enums.ts";
 import { toast } from "react-toastify";
@@ -200,6 +206,21 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    sendReminder: builder.mutation<void, IFormReminderPayload>({
+      query: ({ formId, mail }) => ({
+        url: `forms/${formId}/remind`,
+        method: QueryMethod.POST,
+        body: mail,
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          toast.success(i18n.t("formulaire.success.reminder.send", { ns: FORMULAIRE }));
+        } catch (err) {
+          console.error("formulaire.error.formService.remind", err);
+        }
+      },
+    }),
   }),
   overrideExisting: false,
 });
@@ -216,4 +237,5 @@ export const {
   useLazyExportPdfFormQuery,
   useExportZipMutation,
   useGetUserFormsRightsQuery,
+  useSendReminderMutation,
 } = formApi;
