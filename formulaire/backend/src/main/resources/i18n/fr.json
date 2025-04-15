@@ -100,6 +100,7 @@
   "formulaire.error.formService.move": "Une erreur est survenue lors du déplacement des formulaires",
   "formulaire.error.formService.remind": "Une erreur est survenue lors de l'envoi du rappel",
   "formulaire.error.formService.restore": "Une erreur est survenue lors de la restauration du formulaire",
+  "formulaire.error.formService.rights": "Une erreur est survenue lors de la récupération des droits des formulaires",
   "formulaire.error.formService.unshare": "Une erreur est survenue lors de la suppression du partage du formulaire",
   "formulaire.error.formService.update": "Une erreur est survenue lors de la sauvegarde du formulaire",
   "formulaire.error.question.duplicate": "Impossible d'avoir deux questions conditionnelle dans une même section",

@@ -8,7 +8,6 @@ import io.vertx.core.AsyncResult;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.Promise;
-import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
@@ -35,7 +34,7 @@ public class FormulaireApplicationStorage extends PostgresqlApplicationStorage {
     private final FormService formService;
     private final FileInfos fileInfos;
 
-    public FormulaireApplicationStorage(TimelineHelper timelineHelper, EventBus eb) {
+    public FormulaireApplicationStorage(TimelineHelper timelineHelper) {
         super(DB_SCHEMA, RESPONSE_FILE_TABLE);
         this.timelineHelper = timelineHelper;
         this.formService = new DefaultFormService();
