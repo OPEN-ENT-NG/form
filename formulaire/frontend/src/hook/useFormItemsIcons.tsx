@@ -7,7 +7,7 @@ import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
 import { IForm } from "~/core/models/form/types";
 import CalendarIcon from "@mui/icons-material/CalendarToday";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
-import PersonIcon from "@mui/icons-material/Person";
+import AccountBoxRoundedIcon from "@mui/icons-material/AccountBoxRounded";
 import { PRIMARY_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { EllipsisWithTooltip } from "@cgi-learning-hub/ui";
 import { useFormatDateWithTime } from "./useFormatDateWithTime";
@@ -56,18 +56,10 @@ export const useFormItemsIcons = () => {
     (form: IForm) => {
       return [
         {
-          icon: <PersonIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+          icon: <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
           text: (
             <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
               {form.owner_name}
-            </EllipsisWithTooltip>
-          ),
-        },
-        {
-          icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
-          text: (
-            <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-              {`${(form.nb_responses ?? 0).toString()} ${t("formulaire.responses.count")}`}
             </EllipsisWithTooltip>
           ),
         },
@@ -76,6 +68,14 @@ export const useFormItemsIcons = () => {
           text: (
             <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
               {formatDateWithTime(form.date_creation)}
+            </EllipsisWithTooltip>
+          ),
+        },
+        {
+          icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+          text: (
+            <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+              {`${(form.nb_responses ?? 0).toString()} ${t("formulaire.responses.count")}`}
             </EllipsisWithTooltip>
           ),
         },
