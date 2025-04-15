@@ -22,7 +22,8 @@ import {
   sentFormsChipDatas,
   getDragCursorStyle,
   getEmptyStateDescription,
-  menuItemDatas,
+  formMenuItemDatas,
+  sentFormMenuItemDatas,
   useToggleButtons,
 } from "./utils";
 import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
@@ -107,14 +108,14 @@ export const HomeMainLayout: FC = () => {
           <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref}></SwitchView>
           <OrganizeFilter
             chipDatas={sentFormsChipDatas}
-            menuItemDatas={menuItemDatas}
+            menuItemDatas={sentFormMenuItemDatas}
             setSelectedChips={setSelectedChips}
             selectedChips={selectedChips}
             setSelectedMenuItem={setSelectedMenuItem}
             selectedMenuItem={selectedMenuItem}
           />
         </Box>
-        {sentForms.length > 0 ? (
+        {filteredSentForms.length > 0 ? (
           <Box sx={resourceContainerStyle}>
             {viewMode === ViewMode.CARDS ? (
               <HomeMainSentForms sentForms={filteredSentForms} distributions={distributions} />
@@ -144,7 +145,7 @@ export const HomeMainLayout: FC = () => {
         />
         <OrganizeFilter
           chipDatas={formsChipDatas}
-          menuItemDatas={menuItemDatas}
+          menuItemDatas={formMenuItemDatas}
           setSelectedChips={setSelectedChips}
           selectedChips={selectedChips}
           setSelectedMenuItem={setSelectedMenuItem}

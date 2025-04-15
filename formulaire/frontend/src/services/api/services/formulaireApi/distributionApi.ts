@@ -1,9 +1,10 @@
-import { IDistribution } from "~/core/models/distribution/types.ts";
+import { IDistribution, IDistributionDTO } from "~/core/models/distribution/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { QueryMethod, TagName } from "~/core/enums";
 import { FORMULAIRE } from "~/core/constants.ts";
 import i18n from "~/i18n.ts";
 import { toast } from "react-toastify";
+import { transformDistributions } from "~/core/models/distribution/utils.ts";
 
 export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -13,6 +14,7 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         method: QueryMethod.GET,
       }),
       providesTags: [TagName.DISTRIBUTION],
+      transformResponse: (rawDatas: IDistributionDTO[]) => transformDistributions(rawDatas),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;

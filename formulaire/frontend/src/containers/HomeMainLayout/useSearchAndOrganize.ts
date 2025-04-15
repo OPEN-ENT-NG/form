@@ -78,7 +78,7 @@ export const useSearchAndOrganize = (
     }
 
     return chipFilteredList;
-  }, [forms, searchText, currentFolder.id, selectedChips, selectedMenuItem, userId]);
+  }, [sentForms, distributions, searchText, selectedChips, selectedMenuItem]);
 
   const hasFilteredFolders = useMemo(() => !!filteredFolders.length, [filteredFolders]);
   const hasFilteredForms = useMemo(() => !!filteredForms.length, [filteredForms]);

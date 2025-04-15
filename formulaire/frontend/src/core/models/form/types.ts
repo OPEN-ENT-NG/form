@@ -1,3 +1,5 @@
+import { IDistribution } from "../distribution/types";
+
 export interface IForm {
   id: number;
   title: string;
@@ -79,4 +81,9 @@ export interface IFormRight {
 export interface IFormReminderPayload {
   formId: string;
   mail: { link: string; subject: string; body: string };
+}
+
+export interface IFormDistributionsCouple {
+  form: IForm;
+  distributions: IDistribution[];
 }

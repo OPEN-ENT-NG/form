@@ -120,7 +120,19 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       distributions,
       sentForms,
     }),
-    [currentFolder, tab, folders, selectedFolders, selectedForms, forms, isToasterOpen, tabViewPref, toggleTagViewPref, distributions, sentForms],
+    [
+      currentFolder,
+      tab,
+      folders,
+      selectedFolders,
+      selectedForms,
+      forms,
+      isToasterOpen,
+      tabViewPref,
+      toggleTagViewPref,
+      distributions,
+      sentForms,
+    ],
   );
 
   return <HomeProviderContext.Provider value={value}>{children}</HomeProviderContext.Provider>;

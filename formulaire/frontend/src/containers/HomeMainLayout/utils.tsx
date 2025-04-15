@@ -11,6 +11,7 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { IDistribution } from "~/core/models/distribution/types";
+import { isFormFilled } from "~/core/models/form/utils";
 
 export const formsChipDatas: IFormChipProps[] = [
   {
@@ -29,16 +30,16 @@ export const sentFormsChipDatas: IFormChipProps[] = [
   {
     id: ChipsID.TODO,
     i18nKey: "formulaire.filter.to_do",
-    filterFn: (form: IForm, distributions?: IDistribution[]) => true,
+    filterFn: (form: IForm, distributions?: IDistribution[]) => !isFormFilled(form, distributions ?? []),
   },
   {
     id: ChipsID.FINISHED,
     i18nKey: "formulaire.filter.finished",
-    filterFn: (form: IForm, distributions?: IDistribution[]) => true,
+    filterFn: (form: IForm, distributions?: IDistribution[]) => isFormFilled(form, distributions ?? []),
   },
 ];
 
-export const menuItemDatas: IMenuItemProps[] = [
+export const formMenuItemDatas: IMenuItemProps[] = [
   {
     id: MenuItemsID.CREATION,
     i18nKey: "formulaire.filter.creation_date",
@@ -55,6 +56,31 @@ export const menuItemDatas: IMenuItemProps[] = [
     sortFn: (a: IForm, b: IForm, isAscending: boolean) => {
       const direction = isAscending ? 1 : -1;
       return direction * (new Date(a.date_modification).getTime() - new Date(b.date_modification).getTime());
+    },
+  },
+  {
+    id: MenuItemsID.TITLE,
+    i18nKey: "formulaire.filter.title",
+    state: MenuItemState.DESCENDING,
+    sortFn: (a: IForm, b: IForm, isAscending: boolean) => {
+      const direction = isAscending ? 1 : -1;
+      return direction * a.title.localeCompare(b.title);
+    },
+  },
+];
+
+export const sentFormMenuItemDatas: IMenuItemProps[] = [
+  {
+    id: MenuItemsID.CREATION,
+    i18nKey: "formulaire.filter.sending_date",
+    state: MenuItemState.DESCENDING,
+    sortFn: (a: IDistribution, b: IDistribution, isAscending: boolean) => {
+      const direction = isAscending ? 1 : -1;
+      return (
+        direction *
+        ((a.dateSending ? new Date(a.dateSending).getTime() : 0) -
+          (b.dateSending ? new Date(b.dateSending).getTime() : 0))
+      );
     },
   },
   {

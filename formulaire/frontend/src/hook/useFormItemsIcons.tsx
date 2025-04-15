@@ -8,10 +8,18 @@ import { IForm } from "~/core/models/form/types";
 import CalendarIcon from "@mui/icons-material/CalendarToday";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AccountBoxRoundedIcon from "@mui/icons-material/AccountBoxRounded";
-import { PRIMARY_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import { ERROR_MAIN_COLOR, PRIMARY_MAIN_COLOR, SUCCESS_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { EllipsisWithTooltip } from "@cgi-learning-hub/ui";
 import { useFormatDateWithTime } from "./useFormatDateWithTime";
 import { FORMULAIRE } from "~/core/constants";
+import {
+  getFirstDistribution,
+  getLatestDistribution,
+  getNbFinishedDistrib,
+  isFormFilled,
+} from "~/core/models/form/utils";
+import { IDistribution } from "~/core/models/distribution/types";
 
 export const useFormItemsIcons = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -52,7 +60,7 @@ export const useFormItemsIcons = () => {
     );
   }, []);
 
-  const getPropertyItems = useCallback(
+  const getFormPropertyItems = useCallback(
     (form: IForm) => {
       return [
         {
@@ -67,7 +75,7 @@ export const useFormItemsIcons = () => {
           icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
           text: (
             <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-              {formatDateWithTime(form.date_creation)}
+              {formatDateWithTime(form.date_modification, "formulaire.modified")}
             </EllipsisWithTooltip>
           ),
         },
@@ -84,5 +92,60 @@ export const useFormItemsIcons = () => {
     [t, formatDateWithTime],
   );
 
-  return { getIcons, getPropertyItems };
+  const getText = (form: IForm, distributions: IDistribution[]): string => {
+    if (form.multiple) {
+      return `${t("formulaire.responses.count")} : ${getNbFinishedDistrib(distributions).toString()}`;
+    } else {
+      if (getNbFinishedDistrib(distributions) > 0) {
+        const latestDistrib = getLatestDistribution(distributions);
+        if (latestDistrib.dateResponse) {
+          return formatDateWithTime(latestDistrib.dateResponse, "formulaire.responded.date");
+        }
+      }
+      return t("formulaire.responded.waiting");
+    }
+  };
+
+  const getSentFormPropertyItems = useCallback(
+    (form: IForm, distributions: IDistribution[]) => {
+      return [
+        {
+          icon: <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+          text: (
+            <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+              {form.owner_name}
+            </EllipsisWithTooltip>
+          ),
+        },
+        {
+          icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+          text: (
+            <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+              {formatDateWithTime(getFirstDistribution(distributions).dateSending ?? "", "formulaire.sentAt")}
+            </EllipsisWithTooltip>
+          ),
+        },
+        {
+          icon: (
+            <CheckCircleRoundedIcon
+              sx={{ color: isFormFilled(form, distributions) ? SUCCESS_MAIN_COLOR : ERROR_MAIN_COLOR }}
+            />
+          ),
+          text: (
+            <EllipsisWithTooltip
+              typographyProps={{
+                color: isFormFilled(form, distributions) ? SUCCESS_MAIN_COLOR : ERROR_MAIN_COLOR,
+                fontWeight: 700,
+              }}
+            >
+              {getText(form, distributions)}
+            </EllipsisWithTooltip>
+          ),
+        },
+      ];
+    },
+    [t, formatDateWithTime],
+  );
+
+  return { getIcons, getFormPropertyItems, getSentFormPropertyItems };
 };

@@ -60,10 +60,12 @@ export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, dist
 
   const getFormDistributions = useCallback(
     (form: IForm) => {
-      return distributions.filter((distribution) => distribution.form_id === form.id);
+      const distribs = distributions.filter((distribution) => distribution.formId === form.id);
+      return distribs;
     },
     [distributions],
   );
+
 
   return (
     <>

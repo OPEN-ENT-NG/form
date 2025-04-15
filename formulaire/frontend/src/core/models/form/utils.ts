@@ -1,7 +1,8 @@
 import { FormPropField } from "~/containers/FormPropModal/enums";
 import { IFormPropInputValueState } from "~/containers/FormPropModal/types";
-import { IFormPayload, IForm, IFormDistributionsCouple } from "./types";
+import { IFormPayload, IForm } from "./types";
 import { IDistribution } from "../distribution/types";
+import { DistributionStatus } from "../distribution/enums";
 
 export const buildFormPayload = (
   formPropValue: IFormPropInputValueState,
@@ -63,13 +64,31 @@ export const isSelectedForm = (folder: IForm, selectedFolders: IForm[]): boolean
   return selectedFolders.some((selectedFolder) => selectedFolder.id === folder.id);
 };
 
-export const getLatestDistribution = (formDistributionsCouple: IFormDistributionsCouple): IDistribution | null => {
-  return formDistributionsCouple.distributions.reduce((latest, current) => {
-    return new Date(current.date_sending) > new Date(latest.date_sending) ? current : latest;
-  });
+export const getLatestDistribution = (distributions: IDistribution[]): IDistribution => {
+  return distributions.reduce((latest, current) => {
+    if (!current.dateSending) return latest;
+    if (!latest.dateSending) return current;
+    return new Date(current.dateSending) > new Date(latest.dateSending) ? current : latest;
+  }, distributions[0]);
 };
 
-export const getLatestResponse = (formDistributionsCouple: IFormDistributionsCouple): Date => {
-  const latestDistrib = getLatestDistribution(formDistributionsCouple);
-  return latestDistrib ? new Date(latestDistrib.date_response) : new Date();
+export const getFirstDistribution = (distributions: IDistribution[]): IDistribution => {
+  return distributions.reduce((first, current) => {
+    if (!current.dateSending) return first;
+    if (!first.dateSending) return current;
+    return new Date(current.dateSending) < new Date(first.dateSending) ? current : first;
+  }, distributions[0]);
+};
+
+export const getNbFinishedDistrib = (distributions: IDistribution[]): number => {
+  return distributions.filter((distribution) => distribution.status === DistributionStatus.FINISHED).length;
+};
+
+export const isFormFilled = (form: IForm, distributions: IDistribution[]): boolean => {
+  if (form.multiple) {
+    const latesteDistrib = getLatestDistribution(distributions);
+    return !!latesteDistrib.dateResponse;
+  } else {
+    return getNbFinishedDistrib(distributions) > 0;
+  }
 };
