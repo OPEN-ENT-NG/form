@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # Service Maven pour tous les builds back-end
+  maven:
+    image: maven:3.8.6-jdk-8
+    user: "$DEFAULT_DOCKER_USER"
+    working_dir: /usr/src/maven
+    volumes:
+      - ./:/usr/src/maven
+      - ~/.m2:/var/maven/.m2
+
+  # Service Node.js pour les builds front-end Angular
+  node-angular:
+    image: opendigitaleducation/node:20-alpine-pnpm
+    user: "$DEFAULT_DOCKER_USER"
+    working_dir: /home/node/app
+    volumes:
+      - ./:/home/node/app
+      - ~/.npm:/.npm
+      # Monter common dans les emplacements attendus par les modules Angular
+      - ./common/src:/home/node/app/formulaire/angular/common/src
+      - ./common/src:/home/node/app/formulaire-public/angular/common/src
+
+  # Service Node.js pour les builds front-end React/moderne
+  node-frontend:
+    image: opendigitaleducation/node:20-alpine-pnpm
+    user: "$DEFAULT_DOCKER_USER"
+    working_dir: /home/node/app
+    environment:
+      - TIPTAP_PRO_TOKEN
+    tty: true
+    stdin_open: true
+    ports:
+      - "4200:4200"
+    volumes:
+      - ./:/home/node/app
+      - ~/.pnpm:/.pnpm
+      - ~/.npm:/.npm
+      - ~/.cache:/.cache
+    # En mode développement, on peut activer le mode host
+    network_mode: host
