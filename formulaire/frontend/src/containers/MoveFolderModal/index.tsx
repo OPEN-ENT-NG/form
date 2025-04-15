@@ -1,4 +1,4 @@
-import { IModalProps } from "~/types";
+import { IModalProps } from "~/core/types";
 import { FC, SyntheticEvent, useCallback, useState } from "react";
 import {
   Box,

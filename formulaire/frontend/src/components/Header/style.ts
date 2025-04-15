@@ -1,4 +1,4 @@
-import { spaceBetweenBoxStyle } from "~/styles/boxStyles";
+import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 
 export const headerStyle = {
   ...spaceBetweenBoxStyle,

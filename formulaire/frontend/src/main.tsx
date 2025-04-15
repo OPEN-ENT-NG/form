@@ -16,8 +16,8 @@ import { RouterProvider } from "react-router-dom";
 import { router } from "./routes";
 import "~/i18n";
 import { GlobalStyles } from "@cgi-learning-hub/ui";
-import { globalOverrideStyles } from "./styles/global";
 import { ModalProvider } from "./providers/ModalProvider";
+import { globalOverrideStyles } from "./core/style/global";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {

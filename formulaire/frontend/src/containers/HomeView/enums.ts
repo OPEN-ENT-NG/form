@@ -10,4 +10,5 @@ export enum ToasterButtonType {
   RENAME,
   RESTORE,
   SHARE,
+  REMIND,
 }

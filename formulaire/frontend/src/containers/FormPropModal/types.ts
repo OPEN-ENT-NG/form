@@ -1,4 +1,4 @@
-import { IModalProps } from "~/types";
+import { IModalProps } from "~/core/types";
 import { FormPropField, FormPropModalMode } from "./enums";
 
 export interface IFormPropModalProps extends IModalProps {
