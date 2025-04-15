@@ -15,6 +15,7 @@ export interface IDisplayModalsState {
   [ModalType.MOVE]: boolean;
   [ModalType.EXPORT]: boolean;
   [ModalType.FORM_SHARE]: boolean;
+  [ModalType.REMIND]: boolean;
 }
 
 export type ModalProviderContextType = {
