@@ -487,33 +487,60 @@ build_backend_formulaire_public() {
   build_backend "formulaire-public"
 }
 
-# Fonctions pour exécuter les modes dev des fronts React
-dev_frontend() {
+# Fonctions pour installer les dépendances front
+install_deps() {
   local module=$1
   echo -e "\n------------------"
-  echo "Starting ${module} frontend in dev mode"
+  echo "Installing dependencies for ${module} frontend"
   echo "------------------"
 
-  # Vérifier si le dossier frontend existe
+  # Verify if the frontend directory exists
   if [ ! -d "${module}/frontend" ]; then
     echo "Error: ${module}/frontend directory not found"
     exit 1
   fi
 
   if [ "$NO_DOCKER" = "true" ]; then
-    cd ${module}/frontend && pnpm install && pnpm dev
+    cd ${module}/frontend && pnpm install
     cd ../.. || exit 1
   else
-    docker compose run --rm -p 4200:4200 node-frontend sh -c "cd ${module}/frontend && pnpm install --ignore-scripts && pnpm dev"
+    docker compose run --rm node-frontend sh -c "cd ${module}/frontend && pnpm install --ignore-scripts"
   fi
 }
+# Fonctions pour exécuter les modes dev des fronts React
+run_dev() {
+  local module=$1
+  echo -e "\n------------------"
+  echo "Starting ${module} frontend in dev mode"
+  echo "------------------"
 
+  # Verify if the frontend directory exists
+  if [ ! -d "${module}/frontend" ]; then
+    echo "Error: ${module}/frontend directory not found"
+    exit 1
+  fi
+
+  if [ "$NO_DOCKER" = "true" ]; then
+    cd ${module}/frontend && pnpm dev
+    cd ../.. || exit 1
+  else
+    docker compose run --rm -p 4200:4200 node-frontend sh -c "cd ${module}/frontend && pnpm dev"
+  fi
+}
 dev_frontend_formulaire() {
-  dev_frontend "formulaire"
+  run_dev "formulaire"
 }
 
 dev_frontend_formulaire_public() {
-  dev_frontend "formulaire-public"
+  run_dev "formulaire-public"
+}
+
+install_deps_formulaire() {
+  install_deps "formulaire"
+}
+
+install_deps_formulaire_public() {
+  install_deps "formulaire-public"
 }
 
 # Fonction améliorée pour vérifier les fichiers copiés
@@ -708,7 +735,8 @@ main() {
     echo "  build            - Build all modules or a specific module"
     echo "  buildFront       - Build only the frontend part of a module"
     echo "  buildBack        - Build only the backend part of a module"
-    echo "  dev              - Run development mode for a module's frontend"
+    echo "  runDev           - Run development mode for a module's frontend"
+    echo "  installDeps      - install front dependances for a module's frontend"
     echo "  test             - Run tests for all modules or a specific module"
     echo "  lint             - Run linting for all modules or a specific module"
     echo "  publish          - Publish all modules or a specific module to default Nexus repository"
@@ -722,19 +750,20 @@ main() {
     echo "  --no-docker      - Run commands locally without Docker"
     echo "  For publishNexus: repository URL as third argument"
     echo "Examples:"
-    echo "  ./build.sh clean                - Clean all modules"
-    echo "  ./build.sh clean formulaire     - Clean formulaire module"
-    echo "  ./build.sh build                - Build all modules"
-    echo "  ./build.sh build common         - Build only common module"
-    echo "  ./build.sh buildFront formulaire - Build only the frontend of formulaire"
-    echo "  ./build.sh buildBack formulaire  - Build only the backend of formulaire"
-    echo "  ./build.sh dev formulaire       - Run formulaire frontend in dev mode"
-    echo "  ./build.sh test formulaire      - Test formulaire module"
-    echo "  ./build.sh verify formulaire    - Verify files copied for formulaire"
-    echo "  ./build.sh publish              - Publish all modules to default Nexus"
-    echo "  ./build.sh publish common       - Publish only common module to default Nexus"
+    echo "  ./build.sh clean                  - Clean all modules"
+    echo "  ./build.sh clean formulaire       - Clean formulaire module"
+    echo "  ./build.sh build                  - Build all modules"
+    echo "  ./build.sh build common           - Build only common module"
+    echo "  ./build.sh buildFront formulaire  - Build only the frontend of formulaire"
+    echo "  ./build.sh buildBack formulaire   - Build only the backend of formulaire"
+    echo "  ./build.sh runDev formulaire      - Run formulaire frontend in dev mode"
+    echo "  ./build.sh installDeps formulaire - Install frontend depandances for formulaire"
+    echo "  ./build.sh test formulaire        - Test formulaire module"
+    echo "  ./build.sh verify formulaire      - Verify files copied for formulaire"
+    echo "  ./build.sh publish                - Publish all modules to default Nexus"
+    echo "  ./build.sh publish common         - Publish only common module to default Nexus"
     echo "  ./build.sh publishNexus common https://my-nexus/repo - Publish common to specific Nexus"
-    echo "  ./build.sh --no-docker build    - Build without using Docker"
+    echo "  ./build.sh --no-docker build      - Build without using Docker"
     exit 1
   fi
 
@@ -831,7 +860,7 @@ main() {
       esac
     fi
     ;;
-  dev)
+  runDev)
     if [ -z "$module" ]; then
       echo "Error: Module is required for dev command"
       exit 1
@@ -842,6 +871,25 @@ main() {
         ;;
       formulaire-public)
         dev_frontend_formulaire_public
+        ;;
+      *)
+        echo "Unknown module: $module"
+        exit 1
+        ;;
+      esac
+    fi
+    ;;
+  installDeps)
+    if [ -z "$module" ]; then
+      echo "Error: Module is required for installDeps command"
+      exit 1
+    else
+      case $module in
+      formulaire)
+        install_deps_formulaire
+        ;;
+      formulaire-public)
+        install_deps_formulaire_public
         ;;
       *)
         echo "Unknown module: $module"
