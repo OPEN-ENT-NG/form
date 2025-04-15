@@ -8,7 +8,6 @@ import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import "react-toastify/dist/ReactToastify.css";
-import { useTranslation } from "react-i18next";
 import { DEFAULT_THEME, FORMULAIRE, TOAST_CONFIG } from "./core/constants";
 import { setupStore } from "./store";
 import { options } from "./core/style/theme";
@@ -53,14 +52,12 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const { t } = useTranslation(FORMULAIRE);
-
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <EdificeClientProvider
           params={{
-            app: t("formulaire.title"),
+            app: FORMULAIRE,
           }}
         >
           <EdificeThemeProvider>

@@ -352,6 +352,7 @@
   "formulaire.error.formService.unshare": "Une erreur est survenue lors de la suppression du partage du formulaire",
   "formulaire.error.formService.image": "Une erreur est survenue lors de la récupération de l'image",
   "formulaire.error.formService.checkremind": "Une erreur est survenue lors de la récupération des réponses",
+  "formulaire.error.formService.rights": "Une erreur est survenue lors de la récupération des droits des formulaires",
 
   "formulaire.error.formElements.sync": "Une erreur est survenue lors de la synchronisation des éléments",
   "formulaire.error.formElementService.list": "Une erreur est survenue lors de la récupération des éléments",

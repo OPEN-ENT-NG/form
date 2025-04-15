@@ -5,6 +5,7 @@ import fr.openent.form.core.constants.Tables;
 import fr.openent.formulaire.controllers.*;
 import fr.openent.formulaire.cron.NotifyCron;
 import fr.openent.formulaire.cron.RgpdCron;
+import fr.openent.formulaire.service.ServiceFactory;
 import fr.openent.formulaire.service.impl.FormulaireApplicationStorage;
 import fr.openent.formulaire.service.impl.FormulaireRepositoryEvents;
 import fr.wseduc.webutils.collections.SharedDataHelper;
@@ -47,9 +48,9 @@ public class Formulaire extends BaseServer {
 
 		promise.future()
 				.compose(init -> {
-					eb = getEventBus(vertx);
+                    eb = getEventBus(vertx);
 					timelineHelper = new TimelineHelper(vertx, eb, config);
-					return StorageFactory.build(vertx, config, new FormulaireApplicationStorage(timelineHelper, eb));
+                    return StorageFactory.build(vertx, config, new FormulaireApplicationStorage(timelineHelper, eb));
 				})
 				.compose(storageFactory -> SharedDataHelper.getInstance().getMulti("server", "archiveConfig")
 						.map(formulaireConfigMap -> Pair.of(storageFactory, formulaireConfigMap)))
@@ -58,11 +59,12 @@ public class Formulaire extends BaseServer {
 	}
 
 	public Future<Void> initFormulaire(StorageFactory storageFactory, Map<String, Object> formulaireConfigMap) {
-		Constants.MAX_RESPONSES_EXPORT_PDF = config.getInteger(MAX_RESPONSE_EXPORT_PDF, 100);
+        ServiceFactory.initialize(securedActions);
+        Constants.MAX_RESPONSES_EXPORT_PDF = config.getInteger(MAX_RESPONSE_EXPORT_PDF, 100);
 		Constants.MAX_USERS_SHARING = config.getInteger(MAX_USERS_SHARING, 65000);
 
 		final EventStore eventStore = EventStoreFactory.getFactory().getEventStore(Formulaire.class.getSimpleName());
-		final Storage storage = storageFactory.getStorage();
+        final Storage storage = storageFactory.getStorage();
 
 		// Set RepositoryEvents implementation used to process events published for transition
 		setRepositoryEvents(new FormulaireRepositoryEvents(vertx, (String) formulaireConfigMap.get("archiveConfig")));

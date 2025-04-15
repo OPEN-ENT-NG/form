@@ -6,6 +6,7 @@ import fr.openent.form.core.models.ShareMember;
 import fr.openent.form.core.models.TransactionElement;
 import fr.openent.form.helpers.*;
 import fr.openent.formulaire.service.FormService;
+import fr.openent.formulaire.service.ServiceFactory;
 import fr.wseduc.webutils.Either;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
@@ -14,6 +15,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import org.entcore.common.share.ShareNormalizer;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 import org.entcore.common.sql.SqlStatementsBuilder;
@@ -38,9 +40,15 @@ public class DefaultFormService implements FormService {
     private final Sql sql = Sql.getInstance();
     private final SimpleDateFormat dateFormatter1 = new SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS_SSS);
     private final SimpleDateFormat dateFormatter2 = new SimpleDateFormat(EEE_MMM_DD_HH_MM_SS_Z_YYYY);
+    private final ShareNormalizer shareNormalizer;
+
+    public DefaultFormService(){
+        this.shareNormalizer = new ShareNormalizer(ServiceFactory.getInstance().getSecuredActions());
+    }
 
     @Override
-    public void list(List<String> groupsAndUserIds, UserInfos user, Handler<Either<String, JsonArray>> handler) {
+    public Future<JsonArray> list(List<String> groupsAndUserIds, UserInfos user) {
+        Promise<JsonArray> promise = Promise.promise();
         StringBuilder query = new StringBuilder();
         JsonArray params = new JsonArray();
 
@@ -66,7 +74,22 @@ public class DefaultFormService implements FormService {
                 .append("ORDER BY f.date_modification DESC;");
         params.add(MANAGER_RESOURCE_BEHAVIOUR).add(CONTRIB_RESOURCE_BEHAVIOUR).add(user.getUserId());
 
-        Sql.getInstance().prepared(query.toString(), params, SqlResult.validResultHandler(handler));
+        String errorMessage = "[Formulaire@DefaultFormService::list] Fail to list forms for user with id " + user.getUserId();
+        Sql.getInstance().prepared(query.toString(), params, SqlResult.validResultHandler(FutureHelper.handlerEither(promise, errorMessage)));
+
+        return promise.future();
+    }
+
+    @Override
+    public void list(List<String> groupsAndUserIds, UserInfos user, Handler<Either<String, JsonArray>> handler){
+        list(groupsAndUserIds, user)
+            .onSuccess(res -> {
+                JsonArray updatedRes = res.stream()
+                        .map(form -> this.addNormalizedShares((JsonObject) form))
+                        .collect(JsonArray::new, JsonArray::add, JsonArray::addAll);
+                handler.handle(new Either.Right<>(updatedRes));
+            })
+            .onFailure(error -> handler.handle(new Either.Left<>(error.getMessage())));
     }
 
     @Deprecated
@@ -218,7 +241,7 @@ public class DefaultFormService implements FormService {
     @Deprecated
     public void get(String formId, UserInfos user, Handler<Either<String, JsonObject>> handler) {
         get(formId, user)
-            .onSuccess(result -> handler.handle(new Either.Right<>(result)))
+            .onSuccess(result -> handler.handle(new Either.Right<>(this.addNormalizedShares(result))))
             .onFailure(err -> handler.handle(new Either.Left<>(err.getMessage())));
     }
 
@@ -726,6 +749,29 @@ public class DefaultFormService implements FormService {
                 promise.fail(e2.getMessage());
                 return promise.future();
             }
+        }
+    }
+
+    private Optional<UserInfos> getCreatorForModel(final JsonObject json) {
+        if(!json.containsKey(OWNER_ID)){
+            return Optional.empty();
+        }
+        final UserInfos user = new UserInfos();
+        user.setUserId(json.getString(OWNER_ID));
+        user.setUsername(json.getString(OWNER_NAME));
+        return Optional.of(user);
+    }
+
+    private JsonObject addNormalizedShares(final JsonObject form) {
+        try {
+            if(form != null) {
+                this.shareNormalizer.addNormalizedRights(form, e -> getCreatorForModel(e).map(UserInfos::getUserId));
+            }
+            return form;
+        }
+        catch (Exception e) {
+            log.error(String.format("[Formulaire@%s::addNormalizedShares] Failed to apply normalized shares : %s", this.getClass().getSimpleName(), e.getMessage()));
+            return form;
         }
     }
 }

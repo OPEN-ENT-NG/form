@@ -26,7 +26,7 @@ public class FormulaireApplicationStorageTest {
     @Before
     public void setUp(){
         vertx = Vertx.vertx();
-        formulaireApplicationStorage = new FormulaireApplicationStorage(null, null);
+        formulaireApplicationStorage = new FormulaireApplicationStorage(null);
         Sql.getInstance().init(vertx.eventBus(), FORMULAIRE_ADDRESS);
     }
 
