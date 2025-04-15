@@ -27,6 +27,7 @@ export interface IForm {
   nb_elements: number;
   nb_responses: number | null;
   infoImg: IInfoImg;
+  rights: string[];
 }
 
 export interface IInfoImg {
@@ -69,4 +70,9 @@ export interface IFormPayload {
 export interface IDuplicateFormPayload {
   formIds: number[];
   folderId: number;
+}
+
+export interface IFormRight {
+  resource_id: number;
+  action: string;
 }
