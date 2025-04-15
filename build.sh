@@ -33,8 +33,20 @@ esac
 
 export DEFAULT_DOCKER_USER="$USER_UID:$GROUP_GID"
 
-# Initialiser le fichier .env utilisé par docker-compose
-echo "DEFAULT_DOCKER_USER=$DEFAULT_DOCKER_USER" >.env
+# Initialiser ou mettre à jour le fichier .env utilisé par docker-compose
+if [ -f ".env" ]; then
+  # Le fichier .env existe, vérifier si la variable existe déjà
+  if ! grep -q "^DEFAULT_DOCKER_USER=" .env; then
+    # La variable n'existe pas, l'ajouter
+    echo "DEFAULT_DOCKER_USER=$DEFAULT_DOCKER_USER" >> .env
+  else
+    # La variable existe, la mettre à jour si nécessaire
+    sed -i "s/^DEFAULT_DOCKER_USER=.*/DEFAULT_DOCKER_USER=$DEFAULT_DOCKER_USER/" .env
+  fi
+else
+  # Le fichier .env n'existe pas, le créer
+  echo "DEFAULT_DOCKER_USER=$DEFAULT_DOCKER_USER" > .env
+fi
 
 # Fonctions de nettoyage
 clean_common() {
