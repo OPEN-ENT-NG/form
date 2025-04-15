@@ -1,18 +1,8 @@
 #!/bin/bash
 
-# Options
-NO_DOCKER=""
-for i in "$@"
-do
-case $i in
-  --no-docker*)
-  NO_DOCKER="true"
-  shift
-  ;;
-  *)
-  ;;
-esac
-done
+# Get main script path and current directory
+MAIN_SCRIPT_PATH="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)/build.sh"
+CURRENT_DIR="$(pwd)"
 
 if [ "$#" -lt 1 ]; then
   echo "Usage: $0 <clean|init|localDep|build|install|watch>"
@@ -192,23 +182,11 @@ do
       runDev
       ;;
     installDeps)
-      installDeps
-      ;;
-    runTest)
-      runTest
-      ;;
+        COMMAND="installDeps"
+        ;;
     runDev)
-      runDev
-      ;;
-    prettierDocker)
-      prettierDocker
-      ;;
-    lintFixDocker)
-      lintFixDocker
-      ;;
-    checkQualityCode)
-      checkQualityCode
-      ;;
+        COMMAND="runDev"
+        ;;
     build)
       build
       ;;
@@ -225,9 +203,23 @@ do
       publishNPM
       ;;
     *)
-      echo "Invalid argument : $param"
-  esac
-  if [ ! $? -eq 0 ]; then
-    exit 1
-  fi
+        echo "Unrecognized option: $arg"
+        show_help
+        exit 1
+        ;;
+    esac
 done
+
+# Execute command via main script
+if [ -n "$COMMAND" ]; then
+    echo "Executing $COMMAND for module $MODULE_NAME"
+    # Change to the root directory before executing the main script
+    cd "$(dirname "$MAIN_SCRIPT_PATH")"
+    ./build.sh $NO_DOCKER_ARG $COMMAND "$MODULE_NAME"
+    # Return to the original directory
+    cd "$CURRENT_DIR"
+else
+    echo "No valid command specified"
+    show_help
+    exit 1
+fi

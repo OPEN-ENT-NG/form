@@ -3,6 +3,7 @@
 chmod +x formulaire/build.sh
 chmod +x formulaire-public/build.sh
 
+MVN_OPTS="-Duser.home=/var/maven"
 
 if [ ! -e node_modules ]; then
   mkdir node_modules
