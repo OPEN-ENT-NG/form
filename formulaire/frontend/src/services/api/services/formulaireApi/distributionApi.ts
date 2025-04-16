@@ -24,8 +24,19 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    getFormDistributions: builder.query<IDistribution[], number>({
+      query: (id: number) => `/distributions/forms/${id.toString()}/list`,
+      transformResponse: (rawDatas: IDistributionDTO[]) => transformDistributions(rawDatas),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (error) {
+          console.error("Erreur lors de la récupération des distributions:", error);
+        }
+      },
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetDistributionQuery } = distributionApi;
+export const { useGetDistributionQuery, useGetFormDistributionsQuery } = distributionApi;
