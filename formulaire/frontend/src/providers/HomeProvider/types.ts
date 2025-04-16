@@ -28,6 +28,8 @@ export type HomeProviderContextType = {
   resetSelected: () => void;
   distributions: IDistribution[];
   sentForms: IForm[];
+  selectedSentForm: IForm | null;
+  setSelectedSentForm: (value: IForm | null) => void;
 };
 
 export interface IHomeTabViewPref {

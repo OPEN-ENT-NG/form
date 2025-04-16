@@ -13,12 +13,7 @@ import { ERROR_MAIN_COLOR, PRIMARY_MAIN_COLOR, SUCCESS_MAIN_COLOR, TEXT_SECONDAR
 import { EllipsisWithTooltip } from "@cgi-learning-hub/ui";
 import { useFormatDateWithTime } from "./useFormatDateWithTime";
 import { FORMULAIRE } from "~/core/constants";
-import {
-  getFirstDistribution,
-  getLatestDistribution,
-  getNbFinishedDistrib,
-  isFormFilled,
-} from "~/core/models/form/utils";
+import { getFirstDistribution, getFormStatusText, isFormFilled } from "~/core/models/form/utils";
 import { IDistribution } from "~/core/models/distribution/types";
 
 export const useFormItemsIcons = () => {
@@ -92,20 +87,6 @@ export const useFormItemsIcons = () => {
     [t, formatDateWithTime],
   );
 
-  const getText = (form: IForm, distributions: IDistribution[]): string => {
-    if (form.multiple) {
-      return `${t("formulaire.responses.count")} : ${getNbFinishedDistrib(distributions).toString()}`;
-    } else {
-      if (getNbFinishedDistrib(distributions) > 0) {
-        const latestDistrib = getLatestDistribution(distributions);
-        if (latestDistrib.dateResponse) {
-          return formatDateWithTime(latestDistrib.dateResponse, "formulaire.responded.date");
-        }
-      }
-      return t("formulaire.responded.waiting");
-    }
-  };
-
   const getSentFormPropertyItems = useCallback(
     (form: IForm, distributions: IDistribution[]) => {
       return [
@@ -138,7 +119,7 @@ export const useFormItemsIcons = () => {
                 fontWeight: 700,
               }}
             >
-              {getText(form, distributions)}
+              {getFormStatusText(form, distributions, formatDateWithTime, t)}
             </EllipsisWithTooltip>
           ),
         },

@@ -29,6 +29,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const [selectedForms, setSelectedForms] = useState<IForm[]>([]);
   const [distributions, setDistributions] = useState<IDistribution[]>([]);
   const [sentForms, setSentForms] = useState<IForm[]>([]);
+  const [selectedSentForm, setSelectedSentForm] = useState<IForm | null>(null);
 
   const [tab, setTab] = useState<HomeTabState>(HomeTabState.FORMS);
   const [tabViewPref, setTabViewPref] = useState<IHomeTabViewPref>(initTabViewPref());
@@ -41,11 +42,14 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
 
   const toggleTab = useCallback((tab: HomeTabState) => {
     setTab(tab);
+    resetSelected();
   }, []);
 
   const toggleTagViewPref = useCallback(
-    (viewMode: ViewMode) => {
-      setTabViewPref({ ...tabViewPref, [tab]: viewMode });
+    (viewMode: ViewMode | null) => {
+      if (viewMode !== null) {
+        setTabViewPref({ ...tabViewPref, [tab]: viewMode });
+      }
     },
     [tabViewPref, tab],
   );
@@ -53,6 +57,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const resetSelected = useCallback(() => {
     setSelectedFolders([]);
     setSelectedForms([]);
+    setSelectedSentForm(null);
   }, []);
 
   useEffect(() => {
@@ -72,12 +77,12 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   }, [foldersDatas, rootFolders]);
 
   useEffect(() => {
-    if (selectedFolders.length || selectedForms.length) {
+    if (selectedFolders.length || selectedForms.length || selectedSentForm) {
       setIsToasterOpen(true);
       return;
     }
     setIsToasterOpen(false);
-  }, [selectedFolders, selectedForms]);
+  }, [selectedFolders, selectedForms, selectedSentForm]);
 
   useEffect(() => {
     resetSelected();
@@ -119,6 +124,8 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       resetSelected,
       distributions,
       sentForms,
+      selectedSentForm,
+      setSelectedSentForm,
     }),
     [
       currentFolder,
@@ -126,6 +133,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       folders,
       selectedFolders,
       selectedForms,
+      selectedSentForm,
       forms,
       isToasterOpen,
       tabViewPref,

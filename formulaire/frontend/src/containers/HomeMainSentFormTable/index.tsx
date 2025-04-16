@@ -1,6 +1,6 @@
 import { ChangeEvent, FC, useState } from "react";
 
-import { IHomeMainTableProps } from "./types";
+import { IHomeMainSentFormTableProps } from "./types";
 import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
 import { useHome } from "~/providers/HomeProvider";
@@ -13,33 +13,29 @@ import {
   TablePagination,
   TableRow,
 } from "@cgi-learning-hub/ui";
-import { getPageForms, initialTableProps, useColumns } from "./utils";
+import { useSentFormColumns } from "./utils";
 import { Typography } from "@cgi-learning-hub/ui";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { IForm } from "~/core/models/form/types";
-import ShareIcon from "@mui/icons-material/Share";
-import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
-import PublicIcon from "@mui/icons-material/Public";
-import NotificationsIcon from "@mui/icons-material/Notifications";
-import dayjs from "dayjs";
-import { DateFormat } from "~/core/enums";
-import { tablePaginationStyle } from "./style";
+import { getPageForms, initialTableProps } from "../HomeMainTable/utils";
+import { tablePaginationStyle } from "../HomeMainTable/style";
+import { getFormDistributions, getFormSendingDate, getFormStatusText, isFormFilled } from "~/core/models/form/utils";
+import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
+import { ERROR_MAIN_COLOR, SUCCESS_MAIN_COLOR } from "~/core/style/colors";
 
-export const HomeMainSentFormTable: FC<IHomeMainTableProps> = ({ forms, distributions }) => {
-  const { selectedForms, setSelectedForms } = useHome();
+export const HomeMainSentFormTable: FC<IHomeMainSentFormTableProps> = ({ sentForms, distributions }) => {
+  const { selectedSentForm, setSelectedSentForm } = useHome();
   const { t } = useTranslation(FORMULAIRE);
-  const columns = useColumns();
-  const totalCount = forms.length;
+  const columns = useSentFormColumns();
+  const totalCount = sentForms.length;
   const [tablePaginationProps, setTablePaginationProps] = useState(initialTableProps);
-  const displayedForms = getPageForms(forms, tablePaginationProps);
+  const displayedForms = getPageForms(sentForms, tablePaginationProps);
+  const formatDateWithTime = useFormatDateWithTime();
 
-  const isSelected = (formId: number) => selectedForms.some((form) => form.id === formId);
+  const isSelected = (formId: number) => !!selectedSentForm && selectedSentForm.id === formId;
 
   const handleClick = (event: ChangeEvent<HTMLInputElement>, form: IForm) => {
-    const currentSelectedForms = event.target.checked
-      ? [...selectedForms, form]
-      : selectedForms.filter((item: IForm) => item.id !== form.id);
-    setSelectedForms(currentSelectedForms);
+    setSelectedSentForm(form);
   };
 
   const handleChangePage = (event: unknown, newPage: number) => {
@@ -53,7 +49,7 @@ export const HomeMainSentFormTable: FC<IHomeMainTableProps> = ({ forms, distribu
 
   return (
     <>
-      <TableContainer>
+      <TableContainer sx={{ width: "100%", tableLayout: "fixed" }}>
         <TableHead>
           <TableRow>
             {columns.map((column) => (
@@ -90,18 +86,20 @@ export const HomeMainSentFormTable: FC<IHomeMainTableProps> = ({ forms, distribu
                   <Typography variant={TypographyVariant.BODY2}>{form.owner_name}</Typography>
                 </TableCell>
                 <TableCell align="center">
-                  <Typography variant={TypographyVariant.BODY2}>{form.nb_responses ?? 0}</Typography>
-                </TableCell>
-                <TableCell align="center">
                   <Typography variant={TypographyVariant.BODY2}>
-                    {t("formulaire.modified") + dayjs(form.date_creation).format(DateFormat.DAY_MONTH_YEAR_HOUR_MIN)}
+                    {formatDateWithTime(
+                      getFormSendingDate(getFormDistributions(form, distributions)),
+                      "formulaire.sentAt",
+                    )}
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  {form.reminded && <NotificationsIcon />}
-                  {form.collab && <ShareIcon />}
-                  {form.sent && <ForwardToInboxIcon />}
-                  {form.is_public && <PublicIcon />}
+                  <Typography
+                    variant={TypographyVariant.BODY2}
+                    color={isFormFilled(form, distributions) ? SUCCESS_MAIN_COLOR : ERROR_MAIN_COLOR}
+                  >
+                    {getFormStatusText(form, getFormDistributions(form, distributions), formatDateWithTime, t)}
+                  </Typography>
                 </TableCell>
               </TableRow>
             );

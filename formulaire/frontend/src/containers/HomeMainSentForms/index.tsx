@@ -7,9 +7,10 @@ import { IForm } from "~/core/models/form/types";
 import { useHome } from "~/providers/HomeProvider";
 import { IHomeMainSentFormsProps } from "./types";
 import { SentForm } from "~/components/SentForm";
+import { getFormDistributions } from "~/core/models/form/utils";
 
 export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, distributions }) => {
-  const { selectedForms, setSelectedForms } = useHome();
+  const { selectedSentForm, setSelectedSentForm } = useHome();
   const [visibleCount, setVisibleCount] = useState(FORM_CHUNK);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -17,16 +18,21 @@ export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, dist
 
   const handleFormsSelect = useCallback(
     (form: IForm) => {
-      if (selectedForms.some((f) => f.id === form.id)) {
-        setSelectedForms(selectedForms.filter((f) => f.id !== form.id));
+      if (selectedSentForm) {
+        if (selectedSentForm.id === form.id) {
+          setSelectedSentForm(null);
+          return;
+        }
+        setSelectedSentForm(form);
         return;
       }
-      setSelectedForms([...selectedForms, form]);
+      setSelectedSentForm(form);
+      return;
     },
-    [selectedForms, setSelectedForms],
+    [selectedSentForm, setSelectedSentForm],
   );
 
-  const isSelectedForm = (form: IForm) => selectedForms.some((f) => f.id === form.id);
+  const isSelectedForm = (form: IForm) => !!selectedSentForm && selectedSentForm.id === form.id;
 
   const handleObserver = useCallback(
     (entries: IntersectionObserverEntry[]) => {
@@ -58,15 +64,6 @@ export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, dist
     };
   }, [sentForms, handleObserver]);
 
-  const getFormDistributions = useCallback(
-    (form: IForm) => {
-      const distribs = distributions.filter((distribution) => distribution.formId === form.id);
-      return distribs;
-    },
-    [distributions],
-  );
-
-
   return (
     <>
       <Box display="flex" flexWrap="wrap" gap={2}>
@@ -75,7 +72,7 @@ export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, dist
             <SentForm
               key={form.id}
               form={form}
-              distributions={getFormDistributions(form)}
+              distributions={getFormDistributions(form, distributions)}
               isSelected={isSelectedForm}
               onSelect={handleFormsSelect}
             />

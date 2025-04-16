@@ -120,7 +120,7 @@ export const HomeMainLayout: FC = () => {
             {viewMode === ViewMode.CARDS ? (
               <HomeMainSentForms sentForms={filteredSentForms} distributions={distributions} />
             ) : (
-              <HomeMainSentFormTable forms={filteredSentForms} distributions={distributions} />
+              <HomeMainSentFormTable sentForms={filteredSentForms} distributions={distributions} />
             )}
           </Box>
         ) : (

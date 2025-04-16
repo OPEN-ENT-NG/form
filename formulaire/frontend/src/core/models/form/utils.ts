@@ -60,8 +60,13 @@ export const parseFormToValueState = (form: IForm): IFormPropInputValueState => 
   };
 };
 
-export const isSelectedForm = (folder: IForm, selectedFolders: IForm[]): boolean => {
-  return selectedFolders.some((selectedFolder) => selectedFolder.id === folder.id);
+export const isSelectedForm = (form: IForm, selectedForms: IForm[]): boolean => {
+  return selectedForms.some((selectedForm) => selectedForm.id === form.id);
+};
+
+export const getFormDistributions = (form: IForm, distributions: IDistribution[]): IDistribution[] => {
+  const distribs = distributions.filter((distribution) => distribution.formId === form.id);
+  return distribs;
 };
 
 export const getLatestDistribution = (distributions: IDistribution[]): IDistribution => {
@@ -90,5 +95,29 @@ export const isFormFilled = (form: IForm, distributions: IDistribution[]): boole
     return !!latesteDistrib.dateResponse;
   } else {
     return getNbFinishedDistrib(distributions) > 0;
+  }
+};
+
+export const getFormSendingDate = (distributions: IDistribution[]): Date => {
+  const latestDistrib = getFirstDistribution(distributions);
+  return latestDistrib.dateSending ? new Date(latestDistrib.dateSending) : new Date();
+};
+
+export const getFormStatusText = (
+  form: IForm,
+  distributions: IDistribution[],
+  formatDateWithTime: (date: string | Date | undefined, i18nTextKey: string) => string,
+  t: (key: string) => string,
+): string => {
+  if (form.multiple) {
+    return `${t("formulaire.responses.count")} : ${getNbFinishedDistrib(distributions).toString()}`;
+  } else {
+    if (getNbFinishedDistrib(distributions) > 0) {
+      const latestDistrib = getLatestDistribution(distributions);
+      if (latestDistrib.dateResponse) {
+        return formatDateWithTime(latestDistrib.dateResponse, "formulaire.responded.date");
+      }
+    }
+    return t("formulaire.responded.waiting");
   }
 };
