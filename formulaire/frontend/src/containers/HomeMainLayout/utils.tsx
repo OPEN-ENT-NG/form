@@ -13,7 +13,6 @@ import { ViewMode } from "~/components/SwitchView/enums";
 import { IDistribution } from "~/core/models/distribution/types";
 import { getFormDistributions, getFormSendingDate, isFormFilled } from "~/core/models/form/utils";
 
-
 export const formsChipDatas: IFormChipProps[] = [
   {
     id: ChipsID.SHARED,
