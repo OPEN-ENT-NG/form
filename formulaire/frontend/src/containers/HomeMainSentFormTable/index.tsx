@@ -19,9 +19,10 @@ import { TypographyVariant } from "~/core/style/themeProps";
 import { IForm } from "~/core/models/form/types";
 import { getPageForms, initialTableProps } from "../HomeMainTable/utils";
 import { tablePaginationStyle } from "../HomeMainTable/style";
-import { getFormDistributions, getFormSendingDate, getFormStatusText, isFormFilled } from "~/core/models/form/utils";
+import { getFormDistributions, getFormStatusText, isFormFilled } from "~/core/models/form/utils";
 import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
 import { ERROR_MAIN_COLOR, SUCCESS_MAIN_COLOR } from "~/core/style/colors";
+import { getFirstDistributionDate } from "~/core/models/distribution/utils";
 
 export const HomeMainSentFormTable: FC<IHomeMainSentFormTableProps> = ({ sentForms, distributions }) => {
   const { selectedSentForm, setSelectedSentForm } = useHome();
@@ -61,19 +62,18 @@ export const HomeMainSentFormTable: FC<IHomeMainSentFormTableProps> = ({ sentFor
         </TableHead>
         <TableBody>
           {displayedForms.map((form) => {
-            const isItemSelected = isSelected(form.id);
             return (
               <TableRow
                 key={form.id}
-                selected={isItemSelected}
-                aria-checked={isItemSelected}
+                selected={isSelected(form.id)}
+                aria-checked={isSelected(form.id)}
                 role="checkbox"
                 tabIndex={-1}
                 hover
               >
                 <TableCell sx={{ padding: 0 }} padding="checkbox">
                   <Checkbox
-                    checked={isItemSelected}
+                    checked={isSelected(form.id)}
                     onChange={(event) => {
                       handleClick(event, form);
                     }}
@@ -88,7 +88,7 @@ export const HomeMainSentFormTable: FC<IHomeMainSentFormTableProps> = ({ sentFor
                 <TableCell align="center">
                   <Typography variant={TypographyVariant.BODY2}>
                     {formatDateWithTime(
-                      getFormSendingDate(getFormDistributions(form, distributions)),
+                      getFirstDistributionDate(getFormDistributions(form, distributions)),
                       "formulaire.sentAt",
                     )}
                   </Typography>

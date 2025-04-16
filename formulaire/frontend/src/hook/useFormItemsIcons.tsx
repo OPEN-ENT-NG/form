@@ -13,8 +13,9 @@ import { ERROR_MAIN_COLOR, PRIMARY_MAIN_COLOR, SUCCESS_MAIN_COLOR, TEXT_SECONDAR
 import { EllipsisWithTooltip } from "@cgi-learning-hub/ui";
 import { useFormatDateWithTime } from "./useFormatDateWithTime";
 import { FORMULAIRE } from "~/core/constants";
-import { getFirstDistribution, getFormStatusText, isFormFilled } from "~/core/models/form/utils";
+import { getFormStatusText, isFormFilled } from "~/core/models/form/utils";
 import { IDistribution } from "~/core/models/distribution/types";
+import { getFirstDistributionDate } from "~/core/models/distribution/utils";
 
 export const useFormItemsIcons = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -102,7 +103,7 @@ export const useFormItemsIcons = () => {
           icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
           text: (
             <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-              {formatDateWithTime(getFirstDistribution(distributions).dateSending ?? "", "formulaire.sentAt")}
+              {formatDateWithTime(getFirstDistributionDate(distributions), "formulaire.sentAt")}
             </EllipsisWithTooltip>
           ),
         },

@@ -82,7 +82,6 @@ export const useMapToasterButtons = () => {
 
   const handleSelectAll = useCallback(() => {
     if (tab === HomeTabState.FORMS) {
-      console.log(tab);
       if (hasOnlyFolders) {
         setSelectedFolders(filteredFolders);
         return;

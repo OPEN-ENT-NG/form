@@ -3,6 +3,7 @@ import { IFormPropInputValueState } from "~/containers/FormPropModal/types";
 import { IFormPayload, IForm } from "./types";
 import { IDistribution } from "../distribution/types";
 import { DistributionStatus } from "../distribution/enums";
+import { getFirstDistribution, getLatestDistribution, getNbFinishedDistrib } from "../distribution/utils";
 
 export const buildFormPayload = (
   formPropValue: IFormPropInputValueState,
@@ -65,28 +66,7 @@ export const isSelectedForm = (form: IForm, selectedForms: IForm[]): boolean => 
 };
 
 export const getFormDistributions = (form: IForm, distributions: IDistribution[]): IDistribution[] => {
-  const distribs = distributions.filter((distribution) => distribution.formId === form.id);
-  return distribs;
-};
-
-export const getLatestDistribution = (distributions: IDistribution[]): IDistribution => {
-  return distributions.reduce((latest, current) => {
-    if (!current.dateSending) return latest;
-    if (!latest.dateSending) return current;
-    return new Date(current.dateSending) > new Date(latest.dateSending) ? current : latest;
-  }, distributions[0]);
-};
-
-export const getFirstDistribution = (distributions: IDistribution[]): IDistribution => {
-  return distributions.reduce((first, current) => {
-    if (!current.dateSending) return first;
-    if (!first.dateSending) return current;
-    return new Date(current.dateSending) < new Date(first.dateSending) ? current : first;
-  }, distributions[0]);
-};
-
-export const getNbFinishedDistrib = (distributions: IDistribution[]): number => {
-  return distributions.filter((distribution) => distribution.status === DistributionStatus.FINISHED).length;
+  return distributions.filter((distribution) => distribution.formId === form.id);
 };
 
 export const isFormFilled = (form: IForm, distributions: IDistribution[]): boolean => {
@@ -96,11 +76,6 @@ export const isFormFilled = (form: IForm, distributions: IDistribution[]): boole
   } else {
     return getNbFinishedDistrib(distributions) > 0;
   }
-};
-
-export const getFormSendingDate = (distributions: IDistribution[]): Date => {
-  const latestDistrib = getFirstDistribution(distributions);
-  return latestDistrib.dateSending ? new Date(latestDistrib.dateSending) : new Date();
 };
 
 export const getFormStatusText = (

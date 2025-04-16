@@ -11,7 +11,8 @@ import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { IDistribution } from "~/core/models/distribution/types";
-import { getFormDistributions, getFormSendingDate, isFormFilled } from "~/core/models/form/utils";
+import { getFormDistributions, isFormFilled } from "~/core/models/form/utils";
+import { getFirstDistributionDate } from "~/core/models/distribution/utils";
 
 export const formsChipDatas: IFormChipProps[] = [
   {
@@ -76,10 +77,9 @@ export const sentFormMenuItemDatas: IMenuItemProps[] = [
     state: MenuItemState.DESCENDING,
     sortFn: (a: IForm, b: IForm, isAscending: boolean, distributions?: IDistribution[]) => {
       const direction = isAscending ? 1 : -1;
-      console.log("distributions", distributions);
       if (!distributions) return 0;
-      const aSendingDate = getFormSendingDate(getFormDistributions(a, distributions));
-      const bSendingDate = getFormSendingDate(getFormDistributions(b, distributions));
+      const aSendingDate = getFirstDistributionDate(getFormDistributions(a, distributions));
+      const bSendingDate = getFirstDistributionDate(getFormDistributions(b, distributions));
       return direction * (new Date(aSendingDate).getTime() - new Date(bSendingDate).getTime());
     },
   },

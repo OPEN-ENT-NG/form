@@ -105,7 +105,7 @@ export const HomeMainLayout: FC = () => {
               handleSearch(event.target.value);
             }}
           />
-          <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref}></SwitchView>
+          <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
           <OrganizeFilter
             chipDatas={sentFormsChipDatas}
             menuItemDatas={sentFormMenuItemDatas}
@@ -154,7 +154,7 @@ export const HomeMainLayout: FC = () => {
       </Box>
       <Box sx={searchStyle}>
         <FormBreadcrumbs stringItems={breadcrumbsTexts} />
-        <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref}></SwitchView>
+        <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
       </Box>
       <DndContext
         sensors={sensors}

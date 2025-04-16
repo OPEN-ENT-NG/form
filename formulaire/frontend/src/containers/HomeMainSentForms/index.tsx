@@ -18,15 +18,7 @@ export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, dist
 
   const handleFormsSelect = useCallback(
     (form: IForm) => {
-      if (selectedSentForm) {
-        if (selectedSentForm.id === form.id) {
-          setSelectedSentForm(null);
-          return;
-        }
-        setSelectedSentForm(form);
-        return;
-      }
-      setSelectedSentForm(form);
+      setSelectedSentForm(selectedSentForm ? (selectedSentForm.id === form.id ? null : form) : form);
       return;
     },
     [selectedSentForm, setSelectedSentForm],
