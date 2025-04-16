@@ -23,7 +23,7 @@ export interface IMenuItemProps {
   id: string;
   i18nKey: string;
   state: MenuItemState;
-  sortFn: (a: IForm, b: IForm, isAscending: boolean) => number;
+  sortFn: (a: IForm, b: IForm, isAscending: boolean, distribution?: IDistribution[]) => number;
 }
 
 export const menuAnchorOrigin: PopoverOrigin = {
