@@ -1,10 +1,10 @@
-import { IHeaderButton } from "~/components/Header/types";
 import { ModalType } from "~/core/enums";
 import { useEffect, useRef, useState, RefObject } from "react";
 import { useModal } from "~/providers/ModalProvider";
 import { ComponentVariant } from "~/core/style/themeProps";
+import { IButtonProps } from "~/core/types";
 
-export const useGetHomeHeaderButtons = (): IHeaderButton[] => {
+export const useGetHomeHeaderButtons = (): IButtonProps[] => {
   const { toggleModal } = useModal();
   return [
     {

@@ -9,7 +9,7 @@ import { cardPreviewStyle } from "~/core/style/dndStyle";
 
 export const FormPreview: FC<IFormPreviewProps> = ({ form }) => {
   const { selectedForms } = useHome();
-  const { getIcons, getPropertyItems } = useFormItemsIcons();
+  const { getIcons, getFormPropertyItems } = useFormItemsIcons();
 
   return (
     <Box data-type="dnd-preview" sx={{ ...cardPreviewStyle }}>
@@ -20,7 +20,7 @@ export const FormPreview: FC<IFormPreviewProps> = ({ form }) => {
         image={form.picture}
         defaultImage={LOGO_PATH}
         isSelected={isSelectedForm(form, selectedForms)}
-        propertyItems={getPropertyItems(form)}
+        propertyItems={getFormPropertyItems(form)}
         infoIcons={getIcons(form)}
       />
     </Box>

@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { ShareAction } from "./useShare";
 
-interface UseShareBookmarkProps {
+interface IUseShareBookmarkProps {
   shareRights: ShareRightWithVisibles;
   shareDispatch: Dispatch<ShareAction>;
 }
@@ -16,7 +16,7 @@ export type BookmarkProps = {
   id: string;
 };
 
-export const useShareBookmark = ({ shareRights, shareDispatch }: UseShareBookmarkProps) => {
+export const useShareBookmark = ({ shareRights, shareDispatch }: IUseShareBookmarkProps) => {
   const toast = useToast();
   const { t } = useTranslation();
 
