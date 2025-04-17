@@ -1,6 +1,9 @@
 import { FormPropField } from "~/containers/FormPropModal/enums";
 import { IFormPropInputValueState } from "~/containers/FormPropModal/types";
 import { IFormPayload, IForm } from "./types";
+import { IDistribution } from "../distribution/types";
+import { getFirstDistribution, getLatestDistribution, getNbFinishedDistrib } from "../distribution/utils";
+import { DistributionStatus } from "../distribution/enums";
 
 export const buildFormPayload = (
   formPropValue: IFormPropInputValueState,
@@ -58,6 +61,38 @@ export const parseFormToValueState = (form: IForm): IFormPropInputValueState => 
   };
 };
 
-export const isSelectedForm = (folder: IForm, selectedFolders: IForm[]): boolean => {
-  return selectedFolders.some((selectedFolder) => selectedFolder.id === folder.id);
+export const isSelectedForm = (form: IForm, selectedForms: IForm[]): boolean => {
+  return selectedForms.some((selectedForm) => selectedForm.id === form.id);
+};
+
+export const getFormDistributions = (form: IForm, distributions: IDistribution[]): IDistribution[] => {
+  return distributions.filter((distribution) => distribution.formId === form.id);
+};
+
+export const isFormFilled = (form: IForm, distributions: IDistribution[]): boolean => {
+  const formDistributions = getFormDistributions(form, distributions);
+  if (form.multiple) {
+    return getFirstDistribution(formDistributions).status === DistributionStatus.FINISHED;
+  }
+  return getNbFinishedDistrib(distributions) > 0;
+};
+
+export const getFormStatusText = (
+  form: IForm,
+  distributions: IDistribution[],
+  formatDateWithTime: (date: string | Date | undefined, i18nTextKey: string) => string,
+  t: (key: string) => string,
+): string => {
+  const formDistributions = getFormDistributions(form, distributions);
+  if (form.multiple) {
+    return `${t("formulaire.responses.count")} : ${getNbFinishedDistrib(formDistributions).toString()}`;
+  } else {
+    if (getNbFinishedDistrib(formDistributions) > 0) {
+      const latestDistrib = getLatestDistribution(formDistributions);
+      if (latestDistrib.dateResponse) {
+        return formatDateWithTime(latestDistrib.dateResponse, "formulaire.responded.date");
+      }
+    }
+    return t("formulaire.responded.waiting");
+  }
 };

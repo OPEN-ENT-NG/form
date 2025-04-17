@@ -5,6 +5,6 @@ import { TagName } from "~/core/enums";
 export const emptySplitFormulaireApi = createApi({
   reducerPath: "formulaireApi",
   baseQuery: fetchBaseQuery({ baseUrl: `/${FORMULAIRE}/` }),
-  tagTypes: [TagName.FOLDERS, TagName.FORMS],
+  tagTypes: [TagName.FOLDERS, TagName.FORMS, TagName.DISTRIBUTION],
   endpoints: () => ({}),
 });
