@@ -11,6 +11,10 @@ import { useEdificeClient } from "@edifice.io/react";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { getFormDistributions } from "~/core/models/form/utils";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
+<<<<<<< HEAD
+=======
+import { getFormEditPath } from "~/core/pathHelper";
+>>>>>>> da26aa6f (feat(answer): #FOR-873 add form to answer tab (#462))
 
 export const useMapToasterButtons = () => {
   const {
@@ -142,9 +146,7 @@ export const useMapToasterButtons = () => {
             return;
           }
           if (hasForms && tab === HomeTabState.FORMS) {
-            //TODO
-            console.log("open form");
-            return;
+            return (window.location.href = getFormEditPath(selectedForms[0].id));
           }
           if (hasSentForm && tab === HomeTabState.RESPONSES) {
             //TODO

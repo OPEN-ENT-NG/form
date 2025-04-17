@@ -7,6 +7,7 @@ import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
 import { LOGO_PATH } from "~/core/constants";
 
 import { dragActiveStyle } from "~/core/style/dndStyle";
+import { getFormEditPath } from "~/core/pathHelper";
 
 export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSelect, dragActive = false }) => {
   const { attributes, listeners, setNodeRef } = useDraggable({
@@ -27,6 +28,9 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
         isSelected={isSelected(form)}
         onSelect={() => {
           onSelect(form);
+        }}
+        onClick={() => {
+          window.location.href = getFormEditPath(form.id);
         }}
         propertyItems={getFormPropertyItems(form)}
         infoIcons={getIcons(form)}
