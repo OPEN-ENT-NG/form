@@ -77,21 +77,19 @@ export const mainController = ng.controller('MainController', ['$scope', 'route'
 			formsList: () => {
 				$scope.currentPage = Pages.FORMS_LIST;
 				if ($scope.canCreate()) {
-					template.open('main', 'containers/forms-list');
+					window.location.href = "/formulaire?tab=FORMS";
+				} else {
+				  $scope.redirectTo("/e403");
 				}
-				else {
-					$scope.redirectTo('/e403');
-				}
-			},
-			formsResponses: () => {
+			  },
+			  formsResponses: () => {
 				$scope.currentPage = Pages.FORMS_RESPONSE;
 				if ($scope.canRespond()) {
-					template.open('main', 'containers/forms-responses');
+					window.location.href = "/formulaire?tab=RESPONSES";
+				} else {
+				  $scope.redirectTo("/e403");
 				}
-				else {
-					$scope.redirectTo('/e403');
-				}
-			},
+			  },
 			createForm: () => {
 				$scope.currentPage = Pages.CREATE_FORM;
 				if ($scope.canCreate()) {
