@@ -14,7 +14,7 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
     data: { type: DraggableType.FORM, form },
   });
 
-  const { getIcons, getPropertyItems } = useFormItemsIcons();
+  const { getIcons, getFormPropertyItems } = useFormItemsIcons();
 
   return (
     <Box ref={setNodeRef} sx={{ ...(dragActive ? dragActiveStyle : {}) }} {...attributes} {...listeners}>
@@ -28,7 +28,7 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
         onSelect={() => {
           onSelect(form);
         }}
-        propertyItems={getPropertyItems(form)}
+        propertyItems={getFormPropertyItems(form)}
         infoIcons={getIcons(form)}
         hasNoButtonOnFocus
       />

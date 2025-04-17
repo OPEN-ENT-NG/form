@@ -18,7 +18,7 @@ export const IMAGE_PICKER_INFO = "SVG, PNG, JPG, GIF";
 //DATE FORMAT
 export const DD_MM_YYYY = "DD/MM/YYYY";
 export const FULL_DATE_WITH_TIME_FORMAT = "DD MMMM YYYY HH:mm";
-export const HH_MM = "HH:MM";
+export const HH_MM = "HH:mm";
 
 //IMG PATH
 export const LOGO_PATH = "/formulaire/public/img/logo.svg";
