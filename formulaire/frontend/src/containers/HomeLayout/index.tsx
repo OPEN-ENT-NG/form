@@ -6,6 +6,7 @@ import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { HomeSidebar } from "../HomeSidebar";
 import { IHomeLayoutProps } from "./types";
 import { HomeMainLayout } from "../HomeMainLayout";
+import { AnswerMainLayout } from "~/components/AnswerMainLayout";
 
 export const HomeLayout: FC<IHomeLayoutProps> = ({ headerHeight }) => {
   const { tab } = useHome();
@@ -20,7 +21,8 @@ export const HomeLayout: FC<IHomeLayoutProps> = ({ headerHeight }) => {
         </Box>
       )}
       <Box sx={mainContentStyle}>
-        <HomeMainLayout />
+        {tab === HomeTabState.RESPONSES && <AnswerMainLayout />}
+        {tab === HomeTabState.FORMS && <HomeMainLayout />}
       </Box>
     </HomeLayoutWrapper>
   );
