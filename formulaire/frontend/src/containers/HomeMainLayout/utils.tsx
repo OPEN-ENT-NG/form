@@ -27,19 +27,6 @@ export const formsChipDatas: IFormChipProps[] = [
   },
 ];
 
-export const sentFormsChipDatas: IFormChipProps[] = [
-  {
-    id: ChipsID.TODO,
-    i18nKey: "formulaire.filter.to_do",
-    filterFn: (form: IForm, distributions?: IDistribution[]) => !isFormFilled(form, distributions ?? []),
-  },
-  {
-    id: ChipsID.FINISHED,
-    i18nKey: "formulaire.filter.finished",
-    filterFn: (form: IForm, distributions?: IDistribution[]) => isFormFilled(form, distributions ?? []),
-  },
-];
-
 export const formMenuItemDatas: IMenuItemProps[] = [
   {
     id: MenuItemsID.CREATION,
@@ -57,30 +44,6 @@ export const formMenuItemDatas: IMenuItemProps[] = [
     sortFn: (a: IForm, b: IForm, isAscending: boolean) => {
       const direction = isAscending ? 1 : -1;
       return direction * (new Date(a.date_modification).getTime() - new Date(b.date_modification).getTime());
-    },
-  },
-  {
-    id: MenuItemsID.TITLE,
-    i18nKey: "formulaire.filter.title",
-    state: MenuItemState.DESCENDING,
-    sortFn: (a: IForm, b: IForm, isAscending: boolean) => {
-      const direction = isAscending ? 1 : -1;
-      return direction * a.title.localeCompare(b.title);
-    },
-  },
-];
-
-export const sentFormMenuItemDatas: IMenuItemProps[] = [
-  {
-    id: MenuItemsID.CREATION,
-    i18nKey: "formulaire.filter.sending_date",
-    state: MenuItemState.DESCENDING,
-    sortFn: (a: IForm, b: IForm, isAscending: boolean, distributions?: IDistribution[]) => {
-      const direction = isAscending ? 1 : -1;
-      if (!distributions) return 0;
-      const aSendingDate = getFirstDistributionDate(getFormDistributions(a, distributions));
-      const bSendingDate = getFirstDistributionDate(getFormDistributions(b, distributions));
-      return direction * (new Date(aSendingDate).getTime() - new Date(bSendingDate).getTime());
     },
   },
   {

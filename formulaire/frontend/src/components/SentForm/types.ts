@@ -5,5 +5,5 @@ export interface ISentFormProps {
   form: IForm;
   distributions: IDistribution[];
   isSelected: (form: IForm) => boolean;
-  onSelect: (form: IForm) => void;
+  handleSelect: (form: IForm) => void;
 }

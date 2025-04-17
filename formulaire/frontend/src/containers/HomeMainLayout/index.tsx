@@ -19,11 +19,9 @@ import { OrganizeFilter } from "~/components/OrganizeFilter";
 import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
 import {
   formsChipDatas,
-  sentFormsChipDatas,
   getDragCursorStyle,
   getEmptyStateDescription,
   formMenuItemDatas,
-  sentFormMenuItemDatas,
   useToggleButtons,
 } from "./utils";
 import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
@@ -39,13 +37,9 @@ import { IForm } from "~/core/models/form/types";
 import { IFolder } from "~/core/models/folder/types";
 import { FormPreview } from "~/components/FormPreview";
 import { SwitchView } from "~/components/SwitchView";
-import { HomeTabState } from "~/providers/HomeProvider/enums";
-import { HomeTabs } from "~/components/HomeTab";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { HomeMainTable } from "../HomeMainTable";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
-import { HomeMainSentForms } from "../HomeMainSentForms";
-import { HomeMainSentFormTable } from "../HomeMainSentFormTable";
 
 export const HomeMainLayout: FC = () => {
   const {
@@ -60,7 +54,6 @@ export const HomeMainLayout: FC = () => {
     distributions,
     setSelectedFolders,
     setSelectedForms,
-    toggleTab,
     toggleTagViewPref,
   } = useHome();
   const theme = useTheme();
@@ -75,63 +68,20 @@ export const HomeMainLayout: FC = () => {
 
   const flatTreeViewItems = buildFlatFolderTree(folders);
 
-  const { handleSearch, filteredFolders, hasFilteredFolders, filteredForms, filteredSentForms, hasFilteredForms } =
-    useSearchAndOrganize(
-      folders,
-      forms,
-      currentFolder,
-      userId,
-      selectedChips,
-      sentForms,
-      distributions,
-      selectedMenuItem,
-    );
+  const { handleSearch, filteredFolders, hasFilteredFolders, filteredForms, hasFilteredForms } = useSearchAndOrganize(
+    folders,
+    forms,
+    currentFolder,
+    userId,
+    selectedChips,
+    sentForms,
+    distributions,
+    selectedMenuItem,
+  );
 
   const toggleButtonList: IToggleButtonItem[] = useToggleButtons();
 
   const breadcrumbsTexts = useMemo(() => (currentFolder.name ? [currentFolder.name] : []), [currentFolder.name]);
-
-  if (tab === HomeTabState.RESPONSES) {
-    return (
-      <Box sx={mainContentInnerStyle}>
-        <Box sx={searchStyle}>
-          <Box flexShrink={0}>
-            <HomeTabs value={tab} setValue={toggleTab} />
-          </Box>
-          <SearchInput
-            placeholder={t("formulaire.search.placeholder")}
-            sx={searchBarStyle}
-            onChange={(event) => {
-              handleSearch(event.target.value);
-            }}
-          />
-          <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
-          <OrganizeFilter
-            chipDatas={sentFormsChipDatas}
-            menuItemDatas={sentFormMenuItemDatas}
-            setSelectedChips={setSelectedChips}
-            selectedChips={selectedChips}
-            setSelectedMenuItem={setSelectedMenuItem}
-            selectedMenuItem={selectedMenuItem}
-          />
-        </Box>
-        {filteredSentForms.length > 0 ? (
-          <Box sx={resourceContainerStyle}>
-            {viewMode === ViewMode.CARDS ? (
-              <HomeMainSentForms sentForms={filteredSentForms} distributions={distributions} />
-            ) : (
-              <HomeMainSentFormTable sentForms={filteredSentForms} distributions={distributions} />
-            )}
-          </Box>
-        ) : (
-          <Box sx={emptyStateWrapperStyle}>
-            <ResourcesEmptyState fill={theme.palette.primary.main} />
-            <Typography>{t(getEmptyStateDescription(currentFolder))}</Typography>
-          </Box>
-        )}
-      </Box>
-    );
-  }
 
   return (
     <Box sx={{ ...mainContentInnerStyle, ...getDragCursorStyle(activeDragItem, isValidDrop) }}>

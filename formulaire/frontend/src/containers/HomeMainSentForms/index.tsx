@@ -66,12 +66,12 @@ export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, dist
               form={form}
               distributions={getFormDistributions(form, distributions)}
               isSelected={isSelectedForm}
-              onSelect={handleFormsSelect}
+              handleSelect={handleFormsSelect}
             />
           );
         })}
       </Box>
-      <Box ref={targetRef}></Box>
+      <Box ref={targetRef} />
       {visibleCount < sentForms.length && <Loader />}
     </>
   );

@@ -4,7 +4,7 @@ import { LOGO_PATH } from "~/core/constants";
 import { ISentFormProps } from "./types";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
 
-export const SentForm: FC<ISentFormProps> = ({ form, distributions, isSelected, onSelect }) => {
+export const SentForm: FC<ISentFormProps> = ({ form, distributions, isSelected, handleSelect }) => {
   const { getSentFormPropertyItems } = useFormItemsIcons();
 
   return (
@@ -16,7 +16,7 @@ export const SentForm: FC<ISentFormProps> = ({ form, distributions, isSelected, 
       defaultImage={LOGO_PATH}
       isSelected={isSelected(form)}
       onSelect={() => {
-        onSelect(form);
+        handleSelect(form);
       }}
       propertyItems={getSentFormPropertyItems(form, distributions)}
       hasNoButtonOnFocus
