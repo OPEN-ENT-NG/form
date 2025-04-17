@@ -11,6 +11,7 @@ import { useEdificeClient } from "@edifice.io/react";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { getFormDistributions } from "~/core/models/form/utils";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
+import { getFormEditPath } from "~/core/pathHelper";
 
 export const useMapToasterButtons = () => {
   const {
@@ -142,9 +143,7 @@ export const useMapToasterButtons = () => {
             return;
           }
           if (hasForms && tab === HomeTabState.FORMS) {
-            //TODO
-            console.log("open form");
-            return;
+            return (window.location.href = getFormEditPath(selectedForms[0].id));
           }
           if (hasSentForm && tab === HomeTabState.RESPONSES) {
             //TODO
