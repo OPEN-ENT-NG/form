@@ -75,7 +75,7 @@ export const HomeMainForms: FC<IHomeMainFormsProps> = ({ forms, activeItem }) =>
           />
         ))}
       </Box>
-      <Box ref={targetRef}></Box>
+      <Box ref={targetRef} />
       {visibleCount < forms.length && <Loader />}
     </>
   );
