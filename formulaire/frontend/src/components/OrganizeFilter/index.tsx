@@ -5,7 +5,7 @@ import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 
 import { FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
-import { IChipProps, menuAnchorOrigin, IMenuItemProps, menuTransformOrigin, IOrganizeFilterProps } from "./types";
+import { IFormChipProps, menuAnchorOrigin, IMenuItemProps, menuTransformOrigin, IOrganizeFilterProps } from "./types";
 import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
@@ -68,7 +68,7 @@ export const OrganizeFilter: FC<IOrganizeFilterProps> = ({
   }, []);
 
   const handleChipClick = useCallback(
-    (chip: IChipProps) => {
+    (chip: IFormChipProps) => {
       if (!setSelectedChips) return;
 
       const updatedChips = selectedChips.some((c) => c.id === chip.id)
