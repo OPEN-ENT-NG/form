@@ -8,17 +8,24 @@ import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/a
 import { MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
 import { useShareModal } from "~/providers/ShareModalProvider";
 import { useEdificeClient } from "@edifice.io/react";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
+import { getFormDistributions } from "~/core/models/form/utils";
+import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
 
 export const useMapToasterButtons = () => {
   const {
     selectedFolders,
     selectedForms,
+    selectedSentForm,
+    tab,
     setCurrentFolder,
     setSelectedFolders,
     setSelectedForms,
+    setSelectedSentForm,
     folders,
     currentFolder,
     forms,
+    distributions,
   } = useHome();
 
   const { user } = useEdificeClient();
@@ -47,6 +54,8 @@ export const useMapToasterButtons = () => {
   const hasForms = useMemo(() => selectedForms.length > 0, [selectedForms]);
   const hasElements = useMemo(() => !!selectedForms[0]?.nb_elements, [selectedForms]);
 
+  const hasSentForm = useMemo(() => selectedSentForm, [selectedSentForm]);
+
   const hasOnlyFolders = useMemo(() => hasFolders && hasNoForms, [hasFolders, hasNoForms]);
   const hasOnlyForms = useMemo(() => hasForms && hasNoFolders, [hasForms, hasNoFolders]);
   const hasMixedSelection = useMemo(() => hasFolders && hasForms, [hasFolders, hasForms]);
@@ -62,21 +71,30 @@ export const useMapToasterButtons = () => {
   }, [forms, currentFolder.id]);
 
   const unselectAll = useCallback(() => {
-    setSelectedFolders([]);
-    setSelectedForms([]);
+    if (tab === HomeTabState.FORMS) {
+      setSelectedFolders([]);
+      setSelectedForms([]);
+      return;
+    }
+    //Response tab
+    setSelectedSentForm(null);
+    return;
   }, [setSelectedFolders, setSelectedForms]);
 
   const handleSelectAll = useCallback(() => {
-    if (hasOnlyFolders) {
+    if (tab === HomeTabState.FORMS) {
+      if (hasOnlyFolders) {
+        setSelectedFolders(filteredFolders);
+        return;
+      }
+      if (hasOnlyForms) {
+        setSelectedForms(filteredForms);
+        return;
+      }
       setSelectedFolders(filteredFolders);
-      return;
-    }
-    if (hasOnlyForms) {
       setSelectedForms(filteredForms);
       return;
     }
-    setSelectedFolders(filteredFolders);
-    setSelectedForms(filteredForms);
   }, [filteredFolders, filteredForms, hasOnlyFolders, hasOnlyForms, setSelectedFolders, setSelectedForms]);
 
   const handleDuplicate = useCallback(async () => {
@@ -123,8 +141,16 @@ export const useMapToasterButtons = () => {
             unselectAll();
             return;
           }
-          //TODO
-          console.log("open form");
+          if (hasForms && tab === HomeTabState.FORMS) {
+            //TODO
+            console.log("open form");
+            return;
+          }
+          if (hasSentForm && tab === HomeTabState.RESPONSES) {
+            //TODO
+            console.log("open sent form");
+            return;
+          }
         },
       },
       [ToasterButtonType.RENAME]: {
@@ -200,6 +226,14 @@ export const useMapToasterButtons = () => {
           toggleModal(ModalType.REMIND);
         },
       },
+      [ToasterButtonType.MY_ANSWER]: {
+        titleI18nkey: "formulaire.myResponses",
+        type: ToasterButtonType.MY_ANSWER,
+        action: () => {
+          //TODO
+          console.log("my responses");
+        },
+      },
     }),
     [
       hasFolders,
@@ -214,10 +248,12 @@ export const useMapToasterButtons = () => {
   );
 
   // Simplification des boutons de droite
-  const rightButtons = useMemo(
-    () => [ToasterButtonsMap[ToasterButtonType.UNSELECT_ALL], ToasterButtonsMap[ToasterButtonType.SELECT_ALL]],
-    [ToasterButtonsMap],
-  );
+  const rightButtons = useMemo(() => {
+    if (tab === HomeTabState.RESPONSES) {
+      return [];
+    }
+    return [ToasterButtonsMap[ToasterButtonType.UNSELECT_ALL], ToasterButtonsMap[ToasterButtonType.SELECT_ALL]];
+  }, [ToasterButtonsMap, tab]);
 
   // Fonction simplifiée pour obtenir les boutons de gauche
   const leftButtons = useMemo(() => {
@@ -272,7 +308,16 @@ export const useMapToasterButtons = () => {
           ToasterButtonType.DELETE,
         ];
       }
-
+      // Cas 7: Un formulaire en réponse
+      if (hasSentForm && tab === HomeTabState.RESPONSES) {
+        if (
+          selectedSentForm?.multiple &&
+          getNbFinishedDistrib(getFormDistributions(selectedSentForm, distributions)) > 0
+        ) {
+          return [ToasterButtonType.OPEN, ToasterButtonType.MY_ANSWER];
+        }
+        return [ToasterButtonType.OPEN];
+      }
       return [];
     };
 
@@ -289,6 +334,8 @@ export const useMapToasterButtons = () => {
     hasForms,
     hasMixedSelection,
     hasFormsInTrash,
+    tab,
+    selectedSentForm,
   ]);
 
   return { leftButtons, rightButtons };
