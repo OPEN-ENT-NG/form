@@ -2,8 +2,7 @@ import { FormPropField } from "~/containers/FormPropModal/enums";
 import { IFormPropInputValueState } from "~/containers/FormPropModal/types";
 import { IFormPayload, IForm } from "./types";
 import { IDistribution } from "../distribution/types";
-import { DistributionStatus } from "../distribution/enums";
-import { getFirstDistribution, getLatestDistribution, getNbFinishedDistrib } from "../distribution/utils";
+import { getLatestDistribution, getNbFinishedDistrib } from "../distribution/utils";
 
 export const buildFormPayload = (
   formPropValue: IFormPropInputValueState,

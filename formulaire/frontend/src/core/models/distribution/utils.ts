@@ -84,4 +84,3 @@ export const getFirstDistributionDate = (distributions: IDistribution[]): Date =
   const firstDistrib = getFirstDistribution(distributions);
   return firstDistrib.dateSending ? new Date(firstDistrib.dateSending) : new Date();
 };
-getFirstDistribution(distributions).dateSending

@@ -9,7 +9,8 @@ import { MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
 import { useShareModal } from "~/providers/ShareModalProvider";
 import { useEdificeClient } from "@edifice.io/react";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
-import { getFormDistributions, getNbFinishedDistrib } from "~/core/models/form/utils";
+import { getFormDistributions } from "~/core/models/form/utils";
+import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
 
 export const useMapToasterButtons = () => {
   const {
