@@ -40,6 +40,7 @@ import { SwitchView } from "~/components/SwitchView";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { HomeMainTable } from "../HomeMainTable";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
 
 export const HomeMainLayout: FC = () => {
   const {
