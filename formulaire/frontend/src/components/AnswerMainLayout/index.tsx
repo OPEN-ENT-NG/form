@@ -1,6 +1,12 @@
 import { FC, useState } from "react";
 import { Box, SearchInput, Typography } from "@cgi-learning-hub/ui";
-import { emptyStateWrapperStyle, mainContentInnerStyle, resourceContainerStyle, searchBarStyle, searchStyle } from "~/containers/HomeMainLayout/style";
+import {
+  emptyStateWrapperStyle,
+  mainContentInnerStyle,
+  resourceContainerStyle,
+  searchBarStyle,
+  searchStyle,
+} from "~/containers/HomeMainLayout/style";
 import { HomeTabs } from "../HomeTab";
 import { useHome } from "~/providers/HomeProvider";
 import { useTranslation } from "react-i18next";
