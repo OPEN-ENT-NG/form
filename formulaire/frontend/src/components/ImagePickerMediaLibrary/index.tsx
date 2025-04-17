@@ -19,6 +19,7 @@ import {
   mediaLibraryStyle,
 } from "./style";
 import { IImagePickerMediaLibraryProps, MediaLibraryResult } from "./types";
+import { BoxComponentType } from "~/core/style/themeProps";
 
 export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   information,
@@ -101,11 +102,11 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
             <Box sx={emptyStateContentStyle}>
               <AddPhotoAlternateIcon color="primary" sx={iconStyle} />
               <Typography sx={labelTextStyle}>
-                <Box component="span" fontWeight="bold">
+                <Box component={BoxComponentType.SPAN} fontWeight="bold">
                   Glissez-déposez
                 </Box>{" "}
                 ou{" "}
-                <Box component="span" fontWeight="bold">
+                <Box component={BoxComponentType.SPAN} fontWeight="bold">
                   cliquez
                 </Box>{" "}
                 pour choisir une image
