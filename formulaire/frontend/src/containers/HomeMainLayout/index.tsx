@@ -16,8 +16,14 @@ import { useTranslation } from "react-i18next";
 import { HomeMainForms } from "../HomeMainForms";
 import { FORMULAIRE } from "~/core/constants";
 import { OrganizeFilter } from "~/components/OrganizeFilter";
-import { IChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
-import { chipDatas, getDragCursorStyle, getEmptyStateDescription, menuItemDatas, useToggleButtons } from "./utils";
+import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
+import {
+  formsChipDatas,
+  getDragCursorStyle,
+  getEmptyStateDescription,
+  formMenuItemDatas,
+  useToggleButtons,
+} from "./utils";
 import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
 import { useEdificeClient } from "@edifice.io/react";
 import { DndContext, DragOverlay, pointerWithin } from "@dnd-kit/core";
@@ -31,8 +37,6 @@ import { IForm } from "~/core/models/form/types";
 import { IFolder } from "~/core/models/folder/types";
 import { FormPreview } from "~/components/FormPreview";
 import { SwitchView } from "~/components/SwitchView";
-import { HomeTabState } from "~/providers/HomeProvider/enums";
-import { HomeTabs } from "~/components/HomeTab";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { HomeMainTable } from "../HomeMainTable";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
@@ -46,15 +50,16 @@ export const HomeMainLayout: FC = () => {
     selectedForms,
     tab,
     tabViewPref,
+    sentForms,
+    distributions,
     setSelectedFolders,
     setSelectedForms,
-    toggleTab,
     toggleTagViewPref,
   } = useHome();
   const theme = useTheme();
   const { t } = useTranslation(FORMULAIRE);
   const { user } = useEdificeClient();
-  const [selectedChips, setSelectedChips] = useState<IChipProps[]>([]);
+  const [selectedChips, setSelectedChips] = useState<IFormChipProps[]>([]);
   const [selectedMenuItem, setSelectedMenuItem] = useState<IMenuItemProps>();
   const userId = user?.userId;
   const { handleDragStart, handleDragOver, handleDragEnd, handleDragCancel, sensors, activeDragItem, isValidDrop } =
@@ -69,6 +74,8 @@ export const HomeMainLayout: FC = () => {
     currentFolder,
     userId,
     selectedChips,
+    sentForms,
+    distributions,
     selectedMenuItem,
   );
 
@@ -79,11 +86,6 @@ export const HomeMainLayout: FC = () => {
   return (
     <Box sx={{ ...mainContentInnerStyle, ...getDragCursorStyle(activeDragItem, isValidDrop) }}>
       <Box sx={searchStyle}>
-        {tab === HomeTabState.RESPONSES && (
-          <Box flexShrink={0}>
-            <HomeTabs value={tab} setValue={toggleTab} />
-          </Box>
-        )}
         <SearchInput
           placeholder={t("formulaire.search.placeholder")}
           sx={searchBarStyle}
@@ -92,8 +94,8 @@ export const HomeMainLayout: FC = () => {
           }}
         />
         <OrganizeFilter
-          chipDatas={chipDatas}
-          menuItemDatas={menuItemDatas}
+          chipDatas={formsChipDatas}
+          menuItemDatas={formMenuItemDatas}
           setSelectedChips={setSelectedChips}
           selectedChips={selectedChips}
           setSelectedMenuItem={setSelectedMenuItem}
@@ -102,7 +104,7 @@ export const HomeMainLayout: FC = () => {
       </Box>
       <Box sx={searchStyle}>
         <FormBreadcrumbs stringItems={breadcrumbsTexts} />
-        <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref}></SwitchView>
+        <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
       </Box>
       <DndContext
         sensors={sensors}

@@ -14,6 +14,7 @@ export enum ModalType {
 export enum TagName {
   FOLDERS = "FOLDERS",
   FORMS = "FORMS",
+  DISTRIBUTION = "DISTRIBUTION",
 }
 
 export enum QueryMethod {

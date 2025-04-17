@@ -8,10 +8,14 @@ import { IForm } from "~/core/models/form/types";
 import CalendarIcon from "@mui/icons-material/CalendarToday";
 import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AccountBoxRoundedIcon from "@mui/icons-material/AccountBoxRounded";
-import { PRIMARY_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
+import { ERROR_MAIN_COLOR, PRIMARY_MAIN_COLOR, SUCCESS_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { EllipsisWithTooltip } from "@cgi-learning-hub/ui";
 import { useFormatDateWithTime } from "./useFormatDateWithTime";
 import { FORMULAIRE } from "~/core/constants";
+import { getFormStatusText, isFormFilled } from "~/core/models/form/utils";
+import { IDistribution } from "~/core/models/distribution/types";
+import { getFirstDistributionDate } from "~/core/models/distribution/utils";
 
 export const useFormItemsIcons = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -52,37 +56,68 @@ export const useFormItemsIcons = () => {
     );
   }, []);
 
-  const getPropertyItems = useCallback(
-    (form: IForm) => {
-      return [
-        {
-          icon: <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
-          text: (
-            <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-              {form.owner_name}
-            </EllipsisWithTooltip>
-          ),
-        },
-        {
-          icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
-          text: (
-            <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-              {formatDateWithTime(form.date_creation)}
-            </EllipsisWithTooltip>
-          ),
-        },
-        {
-          icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
-          text: (
-            <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-              {`${(form.nb_responses ?? 0).toString()} ${t("formulaire.responses.count")}`}
-            </EllipsisWithTooltip>
-          ),
-        },
-      ];
-    },
-    [t, formatDateWithTime],
-  );
+  const getFormPropertyItems = useCallback((form: IForm) => {
+    return [
+      {
+        icon: <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+        text: (
+          <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>{form.owner_name}</EllipsisWithTooltip>
+        ),
+      },
+      {
+        icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+        text: (
+          <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+            {formatDateWithTime(form.date_modification, "formulaire.modified")}
+          </EllipsisWithTooltip>
+        ),
+      },
+      {
+        icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+        text: (
+          <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+            {`${(form.nb_responses ?? 0).toString()} ${t("formulaire.responses.count")}`}
+          </EllipsisWithTooltip>
+        ),
+      },
+    ];
+  }, []);
 
-  return { getIcons, getPropertyItems };
+  const getSentFormPropertyItems = useCallback((form: IForm, distributions: IDistribution[]) => {
+    return [
+      {
+        icon: <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+        text: (
+          <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>{form.owner_name}</EllipsisWithTooltip>
+        ),
+      },
+      {
+        icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+        text: (
+          <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+            {formatDateWithTime(getFirstDistributionDate(distributions), "formulaire.sentAt")}
+          </EllipsisWithTooltip>
+        ),
+      },
+      {
+        icon: (
+          <CheckCircleRoundedIcon
+            sx={{ color: isFormFilled(form, distributions) ? SUCCESS_MAIN_COLOR : ERROR_MAIN_COLOR }}
+          />
+        ),
+        text: (
+          <EllipsisWithTooltip
+            typographyProps={{
+              color: isFormFilled(form, distributions) ? SUCCESS_MAIN_COLOR : ERROR_MAIN_COLOR,
+              fontWeight: 700,
+            }}
+          >
+            {getFormStatusText(form, distributions, formatDateWithTime, t)}
+          </EllipsisWithTooltip>
+        ),
+      },
+    ];
+  }, []);
+
+  return { getIcons, getFormPropertyItems, getSentFormPropertyItems };
 };

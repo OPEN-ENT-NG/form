@@ -28,6 +28,21 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    getSentForms: builder.query<IForm[], void>({
+      query: () => ({
+        url: `forms/sent`,
+        method: QueryMethod.GET,
+      }),
+      providesTags: [TagName.FORMS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.formService.list", err);
+          toast.error(i18n.t("formulaire.error.formService.list", { ns: FORMULAIRE }));
+        }
+      },
+    }),
 
     createForm: builder.mutation<IForm, IFormPayload>({
       query: (form) => ({
@@ -230,6 +245,7 @@ export const {
   useUpdateFormMutation,
   useDeleteFormMutation,
   useGetFormsQuery,
+  useGetSentFormsQuery,
   useDuplicateFormsMutation,
   useMoveFormsMutation,
   useRestoreFormsMutation,

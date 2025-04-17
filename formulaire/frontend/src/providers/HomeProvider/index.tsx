@@ -5,8 +5,10 @@ import { IFolder } from "~/core/models/folder/types";
 import { HomeTabState } from "./enums";
 import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
 import { IForm } from "~/core/models/form/types";
-import { useGetFormsQuery } from "~/services/api/services/formulaireApi/formApi";
+import { useGetFormsQuery, useGetSentFormsQuery } from "~/services/api/services/formulaireApi/formApi";
 import { ViewMode } from "~/components/SwitchView/enums";
+import { IDistribution } from "~/core/models/distribution/types";
+import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
 
@@ -25,6 +27,9 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const [forms, setForms] = useState<IForm[]>([]);
   const [selectedFolders, setSelectedFolders] = useState<IFolder[]>([]);
   const [selectedForms, setSelectedForms] = useState<IForm[]>([]);
+  const [distributions, setDistributions] = useState<IDistribution[]>([]);
+  const [sentForms, setSentForms] = useState<IForm[]>([]);
+  const [selectedSentForm, setSelectedSentForm] = useState<IForm | null>(null);
 
   const [tab, setTab] = useState<HomeTabState>(HomeTabState.FORMS);
   const [tabViewPref, setTabViewPref] = useState<IHomeTabViewPref>(initTabViewPref());
@@ -32,14 +37,19 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
 
   const { data: foldersDatas } = useGetFoldersQuery();
   const { data: formsDatas } = useGetFormsQuery();
+  const { data: distributionsDatas } = useGetDistributionQuery();
+  const { data: sentFormsDatas } = useGetSentFormsQuery();
 
   const toggleTab = useCallback((tab: HomeTabState) => {
     setTab(tab);
+    resetSelected();
   }, []);
 
   const toggleTagViewPref = useCallback(
-    (viewMode: ViewMode) => {
-      setTabViewPref({ ...tabViewPref, [tab]: viewMode });
+    (viewMode: ViewMode | null) => {
+      if (viewMode !== null) {
+        setTabViewPref({ ...tabViewPref, [tab]: viewMode });
+      }
     },
     [tabViewPref, tab],
   );
@@ -47,6 +57,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const resetSelected = useCallback(() => {
     setSelectedFolders([]);
     setSelectedForms([]);
+    setSelectedSentForm(null);
   }, []);
 
   useEffect(() => {
@@ -66,16 +77,32 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   }, [foldersDatas, rootFolders]);
 
   useEffect(() => {
-    if (selectedFolders.length || selectedForms.length) {
+    if (selectedFolders.length || selectedForms.length || selectedSentForm) {
       setIsToasterOpen(true);
       return;
     }
     setIsToasterOpen(false);
-  }, [selectedFolders, selectedForms]);
+  }, [selectedFolders, selectedForms, selectedSentForm]);
 
   useEffect(() => {
     resetSelected();
   }, [currentFolder]);
+
+  useEffect(() => {
+    if (distributionsDatas) {
+      setDistributions(distributionsDatas);
+      return;
+    }
+    return;
+  }, [distributionsDatas]);
+
+  useEffect(() => {
+    if (sentFormsDatas) {
+      setSentForms(sentFormsDatas);
+      return;
+    }
+    return;
+  }, [sentFormsDatas]);
 
   const value = useMemo<HomeProviderContextType>(
     () => ({
@@ -95,8 +122,25 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       setSelectedForms,
       isToasterOpen,
       resetSelected,
+      distributions,
+      sentForms,
+      selectedSentForm,
+      setSelectedSentForm,
     }),
-    [currentFolder, tab, folders, selectedFolders, selectedForms, forms, isToasterOpen, tabViewPref, toggleTagViewPref],
+    [
+      currentFolder,
+      tab,
+      folders,
+      selectedFolders,
+      selectedForms,
+      selectedSentForm,
+      forms,
+      isToasterOpen,
+      tabViewPref,
+      toggleTagViewPref,
+      distributions,
+      sentForms,
+    ],
   );
 
   return <HomeProviderContext.Provider value={value}>{children}</HomeProviderContext.Provider>;

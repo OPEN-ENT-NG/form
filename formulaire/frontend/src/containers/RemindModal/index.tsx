@@ -28,7 +28,7 @@ import {
   loaderContainerStyle,
   HiddenContent,
 } from "./style";
-import { useGetFormDistributionsQuery } from "~/services/api/services/formulaireApi/distributionsApi";
+import { useGetFormDistributionsQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { DisplayContentType } from "./enums";
 import { IStatusResponseState } from "./types";
 import { DistributionTable } from "~/components/DistributionTable";
