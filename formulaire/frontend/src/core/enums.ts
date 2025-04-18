@@ -9,6 +9,7 @@ export enum ModalType {
   EXPORT = "showExport",
   FORM_SHARE = "showShare",
   REMIND = "showRemind",
+  ANSWERS = "showAnswers",
 }
 
 export enum TagName {
