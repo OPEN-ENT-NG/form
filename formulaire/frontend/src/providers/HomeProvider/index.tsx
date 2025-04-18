@@ -22,6 +22,14 @@ export const useHome = () => {
 
 export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const rootFolders = useRootFolders();
+
+  const urlParams = new URLSearchParams(window.location.search);
+  const tabParam = urlParams.get("tab");
+  const initialTab =
+    tabParam && Object.values(HomeTabState).includes(tabParam as HomeTabState)
+      ? (tabParam as HomeTabState)
+      : HomeTabState.FORMS;
+
   const [currentFolder, setCurrentFolder] = useState<IFolder>(rootFolders[0]);
   const [folders, setFolders] = useState<IFolder[]>([]);
   const [forms, setForms] = useState<IForm[]>([]);
@@ -31,7 +39,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const [sentForms, setSentForms] = useState<IForm[]>([]);
   const [selectedSentForm, setSelectedSentForm] = useState<IForm | null>(null);
 
-  const [tab, setTab] = useState<HomeTabState>(HomeTabState.FORMS);
+  const [tab, setTab] = useState<HomeTabState>(initialTab);
   const [tabViewPref, setTabViewPref] = useState<IHomeTabViewPref>(initTabViewPref());
   const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
 

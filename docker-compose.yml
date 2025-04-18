@@ -9,6 +9,8 @@ services:
     volumes:
       - ./:/usr/src/maven
       - ~/.m2:/var/maven/.m2
+    environment:
+      MAVEN_CONFIG: /var/maven/.m2
 
   # Service Node.js pour les builds front-end Angular
   node-angular:

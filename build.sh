@@ -18,18 +18,23 @@ for i in "$@"; do
 done
 
 # Détection de l'utilisateur/groupe pour Docker
-case $(uname -s) in
-MINGW* | Darwin*)
-  export USER_UID=1000
-  export GROUP_GID=1000
-  ;;
-*)
-  if [ -z ${USER_UID:+x} ]; then
-    export USER_UID=$(id -u)
-    export GROUP_GID=$(id -g)
-  fi
-  ;;
-esac
+# Tenter d'obtenir les valeurs réelles de l'utilisateur
+if command -v id &> /dev/null; then
+  export USER_UID=$(id -u)
+  export GROUP_GID=$(id -g)
+else
+  # Fallback sur des valeurs par défaut si la commande 'id' n'est pas disponible
+  case $(uname -s) in
+  MINGW* | Darwin*)
+    export USER_UID=1000
+    export GROUP_GID=1000
+    ;;
+  *)
+    export USER_UID=1000
+    export GROUP_GID=1000
+    ;;
+  esac
+fi
 
 export DEFAULT_DOCKER_USER="$USER_UID:$GROUP_GID"
 
@@ -47,6 +52,9 @@ else
   # Le fichier .env n'existe pas, le créer
   echo "DEFAULT_DOCKER_USER=$DEFAULT_DOCKER_USER" > .env
 fi
+
+# Afficher la valeur de DEFAULT_DOCKER_USER
+echo "DEFAULT_DOCKER_USER=$DEFAULT_DOCKER_USER"
 
 # Fonctions de nettoyage
 clean_common() {
@@ -408,7 +416,7 @@ install_parent_pom() {
     mvn $MVN_OPTS clean install -N -U -Drevision=$version -f pom.xml
   else
     # Nettoyer le cache du POM parent
-    docker compose run --rm maven bash -c "rm -rf /var/maven/.m2/repository/fr/openent/form/$version"
+    # docker compose run --rm maven bash -c "rm -rf /var/maven/.m2/repository/fr/openent/form/$version"
     # Installer le POM parent dans Docker avec l'utilisateur root
     docker compose run --rm maven bash -c "cd /usr/src/maven && mvn $MVN_OPTS clean install -N -U -Drevision=$version -f pom.xml"
   fi
