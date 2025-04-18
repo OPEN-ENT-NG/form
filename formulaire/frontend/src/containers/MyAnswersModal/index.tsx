@@ -28,11 +28,7 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           {formDistributions.map((distribution: IDistribution) => (
             <Box component={BoxComponentType.LI}>
               <Box display="flex" alignItems="center">
-                <Box>
-                  {distribution.dateSending
-                    ? formatDateWithTime(distribution.dateSending, "formulaire.responded.date")
-                    : ""}
-                </Box>
+                <Box>{formatDateWithTime(distribution.dateSending, "formulaire.responded.date")}</Box>
                 <IconButton sx={{ color: SECONDARY_MAIN_COLOR }}>
                   <VisibilityIcon />
                 </IconButton>
