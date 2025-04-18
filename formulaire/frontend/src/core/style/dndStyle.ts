@@ -1,4 +1,5 @@
 import { SxProps } from "@mui/material";
+import {CSS_GREY_MAIN_COLOR} from "~/core/style/cssColors.ts";
 
 export const cardPreviewStyle: SxProps = {
   opacity: 0.5,
@@ -7,7 +8,7 @@ export const cardPreviewStyle: SxProps = {
 
 export const overedStyle: SxProps = {
   "& .MuiPaper-root": {
-    border: "2px solid #e4e4e4",
+    border: `2px solid ${CSS_GREY_MAIN_COLOR}`,
   },
 };
 
