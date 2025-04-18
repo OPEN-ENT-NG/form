@@ -7,7 +7,7 @@ import "dayjs/locale/en";
 export const useFormatDateWithTime = () => {
   const { t } = useTranslation(FORMULAIRE);
 
-  return (date: string | Date | undefined, i18nTextKey: string): string => {
+  return (date: string | Date | undefined | null, i18nTextKey: string): string => {
     if (!date) return "";
 
     const locale = t("formulaire.date.format.locale");

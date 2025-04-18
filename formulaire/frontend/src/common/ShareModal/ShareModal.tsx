@@ -26,6 +26,7 @@ import { useShareBookmark } from "./hooks/useShareBookmark";
 import { userHasRight } from "./utils/hasRight";
 import { FORMULAIRE } from "~/core/constants";
 import { useShareModal } from "~/providers/ShareModalProvider";
+import { BoxComponentType } from "~/core/style/themeProps";
 
 export type ShareOptions = {
   resourceId: ID;
@@ -144,13 +145,13 @@ export default function ShareResourceModal({
           {isLoading ? (
             <LoadingScreen />
           ) : (
-            <Box component="table" className="table border align-middle mb-0">
-              <Box component="thead" className="bg-secondary">
-                <Box component="tr">
-                  <Box component="th" scope="col" className="w-32">
+            <Box component={BoxComponentType.TABLE} className="table border align-middle mb-0">
+              <Box component={BoxComponentType.THEAD} className="bg-secondary">
+                <Box component={BoxComponentType.TR}>
+                  <Box component={BoxComponentType.TH} scope="col" className="w-32">
                     <VisuallyHidden>{tEdifice("explorer.modal.share.avatar.shared.alt")}</VisuallyHidden>
                   </Box>
-                  <Box component="th" scope="col">
+                  <Box component={BoxComponentType.TH} scope="col">
                     <VisuallyHidden>{tEdifice("explorer.modal.share.search.placeholder")}</VisuallyHidden>
                   </Box>
                   {shareRightActions
@@ -160,14 +161,14 @@ export default function ShareResourceModal({
                         {tForm("formulaire." + shareRightAction.displayName)}
                       </th>
                     ))}
-                  <Box component="th" scope="col">
+                  <Box component={BoxComponentType.TH} scope="col">
                     <VisuallyHidden>{tEdifice("close")}</VisuallyHidden>
                   </Box>
                 </Box>
               </Box>
-              <Box component="tbody">
-                <Box component="tr">
-                  <Box component="th" scope="row">
+              <Box component={BoxComponentType.TBODY}>
+                <Box component={BoxComponentType.TR}>
+                  <Box component={BoxComponentType.TH} scope="row">
                     <Avatar
                       alt={tEdifice("explorer.modal.share.avatar.me.alt")}
                       size="xs"
@@ -175,12 +176,12 @@ export default function ShareResourceModal({
                       variant="circle"
                     />
                   </Box>
-                  <Box component="td">{tEdifice("share.me")}</Box>
+                  <Box component={BoxComponentType.TD}>{tEdifice("share.me")}</Box>
                   {shareRightActions
                     .filter((shareRightAction) => shareRightAction.id !== "read")
                     .map((shareRightAction) => (
                       <Box
-                        component="td"
+                        component={BoxComponentType.TD}
                         key={shareRightAction.displayName}
                         style={{ width: "80px" }}
                         className="text-center text-white"
@@ -194,7 +195,7 @@ export default function ShareResourceModal({
                         />
                       </Box>
                     ))}
-                  <Box component="td"></Box>
+                  <Box component={BoxComponentType.TD}></Box>
                 </Box>
                 <ShareBookmarkLine
                   showBookmark={showBookmark}
@@ -240,7 +241,7 @@ export default function ShareResourceModal({
             />
           )}
         </Box>
-        <Box component="hr" />
+        <Box component={BoxComponentType.HR} />
         <Heading headingStyle="h4" level="h3" className="mb-16 d-flex align-items-center">
           <Box className="me-8">{tEdifice("explorer.modal.share.search")}</Box>
           <Tooltip

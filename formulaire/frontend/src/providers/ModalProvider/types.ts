@@ -16,6 +16,7 @@ export interface IDisplayModalsState {
   [ModalType.EXPORT]: boolean;
   [ModalType.FORM_SHARE]: boolean;
   [ModalType.REMIND]: boolean;
+  [ModalType.ANSWERS]: boolean;
 }
 
 export type ModalProviderContextType = {
