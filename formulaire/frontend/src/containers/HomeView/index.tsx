@@ -20,6 +20,7 @@ import { MoveFolderModal } from "../MoveFolderModal";
 import { ExportModal } from "../ExportModal";
 import { FormShareModal } from "../FormShareModal";
 import { RemindModal } from "../RemindModal";
+import { MyAnswersModal } from "../MyAnswersModal";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -36,6 +37,7 @@ export const HomeView: FC = () => {
       showExport,
       showShare,
       showRemind,
+      showAnswers,
     },
     toggleModal,
   } = useModal();
@@ -132,6 +134,14 @@ export const HomeView: FC = () => {
           isOpen={showRemind}
           handleClose={() => {
             toggleModal(ModalType.REMIND);
+          }}
+        />
+      )}
+      {showAnswers && (
+        <MyAnswersModal
+          isOpen={showAnswers}
+          handleClose={() => {
+            toggleModal(ModalType.ANSWERS);
           }}
         />
       )}

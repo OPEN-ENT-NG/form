@@ -230,8 +230,7 @@ export const useMapToasterButtons = () => {
         titleI18nkey: "formulaire.myResponses",
         type: ToasterButtonType.MY_ANSWER,
         action: () => {
-          //TODO
-          console.log("my responses");
+          toggleModal(ModalType.ANSWERS);
         },
       },
     }),

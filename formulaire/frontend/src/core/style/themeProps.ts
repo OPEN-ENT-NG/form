@@ -26,3 +26,16 @@ export enum BreakpointVariant {
   LG = "lg",
   XL = "xl",
 }
+
+export enum BoxComponentType {
+  OL = "ol",
+  LI = "li",
+  SPAN = "span",
+  HR = "hr",
+  TABLE = "table",
+  THEAD = "thead",
+  TBODY = "tbody",
+  TH = "th",
+  TR = "tr",
+  TD = "td",
+}
