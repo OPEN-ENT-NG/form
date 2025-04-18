@@ -11,10 +11,7 @@ import { useEdificeClient } from "@edifice.io/react";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { getFormDistributions } from "~/core/models/form/utils";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
-<<<<<<< HEAD
-=======
-import { getFormEditPath } from "~/core/pathHelper";
->>>>>>> da26aa6f (feat(answer): #FOR-873 add form to answer tab (#462))
+import { getFormEditPath, getRespondFormPath } from "~/core/pathHelper";
 
 export const useMapToasterButtons = () => {
   const {
@@ -58,7 +55,7 @@ export const useMapToasterButtons = () => {
   const hasForms = useMemo(() => selectedForms.length > 0, [selectedForms]);
   const hasElements = useMemo(() => !!selectedForms[0]?.nb_elements, [selectedForms]);
 
-  const hasSentForm = useMemo(() => selectedSentForm, [selectedSentForm]);
+  const hasSentForm = useMemo(() => !!selectedSentForm, [selectedSentForm]);
 
   const hasOnlyFolders = useMemo(() => hasFolders && hasNoForms, [hasFolders, hasNoForms]);
   const hasOnlyForms = useMemo(() => hasForms && hasNoFolders, [hasForms, hasNoFolders]);
@@ -148,10 +145,8 @@ export const useMapToasterButtons = () => {
           if (hasForms && tab === HomeTabState.FORMS) {
             return (window.location.href = getFormEditPath(selectedForms[0].id));
           }
-          if (hasSentForm && tab === HomeTabState.RESPONSES) {
-            //TODO
-            console.log("open sent form");
-            return;
+          if (hasSentForm && selectedSentForm?.id && tab === HomeTabState.RESPONSES) {
+            return (window.location.href = getRespondFormPath(selectedSentForm.id));
           }
         },
       },
