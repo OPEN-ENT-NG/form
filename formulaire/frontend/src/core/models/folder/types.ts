@@ -12,6 +12,7 @@ export interface IFolder extends ISelectable {
   id: number;
   parent_id: number | null;
   name: string;
+  icon: React.ElementType | undefined;
   user_id: string;
   nb_folder_children: number;
   nb_form_children: number;

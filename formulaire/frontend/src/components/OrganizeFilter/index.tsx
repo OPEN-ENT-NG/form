@@ -118,7 +118,7 @@ export const OrganizeFilter: FC<IOrganizeFilterProps> = ({
       >
         {menuItemsEnabled && (
           <>
-            <Typography variant={TypographyVariant.H6} sx={sortTitleStyle}>
+            <Typography variant={TypographyVariant.BODY2} sx={sortTitleStyle}>
               {t("formulaire.filter.title.sort")}
             </Typography>
             <Box sx={sortContainerStyle}>
@@ -148,7 +148,7 @@ export const OrganizeFilter: FC<IOrganizeFilterProps> = ({
 
         {chipsEnabled && (
           <>
-            <Typography variant={TypographyVariant.H6} sx={filterTitleStyle}>
+            <Typography variant={TypographyVariant.BODY2} sx={filterTitleStyle}>
               {t("formulaire.filter.title.filter")}
             </Typography>
             <MenuItem
