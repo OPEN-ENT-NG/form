@@ -14,6 +14,7 @@ import {
   emptyRowMessageStyle,
   seeMoreButtonStyle,
 } from "./style";
+import { BoxComponentType } from "~/core/style/themeProps";
 
 export const DistributionTable: FC<IDistributionTableProps> = ({ distributions }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -42,7 +43,7 @@ export const DistributionTable: FC<IDistributionTableProps> = ({ distributions }
           <TableBody sx={tableBodyStyle}>
             {displayedDatas.map((person) => (
               <TableRow key={person.responderId} sx={tableRowStyle}>
-                <TableCell component="th" scope="row">
+                <TableCell component={BoxComponentType.TH} scope="row">
                   {person.responderName}
                 </TableCell>
                 <TableCell align="right">{person.responseCount}</TableCell>
