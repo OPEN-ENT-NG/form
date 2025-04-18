@@ -40,6 +40,7 @@ import { SwitchView } from "~/components/SwitchView";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { HomeMainTable } from "../HomeMainTable";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
 
 export const HomeMainLayout: FC = () => {
   const {
@@ -116,7 +117,9 @@ export const HomeMainLayout: FC = () => {
       >
         {(hasFilteredFolders || hasFilteredForms) && (
           <Box sx={resourceContainerStyle}>
-            {hasFilteredFolders && <HomeMainFolders folders={filteredFolders} activeItem={activeDragItem} />}
+            {hasFilteredFolders && tab === HomeTabState.FORMS && (
+              <HomeMainFolders folders={filteredFolders} activeItem={activeDragItem} />
+            )}
             {hasFilteredForms &&
               (viewMode === ViewMode.CARDS ? (
                 <HomeMainForms forms={filteredForms} activeItem={activeDragItem} />

@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { hasRight } from "./utils/hasRight";
 import { showShareRightLine } from "./utils/showShareRightLine";
+import { BoxComponentType } from "~/core/style/themeProps";
 
 export const ShareBookmarkLine = ({
   shareRights,
@@ -26,8 +27,12 @@ export const ShareBookmarkLine = ({
   return shareRights.rights.map((shareRight: ShareRight) => {
     return (
       showShareRightLine(shareRight, showBookmark) && (
-        <Box component="tr" key={shareRight.id} className={shareRight.isBookmarkMember ? "bg-light" : ""}>
-          <Box component="td">
+        <Box
+          component={BoxComponentType.TR}
+          key={shareRight.id}
+          className={shareRight.isBookmarkMember ? "bg-light" : ""}
+        >
+          <Box component={BoxComponentType.TD}>
             {shareRight.type !== "sharebookmark" && (
               <Avatar
                 alt={t("explorer.modal.share.avatar.shared.alt")}
@@ -39,7 +44,7 @@ export const ShareBookmarkLine = ({
 
             {shareRight.type === "sharebookmark" && <IconBookmark />}
           </Box>
-          <Box component="td">
+          <Box component={BoxComponentType.TD}>
             <Box className="d-flex">
               {shareRight.type === "sharebookmark" && (
                 <Button
@@ -70,7 +75,7 @@ export const ShareBookmarkLine = ({
             .filter((shareRightAction) => shareRightAction.id !== "read")
             .map((shareRightAction) => (
               <Box
-                component="td"
+                component={BoxComponentType.TD}
                 key={shareRightAction.displayName}
                 style={{ width: "80px" }}
                 className="text-center text-white"
@@ -83,7 +88,7 @@ export const ShareBookmarkLine = ({
                 />
               </Box>
             ))}
-          <Box component="td">
+          <Box component={BoxComponentType.TD}>
             {!shareRight.isBookmarkMember && (
               <IconButton
                 aria-label={t("close")}
