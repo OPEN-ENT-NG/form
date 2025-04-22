@@ -8,6 +8,7 @@ import { IForm } from "~/core/models/form/types";
 import { useHome } from "~/providers/HomeProvider";
 import { DraggableType } from "~/core/enums";
 import { DraggableForm } from "~/components/DraggableForm";
+import { cardWrapperStyle } from "~/core/style/boxStyles";
 
 export const HomeMainForms: FC<IHomeMainFormsProps> = ({ forms, activeItem }) => {
   const { selectedForms, setSelectedForms } = useHome();
@@ -61,7 +62,7 @@ export const HomeMainForms: FC<IHomeMainFormsProps> = ({ forms, activeItem }) =>
 
   return (
     <>
-      <Box display="flex" flexWrap="wrap" gap={2}>
+      <Box sx={cardWrapperStyle}>
         {forms.slice(0, visibleCount).map((form) => (
           <DraggableForm
             key={form.id}

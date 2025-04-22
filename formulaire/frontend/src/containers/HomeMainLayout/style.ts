@@ -7,14 +7,20 @@ export const mainContentInnerStyle: SxProps<Theme> = {
   justifyContent: "flex-start",
 
   flexDirection: "column",
-  gap: "2rem",
-  padding: "2rem 2rem 0 2rem",
+  gap: "3rem",
+  paddingTop: "2rem",
 };
 
 export const searchStyle: SxProps<Theme> = {
   ...spaceBetweenBoxStyle,
   gap: "2rem",
   height: "3.5rem",
+  padding: "0 5rem 0 3rem",
+};
+
+export const viewTitleStyle: SxProps<Theme> = {
+  ...searchStyle,
+  paddingTop: "1rem",
 };
 
 export const resourceContainerStyle: SxProps<Theme> = {
@@ -22,9 +28,9 @@ export const resourceContainerStyle: SxProps<Theme> = {
   height: "100%",
   display: "flex",
   flexDirection: "column",
-  padding: "1rem ",
+  padding: " 1rem 3rem 0 3rem",
   width: "100%",
-  gap: "2rem",
+  gap: "4rem",
 };
 
 export const searchBarStyle: SxProps<Theme> = {
@@ -36,7 +42,5 @@ export const emptyStateWrapperStyle: SxProps<Theme> = {
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  paddingTop: "2rem",
   gap: "2rem",
-  height: "30rem",
 };
