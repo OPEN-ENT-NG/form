@@ -1,0 +1,16 @@
+<span>{{#i18n}}timeline.formulaire.new.notification{{/i18n}}</span>
+
+<br/>
+
+<span>{{#i18n}}timeline.formulaire.the.form{{/i18n}}</span>
+{{#formUri}}
+  {{#formName}}
+    <a href="{{#host}}{{formUri}}{{/host}}">{{formName}}</a>
+  {{/formName}}
+{{/formUri}}
+{{^formUri}}
+  {{#formName}}{{formName}}{{/formName}}
+{{/formUri}}
+<span>{{#i18n}}timeline.formulaire.close.on{{/i18n}}</span>
+{{#dateEnding}}{{dateEnding}}{{/dateEnding}}
+<span>{{#i18n}}timeline.formulaire.consult{{/i18n}}</span>

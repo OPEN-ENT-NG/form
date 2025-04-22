@@ -24,6 +24,7 @@ export TIPTAP_PRO_TOKEN=TOKEN
     "zimbra-max-recipients": ${zimbraMaxRecipients},
     "rgpd-cron": "${rgpdCron}",
     "notify-cron": "${notifyCron}",
+    "days-before-notif-closing": "${daysBeforeNotifClosing}",
     "max-responses-export-PDF": ${maxResponsesExportPDF},
     "max-users-sharing": ${maxUsersSharing}
   }
@@ -36,6 +37,7 @@ Dans votre springboard, vous devez inclure des variables d'environnement :
 zimbraMaxRecipients = Integer
 rgpdCron = String (exemple: 0 0 0 */1 * ? *)
 notifyCron = String (exemple: 0 0 0 */1 * ? *)
+daysBeforeNotifClosing = Integer
 maxResponsesExportPDF = Integer
 maxUsersSharing = Integer
 </pre>
