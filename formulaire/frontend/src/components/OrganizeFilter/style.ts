@@ -14,10 +14,12 @@ export const buttonStyle = {
 
 export const sortTitleStyle = {
   paddingBottom: ".5rem",
+  fontWeight: "bold",
 };
 
 export const filterTitleStyle = {
   padding: "1rem 0px .5rem .5rem",
+  fontWeight: "bold",
 };
 
 export const sortContainerStyle = {
