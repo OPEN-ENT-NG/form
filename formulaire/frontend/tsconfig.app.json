@@ -20,6 +20,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+
+    /* Import */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
     "paths": {
       "~/*": ["./src/*"],
       "@cgi-learning-hub/ui": ["node_modules/@cgi-learning-hub/ui"],
@@ -31,6 +36,6 @@
 
     "types": ["vitest/globals", "@testing-library/jest-dom"]
   },
-  "include": ["src"],
+  "include": ["src", "jest.config.ts"],
   "exclude": ["old"]
 }

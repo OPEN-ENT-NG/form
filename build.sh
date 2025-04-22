@@ -169,6 +169,11 @@ publishNexus() {
   docker compose run --rm  maven mvn -DrepositoryId=ode-$nexusRepository -Durl=$repo -DskipTests -Dmaven.test.skip=true --settings /var/maven/.m2/settings.xml deploy
 }
 
+testFormulaireReact() {
+  cd formulaire/frontend
+  ./build.sh runTest
+}
+
 for param in "$@"; do
   case $param in
   init)
@@ -194,10 +199,13 @@ for param in "$@"; do
     ;;
   testNode)
     testNode
-  ;;
+    ;;
   testNodeDev)
     testNodeDev
-  ;;
+    ;;
+  formulaire::testReact)
+    testFormulaireReact
+    ;;
   testMaven)
     test
     ;;
