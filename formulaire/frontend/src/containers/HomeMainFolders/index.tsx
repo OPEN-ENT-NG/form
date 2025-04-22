@@ -9,6 +9,7 @@ import { isSelectedFolder } from "~/core/models/folder/utils";
 import { DraggableFolder } from "~/components/DraggableFolder";
 import { useFolderSubtitle } from "~/hook/useFolderSubtitle";
 import { isDraggedItemFolder, isDraggedItemForm } from "~/hook/dnd-hooks/utils";
+import { cardWrapperStyle } from "~/core/style/boxStyles";
 
 export const HomeMainFolders: FC<IHomeMainFolderProps> = ({ folders, activeItem }) => {
   const { setCurrentFolder, selectedFolders, setSelectedFolders } = useHome();
@@ -26,7 +27,7 @@ export const HomeMainFolders: FC<IHomeMainFolderProps> = ({ folders, activeItem 
   );
 
   return (
-    <Box display="flex" flexWrap="wrap" gap={2}>
+    <Box sx={cardWrapperStyle}>
       {folders.map((folder) => (
         <DraggableFolder
           key={folder.id}

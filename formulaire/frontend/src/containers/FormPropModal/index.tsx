@@ -27,7 +27,6 @@ import {
   checkboxRowStyle,
   dateEndingCheckboxStyle,
   rgpdContentRowStyle,
-  modalActionsStyle,
   datePickerWrapperStyle,
 } from "./style";
 
@@ -387,7 +386,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
 
       <DialogContent>{formContent}</DialogContent>
 
-      <DialogActions sx={modalActionsStyle}>
+      <DialogActions>
         <Button onClick={handleClose}>{t("formulaire.cancel")}</Button>
         <Button variant="contained" onClick={() => void handleSubmit()} disabled={!title.length}>
           {t("formulaire.save")}
