@@ -5,6 +5,16 @@
 * Financeur(s) : Ville de Paris, Région Nouvelle Aquitaine, Région Hauts de France
 * Description : Application de création et de gestion de formulaires dans l'OPEN ENT.
 
+## Build le(s) module(s)
+
+```bash
+# Pensez à configuer la variable d'environnement TIPTAP_PRO_TOKEN
+# dans ~/.bashrc
+export TIPTAP_PRO_TOKEN=TOKEN
+
+./build.sh install
+```
+
 ## Configuration du sous-module Formulaire
 
 <pre>
