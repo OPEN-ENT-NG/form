@@ -4,7 +4,8 @@ import type { Config } from 'jest'
 const config: Config = {
   // Use V8 for faster coverage
   coverageProvider: 'v8',
-
+  testEnvironment: "jsdom",
+  setupFiles: ['<rootDir>/mockModules.js'],
   // Collect coverage
   collectCoverage: true,
   coverageDirectory: 'coverage',
