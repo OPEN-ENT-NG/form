@@ -7,8 +7,10 @@ export const BreadCrumbItemWrapper = styled(Typography, {
   color: textColor,
   fontSize: isHeader ? "2.4rem" : "2rem",
   marginLeft: hasSeparator ? "-1rem" : "",
-  "&:hover": {
-    cursor: "pointer",
-    textDecoration: "underline",
-  },
+  ...(isHeader && {
+    "&:hover": {
+      cursor: "pointer",
+      textDecoration: "underline",
+    },
+  }),
 }));
