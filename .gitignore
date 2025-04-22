@@ -19,6 +19,7 @@ target
 */backend/src/main/resources/public
 */backend/src/main/resources/view
 */backend/src/main/resources/img
+*/backend/src/main/resources/index.html
 
 #==== Angular ====#
 node_modules
