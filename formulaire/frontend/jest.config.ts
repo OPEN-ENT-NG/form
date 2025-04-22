@@ -14,12 +14,17 @@ const config: Config = {
     'lcov'
   ],
 
+  transformIgnorePatterns: [
+    "node_modules/(?!(?:@cgi-learning-hub/ui)/)"
+  ],
+  
+
   // Resolve your TS/JS aliases and mock UI lib
   moduleNameMapper: {
     "^~/(.*)$": "<rootDir>/src/$1",
     "^@edifice\\.io/react$": "<rootDir>/src/tests/mocks/edificeReact.tsx",
     "^@cgi-learning-hub/theme$": "<rootDir>/src/tests/mocks/cgiTheme.tsx",
-    "^@cgi-learning-hub/ui$": "<rootDir>/node_modules/@cgi-learning-hub/ui/dist/index.d.ts",
+    "^@cgi-learning-hub/ui$": "<rootDir>/node_modules/@cgi-learning-hub/ui/dist/index.cjs.js",
     // static assets
     '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/__mocks__/fileMock.js',
   },
@@ -34,13 +39,13 @@ const config: Config = {
 
   // Transform TypeScript and JS
   transform: {
-    "^.+\\.(ts|tsx)$": [
+    "^.+\\.(ts|tsx|js|jsx)$": [
       "ts-jest",
       {
         tsconfig: "tsconfig.app.json",
+        allowJs: true
       },
     ],
-    '^.+\\.(js|jsx)$': 'babel-jest',
   },
 
   // Recognize these extensions
