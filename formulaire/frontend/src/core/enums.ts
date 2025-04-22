@@ -36,6 +36,7 @@ export enum CursorStyle {
   NO_DROP = "no-drop",
   DEFAULT = "default",
 }
+
 export enum DateFormat {
   YEAR_MONTH_DAY_HOUR_MIN_SEC = "YYYY_MM_DD HH:mm:ss",
   YEAR_MONTH_DAY = "YYYY_MM_DD",
@@ -50,4 +51,15 @@ export enum DateFormat {
   DAY_DATE = "dddd L",
   DATE_FULL_LETTER = "dddd LL",
   FULL_DATE_WITH_TIME_FORMAT = "DD MMMM YYYY HH:mm",
+}
+
+export enum KeyName {
+  ENTER = "Enter",
+  SPACE = " ",
+  DELETE = "Delete",
+  BACKSPACE = "Backspace",
+  ARROW_UP = "ArrowUp",
+  ARROW_DOWN = "ArrowDown",
+  ARROW_LEFT = "ArrowLeft",
+  ARROW_RIGHT = "ArrowRight",
 }
