@@ -1,6 +1,6 @@
 {
   "name": "Formulaire-public",
-  "version": "2.0.0-dev.0",
+  "version": "2.0.6",
   "description": "Formulaire-public",
   "main": "gulpfile.js",
   "scripts": {
@@ -26,7 +26,7 @@
     "awesome-typescript-loader": "3.2.1",
     "axios": "0.27.2",
     "core-js": "2.4.1",
-    "entcore": "dev",
+    "entcore": "4.8.12",
     "entcore-toolkit": "^1.0.1",
     "gulp": "3.9.1",
     "gulp-clean": "^0.3.2",
