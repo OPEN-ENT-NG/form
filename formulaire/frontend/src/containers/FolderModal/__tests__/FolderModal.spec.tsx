@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom";
 import { screen, fireEvent, waitFor } from "@testing-library/react"; // re‑exports RTL
 import { renderWithProviders } from "~/tests/testUtils";
 import { FolderModal } from "~/containers/FolderModal";
