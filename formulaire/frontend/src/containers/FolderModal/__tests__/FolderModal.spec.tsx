@@ -4,18 +4,14 @@ import { renderWithProviders } from "~/tests/testUtils";
 import { FolderModal } from "~/containers/FolderModal";
 import { FolderModalMode } from "~/containers/FolderModal/types";
 
-// 1) Mock HomeProvider hook
-jest.mock("~/providers/HomeProvider", () => ({
-  useHome: () => ({
-    currentFolder: { id: "parent-123" },
-    selectedFolders: [{ id: "sel-456", parent_id: "parent-123" }],
-  }),
-}));
+//------MOCKS------
+const homeContext = {
+  currentFolder: { id: "parent-123" },
+  selectedFolders: [{ id: "sel-456", parent_id: "parent-123" }],
+};
 
-jest.mock("react-i18next", () => ({
-  useTranslation: () => ({
-    t: (key: string) => key,
-  }),
+jest.mock("~/providers/HomeProvider", () => ({
+  useHome: () => homeContext,
 }));
 
 const mockCreate = jest.fn().mockResolvedValue({});
@@ -26,17 +22,19 @@ jest.mock("~/services/api/services/formulaireApi/folderApi", () => ({
   useUpdateFolderMutation: () => [mockUpdate],
 }));
 
+//------END OF MOCKS------
+
 describe("<FolderModal />", () => {
   const handleClose = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
+    homeContext.selectedFolders = [{ id: "sel-456", parent_id: "parent-123" }];
   });
 
   it("renders and closes when cancel is clicked", () => {
     renderWithProviders(<FolderModal isOpen={true} handleClose={handleClose} mode={FolderModalMode.CREATE} />);
 
-    // Cancel button text equals key
     const cancelBtn = screen.getByRole("button", { name: "formulaire.cancel" });
     fireEvent.click(cancelBtn);
     expect(handleClose).toHaveBeenCalledTimes(1);
@@ -84,16 +82,10 @@ describe("<FolderModal />", () => {
   });
 
   it("in RENAME mode with no selection, does nothing on click", () => {
-    // Override useHome to return empty selection
-    jest.doMock("~/providers/HomeProvider", () => ({
-      useHome: () => ({
-        currentFolder: { id: "parent-123" },
-        selectedFolders: [],
-      }),
-    }));
-    // Use the already imported FolderModal after mocking
+    // simply clear out the array before rendering:
+    homeContext.selectedFolders = [];
 
-    renderWithProviders(<FolderModal isOpen={true} handleClose={handleClose} mode={FolderModalMode.RENAME} />);
+    renderWithProviders(<FolderModal isOpen handleClose={handleClose} mode={FolderModalMode.RENAME} />);
 
     fireEvent.change(screen.getByRole("textbox"), {
       target: { value: "Whatever" },
@@ -101,7 +93,6 @@ describe("<FolderModal />", () => {
     fireEvent.click(screen.getByRole("button", { name: "formulaire.rename" }));
 
     expect(mockUpdate).not.toHaveBeenCalled();
-    // handleClose is only called if update runs
     expect(handleClose).not.toHaveBeenCalled();
   });
 });
