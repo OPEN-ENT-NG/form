@@ -1,4 +1,4 @@
-import { columnBoxStyle, flexEndBoxStyle, flexStartBoxStyle, modalBoxStyle } from "~/core/style/boxStyles";
+import { columnBoxStyle, flexStartBoxStyle, modalBoxStyle } from "~/core/style/boxStyles";
 
 export const formPropModalWrapper = {
   ...modalBoxStyle,
@@ -82,11 +82,6 @@ export const dateEndingCheckboxStyle = {
 export const rgpdContentRowStyle = {
   ...subContentRowWrapper,
   marginLeft: "3.2rem",
-};
-
-export const modalActionsStyle = {
-  ...flexEndBoxStyle,
-  gap: "1rem",
 };
 
 export const datePickerWrapperStyle = {
