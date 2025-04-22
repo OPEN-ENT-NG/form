@@ -106,8 +106,8 @@ export const HomeMainLayout: FC = () => {
           selectedMenuItem={selectedMenuItem}
         />
       </Box>
-      <Box sx={searchStyle}>
-        <FormBreadcrumbs stringItems={breadcrumbsTexts} />
+      <Box sx={viewTitleStyle}>
+        <FormBreadcrumbs icon={currentFolder.icon ?? FolderIcon} stringItems={breadcrumbsTexts} />
         <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
       </Box>
       <DndContext

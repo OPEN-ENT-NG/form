@@ -1,9 +1,7 @@
 #!/bin/bash
 
-chmod +x formulaire/build.sh
-chmod +x formulaire-public/build.sh
-
 MVN_OPTS="-Duser.home=/var/maven"
+
 
 if [ ! -e node_modules ]; then
   mkdir node_modules
@@ -27,15 +25,8 @@ init() {
   echo "DEFAULT_DOCKER_USER=$me" > .env
 }
 
-install_formulaire_public() {
-  echo -e '\n------------------'
-  echo 'Install Formulaire-public'
-  echo '------------------'
-  cd formulaire-public || exit 1
-  ./build.sh install
-  echo 'Formulaire-public  build !'
-  cd .. || exit 1
-
+clean () {
+  docker-compose run --rm maven mvn $MVN_OPT clean
 }
 
 test () {
