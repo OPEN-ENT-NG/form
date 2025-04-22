@@ -76,16 +76,19 @@ formulaire() {
   mkdir -p formulaire/backend/src/main/resources/view
 
   ## add static angularjs files to formulaire backend
-  cp -R formulaire/angular/src/view/* formulaire/backend/src/main/resources/view
-  cp -R formulaire/angular/src/css/* formulaire/backend/src/main/resources/public
-  cp -R formulaire/angular/src/dist/* formulaire/backend/src/main/resources/public/js
-  cp -R formulaire/angular/src/template/* formulaire/backend/src/main/resources/public/template
+  cp -R formulaire/angular/src/css/* formulaire/backend/src/main/resources/public/css
   cp -R formulaire/angular/src/img/* formulaire/backend/src/main/resources/public/img
+  cp -R formulaire/angular/src/dist/* formulaire/backend/src/main/resources/public/js
+  cp -R formulaire/angular/src/mdi/* formulaire/backend/src/main/resources/public/mdi
   cp -R formulaire/angular/src/i18n/* formulaire/backend/src/main/resources/i18n
+  cp -R formulaire/angular/src/template/* formulaire/backend/src/main/resources/public/template
+  cp -R formulaire/angular/src/view/* formulaire/backend/src/main/resources/view
 
   ## add static reactjs files to formulaire backend
   cp -R formulaire/frontend/dist/* formulaire/backend/src/main/resources
   cp -R formulaire/frontend/public/* formulaire/backend/src/main/resources/public
+  mv formulaire/backend/src/main/resources/*.html formulaire/backend/src/main/resources/view
+  cp -R formulaire/backend/src/main/resources/view-src/* formulaire/backend/src/main/resources/view
 
   formulaire:buildMaven;
 }
@@ -119,16 +122,19 @@ formulairePublic() {
   mkdir -p formulaire-public/backend/src/main/resources/view
 
   ## add static angularjs files to formulaire-public backend
-  cp -R formulaire-public/angular/src/view/* formulaire-public/backend/src/main/resources/view
-  cp -R formulaire-public/angular/src/css/* formulaire-public/backend/src/main/resources/public
-  cp -R formulaire-public/angular/src/dist/* formulaire-public/backend/src/main/resources/public/js
-  cp -R formulaire-public/angular/src/template/* formulaire-public/backend/src/main/resources/public/template
+  cp -R formulaire-public/angular/src/css/* formulaire-public/backend/src/main/resources/public/css
   cp -R formulaire-public/angular/src/img/* formulaire-public/backend/src/main/resources/public/img
+  cp -R formulaire-public/angular/src/dist/* formulaire-public/backend/src/main/resources/public/js
+  cp -R formulaire-public/angular/src/mdi/* formulaire-public/backend/src/main/resources/public/mdi
   cp -R formulaire-public/angular/src/i18n/* formulaire-public/backend/src/main/resources/i18n
+  cp -R formulaire-public/angular/src/template/* formulaire-public/backend/src/main/resources/public/template
+  cp -R formulaire-public/angular/src/view/* formulaire-public/backend/src/main/resources/view
 
   ## add static reactjs files to formulaire backend
   cp -R formulaire-public/frontend/dist/* formulaire-public/backend/src/main/resources
   cp -R formulaire-public/frontend/public/* formulaire-public/backend/src/main/resources/public
+  mv formulaire-public/backend/src/main/resources/*.html formulaire/backend/src/main/resources/view
+  cp -R formulaire-public/backend/src/main/resources/view-src/* formulaire/backend/src/main/resources/view
 
   formulairePublic:buildMaven;
 }
