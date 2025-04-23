@@ -77,12 +77,14 @@ jobs:
     steps:
       - uses: actions/checkout@v1
         # Test Maven Formulaire
+      - name: Run build maven
         working-directory: ./formulaire/backend
         run: mvn -Duser.home=/var/maven clean install
       - name: Run maven test
         working-directory: ./formulaire/backend
         run: mvn -Duser.home=/var/maven testMaven
         # Test Maven Formulaire-public
+      - name: Run build maven
         working-directory: ./formulaire-public/backend
         run: mvn -Duser.home=/var/maven clean install
       - name: Run maven test
