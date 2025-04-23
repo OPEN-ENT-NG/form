@@ -1,4 +1,5 @@
 // src/tests/mocks/cgi-theme.tsx
+import { ThemeOptions } from "@mui/material";
 import { FC, PropsWithChildren } from "react";
 
 /**
@@ -6,7 +7,7 @@ import { FC, PropsWithChildren } from "react";
  */
 export type ThemeProviderProps = {
   themeId?: string;
-  options?: any;
+  options?: ThemeOptions;
 };
 
 /**
