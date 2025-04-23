@@ -5,20 +5,14 @@ const config: Config = {
   // Use V8 for faster coverage
   coverageProvider: 'v8',
   testEnvironment: "jsdom",
-  setupFiles: ['<rootDir>/src/tests/jestSetup.tsx'],
+  setupFilesAfterEnv: ['<rootDir>/src/tests/jestSetup.tsx'],
   // Collect coverage
   collectCoverage: true,
-  coverageDirectory: 'coverage',
   coverageReporters: [
     'text-summary',
     'cobertura',
     'lcov'
   ],
-
-  transformIgnorePatterns: [
-    "node_modules/(?!(?:@cgi-learning-hub/ui)/)"
-  ],
-  
 
   // Resolve your TS/JS aliases and mock UI lib
   moduleNameMapper: {
@@ -28,11 +22,6 @@ const config: Config = {
     "^@cgi-learning-hub/ui$": "<rootDir>/node_modules/@cgi-learning-hub/ui/dist/index.cjs.js",
     // static assets
     '\\.(gif|ttf|eot|svg|png)$': '<rootDir>/__mocks__/fileMock.js',
-  },
-
-  // Pass options to your environment constructor
-  testEnvironmentOptions: {
-    customExportConditions: [''],
   },
 
   // Which files are considered test specs

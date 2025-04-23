@@ -9,6 +9,7 @@ function Tester() {
     <div>
       <span data-testid="flagModalProvider">{String(displayModals[ModalType.FOLDER_RENAME])}</span>
       <button
+        data-testid="toggleModalProvider"
         onClick={() => {
           toggleModal(ModalType.FOLDER_RENAME);
         }}
@@ -36,14 +37,18 @@ describe("<ModalProvider />", () => {
       </ModalProvider>,
     );
 
-    expect(screen.getByTestId("flagModalProvider").textContent).toBe("false");
+    const flag = screen.getByTestId("flagModalProvider");
+    const toggleBtn = screen.getByTestId("toggleModalProvider");
+
+    // initial state
+    expect(flag).toHaveTextContent("false");
 
     // click to toggle on
-    fireEvent.click(screen.getByText("toggleModalProvider"));
-    expect(screen.getByTestId("flagModalProvider").textContent).toBe("true");
+    fireEvent.click(toggleBtn);
+    expect(flag).toHaveTextContent("true");
 
     // click again to toggle off
-    fireEvent.click(screen.getByText("toggleModalProvider"));
-    expect(screen.getByTestId("flagModalProvider").textContent).toBe("false");
+    fireEvent.click(toggleBtn);
+    expect(flag).toHaveTextContent("false");
   });
 });
