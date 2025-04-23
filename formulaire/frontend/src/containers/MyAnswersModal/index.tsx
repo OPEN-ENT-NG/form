@@ -10,6 +10,7 @@ import { getFormDistributions } from "~/core/models/form/utils";
 import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
+import { getRecapFormPath } from "~/core/pathHelper";
 
 export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -29,7 +30,12 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
             <Box component={BoxComponentType.LI}>
               <Box display="flex" alignItems="center">
                 <Box>{formatDateWithTime(distribution.dateSending, "formulaire.responded.date")}</Box>
-                <IconButton sx={{ color: SECONDARY_MAIN_COLOR }}>
+                <IconButton
+                  sx={{ color: SECONDARY_MAIN_COLOR }}
+                  onClick={() => {
+                    window.location.href = getRecapFormPath(distribution.formId, distribution.id);
+                  }}
+                >
                   <VisibilityIcon />
                 </IconButton>
               </Box>

@@ -4,7 +4,7 @@ import { QueryMethod, TagName } from "~/core/enums";
 import { FORMULAIRE } from "~/core/constants.ts";
 import i18n from "~/i18n.ts";
 import { toast } from "react-toastify";
-import { transformDistributions } from "~/core/models/distribution/utils.ts";
+import { transformDistribution, transformDistributions } from "~/core/models/distribution/utils.ts";
 
 export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -35,8 +35,24 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    addDistribution: builder.mutation<IDistribution, number>({
+      query: (distributionId: number) => ({
+        url: `/distributions/${distributionId}/add`,
+        method: QueryMethod.POST,
+      }),
+      transformResponse: (rawData: IDistributionDTO) => transformDistribution(rawData),
+      invalidatesTags: [TagName.DISTRIBUTION],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.distributionService.create", err);
+          toast.error(i18n.t("formulaire.error.distributionService.create", { ns: FORMULAIRE }));
+        }
+      },
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetDistributionQuery, useGetFormDistributionsQuery } = distributionApi;
+export const { useGetDistributionQuery, useGetFormDistributionsQuery, useAddDistributionMutation } = distributionApi;

@@ -11,6 +11,9 @@ import { useEdificeClient } from "@edifice.io/react";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { getFormDistributions } from "~/core/models/form/utils";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
+import { getFormEditPath } from "~/core/pathHelper";
+import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
+import { useHandleOpenFormResponse } from "./useHandleOpenFormResponse";
 
 export const useMapToasterButtons = () => {
   const {
@@ -35,7 +38,8 @@ export const useMapToasterButtons = () => {
   const { toggleModal } = useModal();
   const [duplicateForms, { isLoading: isDuplicating }] = useDuplicateFormsMutation();
   const [restoreForms, { isLoading: isRestoring }] = useRestoreFormsMutation();
-
+  const { data: userDistributions } = useGetDistributionQuery();
+  const handleOpenFormResponse = useHandleOpenFormResponse();
   const hasNoFolders = useMemo(() => selectedFolders.length === 0, [selectedFolders]);
   const hasOneFolder = useMemo(() => selectedFolders.length === 1, [selectedFolders]);
   const hasMultipleFolders = useMemo(() => selectedFolders.length > 1, [selectedFolders]);
@@ -54,7 +58,7 @@ export const useMapToasterButtons = () => {
   const hasForms = useMemo(() => selectedForms.length > 0, [selectedForms]);
   const hasElements = useMemo(() => !!selectedForms[0]?.nb_elements, [selectedForms]);
 
-  const hasSentForm = useMemo(() => selectedSentForm, [selectedSentForm]);
+  const hasSentForm = useMemo(() => !!selectedSentForm, [selectedSentForm]);
 
   const hasOnlyFolders = useMemo(() => hasFolders && hasNoForms, [hasFolders, hasNoForms]);
   const hasOnlyForms = useMemo(() => hasForms && hasNoFolders, [hasForms, hasNoFolders]);
@@ -130,6 +134,15 @@ export const useMapToasterButtons = () => {
     }
   }, [hasForms, isRestoring, isInTrash, selectedForms, restoreForms, unselectAll]);
 
+  const openFormResponseAction = async () => {
+    if (!selectedSentForm?.id || !userDistributions?.length) return;
+
+    const redirectPath = await handleOpenFormResponse(selectedSentForm, userDistributions);
+    if (redirectPath) {
+      window.location.href = redirectPath;
+    }
+  };
+
   const ToasterButtonsMap = useMemo(
     () => ({
       [ToasterButtonType.OPEN]: {
@@ -142,15 +155,9 @@ export const useMapToasterButtons = () => {
             return;
           }
           if (hasForms && tab === HomeTabState.FORMS) {
-            //TODO
-            console.log("open form");
-            return;
+            return (window.location.href = getFormEditPath(selectedForms[0].id));
           }
-          if (hasSentForm && tab === HomeTabState.RESPONSES) {
-            //TODO
-            console.log("open sent form");
-            return;
-          }
+          return openFormResponseAction();
         },
       },
       [ToasterButtonType.RENAME]: {
@@ -235,8 +242,12 @@ export const useMapToasterButtons = () => {
       },
     }),
     [
+      tab,
       hasFolders,
+      hasSentForm,
       selectedFolders,
+      userDistributions,
+      selectedSentForm,
       setCurrentFolder,
       toggleModal,
       unselectAll,
