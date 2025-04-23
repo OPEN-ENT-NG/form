@@ -3,7 +3,6 @@ package fr.openent.formulaire.controllers;
 import org.entcore.common.controller.ControllerHelper;
 
 import static fr.openent.form.core.constants.EbFields.ACTION;
-import static fr.openent.form.core.constants.EbFields.FORMULAIRE_ADDRESS;
 import static fr.openent.form.core.constants.EbFields.LIST_QUESTION_CHILDREN;
 import static fr.openent.form.core.constants.EbFields.LIST_QUESTION_CHOICES;
 import static fr.openent.form.core.constants.EbFields.LIST_QUESTION_FOR_FORM_AND_SECTION;
@@ -36,7 +35,7 @@ public class EventBusController extends ControllerHelper {
     private final QuestionChoiceService questionChoiceService = new DefaultQuestionChoiceService();
     private final QuestionSpecificFieldsService questionSpecificFieldsService = new DefaultQuestionSpecificFieldsService();
 
-    @BusAddress(FORMULAIRE_ADDRESS)
+    @BusAddress("fr.openent.formulaire")
     public void bus(final Message<JsonObject> message) {
         JsonObject body = message.body();
         String action = body.getString(ACTION);
