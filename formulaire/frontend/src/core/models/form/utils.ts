@@ -80,7 +80,7 @@ export const isFormFilled = (form: IForm, distributions: IDistribution[]): boole
 export const getFormStatusText = (
   form: IForm,
   distributions: IDistribution[],
-  formatDateWithTime: (date: string | Date | undefined | null, i18nTextKey: string) => string,
+  formatDateWithTime: (date: string | Date | undefined, i18nTextKey: string) => string,
   t: (key: string) => string,
 ): string => {
   const formDistributions = getFormDistributions(form, distributions);
@@ -89,7 +89,9 @@ export const getFormStatusText = (
   } else {
     if (getNbFinishedDistrib(formDistributions) > 0) {
       const latestDistrib = getLatestDistribution(formDistributions);
-      return formatDateWithTime(latestDistrib.dateResponse, "formulaire.responded.date");
+      if (latestDistrib.dateResponse) {
+        return formatDateWithTime(latestDistrib.dateResponse, "formulaire.responded.date");
+      }
     }
     return t("formulaire.responded.waiting");
   }

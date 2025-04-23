@@ -52,6 +52,7 @@ export default tseslint.config(
       "react-refresh/only-export-components": "off",
       "no-unused-expressions": "off",
       "@typescript-eslint/no-unused-expressions": "error",
+      "@typescript-eslint/restrict-template-expressions": "off",
       // Règle Prettier
       "prettier/prettier": ["warn"],
 
