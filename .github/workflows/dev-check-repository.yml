@@ -76,21 +76,20 @@ jobs:
       options: --user root -v ${{ github.workspace }}:/home/maven/:rw
     steps:
       - uses: actions/checkout@v1
+      - name: Build common module
+        working-directory: ./common
+        run: mvn -Duser.home=/var/maven clean install
         # Test Maven Formulaire
-      - name: Copy parent POM
-        run: cp pom.xml formulaire/backend/pom-parent.xml
-      - name: Run build maven
+      - name: Run build maven formulaire
         working-directory: ./formulaire/backend
-        run: mvn -Duser.home=/var/maven clean install
-      - name: Run maven test
+        run: mvn -Duser.home=/var/maven -am clean install
+      - name: Run maven test formulaire
         working-directory: ./formulaire/backend
-        run: mvn -Duser.home=/var/maven testMaven
+        run: mvn -Duser.home=/var/maven test
         # Test Maven Formulaire-public
-      - name: Copy parent POM
-        run: cp pom.xml formulaire-public/backend/pom-parent.xml
-      - name: Run build maven
+      - name: Run build maven formulaire-public
         working-directory: ./formulaire-public/backend
-        run: mvn -Duser.home=/var/maven clean install
-      - name: Run maven test
+        run: mvn -Duser.home=/var/maven -am clean install
+      - name: Run maven test formulaire-public
         working-directory: ./formulaire-public/backend
-        run: mvn -Duser.home=/var/maven testMaven
+        run: mvn -Duser.home=/var/maven test
