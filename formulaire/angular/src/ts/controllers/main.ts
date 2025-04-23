@@ -77,21 +77,19 @@ export const mainController = ng.controller('MainController', ['$scope', 'route'
 			formsList: () => {
 				$scope.currentPage = Pages.FORMS_LIST;
 				if ($scope.canCreate()) {
-					template.open('main', 'containers/forms-list');
+					window.location.href = "/formulaire?tab=FORMS";
+				} else {
+				  $scope.redirectTo("/e403");
 				}
-				else {
-					$scope.redirectTo('/e403');
-				}
-			},
-			formsResponses: () => {
+			  },
+			  formsResponses: () => {
 				$scope.currentPage = Pages.FORMS_RESPONSE;
 				if ($scope.canRespond()) {
-					template.open('main', 'containers/forms-responses');
+					window.location.href = "/formulaire?tab=RESPONSES";
+				} else {
+				  $scope.redirectTo("/e403");
 				}
-				else {
-					$scope.redirectTo('/e403');
-				}
-			},
+			  },
 			createForm: () => {
 				$scope.currentPage = Pages.CREATE_FORM;
 				if ($scope.canCreate()) {
@@ -239,11 +237,11 @@ export const mainController = ng.controller('MainController', ['$scope', 'route'
 							if (conditionsOk) {
 								$scope.form.nbFormElements = (await formElementService.countFormElements($scope.form.id)).count;
 								if ($scope.responsePosition > $scope.form.nbFormElements) {
-									$scope.redirectTo(`/form/${$scope.form.id}/${$scope.distribution.id}/questions/recap`);
+									$scope.redirectTo(`?view=angular#/form/${$scope.form.id}/${$scope.distribution.id}/questions/recap`);
 								}
 								else {
 									$scope.responsePosition = $scope.responsePosition < 1 ? 1 : $scope.responsePosition;
-									let correctedUrl: string = window.location.origin + window.location.pathname + `#/form/${$scope.form.id}/${$scope.distribution.id}`;
+									let correctedUrl: string = window.location.origin + window.location.pathname + `?view=angular#/form/${$scope.form.id}/${$scope.distribution.id}`;
 									window.location.assign(correctedUrl);
 									$scope.safeApply();
 									$scope.$broadcast(FORMULAIRE_BROADCAST_EVENT.INIT_RESPOND_QUESTION);
@@ -284,7 +282,7 @@ export const mainController = ng.controller('MainController', ['$scope', 'route'
 							template.open('main', 'containers/recap-questions');
 						}
 						else {
-							$scope.redirectTo(`/form/${$scope.form.id}/${$scope.distribution.id}`);
+							$scope.redirectTo(`?view=angular#/form/${$scope.form.id}/${$scope.distribution.id}`);
 						}
 					}
 					else {
