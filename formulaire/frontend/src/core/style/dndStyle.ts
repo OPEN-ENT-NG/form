@@ -1,5 +1,5 @@
 import { SxProps } from "@mui/material";
-import {CSS_GREY_MAIN_COLOR} from "~/core/style/cssColors.ts";
+import { CSS_GREY_MAIN_COLOR } from "~/core/style/cssColors.ts";
 
 export const cardPreviewStyle: SxProps = {
   opacity: 0.5,
