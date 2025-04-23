@@ -1,4 +1,3 @@
-import "@testing-library/jest-dom";
 import { screen, fireEvent, waitFor } from "@testing-library/react"; // re‑exports RTL
 import { renderWithProviders } from "~/tests/testUtils";
 import { FolderModal } from "~/containers/FolderModal";
@@ -16,6 +15,8 @@ jest.mock("~/providers/HomeProvider", () => ({
 
 const mockCreate = jest.fn().mockResolvedValue({});
 const mockUpdate = jest.fn().mockResolvedValue({});
+const handleClose = jest.fn();
+
 
 jest.mock("~/services/api/services/formulaireApi/folderApi", () => ({
   useCreateFolderMutation: () => [mockCreate],
@@ -25,7 +26,6 @@ jest.mock("~/services/api/services/formulaireApi/folderApi", () => ({
 //------END OF MOCKS------
 
 describe("<FolderModal />", () => {
-  const handleClose = jest.fn();
 
   beforeEach(() => {
     jest.clearAllMocks();
@@ -58,6 +58,7 @@ describe("<FolderModal />", () => {
         name: "New Folder",
       });
       expect(handleClose).toHaveBeenCalled();
+      expect(mockUpdate).not.toHaveBeenCalled();
     });
   });
 
@@ -78,6 +79,7 @@ describe("<FolderModal />", () => {
         name: "New Folder",
       });
       expect(handleClose).toHaveBeenCalled();
+      expect(mockUpdate).not.toHaveBeenCalled();
     });
   });
 
@@ -98,6 +100,7 @@ describe("<FolderModal />", () => {
         name: "Renamed Folder",
       });
       expect(handleClose).toHaveBeenCalled();
+      expect(mockCreate).not.toHaveBeenCalled();
     });
   });
 
@@ -114,5 +117,6 @@ describe("<FolderModal />", () => {
 
     expect(mockUpdate).not.toHaveBeenCalled();
     expect(handleClose).not.toHaveBeenCalled();
+    expect(mockCreate).not.toHaveBeenCalled();
   });
 });
