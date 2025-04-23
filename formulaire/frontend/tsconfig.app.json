@@ -20,6 +20,11 @@
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
+
+    /* Import */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
     "paths": {
       "~/*": ["./src/*"],
       "@cgi-learning-hub/ui": ["node_modules/@cgi-learning-hub/ui"],

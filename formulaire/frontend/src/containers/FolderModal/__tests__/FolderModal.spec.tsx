@@ -61,6 +61,26 @@ describe("<FolderModal />", () => {
     });
   });
 
+  it("in CREATE mode, hitting Enter also calls createFolder", async () => {
+    renderWithProviders(<FolderModal isOpen={true} handleClose={handleClose} mode={FolderModalMode.CREATE} />);
+
+    const input = screen.getByRole("textbox");
+    fireEvent.change(input, { target: { value: "New Folder" } });
+    fireEvent.keyDown(input, {
+      key: "Enter",
+      code: "Enter",
+      charCode: 13,
+    });
+
+    await waitFor(() => {
+      expect(mockCreate).toHaveBeenCalledWith({
+        parent_id: "parent-123",
+        name: "New Folder",
+      });
+      expect(handleClose).toHaveBeenCalled();
+    });
+  });
+
   it("in RENAME mode, inputs name and calls updateFolder", async () => {
     renderWithProviders(<FolderModal isOpen={true} handleClose={handleClose} mode={FolderModalMode.RENAME} />);
 

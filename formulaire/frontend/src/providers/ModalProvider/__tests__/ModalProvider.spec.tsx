@@ -21,15 +21,12 @@ function Tester() {
 
 describe("<ModalProvider />", () => {
   it("throws if you call useModal() outside of a ModalProvider", () => {
-    // wrap render in a try/catch so RTL doesn't swallow the error
-    let caught: Error | null = null;
-    try {
-      render(<Tester />);
-    } catch (e) {
-      caught = e ? (e as Error) : null;
-    }
-    expect(caught).toBeInstanceOf(Error);
-    expect(caught?.message).toMatch(/useModal must be used within a ModalProvider/);
+    // silence React error boundary logs for this test
+    const err = jest.spyOn(console, "error").mockImplementation(() => {});
+
+    expect(() => render(<Tester />)).toThrow(/useModal must be used within a ModalProvider/);
+
+    err.mockRestore();
   });
 
   it("provides the initial state (all false) and toggles correctly", () => {

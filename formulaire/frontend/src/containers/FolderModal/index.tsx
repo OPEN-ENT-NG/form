@@ -76,11 +76,7 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
         },
       }}
     >
-      <DialogTitle>
-        <Typography variant="h2" fontWeight="bold">
-          {t(currentConfig.i18nTitle)}
-        </Typography>
-      </DialogTitle>
+      <DialogTitle fontWeight="bold">{t(currentConfig.i18nTitle)}</DialogTitle>
 
       <DialogContent sx={folderModalContentStyle}>
         <Typography sx={folderModalTextFieldLabelStyle}>{t("formulaire.folder.name")}</Typography>
