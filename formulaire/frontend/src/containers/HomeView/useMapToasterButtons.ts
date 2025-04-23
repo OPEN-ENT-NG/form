@@ -273,9 +273,9 @@ export const useMapToasterButtons = () => {
         return [ToasterButtonType.RESTORE, ToasterButtonType.DELETE];
       }
 
-      // Cas 1: Un seul formulaire
+      // Cas 1: Un seul formulaire SANS éléments
       if (hasOneForm && !hasFolders && !hasElements) {
-        const buttons = [
+        return [
           ToasterButtonType.OPEN,
           ToasterButtonType.PROPS,
           ToasterButtonType.DUPLICATE,
@@ -283,7 +283,6 @@ export const useMapToasterButtons = () => {
           ToasterButtonType.EXPORT,
           ToasterButtonType.DELETE,
         ];
-        return hasQuestionsInForms && hasShareRightManager ? [...buttons, ToasterButtonType.SHARE] : buttons;
       }
       // Cas 2: Plusieurs formulaires
       if (hasMultipleForms && !hasFolders) {
@@ -306,9 +305,9 @@ export const useMapToasterButtons = () => {
       if (hasMixedSelection) {
         return [ToasterButtonType.MOVE, ToasterButtonType.DELETE];
       }
-      //cas 6: Un formulaire avec des éléments
+      //cas 6: Un seul formulaire AVEC des éléments
       if (hasOneForm && !hasFolders && hasElements) {
-        return [
+        const buttons = [
           ToasterButtonType.OPEN,
           ToasterButtonType.PROPS,
           ToasterButtonType.DUPLICATE,
@@ -317,6 +316,8 @@ export const useMapToasterButtons = () => {
           ToasterButtonType.EXPORT,
           ToasterButtonType.DELETE,
         ];
+        if (hasQuestionsInForms && hasShareRightManager) buttons.splice(4, 0, ToasterButtonType.SHARE);
+        return buttons;
       }
       // Cas 7: Un formulaire en réponse
       if (hasSentForm && tab === HomeTabState.RESPONSES) {
