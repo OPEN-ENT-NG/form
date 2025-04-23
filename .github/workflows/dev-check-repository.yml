@@ -77,18 +77,12 @@ jobs:
     steps:
       - uses: actions/checkout@v1
         # Test Maven Formulaire
-      - name: Copy parent POM
-        run: cp pom.xml formulaire/backend/pom-parent.xml
-      - name: Run build maven
         working-directory: ./formulaire/backend
         run: mvn -Duser.home=/var/maven clean install
       - name: Run maven test
         working-directory: ./formulaire/backend
         run: mvn -Duser.home=/var/maven testMaven
         # Test Maven Formulaire-public
-      - name: Copy parent POM
-        run: cp pom.xml formulaire-public/backend/pom-parent.xml
-      - name: Run build maven
         working-directory: ./formulaire-public/backend
         run: mvn -Duser.home=/var/maven clean install
       - name: Run maven test
