@@ -13,11 +13,10 @@ const config: Config = {
     'cobertura',
     'lcov'
   ],
-
   // Resolve your TS/JS aliases and mock UI lib
   moduleNameMapper: {
     "^~/(.*)$": "<rootDir>/src/$1",
-    "^@edifice\\.io/react$": "<rootDir>/src/tests/mocks/edificeReact.tsx",
+    "^@edifice\\.io/react(.*)$": "<rootDir>/src/tests/mocks/edificeReact.tsx",
     "^@cgi-learning-hub/theme$": "<rootDir>/src/tests/mocks/cgiTheme.tsx",
     "^@cgi-learning-hub/ui$": "<rootDir>/node_modules/@cgi-learning-hub/ui/dist/index.cjs.js",
     // static assets

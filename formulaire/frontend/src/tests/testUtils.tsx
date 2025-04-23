@@ -13,6 +13,7 @@ import { ToastContainer } from "react-toastify";
 import { FORMULAIRE, TOAST_CONFIG, DEFAULT_THEME } from "~/core/constants";
 import { globalOverrideStyles } from "~/core/style/global";
 import { options } from "~/core/style/theme";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider/LocalizationProvider";
 
 interface ITestProvidersProps {
   /**
