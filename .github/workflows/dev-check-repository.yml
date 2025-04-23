@@ -80,16 +80,16 @@ jobs:
         working-directory: ./common
         run: mvn -Duser.home=/var/maven clean install
         # Test Maven Formulaire
-      - name: Run build maven
+      - name: Run build maven formulaire
         working-directory: ./formulaire/backend
         run: mvn -Duser.home=/var/maven -am clean install
-      - name: Run maven test
+      - name: Run maven test formulaire
         working-directory: ./formulaire/backend
-        run: mvn -Duser.home=/var/maven testMaven
+        run: mvn -Duser.home=/var/maven test
         # Test Maven Formulaire-public
-      - name: Run build maven
+      - name: Run build maven formulaire-public
         working-directory: ./formulaire-public/backend
         run: mvn -Duser.home=/var/maven -am clean install
-      - name: Run maven test
+      - name: Run maven test formulaire-public
         working-directory: ./formulaire-public/backend
-        run: mvn -Duser.home=/var/maven testMaven
+        run: mvn -Duser.home=/var/maven test
