@@ -12,6 +12,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Table,
   Tooltip,
 } from "@cgi-learning-hub/ui";
 import { getPageForms, initialTableProps, useColumns } from "./utils";
@@ -55,69 +56,71 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   return (
     <Box>
       <TableContainer>
-        <TableHead>
-          <TableRow>
-            {columns.map((column) => (
-              <TableCell key={column.id} align="center" style={{ width: column.width }}>
-                <Typography variant={TypographyVariant.BODY1}>{column.label}</Typography>
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {displayedForms.map((form) => {
-            const isItemSelected = isSelected(form.id);
-            return (
-              <TableRow
-                key={form.id}
-                selected={isItemSelected}
-                aria-checked={isItemSelected}
-                role="checkbox"
-                tabIndex={-1}
-                hover
+        <Table>
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell key={column.id} align="center" style={{ width: column.width }}>
+                  <Typography variant={TypographyVariant.BODY1}>{column.label}</Typography>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {displayedForms.map((form) => {
+              const isItemSelected = isSelected(form.id);
+              return (
+                <TableRow
+                  key={form.id}
+                  selected={isItemSelected}
+                  aria-checked={isItemSelected}
+                  role="checkbox"
+                  tabIndex={-1}
+                  hover
                 onClick={() => {
                   handleClick(form);
                 }}
                 sx={{ cursor: "pointer" }}
-              >
-                <TableCell sx={{ padding: 0 }} padding="checkbox">
-                  <Checkbox
-                    checked={isItemSelected}
-                    onChange={() => {
-                      handleClick(form);
+                >
+                  <TableCell sx={{ padding: 0 }} padding="checkbox">
+                    <Checkbox
+                      checked={isItemSelected}
+                      onChange={() => {
+                        handleClick(form);
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
-                    }}
-                  />
-                </TableCell>
-                <TableCell align="center">
-                  <Typography variant={TypographyVariant.BODY2}>{form.title}</Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography variant={TypographyVariant.BODY2}>{form.owner_name}</Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography variant={TypographyVariant.BODY2}>{form.nb_responses ?? 0}</Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Typography variant={TypographyVariant.BODY2}>
-                    {t("formulaire.modified") + dayjs(form.date_creation).format(DateFormat.DAY_MONTH_YEAR_HOUR_MIN)}
-                  </Typography>
-                </TableCell>
-                <TableCell align="center">
-                  <Box sx={iconBoxStyle}>
-                    {getIcons(form).map(({ text, icon }) => (
-                      <Tooltip key={text} title={text} placement="top" arrow>
-                        {icon}
-                      </Tooltip>
-                    ))}
-                  </Box>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
+                      }}
+                    />
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant={TypographyVariant.BODY2}>{form.title}</Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant={TypographyVariant.BODY2}>{form.owner_name}</Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant={TypographyVariant.BODY2}>{form.nb_responses ?? 0}</Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Typography variant={TypographyVariant.BODY2}>
+                      {t("formulaire.modified") + dayjs(form.date_creation).format(DateFormat.DAY_MONTH_YEAR_HOUR_MIN)}
+                    </Typography>
+                  </TableCell>
+                  <TableCell align="center">
+                    <Box sx={iconBoxStyle}>
+                      {getIcons(form).map(({ text, icon }) => (
+                        <Tooltip key={text} title={text} placement="top" arrow>
+                          {icon}
+                        </Tooltip>
+                      ))}
+                    </Box>
+                  </TableCell>
+                </TableRow>
+              );
+            })}
+          </TableBody>
+        </Table>
       </TableContainer>
       {totalCount > DEFAULT_PAGINATION_LIMIT && (
         <TablePagination

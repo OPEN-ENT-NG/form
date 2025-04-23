@@ -17,7 +17,6 @@ const mockCreate = jest.fn().mockResolvedValue({});
 const mockUpdate = jest.fn().mockResolvedValue({});
 const handleClose = jest.fn();
 
-
 jest.mock("~/services/api/services/formulaireApi/folderApi", () => ({
   useCreateFolderMutation: () => [mockCreate],
   useUpdateFolderMutation: () => [mockUpdate],
