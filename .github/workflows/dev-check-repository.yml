@@ -79,7 +79,7 @@ jobs:
         # Test Maven Formulaire
       - name: Run build maven
         working-directory: ./formulaire/backend
-        run: mvn -Duser.home=/var/maven clean install -X
+        run: mvn -Duser.home=/var/maven clean install
       - name: Run maven test
         working-directory: ./formulaire/backend
         run: mvn -Duser.home=/var/maven testMaven
