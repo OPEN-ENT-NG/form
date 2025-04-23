@@ -1,9 +1,21 @@
 package fr.openent.formulaire.controllers;
 
-import fr.openent.form.core.models.IModel;
+import org.entcore.common.controller.ControllerHelper;
+
+import static fr.openent.form.core.constants.EbFields.ACTION;
+import static fr.openent.form.core.constants.EbFields.LIST_QUESTION_CHILDREN;
+import static fr.openent.form.core.constants.EbFields.LIST_QUESTION_CHOICES;
+import static fr.openent.form.core.constants.EbFields.LIST_QUESTION_FOR_FORM_AND_SECTION;
+import static fr.openent.form.core.constants.EbFields.LIST_SECTIONS;
+import static fr.openent.form.core.constants.Fields.ERROR;
+import static fr.openent.form.core.constants.Fields.MESSAGE;
+import static fr.openent.form.core.constants.Fields.OK;
+import static fr.openent.form.core.constants.Fields.PARAM_FORM_ID;
+import static fr.openent.form.core.constants.Fields.PARAM_QUESTION_IDS;
+import static fr.openent.form.core.constants.Fields.RESULT;
+import static fr.openent.form.core.constants.Fields.STATUS;
 import fr.openent.form.core.models.Question;
 import fr.openent.form.helpers.BusResultHelper;
-import fr.openent.form.helpers.IModelHelper;
 import fr.openent.formulaire.service.QuestionChoiceService;
 import fr.openent.formulaire.service.QuestionService;
 import fr.openent.formulaire.service.QuestionSpecificFieldsService;
@@ -12,19 +24,9 @@ import fr.openent.formulaire.service.impl.DefaultQuestionChoiceService;
 import fr.openent.formulaire.service.impl.DefaultQuestionService;
 import fr.openent.formulaire.service.impl.DefaultQuestionSpecificFieldsService;
 import fr.openent.formulaire.service.impl.DefaultSectionService;
-import fr.wseduc.bus.BusAddress;
-import io.vertx.core.Promise;
 import io.vertx.core.eventbus.Message;
-import io.vertx.core.json.Json;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-import org.entcore.common.controller.ControllerHelper;
-
-import java.util.stream.Collectors;
-
-import static fr.openent.form.core.constants.EbFields.*;
-import static fr.openent.form.core.constants.EbFields.ACTION;
-import static fr.openent.form.core.constants.Fields.*;
 
 public class EventBusController extends ControllerHelper {
     private final SectionService sectionService = new DefaultSectionService();
@@ -32,7 +34,7 @@ public class EventBusController extends ControllerHelper {
     private final QuestionChoiceService questionChoiceService = new DefaultQuestionChoiceService();
     private final QuestionSpecificFieldsService questionSpecificFieldsService = new DefaultQuestionSpecificFieldsService();
 
-    @BusAddress(FORMULAIRE_ADDRESS)
+
     public void bus(final Message<JsonObject> message) {
         JsonObject body = message.body();
         String action = body.getString(ACTION);
