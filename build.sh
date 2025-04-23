@@ -84,6 +84,12 @@ formulaire() {
   cp -R formulaire/angular/src/template/* formulaire/backend/src/main/resources/public/template
   cp -R formulaire/angular/src/view/* formulaire/backend/src/main/resources/view
 
+  ## Copy '.html' files in 'ts' folder
+  cd formulaire/angular/src/ts || exit 1 # Need to be in targeted directory for rsync command to work
+  shopt -s globstar # Active '**/' for recursive on next line
+  rsync -R **/*.html ../../../backend/src/main/resources/public/ts --relative --no-implied-dirs
+  cd ../../../.. || exit 1
+
   ## add static reactjs files to formulaire backend
   cp -R formulaire/frontend/dist/* formulaire/backend/src/main/resources
   cp -R formulaire/frontend/public/* formulaire/backend/src/main/resources/public
@@ -129,6 +135,12 @@ formulairePublic() {
   cp -R formulaire-public/angular/src/i18n/* formulaire-public/backend/src/main/resources/i18n
   cp -R formulaire-public/angular/src/template/* formulaire-public/backend/src/main/resources/public/template
   cp -R formulaire-public/angular/src/view/* formulaire-public/backend/src/main/resources/view
+
+  ## Copy '.html' files in 'ts' folder
+  cd formulaire/angular/src/ts || exit 1 # Need to be in targeted directory for rsync command to work
+  shopt -s globstar # Active '**/' for recursive on next line
+  rsync -R **/*.html ../../../backend/src/main/resources/public/ts --relative --no-implied-dirs
+  cd ../../../.. || exit 1
 
   ## add static reactjs files to formulaire backend
   cp -R formulaire-public/frontend/dist/* formulaire-public/backend/src/main/resources
