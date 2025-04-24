@@ -19,6 +19,7 @@
     "zimbra-max-recipients": ${zimbraMaxRecipients},
     "rgpd-cron": "${rgpdCron}",
     "notify-cron": "${notifyCron}",
+    "days-before-notif-closing": "${daysBeforeNotifClosing}",
     "max-responses-export-PDF": ${maxResponsesExportPDF},
     "max-users-sharing": ${maxUsersSharing},
     "theme-platform": "${themePlatform}",
