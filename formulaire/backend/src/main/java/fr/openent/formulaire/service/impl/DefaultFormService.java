@@ -206,6 +206,20 @@ public class DefaultFormService implements FormService {
     }
 
     @Override
+    public Future<List<Form>> listFormsClosingSoon(Integer nbDaysBeforeClosing) {
+        Promise<List<Form>> promise = Promise.promise();
+
+        String query = "SELECT * FROM " + FORM_TABLE + " WHERE sent = ? " +
+                "AND date_ending < TO_CHAR(NOW() + (? * INTERVAL '1 day'),'YYYY-MM-DD')::date";
+        JsonArray params = new JsonArray().add(true).add(nbDaysBeforeClosing);
+
+        String errorMessage = "[Formulaire@DefaultFormService::listFormsClosingSoon] Fail to list forms closing soon";
+        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(IModelHelper.sqlResultToIModel(promise, Form.class, errorMessage)));
+
+        return promise.future();
+    }
+
+    @Override
     public Future<Optional<Form>> get(String formId) {
         Promise<Optional<Form>> promise = Promise.promise();
 
