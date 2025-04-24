@@ -8,7 +8,6 @@ import { useHome } from "~/providers/HomeProvider";
 import { IHomeMainSentFormsProps } from "./types";
 import { SentForm } from "~/components/SentForm";
 import { getFormDistributions } from "~/core/models/form/utils";
-import { cardWrapperStyle } from "~/core/style/boxStyles";
 import { sentFormWrapperStyle } from "./style";
 
 export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, distributions }) => {
