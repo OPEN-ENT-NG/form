@@ -77,6 +77,11 @@ public interface FormService {
     Future<JsonArray> listSentFormsOpeningToday();
 
     /**
+     * List all forms closing before a given number of days
+     */
+    Future<List<Form>> listFormsClosingSoon(Integer nbDaysBeforeClosing);
+
+    /**
      * Get a specific form by id
      * @param formId form identifier
      */
