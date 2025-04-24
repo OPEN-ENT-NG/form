@@ -1,5 +1,6 @@
 package fr.openent.formulaire.service.impl;
 
+import fr.openent.form.core.models.Form;
 import fr.openent.formulaire.service.NotifyService;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
@@ -12,6 +13,8 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
+
+import java.util.List;
 
 import static fr.openent.form.core.constants.Fields.*;
 import static fr.wseduc.webutils.http.Renders.unauthorized;
@@ -87,5 +90,23 @@ public class DefaultNotifyService implements NotifyService {
 
             timelineHelper.notifyTimeline(request, "formulaire.response_notification", user, managers.getList(), params);
         });
+    }
+
+
+    @Override
+    public void notifyClosingFormCRON(Form form, List<String> responders) {
+        HttpServerRequest request = new JsonHttpServerRequest(new JsonObject());
+        UserInfos user = new UserInfos();
+
+        String endPath = form.getRgpd() ? RGPD : NEW;
+        String formUri = "/formulaire#/form/" + form.getId() + "/" + endPath;
+
+        JsonObject params = new JsonObject()
+                .put(PARAM_FORM_URI, formUri)
+                .put(PARAM_FORM_NAME, form.getTitle())
+                .put(PARAM_PUSH_NOTIF, new JsonObject().put(TITLE, "push.notif.formulaire.closingForm").put(BODY, ""))
+                .put(PARAM_RESOURCE_URI, formUri);
+
+        timelineHelper.notifyTimeline(request, "formulaire.closing_form_notification", user, responders, params);
     }
 }
