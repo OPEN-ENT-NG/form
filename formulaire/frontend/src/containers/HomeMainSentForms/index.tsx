@@ -8,6 +8,8 @@ import { useHome } from "~/providers/HomeProvider";
 import { IHomeMainSentFormsProps } from "./types";
 import { SentForm } from "~/components/SentForm";
 import { getFormDistributions } from "~/core/models/form/utils";
+import { cardWrapperStyle } from "~/core/style/boxStyles";
+import { sentFormWrapperStyle } from "./style";
 
 export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, distributions }) => {
   const { selectedSentForm, setSelectedSentForm } = useHome();
@@ -58,7 +60,7 @@ export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, dist
 
   return (
     <>
-      <Box display="flex" flexWrap="wrap" gap={2}>
+      <Box sx={sentFormWrapperStyle}>
         {sentForms.slice(0, visibleCount).map((form) => {
           return (
             <SentForm
