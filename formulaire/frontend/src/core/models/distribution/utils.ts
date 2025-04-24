@@ -1,6 +1,5 @@
 import { IDistributionDTO, IDistribution, IPersonResponseData } from "./types";
 import { DistributionStatus } from "./enums";
-import { log } from "console";
 
 export const transformDistribution = (raw: IDistributionDTO): IDistribution => {
   return {
@@ -62,7 +61,6 @@ export const transformDistributionsToTableData = (
 };
 
 export const getLatestDistribution = (distributions: IDistribution[]): IDistribution => {
-  log("getLatestDistribution", distributions);
   return distributions.reduce((latest, current) => {
     if (!current.dateSending) return latest;
     if (!latest.dateSending) return current;
@@ -71,7 +69,6 @@ export const getLatestDistribution = (distributions: IDistribution[]): IDistribu
 };
 
 export const getFirstDistribution = (distributions: IDistribution[]): IDistribution => {
-  log("getFirstDistribution", distributions);
   return distributions.reduce((first, current) => {
     if (!current.dateSending) return first;
     if (!first.dateSending) return current;
@@ -84,7 +81,6 @@ export const getNbFinishedDistrib = (distributions: IDistribution[]): number => 
 };
 
 export const getFirstDistributionDate = (distributions: IDistribution[]): Date => {
-  console.log("getFirstDistributionDate", distributions);
   const firstDistrib = getFirstDistribution(distributions);
   return firstDistrib.dateSending ? new Date(firstDistrib.dateSending) : new Date();
 };

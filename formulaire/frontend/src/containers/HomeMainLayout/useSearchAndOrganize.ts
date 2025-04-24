@@ -5,6 +5,7 @@ import { useCallback, useMemo, useState } from "react";
 import { MenuItemState } from "~/components/OrganizeFilter/enum";
 import { SHARED_FOLDER_ID } from "~/core/constants";
 import { IDistribution } from "~/core/models/distribution/types";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
 
 export const useSearchAndOrganize = (
   folders: IFolder[],
@@ -14,6 +15,7 @@ export const useSearchAndOrganize = (
   selectedChips: IFormChipProps[],
   sentForms: IForm[],
   distributions: IDistribution[],
+  tab: HomeTabState,
   selectedMenuItem?: IMenuItemProps,
 ) => {
   const [searchText, setSearchText] = useState("");
@@ -45,9 +47,10 @@ export const useSearchAndOrganize = (
         })
       : initialFilteredList;
 
-    const chipFilteredFormList = selectedChips.length
-      ? searchFilteredFormList.filter((form) => selectedChips.every((chip: IFormChipProps) => chip.filterFn(form)))
-      : searchFilteredFormList;
+    const chipFilteredFormList =
+      selectedChips.length && tab === HomeTabState.FORMS
+        ? searchFilteredFormList.filter((form) => selectedChips.every((chip: IFormChipProps) => chip.filterFn(form)))
+        : searchFilteredFormList;
 
     if (selectedMenuItem) {
       const isAscending = selectedMenuItem.state === MenuItemState.ASCENDING;
@@ -55,7 +58,7 @@ export const useSearchAndOrganize = (
     }
 
     return chipFilteredFormList;
-  }, [forms, searchText, currentFolder.id, selectedChips, selectedMenuItem, userId]);
+  }, [forms, searchText, currentFolder.id, selectedChips, selectedMenuItem, userId, tab]);
 
   const filteredSentForms = useMemo(() => {
     const searchFilteredSentFormList = searchText.trim()
@@ -81,7 +84,7 @@ export const useSearchAndOrganize = (
   }, [sentForms, distributions, searchText, selectedChips, selectedMenuItem]);
 
   const hasFilteredFolders = useMemo(() => !!filteredFolders.length, [filteredFolders]);
-  const hasFilteredForms = useMemo(() => !!filteredForms.length, [filteredForms]);
+  const hasFilteredForms = useMemo(() => !!filteredForms.length, [filteredForms, tab]);
 
   return {
     searchText,

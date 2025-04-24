@@ -111,7 +111,6 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
     }
     return;
   }, [sentFormsDatas]);
-  console.log("provider", distributions);
 
   const value = useMemo<HomeProviderContextType>(
     () => ({

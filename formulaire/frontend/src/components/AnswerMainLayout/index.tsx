@@ -44,6 +44,7 @@ export const AnswerMainLayout: FC = () => {
     selectedChips,
     sentForms,
     distributions,
+    tab,
     selectedMenuItem,
   );
 

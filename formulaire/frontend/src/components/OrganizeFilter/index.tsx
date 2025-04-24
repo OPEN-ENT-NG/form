@@ -74,7 +74,6 @@ export const OrganizeFilter: FC<IOrganizeFilterProps> = ({
       const updatedChips = selectedChips.some((c) => c.id === chip.id)
         ? selectedChips.filter((c) => c.id !== chip.id)
         : [...selectedChips, chip];
-
       setSelectedChips(updatedChips);
     },
     [selectedChips, setSelectedChips],
