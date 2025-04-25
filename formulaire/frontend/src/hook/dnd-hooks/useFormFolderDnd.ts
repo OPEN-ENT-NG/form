@@ -41,7 +41,7 @@ export const useFormFolderDnd = (
       }
       const activeData = event.active.data.current as IDragItemProps | null | undefined;
 
-      if (activeData && activeData.type === DraggableType.FOLDER && activeData.folder) {
+      if (activeData?.type === DraggableType.FOLDER && activeData.folder) {
         const folder = activeData.folder;
         setActiveDragItem(createItemState(DraggableType.FOLDER, folder));
         if (!isSelectedFolder(folder, selectedFolders)) {
@@ -49,7 +49,7 @@ export const useFormFolderDnd = (
           setSelectedForm([]);
         }
       }
-      if (activeData && activeData.type === DraggableType.FORM && activeData.form) {
+      if (activeData?.type === DraggableType.FORM && activeData.form) {
         const form = activeData.form;
         setActiveDragItem(createItemState(DraggableType.FORM, undefined, form));
         if (!isSelectedForm(form, selectedForms)) {
