@@ -1,4 +1,3 @@
-import { PopoverOrigin } from "@mui/material";
 import { MenuItemState } from "./enum";
 import { IForm } from "~/core/models/form/types";
 import { IDistribution } from "~/core/models/distribution/types";
@@ -25,13 +24,3 @@ export interface IMenuItemProps {
   state: MenuItemState;
   sortFn: (a: IForm, b: IForm, isAscending: boolean, distribution?: IDistribution[]) => number;
 }
-
-export const menuAnchorOrigin: PopoverOrigin = {
-  vertical: "bottom",
-  horizontal: "right",
-};
-
-export const menuTransformOrigin: PopoverOrigin = {
-  vertical: "top",
-  horizontal: "right",
-};

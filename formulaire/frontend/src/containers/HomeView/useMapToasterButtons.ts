@@ -14,6 +14,7 @@ import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
 import { getFormEditPath } from "~/core/pathHelper";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useHandleOpenFormResponse } from "./useHandleOpenFormResponse";
+import { IForm } from "~/core/models/form/types";
 
 export const useMapToasterButtons = () => {
   const {
@@ -134,10 +135,11 @@ export const useMapToasterButtons = () => {
     }
   }, [hasForms, isRestoring, isInTrash, selectedForms, restoreForms, unselectAll]);
 
-  const openFormResponseAction = async () => {
-    if (!selectedSentForm?.id || !userDistributions?.length) return;
+  const openFormResponseAction: (form?: IForm | null) => Promise<void> = async (form = null) => {
+    const choosenForm = selectedSentForm ?? form;
+    if (!choosenForm || !userDistributions?.length) return;
 
-    const redirectPath = await handleOpenFormResponse(selectedSentForm, userDistributions);
+    const redirectPath = await handleOpenFormResponse(choosenForm, userDistributions);
     if (redirectPath) {
       window.location.href = redirectPath;
     }
@@ -349,5 +351,5 @@ export const useMapToasterButtons = () => {
     selectedSentForm,
   ]);
 
-  return { leftButtons, rightButtons };
+  return { leftButtons, rightButtons, openFormResponseAction };
 };

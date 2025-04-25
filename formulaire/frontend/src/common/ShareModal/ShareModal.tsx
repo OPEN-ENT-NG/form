@@ -80,7 +80,6 @@ export default function ShareResourceModal({
   onCancel,
 }: IShareResourceModalProps) {
   const { resourceId, resourceCreatorId, resourceRights } = shareOptions;
-  console.log(shareOptions);
   const { userFormsRights } = useShareModal();
   const [isLoading, setIsLoading] = useState(true);
 

@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { IColumn } from "../HomeMainTable/types";
+import { IColumn } from "../HomeMainFormsTable/types";
 import { FORMULAIRE } from "~/core/constants";
-import { ColumnId } from "../HomeMainTable/enums";
+import { ColumnId } from "../HomeMainFormsTable/enums";
 
 export const useSentFormColumns: () => IColumn[] = () => {
   const { t } = useTranslation(FORMULAIRE);
