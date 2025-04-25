@@ -1,9 +1,11 @@
+import { PopoverOrigin } from "@mui/material";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { CSS_PRIMARY_LIGHT_COLOR } from "~/core/style/cssColors";
 
 export const menuStyle = {
   "& .MuiPaper-root": {
     padding: "1rem",
+    marginTop: "0.5rem",
   },
 };
 
@@ -58,4 +60,14 @@ export const chipContainerStyle = {
 export const filterArrowStyle = {
   position: "absolute",
   left: ".4rem",
+};
+
+export const menuAnchorOrigin: PopoverOrigin = {
+  vertical: "bottom",
+  horizontal: "right",
+};
+
+export const menuTransformOrigin: PopoverOrigin = {
+  vertical: "top",
+  horizontal: "right",
 };

@@ -23,12 +23,15 @@ export const useHome = () => {
 export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const rootFolders = useRootFolders();
 
+  // DIRTY initialisation du state tab avec le param tab url, à virer quand on en aura plus besoin
   const urlParams = new URLSearchParams(window.location.search);
   const tabParam = urlParams.get("tab");
   const initialTab =
     tabParam && Object.values(HomeTabState).includes(tabParam as HomeTabState)
       ? (tabParam as HomeTabState)
       : HomeTabState.FORMS;
+  const [tab, setTab] = useState<HomeTabState>(initialTab);
+  //
 
   const [currentFolder, setCurrentFolder] = useState<IFolder>(rootFolders[0]);
   const [folders, setFolders] = useState<IFolder[]>([]);
@@ -39,7 +42,6 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const [sentForms, setSentForms] = useState<IForm[]>([]);
   const [selectedSentForm, setSelectedSentForm] = useState<IForm | null>(null);
 
-  const [tab, setTab] = useState<HomeTabState>(initialTab);
   const [tabViewPref, setTabViewPref] = useState<IHomeTabViewPref>(initTabViewPref());
   const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
 
@@ -111,6 +113,14 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
     }
     return;
   }, [sentFormsDatas]);
+
+  // DIRTY effect pour nettoyer le param tab  de l'url quand on reviens de angular à virer quand on en aura plus besoins
+  useEffect(() => {
+    if (urlParams.has("tab")) {
+      window.history.replaceState(null, document.title, window.location.pathname + window.location.hash);
+    }
+  }, []);
+  //
 
   const value = useMemo<HomeProviderContextType>(
     () => ({

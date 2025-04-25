@@ -1,7 +1,7 @@
 import { IForm } from "~/core/models/form/types";
 import { ColumnId } from "./enums";
 
-export interface IHomeMainTableProps {
+export interface IHomeMainFormsTableProps {
   forms: IForm[];
 }
 
