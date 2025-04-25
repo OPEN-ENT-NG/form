@@ -4,7 +4,7 @@ import { MYFORMS_FOLDER_ID, SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/con
 import { CursorStyle } from "~/core/enums";
 import { IFolder } from "~/core/models/folder/types";
 import { IForm } from "~/core/models/form/types";
-import { IActiveDragItemProps } from "~/hook/dnd-hooks/types";
+import { IDragItemProps } from "~/hook/dnd-hooks/types";
 import { isDraggedItemFolder, isDraggedItemForm } from "~/hook/dnd-hooks/utils";
 import AppsIcon from "@mui/icons-material/Apps";
 import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
@@ -67,7 +67,7 @@ export const getEmptyStateDescription = (folder: IFolder) => {
   }
 };
 
-export const getDragCursorStyle = (activeDragItem: IActiveDragItemProps, isValidDrop: boolean) => {
+export const getDragCursorStyle = (activeDragItem: IDragItemProps, isValidDrop: boolean) => {
   return {
     cursor:
       isDraggedItemFolder(activeDragItem) || isDraggedItemForm(activeDragItem)
