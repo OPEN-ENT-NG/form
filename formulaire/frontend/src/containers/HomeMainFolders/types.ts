@@ -1,7 +1,7 @@
 import { IFolder } from "~/core/models/folder/types";
-import { IActiveDragItemProps } from "~/hook/dnd-hooks/types";
+import { IDragItemProps } from "~/hook/dnd-hooks/types";
 
 export interface IHomeMainFolderProps {
-  activeItem: IActiveDragItemProps;
+  activeItem: IDragItemProps;
   folders: IFolder[];
 }

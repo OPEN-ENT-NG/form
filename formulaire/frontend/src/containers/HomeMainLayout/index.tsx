@@ -34,8 +34,6 @@ import { FolderPreview } from "~/components/FolderPreview";
 import { buildFlatFolderTree } from "../HomeSidebar/utils";
 import { DroppableTreeItem } from "~/components/DroppableTreeItem";
 import { useSearchAndOrganize } from "./useSearchAndOrganize";
-import { IForm } from "~/core/models/form/types";
-import { IFolder } from "~/core/models/folder/types";
 import { FormPreview } from "~/components/FormPreview";
 import { SwitchView } from "~/components/SwitchView";
 import { ViewMode } from "~/components/SwitchView/enums";
@@ -132,13 +130,13 @@ export const HomeMainLayout: FC = () => {
           </Box>
         )}
         {flatTreeViewItems.map((item) => (
-          <DroppableTreeItem key={item.internalId} treeItemId={item.internalId} />
+          <DroppableTreeItem key={item.internalId} treeItemId={parseInt(item.internalId)} />
         ))}
         <DragOverlay>
-          {isDraggedItemForm(activeDragItem) ? (
-            <FormPreview form={activeDragItem.data as IForm} />
-          ) : isDraggedItemFolder(activeDragItem) ? (
-            <FolderPreview folder={activeDragItem.data as IFolder} />
+          {isDraggedItemForm(activeDragItem) && activeDragItem.form ? (
+            <FormPreview form={activeDragItem.form} />
+          ) : isDraggedItemFolder(activeDragItem) && activeDragItem.folder ? (
+            <FolderPreview folder={activeDragItem.folder} />
           ) : null}
         </DragOverlay>
         {!hasFilteredFolders && !hasFilteredForms && (

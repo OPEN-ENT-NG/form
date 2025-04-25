@@ -1,5 +1,5 @@
 export interface IDroppableTreeItemProps {
-  treeItemId: string;
+  treeItemId: number;
 }
 
 export interface IStyledDroppableTreeItemProps {
