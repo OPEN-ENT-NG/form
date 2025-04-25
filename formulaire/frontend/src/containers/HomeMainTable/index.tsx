@@ -18,13 +18,10 @@ import { getPageForms, initialTableProps, useColumns } from "./utils";
 import { Typography } from "@cgi-learning-hub/ui";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { IForm } from "~/core/models/form/types";
-import ShareIcon from "@mui/icons-material/Share";
-import ForwardToInboxIcon from "@mui/icons-material/ForwardToInbox";
-import PublicIcon from "@mui/icons-material/Public";
-import NotificationsIcon from "@mui/icons-material/Notifications";
 import dayjs from "dayjs";
 import { DateFormat } from "~/core/enums";
 import { tablePaginationStyle } from "./style";
+import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
 
 export const HomeMainTable: FC<IHomeMainTableProps> = ({ forms }) => {
   const { selectedForms, setSelectedForms } = useHome();
@@ -35,6 +32,7 @@ export const HomeMainTable: FC<IHomeMainTableProps> = ({ forms }) => {
   const displayedForms = getPageForms(forms, tablePaginationProps);
 
   const isSelected = (formId: number) => selectedForms.some((form) => form.id === formId);
+  const { getIcons } = useFormItemsIcons();
 
   const handleClick = (event: ChangeEvent<HTMLInputElement>, form: IForm) => {
     const currentSelectedForms = event.target.checked
@@ -99,26 +97,11 @@ export const HomeMainTable: FC<IHomeMainTableProps> = ({ forms }) => {
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  {form.reminded && !form.is_public && (
-                    <Tooltip title={t("formulaire.reminded")} placement="top" arrow>
-                      <NotificationsIcon />
+                  {getIcons(form).map(({ text, icon }, idx) => (
+                    <Tooltip key={idx} title={text} placement="top" arrow>
+                      {icon}
                     </Tooltip>
-                  )}
-                  {form.collab && (
-                    <Tooltip title={t("formulaire.shared")} placement="top" arrow>
-                      <ShareIcon />
-                    </Tooltip>
-                  )}
-                  {form.sent && !form.archived && (
-                    <Tooltip title={t("formulaire.sent")} placement="top" arrow>
-                      <ForwardToInboxIcon />
-                    </Tooltip>
-                  )}
-                  {form.is_public && (
-                    <Tooltip title={t("formulaire.public")} placement="top" arrow>
-                      <PublicIcon />
-                    </Tooltip>
-                  )}
+                  ))}
                 </TableCell>
               </TableRow>
             );
