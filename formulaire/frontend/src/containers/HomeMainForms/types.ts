@@ -1,7 +1,7 @@
 import { IForm } from "~/core/models/form/types";
-import { IActiveDragItemProps } from "~/hook/dnd-hooks/types";
+import { IDragItemProps } from "~/hook/dnd-hooks/types";
 
 export interface IHomeMainFormsProps {
-  activeItem: IActiveDragItemProps;
+  activeItem: IDragItemProps;
   forms: IForm[];
 }
