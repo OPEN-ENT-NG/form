@@ -1,10 +1,10 @@
 import { ChangeEvent, FC, useState } from "react";
 
-import { IHomeMainTableProps } from "./types";
 import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
 import { useHome } from "~/providers/HomeProvider";
 import {
+  Box,
   Checkbox,
   TableBody,
   TableCell,
@@ -20,10 +20,11 @@ import { TypographyVariant } from "~/core/style/themeProps";
 import { IForm } from "~/core/models/form/types";
 import dayjs from "dayjs";
 import { DateFormat } from "~/core/enums";
-import { tablePaginationStyle } from "./style";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
+import { iconBoxStyle, tablePaginationStyle } from "./style";
+import { IHomeMainFormsTableProps } from "./types";
 
-export const HomeMainTable: FC<IHomeMainTableProps> = ({ forms }) => {
+export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   const { selectedForms, setSelectedForms } = useHome();
   const { t } = useTranslation(FORMULAIRE);
   const columns = useColumns();
@@ -51,7 +52,7 @@ export const HomeMainTable: FC<IHomeMainTableProps> = ({ forms }) => {
   };
 
   return (
-    <>
+    <Box>
       <TableContainer>
         <TableHead>
           <TableRow>
@@ -97,11 +98,13 @@ export const HomeMainTable: FC<IHomeMainTableProps> = ({ forms }) => {
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  {getIcons(form).map(({ text, icon }) => (
-                    <Tooltip key={text} title={text} placement="top" arrow>
-                      {icon}
-                    </Tooltip>
-                  ))}
+                  <Box sx={iconBoxStyle}>
+                    {getIcons(form).map(({ text, icon }) => (
+                      <Tooltip key={text} title={text} placement="top" arrow>
+                        {icon}
+                      </Tooltip>
+                    ))}
+                  </Box>
                 </TableCell>
               </TableRow>
             );
@@ -121,6 +124,6 @@ export const HomeMainTable: FC<IHomeMainTableProps> = ({ forms }) => {
           sx={tablePaginationStyle}
         />
       )}
-    </>
+    </Box>
   );
 };

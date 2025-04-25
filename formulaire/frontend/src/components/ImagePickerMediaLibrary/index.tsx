@@ -74,8 +74,6 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   };
 
   const handleMediaLibrarySuccess = (result: MediaLibraryResult) => {
-    console.log(result);
-
     const mediaItem: MediaLibraryResult = Array.isArray(result) ? result[0] : result;
     const fileId: string = mediaItem._id ?? "";
 
