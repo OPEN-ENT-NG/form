@@ -39,7 +39,7 @@ export interface IHomeTabViewPref {
   [HomeTabState.RESPONSES]: ViewMode;
 }
 
-export interface IUserTabights {
+export interface IUserTabRights {
   [HomeTabState.FORMS]: boolean;
   [HomeTabState.RESPONSES]: boolean;
 }
