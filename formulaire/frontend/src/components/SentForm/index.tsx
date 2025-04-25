@@ -20,7 +20,7 @@ export const SentForm: FC<ISentFormProps> = ({ form, distributions, isSelected, 
         handleSelect(form);
       }}
       onClick={() => {
-        void openFormResponseAction();
+        void openFormResponseAction(form);
       }}
       propertyItems={getSentFormPropertyItems(form, distributions)}
       hasNoButtonOnFocus
