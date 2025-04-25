@@ -23,7 +23,9 @@ export const useSearchAndOrganize = (
   }, []);
 
   const filteredFolders = useMemo(() => {
-    return folders.filter((folder) => folder.parent_id === currentFolder.id);
+    return folders
+      .filter((folder) => folder.parent_id === currentFolder.id)
+      .sort((a, b) => a.name.localeCompare(b.name));
   }, [folders, currentFolder.id]);
 
   const filteredForms = useMemo(() => {
