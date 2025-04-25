@@ -80,22 +80,18 @@ export const useFormFolderDnd = (
 
         const targetId = Number(over?.id ?? -1);
 
-        const isValidDrop =
-          // must be over something
-          !!over &&
-          // can't drop onto trash or shared
-          targetId !== TRASH_FOLDER_ID &&
-          targetId !== SHARED_FOLDER_ID &&
-          // if dragging a folder, don't drop into its own parent;
-          // if dragging a form, don't drop into its current folder;
-          // otherwise (no activeData or other types) allow by default
-          (activeData == null
-            ? true
-            : activeData.type === DraggableType.FOLDER
-            ? activeData.folder?.parent_id !== targetId
-            : activeData.type === DraggableType.FORM
-            ? activeData.form?.folder_id !== targetId
-            : true);
+        // 1. Must actually be “over” something…
+        const isOverSomething = !!over;
+        // 2. And that target isn’t Trash or Shared
+        const isNotTrashOrShared = targetId !== TRASH_FOLDER_ID && targetId !== SHARED_FOLDER_ID;
+        // 3. If you’re dragging a folder, it can’t drop into its own parent
+        const isFolderDropValid =
+          activeData?.type !== DraggableType.FOLDER || activeData.folder?.parent_id !== targetId;
+        // 4. If dragging a form, it must not be dropped into its current folder
+        const isFormDropValid = activeData?.type !== DraggableType.FORM || activeData.form?.folder_id !== targetId;
+
+        // 5. Otherwise (no activeData or other types) everything’s allowed
+        const isValidDrop = isOverSomething && isNotTrashOrShared && isFolderDropValid && isFormDropValid;
 
         setIsValidDrop(isValidDrop);
       }
