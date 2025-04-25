@@ -12,6 +12,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Tooltip,
 } from "@cgi-learning-hub/ui";
 import { getPageForms, initialTableProps, useColumns } from "./utils";
 import { Typography } from "@cgi-learning-hub/ui";
@@ -98,10 +99,26 @@ export const HomeMainTable: FC<IHomeMainTableProps> = ({ forms }) => {
                   </Typography>
                 </TableCell>
                 <TableCell align="center">
-                  {form.reminded && <NotificationsIcon />}
-                  {form.collab && <ShareIcon />}
-                  {form.sent && <ForwardToInboxIcon />}
-                  {form.is_public && <PublicIcon />}
+                  {form.reminded && !form.is_public && (
+                    <Tooltip title={t("formulaire.reminded")} placement="top" arrow>
+                      <NotificationsIcon />
+                    </Tooltip>
+                  )}
+                  {form.collab && (
+                    <Tooltip title={t("formulaire.shared")} placement="top" arrow>
+                      <ShareIcon />
+                    </Tooltip>
+                  )}
+                  {form.sent && !form.archived && (
+                    <Tooltip title={t("formulaire.sent")} placement="top" arrow>
+                      <ForwardToInboxIcon />
+                    </Tooltip>
+                  )}
+                  {form.is_public && (
+                    <Tooltip title={t("formulaire.public")} placement="top" arrow>
+                      <PublicIcon />
+                    </Tooltip>
+                  )}
                 </TableCell>
               </TableRow>
             );
