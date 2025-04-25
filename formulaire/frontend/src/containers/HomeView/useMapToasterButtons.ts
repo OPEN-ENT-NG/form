@@ -349,5 +349,5 @@ export const useMapToasterButtons = () => {
     selectedSentForm,
   ]);
 
-  return { leftButtons, rightButtons };
+  return { leftButtons, rightButtons, openFormResponseAction };
 };

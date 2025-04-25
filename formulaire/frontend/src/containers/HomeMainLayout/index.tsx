@@ -39,11 +39,11 @@ import { IFolder } from "~/core/models/folder/types";
 import { FormPreview } from "~/components/FormPreview";
 import { SwitchView } from "~/components/SwitchView";
 import { ViewMode } from "~/components/SwitchView/enums";
-import { HomeMainTable } from "../HomeMainTable";
 import { IToggleButtonItem } from "~/components/SwitchView/types";
 import FolderIcon from "@mui/icons-material/Folder";
 import { centerBoxStyle } from "~/core/style/boxStyles";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
+import { HomeMainFormsTable } from "../HomeMainFormsTable";
 
 export const HomeMainLayout: FC = () => {
   const {
@@ -80,6 +80,7 @@ export const HomeMainLayout: FC = () => {
     selectedChips,
     sentForms,
     distributions,
+    tab,
     selectedMenuItem,
   );
 
@@ -127,7 +128,7 @@ export const HomeMainLayout: FC = () => {
               (viewMode === ViewMode.CARDS ? (
                 <HomeMainForms forms={filteredForms} activeItem={activeDragItem} />
               ) : (
-                <HomeMainTable forms={filteredForms} />
+                <HomeMainFormsTable forms={filteredForms} />
               ))}
           </Box>
         )}

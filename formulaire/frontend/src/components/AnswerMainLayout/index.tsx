@@ -17,13 +17,14 @@ import { useSearchAndOrganize } from "~/containers/HomeMainLayout/useSearchAndOr
 import { SwitchView } from "../SwitchView";
 import { OrganizeFilter } from "../OrganizeFilter";
 import { IToggleButtonItem } from "../SwitchView/types";
-import { getEmptyStateDescription, useToggleButtons } from "~/containers/HomeMainLayout/utils";
+import { useToggleButtons } from "~/containers/HomeMainLayout/utils";
 import { sentFormMenuItemDatas, sentFormsChipDatas } from "./utils";
 import { ViewMode } from "../SwitchView/enums";
 import { HomeMainSentForms } from "~/containers/HomeMainSentForms";
 import { HomeMainSentFormTable } from "~/containers/HomeMainSentFormTable";
 import { ResourcesEmptyState } from "../SVG/RessourcesEmptyState";
 import { useTheme } from "@mui/material";
+import { centerBoxStyle } from "~/core/style/boxStyles";
 
 export const AnswerMainLayout: FC = () => {
   const { user } = useEdificeClient();
@@ -81,9 +82,13 @@ export const AnswerMainLayout: FC = () => {
           )}
         </Box>
       ) : (
-        <Box sx={emptyStateWrapperStyle}>
-          <ResourcesEmptyState fill={theme.palette.primary.main} />
-          <Typography>{t(getEmptyStateDescription(currentFolder))}</Typography>
+        <Box sx={centerBoxStyle} height="100%">
+          <Box sx={emptyStateWrapperStyle}>
+            <Box height="25rem">
+              <ResourcesEmptyState fill={theme.palette.primary.main} />
+            </Box>
+            <Typography>{t("formulaire.responses.empty.notif")}</Typography>
+          </Box>
         </Box>
       )}
     </Box>
