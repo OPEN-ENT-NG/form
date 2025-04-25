@@ -224,6 +224,9 @@ do
     publishNPM)
       publishNPM
       ;;
+    lint)
+      lintFixDocker && prettierDocker
+      ;;
     *)
       echo "Invalid argument : $param"
   esac

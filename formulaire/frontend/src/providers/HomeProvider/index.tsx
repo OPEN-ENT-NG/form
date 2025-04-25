@@ -9,6 +9,9 @@ import { useGetFormsQuery, useGetSentFormsQuery } from "~/services/api/services/
 import { ViewMode } from "~/components/SwitchView/enums";
 import { IDistribution } from "~/core/models/distribution/types";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
+import { useEdificeClient } from "@edifice.io/react";
+import { hasWorkflow } from "~/core/utils";
+import { workflowRights } from "~/core/rights";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
 
@@ -26,13 +29,16 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   // DIRTY initialisation du state tab avec le param tab url, à virer quand on en aura plus besoin
   const urlParams = new URLSearchParams(window.location.search);
   const tabParam = urlParams.get("tab");
+  const { user } = useEdificeClient();
+  const hasWorkflowCreation = hasWorkflow(user, workflowRights.creation);
+  const hasWorkflowResponse = hasWorkflow(user, workflowRights.response);
+  const initalTabByRight = hasWorkflowCreation ? HomeTabState.FORMS : HomeTabState.RESPONSES;
   const initialTab =
     tabParam && Object.values(HomeTabState).includes(tabParam as HomeTabState)
       ? (tabParam as HomeTabState)
-      : HomeTabState.FORMS;
-  const [tab, setTab] = useState<HomeTabState>(initialTab);
-  //
+      : initalTabByRight;
 
+  const [tab, setTab] = useState<HomeTabState>(initialTab);
   const [currentFolder, setCurrentFolder] = useState<IFolder>(rootFolders[0]);
   const [folders, setFolders] = useState<IFolder[]>([]);
   const [forms, setForms] = useState<IForm[]>([]);
@@ -45,8 +51,8 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const [tabViewPref, setTabViewPref] = useState<IHomeTabViewPref>(initTabViewPref());
   const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
 
-  const { data: foldersDatas } = useGetFoldersQuery();
-  const { data: formsDatas } = useGetFormsQuery();
+  const { data: foldersDatas } = useGetFoldersQuery(undefined, { skip: !hasWorkflowCreation });
+  const { data: formsDatas } = useGetFormsQuery(undefined, { skip: !hasWorkflowCreation });
   const { data: distributionsDatas } = useGetDistributionQuery();
   const { data: sentFormsDatas } = useGetSentFormsQuery();
 
@@ -144,6 +150,8 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       sentForms,
       selectedSentForm,
       setSelectedSentForm,
+      hasWorkflowCreation,
+      hasWorkflowResponse,
     }),
     [
       currentFolder,

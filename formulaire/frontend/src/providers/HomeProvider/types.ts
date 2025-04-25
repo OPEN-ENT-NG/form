@@ -30,6 +30,8 @@ export type HomeProviderContextType = {
   sentForms: IForm[];
   selectedSentForm: IForm | null;
   setSelectedSentForm: (value: IForm | null) => void;
+  hasWorkflowCreation: boolean;
+  hasWorkflowResponse: boolean;
 };
 
 export interface IHomeTabViewPref {
