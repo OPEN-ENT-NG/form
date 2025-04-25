@@ -4,10 +4,13 @@ import { IFolder } from "~/core/models/folder/types";
 import { FORMULAIRE } from "~/core/constants";
 import { HomeTabState, RootFolderIds } from "./enums";
 import { ViewMode } from "~/components/SwitchView/enums";
-import { IHomeTabViewPref } from "./types";
+import { IHomeTabViewPref, IUserTabights } from "./types";
 import FolderIcon from "@mui/icons-material/Folder";
 import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
+import { hasWorkflow } from "~/core/utils";
+import { IUserWorkflowRights, IWorkflowRights, WorkflowRights } from "~/core/rights";
+import { IUserInfo } from "@edifice.io/client";
 
 export const useRootFolders = (): IFolder[] => {
   const { t } = useTranslation(FORMULAIRE);
@@ -58,5 +61,25 @@ export const initTabViewPref = (): IHomeTabViewPref => {
   return {
     [HomeTabState.FORMS]: ViewMode.CARDS,
     [HomeTabState.RESPONSES]: ViewMode.CARDS,
+  };
+};
+
+export const initUserWorfklowRights = (
+  user: IUserInfo | undefined,
+  workflowRights: IWorkflowRights,
+): IUserWorkflowRights => {
+  return {
+    [WorkflowRights.ACCESS]: hasWorkflow(user, workflowRights.access),
+    [WorkflowRights.CREATION]: hasWorkflow(user, workflowRights.creation),
+    [WorkflowRights.RESPONSE]: hasWorkflow(user, workflowRights.response),
+    [WorkflowRights.RGPD]: hasWorkflow(user, workflowRights.rgpd),
+    [WorkflowRights.CREATION_PUBLIC]: hasWorkflow(user, workflowRights.creationPublic),
+  };
+};
+
+export const initUserTabRights = (userWorkflowRights: IUserWorkflowRights): IUserTabights => {
+  return {
+    [HomeTabState.FORMS]: userWorkflowRights[WorkflowRights.CREATION],
+    [HomeTabState.RESPONSES]: userWorkflowRights[WorkflowRights.RESPONSE],
   };
 };

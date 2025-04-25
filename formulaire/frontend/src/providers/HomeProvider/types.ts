@@ -4,6 +4,7 @@ import { HomeTabState } from "./enums";
 import { IForm } from "~/core/models/form/types";
 import { ViewMode } from "~/components/SwitchView/enums";
 import { IDistribution } from "~/core/models/distribution/types";
+import { IUserWorkflowRights } from "~/core/rights";
 
 export interface IHomeProviderProps {
   children: ReactNode;
@@ -30,11 +31,15 @@ export type HomeProviderContextType = {
   sentForms: IForm[];
   selectedSentForm: IForm | null;
   setSelectedSentForm: (value: IForm | null) => void;
-  hasWorkflowCreation: boolean;
-  hasWorkflowResponse: boolean;
+  userWorkflowRights: IUserWorkflowRights;
 };
 
 export interface IHomeTabViewPref {
   [HomeTabState.FORMS]: ViewMode;
   [HomeTabState.RESPONSES]: ViewMode;
+}
+
+export interface IUserTabights {
+  [HomeTabState.FORMS]: boolean;
+  [HomeTabState.RESPONSES]: boolean;
 }

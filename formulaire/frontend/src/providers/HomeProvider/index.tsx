@@ -1,6 +1,6 @@
 import { FC, createContext, useContext, useMemo, useState, useEffect, useCallback } from "react";
 import { HomeProviderContextType, IHomeProviderProps, IHomeTabViewPref } from "./types";
-import { initTabViewPref, useRootFolders } from "./utils";
+import { initTabViewPref, initUserWorfklowRights, initUserTabRights, useRootFolders } from "./utils";
 import { IFolder } from "~/core/models/folder/types";
 import { HomeTabState } from "./enums";
 import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
@@ -10,7 +10,6 @@ import { ViewMode } from "~/components/SwitchView/enums";
 import { IDistribution } from "~/core/models/distribution/types";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useEdificeClient } from "@edifice.io/react";
-import { hasWorkflow } from "~/core/utils";
 import { workflowRights } from "~/core/rights";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
@@ -30,11 +29,13 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const urlParams = new URLSearchParams(window.location.search);
   const tabParam = urlParams.get("tab");
   const { user } = useEdificeClient();
-  const hasWorkflowCreation = hasWorkflow(user, workflowRights.creation);
-  const hasWorkflowResponse = hasWorkflow(user, workflowRights.response);
-  const initalTabByRight = hasWorkflowCreation ? HomeTabState.FORMS : HomeTabState.RESPONSES;
+  const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
+  const userTabRights = initUserTabRights(userWorkflowRights);
+  const initalTabByRight = userWorkflowRights.CREATION ? HomeTabState.FORMS : HomeTabState.RESPONSES;
   const initialTab =
-    tabParam && Object.values(HomeTabState).includes(tabParam as HomeTabState)
+    tabParam &&
+    Object.values(HomeTabState).includes(tabParam as HomeTabState) &&
+    userTabRights[tabParam as HomeTabState]
       ? (tabParam as HomeTabState)
       : initalTabByRight;
 
@@ -51,8 +52,8 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const [tabViewPref, setTabViewPref] = useState<IHomeTabViewPref>(initTabViewPref());
   const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
 
-  const { data: foldersDatas } = useGetFoldersQuery(undefined, { skip: !hasWorkflowCreation });
-  const { data: formsDatas } = useGetFormsQuery(undefined, { skip: !hasWorkflowCreation });
+  const { data: foldersDatas } = useGetFoldersQuery(undefined, { skip: !userWorkflowRights.CREATION });
+  const { data: formsDatas } = useGetFormsQuery(undefined, { skip: !userWorkflowRights.CREATION });
   const { data: distributionsDatas } = useGetDistributionQuery();
   const { data: sentFormsDatas } = useGetSentFormsQuery();
 
@@ -150,8 +151,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       sentForms,
       selectedSentForm,
       setSelectedSentForm,
-      hasWorkflowCreation,
-      hasWorkflowResponse,
+      userWorkflowRights,
     }),
     [
       currentFolder,

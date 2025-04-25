@@ -7,7 +7,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
 
 export const HomeTabs: FC<IHomeTabsProps> = ({ value, setValue }) => {
-  const { hasWorkflowCreation, hasWorkflowResponse } = useHome();
+  const { userWorkflowRights } = useHome();
   const { t } = useTranslation(FORMULAIRE);
 
   const handleChange = (_: React.SyntheticEvent, newValue: HomeTabState) => {
@@ -16,8 +16,8 @@ export const HomeTabs: FC<IHomeTabsProps> = ({ value, setValue }) => {
 
   return (
     <Tabs value={value} onChange={handleChange}>
-      {hasWorkflowCreation && <Tab value={HomeTabState.FORMS} label={t("formulaire.tab.list")} />}
-      {hasWorkflowResponse && <Tab value={HomeTabState.RESPONSES} label={t("formulaire.tab.responses")} />}
+      {userWorkflowRights.CREATION && <Tab value={HomeTabState.FORMS} label={t("formulaire.tab.list")} />}
+      {userWorkflowRights.RESPONSE && <Tab value={HomeTabState.RESPONSES} label={t("formulaire.tab.responses")} />}
     </Tabs>
   );
 };
