@@ -71,6 +71,7 @@ export const getFormDistributions = (form: IForm, distributions: IDistribution[]
 
 export const isFormFilled = (form: IForm, distributions: IDistribution[]): boolean => {
   const formDistributions = getFormDistributions(form, distributions);
+
   if (form.multiple) {
     return getFirstDistribution(formDistributions).status === DistributionStatus.FINISHED;
   }
