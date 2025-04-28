@@ -8,9 +8,5 @@ export const isEnterPressed = (event: React.KeyboardEvent) => {
 export const hasWorkflow = (user: IUserInfo | undefined, workflowName: string): boolean => {
   if (user === undefined) return false;
 
-  return (
-    user.authorizedActions.findIndex((workflowRight) => {
-      return workflowRight.name === workflowName;
-    }) !== -1
-  );
+  return user.authorizedActions.some((workflowRight) => workflowRight.name === workflowName);
 };

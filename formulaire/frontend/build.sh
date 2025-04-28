@@ -224,7 +224,7 @@ do
     publishNPM)
       publishNPM
       ;;
-    lint)
+    lintAndFormat)
       lintFixDocker && prettierDocker
       ;;
     *)
