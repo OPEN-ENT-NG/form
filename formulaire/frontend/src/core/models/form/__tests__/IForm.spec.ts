@@ -1,4 +1,3 @@
-// formUtils.spec.ts
 import dayjs from "dayjs";
 import { isSelectedForm, getFormDistributions, isFormFilled, getFormStatusText } from "~/core/models/form/utils";
 import { makeMockedForm, makeMockedDistribution } from "~/tests/utils";
@@ -45,16 +44,21 @@ describe("formUtils", () => {
       const other = makeMockedDistribution(1);
       other.status = DistributionStatus.ON_CHANGE;
 
+      const doneAnoterForm = makeMockedDistribution(2);
+      doneAnoterForm.status = DistributionStatus.FINISHED;
+
       expect(isFormFilled(form, [done, other])).toBe(true);
       expect(isFormFilled(form, [other])).toBe(false);
+      expect(isFormFilled(form, [other, doneAnoterForm])).toBe(false);
     });
 
     it("for form with no distributions returns false", () => {
       const form = makeMockedForm(1); // multiple=false
-      expect(isFormFilled(form, [])).toBe(false);
+      const fromAnotherForm = makeMockedDistribution(2);
+      expect(isFormFilled(form, [fromAnotherForm])).toBe(false);
     });
 
-    it("for multiple forms checks only the distribution with the earliest dateSending", () => {
+    it("for multiple answer form checks only the distribution with the earliest dateSending", () => {
       const form = makeMockedForm(4); // multiple=true by factory
 
       const earliestDate = dayjs("2024-01-01").toISOString();
@@ -76,11 +80,18 @@ describe("formUtils", () => {
       laterDone.dateSending = laterDate;
       laterDone.status = DistributionStatus.FINISHED;
 
+      const earliestDoneFromAnotherForm = makeMockedDistribution(5);
+      earliestDoneFromAnotherForm.dateSending = earliestDate;
+      earliestDoneFromAnotherForm.status = DistributionStatus.FINISHED;
+
       // earliest is DONE => true, even if later is TO_DO
       expect(isFormFilled(form, [earliestDone, laterToDo])).toBe(true);
 
       // earliest is TO_DO => false, even though later is DONE
       expect(isFormFilled(form, [earliestToDo, laterDone])).toBe(false);
+
+      // earliest is DONE => false, if later is DONE from another form
+      expect(isFormFilled(form, [earliestToDo, laterDone, earliestDoneFromAnotherForm])).toBe(false);
     });
   });
 
@@ -98,8 +109,11 @@ describe("formUtils", () => {
         const toDo = makeMockedDistribution(4);
         toDo.status = DistributionStatus.TO_DO;
 
+        const doneFromAnotherForm = makeMockedDistribution(5);
+        doneFromAnotherForm.status = DistributionStatus.FINISHED;
+
         // two finished among three
-        const text = getFormStatusText(form, [done1, done2, toDo], formatDateWithTime, t);
+        const text = getFormStatusText(form, [done1, done2, toDo, doneFromAnotherForm], formatDateWithTime, t);
         expect(text).toBe(`formulaire.responses.count : 2`);
       });
     });
