@@ -2,7 +2,7 @@ import { FormPropField } from "~/containers/FormPropModal/enums";
 import { IFormPropInputValueState } from "~/containers/FormPropModal/types";
 import { IFormPayload, IForm } from "./types";
 import { IDistribution } from "../distribution/types";
-import { getFirstDistribution, getLatestDistribution, getNbFinishedDistrib } from "../distribution/utils";
+import { getFirstDistribution, getLatestDateResponse, getLatestDistribution, getLatestResponsedDistribution, getNbFinishedDistrib } from "../distribution/utils";
 import { DistributionStatus } from "../distribution/enums";
 import { t } from "~/i18n";
 
@@ -72,6 +72,9 @@ export const getFormDistributions = (form: IForm, distributions: IDistribution[]
 
 export const isFormFilled = (form: IForm, distributions: IDistribution[]): boolean => {
   const formDistributions = getFormDistributions(form, distributions);
+  if (!formDistributions.length) {
+    return false;
+  }
 
   if (form.multiple) {
     return getFirstDistribution(formDistributions).status === DistributionStatus.FINISHED;
@@ -89,7 +92,7 @@ export const getFormStatusText = (
     return `${t("formulaire.responses.count")} : ${getNbFinishedDistrib(formDistributions).toString()}`;
   } else {
     if (getNbFinishedDistrib(formDistributions) > 0) {
-      const latestDistrib = getLatestDistribution(formDistributions);
+      const latestDistrib = getLatestResponsedDistribution(formDistributions);
       if (latestDistrib.dateResponse) {
         return formatDateWithTime(latestDistrib.dateResponse, "formulaire.responded.date");
       }

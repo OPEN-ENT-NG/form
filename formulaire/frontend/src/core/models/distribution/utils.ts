@@ -60,19 +60,19 @@ export const transformDistributionsToTableData = (
     .sort((a, b) => a.responderName.localeCompare(b.responderName));
 };
 
-export const getLatestDistribution = (distributions: IDistribution[]): IDistribution => {
-  return distributions.reduce((latest, current) => {
-    if (!current.dateSending) return latest;
-    if (!latest.dateSending) return current;
-    return new Date(current.dateSending) > new Date(latest.dateSending) ? current : latest;
+export const getLatestDistribution = (distributions: IDistribution[]): IDistribution | undefined => {
+  return distributions.reduce((acc, current) => {
+    if (!current.dateSending) return acc;
+    if (!acc.dateSending) return current;
+    return new Date(current.dateSending) > new Date(acc.dateSending) ? current : acc;
   }, distributions[0]);
 };
 
 export const getFirstDistribution = (distributions: IDistribution[]): IDistribution => {
-  return distributions.reduce((first, current) => {
-    if (!current.dateSending) return first;
-    if (!first.dateSending) return current;
-    return new Date(current.dateSending) < new Date(first.dateSending) ? current : first;
+  return distributions.reduce((acc, current) => {
+    if (!current.dateSending) return acc;
+    if (!acc.dateSending) return current;
+    return new Date(current.dateSending) < new Date(acc.dateSending) ? current : acc;
   }, distributions[0]);
 };
 
@@ -83,4 +83,12 @@ export const getNbFinishedDistrib = (distributions: IDistribution[]): number => 
 export const getFirstDistributionDate = (distributions: IDistribution[]): Date => {
   const firstDistrib = getFirstDistribution(distributions);
   return firstDistrib.dateSending ? new Date(firstDistrib.dateSending) : new Date();
+};
+
+export const getLatestResponsedDistribution = (distributions: IDistribution[]): IDistribution => {
+  return distributions.reduce((acc, current) => {
+    if (!current.dateResponse) return acc;
+    if (!acc.dateResponse) return current;
+    return new Date(current.dateResponse) > new Date(acc.dateResponse) ? current : acc;
+  }, distributions[0]);
 };
