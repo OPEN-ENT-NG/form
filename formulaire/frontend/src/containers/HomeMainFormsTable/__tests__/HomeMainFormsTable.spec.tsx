@@ -3,7 +3,7 @@ import * as Utils from "../utils";
 import { ColumnId } from "../enums";
 import { makeMockedForm } from "~/tests/utils";
 import { renderWithProviders } from "~/tests/testUtils";
-import { HomeMainFormsTable } from "../../HomeMainFormsTable";
+import { HomeMainFormsTable } from "..";
 import { screen, fireEvent, waitFor } from "@testing-library/react"; // re‑exports RTL
 import { DateFormat } from "~/core/enums";
 import dayjs from "dayjs";
