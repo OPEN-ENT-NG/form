@@ -3,7 +3,7 @@ import * as Utils from "../utils";
 import { ColumnId } from "../enums";
 import { makeMockedForm } from "~/tests/utils";
 import { renderWithProviders } from "~/tests/testUtils";
-import { HomeMainTable } from "..";
+import { HomeMainFormsTable } from "../../HomeMainFormsTable";
 import { screen, fireEvent, waitFor } from "@testing-library/react"; // re‑exports RTL
 import { DateFormat } from "~/core/enums";
 import dayjs from "dayjs";
@@ -37,7 +37,7 @@ jest.mock("~/core/constants", () => {
 
 // ------END OF MOCKS------
 
-describe("<HomeMainTable />", () => {
+describe("<HomeMainFormsTable />", () => {
   beforeEach(() => {
     jest.clearAllMocks();
     homeContext.selectedForms = [];
@@ -55,7 +55,7 @@ describe("<HomeMainTable />", () => {
   });
 
   it("renders column headers from useColumns", () => {
-    renderWithProviders(<HomeMainTable forms={[]} />);
+    renderWithProviders(<HomeMainFormsTable forms={[]} />);
     expect(screen.getByText("formulaire.table.title")).toBeInTheDocument();
     expect(screen.getByText("formulaire.table.author")).toBeInTheDocument();
     expect(screen.getByText("formulaire.table.responses")).toBeInTheDocument();
@@ -64,7 +64,7 @@ describe("<HomeMainTable />", () => {
 
   it("renders rows, formatted date and icons correctly", () => {
     const forms = [makeMockedForm(1), makeMockedForm(2), makeMockedForm(3), makeMockedForm(6)];
-    renderWithProviders(<HomeMainTable forms={forms} />);
+    renderWithProviders(<HomeMainFormsTable forms={forms} />);
 
     // 3 rows
     expect(screen.getAllByTestId("CheckBoxOutlineBlankIcon")).toHaveLength(4);
@@ -82,7 +82,7 @@ describe("<HomeMainTable />", () => {
 
   it("clicking a checkbox adds/removes the form via setSelectedForms", async () => {
     const forms = [makeMockedForm(1)];
-    const { rerender } = renderWithProviders(<HomeMainTable forms={forms} />);
+    const { rerender } = renderWithProviders(<HomeMainFormsTable forms={forms} />);
 
     const checkbox = screen.getByRole("checkbox", { name: "", hidden: true });
     fireEvent.click(checkbox);
@@ -93,7 +93,7 @@ describe("<HomeMainTable />", () => {
 
     // Simulate un‐checking
     homeContext.selectedForms = [forms[0]];
-    rerender(<HomeMainTable forms={forms} />);
+    rerender(<HomeMainFormsTable forms={forms} />);
     fireEvent.click(checkbox);
 
     await waitFor(() => {
@@ -103,13 +103,13 @@ describe("<HomeMainTable />", () => {
 
   it("does not render pagination if forms.length ≤ limit", () => {
     const forms = [makeMockedForm(1), makeMockedForm(2)];
-    renderWithProviders(<HomeMainTable forms={forms} />);
+    renderWithProviders(<HomeMainFormsTable forms={forms} />);
     expect(screen.queryByLabelText("formulaire.table.rows.per.page")).toBeNull();
   });
 
   it("renders pagination when forms.length > limit and responds to page change", () => {
     const forms = [makeMockedForm(1), makeMockedForm(2), makeMockedForm(3), makeMockedForm(4), makeMockedForm(5)];
-    renderWithProviders(<HomeMainTable forms={forms} />);
+    renderWithProviders(<HomeMainFormsTable forms={forms} />);
 
     // pagination controls
     const nextBtn = screen.getByTitle("Go to next page");
@@ -124,7 +124,7 @@ describe("<HomeMainTable />", () => {
 
   it("changing rows-per-page resets to page 0 and uses the new limit", async () => {
     const forms = [makeMockedForm(1), makeMockedForm(2), makeMockedForm(3), makeMockedForm(4), makeMockedForm(5)];
-    renderWithProviders(<HomeMainTable forms={forms} />);
+    renderWithProviders(<HomeMainFormsTable forms={forms} />);
 
     // Expect to see form 4 but not form 5
     expect(screen.getByText("Form #4")).toBeInTheDocument();
