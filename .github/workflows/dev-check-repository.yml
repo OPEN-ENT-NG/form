@@ -31,6 +31,7 @@ jobs:
       - name: Run test
         working-directory: ./formulaire-public/angular
         run: yarn test --passWithNoTests
+        # Test React Formulaire
       - name: Update .npmrc with token
         run: |
           sed -i 's|${TIPTAP_PRO_TOKEN}|${{ secrets.TIPTAP_PRO_TOKEN }}|g' .npmrc
