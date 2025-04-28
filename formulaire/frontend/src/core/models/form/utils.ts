@@ -2,7 +2,7 @@ import { FormPropField } from "~/containers/FormPropModal/enums";
 import { IFormPropInputValueState } from "~/containers/FormPropModal/types";
 import { IFormPayload, IForm } from "./types";
 import { IDistribution } from "../distribution/types";
-import { getFirstDistribution, getLatestDateResponse, getLatestDistribution, getLatestResponsedDistribution, getNbFinishedDistrib } from "../distribution/utils";
+import { getFirstDistribution, getLatestResponsedDistribution, getNbFinishedDistrib } from "../distribution/utils";
 import { DistributionStatus } from "../distribution/enums";
 import { t } from "~/i18n";
 

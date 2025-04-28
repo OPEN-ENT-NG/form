@@ -25,7 +25,6 @@ jest.mock("~/services/api/services/formulaireApi/folderApi", () => ({
 //------END OF MOCKS------
 
 describe("<FolderModal />", () => {
-
   beforeEach(() => {
     jest.clearAllMocks();
     homeContext.selectedFolders = [{ id: "sel-456", parent_id: "parent-123" }];
