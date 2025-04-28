@@ -8,7 +8,6 @@ jest.mock("react-i18next", () => ({
     type: "3rdParty",
     init: () => {},
   },
-  // your existing stub
   useTranslation: () => ({
     t: (key: string) => key,
     i18n: { changeLanguage: () => Promise.resolve() },
