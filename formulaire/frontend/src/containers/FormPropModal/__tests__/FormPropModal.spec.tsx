@@ -23,6 +23,15 @@ jest.mock("~/services/api/services/formulaireApi/formApi", () => ({
   useUpdateFormMutation: () => [mockUpdateForm],
 }));
 
+jest.mock("~/services/api/services/formulaireApi/delegateApi", () => ({
+  useGetDelegatesQuery: () => ({
+    data: [],
+    isLoading: false,
+    isError: false,
+    refetch: jest.fn(),
+  }),
+}));
+
 //------END OF MOCKS------
 
 //------HELPERS------
@@ -39,10 +48,8 @@ describe("<FormPropModal />", () => {
       <FormPropModal isOpen handleClose={handleClose} mode={FormPropModalMode.CREATE} isRgpdPossible={false} />,
     );
 
-    // wait for any useEffect‐driven state updates to finish
-    await waitFor(() => {});
-
     fireEvent.click(screen.getByRole("button", { name: "formulaire.cancel" }));
+
     await waitFor(() => {
       expect(handleClose).toHaveBeenCalledTimes(1);
     });
@@ -97,12 +104,13 @@ describe("<FormPropModal />", () => {
   });
 
   describe("toggling description", () => {
-    it("initially hides the description textarea, and toggles it when clicking the Description checkbox", () => {
+    it("initially hides the description textarea, and toggles it when clicking the Description checkbox", async () => {
       renderWithProviders(
         <FormPropModal isOpen handleClose={jest.fn()} mode={FormPropModalMode.CREATE} isRgpdPossible={false} />,
       );
 
       // The checkbox label is the i18n key for DESCRIPTION
+      await screen.findByRole("button", { name: "formulaire.save" });
       const checkboxLabel = screen.getByText("formulaire.prop.description.label");
       expect(screen.queryByPlaceholderText("formulaire.prop.description.placeholder")).toBeNull();
 

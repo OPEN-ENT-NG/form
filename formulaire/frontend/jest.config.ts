@@ -5,7 +5,7 @@ const config: Config = {
   // Use V8 for faster coverage
   coverageProvider: 'v8',
   testEnvironment: "jsdom",
-  setupFilesAfterEnv: ['<rootDir>/src/tests/jestSetup.tsx'],
+  setupFilesAfterEnv: ['<rootDir>/src/tests/jest/jest.setup.tsx', '<rootDir>/src/tests/jest/jest.polyfills.js'],
   // Collect coverage
   collectCoverage: true,
   coverageReporters: [
