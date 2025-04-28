@@ -15,7 +15,7 @@ jobs:
       - name: Run build node with Gulp
         working-directory: ./formulaire/angular
         run: node_modules/gulp/bin/gulp.js build
-      - name: Run test
+      - name: Run test Formulaire Angular
         working-directory: ./formulaire/angular
         run: yarn test --passWithNoTests
       - name: Run build node sass
@@ -28,7 +28,7 @@ jobs:
       - name: Run build node with Gulp
         working-directory: ./formulaire-public/angular
         run: node_modules/gulp/bin/gulp.js build
-      - name: Run test
+      - name: Run test Formulaire-public Angular
         working-directory: ./formulaire-public/angular
         run: yarn test --passWithNoTests
         # Test React Formulaire
@@ -50,7 +50,7 @@ jobs:
       - name: Run Build Vite
         working-directory: ./formulaire/frontend
         run: pnpm build
-      - name: Run tests
+      - name: Run test Formulaire React
         working-directory: ./formulaire/frontend
         run: pnpm test
         # Test React Formulaire-public
@@ -66,7 +66,7 @@ jobs:
       - name: Run Build Vite
         working-directory: ./formulaire-public/frontend
         run: pnpm build
-      - name: Run tests
+      - name: Run test Formulaire-public React
         working-directory: ./formulaire-public/frontend
         run: pnpm test
 
