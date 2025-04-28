@@ -8,9 +8,10 @@ import { useTranslation } from "react-i18next";
 import { FORMULAIRE, SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
 import { homeSidebarWrapper } from "./style";
 import { useModal } from "~/providers/ModalProvider";
+import { WorkflowRights } from "~/core/rights";
 
 export const HomeSidebar: FC = () => {
-  const { folders, currentFolder, setCurrentFolder, tab, toggleTab } = useHome();
+  const { folders, currentFolder, setCurrentFolder, tab, toggleTab, userWorkflowRights } = useHome();
   const { toggleModal } = useModal();
 
   const treeViewItems = buildFolderTree(folders);
@@ -36,7 +37,12 @@ export const HomeSidebar: FC = () => {
 
   return (
     <Box sx={homeSidebarWrapper}>
-      <Box height="3.5rem" display="flex" alignItems="center">
+      <Box
+        height="3.5rem"
+        display="flex"
+        alignItems="center"
+        justifyContent={userWorkflowRights[WorkflowRights.RESPONSE] ? undefined : "center"}
+      >
         <HomeTabs value={tab} setValue={toggleTab} />
       </Box>
       <TreeView
