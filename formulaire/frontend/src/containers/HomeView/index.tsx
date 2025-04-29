@@ -41,7 +41,7 @@ export const HomeView: FC = () => {
     },
     toggleModal,
   } = useModal();
-  const { isActionBarOpen: isActionBarOpen } = useHome();
+  const { isActionBarOpen } = useHome();
   const { leftButtons, rightButtons } = useMapActionBarButtons();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 

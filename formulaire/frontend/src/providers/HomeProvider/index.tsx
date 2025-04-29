@@ -145,7 +145,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       setSelectedFolders,
       selectedForms,
       setSelectedForms,
-      isActionBarOpen: isActionBarOpen,
+      isActionBarOpen,
       resetSelected,
       distributions,
       sentForms,
