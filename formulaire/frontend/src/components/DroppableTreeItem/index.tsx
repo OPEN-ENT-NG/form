@@ -52,7 +52,7 @@ export const DroppableTreeItem: FC<IDroppableTreeItemProps> = ({ treeItemId, tre
     <StyledDroppableTreeItem
       rect={clippedRect}
       isOverDroppable={isOverDroppable}
-      data-type="trereeview-dnd-preview"
+      data-type="treeview-dnd-preview"
       ref={setNodeRef}
     />
   );

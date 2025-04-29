@@ -19,7 +19,6 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const formatDateWithTime = useFormatDateWithTime();
   if (!selectedSentForm) return;
   const formDistributions: IDistribution[] = getFormDistributions(selectedSentForm, distributions);
-  console.log("formDistributions", formDistributions);
 
   return (
     <Dialog open={isOpen} onClose={handleClose} fullWidth>
