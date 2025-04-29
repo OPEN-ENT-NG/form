@@ -33,14 +33,15 @@ export const DroppableTreeItem: FC<IDroppableTreeItemProps> = ({ treeItemId, tre
     );
   }, [treeItemRect, treeRootRect]);
 
-  // memoize the clipped‐to‐container rect
   const clippedRect = useMemo<DOMRect | null>(() => {
     if (!treeItemRect || !treeRootRect) return null;
     const top = Math.max(treeItemRect.top, treeRootRect.top);
     const left = Math.max(treeItemRect.left, treeRootRect.left);
     const right = Math.min(treeItemRect.right, treeRootRect.right);
     const bottom = Math.min(treeItemRect.bottom, treeRootRect.bottom);
-    return new DOMRect(left, top, right - left, bottom - top);
+    const width = right - left;
+    const height = bottom - top;
+    return new DOMRect(left, top, width, height);
   }, [treeItemRect, treeRootRect]);
 
   if (!treeItem || !treeRootRect || !isVisible || !clippedRect) {
