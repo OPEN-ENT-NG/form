@@ -136,7 +136,7 @@ export const HomeMainLayout: FC = () => {
             <DroppableTreeItem
               key={item.internalId}
               treeItemId={parseInt(item.internalId)}
-              treeRootRect={treeRoot ? treeRoot.getBoundingClientRect() : undefined}
+              treeRootRect={treeRoot?.getBoundingClientRect()}
             />
           ))}
         </Box>
