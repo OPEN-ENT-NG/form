@@ -15,3 +15,7 @@ export const getRecapFormPath = (formId: number, distribId: string | number): st
 export const getRgpdPath = (formId: string | number): string => {
   return `${FORMULAIRE}?view=angular#/form/${formId}/rgpd`;
 };
+
+export const getFormResultsPath = (formId: string | number): string => {
+  return `${FORMULAIRE}?view=angular#/form/${formId}/results/1`;
+};
