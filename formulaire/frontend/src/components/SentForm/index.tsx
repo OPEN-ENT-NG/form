@@ -3,11 +3,11 @@ import { ResourceCard } from "@cgi-learning-hub/ui";
 import { LOGO_PATH } from "~/core/constants";
 import { ISentFormProps } from "./types";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
-import { useMapToasterButtons } from "~/containers/HomeView/useMapToasterButtons";
+import { useMapActionBarButtons } from "~/containers/HomeView/useMapActionBarButtons";
 
 export const SentForm: FC<ISentFormProps> = ({ form, distributions, isSelected, handleSelect }) => {
   const { getSentFormPropertyItems } = useFormItemsIcons();
-  const { openFormResponseAction } = useMapToasterButtons();
+  const { openFormResponseAction } = useMapActionBarButtons();
   return (
     <ResourceCard
       key={form.id}
