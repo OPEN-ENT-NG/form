@@ -12,8 +12,8 @@ import { useModal } from "~/providers/ModalProvider";
 import { FormPropModal } from "../FormPropModal";
 import { FormPropModalMode } from "../FormPropModal/enums";
 import { useHome } from "~/providers/HomeProvider";
-import { Toaster } from "~/components/Toaster";
-import { useMapToasterButtons } from "./useMapToasterButtons";
+import { ActionBar } from "~/components/ActionBar";
+import { useMapActionBarButtons } from "./useMapActionBarButtons";
 import { DeleteModal } from "../DeleteModal";
 import { FormImportModal } from "../FormImportModal";
 import { MoveFolderModal } from "../MoveFolderModal";
@@ -41,8 +41,8 @@ export const HomeView: FC = () => {
     },
     toggleModal,
   } = useModal();
-  const { isToasterOpen } = useHome();
-  const { leftButtons, rightButtons } = useMapToasterButtons();
+  const { isActionBarOpen: isActionBarOpen } = useHome();
+  const { leftButtons, rightButtons } = useMapActionBarButtons();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
   return (
@@ -145,7 +145,7 @@ export const HomeView: FC = () => {
           }}
         />
       )}
-      {isToasterOpen && <Toaster leftButtons={leftButtons} rightButtons={rightButtons} />}
+      {isActionBarOpen && <ActionBar leftButtons={leftButtons} rightButtons={rightButtons} />}
     </Box>
   );
 };
