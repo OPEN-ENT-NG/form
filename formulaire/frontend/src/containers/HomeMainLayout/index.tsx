@@ -69,6 +69,7 @@ export const HomeMainLayout: FC = () => {
   const viewMode = tabViewPref[tab];
 
   const flatTreeViewItems = buildFlatFolderTree(folders);
+  const treeRoot = document.querySelector("[data-treeview-root='true']");
 
   const { handleSearch, filteredFolders, hasFilteredFolders, filteredForms, hasFilteredForms } = useSearchAndOrganize(
     folders,
@@ -130,9 +131,15 @@ export const HomeMainLayout: FC = () => {
               ))}
           </Box>
         )}
-        {flatTreeViewItems.map((item) => (
-          <DroppableTreeItem key={item.internalId} treeItemId={parseInt(item.internalId)} />
-        ))}
+        <Box>
+          {flatTreeViewItems.map((item) => (
+            <DroppableTreeItem
+              key={item.internalId}
+              treeItemId={parseInt(item.internalId)}
+              treeRootRect={treeRoot ? treeRoot.getBoundingClientRect() : undefined}
+            />
+          ))}
+        </Box>
         <DragOverlay>
           {isDraggedItemForm(activeDragItem) && activeDragItem.form ? (
             <FormPreview form={activeDragItem.form} />
