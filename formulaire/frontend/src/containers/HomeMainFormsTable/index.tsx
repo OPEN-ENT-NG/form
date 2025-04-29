@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useState } from "react";
+import { ChangeEvent, FC, MouseEvent, useState } from "react";
 
 import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
@@ -35,18 +35,19 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
 
   const isSelected = (formId: number) => selectedForms.some((form) => form.id === formId);
 
-  const handleClick = (event: ChangeEvent<HTMLInputElement>, form: IForm) => {
-    const currentSelectedForms = event.target.checked
-      ? [...selectedForms, form]
-      : selectedForms.filter((item: IForm) => item.id !== form.id);
+  const handleClick = (form: IForm) => {
+    const isAlreadySelected = selectedForms.some((item) => item.id === form.id);
+    const currentSelectedForms = isAlreadySelected
+      ? selectedForms.filter((item: IForm) => item.id !== form.id)
+      : [...selectedForms, form];
     setSelectedForms(currentSelectedForms);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (event: MouseEvent<HTMLButtonElement> | null, newPage: number) => {
     setTablePaginationProps({ ...tablePaginationProps, page: newPage });
   };
 
-  const handleChangeRowsPerPage = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChangeRowsPerPage = (event: ChangeEvent<HTMLInputElement>) => {
     const newLimit = parseInt(event.target.value);
     setTablePaginationProps({ limit: newLimit, page: 0 });
   };
@@ -74,12 +75,19 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
                 role="checkbox"
                 tabIndex={-1}
                 hover
+                onClick={() => {
+                  handleClick(form);
+                }}
+                sx={{ cursor: "pointer" }}
               >
                 <TableCell sx={{ padding: 0 }} padding="checkbox">
                   <Checkbox
                     checked={isItemSelected}
-                    onChange={(event) => {
-                      handleClick(event, form);
+                    onChange={() => {
+                      handleClick(form);
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
                     }}
                   />
                 </TableCell>

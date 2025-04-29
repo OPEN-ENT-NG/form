@@ -25,7 +25,7 @@ export type HomeProviderContextType = {
   setSelectedFolders: (value: IFolder[]) => void;
   selectedForms: IForm[];
   setSelectedForms: (value: IForm[]) => void;
-  isToasterOpen: boolean;
+  isActionBarOpen: boolean;
   resetSelected: () => void;
   distributions: IDistribution[];
   sentForms: IForm[];

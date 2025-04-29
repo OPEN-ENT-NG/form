@@ -1,7 +1,7 @@
-import { ToasterButtonType } from "./enums";
+import { ActionBarButtonType } from "./enums";
 
-export interface IToasterButton {
-  type: ToasterButtonType;
+export interface IActionBarButton {
+  type: ActionBarButtonType;
   titleI18nkey: string;
   action: () => void;
 }

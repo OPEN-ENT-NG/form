@@ -1,7 +1,7 @@
 import { useCallback, useMemo } from "react";
 
 import { useHome } from "~/providers/HomeProvider";
-import { ToasterButtonType } from "./enums";
+import { ActionBarButtonType } from "./enums";
 import { useModal } from "~/providers/ModalProvider";
 import { ModalType } from "~/core/enums";
 import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
@@ -11,12 +11,12 @@ import { useEdificeClient } from "@edifice.io/react";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { getFormDistributions } from "~/core/models/form/utils";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
-import { getFormEditPath } from "~/core/pathHelper";
+import { getFormEditPath, getFormResultsPath } from "~/core/pathHelper";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useHandleOpenFormResponse } from "./useHandleOpenFormResponse";
 import { IForm } from "~/core/models/form/types";
 
-export const useMapToasterButtons = () => {
+export const useMapActionBarButtons = () => {
   const {
     selectedFolders,
     selectedForms,
@@ -145,11 +145,11 @@ export const useMapToasterButtons = () => {
     }
   };
 
-  const ToasterButtonsMap = useMemo(
+  const ActionBarButtonsMap = useMemo(
     () => ({
-      [ToasterButtonType.OPEN]: {
+      [ActionBarButtonType.OPEN]: {
         titleI18nkey: "formulaire.open",
-        type: ToasterButtonType.OPEN,
+        type: ActionBarButtonType.OPEN,
         action: () => {
           if (hasFolders) {
             setCurrentFolder(selectedFolders[0]);
@@ -162,82 +162,89 @@ export const useMapToasterButtons = () => {
           return openFormResponseAction();
         },
       },
-      [ToasterButtonType.RENAME]: {
+      [ActionBarButtonType.RENAME]: {
         titleI18nkey: "formulaire.rename",
-        type: ToasterButtonType.RENAME,
+        type: ActionBarButtonType.RENAME,
         action: () => {
           toggleModal(ModalType.FOLDER_RENAME);
         },
       },
-      [ToasterButtonType.MOVE]: {
+      [ActionBarButtonType.MOVE]: {
         titleI18nkey: "formulaire.move",
-        type: ToasterButtonType.MOVE,
+        type: ActionBarButtonType.MOVE,
         action: () => {
           toggleModal(ModalType.MOVE);
         },
       },
-      [ToasterButtonType.DELETE]: {
+      [ActionBarButtonType.DELETE]: {
         titleI18nkey: "formulaire.delete",
-        type: ToasterButtonType.DELETE,
+        type: ActionBarButtonType.DELETE,
         action: () => {
           toggleModal(ModalType.FORM_FOLDER_DELETE);
         },
       },
-      [ToasterButtonType.PROPS]: {
+      [ActionBarButtonType.PROPS]: {
         titleI18nkey: "formulaire.properties",
-        type: ToasterButtonType.PROPS,
+        type: ActionBarButtonType.PROPS,
         action: () => {
           toggleModal(ModalType.FORM_PROP_UPDATE);
         },
       },
-      [ToasterButtonType.DUPLICATE]: {
+      [ActionBarButtonType.DUPLICATE]: {
         titleI18nkey: "formulaire.duplicate",
-        type: ToasterButtonType.DUPLICATE,
+        type: ActionBarButtonType.DUPLICATE,
         action: () => handleDuplicate(),
       },
-      [ToasterButtonType.EXPORT]: {
+      [ActionBarButtonType.EXPORT]: {
         titleI18nkey: "formulaire.export",
-        type: ToasterButtonType.EXPORT,
+        type: ActionBarButtonType.EXPORT,
         action: () => {
           toggleModal(ModalType.EXPORT);
         },
       },
-      [ToasterButtonType.UNSELECT_ALL]: {
+      [ActionBarButtonType.UNSELECT_ALL]: {
         titleI18nkey: "formulaire.deselect",
-        type: ToasterButtonType.UNSELECT_ALL,
+        type: ActionBarButtonType.UNSELECT_ALL,
         action: () => {
           unselectAll();
         },
       },
-      [ToasterButtonType.SELECT_ALL]: {
+      [ActionBarButtonType.SELECT_ALL]: {
         titleI18nkey: "formulaire.selectAll",
-        type: ToasterButtonType.SELECT_ALL,
+        type: ActionBarButtonType.SELECT_ALL,
         action: () => {
           handleSelectAll();
         },
       },
-      [ToasterButtonType.RESTORE]: {
+      [ActionBarButtonType.RESTORE]: {
         titleI18nkey: "formulaire.restore",
-        type: ToasterButtonType.RESTORE,
+        type: ActionBarButtonType.RESTORE,
         action: () => handleRestore(),
       },
-      [ToasterButtonType.SHARE]: {
+      [ActionBarButtonType.SHARE]: {
         titleI18nkey: "formulaire.share",
-        type: ToasterButtonType.SHARE,
+        type: ActionBarButtonType.SHARE,
         action: () => {
           toggleModal(ModalType.FORM_SHARE);
         },
       },
-      [ToasterButtonType.REMIND]: {
+      [ActionBarButtonType.RESULTS]: {
+        titleI18nkey: "formulaire.results",
+        type: ActionBarButtonType.RESULTS,
+        action: () => {
+          return (window.location.href = getFormResultsPath(selectedForms[0].id));
+        },
+      },
+      [ActionBarButtonType.REMIND]: {
         titleI18nkey: "formulaire.checkremind",
-        type: ToasterButtonType.REMIND,
+        type: ActionBarButtonType.REMIND,
         action: () => {
           toggleModal(ModalType.REMIND);
         },
       },
-      [ToasterButtonType.MY_ANSWER]: {
+      [ActionBarButtonType.MY_ANSWER]: {
         titleI18nkey: "formulaire.myResponses",
-        type: ToasterButtonType.MY_ANSWER,
+        type: ActionBarButtonType.MY_ANSWER,
         action: () => {
           toggleModal(ModalType.ANSWERS);
         },
@@ -264,61 +271,67 @@ export const useMapToasterButtons = () => {
     if (tab === HomeTabState.RESPONSES) {
       return [];
     }
-    return [ToasterButtonsMap[ToasterButtonType.UNSELECT_ALL], ToasterButtonsMap[ToasterButtonType.SELECT_ALL]];
-  }, [ToasterButtonsMap, tab]);
+    return [ActionBarButtonsMap[ActionBarButtonType.UNSELECT_ALL], ActionBarButtonsMap[ActionBarButtonType.SELECT_ALL]];
+  }, [ActionBarButtonsMap, tab]);
 
   // Fonction simplifiée pour obtenir les boutons de gauche
   const leftButtons = useMemo(() => {
-    const getButtonTypes = (): ToasterButtonType[] => {
+    const getButtonTypes = (): ActionBarButtonType[] => {
       // Cas spécial: Formulaires dans la corbeille
       if (hasFormsInTrash) {
-        return [ToasterButtonType.RESTORE, ToasterButtonType.DELETE];
+        return [ActionBarButtonType.RESTORE, ActionBarButtonType.DELETE];
       }
 
       // Cas 1: Un seul formulaire SANS éléments
       if (hasOneForm && !hasFolders && !hasElements) {
         return [
-          ToasterButtonType.OPEN,
-          ToasterButtonType.PROPS,
-          ToasterButtonType.DUPLICATE,
-          ToasterButtonType.MOVE,
-          ToasterButtonType.EXPORT,
-          ToasterButtonType.DELETE,
+          ActionBarButtonType.OPEN,
+          ActionBarButtonType.PROPS,
+          ActionBarButtonType.DUPLICATE,
+          ActionBarButtonType.MOVE,
+          ActionBarButtonType.EXPORT,
+          ActionBarButtonType.DELETE,
         ];
       }
       // Cas 2: Plusieurs formulaires
       if (hasMultipleForms && !hasFolders) {
         return [
-          ToasterButtonType.DUPLICATE,
-          ToasterButtonType.MOVE,
-          ToasterButtonType.EXPORT,
-          ToasterButtonType.DELETE,
+          ActionBarButtonType.DUPLICATE,
+          ActionBarButtonType.MOVE,
+          ActionBarButtonType.EXPORT,
+          ActionBarButtonType.DELETE,
         ];
       }
       // Cas 3: Un seul dossier
       if (hasOneFolder && !hasForms) {
-        return [ToasterButtonType.OPEN, ToasterButtonType.RENAME, ToasterButtonType.MOVE, ToasterButtonType.DELETE];
+        return [
+          ActionBarButtonType.OPEN,
+          ActionBarButtonType.RENAME,
+          ActionBarButtonType.MOVE,
+          ActionBarButtonType.DELETE,
+        ];
       }
       // Cas 4: Plusieurs dossiers
       if (hasMultipleFolders && !hasForms) {
-        return [ToasterButtonType.MOVE, ToasterButtonType.DELETE];
+        return [ActionBarButtonType.MOVE, ActionBarButtonType.DELETE];
       }
       // Cas 5: Mélange dossiers + formulaires
       if (hasMixedSelection) {
-        return [ToasterButtonType.MOVE, ToasterButtonType.DELETE];
+        return [ActionBarButtonType.MOVE, ActionBarButtonType.DELETE];
       }
       //cas 6: Un seul formulaire AVEC des éléments
       if (hasOneForm && !hasFolders && hasElements) {
         const buttons = [
-          ToasterButtonType.OPEN,
-          ToasterButtonType.PROPS,
-          ToasterButtonType.DUPLICATE,
-          ToasterButtonType.MOVE,
-          ToasterButtonType.REMIND,
-          ToasterButtonType.EXPORT,
-          ToasterButtonType.DELETE,
+          ActionBarButtonType.OPEN,
+          ActionBarButtonType.PROPS,
+          ActionBarButtonType.DUPLICATE,
+          ActionBarButtonType.MOVE,
+          ActionBarButtonType.RESULTS,
+          ActionBarButtonType.REMIND,
+          ActionBarButtonType.EXPORT,
+          ActionBarButtonType.DELETE,
         ];
-        if (hasQuestionsInForms && hasShareRightManager) buttons.splice(4, 0, ToasterButtonType.SHARE);
+        if (hasQuestionsInForms && hasShareRightManager) buttons.splice(4, 0, ActionBarButtonType.SHARE);
         return buttons;
       }
       // Cas 7: Un formulaire en réponse
@@ -327,18 +340,18 @@ export const useMapToasterButtons = () => {
           selectedSentForm?.multiple &&
           getNbFinishedDistrib(getFormDistributions(selectedSentForm, distributions)) > 0
         ) {
-          return [ToasterButtonType.OPEN, ToasterButtonType.MY_ANSWER];
+          return [ActionBarButtonType.OPEN, ActionBarButtonType.MY_ANSWER];
         }
-        return [ToasterButtonType.OPEN];
+        return [ActionBarButtonType.OPEN];
       }
       return [];
     };
 
     const buttonTypes = getButtonTypes();
 
-    return buttonTypes.map((type) => ToasterButtonsMap[type]);
+    return buttonTypes.map((type) => ActionBarButtonsMap[type]);
   }, [
-    ToasterButtonsMap,
+    ActionBarButtonsMap,
     hasOneForm,
     hasMultipleForms,
     hasOneFolder,

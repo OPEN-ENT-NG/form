@@ -50,7 +50,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const [selectedSentForm, setSelectedSentForm] = useState<IForm | null>(null);
 
   const [tabViewPref, setTabViewPref] = useState<IHomeTabViewPref>(initTabViewPref());
-  const [isToasterOpen, setIsToasterOpen] = useState<boolean>(false);
+  const [isActionBarOpen, setIsActionBarOpen] = useState<boolean>(false);
 
   const { data: foldersDatas } = useGetFoldersQuery(undefined, { skip: !userWorkflowRights.CREATION });
   const { data: formsDatas } = useGetFormsQuery(undefined, { skip: !userWorkflowRights.CREATION });
@@ -95,10 +95,10 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (selectedFolders.length || selectedForms.length || selectedSentForm) {
-      setIsToasterOpen(true);
+      setIsActionBarOpen(true);
       return;
     }
-    setIsToasterOpen(false);
+    setIsActionBarOpen(false);
   }, [selectedFolders, selectedForms, selectedSentForm]);
 
   useEffect(() => {
@@ -145,7 +145,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       setSelectedFolders,
       selectedForms,
       setSelectedForms,
-      isToasterOpen,
+      isActionBarOpen,
       resetSelected,
       distributions,
       sentForms,
@@ -161,7 +161,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       selectedForms,
       selectedSentForm,
       forms,
-      isToasterOpen,
+      isActionBarOpen,
       tabViewPref,
       toggleTagViewPref,
       distributions,
