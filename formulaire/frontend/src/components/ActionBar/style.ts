@@ -1,7 +1,7 @@
 import { SxProps } from "@cgi-learning-hub/ui";
 import { CSS_PRIMARY_MAIN_COLOR } from "~/core/style/cssColors";
 
-export const toasterWrapper: SxProps = {
+export const actionBarWrapper: SxProps = {
   position: "fixed",
   bottom: 0,
   right: 0,
@@ -14,7 +14,7 @@ export const toasterWrapper: SxProps = {
   background: CSS_PRIMARY_MAIN_COLOR,
 };
 
-export const toasterButtonStyle: SxProps = {
+export const actionBarButtonStyle: SxProps = {
   color: "common.white",
   transition: "all 0.2s ease-in-out",
   borderRadius: "4px",

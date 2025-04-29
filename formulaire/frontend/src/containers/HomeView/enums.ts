@@ -1,15 +1,16 @@
-export enum ToasterButtonType {
+export enum ActionBarButtonType {
   OPEN,
   PROPS,
   DUPLICATE,
   MOVE,
+  SHARE,
+  RESULTS,
+  REMIND,
   EXPORT,
   DELETE,
   SELECT_ALL,
   UNSELECT_ALL,
   RENAME,
   RESTORE,
-  SHARE,
-  REMIND,
   MY_ANSWER,
 }
