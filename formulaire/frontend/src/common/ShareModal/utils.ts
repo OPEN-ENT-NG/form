@@ -1,4 +1,4 @@
-import { ShareRight, ShareRightAction, ShareRightActionDisplayName } from "@edifice.io/client";
+import { ID, ShareRight, ShareRightAction, ShareRightActionDisplayName } from "@edifice.io/client";
 import { IUserFormsRight } from "~/providers/ShareModalProvider/types";
 
 export const hasRight = (shareRight: ShareRight, shareAction: ShareRightAction): boolean => {
@@ -16,4 +16,13 @@ export const userHasRight = (
     return false;
   }
   return !!selectedFormRight.rights.find((right) => right === rightId);
+};
+
+export const showShareRightLine = (shareRight: ShareRight, showBookmarkMembers: boolean): boolean =>
+  (shareRight.isBookmarkMember && showBookmarkMembers) || !shareRight.isBookmarkMember;
+
+export const buildPublicLink = (userFormsRights: IUserFormsRight[], resourceId: ID): string => {
+  const form = userFormsRights.find((formRight: IUserFormsRight) => formRight.form.id === parseInt(resourceId));
+  const prefix = window.location.origin + "/formulaire-public#/form/";
+  return prefix + form?.form.public_key;
 };
