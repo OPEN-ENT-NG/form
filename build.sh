@@ -85,10 +85,10 @@ formulaire() {
   cp -R formulaire/angular/src/view/* formulaire/backend/src/main/resources/view
 
   ## Copy '.html' files in 'ts' folder
-  cd formulaire/angular/src/ts || exit 1 # Need to be in targeted directory for rsync command to work
+  cd formulaire/angular/src/ts # Need to be in targeted directory for rsync command to work
   shopt -s globstar # Active '**/' for recursive on next line
   rsync -R **/*.html ../../../backend/src/main/resources/public/ts --relative --no-implied-dirs
-  cd ../../../.. || exit 1
+  cd ../../../..
 
   ## add static reactjs files to formulaire backend
   cp -R formulaire/frontend/dist/* formulaire/backend/src/main/resources
@@ -137,16 +137,16 @@ formulairePublic() {
   cp -R formulaire-public/angular/src/view/* formulaire-public/backend/src/main/resources/view
 
   ## Copy '.html' files in 'ts' folder
-  cd formulaire/angular/src/ts || exit 1 # Need to be in targeted directory for rsync command to work
+  cd formulaire-public/angular/src/ts # Need to be in targeted directory for rsync command to work
   shopt -s globstar # Active '**/' for recursive on next line
   rsync -R **/*.html ../../../backend/src/main/resources/public/ts --relative --no-implied-dirs
-  cd ../../../.. || exit 1
+  cd ../../../..
 
   ## add static reactjs files to formulaire backend
   cp -R formulaire-public/frontend/dist/* formulaire-public/backend/src/main/resources
   cp -R formulaire-public/frontend/public/* formulaire-public/backend/src/main/resources/public
-  mv formulaire-public/backend/src/main/resources/*.html formulaire/backend/src/main/resources/view
-  cp -R formulaire-public/backend/src/main/resources/view-src/* formulaire/backend/src/main/resources/view
+  mv formulaire-public/backend/src/main/resources/*.html formulaire-public/backend/src/main/resources/view
+  cp -R formulaire-public/backend/src/main/resources/view-src/* formulaire-public/backend/src/main/resources/view
 
   formulairePublic:buildMaven;
 }
