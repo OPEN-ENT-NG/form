@@ -139,6 +139,8 @@ export default function ShareResourceModal({
   const publicLink = buildPublicLink(userFormsRights, resourceId);
 
   const handleCopyPublicLink = async () => {
+    if (!publicLink) return;
+
     try {
       await navigator.clipboard.writeText(publicLink);
       toast.success(tForm("formulaire.link.copy.success"), {
@@ -304,7 +306,7 @@ export default function ShareResourceModal({
         </Heading>
         <Box sx={flexStartBoxStyle}>
           <Typography fontStyle={"italic"}>{publicLink}</Typography>
-          <Box onClick={handleCopyPublicLink} sx={{ cursor: "pointer" }}>
+          <Box onClick={() => handleCopyPublicLink} sx={{ cursor: "pointer" }}>
             <ContentCopyIcon sx={{ marginLeft: "1rem", fontSize: "1.5rem" }} />
           </Box>
         </Box>

@@ -21,8 +21,10 @@ export const userHasRight = (
 export const showShareRightLine = (shareRight: ShareRight, showBookmarkMembers: boolean): boolean =>
   (shareRight.isBookmarkMember && showBookmarkMembers) || !shareRight.isBookmarkMember;
 
-export const buildPublicLink = (userFormsRights: IUserFormsRight[], resourceId: ID): string => {
-  const form = userFormsRights.find((formRight: IUserFormsRight) => formRight.form.id === parseInt(resourceId));
+export const buildPublicLink = (userFormsRights: IUserFormsRight[], resourceId: ID): string | undefined => {
+  const formRight = userFormsRights.find((formRight: IUserFormsRight) => formRight.form.id === parseInt(resourceId));
+  if (!formRight) return undefined;
+
   const prefix = window.location.origin + "/formulaire-public#/form/";
-  return prefix + form?.form.public_key;
+  return prefix + formRight.form.public_key;
 };
