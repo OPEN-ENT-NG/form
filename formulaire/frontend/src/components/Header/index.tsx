@@ -6,7 +6,7 @@ import { FormBreadcrumbs } from "../Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { headerStyle } from "./style";
+import { headerButtonsStyle, headerStyle } from "./style";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { FormsIcon } from "../SVG/FormsIcon";
 
@@ -27,7 +27,7 @@ export const Header: FC<IHeaderProps> = ({
         isHeader
       />
       {isCreationPage && <Box>//TODO</Box>}
-      <Box>
+      <Box sx={headerButtonsStyle}>
         {buttons.map((button) => (
           <Button
             key={button.titleI18nkey}
