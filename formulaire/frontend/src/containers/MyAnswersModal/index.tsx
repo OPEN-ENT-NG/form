@@ -11,6 +11,7 @@ import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 import { getRecapFormPath } from "~/core/pathHelper";
+import { DistributionStatus } from "~/core/models/distribution/enums";
 
 export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -26,21 +27,23 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       </DialogTitle>
       <DialogContent>
         <Box component={BoxComponentType.OL}>
-          {formDistributions.map((distribution: IDistribution) => (
-            <Box component={BoxComponentType.LI}>
-              <Box display="flex" alignItems="center">
-                <Box>{formatDateWithTime(distribution.dateSending, "formulaire.responded.date")}</Box>
-                <IconButton
-                  sx={{ color: SECONDARY_MAIN_COLOR }}
-                  onClick={() => {
-                    window.location.href = getRecapFormPath(distribution.formId, distribution.id);
-                  }}
-                >
-                  <VisibilityIcon />
-                </IconButton>
+          {formDistributions
+            .filter((distribution: IDistribution) => distribution.status === DistributionStatus.FINISHED)
+            .map((distribution: IDistribution) => (
+              <Box component={BoxComponentType.LI} key={distribution.id}>
+                <Box display="flex" alignItems="center">
+                  <Box>{formatDateWithTime(distribution.dateSending, "formulaire.responded.date")}</Box>
+                  <IconButton
+                    sx={{ color: SECONDARY_MAIN_COLOR }}
+                    onClick={() => {
+                      window.location.href = getRecapFormPath(distribution.formId, distribution.id);
+                    }}
+                  >
+                    <VisibilityIcon />
+                  </IconButton>
+                </Box>
               </Box>
-            </Box>
-          ))}
+            ))}
         </Box>
       </DialogContent>
       <DialogActions>

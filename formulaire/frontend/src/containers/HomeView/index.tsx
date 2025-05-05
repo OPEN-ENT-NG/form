@@ -21,6 +21,7 @@ import { ExportModal } from "../ExportModal";
 import { FormShareModal } from "../FormShareModal";
 import { RemindModal } from "../RemindModal";
 import { MyAnswersModal } from "../MyAnswersModal";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -41,14 +42,14 @@ export const HomeView: FC = () => {
     },
     toggleModal,
   } = useModal();
-  const { isActionBarOpen } = useHome();
+  const { isActionBarOpen, tab } = useHome();
   const { leftButtons, rightButtons } = useMapActionBarButtons();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
   return (
     <Box height={"100%"}>
       <Box ref={headerRef}>
-        <Header stringItems={[t("formulaire.title")]} buttons={headerButtons} />
+        <Header stringItems={[t("formulaire.title")]} buttons={tab === HomeTabState.FORMS ? headerButtons : []} />
       </Box>
       <HomeLayout headerHeight={headerHeight} />
       {showFolderCreate && (
