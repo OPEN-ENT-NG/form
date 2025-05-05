@@ -1,18 +1,20 @@
 import { useDroppable } from "@dnd-kit/core";
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { IDroppableTreeItemProps } from "./types";
 import { SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
 import { StyledDroppableTreeItem } from "./style";
 import { IDragItemProps } from "~/hook/dnd-hooks/types";
 import { DraggableType } from "~/core/enums";
+import { getClippedRect } from "./utils";
 
-export const DroppableTreeItem: FC<IDroppableTreeItemProps> = ({ treeItemId }) => {
+export const DroppableTreeItem: FC<IDroppableTreeItemProps> = ({ treeItemId, treeRootRect }) => {
   const { setNodeRef, isOver, active } = useDroppable({
     id: treeItemId,
   });
 
   const treeItemParent = document.querySelector(`[data-treeview-item="${treeItemId}"]`);
   const treeItem = treeItemParent?.firstElementChild as HTMLElement | null;
+  const treeItemRect = treeItem?.getBoundingClientRect();
 
   const activeData = active?.data.current as IDragItemProps | null | undefined;
 
@@ -22,17 +24,27 @@ export const DroppableTreeItem: FC<IDroppableTreeItemProps> = ({ treeItemId }) =
   const isFormMoveValid = activeData?.type !== DraggableType.FORM || activeData.form?.folder_id !== treeItemId;
   const isOverDroppable = isOverSomething && isNotTrashOrShared && isFolderMoveValid && isFormMoveValid;
 
-  if (treeItem) {
-    const rect = treeItem.getBoundingClientRect();
+  const isVisible = useMemo(() => {
+    if (!treeItemRect || !treeRootRect) return false;
     return (
-      <StyledDroppableTreeItem
-        rect={rect}
-        isOverDroppable={isOverDroppable}
-        data-type="trereeview-dnd-preview"
-        ref={setNodeRef}
-      />
+      treeItemRect.bottom >= treeRootRect.top &&
+      treeItemRect.top <= treeRootRect.bottom &&
+      treeItemRect.right >= treeRootRect.left &&
+      treeItemRect.left <= treeRootRect.right
     );
+  }, [treeItemRect, treeRootRect]);
+
+  const clippedRect = getClippedRect(treeItemRect, treeRootRect);
+  if (!treeItem || !treeRootRect || !isVisible || !clippedRect) {
+    return null;
   }
 
-  return null;
+  return (
+    <StyledDroppableTreeItem
+      rect={clippedRect}
+      isOverDroppable={isOverDroppable}
+      data-type="treeview-dnd-preview"
+      ref={setNodeRef}
+    />
+  );
 };
