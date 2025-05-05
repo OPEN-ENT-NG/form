@@ -16,17 +16,20 @@ import {
   Tooltip,
   VisuallyHidden,
 } from "@edifice.io/react";
-import { Box } from "@cgi-learning-hub/ui";
+import { Box, Typography } from "@cgi-learning-hub/ui";
 import { IconBookmark, IconInfoCircle, IconRafterDown } from "@edifice.io/react/icons";
 import { ShareBookmark } from "./ShareBookmark";
 import { ShareBookmarkLine } from "./ShareBookmarkLine";
 import { useSearch } from "./hooks/useSearch";
 import useShare from "./hooks/useShare";
 import { useShareBookmark } from "./hooks/useShareBookmark";
-import { userHasRight } from "./utils/hasRight";
+import { buildPublicLink, userHasRight } from "./utils";
 import { FORMULAIRE } from "~/core/constants";
 import { useShareModal } from "~/providers/ShareModalProvider";
 import { BoxComponentType } from "~/core/style/themeProps";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { flexStartBoxStyle } from "~/core/style/boxStyles";
+import { toast } from "react-toastify";
 
 export type ShareOptions = {
   resourceId: ID;
@@ -132,6 +135,34 @@ export default function ShareResourceModal({
   const searchPlaceholder = showSearchAdmlHint()
     ? tEdifice("explorer.search.adml.hint")
     : tEdifice("explorer.modal.share.search.placeholder");
+
+  const publicLink = buildPublicLink(userFormsRights, resourceId);
+
+  const handleCopyPublicLink = async () => {
+    if (!publicLink) return;
+
+    try {
+      await navigator.clipboard.writeText(publicLink);
+      toast.success(tForm("formulaire.link.copy.success"), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+    } catch (err) {
+      toast.error(tForm("formulaire.link.copy.error"), {
+        position: "top-right",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+      });
+      console.error("Failed to copy text: ", err);
+    }
+  };
 
   return createPortal(
     <Modal id="share_modal" size="lg" isOpen={isOpen} onModalClose={onCancel}>
@@ -269,6 +300,16 @@ export default function ShareResourceModal({
           </Box>
         </Box>
         {children}
+        <Box component={BoxComponentType.HR} />
+        <Heading headingStyle="h4" level="h3" className="mb-16 d-flex align-items-center">
+          <Box className="me-8">{tForm("formulaire.share.link.access")}</Box>
+        </Heading>
+        <Box sx={flexStartBoxStyle}>
+          <Typography fontStyle={"italic"}>{publicLink}</Typography>
+          <Box onClick={() => handleCopyPublicLink} sx={{ cursor: "pointer" }}>
+            <ContentCopyIcon sx={{ marginLeft: "1rem", fontSize: "1.5rem" }} />
+          </Box>
+        </Box>
       </Modal.Body>
       <Modal.Footer>
         <Button type="button" color="tertiary" variant="ghost" onClick={onCancel}>
