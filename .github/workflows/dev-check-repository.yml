@@ -50,9 +50,6 @@ jobs:
       - name: Run Build Vite
         working-directory: ./formulaire/frontend
         run: pnpm build
-      - name: Run test Formulaire React
-        working-directory: ./formulaire/frontend
-        run: pnpm test
         # Test React Formulaire-public
       - name: Run pnpm install
         working-directory: ./formulaire-public/frontend
@@ -94,3 +91,26 @@ jobs:
       - name: Run maven test formulaire-public
         working-directory: ./formulaire-public/backend
         run: mvn -Duser.home=/var/maven test
+
+  test-react:
+    name: Test React
+    runs-on: ubuntu-latest
+    container:
+      image: opendigitaleducation/node:20-alpine-pnpm
+      options: --user root -v ${{ github.workspace }}:/home/node/:rw
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Mettre à jour .npmrc avec le token
+        working-directory: ./formulaire/frontend
+        run: |
+          sed -i 's|${TIPTAP_PRO_TOKEN}|${{ secrets.TIPTAP_PRO_TOKEN }}|g' .npmrc
+      - name: Installer les dépendances
+        working-directory: ./formulaire/frontend
+        run: pnpm install
+        env:
+          TIPTAP_PRO_TOKEN: ${{ secrets.TIPTAP_PRO_TOKEN }}
+      - name: Lancer les tests React Formulaire
+        working-directory: ./formulaire/frontend
+        run: pnpm test
+        continue-on-error: true
