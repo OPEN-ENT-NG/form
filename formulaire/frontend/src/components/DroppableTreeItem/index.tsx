@@ -5,6 +5,7 @@ import { SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
 import { StyledDroppableTreeItem } from "./style";
 import { IDragItemProps } from "~/hook/dnd-hooks/types";
 import { DraggableType } from "~/core/enums";
+import { getClippedRect } from "./utils";
 
 export const DroppableTreeItem: FC<IDroppableTreeItemProps> = ({ treeItemId, treeRootRect }) => {
   const { setNodeRef, isOver, active } = useDroppable({
@@ -33,17 +34,7 @@ export const DroppableTreeItem: FC<IDroppableTreeItemProps> = ({ treeItemId, tre
     );
   }, [treeItemRect, treeRootRect]);
 
-  const clippedRect = useMemo<DOMRect | null>(() => {
-    if (!treeItemRect || !treeRootRect) return null;
-    const top = Math.max(treeItemRect.top, treeRootRect.top);
-    const left = Math.max(treeItemRect.left, treeRootRect.left);
-    const right = Math.min(treeItemRect.right, treeRootRect.right);
-    const bottom = Math.min(treeItemRect.bottom, treeRootRect.bottom);
-    const width = right - left;
-    const height = bottom - top;
-    return new DOMRect(left, top, width, height);
-  }, [treeItemRect, treeRootRect]);
-
+  const clippedRect = getClippedRect(treeItemRect, treeRootRect);
   if (!treeItem || !treeRootRect || !isVisible || !clippedRect) {
     return null;
   }
