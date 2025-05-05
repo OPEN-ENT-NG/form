@@ -12,7 +12,6 @@ import { IUserInfo } from "@edifice.io/client";
 import i18n from "~/i18n";
 
 export const useRootFolders = (): IFolder[] => {
-
   const rootFolders = useMemo<IFolder[]>(
     () => [
       {
