@@ -1,5 +1,4 @@
 import { useCallback } from "react";
-import { useTranslation } from "react-i18next";
 import PublicIcon from "@mui/icons-material/Public";
 import NotificationsIcon from "@mui/icons-material/Notifications";
 import ShareIcon from "@mui/icons-material/Share";
@@ -12,13 +11,12 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { ERROR_MAIN_COLOR, PRIMARY_MAIN_COLOR, SUCCESS_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { EllipsisWithTooltip } from "@cgi-learning-hub/ui";
 import { useFormatDateWithTime } from "./useFormatDateWithTime";
-import { FORMULAIRE } from "~/core/constants";
 import { getFormStatusText, isFormFilled } from "~/core/models/form/utils";
 import { IDistribution } from "~/core/models/distribution/types";
 import { getFirstDistributionDate } from "~/core/models/distribution/utils";
+import i18n from "~/i18n";
 
 export const useFormItemsIcons = () => {
-  const { t } = useTranslation(FORMULAIRE);
   const formatDateWithTime = useFormatDateWithTime();
 
   const getIcons = useCallback((form: IForm) => {
@@ -50,7 +48,7 @@ export const useFormItemsIcons = () => {
         .filter(({ condition }) => condition)
         // eslint-disable-next-line @typescript-eslint/naming-convention
         .map(({ textKey, IconComponent }) => ({
-          text: t(textKey),
+          text: i18n.t(textKey),
           icon: <IconComponent sx={{ color: (theme) => theme.palette.grey.darker }} />,
         }))
     );
@@ -76,7 +74,7 @@ export const useFormItemsIcons = () => {
         icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
         text: (
           <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-            {`${(form.nb_responses ?? 0).toString()} ${t("formulaire.responses.count")}`}
+            {`${(form.nb_responses ?? 0).toString()} ${i18n.t("formulaire.responses.count")}`}
           </EllipsisWithTooltip>
         ),
       },
@@ -112,7 +110,7 @@ export const useFormItemsIcons = () => {
               fontWeight: 700,
             }}
           >
-            {getFormStatusText(form, distributions, formatDateWithTime, t)}
+            {getFormStatusText(form, distributions, formatDateWithTime)}
           </EllipsisWithTooltip>
         ),
       },
