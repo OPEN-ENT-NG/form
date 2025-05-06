@@ -14,7 +14,7 @@ import { useFormatDateWithTime } from "./useFormatDateWithTime";
 import { getFormStatusText, isFormFilled } from "~/core/models/form/utils";
 import { IDistribution } from "~/core/models/distribution/types";
 import { getFirstDistributionDate } from "~/core/models/distribution/utils";
-import i18n from "~/i18n";
+import { t } from "~/i18n";
 
 export const useFormItemsIcons = () => {
   const formatDateWithTime = useFormatDateWithTime();
@@ -48,7 +48,7 @@ export const useFormItemsIcons = () => {
         .filter(({ condition }) => condition)
         // eslint-disable-next-line @typescript-eslint/naming-convention
         .map(({ textKey, IconComponent }) => ({
-          text: i18n.t(textKey),
+          text: t(textKey),
           icon: <IconComponent sx={{ color: (theme) => theme.palette.grey.darker }} />,
         }))
     );
@@ -74,7 +74,7 @@ export const useFormItemsIcons = () => {
         icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
         text: (
           <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
-            {`${(form.nb_responses ?? 0).toString()} ${i18n.t("formulaire.responses.count")}`}
+            {`${(form.nb_responses ?? 0).toString()} ${t("formulaire.responses.count")}`}
           </EllipsisWithTooltip>
         ),
       },

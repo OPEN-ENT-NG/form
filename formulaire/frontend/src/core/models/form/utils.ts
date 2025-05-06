@@ -4,7 +4,7 @@ import { IFormPayload, IForm } from "./types";
 import { IDistribution } from "../distribution/types";
 import { getFirstDistribution, getLatestDistribution, getNbFinishedDistrib } from "../distribution/utils";
 import { DistributionStatus } from "../distribution/enums";
-import i18n from "~/i18n";
+import { t } from "~/i18n";
 
 export const buildFormPayload = (
   formPropValue: IFormPropInputValueState,
@@ -86,7 +86,7 @@ export const getFormStatusText = (
 ): string => {
   const formDistributions = getFormDistributions(form, distributions);
   if (form.multiple) {
-    return `${i18n.t("formulaire.responses.count")} : ${getNbFinishedDistrib(formDistributions).toString()}`;
+    return `${t("formulaire.responses.count")} : ${getNbFinishedDistrib(formDistributions).toString()}`;
   } else {
     if (getNbFinishedDistrib(formDistributions) > 0) {
       const latestDistrib = getLatestDistribution(formDistributions);
@@ -94,6 +94,6 @@ export const getFormStatusText = (
         return formatDateWithTime(latestDistrib.dateResponse, "formulaire.responded.date");
       }
     }
-    return i18n.t("formulaire.responded.waiting");
+    return t("formulaire.responded.waiting");
   }
 };

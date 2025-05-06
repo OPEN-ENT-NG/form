@@ -9,7 +9,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { hasWorkflow } from "~/core/utils";
 import { IUserWorkflowRights, IWorkflowRights, WorkflowRights } from "~/core/rights";
 import { IUserInfo } from "@edifice.io/client";
-import i18n from "~/i18n";
+import { t } from "~/i18n";
 
 export const useRootFolders = (): IFolder[] => {
   const rootFolders = useMemo<IFolder[]>(
@@ -17,7 +17,7 @@ export const useRootFolders = (): IFolder[] => {
       {
         id: RootFolderIds.FOLDER_MY_FORMS_ID,
         parent_id: null,
-        name: i18n.t("formulaire.forms.mine"),
+        name: t("formulaire.forms.mine"),
         icon: FolderIcon,
         user_id: "",
         nb_folder_children: 0,
@@ -28,7 +28,7 @@ export const useRootFolders = (): IFolder[] => {
       {
         id: RootFolderIds.FOLDER_SHARED_FORMS_ID,
         parent_id: null,
-        name: i18n.t("formulaire.forms.shared"),
+        name: t("formulaire.forms.shared"),
         icon: ShareIcon,
         user_id: "",
         nb_folder_children: 0,
@@ -39,7 +39,7 @@ export const useRootFolders = (): IFolder[] => {
       {
         id: RootFolderIds.FOLDER_ARCHIVED_ID,
         parent_id: null,
-        name: i18n.t("formulaire.forms.archived"),
+        name: t("formulaire.forms.archived"),
         icon: DeleteIcon,
         user_id: "",
         nb_folder_children: 0,

@@ -2,15 +2,15 @@ import { IColumn, TablePaginationProps } from "./types";
 import { ColumnId } from "./enums";
 import { DEFAULT_PAGINATION_LIMIT } from "~/core/constants";
 import { IForm } from "~/core/models/form/types";
-import i18n from "~/i18n";
+import { t } from "~/i18n";
 
 export const useColumns: () => IColumn[] = () => {
   return [
     { id: ColumnId.SELECT, label: "", width: "5%" },
-    { id: ColumnId.TITLE, label: i18n.t("formulaire.table.title"), width: "30%" },
-    { id: ColumnId.AUTHOR, label: i18n.t("formulaire.table.author"), width: "20%" },
-    { id: ColumnId.RESPONSE, label: i18n.t("formulaire.table.responses"), width: "10%" },
-    { id: ColumnId.LAST_MODIFICATION, label: i18n.t("formulaire.table.modified"), width: "30%" },
+    { id: ColumnId.TITLE, label: t("formulaire.table.title"), width: "30%" },
+    { id: ColumnId.AUTHOR, label: t("formulaire.table.author"), width: "20%" },
+    { id: ColumnId.RESPONSE, label: t("formulaire.table.responses"), width: "10%" },
+    { id: ColumnId.LAST_MODIFICATION, label: t("formulaire.table.modified"), width: "30%" },
     { id: ColumnId.STATUS, label: "", width: "10%" },
   ];
 };
