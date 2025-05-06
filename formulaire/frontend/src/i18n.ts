@@ -40,7 +40,7 @@ i18n
   });
 
 export const t = (key: string, options?: Record<string, unknown>) => {
-  return i18n.t(key, options);
+  return i18n.t(key, { ns: FORMULAIRE, ...options });
 };
 
 export default i18n;
