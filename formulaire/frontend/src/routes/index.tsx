@@ -13,9 +13,14 @@ const routes = [
         index: true,
         async lazy() {
           const { Home } = await import("./home");
-          return {
-            Component: Home,
-          };
+          return { Component: Home };
+        },
+      },
+      {
+        path: "form/:formId/edit",
+        async lazy() {
+          const { Creation } = await import("./creation");
+          return { Component: Creation };
         },
       },
     ],
