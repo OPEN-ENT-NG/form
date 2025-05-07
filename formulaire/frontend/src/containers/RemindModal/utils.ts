@@ -7,8 +7,6 @@ export const initialStatusResponseState: IStatusResponseState = {
   isNotAnsweredActive: true,
 };
 
-
-
 export const chipOptions = [
   {
     key: StatusResponseType.IS_ANSWERED_ACTIVE,
