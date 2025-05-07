@@ -2,7 +2,7 @@ import { IDistribution, IDistributionDTO } from "~/core/models/distribution/type
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { QueryMethod, TagName } from "~/core/enums";
 import { FORMULAIRE } from "~/core/constants.ts";
-import i18n from "~/i18n.ts";
+import { t } from "~/i18n.ts";
 import { toast } from "react-toastify";
 import { transformDistribution, transformDistributions } from "~/core/models/distribution/utils.ts";
 
@@ -20,7 +20,7 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.distributionService.list", err);
-          toast.error(i18n.t("formulaire.error.distributionService.list", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.distributionService.list", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -47,7 +47,7 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.distributionService.create", err);
-          toast.error(i18n.t("formulaire.error.distributionService.create", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.distributionService.create", { ns: FORMULAIRE }));
         }
       },
     }),

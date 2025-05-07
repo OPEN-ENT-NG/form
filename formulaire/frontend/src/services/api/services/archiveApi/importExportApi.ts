@@ -8,7 +8,7 @@ import {
 } from "~/core/models/import/types";
 import { FORMULAIRE } from "~/core/constants";
 import { toast } from "react-toastify";
-import i18n from "~/i18n";
+import { t } from "~/i18n";
 
 export const importExportApi = emptySplitArchiveApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -25,7 +25,7 @@ export const importExportApi = emptySplitArchiveApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.import", err);
-          toast.error(i18n.t("formulaire.error.formService.import", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.import", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -42,7 +42,7 @@ export const importExportApi = emptySplitArchiveApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.import", err);
-          toast.error(i18n.t("formulaire.error.formService.import", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.import", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -60,7 +60,7 @@ export const importExportApi = emptySplitArchiveApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.import", err);
-          toast.error(i18n.t("formulaire.error.formService.import", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.import", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -76,7 +76,7 @@ export const importExportApi = emptySplitArchiveApi.injectEndpoints({
           window.location.href = `/archive/export/${exportId}`;
         } catch (err) {
           console.error("Error verifying export and downloading zip:", err);
-          toast.error(i18n.t("formulaire.error.formService.export", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.export", { ns: FORMULAIRE }));
         }
       },
     }),
