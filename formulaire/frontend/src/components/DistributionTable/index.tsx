@@ -34,8 +34,10 @@ export const DistributionTable: FC<IDistributionTableProps> = ({ distributions }
         <Table sx={tableStyle}>
           <TableHead>
             <TableRow sx={headerRowStyle}>
-              <TableCell sx={headerCellStyle}>{nameColumnTitle}</TableCell>
-              <TableCell align="right" sx={headerCellStyle}>
+              <TableCell sx={headerCellStyle} width="80%">
+                {nameColumnTitle}
+              </TableCell>
+              <TableCell align="right" sx={headerCellStyle} width="20%">
                 {t("formulaire.number.responses")}
               </TableCell>
             </TableRow>
@@ -43,16 +45,18 @@ export const DistributionTable: FC<IDistributionTableProps> = ({ distributions }
           <TableBody sx={tableBodyStyle}>
             {displayedDatas.map((person) => (
               <TableRow key={person.responderId} sx={tableRowStyle}>
-                <TableCell component={BoxComponentType.TH} scope="row">
+                <TableCell component={BoxComponentType.TH} scope="row" width="80%">
                   {person.responderName}
                 </TableCell>
-                <TableCell align="right">{person.responseCount}</TableCell>
+                <TableCell align="center" width="20%">
+                  {person.responseCount}
+                </TableCell>
               </TableRow>
             ))}
             {!displayedDatas.length && (
               <TableRow sx={tableRowStyle}>
                 <TableCell colSpan={2} align="center">
-                  <Typography sx={emptyRowMessageStyle}>{t("formulaire.table.noDistributions")}</Typography>
+                  <Typography sx={emptyRowMessageStyle}>{t("formulaire.results.empty")}</Typography>
                 </TableCell>
               </TableRow>
             )}
