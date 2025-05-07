@@ -3,6 +3,7 @@ import { RightStringified } from "~/providers/ShareModalProvider/types";
 
 export const FORMULAIRE = "formulaire";
 export const ARCHIVE = "archive";
+export const COMMON = "common";
 
 export const DEFAULT_THEME = "default";
 
