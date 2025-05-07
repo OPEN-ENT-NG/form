@@ -5,10 +5,11 @@ import { FORMULAIRE } from "~/core/constants";
 import { Box } from "@cgi-learning-hub/ui";
 import { Header } from "~/components/Header";
 import { useElementHeight } from "../HomeView/utils";
+import { useCreation } from "~/providers/CreationProvider";
 
 export const CreationView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
-
+  const { form } = useCreation();
   const [headerRef] = useElementHeight<HTMLDivElement>();
 
   return (
@@ -16,6 +17,7 @@ export const CreationView: FC = () => {
       <Box ref={headerRef}>
         <Header stringItems={[t("formulaire.title")]} buttons={[]} />
       </Box>
+      <Box>{form?.id}</Box>
     </Box>
   );
 };
