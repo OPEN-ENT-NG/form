@@ -8,6 +8,7 @@ import {
   Loader,
   DialogActions,
   Button,
+  TextField,
 } from "@cgi-learning-hub/ui";
 import { FC, useEffect, useRef, useState } from "react";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
@@ -53,6 +54,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
     1: formUrl || "",
   });
   const [description, setDescription] = useState<string>(defaultDescription);
+  const [remindObject, setRemindObject] = useState<string>("");
   const editorRef = useRef<EditorRef>(null);
   const { data: distributions, isLoading: isDistributionsLoading } = useGetFormDistributionsQuery(formId);
   const tableDatas = distributions
@@ -66,10 +68,11 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
 
   const handleSubmit = async () => {
     if (!formUrl || !description) return;
+
     try {
       const mail = {
         link: formUrl,
-        subject: t("formulaire.remind.default.subject"),
+        subject: remindObject.trim().length === 0 ? t("formulaire.remind.default.subject") : remindObject,
         body: description,
       };
 
@@ -85,6 +88,17 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
     setShowRemind(false);
   };
 
+  const handleChipClick = (clickedKey: keyof IStatusResponseState) => {
+    setStatusResponse((prev) => {
+      // build a brand new object where only clickedKey is true
+      const newState = {} as IStatusResponseState;
+      (Object.keys(prev) as (keyof IStatusResponseState)[]).forEach((key) => {
+        newState[key] = key === clickedKey;
+      });
+      return newState;
+    });
+  };
+
   const followContent = (
     <>
       <Typography>
@@ -97,10 +111,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
             isActive={statusResponse[option.key]}
             label={t(option.label)}
             onClick={() => {
-              setStatusResponse((prev) => ({
-                ...prev,
-                [option.key]: !prev[option.key],
-              }));
+              handleChipClick(option.key);
             }}
           />
         ))}
@@ -116,6 +127,17 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const writeRemindContent = (
     <>
       <Typography>{t(remindDescription)}</Typography>
+      <Box sx={{ display: "flex", alignItems: "center", width: "60%" }}>
+        <Typography sx={{ width: "16rem" }}>{t("formulaire.remind.subject.label")}</Typography>
+        <TextField
+          variant="standard"
+          fullWidth
+          value={remindObject}
+          onChange={(e) => {
+            setRemindObject(e.target.value);
+          }}
+        />
+      </Box>
       <Box sx={{ ...editorContainerStyle, display: showRemind ? "block" : "none" }}>
         {isOpen && (
           <Editor
