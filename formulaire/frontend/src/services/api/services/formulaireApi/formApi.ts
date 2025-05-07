@@ -8,7 +8,7 @@ import {
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { QueryMethod, TagName } from "~/core/enums.ts";
 import { toast } from "react-toastify";
-import i18n from "~/i18n";
+import { t } from "~/i18n";
 import { FORMULAIRE, ID, LINK_HTML_ELEMENT, PDF_EXTENSION, TRASH_FOLDER_ID, ZIP_EXTENSION } from "~/core/constants";
 
 export const formApi = emptySplitFormulaireApi.injectEndpoints({
@@ -24,7 +24,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.list", err);
-          toast.error(i18n.t("formulaire.error.formService.list", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.list", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -39,7 +39,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.list", err);
-          toast.error(i18n.t("formulaire.error.formService.list", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.list", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -54,10 +54,10 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success(i18n.t("formulaire.success.form.create", { ns: FORMULAIRE }));
+          toast.success(t("formulaire.success.form.create", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.create", err);
-          toast.error(i18n.t("formulaire.error.formService.create", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.create", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -72,10 +72,10 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted({ hasToastDisplay = true }, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          if (hasToastDisplay) toast.success(i18n.t("formulaire.success.form.save", { ns: FORMULAIRE }));
+          if (hasToastDisplay) toast.success(t("formulaire.success.form.save", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.update", err);
-          toast.error(i18n.t("formulaire.error.formService.update", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.update", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -89,10 +89,10 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success(i18n.t("formulaire.success.forms.delete", { ns: FORMULAIRE }));
+          toast.success(t("formulaire.success.forms.delete", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.delete", err);
-          toast.error(i18n.t("formulaire.error.formService.delete", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.delete", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -107,10 +107,10 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success(i18n.t("formulaire.success.forms.duplicate", { ns: FORMULAIRE }));
+          toast.success(t("formulaire.success.forms.duplicate", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.duplicate", err);
-          toast.error(i18n.t("formulaire.error.formService.duplicate", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.duplicate", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -126,10 +126,10 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         try {
           await queryFulfilled;
           if (params.destinationFolderId !== TRASH_FOLDER_ID)
-            toast.success(i18n.t("formulaire.success.move", { ns: FORMULAIRE }));
+            toast.success(t("formulaire.success.move", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.move", err);
-          toast.error(i18n.t("formulaire.error.formService.move", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.move", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -144,10 +144,10 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success(i18n.t("formulaire.success.forms.restore", { ns: FORMULAIRE }));
+          toast.success(t("formulaire.success.forms.restore", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.restore", err);
-          toast.error(i18n.t("formulaire.error.formService.restore", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.restore", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -170,7 +170,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
 
           const fileName =
             forms.length > 1
-              ? i18n.t("formulaire.export.pdf.questions.title") + ZIP_EXTENSION
+              ? t("formulaire.export.pdf.questions.title") + ZIP_EXTENSION
               : forms[0].title.replace(/\s+/g, "_") + PDF_EXTENSION;
 
           // Create a download link and trigger the download
@@ -184,7 +184,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           URL.revokeObjectURL(downloadUrl);
         } catch (err) {
           console.error("formulaire.error.formService.export", err);
-          toast.error(i18n.t("formulaire.error.formService.export", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.export", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -199,7 +199,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.export", err);
-          toast.error(i18n.t("formulaire.error.formService.export", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.export", { ns: FORMULAIRE }));
         }
       },
       transformResponse: (response: { status: string; exportId: string; exportPath: string }) => {
@@ -217,7 +217,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.rights", err);
-          toast.error(i18n.t("formulaire.error.formService.rights", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.rights", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -230,7 +230,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success(i18n.t("formulaire.success.reminder.send", { ns: FORMULAIRE }));
+          toast.success(t("formulaire.success.reminder.send", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.remind", err);
         }
