@@ -4,6 +4,7 @@ import { IFormPayload, IForm } from "./types";
 import { IDistribution } from "../distribution/types";
 import { getFirstDistribution, getLatestDistribution, getNbFinishedDistrib } from "../distribution/utils";
 import { DistributionStatus } from "../distribution/enums";
+import { t } from "~/i18n";
 
 export const buildFormPayload = (
   formPropValue: IFormPropInputValueState,
@@ -82,7 +83,6 @@ export const getFormStatusText = (
   form: IForm,
   distributions: IDistribution[],
   formatDateWithTime: (date: string | Date | undefined, i18nTextKey: string) => string,
-  t: (key: string) => string,
 ): string => {
   const formDistributions = getFormDistributions(form, distributions);
   if (form.multiple) {

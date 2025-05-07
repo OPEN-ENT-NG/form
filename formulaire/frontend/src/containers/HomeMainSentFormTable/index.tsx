@@ -98,7 +98,7 @@ export const HomeMainSentFormTable: FC<IHomeMainSentFormTableProps> = ({ sentFor
                     variant={TypographyVariant.BODY2}
                     color={isFormFilled(form, distributions) ? SUCCESS_MAIN_COLOR : ERROR_MAIN_COLOR}
                   >
-                    {getFormStatusText(form, getFormDistributions(form, distributions), formatDateWithTime, t)}
+                    {getFormStatusText(form, getFormDistributions(form, distributions), formatDateWithTime)}
                   </Typography>
                 </TableCell>
               </TableRow>
