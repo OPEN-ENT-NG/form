@@ -18,7 +18,6 @@ import {
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
 import {
   fileDropZoneWrapper,
-  formPropModalWrapper,
   mainColumnStyle,
   mainContentWrapper,
   subContentColumnWrapper,
@@ -43,7 +42,7 @@ import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/dele
 import { useHome } from "~/providers/HomeProvider";
 import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formulaireApi/formApi";
 import { buildFormPayload } from "~/core/models/form/utils";
-import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { BreakpointVariant, ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 
@@ -367,15 +366,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
   );
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={handleClose}
-      slotProps={{
-        paper: {
-          sx: formPropModalWrapper,
-        },
-      }}
-    >
+    <Dialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD} fullWidth>
       <DialogTitle>
         <Box sx={spaceBetweenBoxStyle}>
           <Typography variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
