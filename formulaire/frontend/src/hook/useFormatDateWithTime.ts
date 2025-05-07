@@ -1,12 +1,10 @@
-import { useTranslation } from "react-i18next";
-import { DD_MM_YYYY, FORMULAIRE, HH_MM } from "~/core/constants";
+import { DD_MM_YYYY, HH_MM } from "~/core/constants";
 import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import "dayjs/locale/en";
+import { t } from "~/i18n";
 
 export const useFormatDateWithTime = () => {
-  const { t } = useTranslation(FORMULAIRE);
-
   return (date: string | Date | undefined | null, i18nTextKey: string): string => {
     if (!date) return "";
 
