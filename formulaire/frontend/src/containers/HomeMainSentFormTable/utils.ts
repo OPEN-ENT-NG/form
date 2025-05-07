@@ -1,10 +1,8 @@
-import { useTranslation } from "react-i18next";
 import { IColumn } from "../HomeMainFormsTable/types";
-import { FORMULAIRE } from "~/core/constants";
 import { ColumnId } from "../HomeMainFormsTable/enums";
+import { t } from "~/i18n";
 
 export const useSentFormColumns: () => IColumn[] = () => {
-  const { t } = useTranslation(FORMULAIRE);
   return [
     { id: ColumnId.SELECT, label: "", width: "1%" },
     { id: ColumnId.TITLE, label: t("formulaire.form.create.title"), width: "12%" },
