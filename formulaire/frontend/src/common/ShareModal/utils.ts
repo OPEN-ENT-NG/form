@@ -22,7 +22,9 @@ export const showShareRightLine = (shareRight: ShareRight, showBookmarkMembers: 
   (shareRight.isBookmarkMember && showBookmarkMembers) || !shareRight.isBookmarkMember;
 
 export const buildPublicLink = (userFormsRights: IUserFormsRight[], resourceId: ID): string | undefined => {
-  const formRight = userFormsRights.find((formRight: IUserFormsRight) => formRight.form.id === parseInt(resourceId));
+  const formRight = userFormsRights.find(
+    (formRight: IUserFormsRight) => formRight.form.id === parseInt(resourceId) && formRight.form.is_public,
+  );
   if (!formRight) return undefined;
 
   const prefix = window.location.origin + "/formulaire-public#/form/";

@@ -24,7 +24,7 @@ import { useSearch } from "./hooks/useSearch";
 import useShare from "./hooks/useShare";
 import { useShareBookmark } from "./hooks/useShareBookmark";
 import { buildPublicLink, userHasRight } from "./utils";
-import { FORMULAIRE } from "~/core/constants";
+import { COMMON, FORMULAIRE } from "~/core/constants";
 import { useShareModal } from "~/providers/ShareModalProvider";
 import { BoxComponentType } from "~/core/style/themeProps";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
@@ -129,7 +129,7 @@ export default function ShareResourceModal({
     showBookmarkInput,
   } = useShareBookmark({ shareRights, shareDispatch });
 
-  const { t: tEdifice } = useTranslation();
+  const { t: tEdifice } = useTranslation(COMMON);
   const { t: tForm } = useTranslation(FORMULAIRE);
 
   const searchPlaceholder = showSearchAdmlHint()
@@ -301,15 +301,19 @@ export default function ShareResourceModal({
         </Box>
         {children}
         <Box component={BoxComponentType.HR} />
-        <Heading headingStyle="h4" level="h3" className="mb-16 d-flex align-items-center">
-          <Box className="me-8">{tForm("formulaire.share.link.access")}</Box>
-        </Heading>
-        <Box sx={flexStartBoxStyle}>
-          <Typography fontStyle={"italic"}>{publicLink}</Typography>
-          <Box onClick={() => handleCopyPublicLink} sx={{ cursor: "pointer" }}>
-            <ContentCopyIcon sx={{ marginLeft: "1rem", fontSize: "1.5rem" }} />
+        {publicLink && (
+          <Box>
+            <Heading headingStyle="h4" level="h3" className="mb-16 d-flex align-items-center">
+              <Box className="me-8">{tForm("formulaire.share.link.access")}</Box>
+            </Heading>
+            <Box sx={flexStartBoxStyle}>
+              <Typography fontStyle={"italic"}>{publicLink}</Typography>
+              <Box onClick={() => handleCopyPublicLink} sx={{ cursor: "pointer" }}>
+                <ContentCopyIcon sx={{ marginLeft: "1rem", fontSize: "1.5rem" }} />
+              </Box>
+            </Box>
           </Box>
-        </Box>
+        )}
       </Modal.Body>
       <Modal.Footer>
         <Button type="button" color="tertiary" variant="ghost" onClick={onCancel}>
