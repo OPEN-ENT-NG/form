@@ -55,7 +55,7 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   };
 
   useEffect(() => {
-    const maxPage = Math.ceil(totalCount / DEFAULT_PAGINATION_LIMIT) - 1;
+    const maxPage = Math.ceil(totalCount / limit) - 1;
     if (page > maxPage) {
       setTablePaginationProps((prev) => ({
         ...prev,
