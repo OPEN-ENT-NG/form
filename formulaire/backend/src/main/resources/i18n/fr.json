@@ -1,4 +1,5 @@
 {
+  "explorer.search.pending": "Recherche en cours...",
   "formulaire.access.element": "Accéder à l'élément : ",
   "formulaire.access.end": "Fin du formulaire",
   "formulaire.access.next": "Accéder à la question/section suivante",
@@ -29,6 +30,7 @@
   "formulaire.created": "Créé le ",
   "formulaire.date.ending": "Date de fermeture",
   "formulaire.date.opening": "Date d'ouverture",
+  "formulaire.date.format.locale": "fr-FR",
   "formulaire.delete": "Supprimer",
   "formulaire.delete.confirmation.folder.multiple": "Êtes-vous sûr de vouloir supprimer les dossiers sélectionnés ?",
   "formulaire.delete.confirmation.folder.unique": "Êtes-vous sûr de vouloir supprimer le dossier sélectionné ?",
@@ -437,5 +439,6 @@
   "group.school.Personnel": "Personnels de l'{{0}}.",
   "group.school.Relative": "Parents de l'{{0}}.",
   "group.school.Student": "Élèves de l'{{0}}.",
-  "group.school.Teacher": "Enseignants de l'{{0}}."
+  "group.school.Teacher": "Enseignants de l'{{0}}.",
+  "portal.no.result": "Aucun résultat"
 }
