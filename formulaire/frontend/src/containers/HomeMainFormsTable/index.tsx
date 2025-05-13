@@ -59,7 +59,7 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
     if (page > maxPage) {
       setTablePaginationProps((prev) => ({
         ...prev,
-        page: maxPage < 0 ? 0 : maxPage,
+        page: Math.max(maxPage, 0),
       }));
     }
   }, [totalCount, limit, page]);
