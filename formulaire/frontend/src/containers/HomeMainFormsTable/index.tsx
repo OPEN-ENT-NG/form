@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, MouseEvent, useState } from "react";
+import { ChangeEvent, FC, MouseEvent, useEffect, useState } from "react";
 
 import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
@@ -6,6 +6,7 @@ import { useHome } from "~/providers/HomeProvider";
 import {
   Box,
   Checkbox,
+  EllipsisWithTooltip,
   TableBody,
   TableCell,
   TableContainer,
@@ -32,6 +33,7 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   const [tablePaginationProps, setTablePaginationProps] = useState(initialTableProps);
   const displayedForms = getPageForms(forms, tablePaginationProps);
   const { getIcons } = useFormItemsIcons();
+  const { limit, page } = tablePaginationProps;
 
   const isSelected = (formId: number) => selectedForms.some((form) => form.id === formId);
 
@@ -51,6 +53,16 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
     const newLimit = parseInt(event.target.value);
     setTablePaginationProps({ limit: newLimit, page: 0 });
   };
+
+  useEffect(() => {
+    const maxPage = Math.ceil(totalCount / limit) - 1;
+    if (page > maxPage) {
+      setTablePaginationProps((prev) => ({
+        ...prev,
+        page: Math.max(maxPage, 0),
+      }));
+    }
+  }, [totalCount, limit, page]);
 
   return (
     <Box>
@@ -92,7 +104,14 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
                   />
                 </TableCell>
                 <TableCell align="center">
-                  <Typography variant={TypographyVariant.BODY2}>{form.title}</Typography>
+                  <EllipsisWithTooltip
+                    typographyProps={{
+                      variant: TypographyVariant.BODY2,
+                      sx: { maxWidth: "30rem" },
+                    }}
+                  >
+                    {form.title}
+                  </EllipsisWithTooltip>
                 </TableCell>
                 <TableCell align="center">
                   <Typography variant={TypographyVariant.BODY2}>{form.owner_name}</Typography>
