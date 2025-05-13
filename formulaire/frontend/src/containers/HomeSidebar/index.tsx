@@ -37,12 +37,7 @@ export const HomeSidebar: FC = () => {
 
   return (
     <Box sx={homeSidebarWrapper}>
-      <Box
-        height="3.5rem"
-        display="flex"
-        alignItems="center"
-        justifyContent={userWorkflowRights[WorkflowRights.RESPONSE] ? undefined : "center"}
-      >
+      <Box height="3.5rem" display="flex" alignItems="center" justifyContent={"center"}>
         <HomeTabs value={tab} setValue={toggleTab} />
       </Box>
       <TreeView

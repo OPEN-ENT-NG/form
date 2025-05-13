@@ -44,9 +44,12 @@ export const HiddenContent = styled(Box, {
 }));
 
 export const dialogStyle = {
+  "& .MuiDialog-container": {
+    alignItems: "flex-start",
+    paddingTop: "8rem",
+  },
   "& .MuiDialog-paper": {
     maxHeight: "80vh",
-    margin: "auto",
     display: "flex",
     flexDirection: "column",
   },
