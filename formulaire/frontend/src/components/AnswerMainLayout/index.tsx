@@ -5,7 +5,6 @@ import {
   mainContentInnerStyle,
   resourceContainerStyle,
   searchBarStyle,
-  searchStyle,
 } from "~/containers/HomeMainLayout/style";
 import { HomeTabs } from "../HomeTab";
 import { useHome } from "~/providers/HomeProvider";
@@ -25,6 +24,7 @@ import { HomeMainSentFormTable } from "~/containers/HomeMainSentFormTable";
 import { ResourcesEmptyState } from "../SVG/RessourcesEmptyState";
 import { useTheme } from "@mui/material";
 import { centerBoxStyle } from "~/core/style/boxStyles";
+import { myAnswerHeader, tabStyle } from "./style";
 
 export const AnswerMainLayout: FC = () => {
   const { user } = useEdificeClient();
@@ -52,8 +52,8 @@ export const AnswerMainLayout: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   return (
     <Box sx={mainContentInnerStyle}>
-      <Box sx={searchStyle}>
-        <Box flexShrink={0}>
+      <Box sx={myAnswerHeader}>
+        <Box flexShrink={0} sx={tabStyle}>
           <HomeTabs value={tab} setValue={toggleTab} />
         </Box>
         <SearchInput
