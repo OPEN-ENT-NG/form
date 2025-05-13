@@ -36,6 +36,8 @@ import { DistributionTable } from "~/components/DistributionTable";
 import { transformDistributionsToTableData } from "~/core/models/distribution/utils";
 import { PRIMARY_MAIN_COLOR } from "~/core/style/colors";
 import { useSendReminderMutation } from "~/services/api/services/formulaireApi/formApi";
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
+import { Badge } from "@mui/material";
 
 export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -115,6 +117,22 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
             }}
           />
         ))}
+        <Badge
+          badgeContent={tableDatas.length}
+          color="primary"
+          showZero
+          sx={{
+            marginTop: "1rem",
+            "& .MuiBadge-badge": {
+              fontSize: "1.2rem",
+              minWidth: 24,
+              height: 24,
+              borderRadius: "50%",
+            },
+          }}
+        >
+          <GroupRoundedIcon />
+        </Badge>
       </Box>
       {distributions?.length && (
         <Box>
