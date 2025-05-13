@@ -10,6 +10,10 @@ export const StyledChip = styled(Chip, {
   padding: "1.5rem 0",
   backgroundColor: isActive ? theme.palette.primary.main : theme.palette.grey[200],
   color: isActive ? theme.palette.common.white : theme.palette.text.primary,
+  "&:hover": {
+    backgroundColor: isActive ? theme.palette.primary.dark : theme.palette.grey[300],
+    color: isActive ? theme.palette.common.white : theme.palette.text.primary,
+  },
 }));
 
 export const editorContainerStyle = {
