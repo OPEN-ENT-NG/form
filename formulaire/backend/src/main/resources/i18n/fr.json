@@ -148,7 +148,7 @@
   "formulaire.checkremind.anonymous": "Nombre de réponses au formulaire ",
   "formulaire.checkremind.name": "Utilisateurs auxquels a été envoyé le formulaire ",
   "formulaire.checkremind.table.name": "Nom",
-  "formulaire.checkremind.table.surname": "Prenom",
+  "formulaire.checkremind.table.surname": "Prénom",
   "formulaire.remind.title": "Envoyer un rappel",
   "formulaire.remind.description.multipleTrue": "Le message de rappel va être transmis à tous les utilisateurs à qui le formulaire a été envoyé.",
   "formulaire.remind.description.multipleFalse": "Le message de rappel va être transmis à tous les utilisateurs qui n'ont pas encore répondu au formulaire.",
