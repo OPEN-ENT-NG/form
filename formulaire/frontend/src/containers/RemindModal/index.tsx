@@ -122,7 +122,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           color="primary"
           showZero
           sx={{
-            marginTop: "1rem",
+            marginTop: "1.5rem",
             "& .MuiBadge-badge": {
               fontSize: "1.2rem",
               minWidth: 24,
