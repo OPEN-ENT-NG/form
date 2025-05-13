@@ -300,9 +300,9 @@ export default function ShareResourceModal({
           </Box>
         </Box>
         {children}
-        <Box component={BoxComponentType.HR} />
         {publicLink && (
           <Box>
+            <Box component={BoxComponentType.HR} />
             <Heading headingStyle="h4" level="h3" className="mb-16 d-flex align-items-center">
               <Box className="me-8">{tForm("formulaire.share.link.access")}</Box>
             </Heading>
