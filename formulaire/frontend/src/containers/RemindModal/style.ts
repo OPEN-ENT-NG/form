@@ -1,4 +1,4 @@
-import { styled, Chip, Box } from "@cgi-learning-hub/ui";
+import { styled, Chip, Box, SxProps } from "@cgi-learning-hub/ui";
 import { columnBoxStyle, flexStartBoxStyle } from "~/core/style/boxStyles";
 import { ICustomChipProps, IHiddenContentProps } from "./types";
 
@@ -43,7 +43,7 @@ export const HiddenContent = styled(Box, {
   gap: "2rem",
 }));
 
-export const dialogStyle = {
+export const dialogStyle: SxProps = {
   "& .MuiDialog-container": {
     alignItems: "flex-start",
     paddingTop: "8rem",
