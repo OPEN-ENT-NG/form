@@ -9,5 +9,7 @@ export const myAnswerHeader: SxProps<Theme> = {
 };
 
 export const tabStyle: SxProps<Theme> = {
-  padding: "0 0 0 2rem",
+  display: "flex",
+  justifyContent: "center",
+  width: "319px",
 };
