@@ -106,6 +106,7 @@ public class Formulaire extends BaseServer {
 		addController(new SectionController());
 		addController(sharingController);
 		addController(new UtilsController(storage));
+		addController(new NotifyCron(timelineHelper));
 
 		// CRON
 		RgpdCron rgpdCron = new RgpdCron(storage);
