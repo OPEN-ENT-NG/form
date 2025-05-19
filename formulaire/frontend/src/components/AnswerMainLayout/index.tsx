@@ -24,7 +24,8 @@ import { HomeMainSentFormTable } from "~/containers/HomeMainSentFormTable";
 import { ResourcesEmptyState } from "../SVG/RessourcesEmptyState";
 import { useTheme } from "@mui/material";
 import { centerBoxStyle } from "~/core/style/boxStyles";
-import { myAnswerHeader, tabStyle } from "./style";
+import { myAnswerHeader, myAnswerSearchStyle, tabStyle } from "./style";
+
 
 export const AnswerMainLayout: FC = () => {
   const { user } = useEdificeClient();
@@ -56,22 +57,24 @@ export const AnswerMainLayout: FC = () => {
         <Box flexShrink={0} sx={tabStyle}>
           <HomeTabs value={tab} setValue={toggleTab} />
         </Box>
-        <SearchInput
-          placeholder={t("formulaire.search.placeholder")}
-          sx={searchBarStyle}
-          onChange={(event) => {
-            handleSearch(event.target.value);
-          }}
-        />
-        <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
-        <OrganizeFilter
-          chipDatas={sentFormsChipDatas}
-          menuItemDatas={sentFormMenuItemDatas}
-          setSelectedChips={setSelectedChips}
-          selectedChips={selectedChips}
-          setSelectedMenuItem={setSelectedMenuItem}
-          selectedMenuItem={selectedMenuItem}
-        />
+        <Box sx={myAnswerSearchStyle}>
+          <SearchInput
+            placeholder={t("formulaire.search.placeholder")}
+            sx={searchBarStyle}
+            onChange={(event) => {
+              handleSearch(event.target.value);
+            }}
+          />
+          <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
+          <OrganizeFilter
+            chipDatas={sentFormsChipDatas}
+            menuItemDatas={sentFormMenuItemDatas}
+            setSelectedChips={setSelectedChips}
+            selectedChips={selectedChips}
+            setSelectedMenuItem={setSelectedMenuItem}
+            selectedMenuItem={selectedMenuItem}
+          />
+        </Box>
       </Box>
       {filteredSentForms.length > 0 ? (
         <Box sx={resourceContainerStyle}>

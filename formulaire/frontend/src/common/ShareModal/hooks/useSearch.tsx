@@ -69,18 +69,19 @@ const defaultActions: ShareRightAction[] = [
 ];
 
 export const useSearch = ({
+  appCode,
   resourceId,
   resourceCreatorId,
   shareRights,
   shareDispatch,
 }: {
+  appCode: string;
   resourceId: ShareOptions["resourceCreatorId"];
   resourceCreatorId: ShareOptions["resourceCreatorId"];
   shareRights: ShareRightWithVisibles;
   shareDispatch: Dispatch<ShareAction>;
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { appCode } = useEdificeClient();
 
   const debouncedSearchInputValue = useDebounce<string>(state.searchInputValue, 500);
 

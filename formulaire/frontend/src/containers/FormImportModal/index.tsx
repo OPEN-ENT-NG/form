@@ -41,18 +41,26 @@ export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const [launchImportForms, { isSuccess: isLaunchSuccess }] = useLazyLaunchImportFormsQuery();
 
   useEffect(() => {
+    console.log("===============");
+    console.log("isUploadSuccess", isUploadSuccess);
+    console.log("uploadedForms", uploadedForms);
+    console.log("isAnalyzeSuccess", isAnalyzeSuccess);
+    console.log("analyzedForms", analyzedForms);
+    console.log("isLaunchSuccess", isLaunchSuccess);
     const handleUploadStep = () => {
       const isUploadOk = isUploadSuccess && !!uploadedForms.importId;
       if (isUploadOk && !isAnalyzeSuccess) {
+        console.log("Run analyzeImportForms");
         void analyzeImportForms(uploadedForms.importId);
       }
       return isUploadOk;
     };
 
     const handleAnalyzeStep = (isUploadOk: boolean) => {
-      const isAnalyzeOk = isUploadOk && isAnalyzeSuccess && !analyzedForms.importId && !!analyzedForms.apps;
-
+      const isAnalyzeOk = isUploadOk && isAnalyzeSuccess && !!analyzedForms.importId && !!analyzedForms.apps;
+      console.log("isAnalyzeOk", isUploadOk, isAnalyzeSuccess, !analyzedForms.importId, !!analyzedForms.apps);
       if (isAnalyzeOk && !isLaunchSuccess) {
+        console.log("Run launchImportForms");
         void launchImportForms({
           importId: analyzedForms.importId,
           apps: analyzedForms.apps,
@@ -64,12 +72,13 @@ export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
     const handleLaunchStep = (isUploadOk: boolean, isAnalyzeOk: boolean) => {
       const isLaunchOk = isUploadOk && isAnalyzeOk && isLaunchSuccess;
       if (isLaunchOk) {
+        console.log("Run invalidateTags");
         dispatch(emptySplitFormulaireApi.util.invalidateTags([TagName.FORMS]));
         toast.success(t("formulaire.success.forms.import"));
         handleClose();
       }
     };
-
+    console.log("===============");
     const isUploadOk = handleUploadStep();
     const isAnalyzeOk = handleAnalyzeStep(isUploadOk);
     handleLaunchStep(isUploadOk, isAnalyzeOk);

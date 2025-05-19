@@ -29,6 +29,7 @@ interface IUseShareResourceModalProps {
   shareResource?: ShareResourceMutation;
   onSuccess: () => void;
   setIsLoading: (value: boolean) => void;
+  appCode: string;
 }
 
 type State = {
@@ -73,6 +74,7 @@ function reducer(state: State, action: ShareAction) {
 }
 
 export default function useShare({
+  appCode,
   resourceId,
   resourceRights,
   resourceCreatorId,
@@ -80,7 +82,6 @@ export default function useShare({
   setIsLoading,
   onSuccess,
 }: IUseShareResourceModalProps) {
-  const { appCode } = useEdificeClient();
   const { user, avatar } = useUser();
 
   const toast = useToast();

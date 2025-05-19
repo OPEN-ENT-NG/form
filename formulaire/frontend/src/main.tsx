@@ -57,7 +57,7 @@ const App = () => {
       <Provider store={store}>
         <EdificeClientProvider
           params={{
-            app: FORMULAIRE,
+            app: "Formulaires",
           }}
         >
           <EdificeThemeProvider>
