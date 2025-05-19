@@ -53,9 +53,11 @@ public class NotifyCron extends ControllerHelper implements Handler<Long> {
     }
 
     public void launchNotifications(Handler<Either<String, JsonObject>> handler) {
-        notifyNewFormFrom()
-            .compose(voidResult -> notifyClosingForm())
-            .onSuccess(voidResult -> handler.handle(new Either.Right<>(new JsonObject())))
+        Future<Void> newFormFuture = notifyNewFormFrom();
+        Future<Void> closingFormFuture = notifyClosingForm();
+
+        Future.all(newFormFuture, closingFormFuture)
+            .onSuccess((future) -> handler.handle(new Either.Right<>(new JsonObject())))
             .onFailure(err -> {
                 String errorMessage = "Failed to send notifications from notify CRON";
                 LogHelper.logError(this, "launchNotifications", errorMessage, err.getMessage());

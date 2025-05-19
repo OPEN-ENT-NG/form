@@ -15,6 +15,7 @@ import { useTranslation } from "react-i18next";
 
 import { ShareAction } from "./useShare";
 import { ShareOptions } from "../ShareModal";
+import { COMMON } from "~/core/constants";
 
 type State = {
   searchInputValue: string;
@@ -87,7 +88,7 @@ export const useSearch = ({
 
   const { isAdml } = useIsAdml();
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(COMMON);
 
   useEffect(() => {
     void search(debouncedSearchInputValue);

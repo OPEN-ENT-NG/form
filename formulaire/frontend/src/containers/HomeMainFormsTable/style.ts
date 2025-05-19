@@ -6,3 +6,7 @@ export const tablePaginationStyle = {
 };
 
 export const iconBoxStyle: SxProps = { ...centerBoxStyle, gap: ".5rem" };
+
+export const tableCheckboxStyle: SxProps = {
+  padding: 0,
+};
