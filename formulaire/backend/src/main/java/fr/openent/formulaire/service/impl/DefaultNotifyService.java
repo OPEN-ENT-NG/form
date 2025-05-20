@@ -99,14 +99,14 @@ public class DefaultNotifyService implements NotifyService {
         UserInfos user = new UserInfos();
 
         String endPath = form.getRgpd() ? RGPD : NEW;
-        String formUri = "/formulaire#/form/" + form.getId() + "/" + endPath;
+        String formUri = "/formulaire?view=angular#/form/" + form.getId() + "/" + endPath;
 
         JsonObject params = new JsonObject()
                 .put(PARAM_FORM_URI, formUri)
                 .put(PARAM_FORM_NAME, form.getTitle())
                 .put(PARAM_PUSH_NOTIF, new JsonObject().put(TITLE, "push.notif.formulaire.closingForm").put(BODY, ""))
                 .put(PARAM_RESOURCE_URI, formUri)
-                .put(PARAM_DATE_ENDING, form.getDateEnding());
+                .put(PARAM_DATE_ENDING, form.getDateEnding().toString());
 
         timelineHelper.notifyTimeline(request, "formulaire.closing_form_notification", user, responders, params);
     }
