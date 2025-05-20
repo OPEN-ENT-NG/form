@@ -9,7 +9,7 @@ import {
   User,
   odeServices,
 } from "@edifice.io/client";
-import { OptionListItemType, useDebounce, useEdificeClient, useIsAdml } from "@edifice.io/react";
+import { OptionListItemType, useDebounce, useIsAdml } from "@edifice.io/react";
 import { IconBookmark } from "@edifice.io/react/icons";
 import { useTranslation } from "react-i18next";
 
