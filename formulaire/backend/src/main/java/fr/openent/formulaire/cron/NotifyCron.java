@@ -31,10 +31,11 @@ public class NotifyCron extends ControllerHelper implements Handler<Long> {
     private final DistributionService distributionService;
     private final NotifyService notifyService;
 
-    public NotifyCron(TimelineHelper timelineHelper) {
+    public NotifyCron(TimelineHelper timelineHelper, JsonObject config) {
         this.formService = new DefaultFormService();
         this.distributionService = new DefaultDistributionService();
         this.notifyService = new DefaultNotifyService(timelineHelper, eb);
+        this.config = config;
     }
 
     @Override

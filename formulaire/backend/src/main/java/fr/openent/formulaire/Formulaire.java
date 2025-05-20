@@ -106,12 +106,11 @@ public class Formulaire extends BaseServer {
 		addController(new SectionController());
 		addController(sharingController);
 		addController(new UtilsController(storage));
-		addController(new NotifyCron(timelineHelper));
 
 		// CRON
 		RgpdCron rgpdCron = new RgpdCron(storage);
 		new CronTrigger(vertx, config.getString(RGPD_CRON, "0 0 0 */1 * ? *")).schedule(rgpdCron);
-		NotifyCron notifyCron = new NotifyCron(timelineHelper);
+		NotifyCron notifyCron = new NotifyCron(timelineHelper, config);
 		new CronTrigger(vertx, config.getString(NOTIFY_CRON, "0 0 0 */1 * ? *")).schedule(notifyCron);
 		startPromise.tryComplete();
 	}
