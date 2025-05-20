@@ -23,7 +23,9 @@
     "timeline.formulaire.access": "Accéder au formulaire ",
     "timeline.formulaire.uploaded.infected.file": " a tenté de telécharger un fichier malveillant nommé ",
     "timeline.formulaire.responded.form": ". Il répondait au formulaire ",
-    "timeline.formulaire.the.form": "Le formulaire ",
-    "timeline.formulaire.close.on": " ferme le ",
-    "timeline.formulaire.consult": ". Consultez le dans Formulaires pour y répondre."
+
+    "timeline.formulaire.consult": ". Consultez le ",
+    "timeline.formulaire.closing" : "Un formulaire non répondu se cloture le ",
+    "timeline.formulaire" : "formulaire",
+    "timeline.formulaire.to.answer" : "afin d'y répondre."
 }

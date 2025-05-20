@@ -105,7 +105,8 @@ public class DefaultNotifyService implements NotifyService {
                 .put(PARAM_FORM_URI, formUri)
                 .put(PARAM_FORM_NAME, form.getTitle())
                 .put(PARAM_PUSH_NOTIF, new JsonObject().put(TITLE, "push.notif.formulaire.closingForm").put(BODY, ""))
-                .put(PARAM_RESOURCE_URI, formUri);
+                .put(PARAM_RESOURCE_URI, formUri)
+                .put(PARAM_DATE_ENDING, form.getDateEnding());
 
         timelineHelper.notifyTimeline(request, "formulaire.closing_form_notification", user, responders, params);
     }
