@@ -23,7 +23,9 @@
   "timeline.formulaire.access": "Go to the form ",
   "timeline.formulaire.uploaded.infected.file": " try to upload an infected file named ",
   "timeline.formulaire.responded.form": ". He was responding to the form ",
-  "timeline.formulaire.the.form": "The form ",
-  "timeline.formulaire.close.on": " close on ",
-  "timeline.formulaire.consult": ". Consult it in the app Formulaires to respond."
+
+  "timeline.formulaire.consult": ". View ",
+  "timeline.formulaire.closing": "An unanswered form closes on ",
+  "timeline.formulaire": "the form",
+  "timeline.formulaire.to.answer": "to answer it."
 }
