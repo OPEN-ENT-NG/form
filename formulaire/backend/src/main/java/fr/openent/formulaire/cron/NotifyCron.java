@@ -18,7 +18,10 @@ import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.notification.TimelineHelper;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static fr.openent.form.core.constants.ConfigFields.DAYS_BEFORE_NOTIF_CLOSING;
@@ -92,19 +95,18 @@ public class NotifyCron extends ControllerHelper implements Handler<Long> {
 
     public Future<Void> notifyClosingForm() {
         Promise<Void> promise = Promise.promise();
-        JsonObject composeInfos = new JsonObject();
+        List<Form> formList = new ArrayList<>();
         Integer nbDaysBeforeClosing = config.getInteger(DAYS_BEFORE_NOTIF_CLOSING, DEFAULT_DAYS_BEFORE_NOTIF_CLOSING);
 
         formService.listFormsClosingSoon(nbDaysBeforeClosing)
             .compose(forms -> {
-                composeInfos.put(FORMS, forms);
+                formList.addAll(forms);
                 List<Number> formIds = forms.stream().map(Form::getId).collect(Collectors.toList());
                 return distributionService.listByForms(new JsonArray(formIds));
             })
             .onSuccess(distributionsJson -> {
                 List<Distribution> distributions = IModelHelper.toList(distributionsJson, Distribution.class);
-                List<Form> forms = IModelHelper.toList(composeInfos.getJsonArray(FORMS), Form.class);
-                forms.forEach(form -> {
+                formList.forEach(form -> {
                     List<String> respondersIds = distributions.stream()
                             .filter(distrib -> distrib.getFormId().equals(form.getId()))
                             .map(Distribution::getResponderId)
