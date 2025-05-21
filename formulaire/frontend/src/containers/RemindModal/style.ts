@@ -46,10 +46,10 @@ export const HiddenContent = styled(Box, {
 export const dialogStyle: SxProps = {
   "& .MuiDialog-container": {
     alignItems: "flex-start",
-    paddingTop: "8rem",
+    paddingTop: "1rem",
   },
   "& .MuiDialog-paper": {
-    maxHeight: "80vh",
+    maxHeight: "90vh",
     display: "flex",
     flexDirection: "column",
   },

@@ -2,6 +2,7 @@ import { FC } from "react";
 import { useHome } from "~/providers/HomeProvider";
 import { ShareModal } from "~/common/ShareModal";
 import { IModalProps } from "~/core/types";
+import { FORMULAIRE } from "~/core/constants";
 
 export const FormShareModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { selectedForms } = useHome();
@@ -15,6 +16,12 @@ export const FormShareModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   };
 
   return (
-    <ShareModal isOpen={isOpen} shareOptions={shareOptions} onCancel={handleClose} onSuccess={handleShareSuccess} />
+    <ShareModal
+      appCode={FORMULAIRE}
+      isOpen={isOpen}
+      shareOptions={shareOptions}
+      onCancel={handleClose}
+      onSuccess={handleShareSuccess}
+    />
   );
 };

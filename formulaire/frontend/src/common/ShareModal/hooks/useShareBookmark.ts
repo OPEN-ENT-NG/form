@@ -5,6 +5,7 @@ import { useToast, useToggle } from "@edifice.io/react";
 import { useTranslation } from "react-i18next";
 
 import { ShareAction } from "./useShare";
+import { COMMON } from "~/core/constants";
 
 interface IUseShareBookmarkProps {
   shareRights: ShareRightWithVisibles;
@@ -18,7 +19,7 @@ export type BookmarkProps = {
 
 export const useShareBookmark = ({ shareRights, shareDispatch }: IUseShareBookmarkProps) => {
   const toast = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslation(COMMON);
 
   const refBookmark = useRef<HTMLInputElement>(null);
 

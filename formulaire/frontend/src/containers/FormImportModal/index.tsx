@@ -50,8 +50,7 @@ export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
     };
 
     const handleAnalyzeStep = (isUploadOk: boolean) => {
-      const isAnalyzeOk = isUploadOk && isAnalyzeSuccess && !analyzedForms.importId && !!analyzedForms.apps;
-
+      const isAnalyzeOk = isUploadOk && isAnalyzeSuccess && !!analyzedForms.importId && !!analyzedForms.apps;
       if (isAnalyzeOk && !isLaunchSuccess) {
         void launchImportForms({
           importId: analyzedForms.importId,
@@ -69,7 +68,6 @@ export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
         handleClose();
       }
     };
-
     const isUploadOk = handleUploadStep();
     const isAnalyzeOk = handleAnalyzeStep(isUploadOk);
     handleLaunchStep(isUploadOk, isAnalyzeOk);

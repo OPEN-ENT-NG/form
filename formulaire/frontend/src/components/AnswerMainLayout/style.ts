@@ -1,5 +1,6 @@
 import { SxProps, Theme } from "@mui/material";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
+import { searchStyle } from "~/containers/HomeMainLayout/style";
 
 export const myAnswerHeader: SxProps<Theme> = {
   ...spaceBetweenBoxStyle,
@@ -12,4 +13,9 @@ export const tabStyle: SxProps<Theme> = {
   display: "flex",
   justifyContent: "center",
   width: "319px",
+};
+
+export const myAnswerSearchStyle: SxProps<Theme> = {
+  ...searchStyle,
+  padding: "0 0 0 calc(1rem + 1px)",
 };
