@@ -2,6 +2,7 @@ package fr.openent.formulaire.service.impl;
 
 import fr.openent.form.core.models.Form;
 import fr.openent.formulaire.service.NotifyService;
+import fr.wseduc.webutils.I18n;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.json.JsonArray;
 import org.entcore.common.http.request.JsonHttpServerRequest;
@@ -14,7 +15,10 @@ import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import static fr.openent.form.core.constants.Fields.*;
 import static fr.wseduc.webutils.http.Renders.unauthorized;
@@ -99,13 +103,17 @@ public class DefaultNotifyService implements NotifyService {
         UserInfos user = new UserInfos();
 
         String endPath = form.getRgpd() ? RGPD : NEW;
-        String formUri = "/formulaire#/form/" + form.getId() + "/" + endPath;
+        String formUri = "/formulaire?view=angular#/form/" + form.getId() + "/" + endPath;
+
+        DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, I18n.getLocale(I18n.acceptLanguage(request)));
+        String formatedDateEnding = df.format(form.getDateEnding());
 
         JsonObject params = new JsonObject()
                 .put(PARAM_FORM_URI, formUri)
                 .put(PARAM_FORM_NAME, form.getTitle())
                 .put(PARAM_PUSH_NOTIF, new JsonObject().put(TITLE, "push.notif.formulaire.closingForm").put(BODY, ""))
-                .put(PARAM_RESOURCE_URI, formUri);
+                .put(PARAM_RESOURCE_URI, formUri)
+                .put(PARAM_DATE_ENDING, formatedDateEnding);
 
         timelineHelper.notifyTimeline(request, "formulaire.closing_form_notification", user, responders, params);
     }

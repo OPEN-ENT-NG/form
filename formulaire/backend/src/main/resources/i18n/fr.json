@@ -477,5 +477,7 @@
   "group.school.Teacher": "Enseignants de l'{{0}}.",
   "group.school.Guest": "Invités de l'{{0}}.",
 
-  "formulaire.date.format.locale": "fr-FR"
+  "formulaire.date.format.locale": "fr-FR",
+  "portal.no.result": "Aucun résultat",
+  "explorer.search.pending": "Recherche en cours..."
 }
