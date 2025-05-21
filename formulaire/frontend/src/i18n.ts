@@ -5,7 +5,7 @@ import i18n from "i18next";
 import LanguageDetector from "i18next-browser-languagedetector";
 import Backend from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
-import { FORMULAIRE } from "./core/constants";
+import { COMMON, FORMULAIRE } from "./core/constants";
 
 i18n
   .use(Backend)
@@ -15,7 +15,7 @@ i18n
     backend: {
       loadPath: (_lngs: string[], namespaces: string[]) => {
         const urls = namespaces.map((namespace: string) => {
-          if (namespace === "common") {
+          if (namespace === COMMON) {
             return `/i18n`;
           }
           return `/${namespace}/i18n`;
@@ -28,7 +28,7 @@ i18n
     },
     defaultNS: FORMULAIRE,
     // you can add name of the app directly in the ns array
-    ns: ["common", FORMULAIRE],
+    ns: [COMMON, FORMULAIRE],
     fallbackLng: "fr",
     supportedLngs: ["fr", "en"],
     interpolation: {

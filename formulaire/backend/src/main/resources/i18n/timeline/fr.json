@@ -11,6 +11,7 @@
   "timeline.formulaire.access": "Accéder au formulaire ",
   "timeline.formulaire.close.on": " ferme le ",
   "timeline.formulaire.consult": ". Consultez le dans Formulaires pour y répondre.",
+  "timeline.formulaire.closing" : "Un formulaire non répondu se clôture le ",
   "timeline.formulaire.from": "de ",
   "timeline.formulaire.lambda.sender": "Un utilisateur ",
   "timeline.formulaire.new.notification": "Nouvelle notification Formulaire ",
@@ -21,6 +22,8 @@
   "timeline.formulaire.sent": " vous a envoyé un formulaire. ",
   "timeline.formulaire.sent.by.unknow": "Vous avez reçu un nouveau formulaire. ",
   "timeline.formulaire.the.form": "Le formulaire ",
+  "timeline.formulaire.to.answer" : "afin d'y répondre.",
   "timeline.formulaire.unknown.sender": "Utilisateur INCONNU",
-  "timeline.formulaire.uploaded.infected.file": " a tenté de telécharger un fichier malveillant nommé "
+  "timeline.formulaire.uploaded.infected.file": " a tenté de telécharger un fichier malveillant nommé ",
+  "timeline.the.formulaire" : "le formulaire"
 }

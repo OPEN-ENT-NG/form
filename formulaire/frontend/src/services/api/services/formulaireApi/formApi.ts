@@ -89,7 +89,6 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
-          toast.success(t("formulaire.success.forms.delete", { ns: FORMULAIRE }));
         } catch (err) {
           console.error("formulaire.error.formService.delete", err);
           toast.error(t("formulaire.error.formService.delete", { ns: FORMULAIRE }));
