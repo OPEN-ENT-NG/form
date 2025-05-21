@@ -22,7 +22,7 @@ import { IForm } from "~/core/models/form/types";
 import dayjs from "dayjs";
 import { DateFormat } from "~/core/enums";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
-import { iconBoxStyle, tableCheckboxStyle, tablePaginationStyle } from "./style";
+import { iconBoxStyle, tableCheckboxStyle, tableContainerStyle, tablePaginationStyle } from "./style";
 import { IHomeMainFormsTableProps } from "./types";
 import { ColumnId } from "./enums";
 
@@ -59,10 +59,8 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked) {
       setSelectedForms(displayedForms);
-      setAllSelected(true);
       return;
     }
-    setAllSelected(false);
     setSelectedForms([]);
   };
 
@@ -84,7 +82,7 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   }, [totalCount, limit, page]);
 
   return (
-    <Box>
+    <Box sx={tableContainerStyle}>
       <TableContainer>
         <TableHead>
           <TableRow>
