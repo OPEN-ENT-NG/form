@@ -35,6 +35,7 @@ export const Header: FC<IHeaderProps> = ({
             onClick={() => {
               button.action();
             }}
+            startIcon={button.startIcon}
             sx={{ marginLeft: "2rem" }}
           >
             {t(button.titleI18nkey)}

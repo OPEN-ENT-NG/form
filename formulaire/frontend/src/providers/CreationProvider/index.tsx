@@ -9,6 +9,8 @@ import { workflowRights } from "~/core/rights";
 import { IForm } from "~/core/models/form/types";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
+import { getSectionList } from "~/core/models/section/utils";
+import { getQuestionList } from "~/core/models/question/utils";
 
 const CreationProviderContext = createContext<CreationProviderContextType | null>(null);
 
@@ -44,20 +46,25 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   }, [formDatas]);
 
   useEffect(() => {
-    if (questionsDatas) {
-      console.log("questionsDatas", questionsDatas);
-      return;
+    if (questionsDatas && questionsDatas.length > 0) {
+      setFormElementsList((prevFormElementList) => {
+        const filteredSections = getSectionList(prevFormElementList);
+        return [...filteredSections, ...questionsDatas];
+      });
+    }
+    if (sectionsDatas && sectionsDatas.length > 0) {
+      setFormElementsList((prevFormElementList) => {
+        const filteredQuestions = getQuestionList(prevFormElementList);
+        return [...filteredQuestions, ...sectionsDatas];
+      });
     }
     return;
-  }, [questionsDatas]);
+  }, [questionsDatas, sectionsDatas]);
 
   useEffect(() => {
-    if (sectionsDatas) {
-      console.log("sectionsDatas", sectionsDatas);
-      return;
-    }
+    console.log("formElementsList", formElementsList);
     return;
-  }, [sectionsDatas]);
+  }, [formElementsList]);
 
   const value = useMemo<CreationProviderContextType>(
     () => ({

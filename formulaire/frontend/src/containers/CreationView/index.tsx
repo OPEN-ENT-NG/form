@@ -1,23 +1,28 @@
 import { FC } from "react";
-import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
 
 import { Box } from "@cgi-learning-hub/ui";
 import { Header } from "~/components/Header";
 import { useElementHeight } from "../HomeView/utils";
 import { useCreation } from "~/providers/CreationProvider";
+import { useGetCreationHeaderButtons } from "./utils";
+import { CreationLayout } from "../CreationLayout";
 
 export const CreationView: FC = () => {
-  const { t } = useTranslation(FORMULAIRE);
   const { form } = useCreation();
-  const [headerRef] = useElementHeight<HTMLDivElement>();
+  const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
+  const headerButtons = useGetCreationHeaderButtons();
 
   return (
-    <Box height={"100%"}>
+    <Box height="100%">
       <Box ref={headerRef}>
-        <Header stringItems={[t("formulaire.title")]} buttons={[]} />
+        {form ? (
+          <Header stringItems={[form.title]} buttons={headerButtons} />
+        ) : (
+          <Header stringItems={["test"]} buttons={headerButtons} />
+        )}
       </Box>
-      <Box>{form?.id}</Box>
+
+      {form && <CreationLayout headerHeight={headerHeight} />}
     </Box>
   );
 };

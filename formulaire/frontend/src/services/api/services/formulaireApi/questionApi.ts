@@ -4,6 +4,7 @@ import { FORMULAIRE } from "~/core/constants";
 import i18n from "~/i18n";
 import { toast } from "react-toastify";
 import { IQuestion } from "~/core/models/question/types";
+import { FormElementType } from "~/core/models/formElement/enum";
 
 export const questionApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -15,6 +16,11 @@ export const questionApi = emptySplitFormulaireApi.injectEndpoints({
           Accept: "application/json;version=2.0",
         },
       }),
+      transformResponse: (response: IQuestion[]) =>
+        response.map((question) => ({
+          ...question,
+          formElementType: FormElementType.QUESTION,
+        })),
       providesTags: [TagName.FORMS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
