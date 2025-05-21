@@ -76,3 +76,6 @@ dist
 /formulaire-public/angular/src/js/
 /formulaire-public/angular/src/mdi/
 /formulaire-public/angular/src/view/
+
+# Test coverage
+*/frontend/coverage

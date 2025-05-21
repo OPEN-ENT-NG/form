@@ -10,7 +10,7 @@ import prettierConfig from "eslint-config-prettier";
 
 export default tseslint.config(
   {
-    ignores: ["dist", "node_modules", "coverage", "prettier.config.cjs", "eslint.config.js", "vite.config.ts"],
+    ignores: ["dist", "node_modules", "coverage", "prettier.config.cjs", "eslint.config.js", "vite.config.ts", "src/tests/jest/jest.polyfills.js"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

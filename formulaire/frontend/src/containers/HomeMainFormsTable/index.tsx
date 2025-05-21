@@ -13,6 +13,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Table,
   Tooltip,
 } from "@cgi-learning-hub/ui";
 import { getPageForms, initialTableProps, useColumns } from "./utils";
@@ -67,36 +68,37 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   return (
     <Box>
       <TableContainer>
-        <TableHead>
-          <TableRow>
-            {columns.map((column) => (
-              <TableCell key={column.id} align="center" style={{ width: column.width }}>
-                <Typography variant={TypographyVariant.BODY1}>{column.label}</Typography>
-              </TableCell>
-            ))}
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {displayedForms.map((form) => {
-            const isItemSelected = isSelected(form.id);
-            return (
-              <TableRow
-                key={form.id}
-                selected={isItemSelected}
-                aria-checked={isItemSelected}
-                role="checkbox"
-                tabIndex={-1}
-                hover
+        <Table>
+          <TableHead>
+            <TableRow>
+              {columns.map((column) => (
+                <TableCell key={column.id} align="center" style={{ width: column.width }}>
+                  <Typography variant={TypographyVariant.BODY1}>{column.label}</Typography>
+                </TableCell>
+              ))}
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {displayedForms.map((form) => {
+              const isItemSelected = isSelected(form.id);
+              return (
+                <TableRow
+                  key={form.id}
+                  selected={isItemSelected}
+                  aria-checked={isItemSelected}
+                  role="checkbox"
+                  tabIndex={-1}
+                  hover
                 onClick={() => {
                   handleClick(form);
                 }}
                 sx={{ cursor: "pointer" }}
-              >
-                <TableCell sx={{ padding: 0 }} padding="checkbox">
-                  <Checkbox
-                    checked={isItemSelected}
-                    onChange={() => {
-                      handleClick(form);
+                >
+                  <TableCell sx={{ padding: 0 }} padding="checkbox">
+                    <Checkbox
+                      checked={isItemSelected}
+                      onChange={() => {
+                        handleClick(form);
                     }}
                     onClick={(e) => {
                       e.stopPropagation();
@@ -104,14 +106,7 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
                   />
                 </TableCell>
                 <TableCell align="center">
-                  <EllipsisWithTooltip
-                    typographyProps={{
-                      variant: TypographyVariant.BODY2,
-                      sx: { maxWidth: "30rem" },
-                    }}
-                  >
-                    {form.title}
-                  </EllipsisWithTooltip>
+                  <Typography variant={TypographyVariant.BODY2}>{form.title}</Typography>
                 </TableCell>
                 <TableCell align="center">
                   <Typography variant={TypographyVariant.BODY2}>{form.owner_name}</Typography>

@@ -1,4 +1,4 @@
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, Fragment, useCallback, useEffect, useMemo, useState } from "react";
 import {
   Typography,
   TextField,
@@ -259,7 +259,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
               const showDescription = isDescriptionDisplay && item.field === FormPropField.DESCRIPTION;
               const showRgpd = item.field === FormPropField.HAS_RGPD && isRgpdPossible && hasRgpd;
               return (
-                <>
+                <Fragment key={item.field}>
                   <Box
                     key={item.field}
                     sx={{
@@ -356,7 +356,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                       <RGPDInfoBox params={delegateParam} />
                     </Box>
                   )}
-                </>
+                </Fragment>
               );
             })}
           </Box>
