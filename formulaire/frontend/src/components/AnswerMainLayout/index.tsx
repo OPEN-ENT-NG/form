@@ -26,7 +26,6 @@ import { useTheme } from "@mui/material";
 import { centerBoxStyle } from "~/core/style/boxStyles";
 import { myAnswerHeader, myAnswerSearchStyle, tabStyle } from "./style";
 
-
 export const AnswerMainLayout: FC = () => {
   const { user } = useEdificeClient();
   const userId = user?.userId;
