@@ -23,7 +23,7 @@ export const Header: FC<IHeaderProps> = ({
       <FormBreadcrumbs
         icon={FormsIcon}
         stringItems={stringItems}
-        separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem", marginX: "0px" }} />}
+        separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem" }} />}
         isHeader
       />
       {isCreationPage && <Box>//TODO</Box>}

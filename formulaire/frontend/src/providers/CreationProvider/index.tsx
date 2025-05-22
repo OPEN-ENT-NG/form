@@ -48,23 +48,18 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   useEffect(() => {
     if (questionsDatas && questionsDatas.length > 0) {
       setFormElementsList((prevFormElementList) => {
-        const filteredSections = getSectionList(prevFormElementList);
-        return [...filteredSections, ...questionsDatas];
+        const previousSections = getSectionList(prevFormElementList);
+        return [...previousSections, ...questionsDatas];
       });
     }
     if (sectionsDatas && sectionsDatas.length > 0) {
       setFormElementsList((prevFormElementList) => {
-        const filteredQuestions = getQuestionList(prevFormElementList);
-        return [...filteredQuestions, ...sectionsDatas];
+        const previousQuestions = getQuestionList(prevFormElementList);
+        return [...previousQuestions, ...sectionsDatas];
       });
     }
     return;
   }, [questionsDatas, sectionsDatas]);
-
-  useEffect(() => {
-    console.log("formElementsList", formElementsList);
-    return;
-  }, [formElementsList]);
 
   const value = useMemo<CreationProviderContextType>(
     () => ({
