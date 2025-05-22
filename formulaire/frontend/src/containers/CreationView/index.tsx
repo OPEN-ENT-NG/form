@@ -16,9 +16,9 @@ export const CreationView: FC = () => {
     <Box height="100%">
       <Box ref={headerRef}>
         {form ? (
-          <Header stringItems={[form.title]} buttons={headerButtons} />
+          <Header stringItems={[form.title]} buttons={headerButtons} displaySeparator />
         ) : (
-          <Header stringItems={["test"]} buttons={headerButtons} />
+          <Header stringItems={["test"]} buttons={headerButtons} displaySeparator />
         )}
       </Box>
 
