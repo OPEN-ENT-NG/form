@@ -7,6 +7,6 @@ export const isFormElementQuestion = (formElement: IFormElement): boolean => {
 };
 
 export const getQuestionList = (formElementList: IFormElement[]): IQuestion[] => {
-  const questions = formElementList.filter((formElement) => isFormElementQuestion(formElement));
+  const questions = formElementList.filter((formElement) => isFormElementQuestion(formElement)) as IQuestion[];
   return questions;
 };
