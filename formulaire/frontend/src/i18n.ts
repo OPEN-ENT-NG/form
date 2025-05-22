@@ -26,7 +26,7 @@ i18n
         return JSON.parse(data);
       },
     },
-    defaultNS: FORMULAIRE,
+    defaultNS: COMMON,
     // you can add name of the app directly in the ns array
     ns: [COMMON, FORMULAIRE],
     fallbackLng: "fr",
@@ -40,7 +40,7 @@ i18n
   });
 
 export const t = (key: string, options?: Record<string, unknown>) => {
-  return i18n.t(key, options);
+  return i18n.t(key, { ns: FORMULAIRE, ...options });
 };
 
 export default i18n;
