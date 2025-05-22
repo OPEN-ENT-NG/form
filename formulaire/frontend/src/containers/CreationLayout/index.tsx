@@ -18,15 +18,6 @@ export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
   const handleNewFormElement = () => {
     console.log("New form element");
   };
-
-  // get Element with data-name = empty-form, then get its parent, and give it a hieght of 300px OR CHANGE LIBRARY
-  const emptyFormElement = document.querySelector("[data-name='empty-form']");
-  if (emptyFormElement) {
-    const parentElement = emptyFormElement.parentElement;
-    if (parentElement) {
-      parentElement.style.height = "350px";
-    }
-  }
   
   return (
     <CreationLayoutWrapper headerHeight={headerHeight}>
@@ -37,6 +28,7 @@ export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
             title={t("formulaire.form.edit.empty.main")}
             description={t("formulaire.form.edit.empty.caption")}
             color="primary.main"
+            imageHeight={350}
           />
           <Button variant={ComponentVariant.CONTAINED} onClick={handleNewFormElement}>
             {t("formulaire.add.element")}
