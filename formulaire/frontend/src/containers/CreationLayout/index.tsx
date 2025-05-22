@@ -18,10 +18,10 @@ export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
   const handleNewFormElement = () => {
     console.log("New form element");
   };
-  
+
   return (
     <CreationLayoutWrapper headerHeight={headerHeight}>
-      {formElementsList.length === 2 && (
+      {formElementsList.length <= 0 && (
         <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" width={"100%"} gap={3}>
           <EmptyState
             image={<EmptyForm />}
