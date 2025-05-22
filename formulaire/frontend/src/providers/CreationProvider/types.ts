@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { Dispatch, ReactNode, SetStateAction } from "react";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 
@@ -10,4 +10,5 @@ export type CreationProviderContextType = {
   form: IForm | null;
   formElementsList: IFormElement[];
   currentEditingElement: IFormElement | null;
+  setCurrentEditingElement: Dispatch<SetStateAction<IFormElement | null>>;
 };

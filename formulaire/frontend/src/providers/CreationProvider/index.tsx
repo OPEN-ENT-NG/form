@@ -66,6 +66,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       form,
       formElementsList,
       currentEditingElement,
+      setCurrentEditingElement,
     }),
     [form, formElementsList, currentEditingElement],
   );
