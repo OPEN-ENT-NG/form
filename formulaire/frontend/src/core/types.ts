@@ -7,7 +7,7 @@ export interface IModalProps {
 }
 
 export interface IButtonProps {
-  titleI18nkey: string;
+  title: string;
   variant?: ComponentVariant.TEXT | ComponentVariant.OUTLINED | ComponentVariant.CONTAINED;
   action: () => void;
   startIcon?: ReactNode;

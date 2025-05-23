@@ -30,7 +30,7 @@ export const Header: FC<IHeaderProps> = ({
       <Box sx={headerButtonsStyle}>
         {buttons.map((button) => (
           <Button
-            key={button.titleI18nkey}
+            key={button.title}
             variant={button.variant ?? ComponentVariant.CONTAINED}
             onClick={() => {
               button.action();
@@ -38,7 +38,7 @@ export const Header: FC<IHeaderProps> = ({
             startIcon={button.startIcon}
             sx={{ marginLeft: "2rem" }}
           >
-            {t(button.titleI18nkey)}
+            {t(button.title)}
           </Button>
         ))}
       </Box>

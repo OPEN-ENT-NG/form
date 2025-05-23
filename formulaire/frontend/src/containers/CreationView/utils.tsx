@@ -1,31 +1,32 @@
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import { t } from "~/i18n";
 
 export const useGetCreationHeaderButtons = (): IButtonProps[] => {
   return [
     {
-      titleI18nkey: "formulaire.return",
+      title: t("formulaire.return"),
       variant: ComponentVariant.OUTLINED,
       action: () => {},
     },
     {
-      titleI18nkey: "formulaire.visualize.path",
+      title: t("formulaire.visualize.path"),
       variant: ComponentVariant.OUTLINED,
       action: () => {},
     },
     {
-      titleI18nkey: "formulaire.organize",
+      title: t("formulaire.organize"),
       variant: ComponentVariant.OUTLINED,
       action: () => {},
     },
     {
-      titleI18nkey: "formulaire.preview",
+      title: t("formulaire.preview"),
       variant: ComponentVariant.OUTLINED,
       action: () => {},
     },
     {
-      titleI18nkey: "formulaire.save",
+      title: t("formulaire.save"),
       variant: ComponentVariant.CONTAINED,
       action: () => {},
       startIcon: <SaveRoundedIcon />,

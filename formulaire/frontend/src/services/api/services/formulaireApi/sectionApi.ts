@@ -1,10 +1,9 @@
 import { QueryMethod, TagName } from "~/core/enums";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
-import { FORMULAIRE } from "~/core/constants";
-import i18n from "~/i18n";
 import { toast } from "react-toastify";
 import { ISection, ISectionDTO } from "~/core/models/section/types";
 import { transformSections } from "~/core/models/section/utils";
+import { t } from "~/i18n";
 
 export const sectionApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -20,7 +19,7 @@ export const sectionApi = emptySplitFormulaireApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.sectionService.list", err);
-          toast.error(i18n.t("formulaire.error.sectionService.list", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.sectionService.list"));
         }
       },
     }),
