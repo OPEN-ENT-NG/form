@@ -215,12 +215,12 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       case DisplayContentType.WRITE_REMIND:
         return [
           {
-            titleI18nkey: "formulaire.cancel",
+            title: t("formulaire.cancel"),
             action: handleCancelRemind,
             variant: ComponentVariant.OUTLINED,
           },
           {
-            titleI18nkey: "formulaire.confirm",
+            title: t("formulaire.confirm"),
             action: () => {
               void handleSubmit();
             },
@@ -228,14 +228,14 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           },
         ];
       case DisplayContentType.NO_DISTRIBUTIONS:
-        return [{ titleI18nkey: "formulaire.close", action: handleClose, variant: ComponentVariant.OUTLINED }];
+        return [{ title: t("formulaire.close"), action: handleClose, variant: ComponentVariant.OUTLINED }];
       case DisplayContentType.LOADING:
-        return [{ titleI18nkey: "formulaire.close", action: handleClose, variant: ComponentVariant.OUTLINED }];
+        return [{ title: t("formulaire.close"), action: handleClose, variant: ComponentVariant.OUTLINED }];
       case DisplayContentType.FOLLOW:
         return [
-          { titleI18nkey: "formulaire.close", action: handleClose, variant: ComponentVariant.OUTLINED },
+          { title: t("formulaire.close"), action: handleClose, variant: ComponentVariant.OUTLINED },
           {
-            titleI18nkey: "formulaire.remind.title",
+            title: t("formulaire.remind.title"),
             action: () => {
               setShowRemind(true);
             },
@@ -243,7 +243,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           },
         ];
       default:
-        return [{ titleI18nkey: "formulaire.close", action: handleClose, variant: ComponentVariant.OUTLINED }];
+        return [{ title: t("formulaire.close"), action: handleClose, variant: ComponentVariant.OUTLINED }];
     }
   };
 
@@ -266,14 +266,14 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       <DialogActions>
         {renderActions().map((button) => (
           <Button
-            key={button.titleI18nkey}
+            key={button.title}
             variant={button.variant ?? ComponentVariant.CONTAINED}
             onClick={() => {
               button.action();
             }}
             sx={buttonStyle}
           >
-            {t(button.titleI18nkey)}
+            {t(button.title)}
           </Button>
         ))}
       </DialogActions>
