@@ -14,3 +14,10 @@ export const BreadCrumbItemWrapper = styled(Typography, {
     },
   }),
 }));
+
+export const separatorStyle = {
+  "& .MuiBreadcrumbs-separator": {
+    marginLeft: 0,
+    marginRight: 0,
+  },
+};
