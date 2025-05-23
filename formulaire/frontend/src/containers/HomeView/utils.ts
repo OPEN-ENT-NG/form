@@ -3,19 +3,20 @@ import { useEffect, useRef, useState, RefObject } from "react";
 import { useModal } from "~/providers/ModalProvider";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
+import { t } from "~/i18n";
 
 export const useGetHomeHeaderButtons = (): IButtonProps[] => {
   const { toggleModal } = useModal();
   return [
     {
-      titleI18nkey: "formulaire.form.import.button",
+      title: t("formulaire.form.import.button"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
         toggleModal(ModalType.FORM_IMPORT);
       },
     },
     {
-      titleI18nkey: "formulaire.form.create.button",
+      title: t("formulaire.form.create.button"),
       variant: ComponentVariant.CONTAINED,
       action: () => {
         toggleModal(ModalType.FORM_PROP_CREATE);

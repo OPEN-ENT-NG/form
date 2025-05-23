@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@mui/material";
 import { Box, Link } from "@cgi-learning-hub/ui";
 import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
 import { FORMULAIRE } from "~/core/constants";
-import { BreadCrumbItemWrapper } from "./style";
+import { BreadCrumbItemWrapper, separatorStyle } from "./style";
 import { useNavigate } from "react-router-dom";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 
@@ -19,7 +19,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   const navigate = useNavigate();
 
   return (
-    <Breadcrumbs separator={separator} maxItems={3}>
+    <Breadcrumbs separator={separator} maxItems={3} sx={separatorStyle}>
       {isHeader ? (
         <Link underline="hover" color={FORM_COLOR} href={`/${FORMULAIRE}`}>
           <Icon height="3rem"></Icon>
