@@ -39,7 +39,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.formService.get", err);
-          toast.error(i18n.t("formulaire.error.formService.get", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.formService.get"));
         }
       },
     }),

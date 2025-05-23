@@ -1,7 +1,6 @@
 import { QueryMethod, TagName } from "~/core/enums";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
-import { FORMULAIRE } from "~/core/constants";
-import i18n from "~/i18n";
+import { t } from "~/i18n";
 import { toast } from "react-toastify";
 import { IQuestion } from "~/core/models/question/types";
 import { FormElementType } from "~/core/models/formElement/enum";
@@ -27,7 +26,7 @@ export const questionApi = emptySplitFormulaireApi.injectEndpoints({
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.questionService.list", err);
-          toast.error(i18n.t("formulaire.error.questionService.list", { ns: FORMULAIRE }));
+          toast.error(t("formulaire.error.questionService.list"));
         }
       },
     }),
