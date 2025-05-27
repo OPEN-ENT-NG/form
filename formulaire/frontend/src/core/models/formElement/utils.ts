@@ -1,3 +1,4 @@
+import { FormElementType } from "./enum";
 import { IFormElement, IFormElementDTO } from "./types";
 
 export const transformFormElement = (raw: IFormElementDTO): IFormElement => {
@@ -14,4 +15,18 @@ export const transformFormElement = (raw: IFormElementDTO): IFormElement => {
 
 export const transformFormElements = (rawFormElements: IFormElementDTO[]): IFormElement[] => {
   return rawFormElements.map(transformFormElement);
+};
+
+export const createNewFormElement = (formElementType: FormElementType): IFormElement => {
+  const defaultElement: IFormElement = {
+    id: null,
+    formId: null,
+    title: null,
+    position: null,
+    formElementType: formElementType,
+    selected: null,
+    label: null,
+  };
+
+  return defaultElement;
 };

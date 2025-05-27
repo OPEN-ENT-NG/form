@@ -238,6 +238,8 @@
   "formulaire.form.edit.empty.caption": "Cliquez sur 'Ajouter' pour créer votre premier élément",
 
   "formulaire.element.new.title": "Sélectionner l'élément à ajouter",
+  "formulaire.element.page.layout": "Mise en page :",
+  "formulaire.element.questions": "Questions :",
   "formulaire.element.new.section.title": "Ajouter une nouvelle section",
   "formulaire.element.new.section.description": "Ajoutez une nouvelle section pour regrouper vos questions sur une même page ou pour personnaliser le parcours des répondants dans votre formulaire.",
   "formulaire.element.new.question.title": "Ajouter une nouvelle question",
