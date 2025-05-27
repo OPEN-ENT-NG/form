@@ -26,12 +26,17 @@ export const sectionButtonStyle: SxProps<Theme> = {
 export const questionButtonStyle: SxProps<Theme> = {
   width: "11rem",
   height: "11rem",
-  cursor: "pointer",
   position: "relative",
 };
 
 export const questionGridStyle: SxProps<Theme> = {
   display: "flex",
+  justifyContent: "center",
+};
+
+export const questionStackStyle: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "center",
   justifyContent: "center",
 };
 

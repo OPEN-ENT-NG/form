@@ -23,7 +23,9 @@ import {
   questionGridStyle,
   questionButtonStyle,
   questionIconStyle,
+  questionStackStyle,
 } from "./style";
+import { questionTypeIcons } from "./const";
 
 export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
   isOpen,
@@ -130,11 +132,11 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
                           handleFormElementCreation(questionType.code);
                         }}
                       >
-                        <Stack spacing={1.5} alignItems="center" justifyContent="center">
+                        <Stack spacing={1.5} sx={questionStackStyle}>
                           <Typography variant={TypographyVariant.H5} fontWeight={TypographyFont.BOLD} color={SECONDARY}>
                             {displayTypeName(questionType.name)}
                           </Typography>
-                          <Box sx={questionIconStyle}>{getQuestionTypeIcon(questionType.code)}</Box>
+                          <Box sx={questionIconStyle}>{questionTypeIcons[questionType.code]}</Box>
                         </Stack>
                       </Card>
                     </Tooltip>
