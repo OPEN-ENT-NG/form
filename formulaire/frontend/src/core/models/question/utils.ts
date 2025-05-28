@@ -2,7 +2,15 @@ import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
 import { createNewFormElement } from "../formElement/utils";
 import { ChoiceTypes, QuestionTypes } from "./enum";
-import { IQuestion, IQuestionChoice } from "./types";
+import {
+  IQuestion,
+  IQuestionChoice,
+  IQuestionChoiceDTO,
+  IQuestionChoicePayload,
+  IQuestionPayload,
+  IQuestionSpecificFields,
+  IQuestionSpecificFieldsPayload,
+} from "./types";
 
 export const isFormElementQuestion = (formElement: IFormElement): boolean => {
   return formElement.formElementType === FormElementType.QUESTION;
@@ -16,8 +24,8 @@ export const getQuestionList = (formElementList: IFormElement[]): IQuestion[] =>
 export const createNewQuestion = (
   formId: number | null,
   questionTypeCode: QuestionTypes,
-  matrixId?: number,
-  matrixPosition?: number,
+  matrixId: number | null = null,
+  matrixPosition: number | null = null,
 ): IQuestion => {
   const formElement = createNewFormElement(FormElementType.QUESTION);
   formElement.formId = formId;
@@ -28,8 +36,8 @@ export const createNewQuestion = (
     sectionId: null,
     sectionPosition: null,
     conditional: false,
-    matrixId: matrixId ?? null,
-    matrixPosition: matrixPosition ?? null,
+    matrixId: matrixId,
+    matrixPosition: matrixPosition,
     choices: [],
     placeholder: null,
     children: [],
@@ -39,11 +47,32 @@ export const createNewQuestion = (
   return defaultSection;
 };
 
+export const transformQuestionChoice = (raw: IQuestionChoiceDTO): IQuestionChoice => {
+  return {
+    id: raw.id,
+    questionId: raw.question_id,
+    value: raw.value,
+    position: raw.position,
+    type: raw.type,
+    nextFormElement: raw.next_form_element,
+    nextFormElementId: raw.next_form_element_id,
+    nextFormElementType: raw.next_form_element_type,
+    isNextFormElementDefault: raw.is_next_form_element_default,
+    isCustom: raw.is_custom,
+    nbResponses: raw.nbResponses,
+    image: raw.image ?? null,
+  };
+};
+
+export const transformQuestionChoices = (rawQuestionChoices: IQuestionChoiceDTO[]): IQuestionChoice[] => {
+  return rawQuestionChoices.map(transformQuestionChoice);
+};
+
 export const createNewQuestionChoice = (
   questionId: number | null,
   position: number = 0,
+  image: string | null = null,
   value?: string,
-  image?: string,
   isCustom?: boolean,
 ): IQuestionChoice => {
   return {
@@ -62,6 +91,61 @@ export const createNewQuestionChoice = (
   };
 };
 
+export const buildQuestionPayload = (question: IQuestion): IQuestionPayload => {
+  return {
+    id: question.id,
+    form_id: question.formId,
+    title: question.title ?? "",
+    position: question.position,
+    form_element_type: question.formElementType ?? FormElementType.QUESTION,
+    selected: question.selected,
+    label: question.label ?? "",
+    question_type: question.questionType,
+    statement: question.statement ?? "",
+    mandatory: question.mandatory,
+    section_id: question.sectionId,
+    section_position: question.sectionPosition,
+    conditional: question.conditional,
+    matrix_id: question.matrixId,
+    matrix_position: question.matrixPosition,
+    choices: (question.choices ?? []).map(buildQuestionChoicePayload),
+    placeholder: question.placeholder ?? "",
+    children: (question.children ?? []).map(buildQuestionPayload),
+    specific_fields: buildQuestionSpecificFieldsPayload(question.specificFields),
+  };
+};
+
+export const buildQuestionChoicePayload = (choice: IQuestionChoice): IQuestionChoicePayload => {
+  return {
+    id: null,
+    question_id: choice.questionId,
+    value: choice.value,
+    position: choice.position,
+    type: ChoiceTypes.TXT,
+    next_form_element: null,
+    next_form_element_id: choice.nextFormElementId,
+    next_form_element_type: choice.nextFormElementType,
+    is_next_form_element_default: choice.isNextFormElementDefault,
+    is_custom: choice.isCustom,
+    nbResponses: choice.nbResponses,
+    image: choice.image ?? null,
+  };
+};
+
+export const buildQuestionSpecificFieldsPayload = (
+  specificFields: IQuestionSpecificFields | null,
+): IQuestionSpecificFieldsPayload => {
+  return {
+    id: specificFields?.id ?? null,
+    question_id: specificFields?.questionId ?? null,
+    cursor_min_val: specificFields?.cursorMinVal ?? null,
+    cursor_max_val: specificFields?.cursorMaxVal ?? null,
+    cursor_step: specificFields?.cursorStep ?? null,
+    cursor_min_label: specificFields?.cursorMinLabel ?? null,
+    cursor_max_label: specificFields?.cursorMaxLabel ?? null,
+  };
+};
+
 export const isTypeChoicesQuestion = (questionType: QuestionTypes): boolean => {
   return (
     questionType == QuestionTypes.SINGLEANSWER ||
@@ -70,4 +154,8 @@ export const isTypeChoicesQuestion = (questionType: QuestionTypes): boolean => {
     questionType == QuestionTypes.MATRIX ||
     questionType == QuestionTypes.RANKING
   );
+};
+
+export const isTypeChildrenQuestion = (questionType: QuestionTypes): boolean => {
+  return questionType == QuestionTypes.MATRIX;
 };
