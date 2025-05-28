@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { CreationProviderContextType, ICreationProviderProps } from "./types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { useParams } from "react-router-dom";
@@ -9,8 +9,11 @@ import { workflowRights } from "~/core/rights";
 import { IForm } from "~/core/models/form/types";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
-import { getSectionList } from "~/core/models/section/utils";
+import { getSectionList, isFormElementSection } from "~/core/models/section/utils";
 import { getQuestionList } from "~/core/models/question/utils";
+import { isValidFormElement } from "~/core/models/formElement/utils";
+import { ISection } from "~/core/models/section/types";
+import { IQuestion } from "~/core/models/question/types";
 
 const CreationProviderContext = createContext<CreationProviderContextType | null>(null);
 
@@ -61,6 +64,87 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
     return;
   }, [questionsDatas, sectionsDatas]);
 
+  // update formElementsList with the given formElement
+  const updateFormElement = useCallback(
+    (formElement: IFormElement) => {
+      setFormElementsList((prevFormElementList) =>
+        prevFormElementList.map((el) => (el.id === formElement.id ? formElement : el)),
+      );
+    },
+    [setFormElementsList],
+  );
+
+  useEffect(() => {
+    if (!currentEditingElement) {
+      return;
+    }
+
+    if (isInFormElementsList(currentEditingElement)) {
+      updateFormElement(currentEditingElement);
+      return;
+    }
+  }, [currentEditingElement]);
+
+  const onClickAwayEditingElement = useCallback(() => {
+    //not new and valid
+    if (!currentEditingElement?.isNew || isValidFormElement(currentEditingElement)) {
+      setCurrentEditingElement(null);
+      return;
+    }
+
+    //Is not valid
+    if (isFormElementSection(currentEditingElement)) {
+      removeFromFormElementsList(currentEditingElement);
+      setCurrentEditingElement(null);
+      return;
+    }
+
+    const questionElement = currentEditingElement as IQuestion;
+
+    //Is not in a section
+    if (!questionElement.sectionId) {
+      removeFromFormElementsList(currentEditingElement);
+      setCurrentEditingElement(null);
+      return;
+    }
+
+    const section = formElementsList.find(
+      (el): el is ISection => isFormElementSection(el) && el.id === questionElement.sectionId,
+    );
+    if (section) {
+      //set FormElementsList with the section updated without the question
+      const sectionWithoutInvalidQuestion: ISection = {
+        ...section,
+        questions: section.questions.filter((q) => q.id !== questionElement.id),
+      };
+      setFormElementsList((prevFormElementList) =>
+        prevFormElementList.map((el) =>
+          el.id === sectionWithoutInvalidQuestion.id ? sectionWithoutInvalidQuestion : el,
+        ),
+      );
+    }
+    setCurrentEditingElement(null);
+    return;
+  }, [currentEditingElement]);
+
+  const isCurrentEditingElement = (element: IFormElement) => {
+    return currentEditingElement ? element.id === currentEditingElement.id : false;
+  };
+
+  const isInFormElementsList = useCallback(
+    (element: IFormElement) => {
+      return formElementsList.some((el) => el.id === element.id);
+    },
+    [formElementsList],
+  );
+
+  const removeFromFormElementsList = useCallback(
+    (elementDeleting: IFormElement) => {
+      setFormElementsList((prevFormElementList) => prevFormElementList.filter((el) => el.id !== elementDeleting.id));
+    },
+    [setFormElementsList],
+  );
+
   const value = useMemo<CreationProviderContextType>(
     () => ({
       form,
@@ -68,6 +152,8 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       setFormElementsList,
       currentEditingElement,
       setCurrentEditingElement,
+      isCurrentEditingElement,
+      onClickAwayEditingElement,
     }),
     [form, formElementsList, currentEditingElement],
   );

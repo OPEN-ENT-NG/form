@@ -19,14 +19,19 @@ export const transformFormElements = (rawFormElements: IFormElementDTO[]): IForm
 
 export const createNewFormElement = (formElementType: FormElementType): IFormElement => {
   const defaultElement: IFormElement = {
-    id: null,
+    id: Date.now(),
     formId: null,
     title: null,
     position: null,
     formElementType: formElementType,
-    selected: null,
+    selected: false,
     label: null,
+    isNew: true,
   };
 
   return defaultElement;
+};
+
+export const isValidFormElement = (element: IFormElement): boolean => {
+  return !!element.title && element.title.trim() !== "";
 };

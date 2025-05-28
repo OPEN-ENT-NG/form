@@ -11,5 +11,7 @@ export type CreationProviderContextType = {
   formElementsList: IFormElement[];
   setFormElementsList: Dispatch<SetStateAction<IFormElement[]>>;
   currentEditingElement: IFormElement | null;
-  setCurrentEditingElement: Dispatch<SetStateAction<IFormElement | null>>;
+  setCurrentEditingElement: (element: IFormElement | null) => void;
+  isCurrentEditingElement: (element: IFormElement) => boolean;
+  onClickAwayEditingElement: () => void;
 };
