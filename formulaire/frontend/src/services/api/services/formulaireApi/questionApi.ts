@@ -2,7 +2,7 @@ import { QueryMethod, TagName } from "~/core/enums";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
 import { t } from "~/i18n";
 import { toast } from "react-toastify";
-import { IQuestion } from "~/core/models/question/types";
+import { IQuestion, IQuestionType } from "~/core/models/question/types";
 import { FormElementType } from "~/core/models/formElement/enum";
 
 export const questionApi = emptySplitFormulaireApi.injectEndpoints({
@@ -20,7 +20,21 @@ export const questionApi = emptySplitFormulaireApi.injectEndpoints({
           ...question,
           formElementType: FormElementType.QUESTION,
         })),
-      providesTags: [TagName.FORMS],
+      providesTags: [TagName.QUESTIONS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.questionService.list", err);
+          toast.error(t("formulaire.error.questionService.list"));
+        }
+      },
+    }),
+    getQuestionTypes: builder.query<IQuestionType[], void>({
+      query: () => ({
+        url: "/types",
+        method: QueryMethod.GET,
+      }),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -34,4 +48,4 @@ export const questionApi = emptySplitFormulaireApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useGetQuestionsQuery } = questionApi;
+export const { useGetQuestionsQuery, useGetQuestionTypesQuery } = questionApi;

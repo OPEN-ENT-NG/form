@@ -1,36 +1,36 @@
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
-import { ChoiceTypes } from "./enum";
+import { ChoiceTypes, QuestionTypes } from "./enum";
 
 // Model Interfaces
 export interface IQuestion extends IFormElement {
-  questionType: number;
-  statement: string;
+  questionType: QuestionTypes;
+  statement: string | null;
   mandatory: boolean;
-  sectionId: number;
-  sectionPosition: number;
+  sectionId: number | null;
+  sectionPosition: number | null;
   conditional: boolean;
-  matrixId: number;
-  matrixPosition: number;
+  matrixId: number | null;
+  matrixPosition: number | null;
   choices: IQuestionChoice[];
-  placeholder: string;
+  placeholder: string | null;
   children: IQuestion[];
   specificFields: IQuestionSpecificFields | null;
 }
 
 export interface IQuestionChoice {
-  id: number;
-  questionId: number;
+  id: number | null;
+  questionId: number | null;
   value: string;
   position: number;
   type: ChoiceTypes;
-  nextFormElement: IFormElement;
-  nextFormElementId: number;
-  nextFormElementType: FormElementType;
+  nextFormElement: IFormElement | null;
+  nextFormElementId: number | null;
+  nextFormElementType: FormElementType | null;
   isNextFormElementDefault: boolean;
   isCustom: boolean;
   nbResponses: number;
-  image?: string;
+  image?: string | null;
 }
 
 export interface IQuestionSpecificFields {
@@ -41,4 +41,10 @@ export interface IQuestionSpecificFields {
   cursorStep: number;
   cursorMinLabel: string;
   cursorMaxLabel: string;
+}
+
+export interface IQuestionType {
+  id: number;
+  code: QuestionTypes;
+  name: string;
 }
