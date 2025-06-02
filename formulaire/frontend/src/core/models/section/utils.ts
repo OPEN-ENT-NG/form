@@ -1,6 +1,6 @@
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
-import { transformFormElement } from "../formElement/utils";
+import { createNewFormElement, transformFormElement } from "../formElement/utils";
 import { ISection, ISectionDTO } from "./types";
 
 export const transformSection = (raw: ISectionDTO): ISection => {
@@ -27,4 +27,19 @@ export const isFormElementSection = (formElement: IFormElement): boolean => {
 export const getSectionList = (formElementList: IFormElement[]): ISection[] => {
   const sections = formElementList.filter((formElement) => isFormElementSection(formElement)) as ISection[];
   return sections;
+};
+
+export const createNewSection = (formId: number): ISection => {
+  const formElement = createNewFormElement(FormElementType.SECTION);
+  formElement.formId = formId;
+  const defaultSection: ISection = {
+    ...formElement,
+    description: null,
+    nextFormElement: null,
+    nextFormElementId: null,
+    nextFormElementType: null,
+    isNextFormElementDefault: true,
+    questions: [],
+  };
+  return defaultSection;
 };
