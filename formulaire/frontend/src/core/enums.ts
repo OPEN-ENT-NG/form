@@ -10,12 +10,14 @@ export enum ModalType {
   FORM_SHARE = "showShare",
   REMIND = "showRemind",
   ANSWERS = "showAnswers",
+  FORM_ELEMENT_CREATE = "showFormElementCreate",
 }
 
 export enum TagName {
   FOLDERS = "FOLDERS",
   FORMS = "FORMS",
   DISTRIBUTION = "DISTRIBUTION",
+  QUESTIONS = "QUESTIONS",
 }
 
 export enum QueryMethod {
