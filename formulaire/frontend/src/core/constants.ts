@@ -55,3 +55,7 @@ export const JPG_EXTENSION = ".jpg";
 export const JPEG_EXTENSION = ".jpeg";
 export const GIF_EXTENSION = ".gif";
 export const SVG_EXTENSION = ".svg";
+
+//QUESTIONS
+export const DEFAULT_NB_CHOICES = 3;
+export const DEFAULT_NB_CHILDREN = 3;

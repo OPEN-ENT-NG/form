@@ -11,11 +11,11 @@ export interface IFormElementDTO {
 }
 
 export interface IFormElement {
-  id: number;
-  formId: number;
-  title: string;
-  position: number;
-  formElementType: FormElementType;
-  selected: boolean;
-  label: string;
+  id: number | null;
+  formId: number | null;
+  title: string | null;
+  position: number | null;
+  formElementType: FormElementType | null;
+  selected: boolean | null;
+  label: string | null;
 }

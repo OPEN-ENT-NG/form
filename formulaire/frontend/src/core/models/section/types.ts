@@ -12,10 +12,10 @@ export interface ISectionDTO extends IFormElementDTO {
 }
 
 export interface ISection extends IFormElement {
-  description: string;
-  nextFormElement: IFormElement;
-  nextFormElementId: number;
-  nextFormElementType: FormElementType;
+  description: string | null;
+  nextFormElement: IFormElement | null;
+  nextFormElementId: number | null;
+  nextFormElementType: FormElementType | null;
   isNextFormElementDefault: boolean;
   questions: IQuestion[];
 }
