@@ -8,21 +8,25 @@ import { FORMULAIRE } from "~/core/constants";
 import { Button } from "@mui/material";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
+import { useModal } from "~/providers/ModalProvider";
+import { ModalType } from "~/core/enums";
 
 export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
   const { form, formElementsList } = useCreation();
+  console.log("formElementsList", formElementsList);
   const { t } = useTranslation(FORMULAIRE);
+
+  const { toggleModal } = useModal();
   if (!form) {
     return;
   }
   const handleNewFormElement = () => {
-    //TODO: implement the logic to add a new form element
-    console.log("New form element");
+    toggleModal(ModalType.FORM_ELEMENT_CREATE);
   };
 
   return (
     <CreationLayoutWrapper headerHeight={headerHeight}>
-      {formElementsList.length <= 0 && (
+      {formElementsList.length > 0 && (
         <Box sx={emptyStateWrapper}>
           <EmptyState
             image={<EmptyForm />}
