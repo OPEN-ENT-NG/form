@@ -13,4 +13,5 @@ export const initialDisplayModalsState: IDisplayModalsState = {
   [ModalType.FORM_SHARE]: false,
   [ModalType.REMIND]: false,
   [ModalType.ANSWERS]: false,
+  [ModalType.FORM_ELEMENT_CREATE]: false,
 };
