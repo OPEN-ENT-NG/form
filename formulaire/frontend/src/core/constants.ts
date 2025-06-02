@@ -44,3 +44,7 @@ export const DEFAULT_PAGINATION_LIMIT = 10;
 export const MANAGER_RIGHT: RightStringified = "manager";
 export const CONTRIB_RIGHT: RightStringified = "contrib";
 export const COMMENT_RIGHT: RightStringified = "comment";
+
+//QUESTIONS
+export const DEFAULT_NB_CHOICES = 3;
+export const DEFAULT_NB_CHILDREN = 3;

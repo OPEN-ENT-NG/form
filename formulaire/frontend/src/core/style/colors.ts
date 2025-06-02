@@ -14,6 +14,7 @@ export const SECONDARY_LIGHT_COLOR = "secondary.light";
 export const SECONDARY_MAIN_COLOR = "secondary.main";
 export const SECONDARY_DARK_COLOR = "secondary.dark";
 export const SECONDARY_DARKER_COLOR = "secondary.darker";
+export const SECONDARY = "secondary";
 
 // Error Colors
 export const ERROR_LIGHT_COLOR = "error.light";
