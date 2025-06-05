@@ -6,7 +6,7 @@ import { DEFAULT_NB_CHILDREN, DEFAULT_NB_CHOICES, FORMULAIRE } from "~/core/cons
 import { ButtonBase, Grid2 } from "@mui/material";
 import { SECONDARY } from "~/core/style/colors";
 import { useGetQuestionTypesQuery } from "~/services/api/services/formulaireApi/questionApi";
-import { displayTypeDescription, displayTypeName, getQuestionTypeIcon } from "./utils";
+import { displayTypeDescription, displayTypeName } from "./utils";
 import { ICreateFormElementModalProps } from "./types";
 import { createNewSection } from "~/core/models/section/utils";
 import { IFormElement } from "~/core/models/formElement/types";
@@ -34,7 +34,7 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
   parentSection = null,
 }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { form, formElementsList, setFormElementsList } = useCreation();
+  const { form, formElementsList, setFormElementsList, setCurrentEditingElement } = useCreation();
 
   const { data: questionTypes } = useGetQuestionTypesQuery();
 
@@ -76,6 +76,8 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
       newFormElement.position = formElementsList.length + 1;
       setFormElementsList((prevFormElementList) => [...prevFormElementList, newFormElement]);
     }
+
+    setCurrentEditingElement(newFormElement);
     handleClose();
     return;
   };

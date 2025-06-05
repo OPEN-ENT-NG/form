@@ -16,6 +16,15 @@ export interface IFormElement {
   title: string | null;
   position: number | null;
   formElementType: FormElementType | null;
-  selected: boolean | null;
+  selected: boolean;
   label: string | null;
+  isNew?: boolean;
+}
+
+export interface IFormElementPayload {
+  id: number | null;
+  form_id: number | null;
+  title: string | null;
+  position: number | null;
+  form_element_type: FormElementType | null;
 }
