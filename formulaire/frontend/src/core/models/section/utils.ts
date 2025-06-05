@@ -1,7 +1,8 @@
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
 import { createNewFormElement, transformFormElement } from "../formElement/utils";
-import { ISection, ISectionDTO } from "./types";
+import { buildQuestionPayload } from "../question/utils";
+import { ISection, ISectionDTO, ISectionPayload } from "./types";
 
 export const transformSection = (raw: ISectionDTO): ISection => {
   return {
@@ -11,7 +12,7 @@ export const transformSection = (raw: ISectionDTO): ISection => {
     nextFormElementId: raw.next_form_element_id,
     nextFormElementType: raw.next_form_element_type,
     isNextFormElementDefault: raw.is_next_form_element_default,
-    questions: raw.questions,
+    questions: [],
     formElementType: FormElementType.SECTION,
   };
 };
@@ -42,4 +43,19 @@ export const createNewSection = (formId: number): ISection => {
     questions: [],
   };
   return defaultSection;
+};
+
+export const buildSectionPayload = (section: ISection): ISectionPayload => {
+  return {
+    id: section.id,
+    form_id: section.formId,
+    title: section.title,
+    position: section.position,
+    form_element_type: section.formElementType,
+    description: section.description,
+    next_form_element_id: section.nextFormElementId,
+    next_form_element_type: section.nextFormElementType,
+    is_next_form_element_default: section.isNextFormElementDefault,
+    questions: section.questions.map((q) => buildQuestionPayload(q)),
+  };
 };

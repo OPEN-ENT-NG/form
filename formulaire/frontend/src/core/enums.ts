@@ -11,6 +11,8 @@ export enum ModalType {
   REMIND = "showRemind",
   ANSWERS = "showAnswers",
   FORM_ELEMENT_CREATE = "showFormElementCreate",
+  FORM_ELEMENT_UNDO = "showFormElementUndo",
+  FORM_ELEMENT_DELETE = "showFormElementDelete",
 }
 
 export enum TagName {
@@ -18,6 +20,8 @@ export enum TagName {
   FORMS = "FORMS",
   DISTRIBUTION = "DISTRIBUTION",
   QUESTIONS = "QUESTIONS",
+  SECTIONS = "SECTIONS",
+  FORM_ELEMENTS = "FORM_ELEMENTS",
 }
 
 export enum QueryMethod {

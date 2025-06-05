@@ -40,3 +40,10 @@ export enum BoxComponentType {
   TR = "tr",
   TD = "td",
 }
+
+export enum AlertSeverityVariant {
+  ERROR = "error",
+  WARNING = "warning",
+  INFO = "info",
+  SUCCESS = "success",
+}
