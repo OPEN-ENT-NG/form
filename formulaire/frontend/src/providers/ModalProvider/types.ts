@@ -18,6 +18,8 @@ export interface IDisplayModalsState {
   [ModalType.REMIND]: boolean;
   [ModalType.ANSWERS]: boolean;
   [ModalType.FORM_ELEMENT_CREATE]: boolean;
+  [ModalType.FORM_ELEMENT_UNDO]: boolean;
+  [ModalType.FORM_ELEMENT_DELETE]: boolean;
 }
 
 export type ModalProviderContextType = {

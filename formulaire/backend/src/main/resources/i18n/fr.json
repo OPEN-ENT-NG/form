@@ -270,6 +270,7 @@
   "formulaire.question.date.empty": "Date au format : jj/mm/aaaa",
   "formulaire.question.file.empty": "Dépôt de fichier",
   "formulaire.question.label": "Label",
+  "formulaire.question.missing.field" : "Question incomplète",
   "formulaire.question.missing.field.choice": "Attention, la question ci-dessus nécessite au moins un choix pour être valide.",
   "formulaire.question.missing.field.title": "Attention, la question ci-dessus nécessite un titre pour être valide.",
   "formulaire.question.multipleanswer.value.mandatory": "Attention, le choix ne peut pas comporter une image seule. Veuillez aussi saisir du texte.",
