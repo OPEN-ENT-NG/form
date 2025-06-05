@@ -10,6 +10,7 @@ import { ComponentVariant } from "~/core/style/themeProps";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { useModal } from "~/providers/ModalProvider";
 import { ModalType } from "~/core/enums";
+import { CreationMainLayout } from "../CreationMainLayout";
 
 export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
   const { form, formElementsList } = useCreation();
@@ -26,7 +27,7 @@ export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
 
   return (
     <CreationLayoutWrapper headerHeight={headerHeight}>
-      {formElementsList.length > 0 && (
+      {!formElementsList.length ? (
         <Box sx={emptyStateWrapper}>
           <EmptyState
             image={<EmptyForm />}
@@ -39,6 +40,8 @@ export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
             {t("formulaire.add.element")}
           </Button>
         </Box>
+      ) : (
+        <CreationMainLayout />
       )}
     </CreationLayoutWrapper>
   );

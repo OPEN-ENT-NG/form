@@ -1,4 +1,4 @@
-import { createContext, FC, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { CreationProviderContextType, ICreationProviderProps } from "./types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { useParams } from "react-router-dom";
@@ -9,8 +9,11 @@ import { workflowRights } from "~/core/rights";
 import { IForm } from "~/core/models/form/types";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
-import { getSectionList } from "~/core/models/section/utils";
-import { getQuestionList } from "~/core/models/question/utils";
+import { isFormElementQuestion } from "~/core/models/question/utils";
+import { isInFormElementsList, removeFormElementFromList, updateElementInList } from "./utils";
+import { IQuestion } from "~/core/models/question/types";
+import { useFormElementList } from "./hook/useFormElementsList";
+import { useFormElementActions } from "./hook/useFormElementActions";
 
 const CreationProviderContext = createContext<CreationProviderContextType | null>(null);
 
@@ -33,9 +36,14 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
     throw new Error("formId is undefined");
   }
 
+  //DATA
   const { data: formDatas } = useGetFormQuery({ formId }, { skip: !userWorkflowRights.CREATION });
   const { data: questionsDatas } = useGetQuestionsQuery({ formId });
   const { data: sectionsDatas } = useGetSectionsQuery({ formId });
+
+  //CUSTOM HOOKS
+  const { completeList } = useFormElementList(sectionsDatas, questionsDatas);
+  const { duplicateQuestion, saveQuestion } = useFormElementActions(formElementsList, formId);
 
   useEffect(() => {
     if (formDatas) {
@@ -46,20 +54,47 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   }, [formDatas]);
 
   useEffect(() => {
-    if (questionsDatas && questionsDatas.length > 0) {
-      setFormElementsList((prevFormElementList) => {
-        const previousSections = getSectionList(prevFormElementList);
-        return [...previousSections, ...questionsDatas];
-      });
-    }
-    if (sectionsDatas && sectionsDatas.length > 0) {
-      setFormElementsList((prevFormElementList) => {
-        const previousQuestions = getQuestionList(prevFormElementList);
-        return [...previousQuestions, ...sectionsDatas];
-      });
+    if (!sectionsDatas && !questionsDatas) return;
+    setFormElementsList(completeList);
+  }, [questionsDatas, sectionsDatas, completeList]);
+
+  useEffect(() => {
+    if (currentEditingElement && isInFormElementsList(currentEditingElement, formElementsList)) {
+      setFormElementsList((prevFormElementList) => updateElementInList(prevFormElementList, currentEditingElement));
     }
     return;
-  }, [questionsDatas, sectionsDatas]);
+  }, [currentEditingElement]);
+
+  //USER ACTIONS
+  const handleUndoQuestionsChange = useCallback(
+    (question: IQuestion) => {
+      if (questionsDatas && questionsDatas.length) {
+        const oldQuestion = questionsDatas.find((q) => q.id === question.id);
+        if (oldQuestion) {
+          setFormElementsList((prevFormElementList) => updateElementInList(prevFormElementList, oldQuestion));
+        }
+      }
+    },
+    [questionsDatas],
+  );
+
+  const handleDeleteFormElement = useCallback(
+    (toRemove: IFormElement) => {
+      setFormElementsList((prevFormElementList) => removeFormElementFromList(prevFormElementList, toRemove));
+    },
+    [setFormElementsList],
+  );
+
+  const handleDuplicateFormElement = useCallback(
+    async (toDuplicate: IFormElement) => {
+      if (!isInFormElementsList(toDuplicate, formElementsList)) return;
+      if (isFormElementQuestion(toDuplicate)) {
+        await duplicateQuestion(toDuplicate as IQuestion);
+        return;
+      }
+    },
+    [setFormElementsList, formElementsList],
+  );
 
   const value = useMemo<CreationProviderContextType>(
     () => ({
@@ -68,6 +103,10 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       setFormElementsList,
       currentEditingElement,
       setCurrentEditingElement,
+      handleUndoQuestionsChange,
+      handleDuplicateFormElement,
+      handleDeleteFormElement,
+      saveQuestion,
     }),
     [form, formElementsList, currentEditingElement],
   );
