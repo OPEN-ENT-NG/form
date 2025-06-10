@@ -250,6 +250,7 @@
   "formulaire.element.block.sharing.multiple.conditional": "Un ou plusieurs éléments de votre formulaire ne sont pas valides. Veuillez corriger ces éléments avant d'effectuer le partage.",
 
   "formulaire.section.title.empty": "Nom de la section",
+  "formulaire.section.missing.field" : "Section incomplète",
   "formulaire.section.missing.field.title": "Attention, la section ci-dessus nécessite un titre pour être valide.",
   "formulaire.section.missing.field.choice": "Attention, la section ci-dessus nécessite au moins un choix pour être valide.",
   "formulaire.section.save.missing.field": "Attention, certaines sections manquent d'informations pour être valides !",

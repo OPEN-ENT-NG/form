@@ -73,8 +73,61 @@ export const isInFormElementsList = (element: IFormElement, formElementsList: IF
   return formElementsList.some((el) => {
     if (isFormElementSection(el)) {
       const section = el as ISection;
-      return section === element || section.questions.some((q) => q.id === element.id);
+      return section.id === element.id || section.questions.some((q) => q.id === element.id);
     }
     return el.id === element.id;
   });
+};
+
+export const addQuestionToSection = (
+  sectionId: number,
+  question: IQuestion,
+  formElementsList: IFormElement[],
+): IFormElement[] => {
+  return formElementsList.map((el) => {
+    if (isFormElementSection(el) && el.id === sectionId) {
+      const section = el as ISection;
+      return {
+        ...section,
+        questions: [...section.questions, question],
+      };
+    }
+    return el;
+  });
+};
+
+export const getFollowingFormElement = (
+  formElement: IFormElement,
+  formElementsList: IFormElement[],
+): IFormElement | null => {
+  if (isFormElementQuestion(formElement)) {
+    const question = formElement as IQuestion;
+
+    if (question.sectionId) {
+      const section = getElementById(question.sectionId, formElementsList) as ISection | undefined;
+      if (!section) {
+        return null;
+      }
+
+      const pos = question.sectionPosition;
+      if (pos === null) {
+        return null;
+      }
+
+      const nextInSection = section.questions.find((q) => q.position === pos + 1);
+      return nextInSection ?? null;
+    }
+  }
+  const position = formElement.position;
+  if (!position) {
+    return null;
+  }
+
+  const followingElement = formElementsList.find((el) => el.position === position + 1);
+
+  return followingElement ? followingElement : null;
+};
+
+export const getElementPositionGreaterEqual = (position: number, formElementsList: IFormElement[]): IFormElement[] => {
+  return formElementsList.filter((el) => el.position && el.position >= position);
 };

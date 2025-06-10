@@ -48,3 +48,6 @@ export const COMMENT_RIGHT: RightStringified = "comment";
 //QUESTIONS
 export const DEFAULT_NB_CHOICES = 3;
 export const DEFAULT_NB_CHILDREN = 3;
+export const DEFAULT_CURSOR_MIN_VALUE = 1;
+export const DEFAULT_CURSOR_MAX_VALUE = 10;
+export const DEFAULT_CURSOR_STEP = 1;
