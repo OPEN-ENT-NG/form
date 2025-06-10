@@ -1,7 +1,7 @@
 import { SxProps, Theme } from "@mui/material";
 import { COMMON_WHITE_COLOR, PRIMARY_MAIN_COLOR, SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 
-export const sectionHeaderStyle: SxProps<Theme> = {
+export const sectionHeaderWrapperStyle: SxProps<Theme> = {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
@@ -13,6 +13,24 @@ export const sectionHeaderStyle: SxProps<Theme> = {
   paddingX: 4,
 };
 
+export const sectionHeaderStyle: SxProps<Theme> = {
+  display: "flex",
+  justifyContent: "space-between",
+  width: "100%",
+  alignItems: "center",
+};
+
+export const sectionTitleStyle: SxProps<Theme> = {
+  width: "100%",
+  paddingX: "1rem",
+};
+
+export const sectionIconWrapperStyle: SxProps<Theme> = {
+  width: "auto",
+  display: "flex",
+  alignItems: "center",
+};
+
 export const sectionContentStyle: SxProps<Theme> = {
   paddingY: 2,
   paddingX: 4,
@@ -20,7 +38,8 @@ export const sectionContentStyle: SxProps<Theme> = {
 
 export const sectionFooterStyle: SxProps<Theme> = {
   paddingTop: 2,
-  display: "flex",
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr 1fr",
   alignItems: "center",
 };
 
@@ -67,4 +86,21 @@ export const editingSectionTitleStyle: SxProps<Theme> = {
   "& .MuiInput-underline:after": {
     borderBottomColor: COMMON_WHITE_COLOR,
   },
+};
+
+export const sectionNewQuestionStyle: SxProps<Theme> = {
+  gridColumn: 3,
+  justifySelf: "end",
+  display: "flex",
+};
+
+export const nextElementSelectorStyle: SxProps<Theme> = {
+  gridColumn: 2,
+  justifySelf: "center",
+  display: "flex",
+};
+
+export const descriptionStyle: SxProps<Theme> = {
+  marginTop: "2rem",
+  marginBottom: "3rem",
 };

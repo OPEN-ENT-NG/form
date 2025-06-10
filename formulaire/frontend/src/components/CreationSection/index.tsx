@@ -14,7 +14,9 @@ import {
   TextField,
 } from "@cgi-learning-hub/ui";
 import {
+  descriptionStyle,
   editingSectionTitleStyle,
+  nextElementSelectorStyle,
   sectionAddQuestionStyle,
   sectionButtonIconStyle,
   sectionButtonStyle,
@@ -22,7 +24,11 @@ import {
   sectionDragIconStyle,
   sectionFooterStyle,
   sectionHeaderStyle,
+  sectionHeaderWrapperStyle,
+  sectionIconWrapperStyle,
+  sectionNewQuestionStyle,
   sectionStackStyle,
+  sectionTitleStyle,
 } from "./style";
 import { IQuestion } from "~/core/models/question/types";
 import { CreationQuestionWrapper } from "~/containers/CreationQuestionWrapper";
@@ -128,19 +134,12 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
   return (
     <Box>
       <Stack component={Paper} sx={sectionStackStyle}>
-        <Box sx={sectionHeaderStyle}>
+        <Box sx={sectionHeaderWrapperStyle}>
           <Box sx={dragIconContainerStyle}>
             <DragIndicatorRoundedIcon sx={sectionDragIconStyle} />
           </Box>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              width: "100%",
-              alignItems: "center",
-            }}
-          >
-            <Box sx={{ width: "100%", paddingX: "1rem" }}>
+          <Box sx={sectionHeaderStyle}>
+            <Box sx={sectionTitleStyle}>
               {isEditing ? (
                 <TextField
                   variant={ComponentVariant.STANDARD}
@@ -155,7 +154,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
               )}
             </Box>
             {currentEditingElement === null && (
-              <Box sx={{ width: "auto", display: "flex", alignItems: "center" }}>
+              <Box sx={sectionIconWrapperStyle}>
                 <IconButton
                   aria-label="duplicate"
                   onClick={handleDuplicate}
@@ -173,7 +172,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
         </Box>
         <Box sx={sectionContentStyle}>
           <Typography
-            sx={{ marginTop: "2rem", marginBottom: "3rem" }}
+            sx={descriptionStyle}
             dangerouslySetInnerHTML={{
               __html: section.description || t("formulaire.section.no.description"),
             }}
@@ -184,8 +183,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
             ))}
           </Box>
           <Box sx={sectionFooterStyle}>
-            <Box sx={{ flex: 1 }} />
-            <Box sx={{ flex: 1, display: "flex", justifyContent: "center" }}>
+            <Box sx={nextElementSelectorStyle}>
               {!hasConditionalQuestion(section) && (
                 <FormControl fullWidth>
                   <Select
@@ -211,7 +209,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
                 </FormControl>
               )}
             </Box>
-            <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+            <Box sx={sectionNewQuestionStyle}>
               {!!form && !hasFormResponses(form) && (
                 <Typography sx={sectionAddQuestionStyle} onClick={handleAddNewQuestion}>
                   {t("formulaire.section.new.question")}

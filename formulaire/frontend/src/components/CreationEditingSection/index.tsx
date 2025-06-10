@@ -4,13 +4,17 @@ import { Box, Typography, IconButton, Stack, Paper, Alert, TextField, ClickAwayL
 import {
   editingSectionTitleStyle,
   editorContainerStyle,
+  newQuestionWrapperStyle,
   sectionAddQuestionStyle,
   sectionButtonIconStyle,
   sectionButtonStyle,
   sectionContentStyle,
   sectionFooterStyle,
   sectionHeaderStyle,
+  sectionHeaderWrapperStyle,
+  sectionIconWrapperStyle,
   sectionStackStyle,
+  sectionTitleStyle,
 } from "./style";
 
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
@@ -83,7 +87,6 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   }, [description, setDescription]);
 
   const handleDelete = () => {
-    // Logic to duplicate the section
     toggleModal(ModalType.SECTION_DELETE);
   };
 
@@ -106,17 +109,9 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
       >
         <Box>
           <Stack component={Paper} sx={sectionStackStyle}>
-            <Box sx={sectionHeaderStyle}>
-              <Box
-                sx={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  width: "100%",
-                  alignItems: "center",
-                  paddingTop: "3rem",
-                }}
-              >
-                <Box sx={{ width: "100%", paddingX: "1rem" }}>
+            <Box sx={sectionHeaderWrapperStyle}>
+              <Box sx={sectionHeaderStyle}>
+                <Box sx={sectionTitleStyle}>
                   <TextField
                     variant={ComponentVariant.STANDARD}
                     fullWidth
@@ -129,7 +124,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                     }}
                   />
                 </Box>
-                <Box sx={{ width: "auto", display: "flex", alignItems: "center" }}>
+                <Box sx={sectionIconWrapperStyle}>
                   <IconButton
                     aria-label="delete"
                     onClick={handleDelete}
@@ -138,11 +133,11 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                   >
                     <DeleteRoundedIcon sx={sectionButtonIconStyle} />
                   </IconButton>
-                  <IconButton aria-label="edit" onClick={handleUndo} sx={sectionButtonStyle}>
+                  <IconButton aria-label="undo" onClick={handleUndo} sx={sectionButtonStyle}>
                     <UndoRoundedIcon sx={sectionButtonIconStyle} />
                   </IconButton>
                   <IconButton
-                    aria-label="edit"
+                    aria-label="save"
                     onClick={() => {
                       void handleClickAwayEditingElement();
                     }}
@@ -167,7 +162,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
               </Box>
               {!!form && !hasFormResponses(form) && (
                 <Box sx={sectionFooterStyle} onClick={handleAddNewQuestion}>
-                  <Box sx={{ flex: 1, display: "flex", justifyContent: "flex-end" }}>
+                  <Box sx={newQuestionWrapperStyle}>
                     <Typography sx={sectionAddQuestionStyle}>{t("formulaire.section.new.question")}</Typography>
                   </Box>
                 </Box>

@@ -99,6 +99,5 @@ export const getFormStatusText = (
 };
 
 export const hasFormResponses = (form: IForm): boolean => {
-  console.log("hasFormResponses", form);
   return (form.nb_responses ?? 0) > 0;
 };

@@ -1,7 +1,7 @@
 import { SxProps, Theme } from "@mui/material";
 import { COMMON_WHITE_COLOR, PRIMARY_MAIN_COLOR, SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 
-export const sectionHeaderStyle: SxProps<Theme> = {
+export const sectionHeaderWrapperStyle: SxProps<Theme> = {
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
@@ -13,6 +13,25 @@ export const sectionHeaderStyle: SxProps<Theme> = {
   paddingX: 4,
 };
 
+export const sectionHeaderStyle: SxProps<Theme> = {
+  display: "flex",
+  justifyContent: "space-between",
+  width: "100%",
+  alignItems: "center",
+  paddingTop: "3rem",
+};
+
+export const sectionTitleStyle: SxProps<Theme> = {
+  width: "100%",
+  paddingX: "1rem",
+};
+
+export const sectionIconWrapperStyle: SxProps<Theme> = {
+  width: "auto",
+  display: "flex",
+  alignItems: "center",
+};
+
 export const sectionContentStyle: SxProps<Theme> = {
   paddingY: 2,
   paddingX: 4,
@@ -22,6 +41,12 @@ export const sectionFooterStyle: SxProps<Theme> = {
   paddingTop: 2,
   display: "flex",
   alignItems: "center",
+};
+
+export const newQuestionWrapperStyle: SxProps<Theme> = {
+  flex: 1,
+  display: "flex",
+  justifyContent: "flex-end",
 };
 
 export const sectionButtonStyle: SxProps<Theme> = {
