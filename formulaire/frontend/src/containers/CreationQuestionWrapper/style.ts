@@ -46,3 +46,9 @@ export const editingQuestionIconContainerStyle: SxProps<Theme> = { marginLeft: "
 export const editingQuestionIconStyle: SxProps<Theme> = { fontSize: "2rem" };
 
 export const questionAlertStyle: SxProps<Theme> = { marginBottom: 2 };
+
+export const conditionalSwitchContainerStyle: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "center",
+  marginLeft: 2,
+};

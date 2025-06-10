@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Box, Button, Typography } from "@cgi-learning-hub/ui";
+import { Box, Button } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant } from "~/core/style/themeProps";
@@ -9,18 +9,13 @@ import { useCreation } from "~/providers/CreationProvider";
 import { isFormElementQuestion } from "~/core/models/question/utils";
 import { CreationQuestionWrapper } from "../CreationQuestionWrapper";
 import { IQuestion } from "~/core/models/question/types";
-import { IFormElement } from "~/core/models/formElement/types";
-import {
-  actionButtonStyle,
-  elementBoxStyle,
-  elementListStyle,
-  innerContainerStyle,
-  outerContainerStyle,
-} from "./style";
+import { actionButtonStyle, elementListStyle, innerContainerStyle, outerContainerStyle } from "./style";
 import { ISection } from "~/core/models/section/types";
+import { CreationSectionWrapper } from "../CreationSectionWrapper";
+import { hasFormResponses } from "~/core/models/form/utils";
 
 export const CreationMainLayout: FC = () => {
-  const { formElementsList } = useCreation();
+  const { form, formElementsList } = useCreation();
   const { t } = useTranslation(FORMULAIRE);
   const { toggleModal } = useModal();
 
@@ -28,34 +23,24 @@ export const CreationMainLayout: FC = () => {
     toggleModal(ModalType.FORM_ELEMENT_CREATE);
   };
 
-  // Helper to render each form element
-  const renderFormElement = (element: IFormElement, idx: number) => {
-    if (isFormElementQuestion(element)) {
-      return <CreationQuestionWrapper key={idx} question={element as IQuestion} />;
-    }
-
-    return (
-      <Box key={idx} sx={elementBoxStyle}>
-        <Typography>
-          {element.title} — position #{element.position}
-        </Typography>
-        {Array.isArray((element as ISection).questions) &&
-          (element as ISection).questions.map((q: IQuestion, qIdx: number) => (
-            <Box sx={{ marginTop: "10px" }} key={qIdx}>
-              <CreationQuestionWrapper question={q} />
-            </Box>
-          ))}
-      </Box>
-    );
-  };
-
   return (
     <Box sx={outerContainerStyle}>
       <Box sx={innerContainerStyle}>
-        <Box sx={elementListStyle}>{formElementsList.map(renderFormElement)}</Box>
-
+        <Box sx={elementListStyle}>
+          {formElementsList.map((element) => {
+            return isFormElementQuestion(element) ? (
+              <CreationQuestionWrapper key={element.id} question={element as IQuestion} />
+            ) : (
+              <CreationSectionWrapper key={element.id} section={element as ISection} />
+            );
+          })}
+        </Box>
         <Box sx={actionButtonStyle}>
-          <Button variant={ComponentVariant.CONTAINED} onClick={handleNewFormElement}>
+          <Button
+            variant={ComponentVariant.CONTAINED}
+            onClick={handleNewFormElement}
+            disabled={!!form && hasFormResponses(form)}
+          >
             {t("formulaire.add.element")}
           </Button>
         </Box>
