@@ -128,7 +128,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
 
   const handleNextFormElementChange = (event: SelectChangeEvent) => {
     const raw = event.target.value;
-    setNextFormElementId(raw === "" ? undefined : Number(raw));
+    setNextFormElementId(raw ? Number(raw) : undefined);
   };
 
   return (

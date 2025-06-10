@@ -27,13 +27,13 @@ export const CreationMainLayout: FC = () => {
     <Box sx={outerContainerStyle}>
       <Box sx={innerContainerStyle}>
         <Box sx={elementListStyle}>
-          {formElementsList.map((element) => {
-            return isFormElementQuestion(element) ? (
+          {formElementsList.map((element) =>
+            isFormElementQuestion(element) ? (
               <CreationQuestionWrapper key={element.id} question={element as IQuestion} />
             ) : (
               <CreationSectionWrapper key={element.id} section={element as ISection} />
-            );
-          })}
+            ),
+          )}
         </Box>
         <Box sx={actionButtonStyle}>
           <Button
