@@ -1,5 +1,6 @@
 import { SxProps, Theme } from "@mui/material";
 
-export const shortAnswerStyle: SxProps<Theme> = {
+export const longAnswerStyle: SxProps<Theme> = {
   padding: "2rem 3rem",
+  pointerEvents: "none",
 };
