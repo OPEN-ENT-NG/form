@@ -19,3 +19,7 @@ export const getRgpdPath = (formId: string | number): string => {
 export const getFormResultsPath = (formId: string | number): string => {
   return `${FORMULAIRE}?view=angular#/form/${formId}/results/1`;
 };
+
+export const getFormTreePath = (formId: string | number): string => {
+  return `${FORMULAIRE}?view=angular#/form/${formId}/tree`;
+};

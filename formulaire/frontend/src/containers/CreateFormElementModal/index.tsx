@@ -16,7 +16,6 @@ import { createNewQuestion, createNewQuestionChoice, isTypeChoicesQuestion } fro
 import { IQuestion } from "~/core/models/question/types";
 import { QuestionTypes } from "~/core/models/question/enum";
 import {
-  createFormElementModalStyle,
   createFormElementModalPaperStyle,
   createFormElementModalContentStyle,
   sectionButtonStyle,
@@ -24,6 +23,7 @@ import {
   questionButtonStyle,
   questionIconStyle,
   questionStackStyle,
+  questionStyle,
 } from "./style";
 import { questionTypeIcons } from "./const";
 
@@ -86,8 +86,6 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
     <Dialog
       open={isOpen}
       onClose={handleClose}
-      fullWidth
-      sx={createFormElementModalStyle}
       slotProps={{
         paper: {
           sx: createFormElementModalPaperStyle,
@@ -101,7 +99,7 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
       </DialogTitle>
 
       <DialogContent sx={createFormElementModalContentStyle}>
-        <Stack spacing={2}>
+        <Stack spacing={3}>
           {showSection && (
             <Stack spacing={2}>
               <Typography variant={TypographyVariant.BODY1}>{t("formulaire.element.page.layout")}</Typography>
@@ -115,13 +113,15 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
                 <Typography fontWeight={TypographyFont.BOLD} color={SECONDARY}>
                   {t("formulaire.element.new.section.title")}
                 </Typography>
-                <Typography>{t("formulaire.element.new.section.description")}</Typography>
+                <Typography variant={TypographyVariant.BODY2}>
+                  {t("formulaire.element.new.section.description")}
+                </Typography>
               </Card>
             </Stack>
           )}
 
           {questionTypes && (
-            <Stack spacing={2}>
+            <Stack spacing={2} sx={questionStyle}>
               <Typography variant={TypographyVariant.BODY1}>{t("formulaire.element.questions")}</Typography>
               <Grid2 container spacing={2} justifyContent="center">
                 {questionTypes.map((questionType) => (

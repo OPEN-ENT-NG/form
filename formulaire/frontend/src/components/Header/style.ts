@@ -7,4 +7,7 @@ export const headerStyle = {
 
 export const headerButtonsStyle = {
   height: "3.6rem",
+  display: "flex",
+  flexWrap: "wrap",
+  alignItems: "center",
 };
