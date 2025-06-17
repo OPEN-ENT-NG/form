@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Box,
@@ -23,14 +23,15 @@ import {
   conditionalSwitchContainerStyle,
   dragIconContainerStyle,
   dragIconStyle,
+  editingQuestionContentStyle,
   editingQuestionFooterStyle,
   editingQuestionIconContainerStyle,
   editingQuestionIconStyle,
-  editingQuestionStackStyle,
   editingQuestionTitleStyle,
   questionAlertStyle,
   questionStackStyle,
   questionTitleStyle,
+  StyledPaper,
 } from "./style";
 import { AlertSeverityVariant, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { IQuestion } from "~/core/models/question/types";
@@ -59,10 +60,18 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     toggleModal,
   } = useModal();
   const [currentQuestionTitle, setCurrentQuestionTitle] = useState<string>(question.title ?? "");
+  const isEditing = isCurrentEditingElement(question, currentEditingElement);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!isCurrentEditingElement(question, currentEditingElement)) setCurrentQuestionTitle(question.title ?? "");
   }, [question.title]);
+
+  useEffect(() => {
+    if (isEditing && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isEditing]);
 
   const handleClickAwayEditingElement = useClickAwayEditingElement(
     currentEditingElement,
@@ -114,8 +123,6 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     void handleDuplicateFormElement(question);
   };
 
-  const isEditing = isCurrentEditingElement(question, currentEditingElement);
-
   return (
     <Box>
       {isEditing ? (
@@ -127,9 +134,10 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
           }}
         >
           <Box>
-            <Stack component={Paper} sx={editingQuestionStackStyle}>
+            <StyledPaper isValidFormElement={isValidFormElement(question)}>
               <Box>
                 <TextField
+                  inputRef={inputRef}
                   variant={ComponentVariant.STANDARD}
                   fullWidth
                   sx={editingQuestionTitleStyle}
@@ -139,7 +147,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                 />
               </Box>
 
-              <Box>{getQuestionContentByType(question)}</Box>
+              <Box sx={editingQuestionContentStyle} >{getQuestionContentByType(question)}</Box>
 
               <Box sx={editingQuestionFooterStyle}>
                 <Switch checked={question.mandatory} onChange={handleMandatoryChange} />
@@ -164,7 +172,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                   </IconButton>
                 </Box>
               </Box>
-            </Stack>
+            </StyledPaper>
             {showQuestionDelete && (
               <DeleteConfirmationModal
                 isOpen={showQuestionDelete}
