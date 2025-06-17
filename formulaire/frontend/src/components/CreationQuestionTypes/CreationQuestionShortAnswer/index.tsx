@@ -44,9 +44,11 @@ export const CreationQuestionShortAnswer: FC<ICreationQuestionTypesProps> = ({ q
             readOnly: !isCurrentEditingElement(question, currentEditingElement),
             sx: {
               pointerEvents: !isCurrentEditingElement(question, currentEditingElement) ? "none" : "auto",
+              userSelect: !isCurrentEditingElement(question, currentEditingElement) ? "none" : "auto",
             },
           },
         }}
+        disabled={!isCurrentEditingElement(question, currentEditingElement)}
       />
     </Box>
   );
