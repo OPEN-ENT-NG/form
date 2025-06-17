@@ -9,14 +9,20 @@ import { FORMULAIRE } from "~/core/constants";
 import { headerButtonsStyle, headerStyle } from "./style";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { FormsIcon } from "../SVG/FormsIcon";
+import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import { Banner } from "../Banner";
+import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
 
 export const Header: FC<IHeaderProps> = ({
   stringItems,
   buttons,
   isCreationPage = false,
   displaySeparator = false,
+  form = null,
 }) => {
+  const formatDateWithTime = useFormatDateWithTime();
   const { t } = useTranslation(FORMULAIRE);
+  const formDateModification = formatDateWithTime(form?.date_modification, "formulaire.form.edit.modified");
 
   return (
     <Box sx={headerStyle}>
@@ -26,8 +32,8 @@ export const Header: FC<IHeaderProps> = ({
         separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem" }} />}
         isHeader
       />
-      {isCreationPage && <Box>//TODO</Box>}
       <Box sx={headerButtonsStyle}>
+        {isCreationPage && formDateModification && <Banner icon={CheckCircleRoundedIcon} text={formDateModification} />}
         {buttons.map((button) => (
           <Button
             key={button.title}
@@ -36,7 +42,7 @@ export const Header: FC<IHeaderProps> = ({
               button.action();
             }}
             startIcon={button.startIcon}
-            sx={{ marginLeft: "2rem" }}
+            sx={{ marginLeft: "1.5rem" }}
           >
             {t(button.title)}
           </Button>
