@@ -4,14 +4,15 @@ import { Box } from "@cgi-learning-hub/ui";
 import { Header } from "~/components/Header";
 import { useElementHeight } from "../HomeView/utils";
 import { useCreation } from "~/providers/CreationProvider";
-import { useGetCreationHeaderButtons } from "./utils";
+import { getRecursiveFolderParents, useGetCreationHeaderButtons } from "./utils";
 import { CreationLayout } from "../CreationLayout";
 import { useModal } from "~/providers/ModalProvider";
 import { ModalType } from "~/core/enums";
 import { CreateFormElementModal } from "../CreateFormElementModal";
+import { IForm } from "~/core/models/form/types";
 
 export const CreationView: FC = () => {
-  const { form } = useCreation();
+  const { form, folders } = useCreation();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
   const headerButtons = useGetCreationHeaderButtons(form?.id);
 
@@ -20,10 +21,15 @@ export const CreationView: FC = () => {
     toggleModal,
   } = useModal();
 
+  const getStringFolders = (form: IForm) : string[] => {
+    const parentFolders = getRecursiveFolderParents(form.folder_id, folders);
+    return [...parentFolders.map((folder) => folder.name), form.title];
+  }
+
   return (
     <Box height="100%">
       <Box ref={headerRef}>
-        {form && headerButtons && <Header stringItems={[form.title]} buttons={headerButtons} form={form} isCreationPage displaySeparator />}
+        {form && headerButtons && <Header stringItems={getStringFolders(form)} buttons={headerButtons} form={form} isCreationPage displaySeparator />}
       </Box>
       {form && <CreationLayout headerHeight={headerHeight} />}
       {showFormElementCreate && (

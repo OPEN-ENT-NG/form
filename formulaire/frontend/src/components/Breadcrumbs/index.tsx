@@ -19,7 +19,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   const navigate = useNavigate();
 
   return (
-    <Breadcrumbs separator={separator} maxItems={3} sx={separator ? separatorStyle : undefined}>
+    <Breadcrumbs separator={separator} maxItems={2} sx={separator ? separatorStyle : undefined}>
       {isHeader ? (
         <Link underline="hover" color={FORM_COLOR} href={`/${FORMULAIRE}`}>
           <Icon height="3rem"></Icon>

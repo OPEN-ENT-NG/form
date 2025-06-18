@@ -1,4 +1,4 @@
-import { styled, Typography } from "@cgi-learning-hub/ui";
+import { styled, SxProps, Typography } from "@cgi-learning-hub/ui";
 import { IBreadCrumbItemWrapperProps } from "./types";
 
 export const BreadCrumbItemWrapper = styled(Typography, {
@@ -15,7 +15,7 @@ export const BreadCrumbItemWrapper = styled(Typography, {
   }),
 }));
 
-export const separatorStyle = {
+export const separatorStyle: SxProps = {
   "& .MuiBreadcrumbs-separator": {
     marginLeft: 0,
     marginRight: 0,
