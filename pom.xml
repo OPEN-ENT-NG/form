@@ -48,7 +48,7 @@
     <properties>
         <revision>2.0-develop-b2school-SNAPSHOT</revision>
         <webUtilsVersion>3.1-develop-b2school-SNAPSHOT</webUtilsVersion>
-        <entCoreVersion>6.6-develop-b2school-SNAPSHOT</entCoreVersion>
+        <entCoreVersion>6.7-SNAPSHOT</entCoreVersion>
         <toolsVersion>2.0.0-final</toolsVersion>
         <junitVersion>5.1.0</junitVersion>
         <vertxCronTimerVersion>3.0-develop-b2school-SNAPSHOT</vertxCronTimerVersion>
