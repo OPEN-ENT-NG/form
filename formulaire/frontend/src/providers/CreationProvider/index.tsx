@@ -14,6 +14,8 @@ import { isInFormElementsList, removeFormElementFromList, updateElementInList } 
 import { IQuestion } from "~/core/models/question/types";
 import { useFormElementList } from "./hook/useFormElementsList";
 import { useFormElementActions } from "./hook/useFormElementActions";
+import { ISection } from "~/core/models/section/types";
+import { isFormElementSection } from "~/core/models/section/utils";
 
 const CreationProviderContext = createContext<CreationProviderContextType | null>(null);
 
@@ -43,7 +45,11 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
 
   //CUSTOM HOOKS
   const { completeList } = useFormElementList(sectionsDatas, questionsDatas);
-  const { duplicateQuestion, saveQuestion } = useFormElementActions(formElementsList, formId);
+  const { duplicateQuestion, duplicateSection, saveQuestion, saveSection } = useFormElementActions(
+    formElementsList,
+    formId,
+    currentEditingElement,
+  );
 
   useEffect(() => {
     if (formDatas) {
@@ -68,14 +74,42 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   //USER ACTIONS
   const handleUndoQuestionsChange = useCallback(
     (question: IQuestion) => {
-      if (questionsDatas && questionsDatas.length) {
-        const oldQuestion = questionsDatas.find((q) => q.id === question.id);
-        if (oldQuestion) {
-          setFormElementsList((prevFormElementList) => updateElementInList(prevFormElementList, oldQuestion));
-        }
-      }
+      if (!questionsDatas?.length) return;
+      const oldQuestion = questionsDatas.find((q) => q.id === question.id);
+      if (!oldQuestion) return;
+      setFormElementsList((prevFormElementList) => updateElementInList(prevFormElementList, oldQuestion));
     },
     [questionsDatas],
+  );
+
+  const handleUndoSectionChange = useCallback(
+    (section: ISection) => {
+      if (!sectionsDatas?.length) return;
+      const oldSection = sectionsDatas.find((s) => s.id === section.id);
+      if (!oldSection) return;
+      setFormElementsList((prevFormElementList) =>
+        updateElementInList(prevFormElementList, {
+          ...section,
+          title: oldSection.title,
+          description: oldSection.description,
+        } as ISection),
+      );
+    },
+    [sectionsDatas],
+  );
+
+  const handleUndoFormElementChange = useCallback(
+    (formElement: IFormElement) => {
+      if (isFormElementQuestion(formElement)) {
+        handleUndoQuestionsChange(formElement as IQuestion);
+        return;
+      }
+      if (isFormElementSection(formElement)) {
+        handleUndoSectionChange(formElement as ISection);
+        return;
+      }
+    },
+    [handleUndoQuestionsChange, handleUndoSectionChange],
   );
 
   const handleDeleteFormElement = useCallback(
@@ -92,6 +126,10 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
         await duplicateQuestion(toDuplicate as IQuestion);
         return;
       }
+      if (isFormElementSection(toDuplicate)) {
+        await duplicateSection(toDuplicate as ISection);
+        return;
+      }
     },
     [setFormElementsList, formElementsList],
   );
@@ -103,10 +141,11 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       setFormElementsList,
       currentEditingElement,
       setCurrentEditingElement,
-      handleUndoQuestionsChange,
+      handleUndoFormElementChange,
       handleDuplicateFormElement,
       handleDeleteFormElement,
       saveQuestion,
+      saveSection,
     }),
     [form, formElementsList, currentEditingElement],
   );

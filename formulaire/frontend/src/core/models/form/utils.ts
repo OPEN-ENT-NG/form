@@ -97,3 +97,7 @@ export const getFormStatusText = (
     return t("formulaire.responded.waiting");
   }
 };
+
+export const hasFormResponses = (form: IForm): boolean => {
+  return !!form.nb_responses;
+};

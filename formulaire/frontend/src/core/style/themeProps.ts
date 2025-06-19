@@ -20,6 +20,10 @@ export enum TypographyFont {
   BOLD = "bold",
 }
 
+export enum TypographyFontStyle {
+  ITALIC = "italic",
+}
+
 export enum BreakpointVariant {
   XS = "xs",
   SM = "sm",
