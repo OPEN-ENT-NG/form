@@ -14,6 +14,9 @@ export const initialDisplayModalsState: IDisplayModalsState = {
   [ModalType.REMIND]: false,
   [ModalType.ANSWERS]: false,
   [ModalType.FORM_ELEMENT_CREATE]: false,
-  [ModalType.FORM_ELEMENT_UNDO]: false,
-  [ModalType.FORM_ELEMENT_DELETE]: false,
+  [ModalType.QUESTION_CREATE]: false,
+  [ModalType.QUESTION_UNDO]: false,
+  [ModalType.SECTION_UNDO]: false,
+  [ModalType.QUESTION_DELETE]: false,
+  [ModalType.SECTION_DELETE]: false,
 };

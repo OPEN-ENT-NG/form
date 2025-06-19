@@ -21,19 +21,24 @@ import {
   useCreateMultipleChoiceQuestionsMutation,
   useUpdateMultipleChoiceQuestionsMutation,
 } from "~/services/api/services/formulaireApi/questionChoiceApi";
-import { useUpdateSectionsMutation } from "~/services/api/services/formulaireApi/sectionApi";
+import { useCreateSectionMutation, useUpdateSectionsMutation } from "~/services/api/services/formulaireApi/sectionApi";
 import { fixListPositions, getElementById, isInFormElementsList } from "../utils";
 import { PositionActionType } from "../enum";
 import { toast } from "react-toastify";
 import { useCallback } from "react";
 
-export const useFormElementActions = (formElementsList: IFormElement[], formId: string) => {
+export const useFormElementActions = (
+  formElementsList: IFormElement[],
+  formId: string,
+  currentEditingElement: IFormElement | null,
+) => {
   const { t } = useTranslation(FORMULAIRE);
 
   const [createSingleQuestion] = useCreateSingleQuestionMutation();
   const [createQuestions] = useCreateQuestionsMutation();
   const [updateQuestions] = useUpdateQuestionsMutation();
   const [updateSections] = useUpdateSectionsMutation();
+  const [createSections] = useCreateSectionMutation();
   const [updateFormElements] = useUpdateFormElementsMutation();
   const [updateMultipleChoiceQuestions] = useUpdateMultipleChoiceQuestionsMutation();
   const [createMultipleChoiceQuestions] = useCreateMultipleChoiceQuestionsMutation();
@@ -141,6 +146,39 @@ export const useFormElementActions = (formElementsList: IFormElement[], formId: 
     }
   };
 
+  const duplicateSection = async (sectionToDuplicate: ISection) => {
+    try {
+      if (currentEditingElement && isFormElementQuestion(currentEditingElement)) {
+        await saveQuestion(currentEditingElement as IQuestion);
+      }
+
+      const newPosition = sectionToDuplicate.position ? sectionToDuplicate.position + 1 : null;
+      const duplicatedSection: ISection = {
+        ...sectionToDuplicate,
+        id: null,
+        position: newPosition ? newPosition : null,
+      };
+      const formElementUpdatedList: IFormElement[] = fixListPositions(
+        formElementsList,
+        newPosition ? newPosition : 0,
+        PositionActionType.CREATION,
+      );
+      await updateFormElementsList(formElementUpdatedList);
+      const newSection: ISection = await createSections(duplicatedSection).unwrap();
+      await Promise.all(
+        sectionToDuplicate.questions.map(async (question) => {
+          await saveQuestion({
+            ...question,
+            sectionId: newSection.id,
+            isNew: true,
+          });
+        }),
+      );
+    } catch (error) {
+      console.error("Error duplicating section:", error);
+    }
+  };
+
   const saveQuestion = useCallback(
     async (question: IQuestion) => {
       if (!isInFormElementsList(question, formElementsList)) return;
@@ -223,8 +261,23 @@ export const useFormElementActions = (formElementsList: IFormElement[], formId: 
     [isInFormElementsList, formElementsList],
   );
 
+  const saveSection = useCallback(
+    async (section: ISection) => {
+      if (!isInFormElementsList(section, formElementsList)) return;
+      // Save Section
+      if (section.isNew) {
+        await createSections(section).unwrap();
+      } else {
+        await updateSections([section]).unwrap();
+      }
+    },
+    [isInFormElementsList, formElementsList],
+  );
+
   return {
     duplicateQuestion,
+    duplicateSection,
     saveQuestion,
+    saveSection,
   };
 };
