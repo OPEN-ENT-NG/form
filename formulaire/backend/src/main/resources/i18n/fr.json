@@ -365,6 +365,7 @@
   "formulaire.scroll.legend": "Utilisez la molette (scroll) de votre souris pour zoomer/dézoomer",
   "formulaire.search": "Rechercher",
   "formulaire.search.placeholder": "Rechercher (titre, auteur)",
+  "formulaire.section.missing.field" : "Section incomplète",
   "formulaire.section.missing.field.choice": "Attention, la section ci-dessus nécessite au moins un choix pour être valide.",
   "formulaire.section.missing.field.title": "Attention, la section ci-dessus nécessite un titre pour être valide.",
   "formulaire.section.new.question": "+ Ajouter une question",

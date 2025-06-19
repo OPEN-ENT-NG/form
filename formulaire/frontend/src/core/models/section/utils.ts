@@ -59,3 +59,8 @@ export const buildSectionPayload = (section: ISection): ISectionPayload => {
     questions: section.questions.map((q) => buildQuestionPayload(q)),
   };
 };
+
+export const hasConditionalQuestion = (section: ISection): boolean => {
+  return section.questions.some((question) => question.conditional);
+};
+

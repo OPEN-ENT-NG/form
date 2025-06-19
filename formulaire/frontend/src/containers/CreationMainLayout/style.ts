@@ -14,13 +14,6 @@ export const innerContainerStyle: SxProps<Theme> = {
   marginTop: 4,
 };
 
-export const elementBoxStyle: SxProps<Theme> = {
-  width: "100%",
-  bgcolor: "grey.100",
-  mb: 2,
-  borderRadius: 1,
-};
-
 export const elementListStyle: SxProps<Theme> = {
   display: "flex",
   flexDirection: "column",
