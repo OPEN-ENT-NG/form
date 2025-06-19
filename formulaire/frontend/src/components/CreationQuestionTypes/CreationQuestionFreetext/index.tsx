@@ -1,15 +1,23 @@
 import { FC, useEffect, useRef, useState } from "react";
-import { ICreationQuestionTypesProps } from "../types";
+import { ICreationQuestionFreetextProps } from "../types";
 import { Box } from "@cgi-learning-hub/ui";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
-import { freetextStyle } from "./style";
 
-export const CreationQuestionFreetext: FC<ICreationQuestionTypesProps> = ({ question }) => {
+export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
   const [statement, setStatement] = useState<string>("");
   const { currentEditingElement, setCurrentEditingElement } = useCreation();
+  
+  useEffect(() => {
+    if (questionTitleRef) {
+      const timeout = setTimeout(() => {
+        questionTitleRef.current?.focus();
+      }, 100);
+      return () => clearTimeout(timeout);
+    }
+  }, []);
 
   useEffect(() => {
     if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
@@ -27,6 +35,7 @@ export const CreationQuestionFreetext: FC<ICreationQuestionTypesProps> = ({ ques
     <Box>
       <Editor
         content={statement}
+        ref={editorRef}
         mode={isCurrentEditingElement(question, currentEditingElement) ? "edit" : "read"}
         onContentChange={() => {
           setStatement(editorRef.current?.getContent("html") as string);
