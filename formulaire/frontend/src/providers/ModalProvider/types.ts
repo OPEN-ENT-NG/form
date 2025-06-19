@@ -18,8 +18,11 @@ export interface IDisplayModalsState {
   [ModalType.REMIND]: boolean;
   [ModalType.ANSWERS]: boolean;
   [ModalType.FORM_ELEMENT_CREATE]: boolean;
-  [ModalType.FORM_ELEMENT_UNDO]: boolean;
-  [ModalType.FORM_ELEMENT_DELETE]: boolean;
+  [ModalType.QUESTION_CREATE]: boolean;
+  [ModalType.QUESTION_UNDO]: boolean;
+  [ModalType.SECTION_UNDO]: boolean;
+  [ModalType.QUESTION_DELETE]: boolean;
+  [ModalType.SECTION_DELETE]: boolean;
 }
 
 export type ModalProviderContextType = {
