@@ -23,7 +23,6 @@ import {
   conditionalSwitchContainerStyle,
   dragIconContainerStyle,
   dragIconStyle,
-  editingQuestionContentStyle,
   editingQuestionFooterStyle,
   editingQuestionIconContainerStyle,
   editingQuestionIconStyle,
@@ -43,6 +42,7 @@ import { UndoConfirmationModal } from "../UndoConfirmationModal";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { isCursorChoiceConsistent, shouldShowConditionalSwitch } from "~/core/models/question/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
+import { getQuestionContentByType } from "./utils";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -139,12 +139,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                 />
               </Box>
 
-              <Box>
-                <Typography variant={TypographyVariant.H6} sx={editingQuestionContentStyle}>
-                  {/* TODO CONTENT */}
-                  Content + {question.questionType}
-                </Typography>
-              </Box>
+              <Box>{getQuestionContentByType(question)}</Box>
 
               <Box sx={editingQuestionFooterStyle}>
                 <Switch checked={question.mandatory} onChange={handleMandatoryChange} />
@@ -204,9 +199,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
           <Box sx={questionTitleStyle}>
             <Typography variant={TypographyVariant.H6}>{question.title}</Typography>
           </Box>
-          <Box>
-            <Typography>Content + {question.questionType}</Typography>
-          </Box>
+          <Box>{getQuestionContentByType(question)}</Box>
         </Stack>
       )}
 
