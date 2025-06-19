@@ -8,7 +8,7 @@ export const outerContainerStyle: SxProps<Theme> = {
 };
 
 export const innerContainerStyle: SxProps<Theme> = {
-  width: "65%",
+  width: "80%",
   display: "flex",
   flexDirection: "column",
   marginTop: 4,
