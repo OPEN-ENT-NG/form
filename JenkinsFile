@@ -39,6 +39,14 @@ pipeline {
       stage('Build Formulaire backend') {
         steps {
           dir('formulaire/backend') {
+            // Clear before adding static content
+            sh 'rm -rf ./src/main/resources/public/css'
+            sh 'rm -rf ./src/main/resources/public/img'
+            sh 'rm -rf ./src/main/resources/public/js'
+            sh 'rm -rf ./src/main/resources/public/mdi'
+            sh 'rm -rf ./src/main/resources/public/template'
+            sh 'rm -rf ./src/main/resources/view'
+
             // Prepare backend/resources
             sh 'mkdir -p ./src/main/resources/public/css'
             sh 'mkdir -p ./src/main/resources/public/img'
@@ -47,24 +55,28 @@ pipeline {
             sh 'mkdir -p ./src/main/resources/public/template'
             sh 'mkdir -p ./src/main/resources/view'
 
-            // Copy Frontend files
-            sh 'cp -R ../frontend/public/* ./src/main/resources/public'
-            sh 'cp -R ../frontend/dist/* ./src/main/resources/'
-            sh 'mv ./src/main/resources/*.html ./src/main/resources/view'
-            sh 'cp -R ./src/main/resources/view-src/* ./src/main/resources/view'
-
-            // Copy Angular files
+            // Copy Angular static files
             sh 'cp -R ../angular/src/css/* ./src/main/resources/public/css'
             sh 'cp -R ../angular/src/img/* ./src/main/resources/public/img'
             sh 'cp -R ../angular/src/dist/* ./src/main/resources/public/js'
             sh 'cp -R ../angular/src/mdi/* ./src/main/resources/public/mdi'
             sh 'cp -R ../angular/src/template/* ./src/main/resources/public/template'
+            sh 'cp -R ../angular/src/view/* ./src/main/resources/view'
+
+            // Copy '.html' files in 'ts' folder
+            sh 'cd ../angular/src/ts' // Need to be in targeted directory for rsync command to work
+            sh 'shopt -s globstar' // Active '**/' for recursive on next line
+            sh 'rsync -R **/*.html ../../../backend/src/main/resources/public/ts --relative --no-implied-dirs4'
+            sh 'cd ../../../backend'
+
+            // Copy Frontend files
+            sh 'cp -R ../frontend/dist/* ./src/main/resources/'
+            sh 'cp -R ../frontend/public/* ./src/main/resources/public'
+            sh 'mv ./src/main/resources/*.html ./src/main/resources/view'
+            sh 'cp -R ./src/main/resources/view-src/* ./src/main/resources/view'
 
             // Build
-            sh 'chmod +x build.sh && ./build.sh clean build publish'
-
-            // Clean
-            sh 'rm -rf ../frontend/dist'
+            sh 'cd ../.. && ./build.sh formulaire:buildMaven'
           }
         }
       }
@@ -90,6 +102,14 @@ pipeline {
       stage('Build Formulaire-public backend') {
         steps {
           dir('formulaire-public/backend') {
+            // Clear before adding static content
+            sh 'rm -rf ./src/main/resources/public/css'
+            sh 'rm -rf ./src/main/resources/public/img'
+            sh 'rm -rf ./src/main/resources/public/js'
+            sh 'rm -rf ./src/main/resources/public/mdi'
+            sh 'rm -rf ./src/main/resources/public/template'
+            sh 'rm -rf ./src/main/resources/view'
+
             // Prepare backend/resources
             sh 'mkdir -p ./src/main/resources/public/css'
             sh 'mkdir -p ./src/main/resources/public/img'
@@ -98,24 +118,28 @@ pipeline {
             sh 'mkdir -p ./src/main/resources/public/template'
             sh 'mkdir -p ./src/main/resources/view'
 
-            // Copy Frontend files
-            sh 'cp -R ../frontend/public/* ./src/main/resources/public'
-            sh 'cp -R ../frontend/dist/* ./src/main/resources/'
-            sh 'mv ./src/main/resources/*.html ./src/main/resources/view'
-            sh 'cp -R ./src/main/resources/view-src/* ./src/main/resources/view'
-
-            // Copy Angular files
+            // Copy Angular static files
             sh 'cp -R ../angular/src/css/* ./src/main/resources/public/css'
             sh 'cp -R ../angular/src/img/* ./src/main/resources/public/img'
             sh 'cp -R ../angular/src/dist/* ./src/main/resources/public/js'
             sh 'cp -R ../angular/src/mdi/* ./src/main/resources/public/mdi'
             sh 'cp -R ../angular/src/template/* ./src/main/resources/public/template'
+            sh 'cp -R ../angular/src/view/* ./src/main/resources/view'
+
+            // Copy '.html' files in 'ts' folder
+            sh 'cd ../angular/src/ts' // Need to be in targeted directory for rsync command to work
+            sh 'shopt -s globstar' // Active '**/' for recursive on next line
+            sh 'rsync -R **/*.html ../../../backend/src/main/resources/public/ts --relative --no-implied-dirs4'
+            sh 'cd ../../../backend'
+
+            // Copy Frontend files
+            sh 'cp -R ../frontend/dist/* ./src/main/resources/'
+            sh 'cp -R ../frontend/public/* ./src/main/resources/public'
+            sh 'mv ./src/main/resources/*.html ./src/main/resources/view'
+            sh 'cp -R ./src/main/resources/view-src/* ./src/main/resources/view'
 
             // Build
-            sh 'chmod +x build.sh && ./build.sh clean build publish'
-
-            // Clean
-            sh 'rm -rf ../frontend/dist'
+            sh 'cd ../.. && ./build.sh formulairePublic:buildMaven'
           }
         }
       }
