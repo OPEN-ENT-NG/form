@@ -80,7 +80,6 @@ formulaire() {
   cp -R formulaire/angular/src/img/* formulaire/backend/src/main/resources/public/img
   cp -R formulaire/angular/src/dist/* formulaire/backend/src/main/resources/public/js
   cp -R formulaire/angular/src/mdi/* formulaire/backend/src/main/resources/public/mdi
-  cp -R formulaire/angular/src/i18n/* formulaire/backend/src/main/resources/i18n
   cp -R formulaire/angular/src/template/* formulaire/backend/src/main/resources/public/template
   cp -R formulaire/angular/src/view/* formulaire/backend/src/main/resources/view
 
@@ -132,7 +131,6 @@ formulairePublic() {
   cp -R formulaire-public/angular/src/img/* formulaire-public/backend/src/main/resources/public/img
   cp -R formulaire-public/angular/src/dist/* formulaire-public/backend/src/main/resources/public/js
   cp -R formulaire-public/angular/src/mdi/* formulaire-public/backend/src/main/resources/public/mdi
-  cp -R formulaire-public/angular/src/i18n/* formulaire-public/backend/src/main/resources/i18n
   cp -R formulaire-public/angular/src/template/* formulaire-public/backend/src/main/resources/public/template
   cp -R formulaire-public/angular/src/view/* formulaire-public/backend/src/main/resources/view
 
