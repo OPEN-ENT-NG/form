@@ -190,8 +190,12 @@ export function shouldShowConditionalSwitch(question: IQuestion, formElements: I
     question.questionType,
   );
 
-  if (!isConditionalQuestionType || !question.sectionId) {
-    return !question.sectionId;
+  if (!isConditionalQuestionType) {
+    return false;
+  }
+
+  if (!question.sectionId) {
+    return true;
   }
 
   const parentSection = getElementById(question.sectionId, formElements);
