@@ -20,6 +20,7 @@ import { useCreation } from "~/providers/CreationProvider";
 import { isValidFormElement } from "~/core/models/formElement/utils";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import {
+  conditionalSwitchContainerStyle,
   dragIconContainerStyle,
   dragIconStyle,
   editingQuestionContentStyle,
@@ -40,10 +41,13 @@ import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
 import { UndoConfirmationModal } from "../UndoConfirmationModal";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
+import { isCursorChoiceConsistent, shouldShowConditionalSwitch } from "~/core/models/question/utils";
+import { QuestionTypes } from "~/core/models/question/enum";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
   const {
+    formElementsList,
     currentEditingElement,
     setCurrentEditingElement,
     handleDuplicateFormElement,
@@ -51,7 +55,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     saveQuestion,
   } = useCreation();
   const {
-    displayModals: { showFormElementUndo, showFormElementDelete },
+    displayModals: { showQuestionUndo, showQuestionDelete },
     toggleModal,
   } = useModal();
   const [currentQuestionTitle, setCurrentQuestionTitle] = useState<string>(question.title ?? "");
@@ -89,12 +93,21 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     setCurrentEditingElement(updatedQuestion);
   };
 
+  const handleConditionalChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const updatedQuestion: IQuestion = {
+      ...question,
+      conditional: event.target.checked,
+      mandatory: event.target.checked,
+    };
+    setCurrentEditingElement(updatedQuestion);
+  };
+
   const handleUndo = () => {
-    toggleModal(ModalType.FORM_ELEMENT_UNDO);
+    toggleModal(ModalType.QUESTION_UNDO);
   };
 
   const handleDelete = () => {
-    toggleModal(ModalType.FORM_ELEMENT_DELETE);
+    toggleModal(ModalType.QUESTION_DELETE);
   };
 
   const handleDuplicate = () => {
@@ -135,7 +148,14 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
 
               <Box sx={editingQuestionFooterStyle}>
                 <Switch checked={question.mandatory} onChange={handleMandatoryChange} />
+
                 <Typography>{t("formulaire.mandatory")}</Typography>
+                {shouldShowConditionalSwitch(question, formElementsList) && (
+                  <Box sx={conditionalSwitchContainerStyle}>
+                    <Switch checked={question.conditional} onChange={handleConditionalChange} />
+                    <Typography>{t("formulaire.conditional")}</Typography>
+                  </Box>
+                )}
 
                 <Box sx={editingQuestionIconContainerStyle}>
                   <IconButton aria-label="duplicate" onClick={handleDuplicate}>
@@ -150,22 +170,22 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                 </Box>
               </Box>
             </Stack>
-            {showFormElementDelete && (
+            {showQuestionDelete && (
               <DeleteConfirmationModal
-                isOpen={showFormElementDelete}
+                isOpen={showQuestionDelete}
                 handleClose={() => {
-                  toggleModal(ModalType.FORM_ELEMENT_DELETE);
+                  toggleModal(ModalType.QUESTION_DELETE);
                 }}
-                question={question}
+                element={question}
               />
             )}
-            {showFormElementUndo && (
+            {showQuestionUndo && (
               <UndoConfirmationModal
-                isOpen={showFormElementUndo}
+                isOpen={showQuestionUndo}
                 handleClose={() => {
-                  toggleModal(ModalType.FORM_ELEMENT_UNDO);
+                  toggleModal(ModalType.QUESTION_UNDO);
                 }}
-                question={question}
+                element={question}
               />
             )}
           </Box>
@@ -191,6 +211,14 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
       )}
 
       {!isValidFormElement(question) && (
+        <Alert
+          severity={AlertSeverityVariant.WARNING}
+          title={t("formulaire.question.missing.field")}
+          children={t("formulaire.question.missing.field.title")}
+          sx={questionAlertStyle}
+        />
+      )}
+      {question.questionType === QuestionTypes.CURSOR && !isCursorChoiceConsistent(question) && (
         <Alert
           severity={AlertSeverityVariant.WARNING}
           title={t("formulaire.question.missing.field")}

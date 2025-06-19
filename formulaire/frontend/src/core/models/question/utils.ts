@@ -1,3 +1,4 @@
+import { DEFAULT_CURSOR_MAX_VALUE, DEFAULT_CURSOR_MIN_VALUE, DEFAULT_CURSOR_STEP } from "~/core/constants";
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
 import { createNewFormElement } from "../formElement/utils";
@@ -11,6 +12,8 @@ import {
   IQuestionSpecificFields,
   IQuestionSpecificFieldsPayload,
 } from "./types";
+import { getElementById } from "~/providers/CreationProvider/utils";
+import { ISection } from "../section/types";
 
 export const isFormElementQuestion = (formElement: IFormElement): boolean => {
   return formElement.formElementType === FormElementType.QUESTION;
@@ -159,3 +162,47 @@ export const isTypeChoicesQuestion = (questionType: QuestionTypes): boolean => {
 export const isTypeChildrenQuestion = (questionType: QuestionTypes): boolean => {
   return questionType == QuestionTypes.MATRIX;
 };
+
+export function isCursorChoiceConsistent(question: IQuestion): boolean {
+  if (question.questionType !== QuestionTypes.CURSOR) {
+    return true;
+  }
+
+  if (!question.specificFields) {
+    return false;
+  }
+
+  const minVal: number = question.specificFields.cursorMinVal
+    ? question.specificFields.cursorMinVal
+    : DEFAULT_CURSOR_MIN_VALUE;
+
+  const maxVal: number = question.specificFields.cursorMaxVal
+    ? question.specificFields.cursorMaxVal
+    : DEFAULT_CURSOR_MAX_VALUE;
+
+  const step: number = question.specificFields.cursorStep ? question.specificFields.cursorStep : DEFAULT_CURSOR_STEP;
+
+  return (maxVal - minVal) % step === 0;
+}
+
+export function shouldShowConditionalSwitch(question: IQuestion, formElements: IFormElement[]): boolean {
+  const isConditionalQuestionType = [QuestionTypes.SINGLEANSWER, QuestionTypes.SINGLEANSWERRADIO].includes(
+    question.questionType,
+  );
+
+  if (!isConditionalQuestionType || !question.sectionId) {
+    return !question.sectionId;
+  }
+
+  const parentSection = getElementById(question.sectionId, formElements);
+
+  if (!parentSection) {
+    return false;
+  }
+
+  const hasOtherConditionalQuestions = (parentSection as ISection).questions.some(
+    (q) => q.id !== question.id && q.conditional,
+  );
+
+  return !hasOtherConditionalQuestions;
+}

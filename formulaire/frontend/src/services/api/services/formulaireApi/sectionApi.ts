@@ -23,6 +23,22 @@ export const sectionApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    createSection: builder.mutation<ISection, ISection>({
+      query: (section) => ({
+        url: `forms/${section.formId}/sections`,
+        method: QueryMethod.POST,
+        body: buildSectionPayload(section),
+      }),
+      invalidatesTags: [TagName.SECTIONS, TagName.FORM_ELEMENTS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(t("formulaire.error.sectionService.create"), err);
+          toast.error(t("formulaire.error.sectionService.create"));
+        }
+      },
+    }),
     updateSections: builder.mutation<ISection[], ISection[]>({
       query: (sections) => ({
         url: `forms/${sections[0].formId}/sections`,
@@ -39,8 +55,29 @@ export const sectionApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    deleteSingleSection: builder.mutation<void, number>({
+      query: (sectionId) => ({
+        url: `/sections/${sectionId.toString()}`,
+        method: QueryMethod.DELETE,
+      }),
+      invalidatesTags: [TagName.SECTIONS, TagName.FORM_ELEMENTS],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+          toast.success(t("formulaire.success.element.delete"));
+        } catch (err) {
+          console.error(t("formulaire.error.questionService.delete"), err);
+          toast.error(t("formulaire.error.questionService.delete"));
+        }
+      },
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetSectionsQuery, useUpdateSectionsMutation } = sectionApi;
+export const {
+  useGetSectionsQuery,
+  useCreateSectionMutation,
+  useUpdateSectionsMutation,
+  useDeleteSingleSectionMutation,
+} = sectionApi;
