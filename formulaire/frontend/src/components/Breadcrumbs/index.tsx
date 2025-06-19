@@ -5,7 +5,7 @@ import { Breadcrumbs } from "@mui/material";
 import { Box, Link } from "@cgi-learning-hub/ui";
 import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
 import { FORMULAIRE } from "~/core/constants";
-import { BreadCrumbItemWrapper, separatorStyle } from "./style";
+import { StyledBreadCrumbItemWrapper, separatorStyle } from "./style";
 import { useNavigate } from "react-router-dom";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 
@@ -30,7 +30,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
         </Box>
       )}
       {stringItems.map((stringItem) => (
-        <BreadCrumbItemWrapper
+        <StyledBreadCrumbItemWrapper
           key={stringItem}
           textColor={textColor}
           isHeader={isHeader}
@@ -40,7 +40,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
           }}
         >
           {stringItem}
-        </BreadCrumbItemWrapper>
+        </StyledBreadCrumbItemWrapper>
       ))}
     </Breadcrumbs>
   );
