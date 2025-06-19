@@ -6,13 +6,13 @@ import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/styl
 import { useCreation } from "~/providers/CreationProvider";
 import { IUndoConfirmationModalProps } from "./types";
 
-export const UndoConfirmationModal: FC<IUndoConfirmationModalProps> = ({ isOpen, handleClose, question }) => {
+export const UndoConfirmationModal: FC<IUndoConfirmationModalProps> = ({ isOpen, handleClose, element }) => {
   const { t } = useTranslation(FORMULAIRE);
 
-  const { setCurrentEditingElement, handleUndoQuestionsChange } = useCreation();
+  const { setCurrentEditingElement, handleUndoFormElementChange } = useCreation();
 
   const handleUndo = () => {
-    handleUndoQuestionsChange(question);
+    handleUndoFormElementChange(element);
     setCurrentEditingElement(null);
     handleClose();
   };

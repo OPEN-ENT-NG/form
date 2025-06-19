@@ -241,13 +241,20 @@ public class DefaultFormService implements FormService {
         Promise<JsonObject> promise = Promise.promise();
 
         String query =
-                "WITH folder_id AS ( " +
-                    "SELECT folder_id FROM " + REL_FORM_FOLDER_TABLE + " " +
-                    "WHERE form_id = ? AND user_id = ? " +
-                ") " +
-                "SELECT *, (SELECT * FROM folder_id) " +
-                "FROM " + FORM_TABLE + " WHERE id = ?;";
-        JsonArray params = new JsonArray().add(formId).add(user.getUserId()).add(formId);
+            "WITH folder_id AS ( " +
+                "SELECT folder_id FROM " + REL_FORM_FOLDER_TABLE + " " +
+                "WHERE form_id = ? AND user_id = ? " +
+            ") " +
+            "SELECT *, (SELECT * FROM folder_id) AS folder_id, " +
+            "  (SELECT COUNT(*) FROM " + DISTRIBUTION_TABLE + " WHERE form_id = ? AND status = ?) AS nb_responses " +
+            "FROM " + FORM_TABLE + " WHERE id = ?;";
+
+        JsonArray params = new JsonArray()
+            .add(formId)
+            .add(user.getUserId())
+            .add(formId)
+            .add(FINISHED)
+            .add(formId);
 
         String errorMessage = "[Formulaire@DefaultFormService::get] Fail to get form with id " + formId;
         Sql.getInstance().prepared(query, params, SqlResult.validUniqueResultHandler(FutureHelper.handlerEither(promise, errorMessage)));

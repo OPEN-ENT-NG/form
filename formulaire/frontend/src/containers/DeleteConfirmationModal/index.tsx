@@ -7,20 +7,32 @@ import { useDeleteSingleQuestionMutation } from "~/services/api/services/formula
 import { IDeleteConfirmationModalProps } from "./types";
 import { removeFormElementFromList } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
+import { isFormElementQuestion } from "~/core/models/question/utils";
+import { useDeleteSingleSectionMutation } from "~/services/api/services/formulaireApi/sectionApi";
 
-export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isOpen, handleClose, question }) => {
+export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isOpen, handleClose, element }) => {
   const { t } = useTranslation(FORMULAIRE);
   const [deleteSingleQuestion] = useDeleteSingleQuestionMutation();
+  const [deleteSingleSection] = useDeleteSingleSectionMutation();
   const { formElementsList, setFormElementsList } = useCreation();
 
   const handleDelete = async () => {
-    if (!question.id) {
+    if (!element.id) {
       handleClose();
       return;
     }
-    setFormElementsList(removeFormElementFromList(formElementsList, question));
+    setFormElementsList(removeFormElementFromList(formElementsList, element));
     handleClose();
-    await deleteSingleQuestion(question.id);
+
+    if (element.isNew) {
+      return;
+    }
+
+    if (isFormElementQuestion(element)) {
+      await deleteSingleQuestion(element.id);
+      return;
+    }
+    await deleteSingleSection(element.id);
   };
 
   return (
