@@ -1,15 +1,17 @@
 import { FC, useEffect, useRef, useState } from "react";
 import { ICreationQuestionFreetextProps } from "../types";
-import { Box } from "@cgi-learning-hub/ui";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
+import { Box } from "@cgi-learning-hub/ui";
+import { editorWrapperStyle, StyledEditorWrapper } from "./style";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
-  const [statement, setStatement] = useState<string>("");
+  const [statement, setStatement] = useState<string>(question.statement ?? "");
   const { currentEditingElement, setCurrentEditingElement } = useCreation();
   
+  // As Editor component automatically take the focus, we wait to take it back
   useEffect(() => {
     if (questionTitleRef) {
       const timeout = setTimeout(() => {
@@ -19,6 +21,7 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
     }
   }, []);
 
+  // Save question when we this component is not the edited one anymore
   useEffect(() => {
     if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
       return;
@@ -31,8 +34,12 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
     setCurrentEditingElement(updatedQuestion);
   }, [statement, setCurrentEditingElement]);
 
+  const handleClick = () => {
+    // editorRef.current?.setFocus("end"));
+  };
+
   return (
-    <Box>
+    <StyledEditorWrapper isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)} onClick={handleClick}>
       <Editor
         content={statement}
         ref={editorRef}
@@ -41,6 +48,6 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
           setStatement(editorRef.current?.getContent("html") as string);
         }}
       />
-    </Box>
+    </StyledEditorWrapper>
   );
 };

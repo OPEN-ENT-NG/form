@@ -1,7 +1,7 @@
 import { styled, SxProps, Typography } from "@cgi-learning-hub/ui";
 import { IBreadCrumbItemWrapperProps } from "./types";
 
-export const BreadCrumbItemWrapper = styled(Typography, {
+export const StyledBreadCrumbItemWrapper = styled(Typography, {
   shouldForwardProp: (prop) => prop !== "textColor" && prop !== "isHeader" && prop !== "hasSeparator",
 })<IBreadCrumbItemWrapperProps>(({ textColor, isHeader, hasSeparator }) => ({
   color: textColor,

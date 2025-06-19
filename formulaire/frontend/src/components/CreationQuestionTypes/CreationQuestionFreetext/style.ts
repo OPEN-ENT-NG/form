@@ -1,5 +1,15 @@
-import { SxProps, Theme } from "@mui/material";
+import { styled, Box } from "@cgi-learning-hub/ui";
+import { IEditorWrapperProps } from "./types";
 
-export const freetextStyle: SxProps<Theme> = {
-  padding: "2rem 3rem",
-};
+export const StyledEditorWrapper = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isCurrentEditingElement",
+})<IEditorWrapperProps>(({ isCurrentEditingElement }) => {
+  if (!isCurrentEditingElement) return { userSelect: "none", pointerEvents: 'none' }  
+  return {
+    "> :first-child": {
+      "> :nth-child(2)": {
+      minHeight: "200px",
+      }
+    }
+  }
+})
