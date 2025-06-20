@@ -4,7 +4,7 @@ jobs:
   build-node-test:
     runs-on: ubuntu-latest
     container:
-      image: opendigitaleducation/node:20-alpine-pnpm
+      image: opendigitaleducation/node:22-alpine-pnpm
       options: --user root -v ${{ github.workspace }}:/home/node/:rw
     steps:
       - uses: actions/checkout@v1
