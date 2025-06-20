@@ -50,7 +50,7 @@ clean () {
   rm -rf dist 
   rm -rf build 
   rm -rf .pnpm-store
-  rm -f package.json 
+  rm -f package-lock.json
   rm -f pnpm-lock.yaml
 }
 
@@ -108,6 +108,7 @@ localDep () {
 }
 
 installDeps() {
+#  check_cert_docker_run_node --env TIPTAP_PRO_TOKEN=$TIPTAP_PRO_TOKEN -- "pnpm install"
   TIPTAP_PRO_TOKEN=$TIPTAP_PRO_TOKEN docker-compose run --rm -u "$USER_UID:$GROUP_GID" node sh -c "pnpm install"
 }
 
@@ -165,6 +166,59 @@ publishMavenLocal (){
     -Dversion=$MVN_MOD_VERSION \
     -Dpackaging=tar.gz \
     -Dfile=${MVN_MOD_NAME}.tar.gz
+}
+
+check_cert_docker_run_node() {
+  # Usage:
+  # check_cert_docker_run_node [--env VAR1=VAL1 --env VAR2=VAL2 ...] -- command_to_run
+  # Exemple :
+  # check_cert_docker_run_node --env TIPTAP_PRO_TOKEN=$TIPTAP_PRO_TOKEN -- "pnpm install"
+
+  local CMD=()
+  local ENV_VARS=()
+  local CERT_PATH="$HOME/zscaler.crt"
+  local CONTAINER_CERT_PATH="/tmp/zscaler.crt"
+
+  while [[ $# -gt 0 ]]; do
+    case "$1" in
+      --env)
+        ENV_VARS+=("-e" "$2")
+        shift 2
+        ;;
+      --)
+        shift
+        CMD=("$@")
+        break
+        ;;
+      *)
+        echo "Unknown argument: $1"
+        return 1
+        ;;
+    esac
+  done
+
+  if [ ${#CMD[@]} -eq 0 ]; then
+    echo "Error: No command provided to run in container."
+    return 1
+  fi
+
+  if [ -f "$CERT_PATH" ]; then
+    echo "===== IN IF ====="
+    local CERT_PATH="$HOME/zscaler.crt"
+    local CONTAINER_CERT_PATH="/tmp/zscaler.crt"
+    docker-compose run --rm "${ENV_VARS[@]}" -u "root:root" -v "$CERT_PATH:$CONTAINER_CERT_PATH:ro" node sh -c "\
+      mkdir -p /usr/local/share/ca-certificates && \
+      cp /tmp/zscaler.crt /usr/local/share/ca-certificates/zscaler.crt && \
+      cat /usr/local/share/ca-certificates/*.crt >> /etc/ssl/certs/ca-certificates.crt && \
+      apk update && apk add --no-cache ca-certificates && \
+      update-ca-certificates --verbose --fresh && \
+      NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/zscaler.crt wget -O test.html https://registry.npmjs.org/ && \
+      NODE_EXTRA_CA_CERTS=/usr/local/share/ca-certificates/zscaler.crt ${CMD[*]}"
+    echo "===== END IF ====="
+  else
+    echo "===== IN ELSE ====="
+    docker-compose run --rm "${ENV_VARS[@]}" -u "$USER_UID:$GROUP_GID" node sh -c "${CMD[*]}"
+  fi
 }
 
 for param in "$@"
