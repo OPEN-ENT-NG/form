@@ -76,7 +76,6 @@ pipeline {
             sh 'cp -R ../frontend/dist/* ./src/main/resources/'
             sh 'cp -R ../frontend/public/* ./src/main/resources/public'
             sh 'mv ./src/main/resources/*.html ./src/main/resources/view'
-            sh 'cp -R ./src/main/resources/view-src/* ./src/main/resources/view'
 
             // Build
             sh 'cd ../.. && ./build.sh formulaire:buildMaven'
@@ -122,7 +121,6 @@ pipeline {
             sh 'mkdir -p ./src/main/resources/view'
 
             // Copy Angular static files
-            sh 'cp -R ../angular/src/css/* ./src/main/resources/public/css'
             sh 'cp -R ../angular/src/img/* ./src/main/resources/public/img'
             sh 'cp -R ../angular/src/dist/* ./src/main/resources/public/js'
             sh 'cp -R ../angular/src/mdi/* ./src/main/resources/public/mdi'
@@ -142,7 +140,6 @@ pipeline {
             sh 'cp -R ../frontend/dist/* ./src/main/resources/'
             sh 'cp -R ../frontend/public/* ./src/main/resources/public'
             sh 'mv ./src/main/resources/*.html ./src/main/resources/view'
-            sh 'cp -R ./src/main/resources/view-src/* ./src/main/resources/view'
 
             // Build
             sh 'cd ../.. && ./build.sh formulairePublic:buildMaven'
