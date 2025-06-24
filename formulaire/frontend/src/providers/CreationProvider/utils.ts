@@ -128,6 +128,32 @@ export const getFollowingFormElement = (
   return followingElement ? followingElement : null;
 };
 
-export const getElementPositionGreaterEqual = (position: number, formElementsList: IFormElement[]): IFormElement[] => {
-  return formElementsList.filter((el) => el.position && el.position >= position);
+const collectFollowing = (el: IFormElement, formElementsList: IFormElement[], acc: IFormElement[]): IFormElement[] => {
+  const next = getFollowingFormElement(el, formElementsList);
+  return next ? collectFollowing(next, formElementsList, [...acc, next]) : acc;
+};
+
+export const getElementsPositionGreaterEqual = (
+  minPosition: number,
+  formElementsList: IFormElement[],
+): IFormElement[] => {
+  // 1) Filter out null positions *and* positions < minPosition,
+  //    using a type guard so TS knows `position` is now definitely a number.
+  const sortedGEList = formElementsList
+    .filter((el): el is IFormElement & { position: number } => el.position !== null && el.position >= minPosition)
+    .sort((a, b) => a.position - b.position);
+
+  // 2) If none, bail
+  if (sortedGEList.length === 0) return [];
+
+  // 3) Use your existing recursion to walk the contiguous +1 chain
+  const first = sortedGEList[0];
+  const chains = collectFollowing(first, formElementsList, [first]);
+
+  // 4) Any sortedGE beyond the last chained position are the “gaps”
+  const lastPos = chains[chains.length - 1].position; // TC knows this is number
+  const gaps = sortedGEList.filter((el) => lastPos && el.position > lastPos);
+
+  // 5) Stitch them together
+  return [...chains, ...gaps];
 };
