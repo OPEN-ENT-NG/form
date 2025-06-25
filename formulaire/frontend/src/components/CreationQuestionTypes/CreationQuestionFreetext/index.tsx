@@ -3,8 +3,8 @@ import { ICreationQuestionFreetextProps } from "../types";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
-import { Box } from "@cgi-learning-hub/ui";
-import { editorWrapperStyle, StyledEditorWrapper } from "./style";
+import { StyledEditorWrapper } from "./style";
+import { EditorFocusPosition, EditorMode } from "./enums";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
@@ -34,20 +34,16 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
     setCurrentEditingElement(updatedQuestion);
   }, [statement, setCurrentEditingElement]);
 
-  const handleClick = () => {
-    // editorRef.current?.setFocus("end"));
-  };
-
   return (
-    <StyledEditorWrapper isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)} onClick={handleClick}>
+    <StyledEditorWrapper isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)} onClick={() => {editorRef.current?.setFocus(EditorFocusPosition.END)}}>
       <Editor
         content={statement}
         ref={editorRef}
-        mode={isCurrentEditingElement(question, currentEditingElement) ? "edit" : "read"}
+        mode={isCurrentEditingElement(question, currentEditingElement) ? EditorMode.EDIT : EditorMode.READ}
         onContentChange={() => {
           setStatement(editorRef.current?.getContent("html") as string);
         }}
-      />
+      />f
     </StyledEditorWrapper>
   );
 };
