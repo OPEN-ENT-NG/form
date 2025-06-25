@@ -46,9 +46,9 @@
     ]
   },
   "dependencies": {
-    "@cgi-learning-hub/icons": "latest",
-    "@cgi-learning-hub/theme": "latest",
-    "@cgi-learning-hub/ui": "latest",
+    "@cgi-learning-hub/icons": "develop",
+    "@cgi-learning-hub/theme": "develop",
+    "@cgi-learning-hub/ui": "develop",
     "@edifice.io/bootstrap": "2.2.13",
     "@edifice.io/client": "2.2.13",
     "@edifice.io/react": "2.2.13",
@@ -120,7 +120,7 @@
   },
   "packageManager": "pnpm@9.15.4",
   "engines": {
-    "node": "20 | 22"
+    "node": "20"
   },
   "nx": {}
 }
