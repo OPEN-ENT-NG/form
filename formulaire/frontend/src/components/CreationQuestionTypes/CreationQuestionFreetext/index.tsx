@@ -10,14 +10,16 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
   const editorRef = useRef<EditorRef>(null);
   const [statement, setStatement] = useState<string>(question.statement ?? "");
   const { currentEditingElement, setCurrentEditingElement } = useCreation();
-  
+
   // As Editor component automatically take the focus, we wait to take it back
   useEffect(() => {
     if (questionTitleRef) {
       const timeout = setTimeout(() => {
         questionTitleRef.current?.focus();
       }, 100);
-      return () => clearTimeout(timeout);
+      return () => {
+        clearTimeout(timeout);
+      };
     }
   }, []);
 
@@ -35,7 +37,12 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
   }, [statement, setCurrentEditingElement]);
 
   return (
-    <StyledEditorWrapper isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)} onClick={() => {editorRef.current?.setFocus(EditorFocusPosition.END)}}>
+    <StyledEditorWrapper
+      isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)}
+      onClick={() => {
+        editorRef.current?.setFocus(EditorFocusPosition.END);
+      }}
+    >
       <Editor
         content={statement}
         ref={editorRef}
@@ -43,7 +50,7 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
         onContentChange={() => {
           setStatement(editorRef.current?.getContent("html") as string);
         }}
-      />f
+      />
     </StyledEditorWrapper>
   );
 };

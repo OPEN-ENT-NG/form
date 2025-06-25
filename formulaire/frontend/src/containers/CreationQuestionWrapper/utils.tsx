@@ -6,7 +6,10 @@ import { CreationQuestionShortAnswer } from "~/components/CreationQuestionTypes/
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 
-export const getQuestionContentByType = (question: IQuestion, questionTitleRef: RefObject<HTMLInputElement>|null = null) => {
+export const getQuestionContentByType = (
+  question: IQuestion,
+  questionTitleRef: RefObject<HTMLInputElement> | null = null,
+) => {
   switch (question.questionType) {
     case QuestionTypes.FREETEXT:
       return <CreationQuestionFreetext question={question} questionTitleRef={questionTitleRef} />;

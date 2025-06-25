@@ -5,5 +5,5 @@ export interface ICreationQuestionTypesProps {
   question: IQuestion;
 }
 export interface ICreationQuestionFreetextProps extends ICreationQuestionTypesProps {
-  questionTitleRef: RefObject<HTMLInputElement>|null;
+  questionTitleRef: RefObject<HTMLInputElement> | null;
 }
