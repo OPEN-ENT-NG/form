@@ -50,9 +50,9 @@
     "@cgi-learning-hub/theme": "develop",
     "@cgi-learning-hub/ui": "develop",
     "@dnd-kit/core": "^6.3.1",
-    "@edifice.io/bootstrap": "2.0.2",
-    "@edifice.io/client": "2.0.2",
-    "@edifice.io/react": "2.0.2",
+    "@edifice.io/bootstrap": "develop",
+    "@edifice.io/client": "develop",
+    "@edifice.io/react": "develop",
     "@emotion/react": "11.11.1",
     "@emotion/styled": "11.11.0",
     "@mui/icons-material": "^6",
@@ -123,9 +123,14 @@
     "vitest": "0.34.6",
     "vitest-dom": "0.1.1"
   },
+  "pnpm": {
+    "overrides": {
+      "@tiptap/extension-horizontal-rule": "2.11.0"
+    }
+  },
   "packageManager": "pnpm@9.15.4",
   "engines": {
-    "node": "20"
+    "node": "18 | 20 | 22"
   },
   "nx": {}
 }
