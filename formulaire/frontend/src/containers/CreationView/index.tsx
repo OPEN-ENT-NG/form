@@ -21,15 +21,23 @@ export const CreationView: FC = () => {
     toggleModal,
   } = useModal();
 
-  const getStringFolders = (form: IForm) : string[] => {
+  const getStringFolders = (form: IForm): string[] => {
     const parentFolders = getRecursiveFolderParents(form.folder_id, folders);
     return [...parentFolders.map((folder) => folder.name), form.title];
-  }
+  };
 
   return (
     <Box height="100%">
       <Box ref={headerRef}>
-        {form && headerButtons && <Header stringItems={getStringFolders(form)} buttons={headerButtons} form={form} isCreationPage displaySeparator />}
+        {form && (
+          <Header
+            stringItems={getStringFolders(form)}
+            buttons={headerButtons}
+            form={form}
+            isCreationPage
+            displaySeparator
+          />
+        )}
       </Box>
       {form && <CreationLayout headerHeight={headerHeight} />}
       {showFormElementCreate && (

@@ -13,12 +13,16 @@ export const useGetCreationHeaderButtons = (formId: string | number | undefined)
     {
       title: t("formulaire.return"),
       variant: ComponentVariant.OUTLINED,
-      action: () => { navigate(`/${FORMULAIRE}`)},
+      action: () => {
+        navigate(`/${FORMULAIRE}`);
+      },
     },
     {
       title: t("formulaire.visualize.path"),
       variant: ComponentVariant.OUTLINED,
-      action: () => { formId ? window.location.href = getFormTreePath(formId) : null},
+      action: () => {
+        if (formId) window.location.href = getFormTreePath(formId);
+      },
     },
     {
       title: t("formulaire.organize"),
@@ -39,10 +43,14 @@ export const useGetCreationHeaderButtons = (formId: string | number | undefined)
   ];
 };
 
-export const getRecursiveFolderParents = (folderId: number|null, folders: IFolder[], recursiveFolderParents: IFolder[] = []): IFolder[] => {
+export const getRecursiveFolderParents = (
+  folderId: number | null,
+  folders: IFolder[],
+  recursiveFolderParents: IFolder[] = [],
+): IFolder[] => {
   if (!folderId) return recursiveFolderParents;
 
-  const parentFolder = folders.find(folder => folder.id === folderId);
+  const parentFolder = folders.find((folder) => folder.id === folderId);
   if (!parentFolder) return recursiveFolderParents;
 
   return getRecursiveFolderParents(parentFolder.parent_id, folders, [parentFolder, ...recursiveFolderParents]);

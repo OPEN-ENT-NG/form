@@ -147,7 +147,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                 />
               </Box>
 
-              <Box sx={editingQuestionContentStyle} >{getQuestionContentByType(question)}</Box>
+              <Box sx={editingQuestionContentStyle}>{getQuestionContentByType(question)}</Box>
 
               <Box sx={editingQuestionFooterStyle}>
                 <Switch checked={question.mandatory} onChange={handleMandatoryChange} />

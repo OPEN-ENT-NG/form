@@ -9,7 +9,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { headerButtonsStyle, headerStyle } from "./style";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { FormsIcon } from "../SVG/FormsIcon";
-import CheckCircleRoundedIcon from '@mui/icons-material/CheckCircleRounded';
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { Banner } from "../Banner";
 import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
 
