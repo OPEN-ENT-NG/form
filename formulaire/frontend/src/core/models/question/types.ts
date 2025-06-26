@@ -48,7 +48,7 @@ export interface IQuestionChoice {
 }
 
 export interface IQuestionSpecificFields {
-  id: number;
+  id: number | null;
   questionId: number;
   cursorMinVal: number;
   cursorMaxVal: number;

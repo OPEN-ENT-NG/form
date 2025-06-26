@@ -5,6 +5,7 @@ import { CreationQuestionLongAnswer } from "~/components/CreationQuestionTypes/C
 import { CreationQuestionShortAnswer } from "~/components/CreationQuestionTypes/CreationQuestionShortAnswer";
 import { CreationQuestionDate } from "~/components/CreationQuestionTypes/CreationQuestionDate";
 import { CreationQuestionTime } from "~/components/CreationQuestionTypes/CreationQuestionTime";
+import { CreationQuestionCursor } from "~/components/CreationQuestionTypes/CreationQuestionCursor";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 
@@ -23,6 +24,8 @@ export const getQuestionContentByType = (
       return <CreationQuestionDate />;
     case QuestionTypes.TIME:
       return <CreationQuestionTime />;
+    case QuestionTypes.CURSOR:
+      return <CreationQuestionCursor question={question} />;
     default:
       return <Typography variant="body1">Unsupported question type {question.questionType.toString()}</Typography>;
   }
