@@ -1,13 +1,8 @@
 import { SxProps, Theme } from "@mui/material";
 
-export const createFormElementModalStyle: SxProps<Theme> = {
-  marginTop: 0,
-};
-
 export const createFormElementModalPaperStyle: SxProps<Theme> = {
-  minHeight: "96vh",
-  maxWidth: "55vw",
-  marginTop: 0,
+  height: "fit-content",
+  maxWidth: "70rem",
 };
 
 export const createFormElementModalContentStyle: SxProps<Theme> = {
@@ -21,6 +16,10 @@ export const sectionButtonStyle: SxProps<Theme> = {
   textAlign: "center",
   gap: 2,
   padding: 2,
+};
+
+export const questionStyle: SxProps<Theme> = {
+  marginBottom: "3rem !important",
 };
 
 export const questionButtonStyle: SxProps<Theme> = {

@@ -63,4 +63,3 @@ export const buildSectionPayload = (section: ISection): ISectionPayload => {
 export const hasConditionalQuestion = (section: ISection): boolean => {
   return section.questions.some((question) => question.conditional);
 };
-
