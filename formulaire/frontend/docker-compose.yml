@@ -1,6 +1,6 @@
 services:
   node:
-    image: "opendigitaleducation/node:20-alpine-pnpm"
+    image: "nexus-pic2.support-ent.fr/hub/node-builder:latest"
     user: "node"
     container_name: node_app
     working_dir: /home/node/app

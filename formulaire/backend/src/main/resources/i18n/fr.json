@@ -186,7 +186,7 @@
   "formulaire.form.download.all.results.lightbox.description.p3": "Si votre formulaire a reçu plus de 100 réponses, seuls les graphiques des questions de type \"Choix multiple\" et \"Réponse unique\" seront téléchargés.",
   "formulaire.form.download.all.results.lightbox.title": "Téléchargement des résultats ({{0}})",
   "formulaire.form.download.all.results.pdf": "Télécharger tous les résultats (PDF)",
-  "formulaire.form.edit.empty.caption": "Cliquez sur 'Ajouter' pour créer votre premier élément",
+  "formulaire.form.edit.empty.caption": "Cliquez sur '{{buttonText}}' pour créer votre premier élément",
   "formulaire.form.edit.empty.main": "Votre formulaire est vide",
   "formulaire.form.edit.modified": "Formulaire enregistré le ",
   "formulaire.form.import.button": "Importer un formulaire",
