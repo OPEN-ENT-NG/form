@@ -4,7 +4,7 @@ import { IFormElement } from "~/core/models/formElement/types";
 import { useParams } from "react-router-dom";
 import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useEdificeClient } from "@edifice.io/react";
-import { initUserWorfklowRights } from "../HomeProvider/utils";
+import { initUserWorfklowRights, useRootFolders } from "../HomeProvider/utils";
 import { workflowRights } from "~/core/rights";
 import { IForm } from "~/core/models/form/types";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
@@ -16,6 +16,8 @@ import { useFormElementList } from "./hook/useFormElementsList";
 import { useFormElementActions } from "./hook/useFormElementActions";
 import { ISection } from "~/core/models/section/types";
 import { isFormElementSection } from "~/core/models/section/utils";
+import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
+import { IFolder } from "~/core/models/folder/types";
 
 const CreationProviderContext = createContext<CreationProviderContextType | null>(null);
 
@@ -31,6 +33,9 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const { formId } = useParams();
   const { user } = useEdificeClient();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
+  const rootFolders = useRootFolders();
+  const [currentFolder, setCurrentFolder] = useState<IFolder>(rootFolders[0]);
+  const [folders, setFolders] = useState<IFolder[]>([]);
   const [form, setForm] = useState<IForm | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
   const [currentEditingElement, setCurrentEditingElement] = useState<IFormElement | null>(null);
@@ -39,6 +44,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   }
 
   //DATA
+  const { data: foldersDatas } = useGetFoldersQuery(undefined, { skip: !userWorkflowRights.CREATION });
   const { data: formDatas } = useGetFormQuery({ formId }, { skip: !userWorkflowRights.CREATION });
   const { data: questionsDatas } = useGetQuestionsQuery({ formId });
   const { data: sectionsDatas } = useGetSectionsQuery({ formId });
@@ -50,6 +56,14 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
     formId,
     currentEditingElement,
   );
+
+  useEffect(() => {
+    if (foldersDatas) {
+      setFolders([...rootFolders, ...foldersDatas]);
+      return;
+    }
+    return;
+  }, [foldersDatas, rootFolders]);
 
   useEffect(() => {
     if (formDatas) {
@@ -136,6 +150,10 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
 
   const value = useMemo<CreationProviderContextType>(
     () => ({
+      currentFolder,
+      setCurrentFolder,
+      folders,
+      setFolders,
       form,
       formElementsList,
       setFormElementsList,
@@ -147,7 +165,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       saveQuestion,
       saveSection,
     }),
-    [form, formElementsList, currentEditingElement],
+    [currentFolder, folders, form, formElementsList, currentEditingElement],
   );
 
   return <CreationProviderContext.Provider value={value}>{children}</CreationProviderContext.Provider>;

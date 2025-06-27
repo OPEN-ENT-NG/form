@@ -20,6 +20,7 @@ export const CreationQuestionLongAnswer: FC = () => {
             readOnly: true,
           },
         }}
+        disabled
       />
     </Box>
   );
