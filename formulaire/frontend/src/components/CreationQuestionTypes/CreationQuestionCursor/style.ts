@@ -1,5 +1,11 @@
 import { SxProps, Theme } from "@mui/material";
 
+export const cursorPropsStyle: SxProps<Theme> = {
+  display: "flex",
+  flexDirection: "column",
+  rowGap: 3,
+};
+
 export const cursorLineStyle: SxProps<Theme> = {
   display: "flex",
   columnGap: 5,

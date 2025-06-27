@@ -1,14 +1,17 @@
 import { FC, useEffect, useState } from "react";
 import { ICreationQuestionTypesProps } from "../types";
-import { Box, Input, TextField, Typography } from "@cgi-learning-hub/ui";
+import { Box, TextField, Typography } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { cursorItemStyle, cursorLineStyle, cursorValueNameStyle } from "./style";
-import { ComponentVariant } from "~/core/style/themeProps";
+import { cursorItemStyle, cursorLineStyle, cursorPropsStyle, cursorValueNameStyle } from "./style";
+import { ComponentSize, ComponentVariant } from "~/core/style/themeProps";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { IQuestionSpecificFields } from "~/core/models/question/types";
-import { getInputsSlotProps, getLabel, initDefaultSpecificFields } from "./utils";
+import { getLabel, initDefaultSpecificFields } from "./utils";
+import { CursorTextField } from "~/components/CursorTextField";
+import { CursorTextFieldType } from "~/components/CursorTextField/enums";
+import { CursorProp } from "./enums";
 
 export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -31,73 +34,84 @@ export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ questi
   }, [currentQuestionCursorProps, setCurrentEditingElement]);
 
   // Locally save the changed value in the question's specificFields
-  const handleValueChange = () => {
+  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>, cursorProp: CursorProp) => {
+    console.log("handleValueCahnge : " + event.target.value);
+
     const updatedSpecificFields = {
       ...currentQuestionCursorProps,
-      // modified prop here
+      [cursorProp]: event.target.value,
     };
     setCurrentQuestionCursorProps(updatedSpecificFields);
     // someting to do here ?
   };
 
   return (
-    <Box>
+    <Box sx={cursorPropsStyle}>
       {/* Min value and label */}
       <Box sx={cursorLineStyle}>
         <Box sx={cursorItemStyle}>
           {getLabel(t("formulaire.question.value.minimum"))}
-          <Input
-            type="number"
-            disabled={!isCurrentEditingElement(question, currentEditingElement)}
-            slotProps={getInputsSlotProps(!isCurrentEditingElement(question, currentEditingElement))}
-            // TODO call handleValueChange
-          />
+          <CursorTextField
+            type={CursorTextFieldType.NUMBER}
+            isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)}
+            onChangeCallback={(event) => {
+              handleValueChange(event, CursorProp.CURSOR_MAX_VAL);
+            }}
+            inputValue={currentQuestionCursorProps.cursorMinVal}
+            stepValue={currentQuestionCursorProps.cursorStep}
+          ></CursorTextField>
         </Box>
         <Box sx={cursorItemStyle}>
           <Typography sx={cursorValueNameStyle}>{t("formulaire.question.value.label")}</Typography>
-          <TextField
-            variant={ComponentVariant.STANDARD}
-            placeholder={t("formulaire.question.label")}
-            value={""}
-            onChange={() => {}}
-            slotProps={getInputsSlotProps(!isCurrentEditingElement(question, currentEditingElement))}
-            // TODO call handleValueChange
-          />
+          <CursorTextField
+            type={CursorTextFieldType.STRING}
+            isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)}
+            onChangeCallback={(event) => {
+              handleValueChange(event, CursorProp.CURSOR_MAX_LABEL);
+            }}
+            inputValue={currentQuestionCursorProps.cursorMinLabel}
+          ></CursorTextField>
         </Box>
       </Box>
       {/* Max value and label */}
       <Box sx={cursorLineStyle}>
         <Box sx={cursorItemStyle}>
           {getLabel(t("formulaire.question.value.maximum"))}
-          <Input
-            type="number"
-            disabled={!isCurrentEditingElement(question, currentEditingElement)}
-            slotProps={getInputsSlotProps(!isCurrentEditingElement(question, currentEditingElement))}
-            // TODO call handleValueChange
-          />
+          <CursorTextField
+            type={CursorTextFieldType.NUMBER}
+            isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)}
+            onChangeCallback={(event) => {
+              handleValueChange(event, CursorProp.CURSOR_MIN_VAL);
+            }}
+            inputValue={currentQuestionCursorProps.cursorMaxVal}
+            stepValue={currentQuestionCursorProps.cursorStep}
+          ></CursorTextField>
         </Box>
         <Box sx={cursorItemStyle}>
           <Typography sx={cursorValueNameStyle}>{t("formulaire.question.value.label")}</Typography>
-          <TextField
-            variant={ComponentVariant.STANDARD}
-            placeholder={t("formulaire.question.label")}
-            value={""}
-            onChange={() => {}}
-            slotProps={getInputsSlotProps(!isCurrentEditingElement(question, currentEditingElement))}
-            // TODO call handleValueChange
-          />
+          <CursorTextField
+            type={CursorTextFieldType.STRING}
+            isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)}
+            onChangeCallback={(event) => {
+              handleValueChange(event, CursorProp.CURSOR_MIN_LABEL);
+            }}
+            inputValue={currentQuestionCursorProps.cursorMaxLabel}
+          ></CursorTextField>
         </Box>
       </Box>
       {/* Step value */}
       <Box sx={cursorLineStyle}>
         <Box sx={cursorItemStyle}>
           {getLabel(t("formulaire.question.value.step"))}
-          <Input
-            type="number"
-            disabled={!isCurrentEditingElement(question, currentEditingElement)}
-            slotProps={getInputsSlotProps(!isCurrentEditingElement(question, currentEditingElement))}
-            // TODO call handleValueChange
-          />
+          <CursorTextField
+            type={CursorTextFieldType.NUMBER}
+            isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)}
+            onChangeCallback={(event) => {
+              handleValueChange(event, CursorProp.CURSOR_STEP);
+            }}
+            inputValue={currentQuestionCursorProps.cursorStep}
+            stepValue={currentQuestionCursorProps.cursorStep}
+          ></CursorTextField>
         </Box>
       </Box>
     </Box>
