@@ -1,11 +1,10 @@
 import { FC } from "react";
-import { Box, EmptyState } from "@cgi-learning-hub/ui";
+import { Box, EmptyState, Button } from "@cgi-learning-hub/ui";
 import { useCreation } from "~/providers/CreationProvider";
 import { ICreationLayoutProps } from "./types";
 import { CreationLayoutWrapper, emptyStateWrapper } from "./style";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { Button } from "@mui/material";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { useModal } from "~/providers/ModalProvider";
@@ -32,9 +31,11 @@ export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
           <EmptyState
             image={<EmptyForm />}
             title={t("formulaire.form.edit.empty.main")}
-            description={t("formulaire.form.edit.empty.caption")}
+            description={t("formulaire.form.edit.empty.caption", { buttonText: t("formulaire.add.element") })}
             color="primary.main"
-            imageHeight={350}
+            imageHeight={300}
+            titleProps={{ variant: "h4" }}
+            descriptionProps={{ variant: "body2" }}
           />
           <Button variant={ComponentVariant.CONTAINED} onClick={handleNewFormElement}>
             {t("formulaire.add.element")}

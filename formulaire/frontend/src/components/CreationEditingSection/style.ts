@@ -9,6 +9,8 @@ export const sectionHeaderWrapperStyle: SxProps<Theme> = {
   backgroundColor: SECONDARY_MAIN_COLOR,
   color: COMMON_WHITE_COLOR,
   borderRadius: 1,
+  borderBottomLeftRadius: 0,
+  borderBottomRightRadius: 0,
   paddingBottom: 2,
   paddingX: 4,
 };
