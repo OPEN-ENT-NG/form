@@ -8,10 +8,11 @@ export const outerContainerStyle: SxProps<Theme> = {
 };
 
 export const innerContainerStyle: SxProps<Theme> = {
-  width: "65%",
+  width: "80%",
   display: "flex",
   flexDirection: "column",
   marginTop: 4,
+  gap: "16px",
 };
 
 export const elementListStyle: SxProps<Theme> = {
@@ -23,4 +24,5 @@ export const elementListStyle: SxProps<Theme> = {
 export const actionButtonStyle: SxProps<Theme> = {
   display: "flex",
   justifyContent: "flex-end",
+  paddingBottom: 4,
 };
