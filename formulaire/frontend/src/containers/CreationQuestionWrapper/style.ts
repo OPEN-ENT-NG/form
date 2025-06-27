@@ -1,5 +1,7 @@
 import { SxProps, Theme } from "@mui/material";
-import { GREY_MAIN_COLOR, SECONDARY_MAIN_COLOR } from "~/core/style/colors";
+import { Paper, styled } from "@cgi-learning-hub/ui";
+import { GREY_MAIN_COLOR } from "~/core/style/colors";
+import { IStyledPaperProps } from "./types";
 
 export const questionStackStyle: SxProps<Theme> = {
   display: "flex",
@@ -20,19 +22,20 @@ export const dragIconStyle: SxProps<Theme> = { transform: "rotate(90deg)", color
 
 export const questionTitleStyle: SxProps<Theme> = { marginBottom: 3 };
 
-export const editingQuestionStackStyle: SxProps<Theme> = {
+export const StyledPaper = styled(Paper, {
+  shouldForwardProp: (prop) => prop !== "isValidFormElement",
+})<IStyledPaperProps>(({ isValidFormElement }) => ({
   display: "flex",
   flexDirection: "column",
-  borderLeft: 4,
-  borderColor: SECONDARY_MAIN_COLOR,
-  borderRadius: 1,
-  marginBottom: 2,
-  paddingTop: 3,
-};
+  borderLeft: "4px solid",
+  marginBottom: "16px",
+  paddingTop: "3rem",
+  borderColor: isValidFormElement ? "transparent !important" : "red !important",
+}));
 
 export const editingQuestionTitleStyle: SxProps<Theme> = { paddingX: "3rem" };
 
-export const editingQuestionContentStyle: SxProps<Theme> = { padding: 2 };
+export const editingQuestionContentStyle: SxProps<Theme> = { padding: "2rem 3rem 0 3rem" };
 
 export const editingQuestionFooterStyle: SxProps<Theme> = {
   display: "flex",

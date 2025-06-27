@@ -36,6 +36,7 @@ node_modules
 */angular/src/mdi/
 */angular/src/view/
 */angular/*.lock
+*/angular/*.log
 
 #==== Frontend ====#
 dist

@@ -6,7 +6,6 @@ import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
-import { shortAnswerStyle } from "./style";
 
 export const CreationQuestionShortAnswer: FC<ICreationQuestionTypesProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -34,7 +33,6 @@ export const CreationQuestionShortAnswer: FC<ICreationQuestionTypesProps> = ({ q
     <Box>
       <TextField
         variant={ComponentVariant.OUTLINED}
-        sx={shortAnswerStyle}
         fullWidth
         placeholder={t("formulaire.question.type.SHORTANSWER")}
         value={currentQuestionPlaceholder}
@@ -44,6 +42,7 @@ export const CreationQuestionShortAnswer: FC<ICreationQuestionTypesProps> = ({ q
             readOnly: !isCurrentEditingElement(question, currentEditingElement),
             sx: {
               pointerEvents: !isCurrentEditingElement(question, currentEditingElement) ? "none" : "auto",
+              userSelect: !isCurrentEditingElement(question, currentEditingElement) ? "none" : "auto",
             },
           },
         }}
