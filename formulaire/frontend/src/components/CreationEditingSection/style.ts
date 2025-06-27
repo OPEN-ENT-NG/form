@@ -6,7 +6,7 @@ export const sectionHeaderWrapperStyle: SxProps<Theme> = {
   alignItems: "center",
   justifyContent: "space-between",
   flexDirection: "column",
-  backgroundColor: PRIMARY_MAIN_COLOR,
+  backgroundColor: SECONDARY_MAIN_COLOR,
   color: COMMON_WHITE_COLOR,
   borderRadius: 1,
   borderBottomLeftRadius: 0,
