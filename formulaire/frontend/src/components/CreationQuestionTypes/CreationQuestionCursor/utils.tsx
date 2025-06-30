@@ -1,10 +1,11 @@
 import { Typography } from "@mui/material";
 import { IQuestion, IQuestionSpecificFields } from "~/core/models/question/types";
 import { cursorValueNameStyle } from "./style";
+import { CursorProp } from "./enums";
+import { CursorTextFieldType } from "~/components/CursorTextField/enums";
+import { t } from "~/i18n";
 
 export const initDefaultSpecificFields = (question: IQuestion): IQuestionSpecificFields => {
-  if (!question.id) throw new Error("Prop question.id shouldn't be null");
-
   return {
     id: null,
     questionId: question.id,
@@ -23,4 +24,48 @@ export const getLabel = (mainText: string) => {
       <span style={{ color: "red" }}>&ensp;*&ensp;</span>:
     </Typography>
   );
+};
+
+export const useGetCursorTextFieldProps = (currentQuestionSpecificFields: IQuestionSpecificFields) => {
+  return [
+    [
+      {
+        text: getLabel(t("formulaire.question.value.minimum")),
+        inputType: CursorTextFieldType.NUMBER,
+        specificFieldsPropName: CursorProp.CURSOR_MIN_VAL,
+        inputValue: currentQuestionSpecificFields.cursorMinVal,
+        stepValue: currentQuestionSpecificFields.cursorStep,
+      },
+      {
+        text: <Typography sx={cursorValueNameStyle}>{t("formulaire.question.value.label")}</Typography>,
+        inputType: CursorTextFieldType.STRING,
+        specificFieldsPropName: CursorProp.CURSOR_MIN_LABEL,
+        inputValue: currentQuestionSpecificFields.cursorMinLabel,
+      },
+    ],
+    [
+      {
+        text: getLabel(t("formulaire.question.value.maximum")),
+        inputType: CursorTextFieldType.NUMBER,
+        specificFieldsPropName: CursorProp.CURSOR_MAX_VAL,
+        inputValue: currentQuestionSpecificFields.cursorMaxVal,
+        stepValue: currentQuestionSpecificFields.cursorStep,
+      },
+      {
+        text: <Typography sx={cursorValueNameStyle}>{t("formulaire.question.value.label")}</Typography>,
+        inputType: CursorTextFieldType.STRING,
+        specificFieldsPropName: CursorProp.CURSOR_MAX_LABEL,
+        inputValue: currentQuestionSpecificFields.cursorMaxLabel,
+      },
+    ],
+    [
+      {
+        text: getLabel(t("formulaire.question.value.step")),
+        inputType: CursorTextFieldType.NUMBER,
+        specificFieldsPropName: CursorProp.CURSOR_STEP,
+        inputValue: currentQuestionSpecificFields.cursorStep,
+        stepValue: currentQuestionSpecificFields.cursorStep,
+      },
+    ],
+  ];
 };

@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 export const CursorTextField: FC<ICursorTextFieldProps> = ({
   type,
   isCurrentEditingElement,
-  onChangeCallback,
+  onChange,
   inputValue,
   stepValue,
 }) => {
@@ -28,9 +28,13 @@ export const CursorTextField: FC<ICursorTextFieldProps> = ({
       },
     };
 
+    const commonInputProps = {
+      value: inputValue,
+    };
+
     if (isTypeNumber) {
       slotProps.htmlInput = {
-        value: inputValue,
+        ...commonInputProps,
         step: stepValue,
         inputMode: "numeric",
         pattern: "[0-9]*",
@@ -38,6 +42,8 @@ export const CursorTextField: FC<ICursorTextFieldProps> = ({
           textAlign: "center",
         },
       };
+    } else {
+      slotProps.htmlInput = commonInputProps;
     }
 
     return slotProps;
@@ -47,12 +53,9 @@ export const CursorTextField: FC<ICursorTextFieldProps> = ({
     <TextField
       type={type}
       variant={type == CursorTextFieldType.NUMBER ? ComponentVariant.OUTLINED : ComponentVariant.STANDARD}
-      {...(isTypeNumber
-        ? { size: ComponentSize.SMALL }
-        : { label: inputValue, placeholder: t("formulaire.question.label") })}
-      disabled={!isCurrentEditingElement}
+      {...(isTypeNumber ? { size: ComponentSize.SMALL } : { placeholder: t("formulaire.question.label") })}
       slotProps={getInputSlotProps()}
-      onChange={onChangeCallback}
+      onChange={onChange}
     />
   );
 };

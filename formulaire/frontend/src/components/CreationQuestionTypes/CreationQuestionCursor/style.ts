@@ -22,7 +22,7 @@ export const cursorItemStyle: SxProps<Theme> = {
   alignItems: "center",
   justifyItems: "flex-end",
   gap: 1,
-  "> :first-child": {
+  "> :first-of-type": {
     textWrapMode: "nowrap",
   },
 };

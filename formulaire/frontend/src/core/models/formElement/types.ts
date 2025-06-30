@@ -1,3 +1,4 @@
+import { IQuestionSpecificFields } from "../question/types";
 import { FormElementType } from "./enum";
 
 export interface IFormElementDTO {
@@ -11,6 +12,7 @@ export interface IFormElementDTO {
 }
 
 export interface IFormElement {
+  key: number;
   id: number | null;
   formId: number | null;
   title: string | null;
@@ -19,6 +21,7 @@ export interface IFormElement {
   selected: boolean;
   label: string | null;
   isNew?: boolean;
+  specificFields?: IQuestionSpecificFields | null;
 }
 
 export interface IFormElementPayload {
