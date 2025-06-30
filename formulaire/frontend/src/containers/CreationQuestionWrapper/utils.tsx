@@ -3,6 +3,7 @@ import { RefObject } from "react";
 import { CreationQuestionFreetext } from "~/components/CreationQuestionTypes/CreationQuestionFreetext";
 import { CreationQuestionLongAnswer } from "~/components/CreationQuestionTypes/CreationQuestionLongAnswer";
 import { CreationQuestionShortAnswer } from "~/components/CreationQuestionTypes/CreationQuestionShortAnswer";
+import { CreationQuestionDate } from "~/components/CreationQuestionTypes/CreationQuestionDate";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 
@@ -17,6 +18,8 @@ export const getQuestionContentByType = (
       return <CreationQuestionShortAnswer question={question} />;
     case QuestionTypes.LONGANSWER:
       return <CreationQuestionLongAnswer />;
+    case QuestionTypes.DATE:
+      return <CreationQuestionDate />;
     default:
       return <Typography variant="body1">Unsupported question type {question.questionType.toString()}</Typography>;
   }
