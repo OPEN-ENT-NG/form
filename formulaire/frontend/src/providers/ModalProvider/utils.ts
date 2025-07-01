@@ -19,4 +19,5 @@ export const initialDisplayModalsState: IDisplayModalsState = {
   [ModalType.SECTION_UNDO]: false,
   [ModalType.QUESTION_DELETE]: false,
   [ModalType.SECTION_DELETE]: false,
+  [ModalType.ORGANIZATION]: false,
 };
