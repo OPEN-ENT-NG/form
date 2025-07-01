@@ -222,8 +222,8 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
       {question.questionType === QuestionTypes.CURSOR && !isCursorChoiceConsistent(question) && (
         <Alert
           severity={AlertSeverityVariant.WARNING}
-          title={t("formulaire.question.missing.field")}
-          children={t("formulaire.question.missing.field.title")}
+          title={t("formulaire.question.field.error")}
+          children={t("formulaire.question.cursor.inconsistency.between.values")}
           sx={questionAlertStyle}
         />
       )}

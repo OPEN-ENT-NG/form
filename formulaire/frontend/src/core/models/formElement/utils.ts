@@ -19,7 +19,8 @@ export const transformFormElements = (rawFormElements: IFormElementDTO[]): IForm
 
 export const createNewFormElement = (formElementType: FormElementType): IFormElement => {
   const defaultElement: IFormElement = {
-    id: Date.now(),
+    key: Date.now(),
+    id: null,
     formId: null,
     title: null,
     position: null,
