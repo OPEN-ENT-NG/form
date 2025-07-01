@@ -7,7 +7,6 @@ import {
   Stack,
   Paper,
   Select,
-  SelectChangeEvent,
   MenuItem,
   FormControl,
   Alert,
@@ -39,47 +38,34 @@ import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import { dragIconContainerStyle, questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
 import { AlertSeverityVariant, ComponentVariant } from "~/core/style/themeProps";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
+import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
 import { isValidFormElement } from "~/core/models/formElement/utils";
 import { useCreation } from "~/providers/CreationProvider";
-import {
-  getElementById,
-  getElementPositionGreaterEqual,
-  getFollowingFormElement,
-  isCurrentEditingElement,
-} from "~/providers/CreationProvider/utils";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useModal } from "~/providers/ModalProvider";
 import { ModalType } from "~/core/enums";
 import { CreateFormElementModal } from "~/containers/CreateFormElementModal";
-import { IFormElement } from "~/core/models/formElement/types";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
 import { hasFormResponses } from "~/core/models/form/utils";
+import { useTargetNextElement } from "~/hook/useTargetNextElement";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const {
-    form,
-    formElementsList,
-    setCurrentEditingElement,
-    currentEditingElement,
-    handleDuplicateFormElement,
-    saveSection,
-  } = useCreation();
+  const { form, setCurrentEditingElement, currentEditingElement, handleDuplicateFormElement } = useCreation();
   const {
     displayModals: { showQuestionCreate },
     toggleModal,
   } = useModal();
 
-  const followingElement = getFollowingFormElement(section, formElementsList);
-  const elementsTwoPositionsAheadList = section.position
-    ? getElementPositionGreaterEqual(section.position + 2, formElementsList)
-    : [];
+  const {
+    targetNextElementId,
+    followingElement,
+    elementsTwoPositionsAheadList,
+    onChange: handleNextFormElementChange,
+  } = useTargetNextElement(section);
 
-  const [nextFormElementId, setNextFormElementId] = useState<number | undefined>(
-    section.nextFormElementId ? section.nextFormElementId : undefined,
-  );
+  //TITLE
   const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
-
   const isEditing = isCurrentEditingElement(section, currentEditingElement);
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -100,6 +86,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
     });
   }, [currentSectionTitle, setCurrentEditingElement]);
 
+  //ACTIONS
   const handleDuplicate = () => {
     void handleDuplicateFormElement(section);
   };
@@ -110,25 +97,6 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
 
   const handleAddNewQuestion = () => {
     toggleModal(ModalType.QUESTION_CREATE);
-  };
-
-  useEffect(() => {
-    if (!nextFormElementId) return;
-    //get nextElement from list of form elements
-    const nextElement: IFormElement | undefined = getElementById(nextFormElementId, formElementsList);
-
-    if (!nextElement?.formElementType) return;
-
-    void saveSection({
-      ...section,
-      nextFormElementId: nextFormElementId ? nextFormElementId : null,
-      nextFormElementType: nextElement.formElementType,
-    });
-  }, [nextFormElementId]);
-
-  const handleNextFormElementChange = (event: SelectChangeEvent) => {
-    const raw = event.target.value;
-    setNextFormElementId(raw ? Number(raw) : undefined);
   };
 
   return (
@@ -188,7 +156,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
                 <FormControl fullWidth>
                   <Select
                     variant={ComponentVariant.OUTLINED}
-                    value={nextFormElementId != null ? String(nextFormElementId) : ""}
+                    value={targetNextElementId != null ? String(targetNextElementId) : TARGET_RECAP}
                     onChange={handleNextFormElementChange}
                     displayEmpty
                   >
@@ -204,7 +172,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
                       </MenuItem>
                     ))}
 
-                    <MenuItem value="">{t("formulaire.access.recap")}</MenuItem>
+                    <MenuItem value={TARGET_RECAP}>{t("formulaire.access.recap")}</MenuItem>
                   </Select>
                 </FormControl>
               )}

@@ -62,3 +62,6 @@ export const DEFAULT_NB_CHILDREN = 3;
 export const DEFAULT_CURSOR_MIN_VALUE = 1;
 export const DEFAULT_CURSOR_MAX_VALUE = 10;
 export const DEFAULT_CURSOR_STEP = 1;
+
+//TARGET NEXT ELEMENT
+export const TARGET_RECAP = "targetRecap";
