@@ -147,7 +147,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
           />
           <Box>
             {section.questions.map((question: IQuestion) => (
-              <CreationQuestionWrapper key={question.id} question={question} />
+              <CreationQuestionWrapper key={question.key} question={question} />
             ))}
           </Box>
           <Box sx={sectionFooterStyle}>
