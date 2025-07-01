@@ -15,13 +15,18 @@ import { useUpdateFormElementsMutation } from "~/services/api/services/formulair
 import {
   useCreateQuestionsMutation,
   useCreateSingleQuestionMutation,
+  useDeleteSingleQuestionMutation,
   useUpdateQuestionsMutation,
 } from "~/services/api/services/formulaireApi/questionApi";
 import {
   useCreateMultipleChoiceQuestionsMutation,
   useUpdateMultipleChoiceQuestionsMutation,
 } from "~/services/api/services/formulaireApi/questionChoiceApi";
-import { useCreateSectionMutation, useUpdateSectionsMutation } from "~/services/api/services/formulaireApi/sectionApi";
+import {
+  useCreateSectionMutation,
+  useDeleteSingleSectionMutation,
+  useUpdateSectionsMutation,
+} from "~/services/api/services/formulaireApi/sectionApi";
 import { fixListPositions, getElementById, isInFormElementsList } from "../utils";
 import { PositionActionType } from "../enum";
 import { toast } from "react-toastify";
@@ -31,6 +36,7 @@ export const useFormElementActions = (
   formElementsList: IFormElement[],
   formId: string,
   currentEditingElement: IFormElement | null,
+  setFormElementsList: (list: IFormElement[]) => void,
 ) => {
   const { t } = useTranslation(FORMULAIRE);
 
@@ -42,11 +48,12 @@ export const useFormElementActions = (
   const [updateFormElements] = useUpdateFormElementsMutation();
   const [updateMultipleChoiceQuestions] = useUpdateMultipleChoiceQuestionsMutation();
   const [createMultipleChoiceQuestions] = useCreateMultipleChoiceQuestionsMutation();
+  const [deleteSingleQuestion] = useDeleteSingleQuestionMutation();
+  const [deleteSingleSection] = useDeleteSingleSectionMutation();
 
   const updateFormElementsList = async (newFormElementsList: IFormElement[]) => {
     const questions = newFormElementsList.filter(isFormElementQuestion) as IQuestion[];
     const sections = newFormElementsList.filter(isFormElementSection) as ISection[];
-
     if (!newFormElementsList.length) {
       return [];
     }
@@ -55,13 +62,104 @@ export const useFormElementActions = (
       await updateQuestions(questions);
       return;
     }
-    if (questions.length && !sections.length) {
+    if (sections.length && !questions.length) {
       await updateSections(sections);
       return;
     }
 
     await updateFormElements(newFormElementsList);
     return;
+  };
+
+  const deleteFormElement = async (toRemove: IFormElement) => {
+    if (!toRemove.id) return;
+
+    // 1. Handle nested question deletion inside a section
+    if (isFormElementQuestion(toRemove)) {
+      await handleNestedQuestionDeletion(toRemove as IQuestion);
+    }
+
+    // 2. Handle removal from top-level list and references
+    await handleTopLevelDeletion(toRemove);
+  };
+
+  const handleNestedQuestionDeletion = async (question: IQuestion) => {
+    if (!question.sectionId || !question.sectionPosition || !question.id) return;
+
+    const parent = formElementsList.find(
+      (el): el is ISection => isFormElementSection(el) && el.id === question.sectionId,
+    );
+    if (!parent) return;
+
+    // Remove question and fix positions within the section
+    const updatedQuestions = fixListPositions(
+      parent.questions.filter((q) => q.id !== question.id),
+      question.sectionPosition,
+      PositionActionType.DELETION,
+    );
+
+    await deleteSingleQuestion(question.id);
+    await updateFormElementsList(updatedQuestions);
+  };
+
+  const handleTopLevelDeletion = async (toRemove: IFormElement) => {
+    if (!toRemove.position || !toRemove.id) return;
+
+    // Remove element and fix positions
+    const filteredList = formElementsList.filter(
+      (el) => el.id !== toRemove.id || el.formElementType !== toRemove.formElementType,
+    );
+    const reindexedList = fixListPositions(filteredList, toRemove.position, PositionActionType.DELETION);
+
+    // Optimistic UI update
+    setFormElementsList(reindexedList);
+
+    // Clear any next-references pointing to the removed element
+    const cleanedList = reindexedList.map(clearNextReferences(toRemove));
+
+    // Persist deletion
+    if (isFormElementQuestion(toRemove)) {
+      await deleteSingleQuestion(toRemove.id);
+    } else if (isFormElementSection(toRemove)) {
+      await deleteSingleSection(toRemove.id);
+    }
+
+    // Push updated list to backend
+    await updateFormElementsList(cleanedList);
+  };
+
+  const clearNextReferences = (removedElement: IFormElement): ((el: IFormElement) => IFormElement) => {
+    // If the removed element is a question, clear any choice-level next refs
+    if (isFormElementQuestion(removedElement)) {
+      return (el) => {
+        if (!isFormElementQuestion(el)) return el;
+        const question = el as IQuestion;
+        // For each choice, null out nextFormElementId/type if they pointed to the removed question
+        const updatedChoices = question.choices?.map((choice) =>
+          choice.nextFormElementId === removedElement.id &&
+          choice.nextFormElementType === removedElement.formElementType
+            ? {
+                ...choice,
+                nextFormElementId: null,
+                nextFormElementType: null,
+              }
+            : choice,
+        );
+        return updatedChoices ? { ...question, choices: updatedChoices } : question;
+      };
+    }
+
+    // Otherwise, it was a section: clear any section-level next refs
+    return (el) => {
+      if (!isFormElementSection(el)) return el;
+      const section = el as ISection;
+      const shouldClearNext =
+        section.nextFormElementId === removedElement.id &&
+        section.nextFormElementType === removedElement.formElementType;
+      if (!shouldClearNext) return el;
+      // If it pointed to the removed section, null out those fields
+      return { ...el, nextFormElementId: null, nextFormElementType: null };
+    };
   };
 
   const duplicateQuestion = async (questionToDuplicate: IQuestion) => {
@@ -275,6 +373,7 @@ export const useFormElementActions = (
   );
 
   return {
+    deleteFormElement,
     duplicateQuestion,
     duplicateSection,
     saveQuestion,
