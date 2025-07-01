@@ -6,6 +6,11 @@ export enum ComponentVariant {
   FILLED = "filled",
 }
 
+export enum ComponentSize {
+  SMALL = "small",
+  MEDIUM = "medium",
+}
+
 export enum TypographyVariant {
   H2 = "h2",
   H3 = "h3",
