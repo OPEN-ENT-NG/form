@@ -3,36 +3,35 @@ import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography }
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
-import { useDeleteSingleQuestionMutation } from "~/services/api/services/formulaireApi/questionApi";
 import { IDeleteConfirmationModalProps } from "./types";
-import { removeFormElementFromList } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
-import { isFormElementQuestion } from "~/core/models/question/utils";
-import { useDeleteSingleSectionMutation } from "~/services/api/services/formulaireApi/sectionApi";
+import { useFormElementActions } from "~/providers/CreationProvider/hook/useFormElementActions";
 
 export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isOpen, handleClose, element }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const [deleteSingleQuestion] = useDeleteSingleQuestionMutation();
-  const [deleteSingleSection] = useDeleteSingleSectionMutation();
-  const { formElementsList, setFormElementsList } = useCreation();
+  const { formElementsList, form, currentEditingElement, handleDeleteFormElement, setFormElementsList } = useCreation();
+
+  if (!form) {
+    throw new Error("form is undefined");
+  }
+  const { deleteFormElement } = useFormElementActions(
+    formElementsList,
+    String(form.id),
+    currentEditingElement,
+    setFormElementsList,
+  );
 
   const handleDelete = async () => {
     if (!element.id) {
       handleClose();
       return;
     }
-    setFormElementsList(removeFormElementFromList(formElementsList, element));
-    handleClose();
-
+    handleDeleteFormElement(element);
     if (element.isNew) {
       return;
     }
-
-    if (isFormElementQuestion(element)) {
-      await deleteSingleQuestion(element.id);
-      return;
-    }
-    await deleteSingleSection(element.id);
+    await deleteFormElement(element);
+    handleClose();
   };
 
   return (
