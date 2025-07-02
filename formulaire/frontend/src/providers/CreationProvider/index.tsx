@@ -51,12 +51,8 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
 
   //CUSTOM HOOKS
   const { completeList } = useFormElementList(sectionsDatas, questionsDatas);
-  const { duplicateQuestion, duplicateSection, saveQuestion, saveSection } = useFormElementActions(
-    formElementsList,
-    formId,
-    currentEditingElement,
-    setFormElementsList,
-  );
+  const { duplicateQuestion, duplicateSection, saveQuestion, saveSection, updateFormElementsList } =
+    useFormElementActions(formElementsList, formId, currentEditingElement, setFormElementsList);
 
   useEffect(() => {
     if (foldersDatas) {
@@ -165,6 +161,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       handleDeleteFormElement,
       saveQuestion,
       saveSection,
+      updateFormElementsList,
     }),
     [currentFolder, folders, form, formElementsList, currentEditingElement],
   );

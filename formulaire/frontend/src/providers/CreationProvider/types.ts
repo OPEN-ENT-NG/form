@@ -24,4 +24,5 @@ export type CreationProviderContextType = {
   handleDeleteFormElement: (element: IFormElement) => void;
   saveQuestion: (question: IQuestion) => Promise<void>;
   saveSection: (section: ISection) => Promise<void>;
+  updateFormElementsList: (formElementsList: IFormElement[]) => Promise<void>;
 };
