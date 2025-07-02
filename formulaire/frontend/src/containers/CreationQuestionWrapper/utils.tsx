@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import { RefObject } from "react";
 import { CreationQuestionFreetext } from "~/components/CreationQuestionTypes/CreationQuestionFreetext";
+import { CreationQuestionFile } from "~/components/CreationQuestionTypes/CreationQuestionFile";
 import { CreationQuestionLongAnswer } from "~/components/CreationQuestionTypes/CreationQuestionLongAnswer";
 import { CreationQuestionShortAnswer } from "~/components/CreationQuestionTypes/CreationQuestionShortAnswer";
 import { CreationQuestionDate } from "~/components/CreationQuestionTypes/CreationQuestionDate";
@@ -28,6 +29,8 @@ export const getQuestionContentByType = (
       return <CreationQuestionTime />;
     case QuestionTypes.CURSOR:
       return <CreationQuestionCursor question={question} />;
+    case QuestionTypes.FILE:
+      return <CreationQuestionFile />;
     default:
       return (
         <Typography variant={TypographyVariant.BODY1}>
