@@ -10,10 +10,16 @@ import { ISection } from "~/core/models/section/types";
 import { OrganizationDraggableItem } from "~/components/OrganizationDraggableItem";
 import { IFormElement } from "~/core/models/formElement/types";
 import { contentStackStyle } from "./style";
+import { flattenFormElements } from "~/core/models/formElement/utils";
 
 export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { formElementsList } = useCreation();
+  const { formElementsList, updateFormElementsList } = useCreation();
+
+  const handleConfirm = () => {
+    void updateFormElementsList(flattenFormElements(formElementsList));
+    handleClose();
+  };
 
   // Recursively render each element + its questions
   const renderElements = (elements: IFormElement[], depth = 0): ReactNode =>
@@ -37,12 +43,7 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
         <Button variant={ComponentVariant.OUTLINED} onClick={handleClose}>
           {t("formulaire.cancel")}
         </Button>
-        <Button
-          variant={ComponentVariant.CONTAINED}
-          onClick={() => {
-            console.log("Organisation created");
-          }}
-        >
+        <Button variant={ComponentVariant.CONTAINED} onClick={handleConfirm}>
           {t("formulaire.confirm")}
         </Button>
       </DialogActions>

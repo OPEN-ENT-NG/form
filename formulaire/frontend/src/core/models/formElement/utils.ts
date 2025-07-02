@@ -1,3 +1,5 @@
+import { isFormElementQuestion } from "../question/utils";
+import { ISection } from "../section/types";
 import { FormElementType } from "./enum";
 import { IFormElement, IFormElementDTO, IFormElementPayload } from "./types";
 
@@ -45,4 +47,20 @@ export const buildFormElementPayload = (formElement: IFormElement): IFormElement
     position: formElement.position,
     form_element_type: formElement.formElementType,
   };
+};
+
+export const flattenFormElements = (
+  formElements: IFormElement[],
+): IFormElement[] => {
+  return formElements.reduce<IFormElement[]>((acc, element) => {
+    if (isFormElementQuestion(element)) {
+      // Question, add it directly
+      return [...acc, element];
+    }
+
+    // Section, spread its questions (if any), then the section itself
+    const section = element as ISection;
+    const questions = section.questions ?? [];
+    return [...acc, ...questions, section];
+  }, []);
 };

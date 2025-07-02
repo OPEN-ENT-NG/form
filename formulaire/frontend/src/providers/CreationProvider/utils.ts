@@ -105,16 +105,18 @@ export const getFollowingFormElement = (
 
     if (question.sectionId) {
       const section = getElementById(question.sectionId, formElementsList) as ISection | undefined;
+      
       if (!section) {
         return null;
       }
 
       const pos = question.sectionPosition;
+      console.log("section", section, "pos", pos, "question", question);
       if (pos === null) {
         return null;
       }
 
-      const nextInSection = section.questions.find((q) => q.position === pos + 1);
+      const nextInSection = section.questions.find((q) => q.sectionPosition === pos + 1);
       return nextInSection ?? null;
     }
   }
