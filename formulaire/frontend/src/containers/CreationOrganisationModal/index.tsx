@@ -1,43 +1,69 @@
-import { FC, ReactNode } from "react";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Box, Stack } from "@cgi-learning-hub/ui";
+import { FC, ReactNode, useMemo } from "react";
+import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Stack } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IModalProps } from "~/core/types";
 import { useCreation } from "~/providers/CreationProvider";
-import { isFormElementSection } from "~/core/models/section/utils";
-import { ISection } from "~/core/models/section/types";
-import { OrganizationDraggableItem } from "~/components/OrganizationDraggableItem";
-import { IFormElement } from "~/core/models/formElement/types";
+import { OrganizationSortableItem, OrganizationSortableItemDisplay } from "~/components/OrganizationSortableItem";
 import { contentStackStyle } from "./style";
-import { flattenFormElements } from "~/core/models/formElement/utils";
+import { closestCenter, DndContext, DragOverlay, MeasuringStrategy } from "@dnd-kit/core";
+import { verticalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
+import { flattenFormElements } from "./utils";
+import { IFlattenedItem } from "./types";
+import { useOrganizationModalDnd } from "~/hook/dnd-hooks/useOrganizationModalDnd";
 
 export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { formElementsList, updateFormElementsList } = useCreation();
+  const { formElementsList, setFormElementsList } = useCreation();
+
+  const flattenedItems = useMemo<IFlattenedItem[]>(() => flattenFormElements(formElementsList), [formElementsList]);
+  const sortedIds = useMemo(() => flattenedItems.map(({ id }) => id), [flattenedItems]);
+
+  // Use our custom hook to manage drag state & handlers
+  const {
+    activeId,
+    projected,
+    handleDragStart,
+    handleDragMove,
+    handleDragOver,
+    handleDragEnd,
+    handleDragCancel,
+    sensors,
+  } = useOrganizationModalDnd(flattenedItems, setFormElementsList, 40);
 
   const handleConfirm = () => {
-    void updateFormElementsList(flattenFormElements(formElementsList));
+    console.log("Confirming organization changes");
+    // void updateFormElementsList(flattenFormElements(formElementsList));
     handleClose();
   };
 
-  // Recursively render each element + its questions
-  const renderElements = (elements: IFormElement[], depth = 0): ReactNode =>
-    elements.map((el) => (
-      <Box key={el.id}>
-        <OrganizationDraggableItem element={el} indent={depth * 4} />
-
-        {isFormElementSection(el) &&
-          (el as ISection).questions.length > 0 &&
-          renderElements((el as ISection).questions, depth + 1)}
-      </Box>
-    ));
+  const renderItems = (): ReactNode =>
+    flattenedItems.map(({ id, element, depth }) => {
+      const effectiveDepth = id === activeId && projected ? projected.depth : depth;
+      return <OrganizationSortableItem key={id} element={element} indent={effectiveDepth * 4} />;
+    });
 
   return (
     <Dialog open={isOpen} onClose={handleClose} fullWidth>
       <DialogTitle>{t("formulaire.organize")}</DialogTitle>
       <DialogContent>
-        <Stack sx={contentStackStyle}>{renderElements(formElementsList)}</Stack>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          measuring={{ droppable: { strategy: MeasuringStrategy.Always } }}
+          onDragStart={handleDragStart}
+          onDragMove={handleDragMove}
+          onDragOver={handleDragOver}
+          onDragEnd={handleDragEnd}
+          onDragCancel={handleDragCancel}
+        >
+          <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
+            <Stack sx={contentStackStyle}>{renderItems()}</Stack>
+          </SortableContext>
+
+          <DragOverlay>{activeId != null && <OrganizationSortableItemDisplay activeId={activeId} />}</DragOverlay>
+        </DndContext>
       </DialogContent>
       <DialogActions>
         <Button variant={ComponentVariant.OUTLINED} onClick={handleClose}>
