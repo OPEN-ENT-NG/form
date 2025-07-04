@@ -1,6 +1,6 @@
 import { IFormElement } from "~/core/models/formElement/types";
 
-export interface IFormElementRowProps {
+export interface IOrganizationSortableItemProps {
   element: IFormElement;
   indent?: number;
 }

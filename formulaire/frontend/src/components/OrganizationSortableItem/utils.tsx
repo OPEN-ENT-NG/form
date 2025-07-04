@@ -16,6 +16,7 @@ import {
 } from "~/providers/CreationProvider/utils";
 import { ISection } from "~/core/models/section/types";
 import { PositionActionType } from "~/providers/CreationProvider/enum";
+import { compareFormElements } from "~/core/models/formElement/utils";
 
 export const getUpDownButtons = (
   element: IFormElement,
@@ -105,6 +106,23 @@ export const swapFormElements = (
         return el;
       });
     }
+
+    //If one is a top level question and the other is in a section
+    if (questionA.position && questionB.sectionId) {
+      const parentBSection = formElementsList.find(
+        (el) => isFormElementSection(el) && el.id === questionB.sectionId,
+      ) as ISection | undefined;
+      if (!parentBSection) return formElementsList;
+      return swapFormElements(questionA, parentBSection, formElementsList);
+    }
+
+    if (questionA.sectionId && questionB.position) {
+      const parentASection = formElementsList.find(
+        (el) => isFormElementSection(el) && el.id === questionA.sectionId,
+      ) as ISection | undefined;
+      if (!parentASection) return formElementsList;
+      return swapFormElements(questionB, parentASection, formElementsList);
+    }
   }
 
   // Fallback: swap their global positions
@@ -117,35 +135,6 @@ export const swapFormElements = (
     }
     return el;
   });
-};
-
-export const compareFormElements = (elementA: IFormElement, elementB: IFormElement): number => {
-  //If both are questions in the same section, sort by sectionPosition
-
-  const bothQuestions = isFormElementQuestion(elementA) && isFormElementQuestion(elementB);
-  if (bothQuestions) {
-    const questionA = elementA as IQuestion;
-    const questionB = elementB as IQuestion;
-
-    if (questionA.sectionId && questionB.sectionId && questionA.sectionId === questionB.sectionId) {
-      const posa = questionA.sectionPosition;
-      const posb = questionB.sectionPosition;
-
-      if (posa == null && posb == null) return 0;
-      if (posa == null) return 1;
-      if (posb == null) return -1;
-      return posa - posb;
-    }
-  }
-
-  //Otherwise fall back to their global position
-  const positionA = elementA.position;
-  const positionB = elementB.position;
-
-  if (positionA == null && positionB == null) return 0;
-  if (positionA == null) return 1;
-  if (positionB == null) return -1;
-  return positionA - positionB;
 };
 
 export const swapAndSortFormElements = (
