@@ -55,24 +55,15 @@ export function useOrganizationModalDnd(
     const overNum = over?.id as number | undefined;
     setOverId(overNum ?? null);
 
-    if (activeId !== null && overNum != null) {
-      setProjected(getProjection(initialFlat, activeId, overNum, offsetX, indentationWidth));
-    }
-  }
-
-  function handleDragEnd({ active, over }: DragEndEvent) {
-    document.body.style.cursor = "";
     if (activeId == null || over == null) {
       reset();
       return;
     }
 
-    // 1. arrayMove in the flat list
     const oldIndex = initialFlat.findIndex((i) => i.id === activeId);
     const newIndex = initialFlat.findIndex((i) => i.id === over.id);
     const moved = arrayMove(initialFlat, oldIndex, newIndex);
 
-    // 2. compute projection to update depth & parentId
     if (projected) {
       moved[newIndex].depth = projected.depth;
       moved[newIndex].parentId = projected.parentId;
@@ -82,6 +73,10 @@ export function useOrganizationModalDnd(
     console.log("Rebuilding tree with moved items:", moved, "->", newList);
     setFormElementsList(newList);
 
+  }
+
+  function handleDragEnd({ active, over }: DragEndEvent) {
+    document.body.style.cursor = "";
     reset();
   }
 
