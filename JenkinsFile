@@ -146,9 +146,17 @@ pipeline {
           }
         }
       }
+
       stage('Build image') {
         steps {
           sh 'edifice image --archs=linux/amd64 --force'
+        }
+      }
+
+      stage('Publish') {
+        steps {
+          checkout scm
+          sh './build.sh publish'
         }
       }
     }
