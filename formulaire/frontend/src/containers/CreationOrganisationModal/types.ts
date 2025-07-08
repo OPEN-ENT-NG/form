@@ -7,3 +7,7 @@ export interface IFlattenedItem {
   depth: number;
 }
 
+export enum MovementType {
+  INDENT = "indent",
+  MOVE = "move",
+}

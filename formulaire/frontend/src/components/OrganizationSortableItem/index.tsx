@@ -27,6 +27,7 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
     id: element.id ? element.id : 0,
     data: { element: element },
   });
+  if(element.id === 433) console.log(listeners, element.id);
   const isSection = isFormElementSection(element);
 
   const handleReorderClick = (element: IFormElement, formElementList: IFormElement[], direction: Direction) => {
@@ -68,9 +69,13 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
 
 interface IOrganizationSortableItemDisplayProps {
   activeId: number;
+  indent?: number;
 }
 
-export const OrganizationSortableItemDisplay: FC<IOrganizationSortableItemDisplayProps> = ({ activeId }) => {
+export const OrganizationSortableItemDisplay: FC<IOrganizationSortableItemDisplayProps> = ({
+  activeId,
+  indent = 0,
+}) => {
   const { formElementsList, setFormElementsList } = useCreation();
   const element = flattenFormElements(formElementsList).find((el) => el.id === activeId);
   if (!element) return null;
@@ -81,7 +86,7 @@ export const OrganizationSortableItemDisplay: FC<IOrganizationSortableItemDispla
   };
 
   return (
-    <Box sx={{ marginLeft: 0, opacity: 0.7 }}>
+    <Box sx={{ marginLeft: indent, opacity: 0.7 }}>
       <StyledPaper elevation={2} isSection={isSection}>
         <Box sx={{ display: "flex", alignItems: "center" }}>
           <Box>

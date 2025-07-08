@@ -94,9 +94,12 @@ function getDragDepth(offset: number, indentationWidth: number) {
 }
 
 /** Max legal depth based on previous item */
-function getMaxDepth(previousItem?: IFlattenedItem) {
-  const previousElement = previousItem?.element;
-  if (!previousElement) return 0;
+function getMaxDepth(activeItem: IFlattenedItem, previousItem: IFlattenedItem | null) {
+  if (!previousItem) return 0;
+  if (isFormElementSection(activeItem.element)) {
+    return 0;
+  }
+  const previousElement = previousItem.element;
   if (isFormElementSection(previousElement)) {
     return previousItem.depth + 1;
   }
@@ -105,8 +108,14 @@ function getMaxDepth(previousItem?: IFlattenedItem) {
 }
 
 /** Min legal depth based on next item */
-function getMinDepth(nextItem?: IFlattenedItem) {
-  return nextItem ? nextItem.depth : 0;
+function getMinDepth(activeItem: IFlattenedItem, nextItem: IFlattenedItem | null) {
+  if (!nextItem) return 0;
+
+  if (isFormElementSection(activeItem.element)) {
+    return 0;
+  }
+
+  return nextItem.depth;
 }
 
 /**
@@ -127,19 +136,19 @@ export function getProjection(
   const oldIndex = items.findIndex(({ id }) => id === activeId);
   const newIndex = items.findIndex(({ id }) => id === overId);
   const activeItem = items[oldIndex];
+  // if (!activeItem) return null;
 
   // Simulate reordering
-  const reord = arrayMove(items, oldIndex, newIndex);
-  console.log("Reordered items:", reord);
-
-  const previousItem = reord[newIndex - 1];
-  const nextItem = reord[newIndex + 1];
+  const reord = oldIndex !== newIndex ? arrayMove(items, oldIndex, newIndex) : items;
+  // console.log("Reordered items:", reord, "from oldIndex:", oldIndex, "to newIndex:", newIndex);
+  const previousItem = newIndex > 0 ? reord[newIndex - 1] : null;
+  const nextItem = newIndex < reord.length ? reord[newIndex + 1] : null;
 
   const dragDepth = getDragDepth(dragOffset, indentationWidth);
   const projectedDepth = activeItem.depth + dragDepth;
 
-  const maxDepth = getMaxDepth(previousItem);
-  const minDepth = getMinDepth(nextItem);
+  const maxDepth = getMaxDepth(activeItem, previousItem);
+  const minDepth = getMinDepth(activeItem, nextItem);
 
   let depth = projectedDepth;
   if (depth > maxDepth) depth = maxDepth;
@@ -147,7 +156,10 @@ export function getProjection(
 
   // Determine new parentId
   let parentId: number | null;
-  if (depth === 0 || !previousItem.depth) {
+  if (!previousItem) {
+    // If there is no previous item, we are at the root level
+    parentId = null;
+  } else if (depth === 0) {
     parentId = null;
   } else if (depth === previousItem.depth) {
     parentId = previousItem.parentId;
@@ -161,7 +173,8 @@ export function getProjection(
       .find((item) => item.depth === depth);
     parentId = prevAtDepth ? prevAtDepth.parentId : null;
   }
-
-  console.log("Projection result:", { depth, maxDepth, minDepth, parentId });
-  return { depth, maxDepth, minDepth, parentId };
+  console.log(
+    `Projection for activeId ${activeId} overId ${overId}: depth=${depth}, maxDepth=${maxDepth}, minDepth=${minDepth}, parentId=${parentId}, dragOffset=${dragOffset}, previousItem=${previousItem?.id}, nextItem=${nextItem?.id}, oldIndex=${oldIndex}, newIndex=${newIndex}`,
+    "from items:", items);
+  return { depth, parentId, oldIndex, newIndex };
 }
