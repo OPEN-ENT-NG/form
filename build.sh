@@ -90,8 +90,8 @@ formulaire() {
   cd ../../../..
 
   ## add static reactjs files to formulaire backend
-  cp -R formulaire/frontend/dist/* formulaire/backend/src/main/resources
-  cp -R formulaire/frontend/public/* formulaire/backend/src/main/resources/public
+  cp -R formulaire/frontend/dist/*.html formulaire/backend/src/main/resources
+  cp -R formulaire/frontend/dist/public/* formulaire/backend/src/main/resources/public
   mv formulaire/backend/src/main/resources/*.html formulaire/backend/src/main/resources/view
 
   formulaire:buildMaven;
@@ -139,8 +139,8 @@ formulairePublic() {
   cd ../../../..
 
   ## add static reactjs files to formulaire backend
-  cp -R formulaire-public/frontend/dist/* formulaire-public/backend/src/main/resources
-  cp -R formulaire-public/frontend/public/* formulaire-public/backend/src/main/resources/public
+  cp -R formulaire-public/frontend/dist/*.html formulaire-public/backend/src/main/resources
+  cp -R formulaire-public/frontend/dist/public/* formulaire-public/backend/src/main/resources/public
   mv formulaire-public/backend/src/main/resources/*.html formulaire-public/backend/src/main/resources/view
 
   formulairePublic:buildMaven;
