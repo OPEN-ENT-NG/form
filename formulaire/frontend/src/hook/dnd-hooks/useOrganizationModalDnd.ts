@@ -1,116 +1,106 @@
-import {
-  DragStartEvent,
-  DragMoveEvent,
-  DragOverEvent,
-  DragEndEvent,
-  PointerSensor,
-  useSensor,
-  useSensors,
-} from "@dnd-kit/core";
-import { arrayMove } from "@dnd-kit/sortable";
-import { useState, useEffect } from "react";
-import { IFlattenedItem } from "~/containers/CreationOrganisationModal/types";
+import { DragStartEvent, DragMoveEvent, DragOverEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { useState } from "react";
+import { IFlattenedItem, MovementType } from "~/containers/CreationOrganisationModal/types";
 import { buildTree, getProjection } from "~/containers/CreationOrganisationModal/utils";
+import { CURSOR_STYLE_DEFAULT, CURSOR_STYLE_GRABBING } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
 
 export function useOrganizationModalDnd(
-  localFlat: IFlattenedItem[],
+  flattenedFormElementsList: IFlattenedItem[],
   setLocalFlat: React.Dispatch<React.SetStateAction<IFlattenedItem[]>>,
   setFormElementsList: (newTree: IFormElement[]) => void,
   indentationWidth: number,
 ) {
   const [activeId, setActiveId] = useState<number | null>(null);
-  const [overId, setOverId] = useState<number | null>(null);
   const [activeItems, setActiveItems] = useState<IFlattenedItem[]>([]);
-  const [offsetX, setOffsetX] = useState(0);
+  const [dragXOffset, setDragXOffset] = useState(0);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 8 },
+      activationConstraint: { distance: 1 },
     }),
   );
 
-  function handleDragStart({ active }: DragStartEvent) {
+  const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveId(active.id as number);
-    document.body.style.cursor = "grabbing";
-
-    const activeItems = localFlat.filter((item) => item.id === active.id || item.parentId === active.id);
+    document.body.style.cursor = CURSOR_STYLE_GRABBING;
+    // Find all items that are part of the active drag (current grabbed item and its children)
+    const activeItems = flattenedFormElementsList.filter(
+      (item) => item.id === active.id || item.parentId === active.id,
+    );
     setActiveItems(activeItems);
-  }
+  };
 
-  function handleDragMove({ delta, over }: DragMoveEvent) {
-    setOffsetX(delta.x);
-    const overId = over?.id as number | undefined;
-    if (activeId == null || overId == null) return;
-    // console.log("Drag moved", localFlat, sortedIds, formElementList);
+  const handleDragMove = ({ delta, over }: DragMoveEvent) => {
+    setDragXOffset(delta.x);
+    const overId = over?.id as number | null;
+    if (!activeId || !overId) return;
+    runProjection(MovementType.INDENT, overId, delta.x + dragXOffset);
+  };
+
+  const handleDragOver = ({ over }: DragOverEvent) => {
+    const overId = over?.id as number | null;
+    if (!activeId || !overId) return;
+    runProjection(MovementType.MOVE, overId, dragXOffset);
+  };
+
+  const handleDragEnd = () => {
+    setFormElementsList(buildTree(flattenedFormElementsList));
+    reset();
+  };
+
+  const handleDragCancel = () => {
+    reset();
+  };
+
+  const reset = () => {
+    document.body.style.cursor = CURSOR_STYLE_DEFAULT;
+    setActiveId(null);
+    setActiveItems([]);
+    setDragXOffset(0);
+  };
+
+  const runProjection = (mode: MovementType, overId: number, dragXOffset: number) => {
+    if (!activeId) return;
+
+    // Compute projection
     const { depth, parentId, oldIndex, newIndex } = getProjection(
-      localFlat,
+      flattenedFormElementsList,
       activeId,
       overId,
-      delta.x + offsetX,
+      dragXOffset,
       indentationWidth,
     );
 
-    if (oldIndex !== newIndex) return; //DragOver will handle it
-
-    localFlat[oldIndex] = {
-      ...localFlat[oldIndex],
-      depth,
-      parentId,
-    };
-  }
-
-  function handleDragOver({ over }: DragOverEvent) {
-    console.log("Drag over", over);
-    const overId = over?.id as number | undefined;
-    if (activeId == null || overId == null) {
+    // If we just move horizontally we just update the depth and parentId
+    if (mode === MovementType.INDENT && oldIndex === newIndex) {
+      // skip if it actually moved positions
+      flattenedFormElementsList[oldIndex] = { ...flattenedFormElementsList[oldIndex], depth, parentId };
+      setLocalFlat(flattenedFormElementsList);
       return;
     }
 
-    const { depth, parentId, newIndex } = getProjection(localFlat, activeId, overId, offsetX, indentationWidth);
-
-    // remove the dragged chunk
-    const without = localFlat.filter((i) => !activeItems.some((a) => a.id === i.id));
-
-    // insert the chunk at newIndex
-    const before = without.slice(0, newIndex);
-    const after = without.slice(newIndex);
-
-    // adjust depths & parent for the ROOT of the subtree
+    // If we are moving vertically, we need to adjust the positions in the list
+    const flattenWithoutActiveItems = flattenedFormElementsList.filter((i) => !activeItems.some((a) => a.id === i.id));
+    const beforeActiveItems = flattenWithoutActiveItems.slice(0, newIndex);
+    const afterActiveItems = flattenWithoutActiveItems.slice(newIndex);
+    const activeItemsWithoutRootList = activeItems.slice(1); // exclude the root item from the active items
     const adjustedRoot = {
       ...activeItems[0],
       depth,
       parentId,
     };
 
-    // rebuild the flattened preview: before + adjustedRoot + its children (depths unchanged) + after
-    const preview = [
-      ...before,
+    // rebuild the flattened list with the adjusted root and the rest of the items
+    const updatedFlattenFormElementsList: IFlattenedItem[] = [
+      ...beforeActiveItems,
       adjustedRoot,
-      ...activeItems.slice(1), // children keep same relative depths
-      ...after,
+      ...activeItemsWithoutRootList,
+      ...afterActiveItems,
     ];
 
-    setLocalFlat(preview);
-  }
-
-  function handleDragEnd({ active, over }: DragEndEvent) {
-    setFormElementsList(buildTree(localFlat));
-    console.log("Drag ended", active, "over", over, localFlat);
-    document.body.style.cursor = "";
-    reset();
-  }
-
-  function handleDragCancel() {
-    document.body.style.cursor = "";
-    reset();
-  }
-
-  function reset() {
-    setActiveId(null);
-    setActiveItems([]);
-    setOffsetX(0);
-  }
+    setLocalFlat(updatedFlattenFormElementsList);
+  };
 
   return {
     activeId,

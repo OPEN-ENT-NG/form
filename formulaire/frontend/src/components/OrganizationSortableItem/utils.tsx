@@ -263,7 +263,6 @@ export const handleSubMoveDown = (subQuestion: IQuestion, formElementList: IForm
 
   // Case B: subQuestion is not the last question in the section, just swap with next question and update section
   const followingElement = getFollowingFormElement(subQuestion, formElementList) as IQuestion | undefined;
-  console.log("followingElement", followingElement, formElementList);
   if (!followingElement) return formElementList;
   const updatedParentSection = {
     ...parentSection,
