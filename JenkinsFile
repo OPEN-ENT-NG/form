@@ -73,8 +73,8 @@ pipeline {
             '''
 
             // Copy Frontend files
-            sh 'cp -R ../frontend/dist/* ./src/main/resources/'
-            sh 'cp -R ../frontend/public/* ./src/main/resources/public'
+            sh 'cp -R ../frontend/dist/* ./src/main/resources'
+            sh 'cp -R ../frontend/dist/public/* ./src/main/resources/public'
             sh 'mv ./src/main/resources/*.html ./src/main/resources/view'
 
             // Build
@@ -137,8 +137,8 @@ pipeline {
             '''
 
             // Copy Frontend files
-            sh 'cp -R ../frontend/dist/* ./src/main/resources/'
-            sh 'cp -R ../frontend/public/* ./src/main/resources/public'
+            sh 'cp -R ../frontend/dist/* ./src/main/resources'
+            sh 'cp -R ../frontend/dist/public/* ./src/main/resources/public'
             sh 'mv ./src/main/resources/*.html ./src/main/resources/view'
 
             // Build
