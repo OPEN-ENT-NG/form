@@ -47,3 +47,4 @@ export const upDownButtonsContainerStyle: SxProps = {
 export const typographyStyle: SxProps = {
   maxWidth: "100%",
 };
+

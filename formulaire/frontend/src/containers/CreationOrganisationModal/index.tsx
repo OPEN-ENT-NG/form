@@ -7,7 +7,7 @@ import { IModalProps } from "~/core/types";
 import { useCreation } from "~/providers/CreationProvider";
 import { OrganizationSortableItem } from "~/components/OrganizationSortableItem";
 import { contentStackStyle } from "./style";
-import { closestCenter, DndContext, DragOverlay } from "@dnd-kit/core";
+import { rectIntersection, DndContext, DragOverlay } from "@dnd-kit/core";
 import { verticalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
 import { formElementsListToFlattenedItemList } from "./utils";
 import { IFlattenedItem } from "./types";
@@ -65,7 +65,7 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
       <DialogContent>
         <DndContext
           sensors={sensors}
-          collisionDetection={closestCenter}
+          collisionDetection={rectIntersection}
           onDragStart={handleDragStart}
           onDragMove={handleDragMove}
           onDragOver={handleDragOver}
