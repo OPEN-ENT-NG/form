@@ -41,16 +41,14 @@ export const buildFolderTree = (folders: IFolder[]): CustomTreeViewItem[] => {
   });
 };
 
+/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument, @typescript-eslint/no-unsafe-return */
 export const buildFlatFolderTree = (folders: IFolder[]): CustomTreeViewItem[] => {
   const flattenTree = (items: CustomTreeViewItem[]): CustomTreeViewItem[] => {
     return items.reduce<CustomTreeViewItem[]>((acc, item) => {
-      acc = [...acc, item];
-      if (item.children && item.children.length) {
-        acc = [...acc, ...flattenTree(item.children)];
-      }
-      return acc;
+      const children = item.children?.length ? flattenTree(item.children) : [];
+      return [...acc, item, ...children];
     }, []);
   };
-
   return flattenTree(buildFolderTree(folders));
 };
+/* eslint-enable */

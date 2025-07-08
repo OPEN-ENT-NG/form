@@ -1,7 +1,6 @@
 import { SelectChangeEvent } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { TARGET_RECAP } from "~/core/constants";
-import { IQuestionChoice } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
 import { useCreation } from "~/providers/CreationProvider";
 import {
@@ -10,7 +9,7 @@ import {
   getFollowingFormElement,
 } from "~/providers/CreationProvider/utils";
 
-export const useTargetNextElement = (section?: ISection, questionChoice?: IQuestionChoice) => {
+export const useTargetNextElement = (section?: ISection) => {
   const { formElementsList, saveSection } = useCreation();
   const followingElement = section ? getFollowingFormElement(section, formElementsList) : undefined;
 
