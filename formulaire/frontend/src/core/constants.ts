@@ -55,5 +55,9 @@ export const DEFAULT_CURSOR_STEP = 1;
 //TARGET NEXT ELEMENT
 export const TARGET_RECAP = "targetRecap";
 
+//CURSOR STYLES
 export const CURSOR_STYLE_GRABBING = "grabbing";
 export const CURSOR_STYLE_DEFAULT = "default";
+
+//DND
+export const DRAG_HORIZONTAL_TRESHOLD = 40;

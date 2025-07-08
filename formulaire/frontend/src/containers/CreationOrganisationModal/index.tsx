@@ -1,8 +1,8 @@
 import { FC, ReactNode, useEffect, useMemo, useState } from "react";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Stack } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
-import { ComponentVariant } from "~/core/style/themeProps";
+import { DRAG_HORIZONTAL_TRESHOLD, FORMULAIRE } from "~/core/constants";
+import { BreakpointVariant, ComponentVariant } from "~/core/style/themeProps";
 import { IModalProps } from "~/core/types";
 import { useCreation } from "~/providers/CreationProvider";
 import { OrganizationSortableItem } from "~/components/OrganizationSortableItem";
@@ -13,10 +13,11 @@ import { formElementsListToFlattenedItemList } from "./utils";
 import { IFlattenedItem } from "./types";
 import { useOrganizationModalDnd } from "~/hook/dnd-hooks/useOrganizationModalDnd";
 import { OrganizationSortableItemPreview } from "~/components/OrganizationSortableItemPreview";
+import { flattenFormElements } from "~/core/models/formElement/utils";
 
 export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { formElementsList, setFormElementsList } = useCreation();
+  const { formElementsList, setFormElementsList, updateFormElementsList } = useCreation();
 
   const [flattenedFormElementsList, setFlattenedFormElementsList] = useState<IFlattenedItem[]>(() =>
     formElementsListToFlattenedItemList(formElementsList),
@@ -40,11 +41,16 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
     handleDragEnd,
     handleDragCancel,
     sensors,
-  } = useOrganizationModalDnd(flattenedFormElementsList, setFlattenedFormElementsList, setFormElementsList, 40);
+  } = useOrganizationModalDnd(
+    flattenedFormElementsList,
+    setFlattenedFormElementsList,
+    setFormElementsList,
+    DRAG_HORIZONTAL_TRESHOLD,
+  );
 
   const handleConfirm = () => {
-    console.log("Confirming organization changes");
-    // void updateFormElementsList(flattenFormElements(formElementsList));
+    console.log("Confirming organization changes", formElementsList);
+    void updateFormElementsList(flattenFormElements(formElementsList));
     handleClose();
   };
 
@@ -54,7 +60,7 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
     });
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} fullWidth>
+    <Dialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD} fullWidth>
       <DialogTitle>{t("formulaire.organize")}</DialogTitle>
       <DialogContent>
         <DndContext
@@ -72,9 +78,7 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
 
           <DragOverlay>
             {activeId != null &&
-              activeItems.map(({ id, element, depth }) => (
-                <OrganizationSortableItemPreview key={id} formElement={element} depth={depth} />
-              ))}
+              activeItems.map(({ id, element }) => <OrganizationSortableItemPreview key={id} formElement={element} />)}
           </DragOverlay>
         </DndContext>
       </DialogContent>

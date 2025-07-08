@@ -1,6 +1,7 @@
 import { DragStartEvent, DragMoveEvent, DragOverEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { useState } from "react";
-import { IFlattenedItem, MovementType } from "~/containers/CreationOrganisationModal/types";
+import { MovementType } from "~/containers/CreationOrganisationModal/enum";
+import { IFlattenedItem } from "~/containers/CreationOrganisationModal/types";
 import { buildTree, getProjection } from "~/containers/CreationOrganisationModal/utils";
 import { CURSOR_STYLE_DEFAULT, CURSOR_STYLE_GRABBING } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
@@ -74,7 +75,6 @@ export function useOrganizationModalDnd(
 
     // If we just move horizontally we just update the depth and parentId
     if (mode === MovementType.INDENT && oldIndex === newIndex) {
-      // skip if it actually moved positions
       flattenedFormElementsList[oldIndex] = { ...flattenedFormElementsList[oldIndex], depth, parentId };
       setLocalFlat(flattenedFormElementsList);
       return;
