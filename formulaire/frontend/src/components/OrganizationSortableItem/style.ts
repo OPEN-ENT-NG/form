@@ -37,4 +37,13 @@ export const arrowIconStyle: SxProps = {
 export const paperContentStyle: SxProps = {
   display: "flex",
   alignItems: "center",
+  maxWidth: "80%",
+};
+
+export const upDownButtonsContainerStyle: SxProps = {
+  display: "flex",
+};
+
+export const typographyStyle: SxProps = {
+  maxWidth: "100%",
 };

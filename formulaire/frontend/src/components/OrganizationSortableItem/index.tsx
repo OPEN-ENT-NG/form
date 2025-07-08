@@ -1,9 +1,9 @@
 import { FC } from "react";
-import { Typography, Box } from "@cgi-learning-hub/ui";
+import { Box, EllipsisWithTooltip } from "@cgi-learning-hub/ui";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import { isFormElementSection } from "~/core/models/section/utils";
 import { IOrganizationSortableItemProps } from "./types";
-import { dragIconStyle, OrganizationStyledPaper, paperContentStyle } from "./style";
+import { dragIconStyle, OrganizationStyledPaper, paperContentStyle, typographyStyle } from "./style";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";
 import {
@@ -19,6 +19,7 @@ import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion } from "~/core/models/question/types";
 import { Direction } from "./enum";
 import { useSortable } from "@dnd-kit/sortable";
+import { DRAG_HORIZONTAL_TRESHOLD } from "~/core/constants";
 
 export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ element, depth = 0 }) => {
   const { formElementsList, setFormElementsList } = useCreation();
@@ -26,6 +27,7 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
     id: element.id ? element.id : 0,
     data: { element: element },
   });
+
   const isSection = isFormElementSection(element);
 
   const handleReorderClick = (element: IFormElement, formElementList: IFormElement[], direction: Direction) => {
@@ -53,7 +55,7 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
       ref={setNodeRef}
       elevation={2}
       isSection={isSection}
-      depth={depth * 40}
+      depth={depth * DRAG_HORIZONTAL_TRESHOLD}
       {...attributes}
       {...listeners}
     >
@@ -61,9 +63,14 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
         <Box>
           <DragIndicatorRoundedIcon sx={dragIconStyle} />
         </Box>
-        <Box>
-          <Typography variant={TypographyVariant.BODY2}>{element.title}</Typography>
-        </Box>
+        <EllipsisWithTooltip
+          typographyProps={{
+            variant: TypographyVariant.BODY2,
+            sx: typographyStyle,
+          }}
+        >
+          {element.title}
+        </EllipsisWithTooltip>
       </Box>
       <Box>{getUpDownButtons(element, formElementsList, handleReorderClick)}</Box>
     </OrganizationStyledPaper>

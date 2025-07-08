@@ -105,7 +105,6 @@ export const getFollowingFormElement = (
 
     if (question.sectionId) {
       const section = getElementById(question.sectionId, formElementsList) as ISection | undefined;
-
       if (!section) {
         return null;
       }

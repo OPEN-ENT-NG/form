@@ -40,7 +40,6 @@ export const formElementsListToFlattenedItemList = (
   }, []);
 };
 
-
 /**
  * Rebuild the nested tree of sections and questions from a DnD-sorted flat list.
  * Root-level items are those with parentId === null. Sections will collect all children
@@ -53,11 +52,9 @@ export const buildTree = (flatItems: IFlattenedItem[]): IFormElement[] => {
       .filter((item) => item.parentId === null)
       // 2) build up your tree in a reduce
       .reduce<IFormElement[]>((acc, item, index) => {
-        // clone so we don’t mutate original
-
         if (isFormElementSection(item.element)) {
           const section = item.element as ISection;
-          section.position = index;
+          section.position = index + 1; //position starts at 1
 
           // collect all children of this section
           section.questions = flatItems
@@ -65,7 +62,7 @@ export const buildTree = (flatItems: IFlattenedItem[]): IFormElement[] => {
             .map((childrenQuestion, questionIndex) => ({
               ...(childrenQuestion.element as IQuestion),
               sectionId: section.id,
-              sectionPosition: questionIndex,
+              sectionPosition: questionIndex + 1,
               position: null,
             }));
 
@@ -74,7 +71,7 @@ export const buildTree = (flatItems: IFlattenedItem[]): IFormElement[] => {
         }
         // top-level question
         const question = item.element as IQuestion;
-        question.position = index;
+        question.position = index + 1;
         question.sectionId = null;
         question.sectionPosition = null;
 

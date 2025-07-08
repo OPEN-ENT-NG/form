@@ -2,7 +2,7 @@ import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion } from "~/core/models/question/types";
 import { isFormElementQuestion } from "~/core/models/question/utils";
 import { Box } from "@cgi-learning-hub/ui";
-import { arrowIconStyle, StyledIconButton } from "./style";
+import { arrowIconStyle, StyledIconButton, upDownButtonsContainerStyle } from "./style";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { isFormElementSection } from "~/core/models/section/utils";
@@ -28,9 +28,9 @@ export const getUpDownButtons = (
     const question = element as IQuestion;
     if (question.sectionPosition) {
       return (
-        <Box sx={{ display: "flex" }}>
+        <Box sx={upDownButtonsContainerStyle}>
           <StyledIconButton
-            isSection={isSection}
+            isSection={false}
             onClick={() => {
               handleReorderClick(element, formElementsList, Direction.UP);
             }}
@@ -38,7 +38,7 @@ export const getUpDownButtons = (
             <KeyboardArrowUpRoundedIcon sx={arrowIconStyle} />
           </StyledIconButton>
           <StyledIconButton
-            isSection={isSection}
+            isSection={false}
             onClick={() => {
               handleReorderClick(element, formElementsList, Direction.DOWN);
             }}
@@ -54,7 +54,7 @@ export const getUpDownButtons = (
 
   const max = formElementsList.length;
   return (
-    <Box sx={{ display: "flex" }}>
+    <Box sx={upDownButtonsContainerStyle}>
       {element.position > 1 && (
         <StyledIconButton
           isSection={isSection}
@@ -86,12 +86,12 @@ export const swapFormElements = (
 ): IFormElement[] => {
   const bothQuestions = isFormElementQuestion(elementA) && isFormElementQuestion(elementB);
 
-  // If both are questions in the same section, swap only their sectionPosition
+  // If both are questions
   if (bothQuestions) {
     const questionA = elementA as IQuestion;
     const questionB = elementB as IQuestion;
 
-    // Only swap within a section when they share a sectionId
+    // in the same section, swap only their sectionPosition
     if (questionA.sectionId && questionB.sectionId && questionA.sectionId === questionB.sectionId) {
       return formElementsList.map((el) => {
         if (isFormElementQuestion(el)) {
@@ -107,7 +107,7 @@ export const swapFormElements = (
       });
     }
 
-    //If one is a top level question and the other is in a section
+    //If one is a top level question and the other is in a section, we swap top level and parent section
     if (questionA.position && questionB.sectionId) {
       const parentBSection = formElementsList.find(
         (el) => isFormElementSection(el) && el.id === questionB.sectionId,
@@ -125,7 +125,7 @@ export const swapFormElements = (
     }
   }
 
-  // Fallback: swap their global positions
+  // Fallback both at top level, swap their global positions
   return formElementsList.map((el) => {
     if (el.id === elementA.id && el.formElementType === elementA.formElementType) {
       return { ...el, position: elementB.position };
@@ -152,23 +152,23 @@ export const moveQuestionToSection = (
   formElementsList: IFormElement[],
   direction: Direction,
 ): IFormElement[] => {
-  if (!question.position) return [];
-  const position = direction === Direction.DOWN ? 1 : section.questions.length + 1;
+  if (!question.position) return formElementsList;
+  const sectionPosition = direction === Direction.DOWN ? 1 : section.questions.length + 1;
 
   const newQuestion: IQuestion = {
     ...question,
     position: null,
     sectionId: section.id,
-    sectionPosition: position,
+    sectionPosition: sectionPosition,
   };
 
   const updatedSection = {
     ...section,
-    questions: [...fixListPositions(section.questions, position, PositionActionType.CREATION), newQuestion].sort(
+    questions: [...fixListPositions(section.questions, sectionPosition, PositionActionType.CREATION), newQuestion].sort(
       compareFormElements,
     ),
   };
-
+  //removeQuestion from top level, then update its new parent section, finally fix the position because of the deletion
   const updatedFormElementsList = fixListPositions(
     updateElementInList(removeFormElementFromList(formElementsList, question), updatedSection),
     question.position,
@@ -183,7 +183,7 @@ export const moveQuestionOutSection = (
   formElementsList: IFormElement[],
   direction: Direction,
 ): IFormElement[] => {
-  if (!subQuestion.sectionId || !subQuestion.sectionPosition || !section.position) return [];
+  if (!subQuestion.sectionId || !subQuestion.sectionPosition || !section.position) return formElementsList;
   const position = direction === Direction.UP ? section.position : section.position + 1;
 
   const newQuestion: IQuestion = {
