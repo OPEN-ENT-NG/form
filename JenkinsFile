@@ -146,6 +146,13 @@ pipeline {
           }
         }
       }
+
+      stage('Publish') {
+        steps {
+          checkout scm
+          sh './build.sh publish'
+        }
+      }
     }
 
     post {
