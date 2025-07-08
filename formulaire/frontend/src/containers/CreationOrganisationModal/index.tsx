@@ -5,29 +5,30 @@ import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IModalProps } from "~/core/types";
 import { useCreation } from "~/providers/CreationProvider";
-import { OrganizationSortableItem, OrganizationSortableItemDisplay } from "~/components/OrganizationSortableItem";
+import { OrganizationSortableItem } from "~/components/OrganizationSortableItem";
 import { contentStackStyle } from "./style";
-import { closestCenter, closestCorners, DndContext, DragOverlay } from "@dnd-kit/core";
+import { closestCenter, DndContext, DragOverlay } from "@dnd-kit/core";
 import { verticalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
-import { flattenFormElements } from "./utils";
+import { formElementsListToFlattenedItemList } from "./utils";
 import { IFlattenedItem } from "./types";
 import { useOrganizationModalDnd } from "~/hook/dnd-hooks/useOrganizationModalDnd";
+import { OrganizationSortableItemPreview } from "~/components/OrganizationSortableItemPreview";
 
 export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
   const { formElementsList, setFormElementsList } = useCreation();
 
-  const [localFlat, setLocalFlat] = useState<IFlattenedItem[]>(() => flattenFormElements(formElementsList));
-  const sortedIds = useMemo(() => localFlat.map(({ id }) => id), [localFlat, formElementsList]);
+  const [flattenedFormElementsList, setFlattenedFormElementsList] = useState<IFlattenedItem[]>(() =>
+    formElementsListToFlattenedItemList(formElementsList),
+  );
+  const sortedIds = useMemo(
+    () => flattenedFormElementsList.map(({ id }) => id),
+    [flattenedFormElementsList, formElementsList],
+  );
 
   useEffect(() => {
-    setLocalFlat(flattenFormElements(formElementsList));
+    setFlattenedFormElementsList(formElementsListToFlattenedItemList(formElementsList));
   }, [formElementsList]);
-
-  useEffect(() => {
-    console.log("Local flat updated:", localFlat, sortedIds);
-  }, [localFlat, sortedIds]);
-
 
   // Use our custom hook to manage drag state & handlers
   const {
@@ -39,7 +40,7 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
     handleDragEnd,
     handleDragCancel,
     sensors,
-  } = useOrganizationModalDnd(localFlat, setLocalFlat, setFormElementsList, 40);
+  } = useOrganizationModalDnd(flattenedFormElementsList, setFlattenedFormElementsList, setFormElementsList, 40);
 
   const handleConfirm = () => {
     console.log("Confirming organization changes");
@@ -48,8 +49,8 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
   };
 
   const renderItems = (): ReactNode =>
-    localFlat.map(({ id, element, depth }) => {
-      return <OrganizationSortableItem key={id} element={element} indent={depth * 4} />;
+    flattenedFormElementsList.map(({ id, element, depth }) => {
+      return <OrganizationSortableItem key={id} element={element} depth={depth} />;
     });
 
   return (
@@ -71,8 +72,8 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
 
           <DragOverlay>
             {activeId != null &&
-              activeItems.map(({ id, depth }) => (
-                <OrganizationSortableItemDisplay key={id} activeId={id} indent={depth * 4} />
+              activeItems.map(({ id, element, depth }) => (
+                <OrganizationSortableItemPreview key={id} formElement={element} depth={depth} />
               ))}
           </DragOverlay>
         </DndContext>

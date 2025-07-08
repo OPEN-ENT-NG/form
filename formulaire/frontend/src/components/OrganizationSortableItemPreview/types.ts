@@ -1,0 +1,10 @@
+import { IFormElement } from "~/core/models/formElement/types";
+
+export interface IOrganizationSortableItemPreviewProps {
+  formElement: IFormElement;
+  depth?: number;
+}
+
+export interface IOrganizationItemPreviewProps {
+  depth: number;
+}

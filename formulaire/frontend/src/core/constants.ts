@@ -54,3 +54,6 @@ export const DEFAULT_CURSOR_STEP = 1;
 
 //TARGET NEXT ELEMENT
 export const TARGET_RECAP = "targetRecap";
+
+export const CURSOR_STYLE_GRABBING = "grabbing";
+export const CURSOR_STYLE_DEFAULT = "default";
