@@ -1,4 +1,4 @@
-import { FC } from "react";
+import { FC, useMemo } from "react";
 import { Box, EllipsisWithTooltip } from "@cgi-learning-hub/ui";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import { isFormElementSection } from "~/core/models/section/utils";
@@ -7,6 +7,7 @@ import { dragIconStyle, OrganizationStyledPaper, paperContentStyle, typographySt
 import { TypographyVariant } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";
 import {
+  getTransformStyle,
   getUpDownButtons,
   handleSubMoveDown,
   handleSubMoveUp,
@@ -23,7 +24,7 @@ import { DRAG_HORIZONTAL_TRESHOLD } from "~/core/constants";
 
 export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ element, depth = 0 }) => {
   const { formElementsList, setFormElementsList } = useCreation();
-  const { attributes, listeners, setNodeRef } = useSortable({
+  const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
     id: element.id ? element.id : 0,
     data: { element: element },
   });
@@ -50,6 +51,8 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
     return;
   };
 
+  const style = useMemo(() => getTransformStyle(transform, transition), [transform, transition]);
+
   return (
     <OrganizationStyledPaper
       ref={setNodeRef}
@@ -58,6 +61,7 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
       depth={depth * DRAG_HORIZONTAL_TRESHOLD}
       {...attributes}
       {...listeners}
+      style={style}
     >
       <Box sx={paperContentStyle}>
         <Box>
