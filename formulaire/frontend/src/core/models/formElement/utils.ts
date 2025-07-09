@@ -50,9 +50,7 @@ export const buildFormElementPayload = (formElement: IFormElement): IFormElement
   };
 };
 
-export const flattenFormElements = (
-  formElements: IFormElement[],
-): IFormElement[] => {
+export const flattenFormElements = (formElements: IFormElement[]): IFormElement[] => {
   return formElements.reduce<IFormElement[]>((acc, element) => {
     if (isFormElementQuestion(element)) {
       // Question, add it directly
@@ -61,7 +59,7 @@ export const flattenFormElements = (
 
     // Section, spread its questions (if any), then the section itself
     const section = element as ISection;
-    const questions = section.questions ?? [];
+    const questions = section.questions;
     return [...acc, section, ...questions];
   }, []);
 };
