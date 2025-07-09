@@ -82,7 +82,9 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
 
           <DragOverlay>
             {activeId != null &&
-              activeItems.map(({ id, element }) => <OrganizationSortableItemPreview key={id} formElement={element} />)}
+              activeItems.map(({ id, element, depth }) => (
+                <OrganizationSortableItemPreview key={id} formElement={element} depth={depth} />
+              ))}
           </DragOverlay>
         </DndContext>
       </DialogContent>

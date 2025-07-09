@@ -12,8 +12,12 @@ import {
   typographyStyle,
 } from "../OrganizationSortableItem/style";
 import { TypographyVariant } from "~/core/style/themeProps";
+import { DRAG_HORIZONTAL_TRESHOLD } from "~/core/constants";
 
-export const OrganizationSortableItemPreview: FC<IOrganizationSortableItemPreviewProps> = ({ formElement }) => {
+export const OrganizationSortableItemPreview: FC<IOrganizationSortableItemPreviewProps> = ({
+  formElement,
+  depth = 0,
+}) => {
   const { formElementsList } = useCreation();
   const isSection = isFormElementSection(formElement);
 
@@ -22,7 +26,7 @@ export const OrganizationSortableItemPreview: FC<IOrganizationSortableItemPrevie
   };
 
   return (
-    <OrganizationStyledPaper elevation={2} isSection={isSection} isPreview>
+    <OrganizationStyledPaper elevation={2} isSection={isSection} depth={depth * DRAG_HORIZONTAL_TRESHOLD} isPreview>
       <Box sx={paperContentStyle}>
         <Box>
           <DragIndicatorRoundedIcon sx={dragIconStyle} />
