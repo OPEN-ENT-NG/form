@@ -25,4 +25,5 @@ export type CreationProviderContextType = {
   saveQuestion: (question: IQuestion) => Promise<void>;
   saveSection: (section: ISection) => Promise<void>;
   updateFormElementsList: (formElementsList: IFormElement[]) => Promise<void>;
+  setResetFormElementListId: Dispatch<SetStateAction<number>>;
 };

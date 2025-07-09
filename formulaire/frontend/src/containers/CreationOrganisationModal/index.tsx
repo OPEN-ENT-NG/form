@@ -17,7 +17,7 @@ import { flattenFormElements } from "~/core/models/formElement/utils";
 
 export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { formElementsList, setFormElementsList, updateFormElementsList } = useCreation();
+  const { formElementsList, setFormElementsList, updateFormElementsList, setResetFormElementListId } = useCreation();
 
   const [flattenedFormElementsList, setFlattenedFormElementsList] = useState<IFlattenedItem[]>(() =>
     formElementsListToFlattenedItemList(formElementsList),
@@ -53,13 +53,18 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
     handleClose();
   };
 
+  const handleResetAndClose = () => {
+    setResetFormElementListId((prev) => prev + 1);
+    handleClose();
+  };
+
   const renderItems = (): ReactNode =>
     flattenedFormElementsList.map(({ id, element, depth }) => {
       return <OrganizationSortableItem key={id} element={element} depth={depth} />;
     });
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD} fullWidth>
+    <Dialog open={isOpen} onClose={handleResetAndClose} maxWidth={BreakpointVariant.MD} fullWidth>
       <DialogTitle>{t("formulaire.organize")}</DialogTitle>
       <DialogContent>
         <DndContext
@@ -82,7 +87,7 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
         </DndContext>
       </DialogContent>
       <DialogActions>
-        <Button variant={ComponentVariant.OUTLINED} onClick={handleClose}>
+        <Button variant={ComponentVariant.OUTLINED} onClick={handleResetAndClose}>
           {t("formulaire.cancel")}
         </Button>
         <Button variant={ComponentVariant.CONTAINED} onClick={handleConfirm}>
