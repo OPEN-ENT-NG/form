@@ -6,10 +6,10 @@ export const OrganizationStyledPaper = styled(Paper, {
 })<IStyledPaperProps>(({ theme, isSection, depth = 0, isPreview = false }) => ({
   display: "flex",
   borderRadius: theme.shape.borderRadius,
-  marginBottom: theme.spacing(2),
+  marginBottom: "1.6rem",
   justifyContent: "space-between",
   alignItems: "center",
-  padding: theme.spacing(0.5, 1),
+  padding: "0.5rem 1rem",
   backgroundColor: isSection ? theme.palette.secondary.main : theme.palette.background.paper,
   color: isSection ? theme.palette.primary.contrastText : theme.palette.text.primary,
   marginLeft: depth,

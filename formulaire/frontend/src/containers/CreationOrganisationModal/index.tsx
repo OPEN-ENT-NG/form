@@ -49,7 +49,6 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
   );
 
   const handleConfirm = () => {
-    console.log("Confirming organization changes", formElementsList);
     void updateFormElementsList(flattenFormElements(formElementsList));
     handleClose();
   };
