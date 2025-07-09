@@ -26,11 +26,7 @@ export const StyledIconButton = styled(IconButton, {
   },
 }));
 
-export const dragIconStyle: SxProps = {
-  fontSize: "3rem",
-};
-
-export const arrowIconStyle: SxProps = {
+export const iconStyle: SxProps = {
   fontSize: "3rem",
 };
 
@@ -40,11 +36,6 @@ export const paperContentStyle: SxProps = {
   maxWidth: "80%",
 };
 
-export const upDownButtonsContainerStyle: SxProps = {
-  display: "flex",
-};
-
 export const typographyStyle: SxProps = {
   maxWidth: "100%",
 };
-

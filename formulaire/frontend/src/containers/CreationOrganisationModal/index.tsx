@@ -1,4 +1,4 @@
-import { FC, ReactNode, useEffect, useMemo, useState } from "react";
+import { FC, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Stack } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { DRAG_HORIZONTAL_TRESHOLD, FORMULAIRE } from "~/core/constants";
@@ -22,10 +22,7 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
   const [flattenedFormElementsList, setFlattenedFormElementsList] = useState<IFlattenedItem[]>(() =>
     formElementsListToFlattenedItemList(formElementsList),
   );
-  const sortedIds = useMemo(
-    () => flattenedFormElementsList.map(({ id }) => id),
-    [flattenedFormElementsList, formElementsList],
-  );
+  const sortedIds = useMemo(() => flattenedFormElementsList.map(({ id }) => id), [flattenedFormElementsList]);
 
   useEffect(() => {
     setFlattenedFormElementsList(formElementsListToFlattenedItemList(formElementsList));
@@ -48,20 +45,23 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
     DRAG_HORIZONTAL_TRESHOLD,
   );
 
-  const handleConfirm = () => {
+  const handleConfirm = useCallback(() => {
     void updateFormElementsList(flattenFormElements(formElementsList));
     handleClose();
-  };
+  }, [updateFormElementsList, formElementsList, handleClose]);
 
-  const handleResetAndClose = () => {
+  const handleResetAndClose = useCallback(() => {
     setResetFormElementListId((prev) => prev + 1);
     handleClose();
-  };
+  }, [setResetFormElementListId, handleClose]);
 
-  const renderItems = (): ReactNode =>
-    flattenedFormElementsList.map(({ id, element, depth }) => {
-      return <OrganizationSortableItem key={id} element={element} depth={depth} />;
-    });
+  const renderItems = useCallback(
+    (): ReactNode =>
+      flattenedFormElementsList.map(({ id, element, depth }) => {
+        return <OrganizationSortableItem key={id} element={element} depth={depth} />;
+      }),
+    [flattenedFormElementsList],
+  );
 
   return (
     <Dialog open={isOpen} onClose={handleResetAndClose} maxWidth={BreakpointVariant.MD} fullWidth>

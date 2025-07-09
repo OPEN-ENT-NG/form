@@ -115,12 +115,12 @@ const getMinDepth = (activeItem: IFlattenedItem, nextItem: IFlattenedItem | null
 
 /**
  * Compute where an item would land if dropped right now.
- * @param flattenedItems The flattened list of items (pre-move)
- * @param activeId The id of the item being dragged
- * @param overId The id of the item being hovered over
- * @param dragOffset The delta.x from drag
- * @param indentationWidth The width in px for one depth level
- * @returns An object with the new depth, parentId, oldIndex and newIndex
+ * @param {IFlattenedItem[]} flattenedItems - The flattened list of items (pre-move)
+ * @param {number} activeId - The id of the item being dragged
+ * @param {number} overId - The id of the item being hovered over
+ * @param {number} dragXOffset - The delta.x from drag
+ * @param {number} indentationWidth - The width in px for one depth level
+ * @returns {{depth: number, parentId: number|null, oldIndex: number, newIndex: number}}
  */
 export const getProjection = (
   flattenedItems: IFlattenedItem[],
@@ -129,51 +129,96 @@ export const getProjection = (
   dragXOffset: number,
   indentationWidth: number,
 ) => {
+  // Compute basic movement and depth projection
+  const basic = computeBasicProjection(flattenedItems, activeId, overId, dragXOffset, indentationWidth);
+
+  // Constrain depth within allowable bounds
+  const depth = applyDepthConstraints(basic);
+
+  // Determine the correct parent based on constrained depth
+  const parentId = determineParentId({ ...basic, depth });
+
+  return {
+    depth,
+    parentId,
+    oldIndex: basic.oldIndex,
+    newIndex: basic.newIndex,
+  };
+};
+
+/**
+ * Extracts indices, items and projected depth before constraints.
+ */
+export function computeBasicProjection(
+  flattenedItems: IFlattenedItem[],
+  activeId: number,
+  overId: number,
+  dragXOffset: number,
+  indentationWidth: number,
+) {
   const oldIndex = flattenedItems.findIndex(({ id }) => id === activeId);
   const newIndex = flattenedItems.findIndex(({ id }) => id === overId);
   const activeItem = flattenedItems[oldIndex];
 
   // Simulate reordering
   const projectedReorderedList = oldIndex !== newIndex ? arrayMove(flattenedItems, oldIndex, newIndex) : flattenedItems;
+
   const previousItem = newIndex > 0 ? projectedReorderedList[newIndex - 1] : null;
-  const nextItem = newIndex < projectedReorderedList.length ? projectedReorderedList[newIndex + 1] : null;
+  const nextItem = newIndex < projectedReorderedList.length - 1 ? projectedReorderedList[newIndex + 1] : null;
 
   const dragDepth = getDragDepth(dragXOffset, indentationWidth);
   const projectedDepth = activeItem.depth + dragDepth;
 
-  const maxDepth = getMaxDepth(activeItem, previousItem);
-  const minDepth = getMinDepth(activeItem, nextItem);
-  const depth = Math.min(Math.max(projectedDepth, minDepth), maxDepth);
-
-  // no previous or depth is root
-  if (!previousItem || depth === 0) {
-    return { depth, parentId: null, oldIndex, newIndex };
-  }
-
-  // same level as previous, same parent as previous
-  if (depth === previousItem.depth) {
-    return {
-      depth,
-      parentId: previousItem.parentId,
-      oldIndex,
-      newIndex,
-    };
-  }
-
-  // 3) deeper, previous becomes parent
-  if (depth > previousItem.depth) {
-    return {
-      depth,
-      parentId: previousItem.id,
-      oldIndex,
-      newIndex,
-    };
-  }
-
   return {
-    depth,
-    parentId: activeItem.parentId,
     oldIndex,
     newIndex,
+    activeItem,
+    previousItem,
+    nextItem,
+    projectedDepth,
   };
-};
+}
+
+/**
+ * Applies min/max depth constraints based on neighboring items.
+ */
+export function applyDepthConstraints({
+  activeItem,
+  previousItem,
+  nextItem,
+  projectedDepth,
+}: {
+  activeItem: IFlattenedItem;
+  previousItem: IFlattenedItem | null;
+  nextItem: IFlattenedItem | null;
+  projectedDepth: number;
+}) {
+  const maxDepth = getMaxDepth(activeItem, previousItem);
+  const minDepth = getMinDepth(activeItem, nextItem);
+  return Math.min(Math.max(projectedDepth, minDepth), maxDepth);
+}
+
+/**
+ * Determines the correct parentId based on constrained depth.
+ */
+export function determineParentId({
+  depth,
+  activeItem,
+  previousItem,
+}: {
+  depth: number;
+  activeItem: IFlattenedItem;
+  previousItem: IFlattenedItem | null;
+}) {
+  // If no previous item or depth is root, parent is null
+  if (!previousItem || depth === 0) return null;
+
+  // Same level as previous => same parent
+  if (depth === previousItem.depth) return previousItem.parentId;
+
+  // Deeper than previous => previous becomes parent
+  if (depth > previousItem.depth) return previousItem.id;
+
+  // Shallower than previous => retain original parent
+  return activeItem.parentId;
+}

@@ -1,14 +1,13 @@
-import { FC, useMemo } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { Box, EllipsisWithTooltip } from "@cgi-learning-hub/ui";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import { isFormElementSection } from "~/core/models/section/utils";
 import { IOrganizationSortableItemProps } from "./types";
-import { dragIconStyle, OrganizationStyledPaper, paperContentStyle, typographyStyle } from "./style";
+import { iconStyle, OrganizationStyledPaper, paperContentStyle, typographyStyle } from "./style";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";
 import {
   getTransformStyle,
-  getUpDownButtons,
   handleSubMoveDown,
   handleSubMoveUp,
   handleTopMoveDown,
@@ -21,35 +20,39 @@ import { IQuestion } from "~/core/models/question/types";
 import { Direction } from "./enum";
 import { useSortable } from "@dnd-kit/sortable";
 import { DRAG_HORIZONTAL_TRESHOLD } from "~/core/constants";
+import { OrganizationUpDownButtons } from "../OrganizationUpDownButtons";
 
 export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ element, depth = 0 }) => {
   const { formElementsList, setFormElementsList } = useCreation();
   const { attributes, listeners, setNodeRef, transform, transition } = useSortable({
-    id: element.id ? element.id : 0,
+    id: element.id ?? 0,
     data: { element: element },
   });
 
   const isSection = isFormElementSection(element);
 
-  const handleReorderClick = (element: IFormElement, formElementList: IFormElement[], direction: Direction) => {
-    if (isTopElement(element)) {
-      if (direction === Direction.DOWN) {
-        setFormElementsList(handleTopMoveDown(element, formElementList));
+  const handleReorderClick = useCallback(
+    (element: IFormElement, formElementList: IFormElement[], direction: Direction) => {
+      if (isTopElement(element)) {
+        if (direction === Direction.DOWN) {
+          setFormElementsList(handleTopMoveDown(element, formElementList));
+          return;
+        }
+        setFormElementsList(handleTopMoveUp(element, formElementList));
         return;
       }
-      setFormElementsList(handleTopMoveUp(element, formElementList));
-      return;
-    }
-    if (isSubElement(element)) {
-      if (direction === Direction.DOWN) {
-        setFormElementsList(handleSubMoveDown(element as IQuestion, formElementList));
+      if (isSubElement(element)) {
+        if (direction === Direction.DOWN) {
+          setFormElementsList(handleSubMoveDown(element as IQuestion, formElementList));
+          return;
+        }
+        setFormElementsList(handleSubMoveUp(element as IQuestion, formElementList));
         return;
       }
-      setFormElementsList(handleSubMoveUp(element as IQuestion, formElementList));
       return;
-    }
-    return;
-  };
+    },
+    [setFormElementsList],
+  );
 
   const style = useMemo(() => getTransformStyle(transform, transition), [transform, transition]);
 
@@ -65,7 +68,7 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
     >
       <Box sx={paperContentStyle}>
         <Box>
-          <DragIndicatorRoundedIcon sx={dragIconStyle} />
+          <DragIndicatorRoundedIcon sx={iconStyle} />
         </Box>
         <EllipsisWithTooltip
           typographyProps={{
@@ -76,7 +79,11 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
           {element.title}
         </EllipsisWithTooltip>
       </Box>
-      <Box>{getUpDownButtons(element, formElementsList, handleReorderClick)}</Box>
+      <OrganizationUpDownButtons
+        element={element}
+        formElementsList={formElementsList}
+        handleReorderClick={handleReorderClick}
+      />
     </OrganizationStyledPaper>
   );
 };

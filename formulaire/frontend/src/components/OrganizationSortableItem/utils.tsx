@@ -1,10 +1,6 @@
 import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion } from "~/core/models/question/types";
 import { isFormElementQuestion } from "~/core/models/question/utils";
-import { Box } from "@cgi-learning-hub/ui";
-import { arrowIconStyle, StyledIconButton, upDownButtonsContainerStyle } from "./style";
-import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
-import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { isFormElementSection } from "~/core/models/section/utils";
 import { Direction } from "./enum";
 import {
@@ -18,124 +14,92 @@ import { ISection } from "~/core/models/section/types";
 import { PositionActionType } from "~/providers/CreationProvider/enum";
 import { compareFormElements } from "~/core/models/formElement/utils";
 
-export const getUpDownButtons = (
-  element: IFormElement,
-  formElementsList: IFormElement[],
-  handleReorderClick: (element: IFormElement, formElementList: IFormElement[], direction: Direction) => void,
-) => {
-  const isSection = isFormElementSection(element);
-  if (isFormElementQuestion(element)) {
-    const question = element as IQuestion;
-    if (question.sectionPosition) {
-      return (
-        <Box sx={upDownButtonsContainerStyle}>
-          <StyledIconButton
-            isSection={false}
-            onClick={() => {
-              handleReorderClick(element, formElementsList, Direction.UP);
-            }}
-          >
-            <KeyboardArrowUpRoundedIcon sx={arrowIconStyle} />
-          </StyledIconButton>
-          <StyledIconButton
-            isSection={false}
-            onClick={() => {
-              handleReorderClick(element, formElementsList, Direction.DOWN);
-            }}
-          >
-            <KeyboardArrowDownRoundedIcon sx={arrowIconStyle} />
-          </StyledIconButton>
-        </Box>
-      );
-    }
-  }
-
-  if (!element.position) return null;
-
-  const max = formElementsList.length;
-  return (
-    <Box sx={upDownButtonsContainerStyle}>
-      {element.position > 1 && (
-        <StyledIconButton
-          isSection={isSection}
-          onClick={() => {
-            handleReorderClick(element, formElementsList, Direction.UP);
-          }}
-        >
-          <KeyboardArrowUpRoundedIcon sx={arrowIconStyle} />
-        </StyledIconButton>
-      )}
-      {element.position < max && (
-        <StyledIconButton
-          isSection={isSection}
-          onClick={() => {
-            handleReorderClick(element, formElementsList, Direction.DOWN);
-          }}
-        >
-          <KeyboardArrowDownRoundedIcon sx={arrowIconStyle} />
-        </StyledIconButton>
-      )}
-    </Box>
-  );
-};
-
-export const swapFormElements = (
-  elementA: IFormElement,
-  elementB: IFormElement,
-  formElementsList: IFormElement[],
-): IFormElement[] => {
-  const bothQuestions = isFormElementQuestion(elementA) && isFormElementQuestion(elementB);
-
-  // If both are questions
-  if (bothQuestions) {
-    const questionA = elementA as IQuestion;
-    const questionB = elementB as IQuestion;
-
-    // in the same section, swap only their sectionPosition
-    if (questionA.sectionId && questionB.sectionId && questionA.sectionId === questionB.sectionId) {
-      return formElementsList.map((el) => {
-        if (isFormElementQuestion(el)) {
-          const q = el as IQuestion;
-          if (q.id === questionA.id) {
-            return { ...q, sectionPosition: questionB.sectionPosition };
-          }
-          if (q.id === questionB.id) {
-            return { ...q, sectionPosition: questionA.sectionPosition };
-          }
-        }
-        return el;
-      });
-    }
-
-    //If one is a top level question and the other is in a section, we swap top level and parent section
-    if (questionA.position && questionB.sectionId) {
-      const parentBSection = formElementsList.find(
-        (el) => isFormElementSection(el) && el.id === questionB.sectionId,
-      ) as ISection | undefined;
-      if (!parentBSection) return formElementsList;
-      return swapFormElements(questionA, parentBSection, formElementsList);
-    }
-
-    if (questionA.sectionId && questionB.position) {
-      const parentASection = formElementsList.find(
-        (el) => isFormElementSection(el) && el.id === questionA.sectionId,
-      ) as ISection | undefined;
-      if (!parentASection) return formElementsList;
-      return swapFormElements(questionB, parentASection, formElementsList);
-    }
-  }
-
-  // Fallback both at top level, swap their global positions
+/**
+ * Swap positions of two questions within the same section.
+ * @param {IFormElement[]} list
+ * @param {IQuestion} qA
+ * @param {IQuestion} qB
+ * @returns {IFormElement[]}
+ */
+function swapSectionPositions(formElementsList: IFormElement[], qA: IQuestion, qB: IQuestion) {
   return formElementsList.map((el) => {
-    if (el.id === elementA.id && el.formElementType === elementA.formElementType) {
-      return { ...el, position: elementB.position };
-    }
-    if (el.id === elementB.id && el.formElementType === elementB.formElementType) {
-      return { ...el, position: elementA.position };
+    if (isFormElementQuestion(el)) {
+      if (el.id === qA.id) return { ...el, sectionPosition: qB.sectionPosition };
+      if (el.id === qB.id) return { ...el, sectionPosition: qA.sectionPosition };
     }
     return el;
   });
-};
+}
+
+/**
+ * Swap a top-level question with its parent section.
+ * @param {IFormElement[]} list
+ * @param {IQuestion} question
+ * @param {ISection} section
+ * @returns {IFormElement[]}
+ */
+function swapQuestionWithSection(formElementsList: IFormElement[], question: IQuestion, section: ISection) {
+  return formElementsList.map((el) => {
+    if (el.id === question.id) {
+      return { ...el, position: section.position };
+    }
+    if (isFormElementSection(el) && el.id === section.id) {
+      return { ...el, position: question.position };
+    }
+    return el;
+  });
+}
+
+/**
+ * Swap global positions of any two form elements.
+ * @param {IFormElement[]} list
+ * @param {IFormElement} elA
+ * @param {IFormElement} elB
+ * @returns {IFormElement[]}
+ */
+function swapGlobalPositions(formElementsList: IFormElement[], elA: IFormElement, elB: IFormElement) {
+  return formElementsList.map((el) => {
+    if (el.id === elA.id && el.formElementType === elA.formElementType) {
+      return { ...el, position: elB.position };
+    }
+    if (el.id === elB.id && el.formElementType === elB.formElementType) {
+      return { ...el, position: elA.position };
+    }
+    return el;
+  });
+}
+
+/**
+ * Refactored swapFormElements with clear helper functions.
+ */
+export function swapFormElements(elementA: IFormElement, elementB: IFormElement, formElementsList: IFormElement[]) {
+  if (isFormElementQuestion(elementA) && isFormElementQuestion(elementB)) {
+    const qA = elementA as IQuestion;
+    const qB = elementB as IQuestion;
+
+    // Same section: swap sectionPosition only
+    if (qA.sectionId && qB.sectionId && qA.sectionId === qB.sectionId) {
+      return swapSectionPositions(formElementsList, qA, qB);
+    }
+
+    // One is top-level question, other in section: swap with section
+    if (qA.position && qB.sectionId) {
+      const parentSec = formElementsList.find((el) => isFormElementSection(el) && el.id === qB.sectionId) as
+        | ISection
+        | undefined;
+      if (parentSec) return swapQuestionWithSection(formElementsList, qA, parentSec);
+    }
+    if (qA.sectionId && qB.position) {
+      const parentSec = formElementsList.find((el) => isFormElementSection(el) && el.id === qA.sectionId) as
+        | ISection
+        | undefined;
+      if (parentSec) return swapQuestionWithSection(formElementsList, qB, parentSec);
+    }
+  }
+
+  // Fallback: swap their global positions
+  return swapGlobalPositions(formElementsList, elementA, elementB);
+}
 
 export const swapAndSortFormElements = (
   elementA: IFormElement,

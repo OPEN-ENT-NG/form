@@ -75,8 +75,9 @@ export function useOrganizationModalDnd(
 
     // If we just move horizontally we just update the depth and parentId
     if (mode === MovementType.INDENT && oldIndex === newIndex) {
-      flattenedFormElementsList[oldIndex] = { ...flattenedFormElementsList[oldIndex], depth, parentId };
-      setLocalFlat(flattenedFormElementsList);
+      const updatedList = [...flattenedFormElementsList];
+      updatedList[oldIndex] = { ...updatedList[oldIndex], depth, parentId };
+      setLocalFlat(updatedList);
       return;
     }
 
