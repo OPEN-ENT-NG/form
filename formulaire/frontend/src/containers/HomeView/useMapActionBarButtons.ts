@@ -15,6 +15,7 @@ import { getFormEditPath, getFormResultsPath } from "~/core/pathHelper";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useHandleOpenFormResponse } from "./useHandleOpenFormResponse";
 import { IForm } from "~/core/models/form/types";
+import { t } from "~/i18n";
 
 export const useMapActionBarButtons = () => {
   const {
@@ -151,8 +152,7 @@ export const useMapActionBarButtons = () => {
   const ActionBarButtonsMap = useMemo(
     () => ({
       [ActionBarButtonType.OPEN]: {
-        titleI18nkey: "formulaire.open",
-        type: ActionBarButtonType.OPEN,
+        label: t("formulaire.open"),
         action: () => {
           if (hasFolders) {
             setCurrentFolder(selectedFolders[0]);
@@ -166,88 +166,75 @@ export const useMapActionBarButtons = () => {
         },
       },
       [ActionBarButtonType.RENAME]: {
-        titleI18nkey: "formulaire.rename",
-        type: ActionBarButtonType.RENAME,
+        label: t("formulaire.rename"),
         action: () => {
           toggleModal(ModalType.FOLDER_RENAME);
         },
       },
       [ActionBarButtonType.MOVE]: {
-        titleI18nkey: "formulaire.move",
-        type: ActionBarButtonType.MOVE,
+        label: t("formulaire.move"),
         action: () => {
           toggleModal(ModalType.MOVE);
         },
       },
       [ActionBarButtonType.DELETE]: {
-        titleI18nkey: "formulaire.delete",
-        type: ActionBarButtonType.DELETE,
+        label: t("formulaire.delete"),
         action: () => {
           toggleModal(ModalType.FORM_FOLDER_DELETE);
         },
       },
       [ActionBarButtonType.PROPS]: {
-        titleI18nkey: "formulaire.properties",
-        type: ActionBarButtonType.PROPS,
+        label: t("formulaire.properties"),
         action: () => {
           toggleModal(ModalType.FORM_PROP_UPDATE);
         },
       },
       [ActionBarButtonType.DUPLICATE]: {
-        titleI18nkey: "formulaire.duplicate",
-        type: ActionBarButtonType.DUPLICATE,
+        label: t("formulaire.duplicate"),
         action: () => handleDuplicate(),
       },
       [ActionBarButtonType.EXPORT]: {
-        titleI18nkey: "formulaire.export",
-        type: ActionBarButtonType.EXPORT,
+        label: t("formulaire.export"),
         action: () => {
           toggleModal(ModalType.EXPORT);
         },
       },
       [ActionBarButtonType.UNSELECT_ALL]: {
-        titleI18nkey: "formulaire.deselect",
-        type: ActionBarButtonType.UNSELECT_ALL,
+        label: t("formulaire.deselect"),
         action: () => {
           unselectAll();
         },
       },
       [ActionBarButtonType.SELECT_ALL]: {
-        titleI18nkey: "formulaire.selectAll",
-        type: ActionBarButtonType.SELECT_ALL,
+        label: t("formulaire.selectAll"),
         action: () => {
           handleSelectAll();
         },
       },
       [ActionBarButtonType.RESTORE]: {
-        titleI18nkey: "formulaire.restore",
-        type: ActionBarButtonType.RESTORE,
+        label: t("formulaire.restore"),
         action: () => handleRestore(),
       },
       [ActionBarButtonType.SHARE]: {
-        titleI18nkey: "formulaire.share",
-        type: ActionBarButtonType.SHARE,
+        label: t("formulaire.share"),
         action: () => {
           toggleModal(ModalType.FORM_SHARE);
         },
       },
       [ActionBarButtonType.RESULTS]: {
-        titleI18nkey: "formulaire.results",
-        type: ActionBarButtonType.RESULTS,
+        label: t("formulaire.results"),
         action: () => {
           return (window.location.href = getFormResultsPath(selectedForms[0].id));
         },
       },
       [ActionBarButtonType.REMIND]: {
-        titleI18nkey: "formulaire.checkremind",
-        type: ActionBarButtonType.REMIND,
+        label: t("formulaire.checkremind"),
         action: () => {
           toggleModal(ModalType.REMIND);
         },
       },
       [ActionBarButtonType.MY_ANSWER]: {
-        titleI18nkey: "formulaire.myResponses",
-        type: ActionBarButtonType.MY_ANSWER,
+        label: t("formulaire.myResponses"),
         action: () => {
           toggleModal(ModalType.ANSWERS);
         },
