@@ -6,9 +6,12 @@ import { getFormTreePath } from "~/core/pathHelper";
 import { useNavigate } from "react-router-dom";
 import { IFolder } from "~/core/models/folder/types";
 import { FORMULAIRE } from "~/core/constants";
+import { ModalType } from "~/core/enums";
+import { useModal } from "~/providers/ModalProvider";
 
 export const useGetCreationHeaderButtons = (formId: string | number | undefined): IButtonProps[] => {
   const navigate = useNavigate();
+  const { toggleModal } = useModal();
   return [
     {
       title: t("formulaire.return"),
@@ -27,7 +30,9 @@ export const useGetCreationHeaderButtons = (formId: string | number | undefined)
     {
       title: t("formulaire.organize"),
       variant: ComponentVariant.OUTLINED,
-      action: () => {},
+      action: () => {
+        toggleModal(ModalType.ORGANIZATION);
+      },
     },
     {
       title: t("formulaire.preview"),

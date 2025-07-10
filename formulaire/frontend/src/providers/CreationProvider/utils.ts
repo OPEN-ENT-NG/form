@@ -114,7 +114,7 @@ export const getFollowingFormElement = (
         return null;
       }
 
-      const nextInSection = section.questions.find((q) => q.position === pos + 1);
+      const nextInSection = section.questions.find((q) => q.sectionPosition === pos + 1);
       return nextInSection ?? null;
     }
   }
@@ -154,4 +154,35 @@ export const getElementsPositionGreaterEqual = (
   const gaps = sortedGEList.filter((el) => lastPos && el.position > lastPos);
 
   return [...chains, ...gaps];
+};
+
+export const getPreviousFormElement = (
+  formElement: IFormElement,
+  formElementsList: IFormElement[],
+): IFormElement | null => {
+  if (isFormElementQuestion(formElement)) {
+    const question = formElement as IQuestion;
+    if (question.sectionId) {
+      const section = getElementById(question.sectionId, formElementsList) as ISection | undefined;
+
+      if (!section) {
+        return null;
+      }
+
+      const pos = question.sectionPosition;
+      if (pos === null) {
+        return null;
+      }
+      const prevInSection = section.questions.find((q) => q.sectionPosition === pos - 1);
+      return prevInSection ?? null;
+    }
+  }
+
+  const position = formElement.position;
+  if (position == null) {
+    return null;
+  }
+
+  const previousElement = formElementsList.find((el) => el.position === position - 1);
+  return previousElement ?? null;
 };
