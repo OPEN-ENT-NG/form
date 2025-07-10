@@ -7,6 +7,7 @@ import {
   getElementById,
   getElementsPositionGreaterEqual,
   getFollowingFormElement,
+  isSectionOrQuestion,
 } from "~/providers/CreationProvider/utils";
 
 export const useTargetNextElement = (section?: ISection) => {
@@ -18,7 +19,11 @@ export const useTargetNextElement = (section?: ISection) => {
     : [];
 
   const computeInitialId = useCallback((): number | undefined => {
-    if (!section || section.nextFormElementId == null || !getElementById(section.nextFormElementId, formElementsList)) {
+    if (
+      !section ||
+      section.nextFormElementId == null ||
+      !getElementById(section.nextFormElementId, formElementsList, isSectionOrQuestion)
+    ) {
       return undefined;
     }
     return section.nextFormElementId;
@@ -30,7 +35,7 @@ export const useTargetNextElement = (section?: ISection) => {
     (event: SelectChangeEvent) => {
       const raw = event.target.value;
       const value = raw !== TARGET_RECAP ? Number(raw) : undefined;
-      const targetElement = value ? getElementById(value, formElementsList) : null;
+      const targetElement = value ? getElementById(value, formElementsList, isSectionOrQuestion) : null;
 
       setTargetNextElementId(value);
       if (!section) return;
@@ -60,7 +65,7 @@ export const useTargetNextElement = (section?: ISection) => {
     }
 
     // If the target element no longer exists in the list, clear the target
-    if (!getElementById(targetNextElementId, formElementsList)) {
+    if (!getElementById(targetNextElementId, formElementsList, isSectionOrQuestion)) {
       setTargetNextElementId(undefined);
       return;
     }
