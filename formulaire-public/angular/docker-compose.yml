@@ -1,6 +1,6 @@
 services:
   node:
-    image: opendigitaleducation/node:22-alpine-pnpm
+    image: "nexus-pic2.support-ent.fr/hub/node-builder:latest"
     working_dir: /home/node/app
     volumes:
       - ./:/home/node/app
