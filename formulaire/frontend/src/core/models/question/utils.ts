@@ -14,6 +14,7 @@ import {
 } from "./types";
 import { getElementById } from "~/providers/CreationProvider/utils";
 import { ISection } from "../section/types";
+import { isFormElementSection } from "../section/utils";
 
 export const isFormElementQuestion = (formElement: IFormElement): boolean => {
   return formElement.formElementType === FormElementType.QUESTION;
@@ -198,7 +199,7 @@ export function shouldShowConditionalSwitch(question: IQuestion, formElements: I
     return true;
   }
 
-  const parentSection = getElementById(question.sectionId, formElements);
+  const parentSection = getElementById(question.sectionId, formElements, isFormElementSection);
 
   if (!parentSection) {
     return false;

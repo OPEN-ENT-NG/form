@@ -175,7 +175,9 @@ export const useFormElementActions = (
       };
 
       if (questionToDuplicate.sectionId) {
-        const parentSection = getElementById(questionToDuplicate.sectionId, formElementsList) as ISection | undefined;
+        const parentSection = getElementById(questionToDuplicate.sectionId, formElementsList, isFormElementSection) as
+          | ISection
+          | undefined;
 
         if (!parentSection) {
           // No parent section nothing to do
@@ -185,7 +187,10 @@ export const useFormElementActions = (
 
       const formElementUpdatedList: IFormElement[] = questionToDuplicate.sectionId
         ? fixListPositions(
-            [...(getElementById(questionToDuplicate.sectionId, formElementsList) as ISection).questions],
+            [
+              ...(getElementById(questionToDuplicate.sectionId, formElementsList, isFormElementSection) as ISection)
+                .questions,
+            ],
             newSectionPosition ? newSectionPosition : 0,
             PositionActionType.CREATION,
           )

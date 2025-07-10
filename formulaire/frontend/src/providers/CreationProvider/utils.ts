@@ -65,17 +65,34 @@ export const fixListPositions = (
   });
 };
 
-export const getElementById = (id: number | null, formElementsList: IFormElement[]): IFormElement | undefined => {
-  return formElementsList.find((el) => el.id === id);
+export const isSectionOrQuestion = (element: IFormElement): boolean => {
+  return isFormElementSection(element) || isFormElementQuestion(element);
+};
+
+export const getElementById = (
+  id: number | null,
+  formElementsList: IFormElement[],
+  formElementTypePredicate: (element: IFormElement) => boolean,
+): IFormElement | undefined => {
+  return formElementsList.find((el) => el.id === id && formElementTypePredicate(el));
 };
 
 export const isInFormElementsList = (element: IFormElement, formElementsList: IFormElement[]): boolean => {
+  // Check if element exists as a section
+  const foundAsSection = getElementById(element.id, formElementsList, isFormElementSection);
+  if (foundAsSection) return true;
+
+  // Check if element exists as a question
+  const foundAsQuestion = getElementById(element.id, formElementsList, isFormElementQuestion);
+  if (foundAsQuestion) return true;
+
+  // Check if element exists as a question within any section
   return formElementsList.some((el) => {
     if (isFormElementSection(el)) {
       const section = el as ISection;
-      return section.id === element.id || section.questions.some((q) => q.id === element.id);
+      return section.questions.some((q) => q.id === element.id);
     }
-    return el.id === element.id;
+    return false;
   });
 };
 
@@ -104,7 +121,9 @@ export const getFollowingFormElement = (
     const question = formElement as IQuestion;
 
     if (question.sectionId) {
-      const section = getElementById(question.sectionId, formElementsList) as ISection | undefined;
+      const section = getElementById(question.sectionId, formElementsList, isFormElementSection) as
+        | ISection
+        | undefined;
       if (!section) {
         return null;
       }
