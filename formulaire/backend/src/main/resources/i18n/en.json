@@ -260,6 +260,7 @@
   "formulaire.element.block.multiple.conditional": "Attention, la section ci-dessus ne doit comporter qu'une question conditionnelle pour être valide",
   "formulaire.section.no.description": "Pas de description",
   "formulaire.section.new.question": "+ Ajouter une question",
+  "formulaire.section.title.default": "Section title",
 
   "formulaire.question.type.FREETEXT": "Zone de texte",
   "formulaire.question.type.SHORTANSWER": "Réponse courte",

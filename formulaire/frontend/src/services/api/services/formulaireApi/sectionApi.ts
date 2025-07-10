@@ -2,7 +2,7 @@ import { QueryMethod, TagName } from "~/core/enums";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
 import { toast } from "react-toastify";
 import { ISection, ISectionDTO } from "~/core/models/section/types";
-import { buildSectionPayload, transformSections } from "~/core/models/section/utils";
+import { buildSectionPayload, transformSection, transformSections } from "~/core/models/section/utils";
 import { t } from "~/i18n";
 
 export const sectionApi = emptySplitFormulaireApi.injectEndpoints({
@@ -30,6 +30,7 @@ export const sectionApi = emptySplitFormulaireApi.injectEndpoints({
         body: buildSectionPayload(section),
       }),
       invalidatesTags: [TagName.SECTIONS, TagName.FORM_ELEMENTS],
+      transformResponse: (rawData: ISectionDTO) => transformSection(rawData),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
