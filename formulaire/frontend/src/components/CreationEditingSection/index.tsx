@@ -34,16 +34,26 @@ import { DeleteConfirmationModal } from "~/containers/DeleteConfirmationModal";
 import { useModal } from "~/providers/ModalProvider";
 import { questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
 import { UndoConfirmationModal } from "~/containers/UndoConfirmationModal";
-import { CreateFormElementModal } from "~/containers/CreateFormElementModal";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { isEnterPressed } from "~/core/utils";
+import { useCreateSectionMutation } from "~/services/api/services/formulaireApi/sectionApi";
+import { isFormElementSection } from "~/core/models/section/utils";
 
 export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { form, setCurrentEditingElement, currentEditingElement, handleDeleteFormElement, saveSection } = useCreation();
+  const {
+    form,
+    setCurrentEditingElement,
+    currentEditingElement,
+    handleDeleteFormElement,
+    saveSection,
+    setQuestionModalSection,
+  } = useCreation();
   const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
   const [description, setDescription] = useState<string>(section.description ?? "");
   const editorRef = useRef<EditorRef>(null);
+  const [createSection] = useCreateSectionMutation();
+
   const handleClickAwayEditingElement = useClickAwayEditingElement(
     currentEditingElement,
     handleDeleteFormElement,
@@ -52,7 +62,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     saveSection,
   );
   const {
-    displayModals: { showSectionDelete, showSectionUndo, showQuestionCreate },
+    displayModals: { showSectionDelete, showSectionUndo },
     toggleModal,
   } = useModal();
 
@@ -94,7 +104,12 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     toggleModal(ModalType.SECTION_UNDO);
   };
 
-  const handleAddNewQuestion = () => {
+  const handleAddNewQuestion = async () => {
+    if (currentEditingElement && isFormElementSection(currentEditingElement) && currentEditingElement.isNew) {
+      const section: ISection = { ...currentEditingElement, title: t("formulaire.section.title.default") } as ISection;
+      const newSection = await createSection(section).unwrap();
+      setQuestionModalSection(newSection);
+    }
     toggleModal(ModalType.QUESTION_CREATE);
   };
 
@@ -161,7 +176,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                 />
               </Box>
               {!!form && !hasFormResponses(form) && (
-                <Box sx={sectionFooterStyle} onClick={handleAddNewQuestion}>
+                <Box sx={sectionFooterStyle} onClick={() => void handleAddNewQuestion()}>
                   <Box sx={newQuestionWrapperStyle}>
                     <Typography sx={sectionAddQuestionStyle}>{t("formulaire.section.new.question")}</Typography>
                   </Box>
@@ -185,16 +200,6 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                 toggleModal(ModalType.SECTION_UNDO);
               }}
               element={section}
-            />
-          )}
-          {showQuestionCreate && (
-            <CreateFormElementModal
-              isOpen={showQuestionCreate}
-              handleClose={() => {
-                toggleModal(ModalType.QUESTION_CREATE);
-              }}
-              showSection={false}
-              parentSection={section}
             />
           )}
         </Box>
