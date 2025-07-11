@@ -23,6 +23,7 @@ import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.http.filter.ResourceFilter;
+import org.entcore.common.migration.AppMigrationConfiguration;
 import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.user.UserInfos;
 import org.entcore.common.user.UserUtils;
@@ -53,7 +54,11 @@ public class SharingController extends ControllerHelper {
         this.formService = new DefaultFormService();
         this.distributionService = new DefaultDistributionService();
         this.formShareService = new DefaultFormSharesService();
-        this.neoService = new DefaultNeoService();
+        this.neoService = new BrokerSwitchNeoService(
+          eb,
+          new DefaultNeoService(),
+          AppMigrationConfiguration.fromVertx("communication")
+        );
         this.notifyService = new DefaultNotifyService(timelineHelper, eb);
     }
 

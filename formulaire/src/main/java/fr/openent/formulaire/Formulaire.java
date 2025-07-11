@@ -14,6 +14,7 @@ import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.events.EventStore;
 import org.entcore.common.events.EventStoreFactory;
 import org.entcore.common.http.BaseServer;
+import org.entcore.common.migration.AppMigrationConfiguration;
 import org.entcore.common.notification.TimelineHelper;
 import org.entcore.common.service.impl.SqlCrudService;
 import org.entcore.common.share.impl.SqlShareService;
@@ -84,7 +85,7 @@ public class Formulaire extends BaseServer {
 
 		// Set sharing service
 		SharingController sharingController = new SharingController(timelineHelper);
-		sharingController.setShareService(new SqlShareService(DB_SCHEMA, Tables.FORM_SHARES, eb, securedActions, null));
+		sharingController.setShareService(new SqlShareService(DB_SCHEMA, Tables.FORM_SHARES, eb, securedActions, null, AppMigrationConfiguration.fromVertx("communication", vertx, config)));
 
 
 		// Init controllers
