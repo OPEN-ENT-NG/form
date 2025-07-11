@@ -199,15 +199,13 @@ export function shouldShowConditionalSwitch(question: IQuestion, formElements: I
     return true;
   }
 
-  const parentSection = getElementById(question.sectionId, formElements, isFormElementSection);
+  const parentSection = getElementById(question.sectionId, formElements, isFormElementSection) as ISection | undefined;
 
   if (!parentSection) {
     return false;
   }
 
-  const hasOtherConditionalQuestions = (parentSection as ISection).questions.some(
-    (q) => q.id !== question.id && q.conditional,
-  );
+  const hasOtherConditionalQuestions = parentSection.questions.some((q) => q.id !== question.id && q.conditional);
 
   return !hasOtherConditionalQuestions;
 }

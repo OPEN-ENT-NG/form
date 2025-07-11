@@ -85,10 +85,7 @@ export const useFormElementActions = (
 
   const handleNestedQuestionDeletion = async (question: IQuestion) => {
     if (!question.sectionId || !question.sectionPosition || !question.id) return;
-
-    const parent = formElementsList.find(
-      (el): el is ISection => isFormElementSection(el) && el.id === question.sectionId,
-    );
+    const parent = getElementById(question.sectionId, formElementsList, isFormElementSection) as ISection | undefined;
     if (!parent) return;
 
     // Remove question and fix positions within the section

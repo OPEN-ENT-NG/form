@@ -79,12 +79,8 @@ export const getElementById = (
 
 export const isInFormElementsList = (element: IFormElement, formElementsList: IFormElement[]): boolean => {
   // Check if element exists as a section
-  const foundAsSection = getElementById(element.id, formElementsList, isFormElementSection);
-  if (foundAsSection) return true;
-
-  // Check if element exists as a question
-  const foundAsQuestion = getElementById(element.id, formElementsList, isFormElementQuestion);
-  if (foundAsQuestion) return true;
+  const foundAtTopLevel = getElementById(element.id, formElementsList, isSectionOrQuestion);
+  if (foundAtTopLevel) return true;
 
   // Check if element exists as a question within any section
   return formElementsList.some((el) => {
