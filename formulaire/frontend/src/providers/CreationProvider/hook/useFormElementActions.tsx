@@ -284,13 +284,15 @@ export const useFormElementActions = (
       if (!isInFormElementsList(question, formElementsList)) return;
 
       //Save Question
+      let questionSaved = question;
       if (question.isNew) {
-        await createSingleQuestion(question).unwrap();
+        questionSaved = await createSingleQuestion(question).unwrap();
       } else {
         await updateQuestions([question]).unwrap();
       }
 
       //Save Choices
+      console.log("Saving question", questionSaved);
       if (
         isTypeChoicesQuestion(question.questionType) &&
         question.choices &&
@@ -321,7 +323,9 @@ export const useFormElementActions = (
 
         if (choicesToCreateList.length) {
           await createMultipleChoiceQuestions({
-            questionChoices: choicesToCreateList,
+            questionChoices: choicesToCreateList.map((choice) => {
+              return { ...choice, questionId: questionSaved.id };
+            }),
             formId: String(question.formId),
           }).unwrap();
         }
