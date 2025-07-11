@@ -9,9 +9,15 @@ import { IUndoConfirmationModalProps } from "./types";
 export const UndoConfirmationModal: FC<IUndoConfirmationModalProps> = ({ isOpen, handleClose, element }) => {
   const { t } = useTranslation(FORMULAIRE);
 
-  const { setCurrentEditingElement, handleUndoFormElementChange } = useCreation();
+  const { setCurrentEditingElement, handleUndoFormElementChange, handleDeleteFormElement } = useCreation();
 
   const handleUndo = () => {
+    if (element.isNew) {
+      handleDeleteFormElement(element);
+      handleClose();
+      return;
+    }
+
     handleUndoFormElementChange(element);
     setCurrentEditingElement(null);
     handleClose();
