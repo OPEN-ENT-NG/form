@@ -79,7 +79,6 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (currentEditingElement && isInFormElementsList(currentEditingElement, formElementsList)) {
-      console.log("currentEditingElement has been updated:", currentEditingElement);
       setFormElementsList((prevFormElementList) => updateElementInList(prevFormElementList, currentEditingElement));
     }
     return;
@@ -127,8 +126,12 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   );
 
   const handleDeleteFormElement = useCallback(
-    (toRemove: IFormElement) => {
-      setFormElementsList((prevFormElementList) => removeFormElementFromList(prevFormElementList, toRemove));
+    (toRemove: IFormElement, useKey: boolean = false) => {
+      if (!useKey) {
+        setFormElementsList((prevFormElementList) => removeFormElementFromList(prevFormElementList, toRemove));
+        return;
+      }
+      setFormElementsList((prevFormElementList) => removeFormElementFromList(prevFormElementList, toRemove, true));
     },
     [setFormElementsList],
   );

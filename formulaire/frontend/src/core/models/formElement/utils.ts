@@ -7,6 +7,7 @@ import { IFormElement, IFormElementDTO, IFormElementPayload } from "./types";
 export const transformFormElement = (raw: IFormElementDTO): IFormElement => {
   return {
     id: raw.id,
+    key: Date.now(),
     formId: raw.form_id,
     title: raw.title,
     position: raw.position,

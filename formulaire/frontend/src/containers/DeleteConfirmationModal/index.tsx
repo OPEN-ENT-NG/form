@@ -31,6 +31,7 @@ export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isO
   const handleDelete = async () => {
     setCurrentEditingElement(null);
     if (!element.id) {
+      handleDeleteFormElement(element, true);
       handleClose();
       return;
     }

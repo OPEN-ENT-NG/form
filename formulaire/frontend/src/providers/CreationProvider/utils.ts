@@ -5,17 +5,29 @@ import { ISection } from "~/core/models/section/types";
 import { isFormElementSection } from "~/core/models/section/utils";
 import { PositionActionType } from "./enum";
 
-export const removeFormElementFromList = (formElementsList: IFormElement[], toRemove: IFormElement): IFormElement[] => {
+export const removeFormElementFromList = (
+  formElementsList: IFormElement[],
+  toRemove: IFormElement,
+  useKey: boolean = false,
+): IFormElement[] => {
+  const filterPredicate = useKey
+    ? (el: IFormElement) => el.key !== toRemove.key
+    : (el: IFormElement) => el.id !== toRemove.id;
+
+  const questionFilterPredicate = useKey
+    ? (q: IQuestion) => q.key !== toRemove.key
+    : (q: IQuestion) => q.id !== toRemove.id;
+
   return formElementsList
     .map((el) =>
       isFormElementSection(el) && isFormElementQuestion(toRemove) && el.id === (toRemove as IQuestion).sectionId
         ? {
             ...el,
-            questions: (el as ISection).questions.filter((q) => q.id !== toRemove.id),
+            questions: (el as ISection).questions.filter(questionFilterPredicate),
           }
         : el,
     )
-    .filter((el) => el.id !== toRemove.id);
+    .filter(filterPredicate);
 };
 
 export const isCurrentEditingElement = (element: IFormElement, currentEditingElement: IFormElement | null) => {
@@ -77,16 +89,26 @@ export const getElementById = (
   return formElementsList.find((el) => el.id === id && formElementTypePredicate(el));
 };
 
+export const getElementByKey = (
+  key: number,
+  formElementsList: IFormElement[],
+  formElementTypePredicate: (element: IFormElement) => boolean,
+): IFormElement | undefined => {
+  return formElementsList.find((el) => el.id === key && formElementTypePredicate(el));
+};
+
 export const isInFormElementsList = (element: IFormElement, formElementsList: IFormElement[]): boolean => {
   // Check if element exists as a section
-  const foundAtTopLevel = getElementById(element.id, formElementsList, isSectionOrQuestion);
+  const foundAtTopLevel =
+    getElementById(element.id, formElementsList, isSectionOrQuestion) ||
+    getElementByKey(element.key, formElementsList, isSectionOrQuestion);
   if (foundAtTopLevel) return true;
 
   // Check if element exists as a question within any section
   return formElementsList.some((el) => {
     if (isFormElementSection(el)) {
       const section = el as ISection;
-      return section.questions.some((q) => q.id === element.id);
+      return section.questions.some((q) => q.id === element.id) || section.questions.some((q) => q.key === element.key);
     }
     return false;
   });
@@ -178,7 +200,9 @@ export const getPreviousFormElement = (
   if (isFormElementQuestion(formElement)) {
     const question = formElement as IQuestion;
     if (question.sectionId) {
-      const section = getElementById(question.sectionId, formElementsList) as ISection | undefined;
+      const section = getElementById(question.sectionId, formElementsList, isFormElementSection) as
+        | ISection
+        | undefined;
 
       if (!section) {
         return null;

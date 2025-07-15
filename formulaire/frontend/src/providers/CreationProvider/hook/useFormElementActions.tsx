@@ -292,7 +292,6 @@ export const useFormElementActions = (
       }
 
       //Save Choices
-      console.log("Saving question", questionSaved);
       if (
         isTypeChoicesQuestion(question.questionType) &&
         question.choices &&

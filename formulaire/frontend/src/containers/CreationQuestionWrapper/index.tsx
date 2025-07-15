@@ -88,9 +88,13 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
       return;
     }
-    setCurrentEditingElement({
-      ...currentEditingElement,
-      title: currentQuestionTitle,
+
+    setCurrentEditingElement((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        title: currentQuestionTitle,
+      };
     });
   }, [currentQuestionTitle, setCurrentEditingElement]);
 

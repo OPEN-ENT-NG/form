@@ -20,7 +20,6 @@ export const useClickAwayEditingElement = (
       setCurrentEditingElement(null);
       if (temporaryElement && isFormElementQuestion(temporaryElement) && saveQuestion) {
         const currentEditingQuestion = temporaryElement as IQuestion;
-        console.log("Saving question:", currentEditingQuestion);
         await saveQuestion(currentEditingQuestion);
         return;
       }

@@ -4,7 +4,7 @@ import { Box } from "@cgi-learning-hub/ui";
 import { cursorItemStyle, cursorLineStyle, cursorPropsStyle } from "./style";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
-import { IQuestion, IQuestionSpecificFields } from "~/core/models/question/types";
+import { IQuestionSpecificFields } from "~/core/models/question/types";
 import { initDefaultSpecificFields, useGetCursorTextFieldProps } from "./utils";
 import { CursorTextField } from "~/components/CursorTextField";
 import { CursorProp } from "./enums";
@@ -18,17 +18,17 @@ export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ questi
 
   // Save question when we this component is not the edited one anymore
   useEffect(() => {
-    console.log("Saving question specific fields:", currentQuestionSpecificFields);
     if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
       return;
     }
-    const updatedQuestion = {
-      ...question,
-      specificFields: currentQuestionSpecificFields,
-    } as IQuestion;
-    console.log("updatedQuestion", updatedQuestion);
 
-    setCurrentEditingElement(updatedQuestion);
+    setCurrentEditingElement((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        specificFields: currentQuestionSpecificFields,
+      };
+    });
   }, [currentQuestionSpecificFields, setCurrentEditingElement]);
 
   // Locally save the changed value in the question's specificFields
@@ -55,6 +55,7 @@ export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ questi
               <CursorTextField
                 type={columnInfos.inputType}
                 isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)}
+                propName={columnInfos.specificFieldsPropName}
                 onChange={(event) => {
                   handleValueChange(event, columnInfos.specificFieldsPropName, columnInfos.inputType);
                 }}
