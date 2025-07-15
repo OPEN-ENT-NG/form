@@ -55,7 +55,7 @@ export const useFormElementActions = (
     const questions = newFormElementsList.filter(isFormElementQuestion) as IQuestion[];
     const sections = newFormElementsList.filter(isFormElementSection) as ISection[];
     if (!newFormElementsList.length) {
-      return [];
+      return;
     }
 
     if (questions.length && !sections.length) {
@@ -378,5 +378,6 @@ export const useFormElementActions = (
     duplicateSection,
     saveQuestion,
     saveSection,
+    updateFormElementsList,
   };
 };

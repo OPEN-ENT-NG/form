@@ -3,7 +3,11 @@ import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
 import { useGetQuestionChoicesQuery } from "~/services/api/services/formulaireApi/questionChoiceApi";
 
-export const useFormElementList = (sectionsDatas: ISection[] | undefined, questionsDatas: IQuestion[] | undefined) => {
+export const useFormElementList = (
+  sectionsDatas: ISection[] | undefined,
+  questionsDatas: IQuestion[] | undefined,
+  resetFormElementListId: number,
+) => {
   const questionsIds = useMemo(
     () => (questionsDatas ?? []).map((q) => q.id).filter((id): id is number => id !== null),
     [questionsDatas],
@@ -58,7 +62,7 @@ export const useFormElementList = (sectionsDatas: ISection[] | undefined, questi
     return [...sectionsWithQuestions, ...questionsWithoutSectionList].sort(
       (a, b) => (a.position ?? Infinity) - (b.position ?? Infinity),
     );
-  }, [sectionsDatas, questionsDatas, choicesDatas]);
+  }, [sectionsDatas, questionsDatas, choicesDatas, resetFormElementListId]);
 
   return { completeList };
 };

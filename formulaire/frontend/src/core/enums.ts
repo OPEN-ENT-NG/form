@@ -16,6 +16,7 @@ export enum ModalType {
   SECTION_UNDO = "showSectionUndo",
   QUESTION_DELETE = "showQuestionDelete",
   SECTION_DELETE = "showSectionDelete",
+  ORGANIZATION = "showOrganization",
 }
 
 export enum TagName {
