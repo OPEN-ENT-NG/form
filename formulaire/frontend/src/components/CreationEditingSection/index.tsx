@@ -105,12 +105,12 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   };
 
   const handleAddNewQuestion = async () => {
-    const targetSection = await getTargetSection();
+    const targetSection = await getOrCreateTargetSection();
     setQuestionModalSection(targetSection);
     toggleModal(ModalType.QUESTION_CREATE);
   };
 
-  const getTargetSection = async (): Promise<ISection> => {
+  const getOrCreateTargetSection = async (): Promise<ISection> => {
     if (currentEditingElement && isFormElementSection(currentEditingElement) && currentEditingElement.isNew) {
       const sectionToCreate: ISection = {
         ...currentEditingElement,
