@@ -40,6 +40,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
   const [currentEditingElement, setCurrentEditingElement] = useState<IFormElement | null>(null);
   const [questionModalSection, setQuestionModalSection] = useState<ISection | null>(null);
+  const [resetFormElementListId, setResetFormElementListId] = useState(0);
   if (formId === undefined) {
     throw new Error("formId is undefined");
   }
@@ -51,13 +52,9 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const { data: sectionsDatas } = useGetSectionsQuery({ formId });
 
   //CUSTOM HOOKS
-  const { completeList } = useFormElementList(sectionsDatas, questionsDatas);
-  const { duplicateQuestion, duplicateSection, saveQuestion, saveSection } = useFormElementActions(
-    formElementsList,
-    formId,
-    currentEditingElement,
-    setFormElementsList,
-  );
+  const { completeList } = useFormElementList(sectionsDatas, questionsDatas, resetFormElementListId);
+  const { duplicateQuestion, duplicateSection, saveQuestion, saveSection, updateFormElementsList } =
+    useFormElementActions(formElementsList, formId, currentEditingElement, setFormElementsList);
 
   useEffect(() => {
     if (foldersDatas) {
@@ -168,6 +165,8 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       saveSection,
       questionModalSection,
       setQuestionModalSection,
+      updateFormElementsList,
+      setResetFormElementListId,
     }),
     [currentFolder, folders, form, formElementsList, currentEditingElement, questionModalSection],
   );
