@@ -10,6 +10,7 @@ import { useModal } from "~/providers/ModalProvider";
 import { ModalType } from "~/core/enums";
 import { CreateFormElementModal } from "../CreateFormElementModal";
 import { IForm } from "~/core/models/form/types";
+import { CreationOrganisationModal } from "../CreationOrganisationModal";
 
 export const CreationView: FC = () => {
   const { form, folders } = useCreation();
@@ -17,7 +18,7 @@ export const CreationView: FC = () => {
   const headerButtons = useGetCreationHeaderButtons(form?.id);
 
   const {
-    displayModals: { showFormElementCreate },
+    displayModals: { showFormElementCreate, showOrganization },
     toggleModal,
   } = useModal();
 
@@ -48,6 +49,15 @@ export const CreationView: FC = () => {
           }}
         />
       )}
+      {showOrganization && (
+        <CreationOrganisationModal
+          isOpen={showOrganization}
+          handleClose={() => {
+            toggleModal(ModalType.ORGANIZATION);
+          }}
+        />
+      )}
+
     </Box>
   );
 };

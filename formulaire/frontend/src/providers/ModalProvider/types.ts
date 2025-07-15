@@ -23,6 +23,7 @@ export interface IDisplayModalsState {
   [ModalType.SECTION_UNDO]: boolean;
   [ModalType.QUESTION_DELETE]: boolean;
   [ModalType.SECTION_DELETE]: boolean;
+  [ModalType.ORGANIZATION]: boolean;
 }
 
 export type ModalProviderContextType = {
