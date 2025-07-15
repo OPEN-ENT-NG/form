@@ -374,6 +374,7 @@
   "formulaire.section.no.description": "Pas de description",
   "formulaire.section.save.missing.field": "Attention, certaines sections manquent d'informations pour être valides !",
   "formulaire.section.save.multiple.conditional": "Attention, une section ne doit comporter qu'une question conditionnelle pour être valide",
+  "formulaire.section.title.default": "Titre de la section",
   "formulaire.section.title.empty": "Nom de la section",
   "formulaire.seeMore": "Voir plus...",
   "formulaire.selectAll": "Tout sélectionner",
