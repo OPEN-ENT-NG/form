@@ -79,6 +79,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (currentEditingElement && isInFormElementsList(currentEditingElement, formElementsList)) {
+      console.log("currentEditingElement has been updated:", currentEditingElement);
       setFormElementsList((prevFormElementList) => updateElementInList(prevFormElementList, currentEditingElement));
     }
     return;

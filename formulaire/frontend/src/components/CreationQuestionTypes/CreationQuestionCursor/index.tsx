@@ -4,10 +4,11 @@ import { Box } from "@cgi-learning-hub/ui";
 import { cursorItemStyle, cursorLineStyle, cursorPropsStyle } from "./style";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
-import { IQuestionSpecificFields } from "~/core/models/question/types";
+import { IQuestion, IQuestionSpecificFields } from "~/core/models/question/types";
 import { initDefaultSpecificFields, useGetCursorTextFieldProps } from "./utils";
 import { CursorTextField } from "~/components/CursorTextField";
 import { CursorProp } from "./enums";
+import { CursorTextFieldType } from "~/components/CursorTextField/enums";
 
 export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ question }) => {
   const { currentEditingElement, setCurrentEditingElement } = useCreation();
@@ -17,22 +18,29 @@ export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ questi
 
   // Save question when we this component is not the edited one anymore
   useEffect(() => {
+    console.log("Saving question specific fields:", currentQuestionSpecificFields);
     if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
       return;
     }
     const updatedQuestion = {
       ...question,
       specificFields: currentQuestionSpecificFields,
-    };
+    } as IQuestion;
+    console.log("updatedQuestion", updatedQuestion);
 
     setCurrentEditingElement(updatedQuestion);
   }, [currentQuestionSpecificFields, setCurrentEditingElement]);
 
   // Locally save the changed value in the question's specificFields
-  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>, cursorProp: CursorProp) => {
+  const handleValueChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    cursorProp: CursorProp,
+    inputType: CursorTextFieldType,
+  ) => {
+    const value = inputType === CursorTextFieldType.NUMBER ? Number(event.target.value) : event.target.value;
     const updatedSpecificFields = {
       ...currentQuestionSpecificFields,
-      [cursorProp]: event.target.value,
+      [cursorProp]: value,
     };
     setCurrentQuestionSpecificFiels(updatedSpecificFields);
   };
@@ -48,7 +56,7 @@ export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ questi
                 type={columnInfos.inputType}
                 isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)}
                 onChange={(event) => {
-                  handleValueChange(event, columnInfos.specificFieldsPropName);
+                  handleValueChange(event, columnInfos.specificFieldsPropName, columnInfos.inputType);
                 }}
                 inputValue={columnInfos.inputValue}
                 {...(columnInfos.stepValue && { stepValue: columnInfos.stepValue })}

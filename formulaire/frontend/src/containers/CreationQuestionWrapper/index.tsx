@@ -89,7 +89,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
       return;
     }
     setCurrentEditingElement({
-      ...question,
+      ...currentEditingElement,
       title: currentQuestionTitle,
     });
   }, [currentQuestionTitle, setCurrentEditingElement]);
