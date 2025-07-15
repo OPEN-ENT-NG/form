@@ -39,6 +39,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const [form, setForm] = useState<IForm | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
   const [currentEditingElement, setCurrentEditingElement] = useState<IFormElement | null>(null);
+  const [questionModalSection, setQuestionModalSection] = useState<ISection | null>(null);
   if (formId === undefined) {
     throw new Error("formId is undefined");
   }
@@ -165,8 +166,10 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       handleDeleteFormElement,
       saveQuestion,
       saveSection,
+      questionModalSection,
+      setQuestionModalSection,
     }),
-    [currentFolder, folders, form, formElementsList, currentEditingElement],
+    [currentFolder, folders, form, formElementsList, currentEditingElement, questionModalSection],
   );
 
   return <CreationProviderContext.Provider value={value}>{children}</CreationProviderContext.Provider>;

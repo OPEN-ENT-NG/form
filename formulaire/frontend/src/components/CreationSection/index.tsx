@@ -44,18 +44,14 @@ import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useModal } from "~/providers/ModalProvider";
 import { ModalType } from "~/core/enums";
-import { CreateFormElementModal } from "~/containers/CreateFormElementModal";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { useTargetNextElement } from "~/hook/useTargetNextElement";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { form, setCurrentEditingElement, currentEditingElement, handleDuplicateFormElement } = useCreation();
-  const {
-    displayModals: { showQuestionCreate },
-    toggleModal,
-  } = useModal();
+  const { form, setCurrentEditingElement, currentEditingElement, handleDuplicateFormElement, setQuestionModalSection } = useCreation();
+  const { toggleModal } = useModal();
 
   const {
     targetNextElementId,
@@ -96,6 +92,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
   };
 
   const handleAddNewQuestion = () => {
+    setQuestionModalSection(section);
     toggleModal(ModalType.QUESTION_CREATE);
   };
 
@@ -193,16 +190,6 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
           title={t("formulaire.section.missing.field")}
           children={t("formulaire.section.missing.field.title")}
           sx={questionAlertStyle}
-        />
-      )}
-      {showQuestionCreate && (
-        <CreateFormElementModal
-          isOpen={showQuestionCreate}
-          handleClose={() => {
-            toggleModal(ModalType.QUESTION_CREATE);
-          }}
-          showSection={false}
-          parentSection={section}
         />
       )}
     </Box>

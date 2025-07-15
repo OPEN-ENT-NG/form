@@ -24,4 +24,6 @@ export type CreationProviderContextType = {
   handleDeleteFormElement: (element: IFormElement) => void;
   saveQuestion: (question: IQuestion) => Promise<void>;
   saveSection: (section: ISection) => Promise<void>;
+  questionModalSection: ISection | null;
+  setQuestionModalSection: Dispatch<SetStateAction<ISection | null>>;
 };
