@@ -55,7 +55,6 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
     0: formUrl || "",
     1: formUrl || "",
   });
-  const [description, setDescription] = useState<string>(defaultDescription);
   const [remindObject, setRemindObject] = useState<string>("");
   const editorRef = useRef<EditorRef>(null);
   const { data: distributions, isLoading: isDistributionsLoading } = useGetFormDistributionsQuery(formId);
@@ -69,6 +68,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       : "formulaire.remind.description.multipleFalse";
 
   const handleSubmit = async () => {
+    const description = editorRef.current?.getContent("html") as string;
     if (!formUrl || !description) return;
 
     try {
@@ -157,17 +157,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
         />
       </Box>
       <Box sx={{ ...editorContainerStyle, display: showRemind ? "block" : "none" }}>
-        {isOpen && (
-          <Editor
-            id="postContent"
-            content={description}
-            mode="edit"
-            ref={editorRef}
-            onContentChange={() => {
-              setDescription(editorRef.current?.getContent("html") as string);
-            }}
-          />
-        )}
+        {isOpen && <Editor id="postContent" content={defaultDescription} mode="edit" ref={editorRef} />}
       </Box>
 
       <Box sx={subContentColumnWrapper}>

@@ -50,12 +50,10 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     setQuestionModalSection,
   } = useCreation();
   const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
-  const [description, setDescription] = useState<string>(section.description ?? "");
   const editorRef = useRef<EditorRef>(null);
   const [createSection] = useCreateSectionMutation();
 
   const handleClickAwayEditingElement = useClickAwayEditingElement(
-    currentEditingElement,
     handleDeleteFormElement,
     setCurrentEditingElement,
     undefined,
@@ -83,18 +81,6 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
       title: currentSectionTitle,
     });
   }, [currentSectionTitle, setCurrentEditingElement]);
-
-  useEffect(() => {
-    if (!currentEditingElement || !isCurrentEditingElement(section, currentEditingElement)) {
-      return;
-    }
-
-    const newSection: ISection = {
-      ...section,
-      description: description,
-    };
-    setCurrentEditingElement(newSection);
-  }, [description, setDescription]);
 
   const handleDelete = () => {
     toggleModal(ModalType.SECTION_DELETE);
@@ -127,7 +113,12 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
         mouseEvent="onMouseDown"
         touchEvent="onTouchStart"
         onClickAway={() => {
-          void handleClickAwayEditingElement();
+          const updated = {
+            ...currentEditingElement,
+            description: editorRef.current?.getContent("html") as string,
+          } as ISection;
+          setCurrentEditingElement(updated);
+          void handleClickAwayEditingElement(updated);
         }}
       >
         <Box>
@@ -143,7 +134,14 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                     value={currentSectionTitle}
                     onChange={handleTitleChange}
                     onKeyDown={(e) => {
-                      if (isEnterPressed(e)) void handleClickAwayEditingElement();
+                      if (isEnterPressed(e) && currentEditingElement) {
+                        const updated = {
+                          ...currentEditingElement,
+                          description: editorRef.current?.getContent("html") as string,
+                        } as ISection;
+                        setCurrentEditingElement(updated);
+                        void handleClickAwayEditingElement(updated);
+                      }
                     }}
                   />
                 </Box>
@@ -162,7 +160,14 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                   <IconButton
                     aria-label="save"
                     onClick={() => {
-                      void handleClickAwayEditingElement();
+                      if (currentEditingElement) {
+                        const updated = {
+                          ...currentEditingElement,
+                          description: editorRef.current?.getContent("html") as string,
+                        } as ISection;
+                        setCurrentEditingElement(updated);
+                        void handleClickAwayEditingElement(updated);
+                      }
                     }}
                     sx={sectionButtonStyle}
                   >
@@ -173,15 +178,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
             </Box>
             <Box sx={sectionContentStyle}>
               <Box sx={editorContainerStyle}>
-                <Editor
-                  id="postContent"
-                  content={description}
-                  mode="edit"
-                  ref={editorRef}
-                  onContentChange={() => {
-                    setDescription(editorRef.current?.getContent("html") as string);
-                  }}
-                />
+                <Editor id="postContent" content={section.description} mode="edit" ref={editorRef} />
               </Box>
               {!!form && !hasFormResponses(form) && (
                 <Box sx={sectionFooterStyle} onClick={() => void handleAddNewQuestion()}>
