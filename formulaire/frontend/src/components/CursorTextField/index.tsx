@@ -6,10 +6,12 @@ import { CursorTextFieldType } from "./enums";
 import { FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
 import { getInputSlotProps } from "./utils";
+import { CursorProp } from "../CreationQuestionTypes/CreationQuestionCursor/enums";
 
 export const CursorTextField: FC<ICursorTextFieldProps> = ({
   type,
   isCurrentEditingElement,
+  propName,
   onChange,
   inputValue,
   stepValue,
@@ -20,7 +22,7 @@ export const CursorTextField: FC<ICursorTextFieldProps> = ({
 
   return (
     <TextField
-      type={type}
+      type={propName === CursorProp.CURSOR_STEP ? "text" : type}
       variant={type == CursorTextFieldType.NUMBER ? ComponentVariant.OUTLINED : ComponentVariant.STANDARD}
       {...(isTypeNumber ? { size: ComponentSize.SMALL } : { placeholder: t("formulaire.question.label") })}
       slotProps={slotProps}
