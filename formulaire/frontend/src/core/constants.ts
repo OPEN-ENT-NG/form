@@ -61,3 +61,10 @@ export const CURSOR_STYLE_DEFAULT = "default";
 
 //DND
 export const DRAG_HORIZONTAL_TRESHOLD = 40;
+
+//EDITOR
+export const EDITOR_CONTENT_HTML = "html";
+
+//MOUSE EVENTS
+export const MOUSE_EVENT_DOWN = "onMouseDown";
+export const TOUCH_EVENT_START = "onTouchStart";

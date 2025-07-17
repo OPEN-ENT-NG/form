@@ -14,7 +14,7 @@ import {
 import { FC, useEffect, useRef, useState } from "react";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
+import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
 import { chipOptions, chooseContent, createFormUrl, initialStatusResponseState } from "./utils";
 import { IButtonProps, IModalProps } from "~/core/types";
@@ -38,6 +38,7 @@ import { transformDistributionsToTableData } from "~/core/models/distribution/ut
 import { PRIMARY_MAIN_COLOR } from "~/core/style/colors";
 import { useSendReminderMutation } from "~/services/api/services/formulaireApi/formApi";
 import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
+import { EditorMode } from "~/components/CreationQuestionTypes/CreationQuestionFreetext/enums";
 
 export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -68,7 +69,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       : "formulaire.remind.description.multipleFalse";
 
   const handleSubmit = async () => {
-    const description = editorRef.current?.getContent("html") as string;
+    const description = editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string;
     if (!formUrl || !description) return;
 
     try {
@@ -157,7 +158,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
         />
       </Box>
       <Box sx={{ ...editorContainerStyle, display: showRemind ? "block" : "none" }}>
-        {isOpen && <Editor id="postContent" content={defaultDescription} mode="edit" ref={editorRef} />}
+        {isOpen && <Editor id="postContent" content={defaultDescription} mode={EditorMode.EDIT} ref={editorRef} />}
       </Box>
 
       <Box sx={subContentColumnWrapper}>

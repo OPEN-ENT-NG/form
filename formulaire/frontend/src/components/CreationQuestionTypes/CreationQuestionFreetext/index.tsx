@@ -6,6 +6,7 @@ import { useCreation } from "~/providers/CreationProvider";
 import { StyledEditorWrapper } from "./style";
 import { EditorMode } from "./enums";
 import { ClickAwayListener } from "@mui/material";
+import { EDITOR_CONTENT_HTML, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
@@ -41,11 +42,11 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
     <>
       {isCurrentEditingElement(question, currentEditingElement) ? (
         <ClickAwayListener
-          mouseEvent="onMouseDown"
-          touchEvent="onTouchStart"
+          mouseEvent={MOUSE_EVENT_DOWN}
+          touchEvent={TOUCH_EVENT_START}
           on
           onClickAway={() => {
-            handleUpdateStatement(editorRef.current?.getContent("html") as string);
+            handleUpdateStatement(editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string);
           }}
         >
           <StyledEditorWrapper isCurrentEditingElement={true}>

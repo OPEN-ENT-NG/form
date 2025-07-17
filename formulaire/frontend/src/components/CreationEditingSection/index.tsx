@@ -22,7 +22,7 @@ import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { AlertSeverityVariant, ComponentVariant } from "~/core/style/themeProps";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
+import { EDITOR_CONTENT_HTML, FORMULAIRE, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
 import { isValidFormElement } from "~/core/models/formElement/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
@@ -38,6 +38,7 @@ import { hasFormResponses } from "~/core/models/form/utils";
 import { isEnterPressed } from "~/core/utils";
 import { useCreateSectionMutation } from "~/services/api/services/formulaireApi/sectionApi";
 import { isFormElementSection } from "~/core/models/section/utils";
+import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
 
 export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -110,12 +111,12 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   return (
     <Box>
       <ClickAwayListener
-        mouseEvent="onMouseDown"
-        touchEvent="onTouchStart"
+        mouseEvent={MOUSE_EVENT_DOWN}
+        touchEvent={TOUCH_EVENT_START}
         onClickAway={() => {
           const updated = {
             ...currentEditingElement,
-            description: editorRef.current?.getContent("html") as string,
+            description: editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string,
           } as ISection;
           setCurrentEditingElement(updated);
           void handleClickAwayEditingElement(updated);
@@ -137,7 +138,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                       if (isEnterPressed(e) && currentEditingElement) {
                         const updated = {
                           ...currentEditingElement,
-                          description: editorRef.current?.getContent("html") as string,
+                          description: editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string,
                         } as ISection;
                         setCurrentEditingElement(updated);
                         void handleClickAwayEditingElement(updated);
@@ -163,7 +164,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                       if (currentEditingElement) {
                         const updated = {
                           ...currentEditingElement,
-                          description: editorRef.current?.getContent("html") as string,
+                          description: editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string,
                         } as ISection;
                         setCurrentEditingElement(updated);
                         void handleClickAwayEditingElement(updated);
@@ -178,7 +179,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
             </Box>
             <Box sx={sectionContentStyle}>
               <Box sx={editorContainerStyle}>
-                <Editor id="postContent" content={section.description} mode="edit" ref={editorRef} />
+                <Editor id="postContent" content={section.description} mode={EditorMode.EDIT} ref={editorRef} />
               </Box>
               {!!form && !hasFormResponses(form) && (
                 <Box sx={sectionFooterStyle} onClick={() => void handleAddNewQuestion()}>
