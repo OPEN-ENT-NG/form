@@ -44,7 +44,6 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
         <ClickAwayListener
           mouseEvent={MOUSE_EVENT_DOWN}
           touchEvent={TOUCH_EVENT_START}
-          on
           onClickAway={() => {
             handleUpdateStatement(editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string);
           }}
