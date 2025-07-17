@@ -117,6 +117,17 @@ export const useChoiceActions = (
     [choices, question],
   );
 
+  const updateChoiceImage = useCallback(
+    (index: number | null, src: string) => {
+      console.log("Updating choice image", index, src);
+      if (index === null || !choices[index]) return;
+      const updatedChoices = [...choices];
+      updatedChoices[index] = { ...updatedChoices[index], image: src };
+      setCurrentEditingElement({ ...question, choices: updatedChoices });
+    },
+    [choices, question],
+  );
+
   const preventEmptyValues = useCallback(() => {
     if (choices.length === 0) return;
 
@@ -145,6 +156,7 @@ export const useChoiceActions = (
     handleSortClick,
     handleNewChoice,
     updateChoice,
+    updateChoiceImage,
     preventEmptyValues,
   };
 };
