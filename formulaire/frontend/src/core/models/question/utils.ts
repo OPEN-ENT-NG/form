@@ -1,4 +1,4 @@
-import { DEFAULT_CURSOR_MAX_VALUE, DEFAULT_CURSOR_MIN_VALUE, DEFAULT_CURSOR_STEP } from "~/core/constants";
+import { DEFAULT_CURSOR_STEP } from "~/core/constants";
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
 import { createNewFormElement } from "../formElement/utils";
@@ -14,6 +14,7 @@ import {
 } from "./types";
 import { getElementById } from "~/providers/CreationProvider/utils";
 import { ISection } from "../section/types";
+import { isFormElementSection } from "../section/utils";
 
 export const isFormElementQuestion = (formElement: IFormElement): boolean => {
   return formElement.formElementType === FormElementType.QUESTION;
@@ -172,13 +173,9 @@ export function isCursorChoiceConsistent(question: IQuestion): boolean {
     return false;
   }
 
-  const minVal: number = question.specificFields.cursorMinVal
-    ? question.specificFields.cursorMinVal
-    : DEFAULT_CURSOR_MIN_VALUE;
+  const minVal: number = question.specificFields.cursorMinVal;
 
-  const maxVal: number = question.specificFields.cursorMaxVal
-    ? question.specificFields.cursorMaxVal
-    : DEFAULT_CURSOR_MAX_VALUE;
+  const maxVal: number = question.specificFields.cursorMaxVal;
 
   const step: number = question.specificFields.cursorStep ? question.specificFields.cursorStep : DEFAULT_CURSOR_STEP;
 
@@ -198,15 +195,13 @@ export function shouldShowConditionalSwitch(question: IQuestion, formElements: I
     return true;
   }
 
-  const parentSection = getElementById(question.sectionId, formElements);
+  const parentSection = getElementById(question.sectionId, formElements, isFormElementSection) as ISection | undefined;
 
   if (!parentSection) {
     return false;
   }
 
-  const hasOtherConditionalQuestions = (parentSection as ISection).questions.some(
-    (q) => q.id !== question.id && q.conditional,
-  );
+  const hasOtherConditionalQuestions = parentSection.questions.some((q) => q.id !== question.id && q.conditional);
 
   return !hasOtherConditionalQuestions;
 }
