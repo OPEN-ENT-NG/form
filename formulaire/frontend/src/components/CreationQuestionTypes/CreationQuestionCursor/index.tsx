@@ -8,6 +8,7 @@ import { IQuestionSpecificFields } from "~/core/models/question/types";
 import { initDefaultSpecificFields, useGetCursorTextFieldProps } from "./utils";
 import { CursorTextField } from "~/components/CursorTextField";
 import { CursorProp } from "./enums";
+import { CursorTextFieldType } from "~/components/CursorTextField/enums";
 
 export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ question }) => {
   const { currentEditingElement, setCurrentEditingElement } = useCreation();
@@ -20,19 +21,26 @@ export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ questi
     if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
       return;
     }
-    const updatedQuestion = {
-      ...question,
-      specificFields: currentQuestionSpecificFields,
-    };
 
-    setCurrentEditingElement(updatedQuestion);
+    setCurrentEditingElement((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        specificFields: currentQuestionSpecificFields,
+      };
+    });
   }, [currentQuestionSpecificFields, setCurrentEditingElement]);
 
   // Locally save the changed value in the question's specificFields
-  const handleValueChange = (event: React.ChangeEvent<HTMLInputElement>, cursorProp: CursorProp) => {
+  const handleValueChange = (
+    event: React.ChangeEvent<HTMLInputElement>,
+    cursorProp: CursorProp,
+    inputType: CursorTextFieldType,
+  ) => {
+    const value = inputType === CursorTextFieldType.NUMBER ? Number(event.target.value) : event.target.value;
     const updatedSpecificFields = {
       ...currentQuestionSpecificFields,
-      [cursorProp]: event.target.value,
+      [cursorProp]: value,
     };
     setCurrentQuestionSpecificFiels(updatedSpecificFields);
   };
@@ -47,8 +55,9 @@ export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ questi
               <CursorTextField
                 type={columnInfos.inputType}
                 isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)}
+                propName={columnInfos.specificFieldsPropName}
                 onChange={(event) => {
-                  handleValueChange(event, columnInfos.specificFieldsPropName);
+                  handleValueChange(event, columnInfos.specificFieldsPropName, columnInfos.inputType);
                 }}
                 inputValue={columnInfos.inputValue}
                 {...(columnInfos.stepValue && { stepValue: columnInfos.stepValue })}

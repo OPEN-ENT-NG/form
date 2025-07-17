@@ -9,7 +9,14 @@ import { useFormElementActions } from "~/providers/CreationProvider/hook/useForm
 
 export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isOpen, handleClose, element }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { formElementsList, form, currentEditingElement, handleDeleteFormElement, setFormElementsList } = useCreation();
+  const {
+    formElementsList,
+    form,
+    currentEditingElement,
+    handleDeleteFormElement,
+    setFormElementsList,
+    setCurrentEditingElement,
+  } = useCreation();
 
   if (!form) {
     throw new Error("form is undefined");
@@ -22,7 +29,9 @@ export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isO
   );
 
   const handleDelete = async () => {
+    setCurrentEditingElement(null);
     if (!element.id) {
+      handleDeleteFormElement(element, true);
       handleClose();
       return;
     }

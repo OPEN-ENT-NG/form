@@ -59,8 +59,6 @@ export const SVG_EXTENSION = ".svg";
 //QUESTIONS
 export const DEFAULT_NB_CHOICES = 3;
 export const DEFAULT_NB_CHILDREN = 3;
-export const DEFAULT_CURSOR_MIN_VALUE = 1;
-export const DEFAULT_CURSOR_MAX_VALUE = 10;
 export const DEFAULT_CURSOR_STEP = 1;
 
 //TARGET NEXT ELEMENT
@@ -72,3 +70,10 @@ export const CURSOR_STYLE_DEFAULT = "default";
 
 //DND
 export const DRAG_HORIZONTAL_TRESHOLD = 40;
+
+//EDITOR
+export const EDITOR_CONTENT_HTML = "html";
+
+//MOUSE EVENTS
+export const MOUSE_EVENT_DOWN = "onMouseDown";
+export const TOUCH_EVENT_START = "onTouchStart";

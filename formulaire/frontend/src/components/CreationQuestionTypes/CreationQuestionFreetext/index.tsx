@@ -1,14 +1,15 @@
-import { FC, useEffect, useRef, useState } from "react";
+import { FC, useEffect, useRef } from "react";
 import { ICreationQuestionFreetextProps } from "../types";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { StyledEditorWrapper } from "./style";
-import { EditorFocusPosition, EditorMode } from "./enums";
+import { EditorMode } from "./enums";
+import { ClickAwayListener } from "@mui/material";
+import { EDITOR_CONTENT_HTML, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
-  const [statement, setStatement] = useState<string>(question.statement ?? "");
   const { currentEditingElement, setCurrentEditingElement } = useCreation();
 
   // As Editor component automatically take the focus, we wait to take it back
@@ -24,33 +25,38 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
   }, []);
 
   // Save question when we this component is not the edited one anymore
-  useEffect(() => {
+  const handleUpdateStatement = (newStatement: string) => {
     if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
       return;
     }
+
     const updatedQuestion = {
       ...question,
-      statement: statement,
+      statement: newStatement,
     };
 
     setCurrentEditingElement(updatedQuestion);
-  }, [statement, setCurrentEditingElement]);
+  };
 
   return (
-    <StyledEditorWrapper
-      isCurrentEditingElement={isCurrentEditingElement(question, currentEditingElement)}
-      onClick={() => {
-        editorRef.current?.setFocus(EditorFocusPosition.END);
-      }}
-    >
-      <Editor
-        content={statement}
-        ref={editorRef}
-        mode={isCurrentEditingElement(question, currentEditingElement) ? EditorMode.EDIT : EditorMode.READ}
-        onContentChange={() => {
-          setStatement(editorRef.current?.getContent("html") as string);
-        }}
-      />
-    </StyledEditorWrapper>
+    <>
+      {isCurrentEditingElement(question, currentEditingElement) ? (
+        <ClickAwayListener
+          mouseEvent={MOUSE_EVENT_DOWN}
+          touchEvent={TOUCH_EVENT_START}
+          onClickAway={() => {
+            handleUpdateStatement(editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string);
+          }}
+        >
+          <StyledEditorWrapper isCurrentEditingElement={true}>
+            <Editor content={question.statement} ref={editorRef} mode={EditorMode.EDIT} />
+          </StyledEditorWrapper>
+        </ClickAwayListener>
+      ) : (
+        <StyledEditorWrapper isCurrentEditingElement={false}>
+          <Editor content={question.statement} ref={editorRef} mode={EditorMode.READ} />
+        </StyledEditorWrapper>
+      )}
+    </>
   );
 };
