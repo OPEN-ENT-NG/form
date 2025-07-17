@@ -18,10 +18,10 @@ export type CreationProviderContextType = {
   formElementsList: IFormElement[];
   setFormElementsList: Dispatch<SetStateAction<IFormElement[]>>;
   currentEditingElement: IFormElement | null;
-  setCurrentEditingElement: (element: IFormElement | null) => void;
+  setCurrentEditingElement: Dispatch<SetStateAction<IFormElement | null>>;
   handleUndoFormElementChange: (element: IFormElement) => void;
   handleDuplicateFormElement: (element: IFormElement) => Promise<void>;
-  handleDeleteFormElement: (element: IFormElement) => void;
+  handleDeleteFormElement: (element: IFormElement, useKey?: boolean) => void;
   saveQuestion: (question: IQuestion) => Promise<void>;
   saveSection: (section: ISection) => Promise<void>;
   questionModalSection: ISection | null;
