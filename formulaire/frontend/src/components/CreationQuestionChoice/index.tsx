@@ -1,15 +1,24 @@
 import { FC } from "react";
-import { Box, Typography } from "@cgi-learning-hub/ui";
+import { Box, Button, TextField, Typography } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { TypographyVariant } from "~/core/style/themeProps";
+import { ICreationQuestionChoiceProps } from "./types";
+import { CreationQuestionChoiceType } from "./enum";
 
-export const CreationQuestionChoice: FC = () => {
+export const CreationQuestionChoice: FC<ICreationQuestionChoiceProps> = ({type, text, onDelete, hasImage, image = ""}) => {
   const { t } = useTranslation(FORMULAIRE);
+
+  const typeToIcons: Record<CreationQuestionChoiceType, string> = {
+    [CreationQuestionChoiceType.SINGLE_CHOICE]: "●",
+    [CreationQuestionChoiceType.MULTIPLE_CHOICE]: "▼",
+    [CreationQuestionChoiceType.DROPDOWN]: "▼",
+  };
 
   return (
     <Box>
-      <Typography variant={TypographyVariant.BODY1}>{t("formulaire.question.date.empty")}</Typography>
+      <Typography>{typeToIcons[type]}</Typography>
+      <TextField></TextField>
+      {hasImage && <Button variant="outlined">Image</Button>}
     </Box>
   );
 };
