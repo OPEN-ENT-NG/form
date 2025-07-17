@@ -11,7 +11,7 @@ import {
   Typography,
 } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
+import { FORMULAIRE, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
 import { ICreationQuestionWrapperProps } from "./types";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
@@ -74,7 +74,6 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   }, [isEditing]);
 
   const handleClickAwayEditingElement = useClickAwayEditingElement(
-    currentEditingElement,
     handleDeleteFormElement,
     setCurrentEditingElement,
     saveQuestion,
@@ -88,9 +87,13 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
       return;
     }
-    setCurrentEditingElement({
-      ...question,
-      title: currentQuestionTitle,
+
+    setCurrentEditingElement((prev) => {
+      if (!prev) return prev;
+      return {
+        ...prev,
+        title: currentQuestionTitle,
+      };
     });
   }, [currentQuestionTitle, setCurrentEditingElement]);
 
@@ -127,10 +130,13 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     <Box>
       {isEditing ? (
         <ClickAwayListener
-          mouseEvent="onMouseDown"
-          touchEvent="onTouchStart"
+          mouseEvent={MOUSE_EVENT_DOWN}
+          touchEvent={TOUCH_EVENT_START}
           onClickAway={() => {
-            void handleClickAwayEditingElement();
+            if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
+              return;
+            }
+            void handleClickAwayEditingElement(currentEditingElement);
           }}
         >
           <Box>

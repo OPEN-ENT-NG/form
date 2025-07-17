@@ -85,10 +85,7 @@ export const useFormElementActions = (
 
   const handleNestedQuestionDeletion = async (question: IQuestion) => {
     if (!question.sectionId || !question.sectionPosition || !question.id) return;
-
-    const parent = formElementsList.find(
-      (el): el is ISection => isFormElementSection(el) && el.id === question.sectionId,
-    );
+    const parent = getElementById(question.sectionId, formElementsList, isFormElementSection) as ISection | undefined;
     if (!parent) return;
 
     // Remove question and fix positions within the section
@@ -175,7 +172,9 @@ export const useFormElementActions = (
       };
 
       if (questionToDuplicate.sectionId) {
-        const parentSection = getElementById(questionToDuplicate.sectionId, formElementsList) as ISection | undefined;
+        const parentSection = getElementById(questionToDuplicate.sectionId, formElementsList, isFormElementSection) as
+          | ISection
+          | undefined;
 
         if (!parentSection) {
           // No parent section nothing to do
@@ -185,7 +184,10 @@ export const useFormElementActions = (
 
       const formElementUpdatedList: IFormElement[] = questionToDuplicate.sectionId
         ? fixListPositions(
-            [...(getElementById(questionToDuplicate.sectionId, formElementsList) as ISection).questions],
+            [
+              ...(getElementById(questionToDuplicate.sectionId, formElementsList, isFormElementSection) as ISection)
+                .questions,
+            ],
             newSectionPosition ? newSectionPosition : 0,
             PositionActionType.CREATION,
           )
@@ -282,8 +284,9 @@ export const useFormElementActions = (
       if (!isInFormElementsList(question, formElementsList)) return;
 
       //Save Question
+      let questionSaved = question;
       if (question.isNew) {
-        await createSingleQuestion(question).unwrap();
+        questionSaved = await createSingleQuestion(question).unwrap();
       } else {
         await updateQuestions([question]).unwrap();
       }
@@ -319,7 +322,9 @@ export const useFormElementActions = (
 
         if (choicesToCreateList.length) {
           await createMultipleChoiceQuestions({
-            questionChoices: choicesToCreateList,
+            questionChoices: choicesToCreateList.map((choice) => {
+              return { ...choice, questionId: questionSaved.id };
+            }),
             formId: String(question.formId),
           }).unwrap();
         }
