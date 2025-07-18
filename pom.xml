@@ -41,7 +41,7 @@
     </modules>
 
     <properties>
-        <revision>2.1.6</revision>
+        <revision>2.1.6.0</revision>
         <entCoreVersion>6.14.2</entCoreVersion>
         <toolsVersion>2.0.0-final</toolsVersion>
         <junitVersion>5.1.0</junitVersion>
