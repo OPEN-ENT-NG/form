@@ -11,6 +11,7 @@ import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { t } from "~/i18n";
+import { CreationQuestionChoiceWrapper } from "../CreationQuestionChoiceWrapper";
 
 export const getQuestionContentByType = (
   question: IQuestion,
@@ -31,6 +32,8 @@ export const getQuestionContentByType = (
       return <CreationQuestionCursor question={question} />;
     case QuestionTypes.FILE:
       return <CreationQuestionFile />;
+    case QuestionTypes.SINGLEANSWER:
+      return <CreationQuestionChoiceWrapper question={question} />;
     default:
       return (
         <Typography variant={TypographyVariant.BODY1}>
