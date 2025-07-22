@@ -26,6 +26,7 @@ export enum TagName {
   QUESTIONS = "QUESTIONS",
   SECTIONS = "SECTIONS",
   FORM_ELEMENTS = "FORM_ELEMENTS",
+  CHOICE = "CHOICE",
 }
 
 export enum QueryMethod {
