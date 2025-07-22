@@ -45,6 +45,7 @@ export interface IQuestionChoice {
   isCustom: boolean;
   nbResponses: number;
   image: string | null;
+  isNew: boolean;
 }
 
 export interface IQuestionSpecificFields {
