@@ -12,6 +12,7 @@ export const emptySplitFormulaireApi = createApi({
     TagName.QUESTIONS,
     TagName.SECTIONS,
     TagName.FORM_ELEMENTS,
+    TagName.CHOICE,
   ],
   endpoints: () => ({}),
 });
