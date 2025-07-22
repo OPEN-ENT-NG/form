@@ -51,27 +51,6 @@ export const createNewQuestion = (
   return defaultSection;
 };
 
-export const transformQuestionChoice = (raw: IQuestionChoiceDTO): IQuestionChoice => {
-  return {
-    id: raw.id,
-    questionId: raw.question_id,
-    value: raw.value,
-    position: raw.position,
-    type: raw.type,
-    nextFormElement: raw.next_form_element,
-    nextFormElementId: raw.next_form_element_id,
-    nextFormElementType: raw.next_form_element_type,
-    isNextFormElementDefault: raw.is_next_form_element_default,
-    isCustom: raw.is_custom,
-    nbResponses: raw.nbResponses,
-    image: raw.image ?? null,
-  };
-};
-
-export const transformQuestionChoices = (rawQuestionChoices: IQuestionChoiceDTO[]): IQuestionChoice[] => {
-  return rawQuestionChoices.map(transformQuestionChoice);
-};
-
 export const createNewQuestionChoice = (
   questionId: number | null,
   position: number = 0,
@@ -92,7 +71,31 @@ export const createNewQuestionChoice = (
     isCustom: isCustom ? isCustom : false,
     nbResponses: 0,
     image: image ? image : null,
+    isNew: true,
   };
+};
+
+
+export const transformQuestionChoice = (raw: IQuestionChoiceDTO): IQuestionChoice => {
+  return {
+    id: raw.id,
+    questionId: raw.question_id,
+    value: raw.value,
+    position: raw.position,
+    type: raw.type,
+    nextFormElement: raw.next_form_element,
+    nextFormElementId: raw.next_form_element_id,
+    nextFormElementType: raw.next_form_element_type,
+    isNextFormElementDefault: raw.is_next_form_element_default,
+    isCustom: raw.is_custom,
+    nbResponses: raw.nbResponses,
+    image: raw.image ?? null,
+    isNew: false,
+  };
+};
+
+export const transformQuestionChoices = (rawQuestionChoices: IQuestionChoiceDTO[]): IQuestionChoice[] => {
+  return rawQuestionChoices.map(transformQuestionChoice);
 };
 
 export const buildQuestionPayload = (question: IQuestion): IQuestionPayload => {
@@ -121,7 +124,7 @@ export const buildQuestionPayload = (question: IQuestion): IQuestionPayload => {
 
 export const buildQuestionChoicePayload = (choice: IQuestionChoice): IQuestionChoicePayload => {
   return {
-    id: null,
+    id: choice.id,
     question_id: choice.questionId,
     value: choice.value,
     position: choice.position,
