@@ -77,6 +77,26 @@ export const fixListPositions = (
   });
 };
 
+export const fixChoicesPositions = (
+  question: IQuestion,
+  positionStart: number,
+  action: PositionActionType = PositionActionType.CREATION,
+): IQuestion => {
+  if (!question.choices) return question;
+  return {
+    ...question,
+    choices: question.choices.map((choice) => {
+      if (choice.position && choice.position >= positionStart) {
+        return {
+          ...choice,
+          position: action === PositionActionType.CREATION ? choice.position + 1 : choice.position - 1,
+        };
+      }
+      return choice;
+    }),
+  };
+};
+
 export const isSectionOrQuestion = (element: IFormElement): boolean => {
   return isFormElementSection(element) || isFormElementQuestion(element);
 };

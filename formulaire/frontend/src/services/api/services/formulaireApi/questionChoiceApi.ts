@@ -22,7 +22,7 @@ export const questionChoiceApi = emptySplitFormulaireApi.injectEndpoints({
           },
         };
       },
-      providesTags: [TagName.QUESTIONS, TagName.FORM_ELEMENTS],
+      providesTags: [TagName.QUESTIONS, TagName.CHOICE],
       transformResponse: (rawDatas: IQuestionChoiceDTO[]) => transformQuestionChoices(rawDatas),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -42,7 +42,7 @@ export const questionChoiceApi = emptySplitFormulaireApi.injectEndpoints({
         method: QueryMethod.PUT,
         body: questionChoices.map((choice) => buildQuestionChoicePayload(choice)),
       }),
-      invalidatesTags: [TagName.QUESTIONS, TagName.FORM_ELEMENTS],
+      invalidatesTags: [TagName.QUESTIONS, TagName.CHOICE],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -61,13 +61,28 @@ export const questionChoiceApi = emptySplitFormulaireApi.injectEndpoints({
         method: QueryMethod.POST,
         body: questionChoices.map((choice) => buildQuestionChoicePayload(choice)),
       }),
-      invalidatesTags: [TagName.QUESTIONS, TagName.FORM_ELEMENTS],
+      invalidatesTags: [TagName.QUESTIONS, TagName.CHOICE],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (err) {
           console.error(t("formulaire.error.questionChoiceService.create"), err);
           toast.error(t("formulaire.error.questionChoiceService.create"));
+        }
+      },
+    }),
+    deleteQuestionChoice: builder.mutation<void, { choiceId: number }>({
+      query: ({ choiceId }) => ({
+        url: `choices/${choiceId}`,
+        method: QueryMethod.DELETE,
+      }),
+      invalidatesTags: [TagName.QUESTIONS, TagName.CHOICE],
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(t("formulaire.error.questionChoiceService.delete"), err);
+          toast.error(t("formulaire.error.questionChoiceService.delete"));
         }
       },
     }),
@@ -79,4 +94,5 @@ export const {
   useGetQuestionChoicesQuery,
   useUpdateMultipleChoiceQuestionsMutation,
   useCreateMultipleChoiceQuestionsMutation,
+  useDeleteQuestionChoiceMutation,
 } = questionChoiceApi;
