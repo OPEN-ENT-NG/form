@@ -52,7 +52,7 @@
   "formulaire.element.delete.confirmation": "Êtes-vous sûr(e) de vouloir supprimer cet élément et tout ce qu'il contient ?",
   "formulaire.element.delete.empty.warning": "Suppression impossible : un formulaire déjà envoyé ne peut être vide",
   "formulaire.element.delete.response.fill.warning": "Vous ne pouvez pas supprimer cet élément, des utilisateurs y ont déjà répondu",
-  "formulaire.element.page.layout": "Page layout :",
+  "formulaire.element.page.layout": "Mise en page :",
   "formulaire.element.questions": "Questions :",
   "formulaire.element.new.question.title": "Ajouter une nouvelle question",
   "formulaire.element.new.section.description": "Ajoutez une nouvelle section pour regrouper vos questions sur une même page ou pour personnaliser le parcours des répondants dans votre formulaire.",
