@@ -34,11 +34,7 @@ export const compareChoices = (a: IQuestionChoice, b: IQuestionChoice): number =
 };
 
 export const compareChoicesByValue = (a: IQuestionChoice, b: IQuestionChoice, direction: Direction): number => {
-  if (direction === Direction.UP) {
-    return a.value.localeCompare(b.value);
-  }
-
-  return b.value.localeCompare(a.value);
+  return direction === Direction.UP ? a.value.localeCompare(b.value) : b.value.localeCompare(a.value);
 };
 
 export const initialSortDirection = (question: IQuestion): Direction => {

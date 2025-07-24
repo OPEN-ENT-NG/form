@@ -43,6 +43,10 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
     updateChoice,
   } = useChoiceActions(question, setCurrentEditingElement, setFormElementsList);
 
+  const sortedChoices = useMemo(() => {
+    return choices.sort((a, b) => compareChoices(a, b));
+  }, [choices]);
+
   //When clicking on the new question, focus the last input field
   useEffect(() => {
     if (newChoiceInputRef.current) {
@@ -78,42 +82,40 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
               <Typography variant={TypographyVariant.BODY2}>{t("formulaire.sort")}</Typography>
             </Box>
             <Box sx={choicesWrapperStyle}>
-              {choices
-                .sort((a, b) => compareChoices(a, b))
-                .map((choice, index) => (
-                  <Box key={choice.id ?? index} sx={choiceWrapperStyle}>
-                    <Box sx={upDownButtonsWrapperStyle}>
-                      <QuestionChoicesUpDownButtons
-                        choice={choice}
-                        index={index}
-                        questionChoicesList={choices}
-                        handleReorderClick={handleSwapClick}
-                      />
-                    </Box>
-                    <TextField
-                      inputRef={isInputRef(index)}
-                      value={choice.value}
-                      variant={ComponentVariant.STANDARD}
-                      fullWidth
-                      onChange={(e) => {
-                        updateChoice(index, e.target.value);
-                      }}
-                      disabled={choice.isCustom}
-                      sx={choiceInputStyle}
+              {sortedChoices.map((choice, index) => (
+                <Box key={choice.id ?? index} sx={choiceWrapperStyle}>
+                  <Box sx={upDownButtonsWrapperStyle}>
+                    <QuestionChoicesUpDownButtons
+                      choice={choice}
+                      index={index}
+                      questionChoicesList={choices}
+                      handleReorderClick={handleSwapClick}
                     />
-                    <Box sx={deleteWrapperStyle}>
-                      {choices.length > 1 && (
-                        <IconButton
-                          onClick={() => void handleDeleteChoice(choice.id, index, choice.position)}
-                          size={ComponentSize.SMALL}
-                          sx={deleteButtonIconStyle}
-                        >
-                          <ClearRoundedIcon sx={iconStyle} />
-                        </IconButton>
-                      )}
-                    </Box>
                   </Box>
-                ))}
+                  <TextField
+                    inputRef={isInputRef(index)}
+                    value={choice.value}
+                    variant={ComponentVariant.STANDARD}
+                    fullWidth
+                    onChange={(e) => {
+                      updateChoice(index, e.target.value);
+                    }}
+                    disabled={choice.isCustom}
+                    sx={choiceInputStyle}
+                  />
+                  <Box sx={deleteWrapperStyle}>
+                    {choices.length > 1 && (
+                      <IconButton
+                        onClick={() => void handleDeleteChoice(choice.id, index, choice.position)}
+                        size={ComponentSize.SMALL}
+                        sx={deleteButtonIconStyle}
+                      >
+                        <ClearRoundedIcon sx={iconStyle} />
+                      </IconButton>
+                    )}
+                  </Box>
+                </Box>
+              ))}
               <Box sx={newChoiceWrapperStyle}>
                 <TextField
                   label={t("formulaire.question.label")}
@@ -144,19 +146,17 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
         </ClickAwayListener>
       ) : (
         <Box sx={baseChoiceWrapperStyle}>
-          {choices
-            .sort((a, b) => compareChoices(a, b))
-            .map((choice, index) => (
-              <Box key={choice.id ?? index} sx={newChoiceWrapperStyle}>
-                <TextField
-                  value={choice.value}
-                  variant={ComponentVariant.STANDARD}
-                  fullWidth
-                  slotProps={{ htmlInput: { readOnly: true } }}
-                  sx={choiceStyle}
-                />
-              </Box>
-            ))}
+          {sortedChoices.map((choice, index) => (
+            <Box key={choice.id ?? index} sx={newChoiceWrapperStyle}>
+              <TextField
+                value={choice.value}
+                variant={ComponentVariant.STANDARD}
+                fullWidth
+                slotProps={{ htmlInput: { readOnly: true } }}
+                sx={choiceStyle}
+              />
+            </Box>
+          ))}
         </Box>
       )}
     </Box>
