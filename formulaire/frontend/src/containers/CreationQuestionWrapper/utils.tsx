@@ -34,7 +34,7 @@ export const getQuestionContentByType = (
     case QuestionTypes.FILE:
       return <CreationQuestionFile />;
     case QuestionTypes.SINGLEANSWER:
-      return <CreationQuestionChoiceWrapper question={question} type={CreationQuestionChoiceType.DROPDOWN} />;
+      return <CreationQuestionChoiceWrapper question={question} type={CreationQuestionChoiceType.SINGLE_ANSWER} />;
     default:
       return (
         <Typography variant={TypographyVariant.BODY1}>
