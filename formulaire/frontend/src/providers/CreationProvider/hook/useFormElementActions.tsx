@@ -315,14 +315,14 @@ export const useFormElementActions = (
 
         if (choicesToUpdateList.length) {
           await updateMultipleChoiceQuestions({
-            questionChoices: choicesToUpdateList,
+            questionChoices: preventEmptyChoiceValues(choicesToUpdateList),
             formId: String(question.formId),
           }).unwrap();
         }
 
         if (choicesToCreateList.length) {
           await createMultipleChoiceQuestions({
-            questionChoices: choicesToCreateList.map((choice) => {
+            questionChoices: preventEmptyChoiceValues(choicesToCreateList).map((choice) => {
               return { ...choice, questionId: questionSaved.id };
             }),
             formId: String(question.formId),
@@ -377,6 +377,15 @@ export const useFormElementActions = (
     [isInFormElementsList, formElementsList],
   );
 
+  const preventEmptyChoiceValues = (choices: IQuestionChoice[]) => {
+    return choices.map((choice) => {
+      if (!choice.value.trim()) {
+        return { ...choice, value: t("formulaire.option", { 0: choice.position }) };
+      }
+      return choice;
+    });
+  };
+
   return {
     deleteFormElement,
     duplicateQuestion,
@@ -384,5 +393,6 @@ export const useFormElementActions = (
     saveQuestion,
     saveSection,
     updateFormElementsList,
+    preventEmptyChoiceValues,
   };
 };

@@ -57,7 +57,7 @@ function swapQuestionWithSection(formElementsList: IFormElement[], question: IQu
  * @param {IFormElement} elB
  * @returns {IFormElement[]}
  */
-function swapGlobalPositions(formElementsList: IFormElement[], elA: IFormElement, elB: IFormElement) {
+const swapGlobalPositions = (formElementsList: IFormElement[], elA: IFormElement, elB: IFormElement) => {
   return formElementsList.map((el) => {
     if (el.id === elA.id && el.formElementType === elA.formElementType) {
       return { ...el, position: elB.position };
@@ -67,7 +67,7 @@ function swapGlobalPositions(formElementsList: IFormElement[], elA: IFormElement
     }
     return el;
   });
-}
+};
 
 /**
  * Refactored swapFormElements with clear helper functions.
