@@ -102,7 +102,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     <CreationQuestionChoice
                       index={index}
                       type={type}
-                      hasImage={type === CreationQuestionChoiceType.DROPDOWN}
+                      hasImage={type === CreationQuestionChoiceType.SINGLE_ANSWER}
                       updateChoiceImage={updateChoiceImage}
                       image={choice.image ?? undefined}
                       isEditing={true}

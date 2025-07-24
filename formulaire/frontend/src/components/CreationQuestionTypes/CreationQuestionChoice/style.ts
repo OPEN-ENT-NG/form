@@ -1,4 +1,5 @@
 import { SxProps } from "@mui/material";
+import { PRIMARY_MAIN_COLOR } from "~/core/style/colors";
 
 export const questionChoiceWrapperStyle: SxProps = {
   display: "flex",
@@ -6,10 +7,20 @@ export const questionChoiceWrapperStyle: SxProps = {
   flexDirection: "column",
 };
 
+export const choiceInputStyle: SxProps = {
+  display: "flex",
+  width: "100%",
+  marginRight: 1,
+};
+
 export const choiceIconStyle: SxProps = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+};
+
+export const imageIconStyle: SxProps = {
+  color: PRIMARY_MAIN_COLOR,
 };
 
 export const mediaLibraryWrapperStyle: SxProps = {

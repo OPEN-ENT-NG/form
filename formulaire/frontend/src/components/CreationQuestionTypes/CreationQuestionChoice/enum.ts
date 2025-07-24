@@ -1,5 +1,5 @@
 export enum CreationQuestionChoiceType {
-  DROPDOWN = "dropdown",
-  SINGLE_CHOICE = "single_choice",
-  MULTIPLE_CHOICE = "multiple_choice",
+  SINGLE_ANSWER = "singleAnswer",
+  SINGLE_ANSWER_RADIO = "singleAnswerRadio",
+  MULTIPLE_ANSWER = "multipleAnswer",
 }
