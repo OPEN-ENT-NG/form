@@ -5,5 +5,5 @@ export interface IQuestionChoicesUpDownButtonsProps {
   choice: IQuestionChoice;
   index: number;
   questionChoicesList: IQuestionChoice[];
-  handleReorderClick: (choice: IQuestionChoice, direction: Direction) => void;
+  handleReorderClick: (choiceIndex: number, direction: Direction) => void;
 }
