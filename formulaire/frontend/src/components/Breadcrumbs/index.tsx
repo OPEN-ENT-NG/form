@@ -1,11 +1,10 @@
 import { FC } from "react";
 
 import { IFormBreadcrumbsProps } from "./types";
-import { Breadcrumbs } from "@mui/material";
 import { Box, EllipsisWithTooltip, Link } from "@cgi-learning-hub/ui";
 import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
 import { FORMULAIRE } from "~/core/constants";
-import { StyledBreadCrumbItemWrapper, ellipsisStyle, separatorStyle } from "./style";
+import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 
@@ -17,13 +16,15 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
 }) => {
   const textColor = isHeader ? FORM_COLOR : CSS_TEXT_PRIMARY_COLOR;
   const navigate = useNavigate();
+  const maxItemsBeforeCollaspse = 3;
 
   return (
-    <Breadcrumbs
+    <StyledBreadCrumb
       separator={separator}
-      maxItems={3}
+      maxItems={maxItemsBeforeCollaspse}
       itemsAfterCollapse={2}
-      sx={separator ? separatorStyle : ellipsisStyle}
+      hasSeparator={separator != null}
+      shouldEllipsis={stringItems.length >= maxItemsBeforeCollaspse}
     >
       {isHeader ? (
         <Link underline="hover" color={FORM_COLOR} href={`/${FORMULAIRE}`} sx={{ flexShrink: 0 }}>
@@ -36,21 +37,27 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
       )}
       {stringItems.map((stringItem, index) => {
         const isLast = index === stringItems.length - 1;
+        const shouldEllipsis = isLast && stringItems.length >= maxItemsBeforeCollaspse;
+        const content = shouldEllipsis ? (
+          <EllipsisWithTooltip typographyProps={{ fontSize: "2.4rem" }}>{stringItem}</EllipsisWithTooltip>
+        ) : (
+          stringItem
+        );
         return (
           <StyledBreadCrumbItemWrapper
             key={stringItem}
             textColor={textColor}
             isHeader={isHeader}
-            hasSeparator={!separator}
+            hasSeparator={separator != null}
             isLast={isLast}
             onClick={() => {
               if (isHeader) navigate("/");
             }}
           >
-            <EllipsisWithTooltip typographyProps={{ fontSize: "2.4rem" }}>{stringItem}</EllipsisWithTooltip>
+            {content}
           </StyledBreadCrumbItemWrapper>
         );
       })}
-    </Breadcrumbs>
+    </StyledBreadCrumb>
   );
 };
