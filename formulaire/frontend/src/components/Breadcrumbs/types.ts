@@ -12,4 +12,5 @@ export interface IBreadCrumbItemWrapperProps {
   textColor: string;
   isHeader: boolean;
   hasSeparator: boolean;
+  isLast: boolean;
 }
