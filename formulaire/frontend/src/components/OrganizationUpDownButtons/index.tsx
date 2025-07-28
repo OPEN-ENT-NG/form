@@ -18,11 +18,15 @@ export const OrganizationUpDownButtons: FC<IOrganizationUpDownButtonsProps> = ({
   const isQuestion = isFormElementQuestion(element);
 
   // Determine visibility of arrows
-  const showSectionArrows = useMemo(() => isQuestion && (element as IQuestion).sectionPosition, [isQuestion, element]);
+  const showSectionArrows = useMemo(
+    () => isQuestion && (element as IQuestion).sectionPosition,
+    [isQuestion, element, formElementsList],
+  );
   const showUp = useMemo(
     () => !showSectionArrows && element.position && element.position > 1,
-    [showSectionArrows, element],
+    [showSectionArrows, element, formElementsList],
   );
+  console.log("Show Up:", showUp, "Element Position:", element.position);
   const showDown = useMemo(
     () => !showSectionArrows && element.position && element.position < formElementsList.length,
     [showSectionArrows, element, formElementsList],

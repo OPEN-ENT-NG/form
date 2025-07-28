@@ -1,28 +1,29 @@
 import { ReactNode } from "react";
 import { CursorIcon } from "~/components/SVG/questionTypes/CursorIcon";
-import { DateIcon } from "~/components/SVG/questionTypes/DateIcon";
-import { FileIcon } from "~/components/SVG/questionTypes/FileIcon";
-import { FreeTextIcon } from "~/components/SVG/questionTypes/FreeTextIcon";
-import { LongAnswerIcon } from "~/components/SVG/questionTypes/LongAnswerIcon";
-import { MatrixIcon } from "~/components/SVG/questionTypes/MatrixIcon";
 import { MultipleAnswerIcon } from "~/components/SVG/questionTypes/MultipleAnswerIcon";
-import { RankingIcon } from "~/components/SVG/questionTypes/RankingIcon";
-import { ShortAnswerIcon } from "~/components/SVG/questionTypes/ShortAnswerIcon";
 import { SingleAnswerRadioIcon } from "~/components/SVG/questionTypes/SingleAnswerRadioIcon";
-import { TimeIcon } from "~/components/SVG/questionTypes/TimeIcon";
 import { UniqueIcon } from "~/components/SVG/questionTypes/UniqueIcon";
+import TextFieldsRoundedIcon from "@mui/icons-material/TextFieldsRounded";
+import ShortTextRoundedIcon from "@mui/icons-material/ShortTextRounded";
+import NotesRoundedIcon from "@mui/icons-material/NotesRounded";
+import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
+import AccessTimeFilledRoundedIcon from "@mui/icons-material/AccessTimeFilledRounded";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
+import AppsIcon from "@mui/icons-material/Apps";
+import FormatListNumberedRoundedIcon from "@mui/icons-material/FormatListNumberedRounded";
+import { questionIconStyle } from "./style";
 
 export const questionTypeIcons: Record<number, ReactNode> = {
-  1: <FreeTextIcon />,
-  2: <ShortAnswerIcon />,
-  3: <LongAnswerIcon />,
-  4: <UniqueIcon />,
-  5: <MultipleAnswerIcon />,
-  6: <DateIcon />,
-  7: <TimeIcon />,
-  8: <FileIcon />,
-  9: <SingleAnswerRadioIcon />,
-  10: <MatrixIcon />,
-  11: <CursorIcon />,
-  12: <RankingIcon />,
+  1: <TextFieldsRoundedIcon sx={questionIconStyle} />,
+  2: <ShortTextRoundedIcon sx={questionIconStyle} />,
+  3: <NotesRoundedIcon sx={questionIconStyle} />,
+  4: <UniqueIcon />, //Custom
+  5: <MultipleAnswerIcon />, //Custom
+  6: <CalendarTodayRoundedIcon sx={questionIconStyle} />,
+  7: <AccessTimeFilledRoundedIcon sx={questionIconStyle} />,
+  8: <UploadFileIcon sx={questionIconStyle} />,
+  9: <SingleAnswerRadioIcon />, //Custom
+  10: <AppsIcon sx={questionIconStyle} />,
+  11: <CursorIcon />, //Custom
+  12: <FormatListNumberedRoundedIcon sx={questionIconStyle} />,
 };

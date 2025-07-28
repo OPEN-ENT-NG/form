@@ -8,11 +8,16 @@ import { IFolder } from "~/core/models/folder/types";
 import { FORMULAIRE } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { useModal } from "~/providers/ModalProvider";
+import { IFormElement } from "~/core/models/formElement/types";
 
-export const useGetCreationHeaderButtons = (formId: string | number | undefined): IButtonProps[] => {
+export const useGetCreationHeaderButtons = (
+  formId: string | number | undefined,
+  formElementsList: IFormElement[],
+): IButtonProps[] => {
   const navigate = useNavigate();
   const { toggleModal } = useModal();
-  return [
+
+  const buttons: (IButtonProps | undefined)[] = [
     {
       title: t("formulaire.return"),
       variant: ComponentVariant.OUTLINED,
@@ -27,13 +32,15 @@ export const useGetCreationHeaderButtons = (formId: string | number | undefined)
         if (formId) window.location.href = getFormTreePath(formId);
       },
     },
-    {
-      title: t("formulaire.organize"),
-      variant: ComponentVariant.OUTLINED,
-      action: () => {
-        toggleModal(ModalType.ORGANIZATION);
-      },
-    },
+    formElementsList.length > 0
+      ? {
+          title: t("formulaire.organize"),
+          variant: ComponentVariant.OUTLINED,
+          action: () => {
+            toggleModal(ModalType.ORGANIZATION);
+          },
+        }
+      : undefined,
     {
       title: t("formulaire.preview"),
       variant: ComponentVariant.OUTLINED,
@@ -46,6 +53,8 @@ export const useGetCreationHeaderButtons = (formId: string | number | undefined)
       startIcon: <SaveRoundedIcon />,
     },
   ];
+
+  return buttons.filter(Boolean) as IButtonProps[];
 };
 
 export const getRecursiveFolderParents = (

@@ -7,6 +7,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
 import { getInputSlotProps } from "./utils";
 import { CursorProp } from "../CreationQuestionTypes/CreationQuestionCursor/enums";
+import { cursorTextFieldStyle } from "./style";
 
 export const CursorTextField: FC<ICursorTextFieldProps> = ({
   type,
@@ -27,6 +28,7 @@ export const CursorTextField: FC<ICursorTextFieldProps> = ({
       {...(isTypeNumber ? { size: ComponentSize.SMALL } : { placeholder: t("formulaire.question.label") })}
       slotProps={slotProps}
       onChange={onChange}
+      sx={cursorTextFieldStyle}
     />
   );
 };

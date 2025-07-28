@@ -13,9 +13,9 @@ import { IForm } from "~/core/models/form/types";
 import { CreationOrganisationModal } from "../CreationOrganisationModal";
 
 export const CreationView: FC = () => {
-  const { form, folders } = useCreation();
+  const { form, folders, formElementsList } = useCreation();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
-  const headerButtons = useGetCreationHeaderButtons(form?.id);
+  const headerButtons = useGetCreationHeaderButtons(form?.id, formElementsList);
 
   const {
     displayModals: { showFormElementCreate, showOrganization },
