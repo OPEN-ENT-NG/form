@@ -10,3 +10,8 @@ export const hasWorkflow = (user: IUserInfo | undefined, workflowName: string): 
 
   return user.authorizedActions.some((workflowRight) => workflowRight.name === workflowName);
 };
+
+export const blockProps =
+  (...propsToBlock: string[]) =>
+  (prop: string) =>
+    !propsToBlock.includes(prop);
