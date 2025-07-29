@@ -1,12 +1,20 @@
-import { styled, SxProps, Typography } from "@cgi-learning-hub/ui";
-import { IBreadCrumbItemWrapperProps } from "./types";
+import { Breadcrumbs, styled, Typography } from "@cgi-learning-hub/ui";
+import { IBreadCrumbItemWrapperProps, IBreadCrumbProps } from "./types";
+import { blockProps } from "~/core/utils";
 
 export const StyledBreadCrumbItemWrapper = styled(Typography, {
-  shouldForwardProp: (prop) => prop !== "textColor" && prop !== "isHeader" && prop !== "hasSeparator",
-})<IBreadCrumbItemWrapperProps>(({ textColor, isHeader, hasSeparator }) => ({
+  shouldForwardProp: blockProps("textColor", "isHeader", "hasSeparator", "isLast"),
+})<IBreadCrumbItemWrapperProps>(({ textColor, isHeader, hasSeparator, isLast }) => ({
   color: textColor,
   fontSize: isHeader ? "2.4rem" : "2rem",
-  marginLeft: hasSeparator ? "-1rem" : "",
+  marginLeft: hasSeparator ? "" : "-1rem",
+  ...(isLast && {
+    flexShrink: 1,
+    minWidth: 0,
+  }),
+  ...(!isLast && {
+    flexShrink: 0,
+  }),
   ...(isHeader && {
     "&:hover": {
       cursor: "pointer",
@@ -15,9 +23,26 @@ export const StyledBreadCrumbItemWrapper = styled(Typography, {
   }),
 }));
 
-export const separatorStyle: SxProps = {
-  "& .MuiBreadcrumbs-separator": {
-    marginLeft: 0,
-    marginRight: 0,
+export const StyledBreadCrumb = styled(Breadcrumbs, {
+  shouldForwardProp: blockProps("hasSeparator", "shouldEllipsis"),
+})<IBreadCrumbProps>(({ hasSeparator, shouldEllipsis }) => ({
+  ...(shouldEllipsis && {
+    "& .MuiBreadcrumbs-li:last-of-type": {
+      flexShrink: 1,
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+  }),
+  "& .MuiBreadcrumbs-ol": {
+    flexWrap: "nowrap",
   },
-};
+  "& .MuiBreadcrumbs-li": {
+    flexShrink: 0,
+  },
+  ...(hasSeparator && {
+    "& .MuiBreadcrumbs-separator": {
+      marginLeft: 0,
+      marginRight: 0,
+    },
+  }),
+}));
