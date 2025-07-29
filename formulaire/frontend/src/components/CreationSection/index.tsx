@@ -50,7 +50,8 @@ import { useTargetNextElement } from "~/hook/useTargetNextElement";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { form, setCurrentEditingElement, currentEditingElement, handleDuplicateFormElement, setQuestionModalSection } = useCreation();
+  const { form, setCurrentEditingElement, currentEditingElement, handleDuplicateFormElement, setQuestionModalSection } =
+    useCreation();
   const { toggleModal } = useModal();
 
   const {

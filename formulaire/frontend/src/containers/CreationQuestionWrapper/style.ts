@@ -9,6 +9,7 @@ export const questionStackStyle: SxProps<Theme> = {
   borderRadius: 1,
   marginBottom: 2,
   padding: "0rem 3rem 3rem 3rem",
+  boxShadow: "1px 4px 5px 2px rgba(0, 0, 0, 0.1)",
 };
 
 export const dragIconContainerStyle: SxProps<Theme> = {
@@ -31,6 +32,7 @@ export const StyledPaper = styled(Paper, {
   marginBottom: "16px",
   paddingTop: "3rem",
   borderColor: isValidFormElement ? "transparent !important" : "red !important",
+  boxShadow: "1px 4px 5px 2px rgba(0, 0, 0, 0.1)",
 }));
 
 export const editingQuestionTitleStyle: SxProps<Theme> = { paddingX: "3rem" };
