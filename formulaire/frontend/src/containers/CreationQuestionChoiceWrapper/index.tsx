@@ -87,51 +87,49 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
               <Typography variant={TypographyVariant.BODY2}>{t("formulaire.sort")}</Typography>
             </Box>
             <Box sx={choicesWrapperStyle}>
-              {choices
-                .sort((a, b) => compareChoices(a, b))
-                .map((choice, index) => (
-                  <Box key={choice.id ?? index} sx={choiceWrapperStyle}>
-                    <Box sx={upDownButtonsWrapperStyle}>
-                      <QuestionChoicesUpDownButtons
-                        choice={choice}
-                        index={index}
-                        questionChoicesList={choices}
-                        handleReorderClick={handleSwapClick}
-                      />
-                    </Box>
-                    <CreationQuestionChoice
+              {sortedChoices.map((choice, index) => (
+                <Box key={choice.id ?? index} sx={choiceWrapperStyle}>
+                  <Box sx={upDownButtonsWrapperStyle}>
+                    <QuestionChoicesUpDownButtons
+                      choice={choice}
                       index={index}
-                      type={type}
-                      hasImage={type === CreationQuestionChoiceType.SINGLE_ANSWER}
-                      updateChoiceImage={updateChoiceImage}
-                      image={choice.image ?? undefined}
-                      isEditing={true}
-                    >
-                      <TextField
-                        inputRef={isInputRef(index)}
-                        value={choice.value}
-                        variant={ComponentVariant.STANDARD}
-                        fullWidth
-                        onChange={(e) => {
-                          updateChoice(index, e.target.value);
-                        }}
-                        disabled={choice.isCustom}
-                        sx={choiceInputStyle}
-                      />
-                    </CreationQuestionChoice>
-                    <Box sx={deleteWrapperStyle}>
-                      {choices.length > 1 && (
-                        <IconButton
-                          onClick={() => void handleDeleteChoice(choice.id, index, choice.position)}
-                          size={ComponentSize.SMALL}
-                          sx={deleteButtonIconStyle}
-                        >
-                          <ClearRoundedIcon sx={iconStyle} />
-                        </IconButton>
-                      )}
-                    </Box>
+                      questionChoicesList={choices}
+                      handleReorderClick={handleSwapClick}
+                    />
                   </Box>
-                ))}
+                  <CreationQuestionChoice
+                    index={index}
+                    type={type}
+                    hasImage={type === CreationQuestionChoiceType.SINGLE_ANSWER}
+                    updateChoiceImage={updateChoiceImage}
+                    image={choice.image ?? undefined}
+                    isEditing={true}
+                  >
+                    <TextField
+                      inputRef={isInputRef(index)}
+                      value={choice.value}
+                      variant={ComponentVariant.STANDARD}
+                      fullWidth
+                      onChange={(e) => {
+                        updateChoice(index, e.target.value);
+                      }}
+                      disabled={choice.isCustom}
+                      sx={choiceInputStyle}
+                    />
+                  </CreationQuestionChoice>
+                  <Box sx={deleteWrapperStyle}>
+                    {choices.length > 1 && (
+                      <IconButton
+                        onClick={() => void handleDeleteChoice(choice.id, index, choice.position)}
+                        size={ComponentSize.SMALL}
+                        sx={deleteButtonIconStyle}
+                      >
+                        <ClearRoundedIcon sx={iconStyle} />
+                      </IconButton>
+                    )}
+                  </Box>
+                </Box>
+              ))}
               <Box sx={newChoiceWrapperStyle}>
                 <CreationQuestionChoice index={question.choices.length} type={type}>
                   <TextField
@@ -164,21 +162,19 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
         </ClickAwayListener>
       ) : (
         <Box sx={notEditingchoicesWrapperStyle}>
-          {choices
-            .sort((a, b) => compareChoices(a, b))
-            .map((choice, index) => (
-              <Box key={choice.id ?? index} sx={baseChoiceWrapperStyle}>
-                <CreationQuestionChoice index={index} type={type} image={choice.image ?? undefined}>
-                  <TextField
-                    value={choice.value}
-                    variant={ComponentVariant.STANDARD}
-                    fullWidth
-                    slotProps={{ htmlInput: { readOnly: true } }}
-                    sx={choiceStyle}
-                  />
-                </CreationQuestionChoice>
-              </Box>
-            ))}
+          {sortedChoices.map((choice, index) => (
+            <Box key={choice.id ?? index} sx={baseChoiceWrapperStyle}>
+              <CreationQuestionChoice index={index} type={type} image={choice.image ?? undefined}>
+                <TextField
+                  value={choice.value}
+                  variant={ComponentVariant.STANDARD}
+                  fullWidth
+                  slotProps={{ htmlInput: { readOnly: true } }}
+                  sx={choiceStyle}
+                />
+              </CreationQuestionChoice>
+            </Box>
+          ))}
         </Box>
       )}
     </Box>
