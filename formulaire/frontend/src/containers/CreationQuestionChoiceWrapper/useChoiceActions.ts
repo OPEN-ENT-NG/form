@@ -15,31 +15,25 @@ export const useChoiceActions = (
   setFormElementsList: Dispatch<SetStateAction<IFormElement[]>>,
 ) => {
   const [currentSortDirection, setCurrentSortDirection] = useState<Direction>(Direction.DOWN);
-  const [isDeleting, setIsDeleting] = useState(false);
   const [deleteQuestionChoice] = useDeleteQuestionChoiceMutation();
 
   const isExistingCustomChoice = question.choices?.some((choice) => choice.isCustom);
   const choices = question.choices || [];
+  const setQuestion = setCurrentEditingElement as Dispatch<SetStateAction<IQuestion>>;
 
   const handleDeleteChoice = useCallback(
-    async (choiceId: number | null, index: number | null, position: number) => {
-      if (isDeleting || index === null || !question.choices) return;
+    async (choiceId: number | null, index: number, position: number) => {
+      setQuestion((prev) => {
+        const choices = prev.choices || [];
+        const updatedChoicesList = choices.filter((_, i) => i !== index);
+        return fixChoicesPositions({ ...prev, choices: updatedChoicesList }, position, PositionActionType.DELETION);
+      });
 
-      setIsDeleting(true);
-
-      const updatedChoices = [...question.choices.slice(0, index), ...question.choices.slice(index + 1)];
-      const updatedQuestion = fixChoicesPositions(
-        { ...question, choices: updatedChoices },
-        position,
-        PositionActionType.DELETION,
-      );
-
-      setCurrentEditingElement(updatedQuestion);
-      if (choiceId) await deleteQuestionChoice({ choiceId });
-
-      setIsDeleting(false);
+      if (choiceId) {
+        await deleteQuestionChoice({ choiceId });
+      }
     },
-    [isDeleting, question, deleteQuestionChoice],
+    [deleteQuestionChoice],
   );
 
   const handleSwapClick = useCallback(
@@ -117,6 +111,16 @@ export const useChoiceActions = (
     [choices, question],
   );
 
+  const updateChoiceImage = useCallback(
+    (index: number | null, src: string) => {
+      if (index === null || !choices[index]) return;
+      const updatedChoices = [...choices];
+      updatedChoices[index] = { ...updatedChoices[index], image: src };
+      setCurrentEditingElement({ ...question, choices: updatedChoices });
+    },
+    [choices, question],
+  );
+
   const preventEmptyValues = useCallback(() => {
     if (choices.length === 0) return;
 
@@ -145,6 +149,7 @@ export const useChoiceActions = (
     handleSortClick,
     handleNewChoice,
     updateChoice,
+    updateChoiceImage,
     preventEmptyValues,
   };
 };
