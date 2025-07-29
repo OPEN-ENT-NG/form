@@ -1,11 +1,10 @@
 import { FC } from "react";
 
 import { IFormBreadcrumbsProps } from "./types";
-import { Breadcrumbs } from "@mui/material";
-import { Box, Link } from "@cgi-learning-hub/ui";
+import { Box, EllipsisWithTooltip, Link } from "@cgi-learning-hub/ui";
 import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
 import { FORMULAIRE } from "~/core/constants";
-import { StyledBreadCrumbItemWrapper, separatorStyle } from "./style";
+import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 
@@ -17,31 +16,48 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
 }) => {
   const textColor = isHeader ? FORM_COLOR : CSS_TEXT_PRIMARY_COLOR;
   const navigate = useNavigate();
+  const maxItemsBeforeCollaspse = 3;
 
   return (
-    <Breadcrumbs separator={separator} maxItems={2} sx={separator ? separatorStyle : undefined}>
+    <StyledBreadCrumb
+      separator={separator}
+      maxItems={maxItemsBeforeCollaspse}
+      itemsAfterCollapse={2}
+      hasSeparator={separator != null}
+      shouldEllipsis={stringItems.length >= maxItemsBeforeCollaspse}
+    >
       {isHeader ? (
-        <Link underline="hover" color={FORM_COLOR} href={`/${FORMULAIRE}`}>
-          <Icon height="3rem"></Icon>
+        <Link underline="hover" color={FORM_COLOR} href={`/${FORMULAIRE}`} sx={{ flexShrink: 0 }}>
+          <Icon height="3rem" width="3rem"></Icon>
         </Link>
       ) : (
         <Box color={GREY_DARKER_COLOR}>
           <Icon height="2.3rem"></Icon>
         </Box>
       )}
-      {stringItems.map((stringItem) => (
-        <StyledBreadCrumbItemWrapper
-          key={stringItem}
-          textColor={textColor}
-          isHeader={isHeader}
-          hasSeparator={!separator}
-          onClick={() => {
-            if (isHeader) navigate("/");
-          }}
-        >
-          {stringItem}
-        </StyledBreadCrumbItemWrapper>
-      ))}
-    </Breadcrumbs>
+      {stringItems.map((stringItem, index) => {
+        const isLast = index === stringItems.length - 1;
+        const shouldEllipsis = isLast && stringItems.length >= maxItemsBeforeCollaspse;
+        const content = shouldEllipsis ? (
+          <EllipsisWithTooltip typographyProps={{ fontSize: "2.4rem" }}>{stringItem}</EllipsisWithTooltip>
+        ) : (
+          stringItem
+        );
+        return (
+          <StyledBreadCrumbItemWrapper
+            key={stringItem}
+            textColor={textColor}
+            isHeader={isHeader}
+            hasSeparator={separator != null}
+            isLast={isLast}
+            onClick={() => {
+              if (isHeader) navigate("/");
+            }}
+          >
+            {content}
+          </StyledBreadCrumbItemWrapper>
+        );
+      })}
+    </StyledBreadCrumb>
   );
 };
