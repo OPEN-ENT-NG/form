@@ -20,18 +20,20 @@ export const sortIconStyle: SxProps = {
 export const choicesWrapperStyle: SxProps = {
   display: "flex",
   flexDirection: "column",
-  marginBottom: 2,
+  marginY: 2,
+  gap: 1,
 };
 
 export const choiceWrapperStyle: SxProps = {
   display: "flex",
-  alignItems: "center",
+  alignItems: "flex-start",
 };
 
 export const upDownButtonsWrapperStyle: SxProps = {
   display: "flex",
   alignItems: "center",
   minWidth: 56,
+  minHeight: 40,
 };
 
 export const deleteWrapperStyle: SxProps = {
@@ -42,20 +44,34 @@ export const deleteWrapperStyle: SxProps = {
 
 export const deleteButtonIconStyle: SxProps = {
   marginLeft: 1,
-  marginTop: 2,
+  minHeight: 40,
 };
 
-export const newChoiceWrapperStyle: SxProps = {
+export const baseChoiceWrapperStyle: SxProps = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   width: "100%",
   paddingLeft: "56px", //Match updown buttons width
-  paddingRight: "42px", //Match delete button width
 };
 
 export const choiceInputStyle: SxProps = {
   marginLeft: 1,
+};
+
+export const newChoiceWrapperStyle: SxProps = {
+  minHeight: "40px",
+  ...baseChoiceWrapperStyle,
+};
+
+export const newChoiceInputStyle: SxProps = {
+  ...choiceInputStyle,
+  "& .MuiInputBase-root": {
+    marginTop: 0, // Override the default margin
+  },
+  "& .MuiInputBase-input": {
+    color: "text.secondary", // Label-like color for the value text
+  },
 };
 
 export const otherChoiceSpanStyle: SxProps = {
@@ -66,13 +82,13 @@ export const otherChoiceSpanStyle: SxProps = {
   },
 };
 
-export const baseChoiceWrapperStyle: SxProps = {
-  display: "flex",
-  flexDirection: "column",
+export const notEditingchoicesWrapperStyle: SxProps = {
+  ...choicesWrapperStyle,
   gap: 2,
 };
 
 export const choiceStyle: SxProps = {
+  marginLeft: 1,
   "& .MuiInputBase-input": {
     color: "text.disabled",
     cursor: "default",
