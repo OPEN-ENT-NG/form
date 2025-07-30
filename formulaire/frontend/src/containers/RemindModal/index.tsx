@@ -56,7 +56,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
     1: formUrl || "",
   });
   const [description, setDescription] = useState<string>(defaultDescription);
-  const [remindObject, setRemindObject] = useState<string>("");
+  const [remindObject, setRemindObject] = useState<string>(t("formulaire.remind.default.subject"));
   const editorRef = useRef<EditorRef>(null);
   const { data: distributions, isLoading: isDistributionsLoading } = useGetFormDistributionsQuery(formId);
   const tableDatas = distributions
