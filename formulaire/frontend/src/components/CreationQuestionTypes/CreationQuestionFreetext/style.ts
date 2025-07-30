@@ -9,6 +9,14 @@ export const StyledEditorWrapper = styled(Box, {
     "> :first-child": {
       "> :nth-child(2)": {
         minHeight: "200px",
+
+        "> :first-child": {
+          display: "flex",
+
+          "& > :first-child": {
+            flex: "1 1 auto",
+          },
+        },
       },
     },
   };
