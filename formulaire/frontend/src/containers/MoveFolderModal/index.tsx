@@ -29,7 +29,7 @@ export const MoveFolderModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const [moveForms] = useMoveFormsMutation();
   const [moveFolders] = useMoveFoldersMutation();
 
-  const treeViewItems = buildFolderTree(folders);
+  const treeViewItems = buildFolderTree(folders, selectedFolders);
   const handleSelectedItemChange = useCallback(
     (event: SyntheticEvent, itemId: string | null) => {
       if (!itemId) {
