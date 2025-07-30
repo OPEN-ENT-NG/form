@@ -285,12 +285,10 @@ export const useMapActionBarButtons = () => {
 
       // Cas 1: Un seul formulaire SANS éléments
       if (hasOneForm && !hasFolders && !hasElements) {
-        const buttons = [
-          ActionBarButtonType.OPEN,
-          ActionBarButtonType.PROPS,
-          ActionBarButtonType.DUPLICATE,
-          ActionBarButtonType.MOVE,
-        ];
+        const buttons = [ActionBarButtonType.OPEN, ActionBarButtonType.PROPS, ActionBarButtonType.DUPLICATE];
+        if (currentFolder.id === rootFolders[0].id) {
+          buttons.push(ActionBarButtonType.MOVE);
+        }
         if (hasShareRightManager) {
           buttons.push(ActionBarButtonType.EXPORT, ActionBarButtonType.DELETE);
         }
@@ -298,7 +296,10 @@ export const useMapActionBarButtons = () => {
       }
       // Cas 2: Plusieurs formulaires
       if (hasMultipleForms && !hasFolders) {
-        const buttons = [ActionBarButtonType.DUPLICATE, ActionBarButtonType.MOVE];
+        const buttons = [ActionBarButtonType.DUPLICATE];
+        if (currentFolder.id === rootFolders[0].id) {
+          buttons.push(ActionBarButtonType.MOVE);
+        }
         if (hasShareRightManager) {
           buttons.push(ActionBarButtonType.EXPORT, ActionBarButtonType.DELETE);
         }
@@ -331,12 +332,17 @@ export const useMapActionBarButtons = () => {
           ActionBarButtonType.OPEN,
           ActionBarButtonType.PROPS,
           ActionBarButtonType.DUPLICATE,
-          ActionBarButtonType.MOVE,
           ActionBarButtonType.RESULTS,
           ActionBarButtonType.REMIND,
         ];
+        if (currentFolder.id === rootFolders[0].id) {
+          buttons.splice(3, 0, ActionBarButtonType.MOVE);
+        }
         if (hasShareRightManager) {
-          if (hasQuestionsInForms) buttons.splice(4, 0, ActionBarButtonType.SHARE);
+          if (hasQuestionsInForms) {
+            const buttonShareIndex = buttons.findIndex((button) => button === ActionBarButtonType.RESULTS);
+            buttons.splice(buttonShareIndex, 0, ActionBarButtonType.SHARE);
+          }
           buttons.push(ActionBarButtonType.EXPORT, ActionBarButtonType.DELETE);
         }
         return buttons;
