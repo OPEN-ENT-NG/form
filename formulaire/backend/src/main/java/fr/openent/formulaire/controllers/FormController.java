@@ -322,7 +322,7 @@ public class FormController extends ControllerHelper {
         Integer folderId = Integer.parseInt(request.getParam(PARAM_FOLDER_ID));
         UserUtils.getUserInfos(eb, request, user -> {
             if (user == null) {
-                String message = "[Formulaire@duplicateForms] User not found in session.";
+                String message = "[Formulaire@FormController::duplicateForms] User not found in session.";
                 log.error(message);
                 unauthorized(request, message);
                 return;
@@ -330,7 +330,7 @@ public class FormController extends ControllerHelper {
 
             RequestUtils.bodyToJsonArray(request, formIds -> {
                 if (formIds == null || formIds.isEmpty()) {
-                    log.error("[Formulaire@duplicateForms] No forms to duplicate.");
+                    log.error("[Formulaire@FormController::duplicateForms] No forms to duplicate.");
                     noContent(request);
                     return;
                 }
@@ -343,12 +343,12 @@ public class FormController extends ControllerHelper {
 
                 formService.checkFormsRights(groupsAndUserIds, user, CONTRIB_RESOURCE_BEHAVIOUR, formIds, hasRightsEvt -> {
                     if (hasRightsEvt.isLeft()) {
-                        log.error("[Formulaire@duplicateForms] Fail to check rights for method " + hasRightsEvt);
+                        log.error("[Formulaire@FormController::duplicateForms] Fail to check rights for method " + hasRightsEvt);
                         renderInternalError(request, hasRightsEvt);
                         return;
                     }
                     if (hasRightsEvt.right().getValue().isEmpty()) {
-                        String message = "[Formulaire@duplicateForms] No rights found for forms with ids " + formIds;
+                        String message = "[Formulaire@FormController::duplicateForms] No rights found for forms with ids " + formIds;
                         log.error(message);
                         notFound(request, message);
                         return;
@@ -357,7 +357,7 @@ public class FormController extends ControllerHelper {
                     // Check if user is owner or contributor to all the forms
                     Long count = hasRightsEvt.right().getValue().getLong(COUNT);
                     if (count == null || count != formIds.size()) {
-                        String message = "[Formulaire@duplicateForms] You're missing rights on one form or more.";
+                        String message = "[Formulaire@FormController::duplicateForms] You're missing rights on one form or more.";
                         log.error(message);
                         unauthorized(request, message);
                         return;
@@ -365,12 +365,12 @@ public class FormController extends ControllerHelper {
 
                     folderService.get(folderId.toString(), folderEvt -> {
                         if (folderEvt.isLeft()) {
-                            log.error("[Formulaire@duplicateForms] Fail to get folder for id " + folderId);
+                            log.error("[Formulaire@FormController::duplicateForms] Fail to get folder for id " + folderId);
                             renderInternalError(request, folderEvt);
                             return;
                         }
                         if (folderEvt.right().getValue().isEmpty()) {
-                            String message = "[Formulaire@duplicateForms] No folder found for id " + folderId;
+                            String message = "[Formulaire@FormController::duplicateForms] No folder found for id " + folderId;
                             log.error(message);
                             notFound(request, message);
                             return;
@@ -379,7 +379,7 @@ public class FormController extends ControllerHelper {
                         // Check if the folder is not owned by the connected user
                         JsonObject folder = folderEvt.right().getValue();
                         if (folderId != ID_ROOT_FOLDER && !folder.getString(USER_ID).equals(user.getUserId())) {
-                            String message = "[Formulaire@duplicateForms] You're not owner of the folder with id " + folderId;
+                            String message = "[Formulaire@FormController::duplicateForms] You're not owner of the folder with id " + folderId;
                             log.error(message);
                             unauthorized(request, message);
                             return;
