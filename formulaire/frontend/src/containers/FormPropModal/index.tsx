@@ -50,6 +50,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
   const {
     selectedForms,
     currentFolder: { id: currentFolderId },
+    rootFolders,
   } = useHome();
   const {
     formPropInputValue,
@@ -121,7 +122,13 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
 
   const handleSubmit = useCallback(async () => {
     const formInEdit = mode === FormPropModalMode.UPDATE ? selectedForms[0] : null;
-    const formPayload = buildFormPayload(formPropInputValue, currentFolderId, formInEdit);
+
+    const targetFolderId: number =
+      rootFolders.length >= 3 && (currentFolderId === rootFolders[1]?.id || currentFolderId === rootFolders[2]?.id)
+        ? rootFolders[0]?.id ?? currentFolderId
+        : currentFolderId;
+
+    const formPayload = buildFormPayload(formPropInputValue, targetFolderId, formInEdit);
 
     const submitActions = {
       [FormPropModalMode.CREATE]: () => createForm(formPayload),
