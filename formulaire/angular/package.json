@@ -21,7 +21,8 @@
   },
   "homepage": "https://github.com/OPEN-ENT-NG/form#readme",
   "resolutions": {
-    "graceful-fs": "^4.2.11"
+    "graceful-fs": "^4.2.11",
+    "@types/d3-dispatch": "3.0.2"
   },
   "dependencies": {
     "awesome-typescript-loader": "3.2.1",
