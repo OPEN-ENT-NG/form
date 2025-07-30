@@ -284,23 +284,24 @@ export const useMapActionBarButtons = () => {
 
       // Cas 1: Un seul formulaire SANS éléments
       if (hasOneForm && !hasFolders && !hasElements) {
-        return [
+        const buttons = [
           ActionBarButtonType.OPEN,
           ActionBarButtonType.PROPS,
           ActionBarButtonType.DUPLICATE,
           ActionBarButtonType.MOVE,
-          ActionBarButtonType.EXPORT,
-          ActionBarButtonType.DELETE,
         ];
+        if (hasShareRightManager) {
+          buttons.push(ActionBarButtonType.EXPORT, ActionBarButtonType.DELETE);
+        }
+        return buttons;
       }
       // Cas 2: Plusieurs formulaires
       if (hasMultipleForms && !hasFolders) {
-        return [
-          ActionBarButtonType.DUPLICATE,
-          ActionBarButtonType.MOVE,
-          ActionBarButtonType.EXPORT,
-          ActionBarButtonType.DELETE,
-        ];
+        const buttons = [ActionBarButtonType.DUPLICATE, ActionBarButtonType.MOVE];
+        if (hasShareRightManager) {
+          buttons.push(ActionBarButtonType.EXPORT, ActionBarButtonType.DELETE);
+        }
+        return buttons;
       }
       // Cas 3: Un seul dossier
       if (hasOneFolder && !hasForms) {
@@ -317,7 +318,11 @@ export const useMapActionBarButtons = () => {
       }
       // Cas 5: Mélange dossiers + formulaires
       if (hasMixedSelection) {
-        return [ActionBarButtonType.MOVE, ActionBarButtonType.DELETE];
+        const buttons = [ActionBarButtonType.MOVE];
+        if (hasShareRightManager) {
+          buttons.push(ActionBarButtonType.DELETE);
+        }
+        return buttons;
       }
       //cas 6: Un seul formulaire AVEC des éléments
       if (hasOneForm && !hasFolders && hasElements) {
@@ -328,10 +333,11 @@ export const useMapActionBarButtons = () => {
           ActionBarButtonType.MOVE,
           ActionBarButtonType.RESULTS,
           ActionBarButtonType.REMIND,
-          ActionBarButtonType.EXPORT,
-          ActionBarButtonType.DELETE,
         ];
-        if (hasQuestionsInForms && hasShareRightManager) buttons.splice(4, 0, ActionBarButtonType.SHARE);
+        if (hasShareRightManager) {
+          if (hasQuestionsInForms) buttons.splice(4, 0, ActionBarButtonType.SHARE);
+          buttons.push(ActionBarButtonType.EXPORT, ActionBarButtonType.DELETE);
+        }
         return buttons;
       }
       // Cas 7: Un formulaire en réponse
