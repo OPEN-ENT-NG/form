@@ -8,11 +8,10 @@ import { IFolder } from "~/core/models/folder/types";
 import { FORMULAIRE } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { useModal } from "~/providers/ModalProvider";
-import { IFormElement } from "~/core/models/formElement/types";
 
 export const useGetCreationHeaderButtons = (
   formId: string | number | undefined,
-  formElementsList: IFormElement[],
+  hasFormElements: boolean,
 ): IButtonProps[] => {
   const navigate = useNavigate();
   const { toggleModal } = useModal();
@@ -32,7 +31,7 @@ export const useGetCreationHeaderButtons = (
         if (formId) window.location.href = getFormTreePath(formId);
       },
     },
-    formElementsList.length > 0
+    hasFormElements
       ? {
           title: t("formulaire.organize"),
           variant: ComponentVariant.OUTLINED,

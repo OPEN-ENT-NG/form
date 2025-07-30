@@ -26,7 +26,6 @@ export const OrganizationUpDownButtons: FC<IOrganizationUpDownButtonsProps> = ({
     () => !showSectionArrows && element.position && element.position > 1,
     [showSectionArrows, element, formElementsList],
   );
-  console.log("Show Up:", showUp, "Element Position:", element.position);
   const showDown = useMemo(
     () => !showSectionArrows && element.position && element.position < formElementsList.length,
     [showSectionArrows, element, formElementsList],

@@ -15,7 +15,7 @@ import { CreationOrganisationModal } from "../CreationOrganisationModal";
 export const CreationView: FC = () => {
   const { form, folders, formElementsList } = useCreation();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
-  const headerButtons = useGetCreationHeaderButtons(form?.id, formElementsList);
+  const headerButtons = useGetCreationHeaderButtons(form?.id, !!formElementsList.length);
 
   const {
     displayModals: { showFormElementCreate, showOrganization },

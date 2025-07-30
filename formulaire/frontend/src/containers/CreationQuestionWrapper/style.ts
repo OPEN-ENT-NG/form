@@ -65,10 +65,20 @@ export const mandatorySwitchContainerStyle: SxProps<Theme> = {
 export const editingQuestionIconContainerStyle: SxProps<Theme> = { marginLeft: "1rem" };
 
 export const editingQuestionIconStyle: SxProps<Theme> = { fontSize: "2rem" };
-
 export const questionAlertStyle: SxProps<Theme> = {
   marginBottom: 2,
-  bgcolor: `${CSS_WARNING_LIGHT_COLOR} !important`,
+  position: "relative",
+  zIndex: 0,
+  backgroundColor: "transparent !important",
+  "&::before": {
+    content: '""',
+    position: "absolute",
+    inset: 0,
+    backgroundColor: `${CSS_WARNING_LIGHT_COLOR} !important`,
+    opacity: 0.35,
+    pointerEvents: "none",
+    zIndex: -1,
+  },
 };
 
 export const conditionalSwitchContainerStyle: SxProps<Theme> = {
