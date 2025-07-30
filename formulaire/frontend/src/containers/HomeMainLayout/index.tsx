@@ -131,6 +131,7 @@ export const HomeMainLayout: FC = () => {
               ))}
           </Box>
         )}
+        {/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */}
         <Box>
           {flatTreeViewItems.map((item) => (
             <DroppableTreeItem
@@ -140,6 +141,7 @@ export const HomeMainLayout: FC = () => {
             />
           ))}
         </Box>
+        {/* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-argument */}
         <DragOverlay>
           {isDraggedItemForm(activeDragItem) && activeDragItem.form ? (
             <FormPreview form={activeDragItem.form} />

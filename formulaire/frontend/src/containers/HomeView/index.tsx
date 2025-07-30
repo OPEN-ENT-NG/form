@@ -22,6 +22,7 @@ import { FormShareModal } from "../FormShareModal";
 import { RemindModal } from "../RemindModal";
 import { MyAnswersModal } from "../MyAnswersModal";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
+import { WorkflowRights } from "~/core/rights";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -42,7 +43,7 @@ export const HomeView: FC = () => {
     },
     toggleModal,
   } = useModal();
-  const { isActionBarOpen, tab } = useHome();
+  const { isActionBarOpen, tab, userWorkflowRights } = useHome();
   const { leftButtons, rightButtons } = useMapActionBarButtons();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
@@ -85,7 +86,7 @@ export const HomeView: FC = () => {
             toggleModal(ModalType.FORM_PROP_CREATE);
           }}
           mode={FormPropModalMode.CREATE}
-          isRgpdPossible
+          isRgpdPossible={userWorkflowRights[WorkflowRights.RGPD]}
         />
       )}
       {showFormPropUpdate && (
@@ -95,7 +96,7 @@ export const HomeView: FC = () => {
             toggleModal(ModalType.FORM_PROP_UPDATE);
           }}
           mode={FormPropModalMode.UPDATE}
-          isRgpdPossible
+          isRgpdPossible={userWorkflowRights[WorkflowRights.RGPD]}
         />
       )}
       {showMove && (
