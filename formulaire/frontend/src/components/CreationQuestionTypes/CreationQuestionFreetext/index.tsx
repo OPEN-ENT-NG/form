@@ -7,6 +7,7 @@ import { StyledEditorWrapper } from "./style";
 import { EditorMode } from "./enums";
 import { ClickAwayListener } from "@mui/material";
 import { EDITOR_CONTENT_HTML, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
+import { EditorVariant } from "~/core/style/themeProps";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
@@ -49,12 +50,17 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
           }}
         >
           <StyledEditorWrapper isCurrentEditingElement={true}>
-            <Editor content={question.statement} ref={editorRef} mode={EditorMode.EDIT} />
+            <Editor
+              content={question.statement}
+              ref={editorRef}
+              mode={EditorMode.EDIT}
+              variant={EditorVariant.OUTLINE}
+            />
           </StyledEditorWrapper>
         </ClickAwayListener>
       ) : (
         <StyledEditorWrapper isCurrentEditingElement={false}>
-          <Editor content={question.statement} ref={editorRef} mode={EditorMode.READ} />
+          <Editor content={question.statement} ref={editorRef} mode={EditorMode.READ} variant={EditorVariant.GHOST} />
         </StyledEditorWrapper>
       )}
     </>

@@ -208,3 +208,7 @@ export function shouldShowConditionalSwitch(question: IQuestion, formElements: I
 
   return !hasOtherConditionalQuestions;
 }
+
+export const shouldShowMandatorySwitch = (question: IQuestion): boolean => {
+  return question.questionType !== QuestionTypes.FREETEXT;
+};
