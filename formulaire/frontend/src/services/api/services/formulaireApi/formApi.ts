@@ -97,8 +97,8 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
     }),
 
     duplicateForms: builder.mutation<IForm[], IDuplicateFormPayload>({
-      query: ({ formIds, folderId }) => ({
-        url: `forms/duplicate/${folderId.toString()}`,
+      query: ({ formIds, targetFolderId }) => ({
+        url: `forms/duplicate/${targetFolderId.toString()}`,
         method: QueryMethod.POST,
         body: formIds,
       }),
