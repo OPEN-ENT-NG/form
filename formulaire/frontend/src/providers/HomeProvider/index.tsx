@@ -137,6 +137,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       toggleTab,
       tabViewPref,
       toggleTagViewPref,
+      rootFolders,
       folders,
       setFolders,
       forms,
@@ -156,6 +157,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
     [
       currentFolder,
       tab,
+      rootFolders,
       folders,
       selectedFolders,
       selectedForms,
