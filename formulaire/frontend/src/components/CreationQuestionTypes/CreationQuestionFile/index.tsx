@@ -9,7 +9,7 @@ export const CreationQuestionFile: FC = () => {
 
   return (
     <Box>
-      <Typography variant={TypographyVariant.BODY2}>{t("formulaire.question.type.FILE")}</Typography>
+      <Typography variant={TypographyVariant.BODY1}>{t("formulaire.question.type.FILE")}</Typography>
     </Box>
   );
 };
