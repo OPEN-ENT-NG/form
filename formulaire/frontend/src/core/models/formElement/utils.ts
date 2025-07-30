@@ -1,6 +1,7 @@
 import { IQuestion } from "../question/types";
 import { isFormElementQuestion } from "../question/utils";
 import { ISection } from "../section/types";
+import { isFormElementSection } from "../section/utils";
 import { FormElementType } from "./enum";
 import { IFormElement, IFormElementDTO, IFormElementPayload } from "./types";
 
@@ -38,7 +39,7 @@ export const createNewFormElement = (formElementType: FormElementType): IFormEle
 };
 
 export const isValidFormElement = (element: IFormElement): boolean => {
-  return !!element.title && element.title.trim() !== "";
+  return (!!element.title && element.title.trim() !== "") || isFormElementSection(element);
 };
 
 export const buildFormElementPayload = (formElement: IFormElement): IFormElementPayload => {

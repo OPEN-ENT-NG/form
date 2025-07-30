@@ -1,4 +1,5 @@
 import { SxProps, Theme } from "@mui/material";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const createFormElementModalPaperStyle: SxProps<Theme> = {
   height: "fit-content",
@@ -36,10 +37,25 @@ export const questionGridStyle: SxProps<Theme> = {
 export const questionStackStyle: SxProps<Theme> = {
   display: "flex",
   alignItems: "center",
-  justifyContent: "center",
+  justifyContent: "flex-start",
+  flexDirection: "column",
+  height: "100%",
+  position: "relative",
+};
+
+export const questionTextStyle: SxProps<Theme> = {
+  marginTop: "1rem !important",
+};
+
+export const iconContainerStyle: SxProps<Theme> = {
+  position: "absolute",
+  top: "50%",
+  transform: "translateY(-50%)",
+  color: TEXT_PRIMARY_COLOR,
 };
 
 export const questionIconStyle: SxProps<Theme> = {
-  width: "3.6rem",
-  height: "3.6rem",
+  color: TEXT_PRIMARY_COLOR,
+  height: "3rem",
+  width: "3rem",
 };
