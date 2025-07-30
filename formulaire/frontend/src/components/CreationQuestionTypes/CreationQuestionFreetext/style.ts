@@ -1,23 +1,40 @@
 import { styled, Box } from "@cgi-learning-hub/ui";
 import { IEditorWrapperProps } from "./types";
 
+const flexContainerStyles = {
+  display: "flex",
+  width: "100%",
+
+  "& > :first-child": {
+    flex: "1 1 auto",
+    width: "100%",
+  },
+};
+
 export const StyledEditorWrapper = styled(Box, {
   shouldForwardProp: (prop) => prop !== "isCurrentEditingElement",
 })<IEditorWrapperProps>(({ isCurrentEditingElement }) => {
-  if (!isCurrentEditingElement) return { userSelect: "none", pointerEvents: "none" };
-  return {
+  // if not Editing our target is the first child
+  const nth = isCurrentEditingElement ? 2 : 1;
+
+  //Selector Tree for the Editor component
+  const editorTree = {
     "> :first-child": {
-      "> :nth-child(2)": {
+      [`> :nth-child(${nth})`]: {
         minHeight: "200px",
-
-        "> :first-child": {
-          display: "flex",
-
-          "& > :first-child": {
-            flex: "1 1 auto",
-          },
-        },
+        "> :first-child": flexContainerStyles,
       },
     },
   };
+
+  // if not editing, add the disable‐interaction bits
+  if (!isCurrentEditingElement) {
+    return {
+      userSelect: "none",
+      pointerEvents: "none",
+      ...editorTree,
+    };
+  }
+
+  return editorTree;
 });
