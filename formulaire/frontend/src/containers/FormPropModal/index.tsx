@@ -34,7 +34,7 @@ import { FormPropField, FormPropModalMode } from "./enums";
 import { useFormPropInputValueState } from "./useFormPropValueState";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, IMAGE_PICKER_INFO } from "~/core/constants";
-import dayjs from "dayjs";
+import dayjs, { Dayjs } from "dayjs";
 import { buildDelegatesParam, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";
 import { GREY_DARK_COLOR } from "~/core/style/colors";
 import RGPDInfoBox from "~/components/RgpdInfoBox";
@@ -204,7 +204,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                 minDate={dayjs()}
                 value={dayjs(formPropInputValue[FormPropField.DATE_OPENING])}
                 onChange={(value) => {
-                  handleDateChange(FormPropField.DATE_OPENING, value);
+                  handleDateChange(FormPropField.DATE_OPENING, value as Dayjs);
                 }}
               />
             </Box>
@@ -238,7 +238,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                   minDate={dayjs(dateOpening).add(1, "day")}
                   value={dayjs(formPropInputValue[FormPropField.DATE_ENDING])}
                   onChange={(value) => {
-                    handleDateChange(FormPropField.DATE_ENDING, value);
+                    handleDateChange(FormPropField.DATE_ENDING, value as Dayjs);
                   }}
                 />
               </Box>
