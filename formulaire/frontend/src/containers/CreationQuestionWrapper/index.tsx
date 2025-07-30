@@ -3,6 +3,7 @@ import {
   Alert,
   Box,
   ClickAwayListener,
+  EllipsisWithTooltip,
   IconButton,
   Paper,
   Stack,
@@ -28,12 +29,14 @@ import {
   editingQuestionIconContainerStyle,
   editingQuestionIconStyle,
   editingQuestionTitleStyle,
+  mandatorySwitchContainerStyle,
+  mandatoryTitleStyle,
   questionAlertStyle,
   questionStackStyle,
   questionTitleStyle,
   StyledPaper,
 } from "./style";
-import { AlertSeverityVariant, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { IQuestion } from "~/core/models/question/types";
 import { useModal } from "~/providers/ModalProvider";
 import { ModalType } from "~/core/enums";
@@ -41,9 +44,14 @@ import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
 import { UndoConfirmationModal } from "../UndoConfirmationModal";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
-import { isCursorChoiceConsistent, shouldShowConditionalSwitch } from "~/core/models/question/utils";
+import {
+  isCursorChoiceConsistent,
+  shouldShowConditionalSwitch,
+  shouldShowMandatorySwitch,
+} from "~/core/models/question/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { getQuestionContentByType } from "./utils";
+import { ERROR_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -156,9 +164,13 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
               <Box sx={editingQuestionContentStyle}>{getQuestionContentByType(question, inputRef)}</Box>
 
               <Box sx={editingQuestionFooterStyle}>
-                <Switch checked={question.mandatory} onChange={handleMandatoryChange} />
+                {shouldShowMandatorySwitch(question) && (
+                  <Box sx={mandatorySwitchContainerStyle}>
+                    <Switch checked={question.mandatory} onChange={handleMandatoryChange} />
+                    <Typography>{t("formulaire.mandatory")}</Typography>
+                  </Box>
+                )}
 
-                <Typography>{t("formulaire.mandatory")}</Typography>
                 {shouldShowConditionalSwitch(question, formElementsList) && (
                   <Box sx={conditionalSwitchContainerStyle}>
                     <Switch checked={question.conditional} onChange={handleConditionalChange} />
@@ -211,7 +223,19 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             <DragIndicatorRoundedIcon sx={dragIconStyle} />
           </Box>
           <Box sx={questionTitleStyle}>
-            <Typography variant={TypographyVariant.H6}>{question.title}</Typography>
+            <EllipsisWithTooltip
+              typographyProps={{
+                variant: TypographyVariant.H6,
+                color: question.title ? undefined : TEXT_SECONDARY_COLOR,
+              }}
+            >
+              {question.title || t("formulaire.question.title.empty")}
+            </EllipsisWithTooltip>
+            {question.mandatory && (
+              <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR} sx={mandatoryTitleStyle}>
+                *
+              </Typography>
+            )}
           </Box>
           <Box>{getQuestionContentByType(question)}</Box>
         </Stack>

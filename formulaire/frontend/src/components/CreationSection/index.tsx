@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { ICreationSectionProps } from "./types";
 import {
   Box,
@@ -10,12 +10,12 @@ import {
   MenuItem,
   FormControl,
   Alert,
-  TextField,
+  EllipsisWithTooltip,
 } from "@cgi-learning-hub/ui";
 import {
   descriptionStyle,
-  editingSectionTitleStyle,
   nextElementSelectorStyle,
+  nextElementSelectorWrapperStyle,
   sectionAddQuestionStyle,
   sectionButtonIconStyle,
   sectionButtonStyle,
@@ -63,11 +63,6 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
 
   //TITLE
   const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
-  const isEditing = isCurrentEditingElement(section, currentEditingElement);
-
-  const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    setCurrentSectionTitle(event.target.value);
-  };
 
   useEffect(() => {
     if (!isCurrentEditingElement(section, currentEditingElement)) setCurrentSectionTitle(section.title ?? "");
@@ -106,18 +101,9 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
           </Box>
           <Box sx={sectionHeaderStyle}>
             <Box sx={sectionTitleStyle}>
-              {isEditing ? (
-                <TextField
-                  variant={ComponentVariant.STANDARD}
-                  fullWidth
-                  sx={editingSectionTitleStyle}
-                  placeholder={t("formulaire.section.title.empty")}
-                  value={currentSectionTitle}
-                  onChange={handleTitleChange}
-                />
-              ) : (
-                <Typography>{section.title ? section.title : t("formulaire.section.title.empty")}</Typography>
-              )}
+              <EllipsisWithTooltip>
+                {section.title ? section.title : t("formulaire.section.title.empty")}
+              </EllipsisWithTooltip>
             </Box>
             {currentEditingElement === null && (
               <Box sx={sectionIconWrapperStyle}>
@@ -149,7 +135,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
             ))}
           </Box>
           <Box sx={sectionFooterStyle}>
-            <Box sx={nextElementSelectorStyle}>
+            <Box sx={nextElementSelectorWrapperStyle}>
               {!hasConditionalQuestion(section) && (
                 <FormControl fullWidth>
                   <Select
@@ -157,20 +143,27 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
                     value={targetNextElementId != null ? String(targetNextElementId) : TARGET_RECAP}
                     onChange={handleNextFormElementChange}
                     displayEmpty
+                    MenuProps={{
+                      PaperProps: {
+                        sx: nextElementSelectorStyle,
+                      },
+                    }}
                   >
                     {followingElement && (
                       <MenuItem value={followingElement.id != null ? String(followingElement.id) : ""}>
-                        {t("formulaire.access.next")}
+                        <EllipsisWithTooltip>{t("formulaire.access.next")}</EllipsisWithTooltip>
                       </MenuItem>
                     )}
 
                     {elementsTwoPositionsAheadList.map((el) => (
                       <MenuItem key={el.id} value={el.id != null ? String(el.id) : ""}>
-                        {t("formulaire.access.element") + (el.title ?? "")}
+                        <EllipsisWithTooltip> {t("formulaire.access.element") + (el.title ?? "")}</EllipsisWithTooltip>
                       </MenuItem>
                     ))}
 
-                    <MenuItem value={TARGET_RECAP}>{t("formulaire.access.recap")}</MenuItem>
+                    <MenuItem value={TARGET_RECAP}>
+                      <EllipsisWithTooltip> {t("formulaire.access.recap")}</EllipsisWithTooltip>
+                    </MenuItem>
                   </Select>
                 </FormControl>
               )}
