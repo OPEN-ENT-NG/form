@@ -17,7 +17,7 @@ import { isEnterPressed } from "~/core/utils";
 export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }) => {
   const { currentFolder, selectedFolders } = useHome();
   const { t } = useTranslation(FORMULAIRE);
-  const [newName, setNewName] = useState<string>("");
+  const [newName, setNewName] = useState<string>(mode === FolderModalMode.RENAME ? selectedFolders[0]?.name : "");
   const [createFolder] = useCreateFolderMutation();
   const [updateFolder] = useUpdateFolderMutation();
 
