@@ -17,6 +17,7 @@ export type HomeProviderContextType = {
   toggleTab: (tab: HomeTabState) => void;
   tabViewPref: IHomeTabViewPref;
   toggleTagViewPref: (viewMode: ViewMode) => void;
+  rootFolders: IFolder[];
   folders: IFolder[];
   setFolders: (value: IFolder[]) => void;
   forms: IForm[];
