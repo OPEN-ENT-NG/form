@@ -27,6 +27,7 @@ export const useMapActionBarButtons = () => {
     setSelectedForms,
     setSelectedSentForm,
     folders,
+    rootFolders,
     currentFolder,
     forms,
     distributions,
@@ -107,11 +108,11 @@ export const useMapActionBarButtons = () => {
 
     try {
       const formIds = selectedForms.map((form) => form.id);
-      const folderId = currentFolder.id;
+      const targetFolderId = currentFolder.id === rootFolders[1].id ? rootFolders[0].id : currentFolder.id;
 
       await duplicateForms({
         formIds,
-        folderId,
+        targetFolderId,
       }).unwrap();
       unselectAll();
       return;

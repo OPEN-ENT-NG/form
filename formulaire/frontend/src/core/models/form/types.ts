@@ -69,7 +69,7 @@ export interface IFormPayload {
 
 export interface IDuplicateFormPayload {
   formIds: number[];
-  folderId: number;
+  targetFolderId: number;
 }
 
 export interface IFormRight {
