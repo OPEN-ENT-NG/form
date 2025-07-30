@@ -21,12 +21,12 @@ export const sectionHeaderStyle: SxProps<Theme> = {
 };
 
 export const sectionTitleStyle: SxProps<Theme> = {
-  width: "100%",
-  paddingX: "1rem",
+  flex: 1,
+  minWidth: 0,
+  paddingRight: "1rem",
 };
 
 export const sectionIconWrapperStyle: SxProps<Theme> = {
-  width: "auto",
   display: "flex",
   alignItems: "center",
 };
@@ -94,10 +94,14 @@ export const sectionNewQuestionStyle: SxProps<Theme> = {
   display: "flex",
 };
 
-export const nextElementSelectorStyle: SxProps<Theme> = {
+export const nextElementSelectorWrapperStyle: SxProps<Theme> = {
   gridColumn: 2,
   justifySelf: "center",
   display: "flex",
+};
+
+export const nextElementSelectorStyle: SxProps<Theme> = {
+  width: 300,
 };
 
 export const descriptionStyle: SxProps<Theme> = {

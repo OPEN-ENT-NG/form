@@ -34,6 +34,7 @@ export const CreationQuestionShortAnswer: FC<ICreationQuestionTypesProps> = ({ q
       <TextField
         variant={ComponentVariant.OUTLINED}
         fullWidth
+        multiline
         placeholder={t("formulaire.question.type.SHORTANSWER")}
         value={currentQuestionPlaceholder}
         onChange={handlePlaceholderChange}

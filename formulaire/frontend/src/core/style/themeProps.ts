@@ -6,6 +6,11 @@ export enum ComponentVariant {
   FILLED = "filled",
 }
 
+export enum EditorVariant {
+  OUTLINE = "outline",
+  GHOST = "ghost",
+}
+
 export enum ComponentSize {
   SMALL = "small",
   MEDIUM = "medium",
