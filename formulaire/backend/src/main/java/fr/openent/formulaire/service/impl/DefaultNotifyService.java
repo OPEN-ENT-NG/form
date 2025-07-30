@@ -57,7 +57,7 @@ public class DefaultNotifyService implements NotifyService {
 
     private void notifyNewFormMain(HttpServerRequest request, JsonObject form, JsonArray responders, UserInfos user) {
         String endPath = form.getBoolean(RGPD) ? RGPD : NEW;
-        String formUri = "/formulaire#/form/" + form.getInteger(ID) + "/" + endPath;
+        String formUri = "/formulaire?view=angular#/form/" + form.getInteger(ID) + "/" + endPath;
 
         JsonObject params = new JsonObject()
                 .put(PARAM_USER_URI, "/userbook/annuaire#" + user.getUserId())
@@ -80,7 +80,7 @@ public class DefaultNotifyService implements NotifyService {
                 return;
             }
 
-            String formResultsUri = "/formulaire#/form/" + form.getInteger(ID) + "/results/1";
+            String formResultsUri = "/formulaire?view=angular#/form/" + form.getInteger(ID) + "/results/1";
 
             JsonObject params = new JsonObject()
                     .put(ANONYMOUS, form.getBoolean(ANONYMOUS))
