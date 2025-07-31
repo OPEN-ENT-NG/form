@@ -29,7 +29,7 @@ import {
   datePickerWrapperStyle,
 } from "./style";
 
-import { IFormPropModalProps } from "./types";
+import { IFormCheckBoxProp, IFormPropModalProps } from "./types";
 import { FormPropField, FormPropModalMode } from "./enums";
 import { useFormPropInputValueState } from "./useFormPropValueState";
 import { useTranslation } from "react-i18next";
@@ -168,6 +168,23 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
     return;
   }, [isDescriptionDisplay, handleFormPropInputValueChange]);
 
+  const isCheckboxDisabled = (item: IFormCheckBoxProp) => {
+    const isDisabledPublic =
+      item.field === FormPropField.IS_ANONYMOUS ||
+      item.field === FormPropField.IS_MULTIPLE ||
+      item.field === FormPropField.IS_EDITABLE
+        ? isPublic
+        : false;
+
+    const isDisabledAnswered =
+      (item.field === FormPropField.IS_MULTIPLE ||
+        item.field === FormPropField.IS_ANONYMOUS ||
+        item.field === FormPropField.HAS_RGPD) &&
+      !!selectedForms[0]?.nb_responses;
+
+    return isDisabledPublic || isDisabledAnswered;
+  };
+
   const formContent = (
     <>
       <Typography mb={"1rem"}>{t("formulaire.prop.edit.title")}</Typography>
@@ -253,12 +270,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
           </Box>
           <Box sx={subContentColumnWrapper}>
             {formCheckBoxPropsReadyList.map((item) => {
-              const isDisabled =
-                item.field === FormPropField.IS_ANONYMOUS ||
-                item.field === FormPropField.IS_MULTIPLE ||
-                item.field === FormPropField.IS_EDITABLE
-                  ? isPublic
-                  : false;
+              const isDisabled = isCheckboxDisabled(item);
               const isChecked =
                 item.field === FormPropField.DESCRIPTION
                   ? isDescriptionDisplay
