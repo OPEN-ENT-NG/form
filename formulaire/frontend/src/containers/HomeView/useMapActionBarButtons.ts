@@ -58,7 +58,9 @@ export const useMapActionBarButtons = () => {
   const hasOneForm = useMemo(() => selectedForms.length === 1, [selectedForms]);
   const hasMultipleForms = useMemo(() => selectedForms.length > 1, [selectedForms]);
   const hasForms = useMemo(() => selectedForms.length > 0, [selectedForms]);
-  const hasElements = useMemo(() => !!selectedForms[0]?.nb_elements, [selectedForms]);
+  const hasElements = useMemo(() => {
+    return selectedForms.length > 0 && selectedForms.every((form) => form.nb_elements > 0);
+  }, [selectedForms]);
 
   const hasSentForm = useMemo(() => !!selectedSentForm, [selectedSentForm]);
 
@@ -288,9 +290,6 @@ export const useMapActionBarButtons = () => {
         const buttons = [ActionBarButtonType.OPEN, ActionBarButtonType.PROPS, ActionBarButtonType.DUPLICATE];
         if (currentFolder.id === rootFolders[0].id) {
           buttons.push(ActionBarButtonType.MOVE);
-        }
-        if (hasShareRightManager) {
-          buttons.push(ActionBarButtonType.EXPORT, ActionBarButtonType.DELETE);
         }
         return buttons;
       }
