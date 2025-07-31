@@ -21,6 +21,16 @@ import {
 import { IImagePickerMediaLibraryProps, MediaLibraryResult } from "./types";
 import { BoxComponentType } from "~/core/style/themeProps";
 import { useDropzone } from "react-dropzone";
+import {
+  FORMULAIRE,
+  GIF_EXTENSION,
+  IMAGE_CONTENT_TYPE,
+  JPEG_EXTENSION,
+  JPG_EXTENSION,
+  PNG_EXTENSION,
+  PROTECTED_VISIBILITY,
+  SVG_EXTENSION,
+} from "~/core/constants";
 
 export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   information,
@@ -39,8 +49,8 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   const handleDropFiles = async (acceptedFiles: File[]) => {
     const file = acceptedFiles[0];
     const newWorkspaceElement: MediaLibraryResult = await create(file, {
-      visibility: "protected",
-      application: "formulaire",
+      visibility: PROTECTED_VISIBILITY,
+      application: FORMULAIRE,
     });
     handleMediaLibrarySuccess(newWorkspaceElement);
   };
@@ -52,7 +62,7 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   const { getRootProps, isDragActive } = useDropzone({
     onDrop: handleDropFilesWrapper,
     multiple: false,
-    accept: { "image/*": [".png", ".jpeg", ".jpg", ".gif", ".svg"] },
+    accept: { IMAGE_CONTENT_TYPE: [PNG_EXTENSION, JPEG_EXTENSION, JPG_EXTENSION, GIF_EXTENSION, SVG_EXTENSION] },
   });
 
   useEffect(() => {
@@ -168,7 +178,7 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
               onSuccess={handleMediaLibrarySuccess}
               appCode={appCode}
               multiple={false}
-              visibility="protected"
+              visibility={PROTECTED_VISIBILITY}
             />
           </Box>,
           portalElement,
