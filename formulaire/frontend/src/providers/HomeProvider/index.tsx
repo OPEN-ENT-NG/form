@@ -115,7 +115,8 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
 
   useEffect(() => {
     if (sentFormsDatas) {
-      setSentForms(sentFormsDatas);
+      const notArchivedSentForms = sentFormsDatas.filter((form) => !form.archived);
+      setSentForms(notArchivedSentForms);
       return;
     }
     return;
