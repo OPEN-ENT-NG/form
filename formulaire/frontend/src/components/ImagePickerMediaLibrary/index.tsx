@@ -4,7 +4,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Typography } from "@mui/material";
 import { FC, useEffect, useRef, useState } from "react";
 import { MediaLibrary, MediaLibraryRef } from "@edifice.io/react/multimedia";
-import { useEdificeClient } from "@edifice.io/react";
+import { useEdificeClient, useWorkspaceFile } from "@edifice.io/react";
 import { createPortal } from "react-dom";
 import {
   containerStyle,
@@ -20,6 +20,7 @@ import {
 } from "./style";
 import { IImagePickerMediaLibraryProps, MediaLibraryResult } from "./types";
 import { BoxComponentType } from "~/core/style/themeProps";
+import { useDropzone } from "react-dropzone";
 
 export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   information,
@@ -33,6 +34,26 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   const [portalElement, setPortalElement] = useState<HTMLElement | null>(null);
   const mediaLibraryRef = useRef<MediaLibraryRef>(null);
   const { appCode } = useEdificeClient();
+  const { create } = useWorkspaceFile();
+
+  const handleDropFiles = async (acceptedFiles: File[]) => {
+    const file = acceptedFiles[0];
+    const newWorkspaceElement: MediaLibraryResult = await create(file, {
+      visibility: "protected",
+      application: "formulaire",
+    });
+    handleMediaLibrarySuccess(newWorkspaceElement);
+  };
+
+  const handleDropFilesWrapper = (acceptedFiles: File[]) => {
+    void handleDropFiles(acceptedFiles);
+  };
+
+  const { getRootProps, isDragActive } = useDropzone({
+    onDrop: handleDropFilesWrapper,
+    multiple: false,
+    accept: { "image/*": [".png", ".jpeg", ".jpg", ".gif", ".svg"] },
+  });
 
   useEffect(() => {
     const element = document.getElementById("portal");
@@ -86,7 +107,7 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   };
 
   return (
-    <>
+    <Box {...getRootProps()}>
       <Box sx={containerStyle} className="media-library-image-picker">
         <Box
           sx={{
@@ -99,16 +120,25 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
           {!currentSrc ? (
             <Box sx={emptyStateContentStyle}>
               <AddPhotoAlternateIcon color="primary" sx={iconStyle} />
-              <Typography sx={labelTextStyle}>
-                <Box component={BoxComponentType.SPAN} fontWeight="bold">
-                  Glissez-déposez
-                </Box>{" "}
-                ou{" "}
-                <Box component={BoxComponentType.SPAN} fontWeight="bold">
-                  cliquez
-                </Box>{" "}
-                pour choisir une image
-              </Typography>
+              {isDragActive ? (
+                <Typography sx={labelTextStyle}>
+                  <Box component={BoxComponentType.SPAN} fontWeight="bold">
+                    Glissez
+                  </Box>{" "}
+                  une image
+                </Typography>
+              ) : (
+                <Typography sx={labelTextStyle}>
+                  <Box component={BoxComponentType.SPAN} fontWeight="bold">
+                    Glissez-déposez
+                  </Box>{" "}
+                  ou{" "}
+                  <Box component={BoxComponentType.SPAN} fontWeight="bold">
+                    cliquez
+                  </Box>{" "}
+                  pour choisir une image
+                </Typography>
+              )}
               {information && <Typography sx={infoTextStyle}>{information}</Typography>}
             </Box>
           ) : (
@@ -143,6 +173,6 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
           </Box>,
           portalElement,
         )}
-    </>
+    </Box>
   );
 };
