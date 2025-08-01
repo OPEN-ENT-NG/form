@@ -7,6 +7,10 @@ import Backend from "i18next-http-backend";
 import { initReactI18next } from "react-i18next";
 import { COMMON, FORMULAIRE } from "./core/constants";
 
+const preprocessInterpolation = (str: string) => {
+  return str.replace(/\[\[(.*?)\]\]/g, "{{$1}}");
+};
+
 i18n
   .use(Backend)
   .use(LanguageDetector)
@@ -23,7 +27,8 @@ i18n
         return urls;
       },
       parse: function (data: string) {
-        return JSON.parse(data);
+        const transformed = preprocessInterpolation(data);
+        return JSON.parse(transformed);
       },
     },
     defaultNS: COMMON,
