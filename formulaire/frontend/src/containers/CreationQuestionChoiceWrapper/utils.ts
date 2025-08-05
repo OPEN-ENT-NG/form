@@ -14,13 +14,13 @@ const swapChoices = (
   choiceB: IQuestionChoice,
   choices: IQuestionChoice[],
 ): IQuestionChoice[] => {
-  if (choices.length < 2 || choiceA.id === choiceB.id) return choices;
+  if (choices.length < 2 || choiceA.position === choiceB.position) return choices;
 
   return choices.map((choice) => {
-    if (choice.id === choiceA.id) {
+    if (choice.position === choiceA.position) {
       return { ...choice, position: choiceB.position };
     }
-    if (choice.id === choiceB.id) {
+    if (choice.position === choiceB.position) {
       return { ...choice, position: choiceA.position };
     }
     return choice;

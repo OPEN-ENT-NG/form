@@ -18,8 +18,11 @@ export const QuestionChoicesUpDownButtons: FC<IQuestionChoicesUpDownButtonsProps
   const showUp = useMemo(() => choice.position > 1 && !choice.isCustom, [choice]);
 
   const showDown = useMemo(
-    () => choice.position < questionChoicesList.length && !questionChoicesList[index + 1].isCustom,
-    [choice, questionChoicesList],
+    () =>
+      choice.position < questionChoicesList.length &&
+      index + 1 < questionChoicesList.length &&
+      !questionChoicesList[index + 1]?.isCustom,
+    [choice, questionChoicesList, index],
   );
   // Render only if any arrow should be shown
   if (!showUp && !showDown) {
@@ -32,7 +35,7 @@ export const QuestionChoicesUpDownButtons: FC<IQuestionChoicesUpDownButtonsProps
         {!!showUp && (
           <IconButton
             onClick={() => {
-              handleReorderClick(choice, Direction.UP);
+              handleReorderClick(index, Direction.UP);
             }}
             size={ComponentSize.SMALL}
           >
@@ -44,7 +47,7 @@ export const QuestionChoicesUpDownButtons: FC<IQuestionChoicesUpDownButtonsProps
         {!!showDown && (
           <IconButton
             onClick={() => {
-              handleReorderClick(choice, Direction.DOWN);
+              handleReorderClick(index, Direction.DOWN);
             }}
             size={ComponentSize.SMALL}
           >

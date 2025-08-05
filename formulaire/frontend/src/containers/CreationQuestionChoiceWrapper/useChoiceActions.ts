@@ -1,5 +1,5 @@
-import { Dispatch, SetStateAction, useCallback, useState } from "react";
-import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
+import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
+import { IQuestion } from "~/core/models/question/types";
 import { Direction } from "~/components/OrganizationSortableItem/enum";
 import { useDeleteQuestionChoiceMutation } from "~/services/api/services/formulaireApi/questionChoiceApi";
 import { fixChoicesPositions, updateElementInList } from "~/providers/CreationProvider/utils";
@@ -18,8 +18,8 @@ export const useChoiceActions = (
   const [deleteQuestionChoice] = useDeleteQuestionChoiceMutation();
 
   const isExistingCustomChoice = question.choices?.some((choice) => choice.isCustom);
-  const choices = question.choices || [];
   const setQuestion = setCurrentEditingElement as Dispatch<SetStateAction<IQuestion>>;
+  const choices = useMemo(() => question.choices || [], [question]);
 
   const handleDeleteChoice = useCallback(
     async (choiceId: number | null, index: number, position: number) => {
@@ -37,15 +37,13 @@ export const useChoiceActions = (
   );
 
   const handleSwapClick = useCallback(
-    (choice: IQuestionChoice, direction: Direction) => {
-      const currentIndex = choices.findIndex((c) => c.id === choice.id);
-      const newIndex = direction === Direction.UP ? currentIndex - 1 : currentIndex + 1;
-
-      if (currentIndex === -1 || newIndex < 0 || newIndex >= choices.length) return;
+    (choiceIndex: number, direction: Direction) => {
+      const newIndex = direction === Direction.UP ? choiceIndex - 1 : choiceIndex + 1;
+      if (choiceIndex === -1 || newIndex < 0 || newIndex >= choices.length) return;
 
       const updatedQuestion = {
         ...question,
-        choices: swapChoicesAndSort(choices[currentIndex], choices[newIndex], choices),
+        choices: swapChoicesAndSort(choices[choiceIndex], choices[newIndex], choices),
       };
       setCurrentEditingElement(updatedQuestion);
     },
@@ -70,18 +68,14 @@ export const useChoiceActions = (
   }, [choices, currentSortDirection, question]);
 
   const handleNewChoice = useCallback(
-    (isCustom: boolean) => {
-      if (!question.choices || (isExistingCustomChoice && isCustom)) return;
-
-      const value = isCustom
-        ? t("formulaire.other")
-        : t("formulaire.option", { 0: isExistingCustomChoice ? choices.length : choices.length + 1 });
+    (isCustom: boolean, choiceValue: string) => {
+      if (!question.choices || (isExistingCustomChoice && isCustom) || !choiceValue) return;
 
       const newChoice = createNewQuestionChoice(
         question.id,
         isExistingCustomChoice ? choices.length : choices.length + 1,
         null,
-        value,
+        choiceValue,
         isCustom,
       );
 
