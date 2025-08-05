@@ -69,9 +69,6 @@ export const newChoiceInputStyle: SxProps = {
   "& .MuiInputBase-root": {
     marginTop: 0, // Override the default margin
   },
-  "& .MuiInputBase-input": {
-    color: "text.secondary", // Label-like color for the value text
-  },
 };
 
 export const otherChoiceSpanStyle: SxProps = {

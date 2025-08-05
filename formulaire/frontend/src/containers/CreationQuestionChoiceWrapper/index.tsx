@@ -1,5 +1,5 @@
 import { Box, ClickAwayListener, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
-import { FC, useEffect, useMemo, useRef } from "react";
+import { FC, useMemo, useState } from "react";
 import { ICreationQuestionChoiceWrapperProps } from "./types";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
@@ -33,12 +33,10 @@ import { CreationQuestionChoiceType } from "~/components/CreationQuestionTypes/C
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({ question, type }) => {
   const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
-  const newChoiceInputRef = useRef<HTMLInputElement | null>(null);
-  const isExistingCustomChoice = useMemo(() => question.choices?.some((choice) => choice.isCustom), [question.choices]);
   const { t } = useTranslation(FORMULAIRE);
+  const [newChoiceValue, setNewChoiceValue] = useState<string>("");
 
   const {
-    choices,
     handleDeleteChoice,
     handleNewChoice,
     handleSortClick,
@@ -49,23 +47,8 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   } = useChoiceActions(question, setCurrentEditingElement, setFormElementsList);
 
   const sortedChoices = useMemo(() => {
-    return choices.sort((a, b) => compareChoices(a, b));
-  }, [choices]);
-
-  //When clicking on the new question, focus the last input field
-  useEffect(() => {
-    if (newChoiceInputRef.current) {
-      newChoiceInputRef.current.focus();
-    }
-  }, [question.choices?.length]);
-
-  //Is this the element we need to focus on ?
-  const isInputRef = (index: number) => {
-    if (isExistingCustomChoice) {
-      return index === choices.length - 2 ? newChoiceInputRef : null;
-    }
-    return index === choices.length - 1 ? newChoiceInputRef : null;
-  };
+    return question.choices?.sort((a, b) => compareChoices(a, b)) ?? [];
+  }, [question.choices]);
 
   if (!question.choices) {
     return null;
@@ -93,7 +76,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     <QuestionChoicesUpDownButtons
                       choice={choice}
                       index={index}
-                      questionChoicesList={choices}
+                      questionChoicesList={question.choices ?? []}
                       handleReorderClick={handleSwapClick}
                     />
                   </Box>
@@ -106,7 +89,6 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     isEditing={true}
                   >
                     <TextField
-                      inputRef={isInputRef(index)}
                       value={choice.value}
                       variant={ComponentVariant.STANDARD}
                       fullWidth
@@ -118,7 +100,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     />
                   </CreationQuestionChoice>
                   <Box sx={deleteWrapperStyle}>
-                    {choices.length > 1 && (
+                    {question.choices && question.choices.length > 1 && (
                       <IconButton
                         onClick={() => void handleDeleteChoice(choice.id, index, choice.position)}
                         size={ComponentSize.SMALL}
@@ -133,11 +115,16 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
               <Box sx={newChoiceWrapperStyle}>
                 <CreationQuestionChoice index={question.choices.length} type={type}>
                   <TextField
-                    value={t("formulaire.question.label")}
+                    value={newChoiceValue}
                     variant={ComponentVariant.STANDARD}
+                    placeholder={t("formulaire.question.label")}
                     fullWidth
-                    onFocus={() => {
-                      handleNewChoice(false);
+                    onBlur={() => {
+                      handleNewChoice(false, newChoiceValue);
+                      setNewChoiceValue("");
+                    }}
+                    onChange={(e) => {
+                      setNewChoiceValue(e.target.value);
                     }}
                     sx={newChoiceInputStyle}
                   />
@@ -150,7 +137,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                 <Box
                   component={BoxComponentType.SPAN}
                   onClick={() => {
-                    handleNewChoice(true);
+                    handleNewChoice(true, t("formulaire.other"));
                   }}
                   sx={otherChoiceSpanStyle}
                 >
