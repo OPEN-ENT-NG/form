@@ -39,6 +39,7 @@ export const CreationQuestionChoice: FC<ICreationQuestionChoiceProps> = ({
     [QuestionTypes.SINGLEANSWERRADIO]: <Radio sx={choiceIconStyle} disabled={true} />,
     [QuestionTypes.MULTIPLEANSWER]: <Checkbox sx={choiceIconStyle} disabled={true} />,
     [QuestionTypes.SINGLEANSWER]: <Typography sx={choiceIconStyle}>{`${index + 1}.`}</Typography>,
+    [QuestionTypes.RANKING]: <></>,
   };
 
   return (
