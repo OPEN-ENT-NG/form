@@ -12,7 +12,6 @@ import { IQuestion } from "~/core/models/question/types";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { t } from "~/i18n";
 import { CreationQuestionChoiceWrapper } from "../CreationQuestionChoiceWrapper";
-import { CreationQuestionChoiceType } from "~/components/CreationQuestionTypes/CreationQuestionChoice/enum";
 
 export const getQuestionContentByType = (
   question: IQuestion,
@@ -34,7 +33,9 @@ export const getQuestionContentByType = (
     case QuestionTypes.FILE:
       return <CreationQuestionFile />;
     case QuestionTypes.SINGLEANSWER:
-      return <CreationQuestionChoiceWrapper question={question} type={CreationQuestionChoiceType.SINGLE_ANSWER} />;
+    case QuestionTypes.MULTIPLEANSWER:
+    case QuestionTypes.SINGLEANSWERRADIO:
+      return <CreationQuestionChoiceWrapper question={question} type={question.questionType} />;
     default:
       return (
         <Typography variant={TypographyVariant.BODY1}>
