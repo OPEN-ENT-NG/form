@@ -1,8 +1,7 @@
 import { FC, ReactNode, useCallback, useState } from "react";
-import { Box, IconButton, Typography } from "@cgi-learning-hub/ui";
+import { Box, IconButton, Typography, Checkbox, Radio } from "@cgi-learning-hub/ui";
 import { IMAGE_PICKER_INFO } from "~/core/constants";
 import { ICreationQuestionChoiceProps } from "./types";
-import { CreationQuestionChoiceType } from "./enum";
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import {
   choiceIconStyle,
@@ -15,8 +14,7 @@ import {
 import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
 import { ComponentSize } from "~/core/style/themeProps";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import RadioButtonUncheckedRoundedIcon from "@mui/icons-material/RadioButtonUncheckedRounded";
-import CheckBoxOutlineBlankRoundedIcon from "@mui/icons-material/CheckBoxOutlineBlankRounded";
+import { QuestionTypes } from "~/core/models/question/enum";
 
 export const CreationQuestionChoice: FC<ICreationQuestionChoiceProps> = ({
   type,
@@ -37,10 +35,10 @@ export const CreationQuestionChoice: FC<ICreationQuestionChoiceProps> = ({
     [updateChoiceImage, index],
   );
 
-  const typeToIcons: Record<CreationQuestionChoiceType, ReactNode> = {
-    [CreationQuestionChoiceType.SINGLE_ANSWER_RADIO]: <RadioButtonUncheckedRoundedIcon sx={choiceIconStyle} />,
-    [CreationQuestionChoiceType.MULTIPLE_ANSWER]: <CheckBoxOutlineBlankRoundedIcon sx={choiceIconStyle} />,
-    [CreationQuestionChoiceType.SINGLE_ANSWER]: <Typography sx={choiceIconStyle}>{`${index + 1}.`}</Typography>,
+  const typeToIcons: Partial<Record<QuestionTypes, ReactNode>> = {
+    [QuestionTypes.SINGLEANSWERRADIO]: <Radio sx={choiceIconStyle} disabled={true} />,
+    [QuestionTypes.MULTIPLEANSWER]: <Checkbox sx={choiceIconStyle} disabled={true} />,
+    [QuestionTypes.SINGLEANSWER]: <Typography sx={choiceIconStyle}>{`${index + 1}.`}</Typography>,
   };
 
   return (
