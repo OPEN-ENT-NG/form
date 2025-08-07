@@ -1,7 +1,6 @@
 import { SelectChangeEvent } from "@mui/material";
 import { useCallback, useEffect, useState } from "react";
 import { TARGET_RECAP } from "~/core/constants";
-import { ISection } from "~/core/models/section/types";
 import { useCreation } from "~/providers/CreationProvider";
 import {
   getElementById,
@@ -9,25 +8,32 @@ import {
   getFollowingFormElement,
   isSectionOrQuestion,
 } from "~/providers/CreationProvider/utils";
+import { EntityWithNextElement, IUseTargetNextElementConfig } from "./types";
 
-export const useTargetNextElement = (section?: ISection) => {
-  const { formElementsList, saveSection } = useCreation();
-  const followingElement = section ? getFollowingFormElement(section, formElementsList) : undefined;
+export const useTargetNextElement = <T extends EntityWithNextElement>({
+  entity,
+  positionReferenceElement,
+  onSave,
+}: IUseTargetNextElementConfig<T>) => {
+  const { formElementsList } = useCreation();
 
-  const elementsTwoPositionsAheadList = section?.position
-    ? getElementsPositionGreaterEqual(section.position + 2, formElementsList)
+  const followingElement = positionReferenceElement.position
+    ? getFollowingFormElement(positionReferenceElement, formElementsList)
+    : undefined;
+
+  const elementsTwoPositionsAheadList = positionReferenceElement.position
+    ? getElementsPositionGreaterEqual(positionReferenceElement.position + 2, formElementsList)
     : [];
 
   const computeInitialId = useCallback((): number | undefined => {
     if (
-      !section ||
-      section.nextFormElementId == null ||
-      !getElementById(section.nextFormElementId, formElementsList, isSectionOrQuestion)
+      entity.nextFormElementId == null ||
+      !getElementById(entity.nextFormElementId, formElementsList, isSectionOrQuestion)
     ) {
       return undefined;
     }
-    return section.nextFormElementId;
-  }, [section, formElementsList, followingElement]);
+    return entity.nextFormElementId;
+  }, [entity, formElementsList]);
 
   const [targetNextElementId, setTargetNextElementId] = useState<number | undefined>(computeInitialId());
 
@@ -38,14 +44,23 @@ export const useTargetNextElement = (section?: ISection) => {
       const targetElement = value ? getElementById(value, formElementsList, isSectionOrQuestion) : null;
 
       setTargetNextElementId(value);
-      if (!section) return;
-      void saveSection({
-        ...section,
+
+      // Create updated entity with new nextFormElementId and type
+      const updatedEntity = {
+        ...entity,
         nextFormElementId: value ?? null,
         nextFormElementType: targetElement?.formElementType ?? null,
+      } as T;
+
+      console.log("onChange", {
+        updatedEntity,
+        targetNextElementId: value,
+        targetElementType: targetElement?.formElementType ?? undefined,
       });
+
+      onSave(updatedEntity, value, targetElement?.formElementType ?? undefined);
     },
-    [section, formElementsList, saveSection],
+    [entity, formElementsList, onSave],
   );
 
   useEffect(() => {
@@ -71,7 +86,7 @@ export const useTargetNextElement = (section?: ISection) => {
     }
 
     return;
-  }, [followingElement, elementsTwoPositionsAheadList, formElementsList]);
+  }, [followingElement, elementsTwoPositionsAheadList, formElementsList, targetNextElementId]);
 
   return {
     targetNextElementId,
