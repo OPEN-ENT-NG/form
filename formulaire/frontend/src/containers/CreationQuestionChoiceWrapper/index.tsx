@@ -26,10 +26,12 @@ import {
   otherChoiceSpanStyle,
   sortIconStyle,
   sortWrapperStyle,
+  StyledSortWrapper,
   upDownButtonsWrapperStyle,
 } from "./style";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { QuestionTypes } from "~/core/models/question/enum";
+import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({ question, type }) => {
   const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
@@ -44,6 +46,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
     preventEmptyValues,
     updateChoice,
     updateChoiceImage,
+    updateChoiceNextFormElement,
   } = useChoiceActions(question, setCurrentEditingElement, setFormElementsList);
 
   const sortedChoices = useMemo(() => {
@@ -65,10 +68,12 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
           }}
         >
           <Box>
-            <Box onClick={handleSortClick} sx={sortWrapperStyle}>
-              <SortByAlphaRoundedIcon sx={sortIconStyle} />
-              <Typography variant={TypographyVariant.BODY2}>{t("formulaire.sort")}</Typography>
-            </Box>
+            <StyledSortWrapper isConditional={question.conditional}>
+              <Box onClick={handleSortClick} sx={sortWrapperStyle}>
+                <SortByAlphaRoundedIcon sx={sortIconStyle} />
+                <Typography variant={TypographyVariant.BODY2}>{t("formulaire.sort")}</Typography>
+              </Box>
+            </StyledSortWrapper>
             <Box sx={choicesWrapperStyle}>
               {sortedChoices.map((choice, index) => (
                 <Box key={choice.id ?? index} sx={choiceWrapperStyle}>
@@ -110,6 +115,14 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                       </IconButton>
                     )}
                   </Box>
+                  {question.conditional && (
+                    <CreationQuestionChoiceConditional
+                      question={question}
+                      choice={choice}
+                      choiceIndex={index}
+                      updateChoiceNextFormElement={updateChoiceNextFormElement}
+                    />
+                  )}
                 </Box>
               ))}
               <NewChoiceWrapper hasImage={type !== QuestionTypes.SINGLEANSWER}>

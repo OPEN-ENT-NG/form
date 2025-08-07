@@ -8,6 +8,7 @@ import { compareChoicesByValue, swapChoicesAndSort } from "./utils";
 import { createNewQuestionChoice } from "~/core/models/question/utils";
 import { t } from "~/i18n";
 import { IFormElement } from "~/core/models/formElement/types";
+import { FormElementType } from "~/core/models/formElement/enum";
 
 export const useChoiceActions = (
   question: IQuestion,
@@ -115,6 +116,20 @@ export const useChoiceActions = (
     [choices, question],
   );
 
+  const updateChoiceNextFormElement = useCallback(
+    (index: number | null, nextFormElementId: number | undefined, nextFormElementType: FormElementType | undefined) => {
+      if (index === null || !choices[index]) return;
+      const updatedChoices = [...choices];
+      updatedChoices[index] = {
+        ...updatedChoices[index],
+        nextFormElementId: nextFormElementId ? nextFormElementId : null,
+        nextFormElementType: nextFormElementType ? nextFormElementType : null,
+      };
+      setCurrentEditingElement({ ...question, choices: updatedChoices });
+    },
+    [choices, question],
+  );
+
   const preventEmptyValues = useCallback(() => {
     if (choices.length === 0) return;
 
@@ -145,5 +160,6 @@ export const useChoiceActions = (
     updateChoice,
     updateChoiceImage,
     preventEmptyValues,
+    updateChoiceNextFormElement,
   };
 };
