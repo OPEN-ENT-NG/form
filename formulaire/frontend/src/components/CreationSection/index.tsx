@@ -1,4 +1,4 @@
-import { FC, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { ICreationSectionProps } from "./types";
 import {
   Box,
@@ -46,20 +46,39 @@ import { useModal } from "~/providers/ModalProvider";
 import { ModalType } from "~/core/enums";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
 import { hasFormResponses } from "~/core/models/form/utils";
-import { useTargetNextElement } from "~/hook/useTargetNextElement";
+import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
+import { ISection } from "~/core/models/section/types";
+import { FormElementType } from "~/core/models/formElement/enum";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { form, setCurrentEditingElement, currentEditingElement, handleDuplicateFormElement, setQuestionModalSection } =
-    useCreation();
+  const {
+    form,
+    setCurrentEditingElement,
+    currentEditingElement,
+    handleDuplicateFormElement,
+    setQuestionModalSection,
+    saveSection,
+  } = useCreation();
   const { toggleModal } = useModal();
+
+  const onSaveSectionNextElement = useCallback(
+    (updatedEntity: ISection, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
+      void saveSection({
+        ...updatedEntity,
+        nextFormElementId: targetElementId ?? null,
+        nextFormElementType: targetElementType ?? null,
+      });
+    },
+    [saveSection],
+  );
 
   const {
     targetNextElementId,
     followingElement,
     elementsTwoPositionsAheadList,
     onChange: handleNextFormElementChange,
-  } = useTargetNextElement(section);
+  } = useTargetNextElement({ entity: section, positionReferenceElement: section, onSave: onSaveSectionNextElement });
 
   //TITLE
   const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
