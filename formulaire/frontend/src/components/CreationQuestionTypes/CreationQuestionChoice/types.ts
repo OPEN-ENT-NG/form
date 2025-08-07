@@ -1,7 +1,7 @@
-import { CreationQuestionChoiceType } from "./enum";
+import { QuestionTypes } from "~/core/models/question/enum";
 
 export interface ICreationQuestionChoiceProps {
-  type: CreationQuestionChoiceType;
+  type: QuestionTypes;
   children: React.ReactNode;
   index: number;
   isEditing?: boolean;
