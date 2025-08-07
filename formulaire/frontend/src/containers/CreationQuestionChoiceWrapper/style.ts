@@ -14,6 +14,16 @@ export const sortWrapperStyle: SxProps = {
   },
 };
 
+export const StyledSortWrapper = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isConditional",
+})<{ isConditional?: boolean }>(({ isConditional }) => ({
+  display: "flex",
+  justifyContent: "flex-end",
+  ...(isConditional && {
+    width: "55%",
+  }),
+}));
+
 export const sortIconStyle: SxProps = {
   fontSize: "2rem",
   marginRight: 0.5,
