@@ -21,7 +21,7 @@ import {
   deleteButtonIconStyle,
   deleteWrapperStyle,
   newChoiceInputStyle,
-  newChoiceWrapperStyle,
+  NewChoiceWrapper,
   notEditingchoicesWrapperStyle,
   otherChoiceSpanStyle,
   sortIconStyle,
@@ -29,7 +29,7 @@ import {
   upDownButtonsWrapperStyle,
 } from "./style";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
-import { CreationQuestionChoiceType } from "~/components/CreationQuestionTypes/CreationQuestionChoice/enum";
+import { QuestionTypes } from "~/core/models/question/enum";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({ question, type }) => {
   const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
@@ -83,7 +83,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                   <CreationQuestionChoice
                     index={index}
                     type={type}
-                    hasImage={type === CreationQuestionChoiceType.SINGLE_ANSWER}
+                    hasImage={type !== QuestionTypes.SINGLEANSWER}
                     updateChoiceImage={updateChoiceImage}
                     image={choice.image ?? undefined}
                     isEditing={true}
@@ -112,7 +112,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                   </Box>
                 </Box>
               ))}
-              <Box sx={newChoiceWrapperStyle}>
+              <NewChoiceWrapper hasImage={type !== QuestionTypes.SINGLEANSWER}>
                 <CreationQuestionChoice index={question.choices.length} type={type}>
                   <TextField
                     value={newChoiceValue}
@@ -129,7 +129,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     sx={newChoiceInputStyle}
                   />
                 </CreationQuestionChoice>
-              </Box>
+              </NewChoiceWrapper>
             </Box>
             <Box>
               <Typography variant={TypographyVariant.BODY2}>

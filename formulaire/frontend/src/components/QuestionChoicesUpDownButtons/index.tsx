@@ -32,7 +32,7 @@ export const QuestionChoicesUpDownButtons: FC<IQuestionChoicesUpDownButtonsProps
   return (
     <Box sx={upDownButtonsContainerStyle}>
       <Box sx={arrowWrapperStyle}>
-        {!!showUp && (
+        {showUp && (
           <IconButton
             onClick={() => {
               handleReorderClick(index, Direction.UP);
@@ -44,7 +44,7 @@ export const QuestionChoicesUpDownButtons: FC<IQuestionChoicesUpDownButtonsProps
         )}
       </Box>
       <Box sx={arrowWrapperStyle}>
-        {!!showDown && (
+        {showDown && (
           <IconButton
             onClick={() => {
               handleReorderClick(index, Direction.DOWN);

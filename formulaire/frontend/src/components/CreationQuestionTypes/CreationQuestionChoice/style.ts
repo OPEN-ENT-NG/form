@@ -11,12 +11,19 @@ export const choiceInputStyle: SxProps = {
   display: "flex",
   width: "100%",
   marginRight: 1,
+  alignItems: "center",
 };
 
 export const choiceIconStyle: SxProps = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
+  padding: 0,
+  minWidth: "24px",
+  minHeight: "24px",
+  "& > svg": {
+    fontSize: "2.4rem !important",
+  },
 };
 
 export const imageIconStyle: SxProps = {

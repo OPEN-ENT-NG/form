@@ -1,5 +1,7 @@
 import { SxProps } from "@mui/material";
 import { PRIMARY_DARKER_COLOR, PRIMARY_MAIN_COLOR } from "~/core/style/colors";
+import { styled, Box } from "@cgi-learning-hub/ui";
+import { INewChoiceWrapperProps } from "./types";
 
 export const sortWrapperStyle: SxProps = {
   display: "flex",
@@ -47,22 +49,26 @@ export const deleteButtonIconStyle: SxProps = {
   minHeight: 40,
 };
 
-export const baseChoiceWrapperStyle: SxProps = {
+export const baseChoiceWrapperStyle = {
   display: "flex",
   justifyContent: "center",
   alignItems: "center",
   width: "100%",
   paddingLeft: "56px", //Match updown buttons width
-};
+  paddingRight: "42px", //Match delete button width
+} as const;
 
 export const choiceInputStyle: SxProps = {
   marginLeft: 1,
 };
 
-export const newChoiceWrapperStyle: SxProps = {
-  minHeight: "40px",
+export const NewChoiceWrapper = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "hasImage",
+})<INewChoiceWrapperProps>(({ hasImage }) => ({
   ...baseChoiceWrapperStyle,
-};
+  minHeight: "40px",
+  paddingRight: hasImage ? "82px !important" : "42px", // Match delete button and image button width
+}));
 
 export const newChoiceInputStyle: SxProps = {
   ...choiceInputStyle,
