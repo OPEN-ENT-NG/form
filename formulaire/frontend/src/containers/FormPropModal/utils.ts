@@ -3,6 +3,7 @@ import { FormPropField } from "./enums";
 import { IFormCheckBoxProp, IFormPropInputValueState } from "./types";
 import { IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
 import dayjs, { Dayjs } from "dayjs";
+import { t } from "~/i18n";
 
 export const initialFormPropInputValueState: IFormPropInputValueState = {
   [FormPropField.TITLE]: "",
@@ -68,7 +69,7 @@ export const buildDelegatesParam = (
 ): IRGPDI18nParams => {
   if (delegate) {
     return {
-      finalite: rgpdGoal.length ? rgpdGoal : "[Finalité]",
+      finalite: rgpdGoal.length ? rgpdGoal : t("formulaire.prop.rgpd.goal.default"),
       expirationDate: expirationDate,
       rectoratName: delegate.entity,
       rectoratEmail: delegate.mail,
@@ -82,7 +83,7 @@ export const buildDelegatesParam = (
 
   // Valeurs par défaut si pas de délégué
   return {
-    finalite: rgpdGoal.length ? rgpdGoal : "[Finalité]",
+    finalite: rgpdGoal.length ? rgpdGoal : t("formulaire.prop.rgpd.goal.default"),
     expirationDate: expirationDate,
     rectoratName: "du Rectorat de Paris",
     rectoratEmail: "dpd@ac-paris.fr",
