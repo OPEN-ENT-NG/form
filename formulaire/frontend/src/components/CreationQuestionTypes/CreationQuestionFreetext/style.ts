@@ -21,7 +21,7 @@ export const StyledEditorWrapper = styled(Box, {
   const editorTree = {
     "> :first-child": {
       [`> :nth-child(${nth})`]: {
-        minHeight: "200px",
+        ...(isCurrentEditingElement && { minHeight: "200px" }),
         "> :first-child": flexContainerStyles,
       },
     },

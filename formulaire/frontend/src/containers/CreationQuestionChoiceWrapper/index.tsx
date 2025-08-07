@@ -4,7 +4,7 @@ import { ICreationQuestionChoiceWrapperProps } from "./types";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { QuestionChoicesUpDownButtons } from "~/components/QuestionChoicesUpDownButtons";
-import { compareChoices } from "./utils";
+import { compareChoices, hasImageType } from "./utils";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
 import { BoxComponentType, ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
@@ -29,7 +29,6 @@ import {
   upDownButtonsWrapperStyle,
 } from "./style";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
-import { QuestionTypes } from "~/core/models/question/enum";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({ question, type }) => {
   const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
@@ -83,7 +82,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                   <CreationQuestionChoice
                     index={index}
                     type={type}
-                    hasImage={type !== QuestionTypes.SINGLEANSWER}
+                    hasImage={hasImageType(type)}
                     updateChoiceImage={updateChoiceImage}
                     image={choice.image ?? undefined}
                     isEditing={true}
@@ -112,7 +111,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                   </Box>
                 </Box>
               ))}
-              <NewChoiceWrapper hasImage={type !== QuestionTypes.SINGLEANSWER}>
+              <NewChoiceWrapper hasImage={hasImageType(type)}>
                 <CreationQuestionChoice index={question.choices.length} type={type}>
                   <TextField
                     value={newChoiceValue}
