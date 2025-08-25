@@ -101,7 +101,7 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
         <Button variant="outlined" color="primary" onClick={handleClose}>
           {t("formulaire.cancel")}
         </Button>
-        <Button variant="contained" color="primary" onClick={currentConfig.handleAction}>
+        <Button variant="contained" color="primary" onClick={currentConfig.handleAction} disabled={!newName}>
           {t(currentConfig.i18nButtonText)}
         </Button>
       </DialogActions>
