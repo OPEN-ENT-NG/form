@@ -6,6 +6,7 @@ export interface IOrganizeFilterProps {
   chipDatas?: IFormChipProps[];
   setSelectedChips?: (selectedChips: IFormChipProps[]) => void;
   selectedChips?: IFormChipProps[];
+  forceUniqueChips?: boolean;
 
   menuItemDatas?: IMenuItemProps[];
   setSelectedMenuItem?: (menuItem: IMenuItemProps) => void;

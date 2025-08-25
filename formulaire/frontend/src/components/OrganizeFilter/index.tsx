@@ -32,6 +32,7 @@ export const OrganizeFilter: FC<IOrganizeFilterProps> = ({
   selectedChips = [],
   setSelectedMenuItem,
   selectedMenuItem,
+  forceUniqueChips = false,
 }) => {
   const { t } = useTranslation(FORMULAIRE);
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
@@ -73,12 +74,20 @@ export const OrganizeFilter: FC<IOrganizeFilterProps> = ({
     (chip: IFormChipProps) => {
       if (!setSelectedChips) return;
 
+      if (forceUniqueChips) {
+        // If forceUniqueChips is true, only allow one chip to be selected at a time
+        const isChipSelected = selectedChips.some((c) => c.id === chip.id);
+        setSelectedChips(isChipSelected ? [] : [chip]);
+        return;
+      }
+      // Original behavior: toggle the chip in the selection
       const updatedChips = selectedChips.some((c) => c.id === chip.id)
         ? selectedChips.filter((c) => c.id !== chip.id)
         : [...selectedChips, chip];
       setSelectedChips(updatedChips);
+      return;
     },
-    [selectedChips, setSelectedChips],
+    [selectedChips, setSelectedChips, forceUniqueChips],
   );
 
   const handleMenuItemClick = useCallback(
