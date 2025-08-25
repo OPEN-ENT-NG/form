@@ -32,6 +32,7 @@ export const getQuestionContentByType = (
       return <CreationQuestionCursor question={question} />;
     case QuestionTypes.FILE:
       return <CreationQuestionFile />;
+    case QuestionTypes.RANKING:
     case QuestionTypes.SINGLEANSWER:
     case QuestionTypes.MULTIPLEANSWER:
     case QuestionTypes.SINGLEANSWERRADIO:
