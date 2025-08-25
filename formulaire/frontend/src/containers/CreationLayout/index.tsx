@@ -13,7 +13,6 @@ import { CreationMainLayout } from "../CreationMainLayout";
 
 export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
   const { form, formElementsList } = useCreation();
-  // console.log("formElementsList", formElementsList);
   const { t } = useTranslation(FORMULAIRE);
 
   const { toggleModal } = useModal();
