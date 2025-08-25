@@ -47,7 +47,8 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
         setIsLoading(false);
       }
       if (selectedFormat === ExportFormat.PDF) {
-        await exportPdf(selectedForms);
+        const notEmptySelectedForms = selectedForms.filter((form) => form.nb_elements > 0);
+        await exportPdf(notEmptySelectedForms);
       }
     } catch (error) {
       setIsLoading(false);
