@@ -72,6 +72,7 @@ export const AnswerMainLayout: FC = () => {
             selectedChips={selectedChips}
             setSelectedMenuItem={setSelectedMenuItem}
             selectedMenuItem={selectedMenuItem}
+            forceUniqueChips={true}
           />
         </Box>
       </Box>
