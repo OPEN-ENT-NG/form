@@ -44,3 +44,14 @@ export const DEFAULT_PAGINATION_LIMIT = 10;
 export const MANAGER_RIGHT: RightStringified = "manager";
 export const CONTRIB_RIGHT: RightStringified = "contrib";
 export const COMMENT_RIGHT: RightStringified = "comment";
+
+//MEDIA LIBRARY
+export const PROTECTED_VISIBILITY = "protected";
+
+//FILE EXTENSIONS
+export const IMAGE_CONTENT_TYPE = "image/*";
+export const PNG_EXTENSION = ".png";
+export const JPG_EXTENSION = ".jpg";
+export const JPEG_EXTENSION = ".jpeg";
+export const GIF_EXTENSION = ".gif";
+export const SVG_EXTENSION = ".svg";
