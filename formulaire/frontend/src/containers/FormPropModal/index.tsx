@@ -398,7 +398,11 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
 
       <DialogActions>
         <Button onClick={handleClose}>{t("formulaire.cancel")}</Button>
-        <Button variant="contained" onClick={() => void handleSubmit()} disabled={!title.length}>
+        <Button
+          variant="contained"
+          onClick={() => void handleSubmit()}
+          disabled={!title.length || (hasRgpd && delegateParam.finalite === t("formulaire.prop.rgpd.goal.default"))}
+        >
           {t("formulaire.save")}
         </Button>
       </DialogActions>

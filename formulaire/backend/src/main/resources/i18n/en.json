@@ -135,6 +135,7 @@
   "formulaire.prop.description.description":"Cette description sera affichée en début de formulaire pour les répondants",
   "formulaire.prop.rgpd.label": "Collecte de données à caractère personnel",
   "formulaire.prop.rgpd.goal": "Finalité",
+  "formulaire.prop.rgpd.goal.default": "[Finalité]",
   "formulaire.prop.rgpd.goal.input": "Saisir la finalité (150 caractères maximum)",
   "formulaire.prop.rgpd.lifetime": "Durée de conservation : ",
   "formulaire.prop.rgpd.goal.description": "Par exemple :\n- organisation d'une sortie scolaire avec nuitées\n- planification des interventions des parents dans le cadre du projet \"découverte des métiers\"",
