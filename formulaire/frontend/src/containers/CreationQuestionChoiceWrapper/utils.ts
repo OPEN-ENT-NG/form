@@ -1,4 +1,5 @@
 import { Direction } from "~/components/OrganizationSortableItem/enum";
+import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 
 export const swapChoicesAndSort = (
@@ -43,4 +44,8 @@ export const initialSortDirection = (question: IQuestion): Direction => {
 
   const isSorted = choices.every((choice, idx) => choice.value === sortedOrderChoices[idx]);
   return isSorted ? Direction.UP : Direction.DOWN;
+};
+
+export const hasImageType = (type: QuestionTypes): boolean => {
+  return type === QuestionTypes.SINGLEANSWERRADIO || type === QuestionTypes.MULTIPLEANSWER;
 };
