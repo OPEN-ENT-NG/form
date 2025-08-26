@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { ThemeProvider as ThemeProviderCGI, ThemeProviderProps } from "@cgi-learning-hub/theme";
 import "@edifice.io/bootstrap/dist/index.css";
@@ -18,6 +18,7 @@ import { GlobalStyles } from "@cgi-learning-hub/ui";
 import { ModalProvider } from "./providers/ModalProvider";
 import { globalOverrideStyles } from "./core/style/global";
 import { t } from "~/i18n";
+import { useTheme } from "./hook/useTheme";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -52,6 +53,13 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
+  const [isTheme1D, setIsTheme1D] = useState(false);
+  const { getIsTheme1D } = useTheme(setIsTheme1D);
+
+  useEffect(() => {
+    void getIsTheme1D();
+  }, [getIsTheme1D]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
@@ -61,7 +69,7 @@ const App = () => {
           }}
         >
           <EdificeThemeProvider>
-            <ThemeProviderCGI themeId={themePlatform ?? "default"} options={options}>
+            <ThemeProviderCGI themeId={isTheme1D ? "ent1D" : themePlatform ?? "default"} options={options}>
               <ModalProvider>
                 <GlobalStyles styles={globalOverrideStyles} />
                 <ToastContainer {...TOAST_CONFIG} />
