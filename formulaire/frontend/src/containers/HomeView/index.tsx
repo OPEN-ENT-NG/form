@@ -146,7 +146,7 @@ export const HomeView: FC = () => {
           }}
         />
       )}
-      {isActionBarOpen && <ActionBar leftButtons={leftButtons} rightButtons={rightButtons} />}
+      {isActionBarOpen && <ActionBar leftActions={leftButtons} rightActions={rightButtons} />}
     </Box>
   );
 };
