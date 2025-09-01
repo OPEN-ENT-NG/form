@@ -177,7 +177,8 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
         : false;
 
     const isDisabledAnswered =
-      (item.field === FormPropField.IS_MULTIPLE ||
+      (item.field === FormPropField.IS_PUBLIC ||
+        item.field === FormPropField.IS_MULTIPLE ||
         item.field === FormPropField.IS_ANONYMOUS ||
         item.field === FormPropField.HAS_RGPD) &&
       !!selectedForms[0]?.nb_responses;
