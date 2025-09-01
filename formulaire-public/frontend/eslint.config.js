@@ -5,6 +5,10 @@ import reactHooks from "eslint-plugin-react-hooks";
 import reactRefresh from "eslint-plugin-react-refresh";
 import globals from "globals";
 import tseslint from "typescript-eslint";
+import { fileURLToPath } from "url";
+import path from "path";
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default [
   { ignores: ["dist", "node_modules", "coverage", "prettier.config.cjs"] },
@@ -24,7 +28,7 @@ export default [
           jsx: true,
         },
         projectService: true,
-        tsconfigRootDir: ".",
+        tsconfigRootDir: path.resolve(__dirname),
       },
     },
     plugins: {

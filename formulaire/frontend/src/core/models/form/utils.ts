@@ -76,7 +76,7 @@ export const isFormFilled = (form: IForm, distributions: IDistribution[]): boole
   if (form.multiple) {
     return getFirstDistribution(formDistributions).status === DistributionStatus.FINISHED;
   }
-  return getNbFinishedDistrib(distributions) > 0;
+  return getNbFinishedDistrib(formDistributions) > 0;
 };
 
 export const getFormStatusText = (
