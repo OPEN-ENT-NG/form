@@ -180,7 +180,7 @@ export const mainController = ng.controller('MainController', ['$scope', 'route'
 				if ($scope.form.rgpd) {
 					if ($scope.canRespond() && $scope.hasShareRightResponse($scope.form) && !$scope.form.archived) {
 						if ($scope.form.date_opening < new Date() && ($scope.form.date_ending ? ($scope.form.date_ending > new Date()) : true)) {
-							let correctedUrl = window.location.origin + window.location.pathname + `#/form/${$scope.form.id}/rgpd`;
+							let correctedUrl = window.location.origin + window.location.pathname + `?view=angular#/form/${$scope.form.id}/rgpd`;
 							window.location.assign(correctedUrl);
 							$scope.safeApply();
 							$scope.$broadcast(FORMULAIRE_BROADCAST_EVENT.INIT_RGPD_QUESTION);
