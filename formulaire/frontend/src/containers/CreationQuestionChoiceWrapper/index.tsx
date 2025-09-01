@@ -31,7 +31,6 @@ import {
 } from "./style";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
-import { QuestionTypes } from "~/core/models/question/enum";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({ question, type }) => {
   const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
