@@ -131,7 +131,11 @@ export const MoveFolderModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
         <Button variant={ComponentVariant.OUTLINED} onClick={handleClose}>
           {t("formulaire.cancel")}
         </Button>
-        <Button variant={ComponentVariant.CONTAINED} onClick={handleMove}>
+        <Button
+          variant={ComponentVariant.CONTAINED}
+          onClick={handleMove}
+          disabled={selectedFolders.every((f) => f.parent_id === targetFolder.id)}
+        >
           {t("formulaire.move")}
         </Button>
       </DialogActions>

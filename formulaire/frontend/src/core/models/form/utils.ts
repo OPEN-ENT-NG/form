@@ -71,12 +71,13 @@ export const getFormDistributions = (form: IForm, distributions: IDistribution[]
 };
 
 export const isFormFilled = (form: IForm, distributions: IDistribution[]): boolean => {
+  console.log("isFormFilled : ", form, distributions);
   const formDistributions = getFormDistributions(form, distributions);
 
   if (form.multiple) {
     return getFirstDistribution(formDistributions).status === DistributionStatus.FINISHED;
   }
-  return getNbFinishedDistrib(distributions) > 0;
+  return getNbFinishedDistrib(formDistributions) > 0;
 };
 
 export const getFormStatusText = (
