@@ -24,7 +24,6 @@ import { useDropzone } from "react-dropzone";
 import {
   FORMULAIRE,
   GIF_EXTENSION,
-  IMAGE_CONTENT_TYPE,
   JPEG_EXTENSION,
   JPG_EXTENSION,
   PNG_EXTENSION,

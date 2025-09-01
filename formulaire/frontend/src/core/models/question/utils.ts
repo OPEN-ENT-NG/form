@@ -75,7 +75,6 @@ export const createNewQuestionChoice = (
   };
 };
 
-
 export const transformQuestionChoice = (raw: IQuestionChoiceDTO): IQuestionChoice => {
   return {
     id: raw.id,

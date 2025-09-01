@@ -71,7 +71,6 @@ export const getFormDistributions = (form: IForm, distributions: IDistribution[]
 };
 
 export const isFormFilled = (form: IForm, distributions: IDistribution[]): boolean => {
-  console.log("isFormFilled : ", form, distributions);
   const formDistributions = getFormDistributions(form, distributions);
 
   if (form.multiple) {
