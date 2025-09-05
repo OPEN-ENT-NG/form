@@ -38,10 +38,10 @@ public class FormulaireRepositoryEvents extends SqlRepositoryEvents {
     private ImportExportService importExportService;
     protected final FolderImporter folderImporter;
 
-    public FormulaireRepositoryEvents(Vertx vertx) {
+    public FormulaireRepositoryEvents(Vertx vertx, String archiveConfig) {
         super(vertx);
         this.importExportService = new ImportExportService(sql, fs, vertx);
-        this.folderImporter = new FolderImporter(vertx, vertx.fileSystem(), vertx.eventBus());
+        this.folderImporter = new FolderImporter(archiveConfig, vertx.fileSystem(), vertx.eventBus());
     }
 
     // Export/Import events
