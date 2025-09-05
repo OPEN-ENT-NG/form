@@ -45,7 +45,6 @@ import static fr.openent.form.helpers.UtilsHelper.getIds;
 
 public class FormQuestionsExportPDF extends ControllerHelper {
     private static final Logger log = LoggerFactory.getLogger(FormQuestionsExportPDF.class);
-    private String node;
     private final HttpServerRequest request;
     private final JsonObject config;
     private final Vertx vertx;
@@ -454,11 +453,6 @@ public class FormQuestionsExportPDF extends ControllerHelper {
                 JsonObject actionObject = new JsonObject();
                 byte[] bytes;
                 bytes = processedTemplate.getBytes(StandardCharsets.UTF_8);
-
-                node = (String) vertx.sharedData().getLocalMap(SERVER).get(NODE);
-                if (node == null) {
-                    node = "";
-                }
 
                 actionObject.put(CONTENT, bytes).put(BASE_URL, baseUrl);
                 generatePDF(templateProps.getString(FORM_TITLE), processedTemplate)
