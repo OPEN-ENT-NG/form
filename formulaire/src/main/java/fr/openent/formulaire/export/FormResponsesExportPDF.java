@@ -28,7 +28,6 @@ import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 import org.entcore.common.pdf.Pdf;
 import org.entcore.common.pdf.PdfFactory;
@@ -43,7 +42,6 @@ import static fr.wseduc.webutils.http.Renders.*;
 
 public class FormResponsesExportPDF {
     private static final Logger log = LoggerFactory.getLogger(FormResponsesExportPDF.class);
-    private String node;
     private final HttpServerRequest request;
     private final JsonObject config;
     private final Vertx vertx;
@@ -357,11 +355,6 @@ public class FormResponsesExportPDF {
                 JsonObject actionObject = new JsonObject();
                 byte[] bytes;
                 bytes = processedTemplate.getBytes(StandardCharsets.UTF_8);
-
-                node = (String) vertx.sharedData().getLocalMap("server").get("node");
-                if (node == null) {
-                    node = "";
-                }
 
                 actionObject.put("content", bytes).put("baseUrl", baseUrl);
                 generatePDF(TITLE, processedTemplate)

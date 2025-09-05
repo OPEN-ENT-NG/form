@@ -19,6 +19,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import org.entcore.common.user.ExportResourceResult;
 import org.entcore.common.utils.ResourceUtils;
 
 import java.io.File;
@@ -38,10 +39,10 @@ public class FormulaireRepositoryEvents extends SqlRepositoryEvents {
     private ImportExportService importExportService;
     protected final FolderImporter folderImporter;
 
-    public FormulaireRepositoryEvents(Vertx vertx) {
+    public FormulaireRepositoryEvents(Vertx vertx, String archiveConfig) {
         super(vertx);
         this.importExportService = new ImportExportService(sql, fs, vertx);
-        this.folderImporter = new FolderImporter(vertx, vertx.fileSystem(), vertx.eventBus());
+        this.folderImporter = new FolderImporter(archiveConfig, vertx.fileSystem(), vertx.eventBus());
     }
 
     // Export/Import events
@@ -61,10 +62,10 @@ public class FormulaireRepositoryEvents extends SqlRepositoryEvents {
      */
     @Override
     public void exportResources(JsonArray resourcesIds, boolean exportDocuments, boolean exportSharedResources, String exportId,
-                                String userId, JsonArray groups, String exportPath, String locale, String host, final Handler<Boolean> handler) {
+                                String userId, JsonArray groups, String exportPath, String locale, String host, final Handler<ExportResourceResult> handler) {
 
         if (resourcesIds == null || resourcesIds.isEmpty()) {
-            handler.handle(true);
+            handler.handle(new ExportResourceResult(true, exportPath));
             return;
         }
 
@@ -104,10 +105,10 @@ public class FormulaireRepositoryEvents extends SqlRepositoryEvents {
                 // Directory creation and continue the export
                 createExportDirectory(exportPath, locale, path -> {
                     if (path != null) {
-                        exportTables(infos, new JsonArray(), fieldsToNull, exportDocuments, path, exported, handler);
+                        exportTables(infos, new JsonArray(), fieldsToNull, exportDocuments, path, exported, suceeded -> new ExportResourceResult(suceeded, path));
                     }
                     else {
-                        handler.handle(exported.get());
+                        handler.handle(new ExportResourceResult(exported.get(), null));
                     }
                 });
             });

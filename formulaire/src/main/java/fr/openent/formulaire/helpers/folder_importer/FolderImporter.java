@@ -11,7 +11,6 @@ import java.util.LinkedList;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 import io.vertx.core.*;
 import org.entcore.common.folders.impl.DocumentHelper;
@@ -27,7 +26,6 @@ import io.vertx.core.file.FileSystem;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import io.vertx.core.shareddata.LocalMap;
 import io.vertx.core.json.JsonArray;
 
 public class FolderImporter {
@@ -123,18 +121,16 @@ public class FolderImporter {
     protected final boolean throwErrors;
     protected final Pattern uuidPattern = Pattern.compile(StringUtils.UUID_REGEX);
 
-    public FolderImporter(Vertx vertx, FileSystem fs, EventBus eb) {
-        this(vertx, fs, eb, true);
+    public FolderImporter(String archiveConfig, FileSystem fs, EventBus eb) {
+        this(archiveConfig, fs, eb, true);
     }
 
-    public FolderImporter(Vertx vertx, FileSystem fs, EventBus eb, boolean throwErrors) {
+    public FolderImporter(String archiveConfig, FileSystem fs, EventBus eb, boolean throwErrors) {
         this.fs = fs;
         this.eb = eb;
         this.throwErrors = throwErrors;
         try {
-            final LocalMap<Object, Object> serverMap = vertx.sharedData().getLocalMap("server");
-            if (serverMap.containsKey("archiveConfig")) {
-                final String archiveConfig = serverMap.get("archiveConfig").toString();
+            if (archiveConfig != null) {
                 final JsonObject archiveConfigJson = new JsonObject(archiveConfig);
                 this.busTimeoutSec = archiveConfigJson.getInteger("storageTimeout", 600);
             }
