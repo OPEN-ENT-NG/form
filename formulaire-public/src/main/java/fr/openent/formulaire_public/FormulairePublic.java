@@ -3,6 +3,7 @@ package fr.openent.formulaire_public;
 import fr.openent.formulaire_public.controllers.CaptchaController;
 import fr.openent.formulaire_public.controllers.FormulairePublicController;
 import fr.openent.formulaire_public.controllers.FormController;
+import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.logging.Logger;
@@ -15,7 +16,14 @@ public class FormulairePublic extends BaseServer {
 
 	@Override
 	public void start(Promise<Void> startPromise) throws Exception {
-		super.start(startPromise);
+		final Promise<Void> promise = Promise.promise();
+		super.start(promise);
+		promise.future()
+				.compose(init -> initFormulairePublic())
+				.onComplete(startPromise);
+	}
+
+	public Future<Void> initFormulairePublic() {
 
 		final EventBus eb = getEventBus(vertx);
 		final TimelineHelper timelineHelper = new TimelineHelper(vertx, eb, config);
@@ -24,6 +32,6 @@ public class FormulairePublic extends BaseServer {
 		addController(new CaptchaController());
 		addController(new FormController(timelineHelper));
 		addController(new FormulairePublicController());
-		startPromise.tryComplete();
+		return Future.succeededFuture();
 	}
 }

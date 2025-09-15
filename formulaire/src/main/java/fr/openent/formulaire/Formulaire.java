@@ -8,10 +8,12 @@ import fr.openent.formulaire.cron.RgpdCron;
 import fr.openent.formulaire.service.impl.FormulaireApplicationStorage;
 import fr.openent.formulaire.service.impl.FormulaireRepositoryEvents;
 import fr.wseduc.webutils.collections.SharedDataHelper;
+import io.vertx.core.Future;
 import io.vertx.core.Promise;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import org.apache.commons.lang3.tuple.Pair;
 import org.entcore.common.events.EventStore;
 import org.entcore.common.events.EventStoreFactory;
 import org.entcore.common.http.BaseServer;
@@ -23,12 +25,12 @@ import org.entcore.common.sql.SqlConfs;
 import org.entcore.common.storage.Storage;
 import org.entcore.common.storage.StorageFactory;
 
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import fr.wseduc.cron.CronTrigger;
-import org.entcore.common.storage.impl.PostgresqlApplicationStorage;
 
 import static fr.openent.form.core.constants.ConfigFields.*;
 import static fr.openent.form.core.constants.Tables.DB_SCHEMA;
@@ -42,21 +44,16 @@ public class Formulaire extends BaseServer {
 	public void start(Promise<Void> startPromise) throws Exception {
 		final Promise<Void> promise = Promise.promise();
 		super.start(promise);
-		promise.future().onSuccess(init -> StorageFactory.build(vertx, config, new FormulaireApplicationStorage(timelineHelper, eb))
-				.onSuccess(storageFactory -> SharedDataHelper.getInstance().getMulti("server", "archiveConfig")
-						.onSuccess(formulaireConfigMap -> {
-							try {
-								initFormulaire(startPromise, storageFactory, formulaireConfigMap);
-							} catch (Exception e) {
-								startPromise.fail(e);
-								log.error("Error when starting Formulaire", e);
-							}
-						}).onFailure(ex -> log.error("Error when getting Formulaire shared data", ex))
-				).onFailure(ex -> log.error("Error building storage factory", ex))
-		).onFailure(ex -> log.error("Error when starting Formulaire server super classes", ex));
+
+		promise.future()
+				.compose(init -> StorageFactory.build(vertx, config, new FormulaireApplicationStorage(timelineHelper, eb)))
+				.compose(storageFactory -> SharedDataHelper.getInstance().getMulti("server", "archiveConfig")
+						.map(formulaireConfigMap -> Pair.of(storageFactory, formulaireConfigMap)))
+				.compose(configPair -> initFormulaire(configPair.getLeft(), configPair.getRight()))
+				.onComplete(startPromise);
 	}
 
-	public void initFormulaire(final Promise<Void> startPromise, StorageFactory storageFactory, Map<String, Object> formulaireConfigMap) throws Exception {
+	public Future<Void> initFormulaire(StorageFactory storageFactory, Map<String, Object> formulaireConfigMap) {
 		Constants.MAX_RESPONSES_EXPORT_PDF = config.getInteger(MAX_RESPONSE_EXPORT_PDF, 100);
 		Constants.MAX_USERS_SHARING = config.getInteger(MAX_USERS_SHARING, 65000);
 
@@ -123,10 +120,14 @@ public class Formulaire extends BaseServer {
 		addController(new UtilsController(storage));
 
 		// CRON
-		RgpdCron rgpdCron = new RgpdCron(storage);
-		new CronTrigger(vertx, config.getString(RGPD_CRON, "0 0 0 */1 * ? *")).schedule(rgpdCron);
-		NotifyCron notifyCron = new NotifyCron(timelineHelper);
-		new CronTrigger(vertx, config.getString(NOTIFY_CRON, "0 0 0 */1 * ? *")).schedule(notifyCron);
-		startPromise.tryComplete();
+		try {
+			RgpdCron rgpdCron = new RgpdCron(storage);
+			new CronTrigger(vertx, config.getString(RGPD_CRON, "0 0 0 */1 * ? *")).schedule(rgpdCron);
+			NotifyCron notifyCron = new NotifyCron(timelineHelper);
+			new CronTrigger(vertx, config.getString(NOTIFY_CRON, "0 0 0 */1 * ? *")).schedule(notifyCron);
+		} catch (ParseException e) {
+			return Future.failedFuture(e);
+		}
+		return Future.succeededFuture();
 	}
 }

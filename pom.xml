@@ -42,7 +42,7 @@
 
     <properties>
         <revision>2.1-zookeeper-SNAPSHOT</revision>
-        <entCoreVersion>6.6-zookeeper-SNAPSHOT</entCoreVersion>
+        <entCoreVersion>6.8-zookeeper-SNAPSHOT</entCoreVersion>
         <toolsVersion>2.0.0-final</toolsVersion>
         <junitVersion>5.1.0</junitVersion>
         <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
