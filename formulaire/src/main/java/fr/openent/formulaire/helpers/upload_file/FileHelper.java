@@ -46,6 +46,9 @@ public class FileHelper {
         AtomicInteger incrementFile = new AtomicInteger(0);
         List<Attachment> listMetadata = new ArrayList<>();
 
+        // Enable multipart handling
+        request.setExpectMultipart(true);
+
         // We define the exception handler
         request.exceptionHandler(event -> {
             log.error("[Formulaire@uploadMultipleFiles] An error has occurred during http request process : " + event.getMessage());
