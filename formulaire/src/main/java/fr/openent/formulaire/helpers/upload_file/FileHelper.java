@@ -8,9 +8,10 @@ import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.storage.Storage;
 import org.entcore.common.utils.FileUtils;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -57,7 +58,14 @@ public class FileHelper {
 
         request.uploadHandler(upload -> {
             // Generate unique filename for temporary storage
-            String tempFileName = "/tmp/form_" + UUID.randomUUID().toString();
+            String tempFileName;
+            try {
+                tempFileName = File.createTempFile("form_", null).getAbsolutePath();
+            } catch (IOException e) {
+                log.error("[Formulaire@uploadMultipleFiles] Failed to create temporary file: " + e.getMessage());
+                promise.fail(e.getMessage());
+                return;
+            }
             final JsonObject metadata = FileUtils.metadata(upload);
 
             // Save upload to temporary file first
@@ -85,8 +93,7 @@ public class FileHelper {
                             }
                         });
 
-                        if (incrementFile.get() == nbFilesToUpload && !responseSent.get()) {
-                            responseSent.set(true);
+                        if (incrementFile.get() == nbFilesToUpload && responseSent.compareAndSet(false, true)) {
                             for (Attachment at : listMetadata) {
                                 log.info(at.id());
                             }
