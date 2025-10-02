@@ -53,13 +53,21 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
 
       //Add choices (and children for matrix)
       if (isTypeChoicesQuestion(newQuestion.questionType)) {
+        const isMatrix = newQuestion.questionType === QuestionTypes.MATRIX;
+        const choiceI18nKey = isMatrix ? "formulaire.matrix.line.label.default" : "formulaire.option";
         newQuestion.choices = Array.from({ length: DEFAULT_NB_CHOICES }, (_, i) =>
-          createNewQuestionChoice(newQuestion.id, i + 1),
+          createNewQuestionChoice(newQuestion.id, i + 1, null, t(choiceI18nKey, { 0: i + 1 })),
         );
 
-        if (newQuestion.questionType === QuestionTypes.MATRIX) {
+        if (isMatrix) {
           newQuestion.children = Array.from({ length: DEFAULT_NB_CHILDREN }, (_, i) =>
-            createNewQuestion(newQuestion.id, QuestionTypes.SINGLEANSWERRADIO, i + 1),
+            createNewQuestion(
+              newQuestion.formId,
+              QuestionTypes.SINGLEANSWERRADIO,
+              newQuestion.id,
+              i + 1,
+              t("formulaire.matrix.column.label.default", { 0: i + 1 }),
+            ),
           );
         }
       }
