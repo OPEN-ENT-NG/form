@@ -31,6 +31,7 @@ import { fixListPositions, getElementById, isInFormElementsList } from "../utils
 import { PositionActionType } from "../enum";
 import { toast } from "react-toastify";
 import { useCallback } from "react";
+import { QuestionTypes } from "~/core/models/question/enum";
 
 export const useFormElementActions = (
   formElementsList: IFormElement[],
@@ -225,8 +226,8 @@ export const useFormElementActions = (
                   child.questionType,
                   newQuestion.id,
                   child.matrixPosition,
+                  child.title,
                 );
-                duplicatedChild.title = child.title;
                 return duplicatedChild;
               })
           : [];
@@ -315,14 +316,20 @@ export const useFormElementActions = (
 
         if (choicesToUpdateList.length) {
           await updateMultipleChoiceQuestions({
-            questionChoices: preventEmptyChoiceValues(choicesToUpdateList),
+            questionChoices: preventEmptyChoiceValues(
+              choicesToUpdateList,
+              question.questionType === QuestionTypes.MATRIX,
+            ),
             formId: String(question.formId),
           }).unwrap();
         }
 
         if (choicesToCreateList.length) {
           await createMultipleChoiceQuestions({
-            questionChoices: preventEmptyChoiceValues(choicesToCreateList).map((choice) => {
+            questionChoices: preventEmptyChoiceValues(
+              choicesToCreateList,
+              question.questionType === QuestionTypes.MATRIX,
+            ).map((choice) => {
               return { ...choice, questionId: questionSaved.id };
             }),
             formId: String(question.formId),
@@ -353,11 +360,19 @@ export const useFormElementActions = (
         );
 
         if (childrensToUpdateList.length) {
-          await updateQuestions(childrensToUpdateList).unwrap();
+          await updateQuestions(
+            childrensToUpdateList.map((child) => {
+              return { ...child, matrixId: questionSaved.id };
+            }),
+          ).unwrap();
         }
 
         if (childrensToCreateList.length) {
-          await createQuestions(childrensToCreateList).unwrap();
+          await createQuestions(
+            childrensToCreateList.map((child) => {
+              return { ...child, matrixId: questionSaved.id };
+            }),
+          ).unwrap();
         }
       }
     },
@@ -377,10 +392,11 @@ export const useFormElementActions = (
     [isInFormElementsList, formElementsList],
   );
 
-  const preventEmptyChoiceValues = (choices: IQuestionChoice[]) => {
+  const preventEmptyChoiceValues = (choices: IQuestionChoice[], isMatrix: boolean = false) => {
     return choices.map((choice) => {
       if (!choice.value.trim()) {
-        return { ...choice, value: t("formulaire.option", { 0: choice.position }) };
+        const choiceValueI18nKey = isMatrix ? "formulaire.matrix.line.label.default" : "formulaire.option";
+        return { ...choice, value: t(choiceValueI18nKey, { 0: choice.position }) };
       }
       return choice;
     });

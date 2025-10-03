@@ -22,12 +22,16 @@ export const transformFormElements = (rawFormElements: IFormElementDTO[]): IForm
   return rawFormElements.map(transformFormElement);
 };
 
-export const createNewFormElement = (formElementType: FormElementType): IFormElement => {
+export const createNewFormElement = (
+  formElementType: FormElementType,
+  formId?: number | null,
+  title?: string | null,
+): IFormElement => {
   const defaultElement: IFormElement = {
     key: Date.now(),
     id: null,
-    formId: null,
-    title: null,
+    formId: formId ? formId : null,
+    title: title ? title : "",
     position: null,
     formElementType: formElementType,
     selected: false,
