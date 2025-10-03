@@ -31,6 +31,35 @@ export const questionApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    getQuestionsChildren: builder.query<IQuestion[], number[]>({
+      query: (questionIds) => {
+        const searchParams = new URLSearchParams();
+        questionIds.forEach((id, index) => {
+          searchParams.append(index.toString(), id.toString());
+        });
+
+        return {
+          url: `questions/children?${searchParams.toString()}`,
+          method: QueryMethod.GET,
+          headers: {
+            Accept: "application/json;version=2.0",
+          },
+        };
+      },
+      transformResponse: (response: IQuestion[]) =>
+        response.map((question) => ({
+          ...question,
+          formElementType: FormElementType.QUESTION,
+        })),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error(t("formulaire.error.questionService.list"), err);
+          toast.error(t("formulaire.error.questionService.list"));
+        }
+      },
+    }),
     getQuestionTypes: builder.query<IQuestionType[], void>({
       query: () => ({
         url: "/types",
@@ -96,7 +125,7 @@ export const questionApi = emptySplitFormulaireApi.injectEndpoints({
     }),
     deleteSingleQuestion: builder.mutation<void, number>({
       query: (questionId) => ({
-        url: `/questions/${questionId.toString()}`,
+        url: `/questions/${questionId}`,
         method: QueryMethod.DELETE,
       }),
       invalidatesTags: [TagName.QUESTIONS, TagName.FORM_ELEMENTS],
@@ -116,6 +145,7 @@ export const questionApi = emptySplitFormulaireApi.injectEndpoints({
 
 export const {
   useGetQuestionsQuery,
+  useGetQuestionsChildrenQuery,
   useGetQuestionTypesQuery,
   useCreateSingleQuestionMutation,
   useCreateQuestionsMutation,

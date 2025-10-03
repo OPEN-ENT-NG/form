@@ -97,6 +97,26 @@ export const fixChoicesPositions = (
   };
 };
 
+export const fixMatrixChildrenPositions = (
+  question: IQuestion,
+  positionStart: number,
+  action: PositionActionType = PositionActionType.CREATION,
+): IQuestion => {
+  if (!question.children) return question;
+  return {
+    ...question,
+    children: question.children.map((child) => {
+      if (child.matrixPosition && child.matrixPosition >= positionStart) {
+        return {
+          ...child,
+          matrixPosition: action === PositionActionType.CREATION ? child.matrixPosition + 1 : child.matrixPosition - 1,
+        };
+      }
+      return child;
+    }),
+  };
+};
+
 export const isSectionOrQuestion = (element: IFormElement): boolean => {
   return isFormElementSection(element) || isFormElementQuestion(element);
 };

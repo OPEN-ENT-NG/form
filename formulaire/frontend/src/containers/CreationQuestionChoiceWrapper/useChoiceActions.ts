@@ -2,7 +2,7 @@ import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react"
 import { IQuestion } from "~/core/models/question/types";
 import { Direction } from "~/components/OrganizationSortableItem/enum";
 import { useDeleteQuestionChoiceMutation } from "~/services/api/services/formulaireApi/questionChoiceApi";
-import { fixChoicesPositions, updateElementInList } from "~/providers/CreationProvider/utils";
+import { fixChoicesPositions, isCurrentEditingElement, updateElementInList } from "~/providers/CreationProvider/utils";
 import { PositionActionType } from "~/providers/CreationProvider/enum";
 import { compareChoicesByValue, swapChoicesAndSort } from "./utils";
 import { createNewQuestionChoice } from "~/core/models/question/utils";
@@ -12,8 +12,10 @@ import { FormElementType } from "~/core/models/formElement/enum";
 
 export const useChoiceActions = (
   question: IQuestion,
+  currentEditingElement: IFormElement | null,
   setCurrentEditingElement: (q: IQuestion) => void,
   setFormElementsList: Dispatch<SetStateAction<IFormElement[]>>,
+  choiceValueI18nKey?: string | null,
 ) => {
   const [currentSortDirection, setCurrentSortDirection] = useState<Direction>(Direction.DOWN);
   const [deleteQuestionChoice] = useDeleteQuestionChoiceMutation();
@@ -31,7 +33,7 @@ export const useChoiceActions = (
       });
 
       if (choiceId) {
-        await deleteQuestionChoice({ choiceId });
+        await deleteQuestionChoice(choiceId);
       }
     },
     [deleteQuestionChoice],
@@ -135,7 +137,7 @@ export const useChoiceActions = (
 
     const updatedChoices = choices.map((choice) => {
       if (!choice.value.trim()) {
-        return { ...choice, value: t("formulaire.option", { 0: choice.position }) };
+        return { ...choice, value: t(choiceValueI18nKey ?? "formulaire.option", { 0: choice.position }) };
       }
       return choice;
     });
@@ -144,6 +146,9 @@ export const useChoiceActions = (
       ...question,
       choices: updatedChoices,
     };
+
+    // Synch currentEditingElement
+    if (currentEditingElement && isCurrentEditingElement(question, currentEditingElement)) setQuestion(updatedQuestion);
 
     setFormElementsList((prevFormElementsList) => {
       const updatedFormElementsList = updateElementInList(prevFormElementsList, updatedQuestion);

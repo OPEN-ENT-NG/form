@@ -1,0 +1,31 @@
+import { FC } from "react";
+import { Box, Typography } from "@cgi-learning-hub/ui";
+import { useTranslation } from "react-i18next";
+import { FORMULAIRE } from "~/core/constants";
+import { TypographyVariant } from "~/core/style/themeProps";
+import { CreationQuestionChoiceWrapper } from "~/containers/CreationQuestionChoiceWrapper";
+import { QuestionTypes } from "~/core/models/question/enum";
+import { ICreationQuestionTypesProps } from "../types";
+import { matrixStyle } from "./style";
+import { CreationMatrixChildrenWrapper } from "~/containers/CreationMatrixChildrenWrapper";
+
+export const CreationQuestionMatrix: FC<ICreationQuestionTypesProps> = ({ question }) => {
+  const { t } = useTranslation(FORMULAIRE);
+
+  return (
+    <Box sx={matrixStyle}>
+      <Box>
+        <Typography variant={TypographyVariant.H6}>{t("formulaire.matrix.columns")}</Typography>
+        <CreationMatrixChildrenWrapper question={question}></CreationMatrixChildrenWrapper>
+      </Box>
+      <Box>
+        <Typography variant={TypographyVariant.H6}>{t("formulaire.matrix.lines")}</Typography>
+        <CreationQuestionChoiceWrapper
+          question={question}
+          type={QuestionTypes.MATRIX}
+          choiceValueI18nKey={"formulaire.matrix.line.label.default"}
+        ></CreationQuestionChoiceWrapper>
+      </Box>
+    </Box>
+  );
+};

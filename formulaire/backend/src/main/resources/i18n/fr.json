@@ -215,6 +215,8 @@
   "formulaire.mandatory.explanation.matrix": "Le répondant doit répondre à chaque ligne",
   "formulaire.matrix.columns": "Colonnes (Options de réponses)",
   "formulaire.matrix.lines": "Lignes",
+  "formulaire.matrix.column.label.default": "Colonne {{0}}",
+  "formulaire.matrix.line.label.default": "Ligne {{0}}",
   "formulaire.matrix.type.MULTIPLEANSWER": "Matrice à choix multiple",
   "formulaire.matrix.type.SINGLEANSWERRADIO": "Matrice à choix unique",
   "formulaire.mine": "Mon formulaire",

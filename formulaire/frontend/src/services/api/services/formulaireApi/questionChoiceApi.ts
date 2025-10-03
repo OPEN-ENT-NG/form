@@ -71,8 +71,8 @@ export const questionChoiceApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
-    deleteQuestionChoice: builder.mutation<void, { choiceId: number }>({
-      query: ({ choiceId }) => ({
+    deleteQuestionChoice: builder.mutation<void, number>({
+      query: (choiceId) => ({
         url: `choices/${choiceId}`,
         method: QueryMethod.DELETE,
       }),
