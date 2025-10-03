@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
+import { useGetQuestionsChildrenQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetQuestionChoicesQuery } from "~/services/api/services/formulaireApi/questionChoiceApi";
 
 export const useFormElementList = (
@@ -18,6 +19,8 @@ export const useFormElementList = (
     { skip: questionsIds.length === 0 },
   );
 
+  const { data: childrenDatas } = useGetQuestionsChildrenQuery(questionsIds, { skip: questionsIds.length === 0 });
+
   const completeList = useMemo(() => {
     // Create a Map of choices by questionId for O(1) lookup
     const choicesByQuestion = (choicesDatas ?? []).reduce((acc, choice) => {
@@ -28,23 +31,36 @@ export const useFormElementList = (
       return acc;
     }, new Map<number, IQuestionChoice[]>());
 
+    // Create a Map of children by questionId for O(1) lookup
+    const childrenByQuestion = (childrenDatas ?? []).reduce((acc, child) => {
+      if (child.matrixId != null) {
+        const existingChildren = acc.get(child.matrixId) ?? [];
+        return acc.set(child.matrixId, [...existingChildren, child]);
+      }
+      return acc;
+    }, new Map<number, IQuestion[]>());
+
     const { questionsBySection, questionsWithoutSectionList } = (questionsDatas ?? []).reduce(
       (acc, question) => {
-        const withChoices = {
+        const withChoicesAndChildren = {
           ...question,
           choices: question.id != null ? choicesByQuestion.get(question.id) ?? [] : [],
+          children: question.id != null ? childrenByQuestion.get(question.id) ?? [] : [],
         };
 
         if (question.sectionId != null) {
           const existingQuestions = acc.questionsBySection.get(question.sectionId) ?? [];
           return {
             ...acc,
-            questionsBySection: acc.questionsBySection.set(question.sectionId, [...existingQuestions, withChoices]),
+            questionsBySection: acc.questionsBySection.set(question.sectionId, [
+              ...existingQuestions,
+              withChoicesAndChildren,
+            ]),
           };
         } else {
           return {
             ...acc,
-            questionsWithoutSectionList: [...acc.questionsWithoutSectionList, withChoices],
+            questionsWithoutSectionList: [...acc.questionsWithoutSectionList, withChoicesAndChildren],
           };
         }
       },
@@ -62,7 +78,7 @@ export const useFormElementList = (
     return [...sectionsWithQuestions, ...questionsWithoutSectionList].sort(
       (a, b) => (a.position ?? Infinity) - (b.position ?? Infinity),
     );
-  }, [sectionsDatas, questionsDatas, choicesDatas, resetFormElementListId]);
+  }, [sectionsDatas, questionsDatas, choicesDatas, childrenDatas, resetFormElementListId]);
 
   return { completeList };
 };

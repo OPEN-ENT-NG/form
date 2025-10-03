@@ -30,9 +30,9 @@ export const createNewQuestion = (
   questionTypeCode: QuestionTypes,
   matrixId: number | null = null,
   matrixPosition: number | null = null,
+  title?: string | null,
 ): IQuestion => {
-  const formElement = createNewFormElement(FormElementType.QUESTION);
-  formElement.formId = formId;
+  const formElement = createNewFormElement(FormElementType.QUESTION, formId, title);
   const defaultSection: IQuestion = {
     questionType: questionTypeCode,
     statement: null,

@@ -12,6 +12,7 @@ import { IQuestion } from "~/core/models/question/types";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { t } from "~/i18n";
 import { CreationQuestionChoiceWrapper } from "../CreationQuestionChoiceWrapper";
+import { CreationQuestionMatrix } from "~/components/CreationQuestionTypes/CreationQuestionMatrix";
 
 export const getQuestionContentByType = (
   question: IQuestion,
@@ -32,6 +33,8 @@ export const getQuestionContentByType = (
       return <CreationQuestionCursor question={question} />;
     case QuestionTypes.FILE:
       return <CreationQuestionFile />;
+    case QuestionTypes.MATRIX:
+      return <CreationQuestionMatrix question={question} />;
     case QuestionTypes.RANKING:
     case QuestionTypes.SINGLEANSWER:
     case QuestionTypes.MULTIPLEANSWER:
@@ -40,7 +43,7 @@ export const getQuestionContentByType = (
     default:
       return (
         <Typography variant={TypographyVariant.BODY1}>
-          {t("formulaire.question.creation.error.type", { questionType: question.questionType.toString() })}
+          {t("formulaire.question.creation.error.type", { questionType: question.questionType })}
         </Typography>
       );
   }

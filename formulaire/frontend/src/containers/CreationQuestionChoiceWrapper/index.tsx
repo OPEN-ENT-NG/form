@@ -3,13 +3,13 @@ import { FC, useMemo, useState } from "react";
 import { ICreationQuestionChoiceWrapperProps } from "./types";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
-import { QuestionChoicesUpDownButtons } from "~/components/QuestionChoicesUpDownButtons";
+import { UpDownButtons } from "~/components/UpDownButtons";
 import { compareChoices, hasImageType } from "./utils";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
 import { BoxComponentType, ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import { iconStyle } from "~/components/QuestionChoicesUpDownButtons/style";
+import { iconStyle } from "~/components/UpDownButtons/style";
 import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
 import { useChoiceActions } from "./useChoiceActions";
 import {
@@ -32,7 +32,12 @@ import {
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
 
-export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({ question, type }) => {
+export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({
+  question,
+  type,
+  hideCustomChoice = false,
+  choiceValueI18nKey = null,
+}) => {
   const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
   const { t } = useTranslation(FORMULAIRE);
   const [newChoiceValue, setNewChoiceValue] = useState<string>("");
@@ -46,7 +51,13 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
     updateChoice,
     updateChoiceImage,
     updateChoiceNextFormElement,
-  } = useChoiceActions(question, setCurrentEditingElement, setFormElementsList);
+  } = useChoiceActions(
+    question,
+    currentEditingElement,
+    setCurrentEditingElement,
+    setFormElementsList,
+    choiceValueI18nKey,
+  );
 
   const sortedChoices = useMemo(() => {
     return question.choices?.sort((a, b) => compareChoices(a, b)) ?? [];
@@ -77,12 +88,15 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
               {sortedChoices.map((choice, index) => (
                 <Box key={choice.id ?? index} sx={choiceWrapperStyle}>
                   <Box sx={upDownButtonsWrapperStyle}>
-                    <QuestionChoicesUpDownButtons
-                      choice={choice}
-                      index={index}
-                      questionChoicesList={question.choices ?? []}
-                      handleReorderClick={handleSwapClick}
-                    />
+                    {!choice.isCustom && (
+                      <UpDownButtons
+                        element={choice}
+                        index={index}
+                        elementList={question.choices ?? []}
+                        hasCustomAtTheEnd={sortedChoices[sortedChoices.length - 1].isCustom}
+                        handleReorderClick={handleSwapClick}
+                      />
+                    )}
                   </Box>
                   <CreationQuestionChoice
                     index={index}
@@ -143,20 +157,22 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                 </CreationQuestionChoice>
               </NewChoiceWrapper>
             </Box>
-            <Box>
-              <Typography variant={TypographyVariant.BODY2}>
-                {t("formulaire.question.add.choice.other.text")}
-                <Box
-                  component={BoxComponentType.SPAN}
-                  onClick={() => {
-                    handleNewChoice(true, t("formulaire.other"));
-                  }}
-                  sx={otherChoiceSpanStyle}
-                >
-                  {t("formulaire.question.add.choice.other.link")}
-                </Box>
-              </Typography>
-            </Box>
+            {!hideCustomChoice && (
+              <Box>
+                <Typography variant={TypographyVariant.BODY2}>
+                  {t("formulaire.question.add.choice.other.text")}
+                  <Box
+                    component={BoxComponentType.SPAN}
+                    onClick={() => {
+                      handleNewChoice(true, t("formulaire.other"));
+                    }}
+                    sx={otherChoiceSpanStyle}
+                  >
+                    {t("formulaire.question.add.choice.other.link")}
+                  </Box>
+                </Typography>
+              </Box>
+            )}
           </Box>
         </ClickAwayListener>
       ) : (

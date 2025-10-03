@@ -1,5 +1,5 @@
 import { IQuestion } from "~/core/models/question/types";
 
-export interface ICreationQuestionTypesProps {
+export interface ICreationMatrixChildrenWrapperProps {
   question: IQuestion;
 }
