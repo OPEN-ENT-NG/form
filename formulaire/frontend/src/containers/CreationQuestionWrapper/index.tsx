@@ -72,7 +72,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    if (!isCurrentEditingElement(question, currentEditingElement)) setCurrentQuestionTitle(question.title ?? "");
+    if (!isEditing) setCurrentQuestionTitle(question.title ?? "");
   }, [question.title]);
 
   useEffect(() => {
