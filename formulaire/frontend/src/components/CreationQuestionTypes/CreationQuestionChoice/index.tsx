@@ -17,9 +17,9 @@ import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { QuestionTypes } from "~/core/models/question/enum";
 
 export const CreationQuestionChoice: FC<ICreationQuestionChoiceProps> = ({
-  type,
   children,
   index,
+  type = "",
   isEditing = false,
   hasImage = false,
   updateChoiceImage,
@@ -35,11 +35,10 @@ export const CreationQuestionChoice: FC<ICreationQuestionChoiceProps> = ({
     [updateChoiceImage, index],
   );
 
-  const typeToIcons: Partial<Record<QuestionTypes, ReactNode>> = {
+  const typeToIcons: Partial<Record<QuestionTypes | string, ReactNode>> = {
     [QuestionTypes.SINGLEANSWERRADIO]: <Radio sx={choiceIconStyle} disabled={true} />,
     [QuestionTypes.MULTIPLEANSWER]: <Checkbox sx={choiceIconStyle} disabled={true} />,
     [QuestionTypes.SINGLEANSWER]: <Typography sx={choiceIconStyle}>{`${index + 1}.`}</Typography>,
-    [QuestionTypes.RANKING]: <></>,
   };
 
   return (
