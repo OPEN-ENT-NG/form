@@ -1,5 +1,5 @@
 import { Box, ClickAwayListener, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 import { ICreationQuestionChoiceWrapperProps } from "./types";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
@@ -31,6 +31,7 @@ import {
 } from "./style";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
+import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({
   question,
@@ -41,6 +42,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
   const { t } = useTranslation(FORMULAIRE);
   const [newChoiceValue, setNewChoiceValue] = useState<string>("");
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const {
     handleDeleteChoice,
@@ -66,6 +68,30 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   if (!question.choices) {
     return null;
   }
+
+  const handleKeyDownExistingChoice = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (isShiftEnterPressed(e)) {
+      updateChoice(index, (e.target as HTMLInputElement).value);
+      const targetIndex = index - 1 >= 0 ? index - 1 : 0;
+      inputRefs.current[targetIndex]?.focus();
+    } else if (isEnterPressed(e)) {
+      updateChoice(index, (e.target as HTMLInputElement).value);
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDownNewChoice = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isShiftEnterPressed(e)) {
+      handleNewChoice(false, newChoiceValue);
+      setNewChoiceValue("");
+      const index = question.choices?.length ?? 0;
+      const targetIndex = index - 1 >= 0 ? index - 1 : 0;
+      inputRefs.current[targetIndex]?.focus();
+    } else if (isEnterPressed(e)) {
+      handleNewChoice(false, newChoiceValue);
+      setNewChoiceValue("");
+    }
+  };
 
   return (
     <Box>
@@ -107,11 +133,15 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     isEditing={true}
                   >
                     <TextField
+                      inputRef={(el: HTMLInputElement | null) => (inputRefs.current[index] = el)}
                       value={choice.value}
                       variant={ComponentVariant.STANDARD}
                       fullWidth
                       onChange={(e) => {
                         updateChoice(index, e.target.value);
+                      }}
+                      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                        handleKeyDownExistingChoice(e, index);
                       }}
                       disabled={choice.isCustom}
                       sx={choiceInputStyle}
@@ -141,6 +171,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
               <NewChoiceWrapper hasImage={hasImageType(type)}>
                 <CreationQuestionChoice index={question.choices.length} type={type}>
                   <TextField
+                    inputRef={(el: HTMLInputElement | null) => (inputRefs.current[question.choices?.length ?? 0] = el)}
                     value={newChoiceValue}
                     variant={ComponentVariant.STANDARD}
                     placeholder={t("formulaire.question.label")}
@@ -152,6 +183,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     onChange={(e) => {
                       setNewChoiceValue(e.target.value);
                     }}
+                    onKeyDown={handleKeyDownNewChoice}
                     sx={newChoiceInputStyle}
                   />
                 </CreationQuestionChoice>
