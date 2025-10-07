@@ -1,5 +1,5 @@
 import { Box, ClickAwayListener, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
-import { FC, useMemo, useState } from "react";
+import { FC, useMemo, useRef, useState } from "react";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { UpDownButtons } from "~/components/UpDownButtons";
@@ -29,11 +29,13 @@ import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/Creat
 import { ICreationMatrixChildrenWrapperProps } from "./types";
 import { IQuestion } from "~/core/models/question/types";
 import { useMatrixChildrenActions } from "./useMatrixChildrenActions";
+import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
 
 export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperProps> = ({ question }) => {
   const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
   const { t } = useTranslation(FORMULAIRE);
   const [newChildTitle, setNewChildrenTitle] = useState<string>("");
+  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const { handleDeleteChild, handleNewChild, handleSortClick, handleSwapClick, preventEmptyValues, updateChild } =
     useMatrixChildrenActions(question, currentEditingElement, setCurrentEditingElement, setFormElementsList);
@@ -53,6 +55,30 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
   if (!question.children) {
     return null;
   }
+
+  const handleKeyDownExistingChoice = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+    if (isShiftEnterPressed(e)) {
+      updateChild(index, (e.target as HTMLInputElement).value);
+      const targetIndex = index - 1 >= 0 ? index - 1 : 0;
+      inputRefs.current[targetIndex]?.focus();
+    } else if (isEnterPressed(e)) {
+      updateChild(index, (e.target as HTMLInputElement).value);
+      inputRefs.current[index + 1]?.focus();
+    }
+  };
+
+  const handleKeyDownNewChoice = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (isShiftEnterPressed(e)) {
+      handleNewChild(newChildTitle);
+      setNewChildrenTitle("");
+      const index = question.choices?.length ?? 0;
+      const targetIndex = index - 1 >= 0 ? index - 1 : 0;
+      inputRefs.current[targetIndex]?.focus();
+    } else if (isEnterPressed(e)) {
+      handleNewChild(newChildTitle);
+      setNewChildrenTitle("");
+    }
+  };
 
   return (
     <Box>
@@ -85,11 +111,15 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
                   </Box>
                   <CreationQuestionChoice index={index} type={question.questionType} isEditing={true}>
                     <TextField
+                      inputRef={(el: HTMLInputElement | null) => (inputRefs.current[index] = el)}
                       value={child.title}
                       variant={ComponentVariant.STANDARD}
                       fullWidth
                       onChange={(e) => {
                         updateChild(index, e.target.value);
+                      }}
+                      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                        handleKeyDownExistingChoice(e, index);
                       }}
                       disabled={false}
                       sx={choiceInputStyle}
@@ -111,6 +141,7 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
               <NewChoiceWrapper hasImage={false}>
                 <CreationQuestionChoice index={question.children.length}>
                   <TextField
+                    inputRef={(el: HTMLInputElement | null) => (inputRefs.current[question.children?.length ?? 0] = el)}
                     value={newChildTitle}
                     variant={ComponentVariant.STANDARD}
                     placeholder={t("formulaire.question.label")}
@@ -122,6 +153,7 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
                     onChange={(e) => {
                       setNewChildrenTitle(e.target.value);
                     }}
+                    onKeyDown={handleKeyDownNewChoice}
                     sx={newChoiceInputStyle}
                   />
                 </CreationQuestionChoice>
