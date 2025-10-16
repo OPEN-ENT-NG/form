@@ -15,13 +15,14 @@ import { useHome } from "~/providers/HomeProvider";
 import { useMapActionBarButtons } from "./useMapActionBarButtons";
 import { DeleteModal } from "../DeleteModal";
 import { FormImportModal } from "../FormImportModal";
-import { MoveFolderModal } from "../MoveFolderModal";
+import { MoveModal } from "../MoveModal";
 import { ExportModal } from "../ExportModal";
 import { FormShareModal } from "../FormShareModal";
 import { RemindModal } from "../RemindModal";
 import { MyAnswersModal } from "../MyAnswersModal";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { WorkflowRights } from "~/core/rights";
+import { FormOpenBlockedModal } from "../FormOpenBlockedModal";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -30,27 +31,38 @@ export const HomeView: FC = () => {
     displayModals: {
       showFolderCreate,
       showFolderRename,
+      showMove,
+      showDelete,
       showFormPropCreate,
       showFormPropUpdate,
-      showFormFolderDelete,
+      showFormOpenBlocked,
       showFormImport,
-      showMove,
-      showExport,
-      showShare,
-      showRemind,
-      showAnswers,
+      showFormExport,
+      showFormShare,
+      showFormRemind,
+      showFormAnswers,
     },
     toggleModal,
   } = useModal();
-  const { isActionBarOpen, tab, userWorkflowRights } = useHome();
+  const { isMobile, isActionBarOpen, tab, userWorkflowRights } = useHome();
   const { leftButtons, rightButtons } = useMapActionBarButtons();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
+  const actionBarMobileSlotProps = {
+    ...(isMobile && {
+      root: { flexWrap: "wrap" as const },
+      leftActionsContainer: { flexWrap: "wrap" as const },
+      rightActionsContainer: { flexWrap: "wrap" as const, justifyContent: "flex-start" as const },
+    }),
+  };
+
   return (
     <Box height={"100%"}>
-      <Box ref={headerRef}>
-        <Header stringItems={[t("formulaire.title")]} buttons={tab === HomeTabState.FORMS ? headerButtons : []} />
-      </Box>
+      {!isMobile && (
+        <Box ref={headerRef}>
+          <Header stringItems={[t("formulaire.title")]} buttons={tab === HomeTabState.FORMS ? headerButtons : []} />
+        </Box>
+      )}
       <HomeLayout headerHeight={headerHeight} />
       {showFolderCreate && (
         <FolderModal
@@ -70,11 +82,19 @@ export const HomeView: FC = () => {
           mode={FolderModalMode.RENAME}
         />
       )}
-      {showFormFolderDelete && (
-        <DeleteModal
-          isOpen={showFormFolderDelete}
+      {showMove && (
+        <MoveModal
+          isOpen={showMove}
           handleClose={() => {
-            toggleModal(ModalType.FORM_FOLDER_DELETE);
+            toggleModal(ModalType.MOVE);
+          }}
+        />
+      )}
+      {showDelete && (
+        <DeleteModal
+          isOpen={showDelete}
+          handleClose={() => {
+            toggleModal(ModalType.DELETE);
           }}
         />
       )}
@@ -98,11 +118,11 @@ export const HomeView: FC = () => {
           isRgpdPossible={userWorkflowRights[WorkflowRights.RGPD]}
         />
       )}
-      {showMove && (
-        <MoveFolderModal
-          isOpen={showMove}
+      {showFormOpenBlocked && (
+        <FormOpenBlockedModal
+          isOpen={showFormOpenBlocked}
           handleClose={() => {
-            toggleModal(ModalType.MOVE);
+            toggleModal(ModalType.FORM_OPEN_BLOCKED);
           }}
         />
       )}
@@ -114,39 +134,41 @@ export const HomeView: FC = () => {
           }}
         />
       )}
-      {showExport && (
+      {showFormExport && (
         <ExportModal
-          isOpen={showExport}
+          isOpen={showFormExport}
           handleClose={() => {
-            toggleModal(ModalType.EXPORT);
+            toggleModal(ModalType.FORM_EXPORT);
           }}
         />
       )}
-      {showShare && (
+      {showFormShare && (
         <FormShareModal
-          isOpen={showShare}
+          isOpen={showFormShare}
           handleClose={() => {
             toggleModal(ModalType.FORM_SHARE);
           }}
         />
       )}
-      {showRemind && (
+      {showFormRemind && (
         <RemindModal
-          isOpen={showRemind}
+          isOpen={showFormRemind}
           handleClose={() => {
-            toggleModal(ModalType.REMIND);
+            toggleModal(ModalType.FORM_REMIND);
           }}
         />
       )}
-      {showAnswers && (
+      {showFormAnswers && (
         <MyAnswersModal
-          isOpen={showAnswers}
+          isOpen={showFormAnswers}
           handleClose={() => {
-            toggleModal(ModalType.ANSWERS);
+            toggleModal(ModalType.FORM_ANSWERS);
           }}
         />
       )}
-      {isActionBarOpen && <ActionBar leftActions={leftButtons} rightActions={rightButtons} />}
+      {isActionBarOpen && (
+        <ActionBar leftActions={leftButtons} rightActions={rightButtons} slotProps={actionBarMobileSlotProps} />
+      )}
     </Box>
   );
 };

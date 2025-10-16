@@ -2,7 +2,6 @@ import { IModalProps } from "~/core/types";
 import { ChangeEvent, FC, useState } from "react";
 import {
   Box,
-  Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
@@ -21,6 +20,7 @@ import { dialogContentStyle, exportContainerStyle, radioGroupStyle } from "./sty
 import { useExportZipMutation, useLazyExportPdfFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useHome } from "~/providers/HomeProvider";
 import { useVerifyExportAndDownloadZipMutation } from "~/services/api/services/archiveApi/importExportApi";
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 
 export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -58,7 +58,7 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   };
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD} fullWidth>
+    <ResponsiveDialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD} fullWidth>
       <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
         {t("formulaire.export")}
       </DialogTitle>
@@ -109,6 +109,6 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           {t("formulaire.export")}
         </Button>
       </DialogActions>
-    </Dialog>
+    </ResponsiveDialog>
   );
 };

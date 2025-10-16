@@ -1,6 +1,6 @@
 import { IForm } from "~/core/models/form/types";
-import { ChipsID, MenuItemsID, MenuItemState } from "../OrganizeFilter/enum";
-import { IFormChipProps, IMenuItemProps } from "../OrganizeFilter/types";
+import { ChipsID, MenuItemsID, MenuItemState } from "../../components/OrganizeFilter/enum";
+import { IFormChipProps, IMenuItemProps } from "../../components/OrganizeFilter/types";
 import { IDistribution } from "~/core/models/distribution/types";
 import { getFormDistributions, isFormFilled } from "~/core/models/form/utils";
 import { getFirstDistributionDate } from "~/core/models/distribution/utils";

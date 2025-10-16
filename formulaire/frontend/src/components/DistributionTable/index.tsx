@@ -1,5 +1,5 @@
 import { FC, useState } from "react";
-import { Box, Button, Table, TableBody, TableCell, TableHead, TableRow, Paper, Typography } from "@cgi-learning-hub/ui";
+import { Box, Button, Table, TableCell, TableHead, TableRow, Paper, Typography } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { IDistributionTableProps } from "./types";
@@ -9,14 +9,14 @@ import {
   paperStyle,
   headerRowStyle,
   headerCellStyle,
-  tableBodyStyle,
   tableRowStyle,
   emptyRowMessageStyle,
   seeMoreButtonStyle,
+  StyledTableBody,
+  tableRowMobileStyle,
 } from "./style";
-import { BoxComponentType } from "~/core/style/themeProps";
 
-export const DistributionTable: FC<IDistributionTableProps> = ({ distributions }) => {
+export const DistributionTable: FC<IDistributionTableProps> = ({ distributions, isMobile = false }) => {
   const { t } = useTranslation(FORMULAIRE);
   const [maxRows, setMaxRows] = useState<number>(8);
 
@@ -27,6 +27,7 @@ export const DistributionTable: FC<IDistributionTableProps> = ({ distributions }
   const displayedDatas = distributions.slice(0, maxRows);
   const hasMoreToShow = distributions.length > maxRows;
   const nameColumnTitle = `${t("formulaire.checkremind.table.name")}, ${t("formulaire.checkremind.table.surname")}`;
+  const tableBodyCellStyle = isMobile ? tableRowMobileStyle : {};
 
   return (
     <Box sx={containerStyle}>
@@ -34,21 +35,21 @@ export const DistributionTable: FC<IDistributionTableProps> = ({ distributions }
         <Table sx={tableStyle}>
           <TableHead>
             <TableRow sx={headerRowStyle}>
-              <TableCell sx={headerCellStyle} width="80%">
+              <TableCell sx={headerCellStyle} width={isMobile ? "45%" : "80%"}>
                 {nameColumnTitle}
               </TableCell>
-              <TableCell align="right" sx={headerCellStyle} width="20%">
+              <TableCell align="right" sx={headerCellStyle} width={isMobile ? "55%" : "20%"}>
                 {t("formulaire.number.responses")}
               </TableCell>
             </TableRow>
           </TableHead>
-          <TableBody sx={tableBodyStyle}>
+          <StyledTableBody isMobile={isMobile}>
             {displayedDatas.map((person) => (
               <TableRow key={person.responderId} sx={tableRowStyle}>
-                <TableCell component={BoxComponentType.TH} scope="row" width="80%">
+                <TableCell width="80%" sx={tableBodyCellStyle}>
                   {person.responderName}
                 </TableCell>
-                <TableCell align="center" width="20%">
+                <TableCell align="center" width="20%" sx={tableBodyCellStyle}>
                   {person.responseCount}
                 </TableCell>
               </TableRow>
@@ -60,7 +61,7 @@ export const DistributionTable: FC<IDistributionTableProps> = ({ distributions }
                 </TableCell>
               </TableRow>
             )}
-          </TableBody>
+          </StyledTableBody>
         </Table>
       </Paper>
 

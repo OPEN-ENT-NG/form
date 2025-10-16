@@ -1,15 +1,6 @@
 import { FC } from "react";
 import { IModalProps } from "~/core/types";
-import {
-  Box,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  Button,
-  IconButton,
-  Tooltip,
-} from "@cgi-learning-hub/ui";
+import { Box, DialogActions, DialogContent, DialogTitle, Button, IconButton, Tooltip } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { BoxComponentType, ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
@@ -21,6 +12,7 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 import { getRecapFormPath } from "~/core/pathHelper";
 import { DistributionStatus } from "~/core/models/distribution/enums";
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 
 export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -30,7 +22,7 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const formDistributions: IDistribution[] = getFormDistributions(selectedSentForm, distributions);
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} fullWidth>
+    <ResponsiveDialog open={isOpen} onClose={handleClose} fullWidth>
       <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
         {t("formulaire.myResponses") + " - " + selectedSentForm.title}
       </DialogTitle>
@@ -62,6 +54,6 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           {t("formulaire.cancel")}
         </Button>
       </DialogActions>
-    </Dialog>
+    </ResponsiveDialog>
   );
 };
