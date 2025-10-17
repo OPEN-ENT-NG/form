@@ -1,9 +1,10 @@
-import { styled, Chip, Box, SxProps } from "@cgi-learning-hub/ui";
+import { styled, Chip, Box } from "@cgi-learning-hub/ui";
 import { columnBoxStyle, flexStartBoxStyle } from "~/core/style/boxStyles";
-import { ICustomChipProps, IHiddenContentProps } from "./types";
+import { ICustomChipProps, IEditorContainerProps, IHiddenContentProps } from "./types";
+import { blockProps } from "~/core/utils";
 
 export const StyledChip = styled(Chip, {
-  shouldForwardProp: (prop) => prop !== "isActive",
+  shouldForwardProp: blockProps("isActive"),
 })<ICustomChipProps>(({ theme, isActive }) => ({
   cursor: "pointer",
   fontSize: "1.6rem",
@@ -16,13 +17,16 @@ export const StyledChip = styled(Chip, {
   },
 }));
 
-export const editorContainerStyle = {
+export const StyledEditorContainer = styled(Box, {
+  shouldForwardProp: blockProps("isMobile", "showRemind"),
+})<IEditorContainerProps>(({ isMobile, showRemind }) => ({
+  display: showRemind ? "block" : "none",
   boxSizing: "border-box",
-  padding: "0rem 2rem",
+  ...(!isMobile ? { padding: "0rem 2rem" } : {}),
   "& .ProseMirror[contenteditable='true']": {
     minHeight: "180px",
   },
-};
+}));
 
 export const mainContentColumnWrapper = {
   ...columnBoxStyle,
@@ -36,22 +40,26 @@ export const subContentColumnWrapper = {
 export const chipWrapper = { ...flexStartBoxStyle, gap: "2rem" };
 
 export const HiddenContent = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "isVisible",
+  shouldForwardProp: blockProps("isVisible"),
 })<IHiddenContentProps>(({ isVisible }) => ({
   ...columnBoxStyle,
   display: isVisible ? "flex" : "none",
   gap: "2rem",
 }));
 
-export const dialogStyle: SxProps = {
-  "& .MuiDialog-container": {
-    alignItems: "flex-start",
-    paddingTop: "1rem",
+export const dialogStyle = {
+  container: {
+    sx: {
+      alignItems: "flex-start",
+      paddingTop: "1rem",
+    },
   },
-  "& .MuiDialog-paper": {
-    maxHeight: "90vh",
-    display: "flex",
-    flexDirection: "column",
+  paper: {
+    sx: {
+      maxHeight: "90vh",
+      display: "flex",
+      flexDirection: "column",
+    },
   },
 };
 

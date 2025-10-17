@@ -1,9 +1,10 @@
-import { SxProps } from "@mui/material";
+import { styled, SxProps, TableBody } from "@cgi-learning-hub/ui";
+import { ITableBodyProps } from "./types";
+import { blockProps } from "~/core/utils";
 
 export const tableStyle: SxProps = {
   tableLayout: "fixed",
-  display: "flex",
-  flexDirection: "column",
+  width: "100%",
   borderCollapse: "separate",
   "& .MuiTableCell-root": {
     borderLeft: "none",
@@ -37,10 +38,13 @@ export const headerCellStyle: SxProps = {
   backgroundColor: "primary.main",
 };
 
-export const tableBodyStyle: SxProps = {
+export const StyledTableBody = styled(TableBody, {
+  shouldForwardProp: blockProps("isMobile"),
+})<ITableBodyProps>(({ isMobile = false }) => ({
   display: "block",
-  maxHeight: "calc(50vh - 10rem)",
-  overflow: "auto",
+  maxHeight: `calc(50vh - ${isMobile ? 17 : 10}rem)`,
+  overflowY: "auto",
+  overflowX: "hidden",
   "&::-webkit-scrollbar": {
     width: "0.8rem",
   },
@@ -48,14 +52,22 @@ export const tableBodyStyle: SxProps = {
     backgroundColor: "rgba(0,0,0,0.2)",
     borderRadius: "0.25rem",
   },
-};
+}));
 
 export const tableRowStyle: SxProps = {
   display: "table",
   width: "100%",
+  tableLayout: "fixed",
   "&:last-child td, &:last-child th": {
     border: 0,
   },
+};
+
+export const tableRowMobileStyle: SxProps = {
+  padding: "6px",
+  whiteSpace: "nowrap",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
 };
 
 export const emptyRowMessageStyle: SxProps = {

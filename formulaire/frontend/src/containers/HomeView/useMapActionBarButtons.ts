@@ -19,6 +19,7 @@ import { t } from "~/i18n";
 
 export const useMapActionBarButtons = () => {
   const {
+    isMobile,
     selectedFolders,
     selectedForms,
     selectedSentForm,
@@ -160,7 +161,8 @@ export const useMapActionBarButtons = () => {
             return;
           }
           if (hasForms && tab === HomeTabState.FORMS) {
-            return (window.location.href = getFormEditPath(selectedForms[0].id));
+            if (isMobile) toggleModal(ModalType.FORM_OPEN_BLOCKED);
+            else return (window.location.href = getFormEditPath(selectedForms[0].id));
           }
           return openFormResponseAction();
         },
@@ -180,7 +182,7 @@ export const useMapActionBarButtons = () => {
       [ActionBarButtonType.DELETE]: {
         label: t("formulaire.delete"),
         action: () => {
-          toggleModal(ModalType.FORM_FOLDER_DELETE);
+          toggleModal(ModalType.DELETE);
         },
       },
       [ActionBarButtonType.PROPS]: {
@@ -196,7 +198,7 @@ export const useMapActionBarButtons = () => {
       [ActionBarButtonType.EXPORT]: {
         label: t("formulaire.export"),
         action: () => {
-          toggleModal(ModalType.EXPORT);
+          toggleModal(ModalType.FORM_EXPORT);
         },
       },
       [ActionBarButtonType.UNSELECT_ALL]: {
@@ -230,13 +232,13 @@ export const useMapActionBarButtons = () => {
       [ActionBarButtonType.REMIND]: {
         label: t("formulaire.checkremind"),
         action: () => {
-          toggleModal(ModalType.REMIND);
+          toggleModal(ModalType.FORM_REMIND);
         },
       },
       [ActionBarButtonType.MY_ANSWER]: {
         label: t("formulaire.myResponses"),
         action: () => {
-          toggleModal(ModalType.ANSWERS);
+          toggleModal(ModalType.FORM_ANSWERS);
         },
       },
     }),
@@ -274,9 +276,14 @@ export const useMapActionBarButtons = () => {
 
       // Cas 1: Un seul formulaire SANS éléments
       if (hasOneForm && !hasFolders && !hasElements) {
-        const buttons = [ActionBarButtonType.OPEN, ActionBarButtonType.PROPS, ActionBarButtonType.DUPLICATE];
+        const buttons = [
+          ActionBarButtonType.OPEN,
+          ActionBarButtonType.PROPS,
+          ActionBarButtonType.DUPLICATE,
+          ActionBarButtonType.DELETE,
+        ];
         if (currentFolder.id === rootFolders[0].id) {
-          buttons.push(ActionBarButtonType.MOVE);
+          buttons.splice(3, 0, ActionBarButtonType.MOVE);
         }
         return buttons;
       }

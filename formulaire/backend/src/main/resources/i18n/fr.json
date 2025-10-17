@@ -220,6 +220,8 @@
   "formulaire.matrix.type.MULTIPLEANSWER": "Matrice à choix multiple",
   "formulaire.matrix.type.SINGLEANSWERRADIO": "Matrice à choix unique",
   "formulaire.mine": "Mon formulaire",
+  "formulaire.modal.open.form.blocked.title": "Éditer un formulaire",
+  "formulaire.modal.open.form.blocked.body": "L'édition des formulaires est optimisée pour les écrans plus larges.",
   "formulaire.modified": "Modifié le ",
   "formulaire.months": "mois",
   "formulaire.mouse.legend": "Maintenez le clic et déplacez la souris pour vous déplacer sur l'arbre",
