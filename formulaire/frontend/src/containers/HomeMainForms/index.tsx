@@ -10,7 +10,7 @@ import { DraggableType } from "~/core/enums";
 import { DraggableForm } from "~/components/DraggableForm";
 import { cardWrapperStyle } from "~/core/style/boxStyles";
 
-export const HomeMainForms: FC<IHomeMainFormsProps> = ({ forms, activeItem }) => {
+export const HomeMainForms: FC<IHomeMainFormsProps> = ({ forms, activeItem = null }) => {
   const { selectedForms, setSelectedForms } = useHome();
   const [visibleCount, setVisibleCount] = useState(FORM_CHUNK);
 
@@ -70,6 +70,7 @@ export const HomeMainForms: FC<IHomeMainFormsProps> = ({ forms, activeItem }) =>
             isSelected={isSelectedForm}
             onSelect={handleFormsSelect}
             dragActive={
+              !!activeItem &&
               (activeItem.type === DraggableType.FORM || activeItem.type === DraggableType.FOLDER) &&
               selectedForms.some((f) => f.id === form.id)
             }

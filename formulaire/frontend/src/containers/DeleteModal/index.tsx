@@ -1,6 +1,6 @@
 import { IModalProps } from "~/core/types";
 import { FC, useCallback } from "react";
-import { Button, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
+import { Button, Typography, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, TRASH_FOLDER_ID } from "~/core/constants";
 import { deleteModalStyle } from "./style";
@@ -16,6 +16,7 @@ import { PRIMARY } from "~/core/style/colors";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 import { IForm, IFormPayload } from "~/core/models/form/types";
 import { toast } from "react-toastify";
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 
 export const DeleteModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { selectedForms, selectedFolders, resetSelected, currentFolder } = useHome();
@@ -82,7 +83,7 @@ export const DeleteModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   };
 
   return (
-    <Dialog
+    <ResponsiveDialog
       open={isOpen}
       onClose={handleClose}
       slotProps={{
@@ -109,6 +110,6 @@ export const DeleteModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           {t("formulaire.delete")}
         </Button>
       </DialogActions>
-    </Dialog>
+    </ResponsiveDialog>
   );
 };

@@ -11,7 +11,7 @@ import { useFolderSubtitle } from "~/hook/useFolderSubtitle";
 import { isDraggedItemFolder, isDraggedItemForm } from "~/hook/dnd-hooks/utils";
 import { cardWrapperStyle } from "~/core/style/boxStyles";
 
-export const HomeMainFolders: FC<IHomeMainFolderProps> = ({ folders, activeItem }) => {
+export const HomeMainFolders: FC<IHomeMainFolderProps> = ({ folders, activeItem = null }) => {
   const { setCurrentFolder, selectedFolders, setSelectedFolders } = useHome();
   const getFolderSubtitle = useFolderSubtitle();
 
@@ -41,6 +41,7 @@ export const HomeMainFolders: FC<IHomeMainFolderProps> = ({ folders, activeItem 
           isSelected={isSelectedFolder(folder, selectedFolders)}
           getFolderSubtitle={() => getFolderSubtitle(folder)}
           dragActive={
+            !!activeItem &&
             (isDraggedItemForm(activeItem) || isDraggedItemFolder(activeItem)) &&
             isSelectedFolder(folder, selectedFolders)
           }

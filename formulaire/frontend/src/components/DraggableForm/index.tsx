@@ -1,18 +1,21 @@
 import { FC } from "react";
 import { IDraggableFormProps } from "./types";
 import { useDraggable } from "@dnd-kit/core";
-import { DraggableType } from "~/core/enums";
+import { DraggableType, SizeAbreviation } from "~/core/enums";
 import { Box, ResourceCard } from "@cgi-learning-hub/ui";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
 import { LOGO_PATH } from "~/core/constants";
 
 import { dragActiveStyle } from "~/core/style/dndStyle";
 import { getFormEditPath } from "~/core/pathHelper";
+import { useHome } from "~/providers/HomeProvider";
 
 export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSelect, dragActive = false }) => {
+  const { isMobile } = useHome();
   const { attributes, listeners, setNodeRef } = useDraggable({
     id: `draggable-form-${form.id.toString()}`,
     data: { type: DraggableType.FORM, form },
+    disabled: isMobile,
   });
 
   const { getIcons, getFormPropertyItems } = useFormItemsIcons();
@@ -30,11 +33,13 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
           onSelect(form);
         }}
         onClick={() => {
-          window.location.href = getFormEditPath(form.id);
+          if (isMobile) onSelect(form);
+          else window.location.href = getFormEditPath(form.id);
         }}
         propertyItems={getFormPropertyItems(form)}
         infoIcons={getIcons(form)}
         hasNoButtonOnFocus
+        size={isMobile ? SizeAbreviation.SMALL : SizeAbreviation.MEDIUM}
       />
     </Box>
   );

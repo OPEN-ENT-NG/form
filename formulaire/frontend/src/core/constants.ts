@@ -77,3 +77,7 @@ export const EDITOR_CONTENT_HTML = "html";
 //MOUSE EVENTS
 export const MOUSE_EVENT_DOWN = "onMouseDown";
 export const TOUCH_EVENT_START = "onTouchStart";
+
+// RESPONSIVE
+export const MOBILE_MAX_WIDTH = 576;
+export const TABLET_MAX_WIDTH = 768;

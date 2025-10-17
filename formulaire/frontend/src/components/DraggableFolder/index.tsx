@@ -5,6 +5,7 @@ import { DraggableType } from "~/core/enums";
 import { FolderCard } from "@cgi-learning-hub/ui";
 import { IDraggableFolderProps } from "./types";
 import { StyledDraggableFolder } from "./style";
+import { useHome } from "~/providers/HomeProvider";
 
 export const DraggableFolder: FC<IDraggableFolderProps> = ({
   folder,
@@ -14,6 +15,7 @@ export const DraggableFolder: FC<IDraggableFolderProps> = ({
   isSelected,
   getFolderSubtitle,
 }) => {
+  const { isMobile } = useHome();
   const [isOvered, setIsOvered] = useState(false);
 
   const {
@@ -23,6 +25,7 @@ export const DraggableFolder: FC<IDraggableFolderProps> = ({
   } = useDraggable({
     id: `draggable-folder-${folder.id.toString()}`,
     data: { type: DraggableType.FOLDER, folder },
+    disabled: isMobile,
   });
 
   const { setNodeRef: setDroppableNodeRef } = useDroppable({
@@ -56,14 +59,15 @@ export const DraggableFolder: FC<IDraggableFolderProps> = ({
     <StyledDraggableFolder ref={setNodeRef} {...attributes} {...listeners} dragActive={dragActive} isOvered={isOvered}>
       <FolderCard
         key={folder.id}
-        width="30rem"
+        width={isMobile ? "auto" : "30rem"}
         title={folder.name}
         subtitle={getFolderSubtitle(folder)}
         onSelect={() => {
           onSelect(folder);
         }}
         onClick={() => {
-          onClick(folder);
+          if (isMobile) onSelect(folder);
+          else onClick(folder);
         }}
         isSelected={isSelected}
         iconSize="3.2rem"

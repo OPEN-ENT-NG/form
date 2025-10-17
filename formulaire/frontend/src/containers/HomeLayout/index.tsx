@@ -1,29 +1,42 @@
 import { FC } from "react";
 import { Box } from "@cgi-learning-hub/ui";
 import { useHome } from "~/providers/HomeProvider";
-import { sidebarStyle, sidebarContentStyle, mainContentStyle, HomeLayoutWrapper } from "./styles";
+import { sidebarStyle, sidebarContentStyle, mainContentStyle, StyledHomeLayoutWrapper } from "./styles";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { HomeSidebar } from "../HomeSidebar";
 import { IHomeLayoutProps } from "./types";
 import { HomeMainLayout } from "../HomeMainLayout";
-import { AnswerMainLayout } from "~/components/AnswerMainLayout";
+import { AnswerMainLayout } from "~/containers/AnswerMainLayout";
+import { HomeMainLayoutMobile } from "../HomeMainLayoutMobile";
 
 export const HomeLayout: FC<IHomeLayoutProps> = ({ headerHeight }) => {
-  const { tab } = useHome();
+  const { isMobile, tab } = useHome();
 
   return (
-    <HomeLayoutWrapper headerHeight={headerHeight}>
-      {tab === HomeTabState.FORMS && (
-        <Box sx={sidebarStyle}>
-          <Box sx={sidebarContentStyle}>
-            <HomeSidebar />
-          </Box>
+    <StyledHomeLayoutWrapper headerHeight={headerHeight}>
+      {tab === HomeTabState.FORMS ? (
+        isMobile ? (
+          // Forms + mobile
+          <HomeMainLayoutMobile></HomeMainLayoutMobile>
+        ) : (
+          // Forms + desktop
+          <>
+            <Box sx={sidebarStyle}>
+              <Box sx={sidebarContentStyle}>
+                <HomeSidebar />
+              </Box>
+            </Box>
+            <Box sx={mainContentStyle}>
+              <HomeMainLayout />
+            </Box>
+          </>
+        )
+      ) : (
+        // Answers (mobile or not)
+        <Box sx={mainContentStyle}>
+          <AnswerMainLayout />
         </Box>
       )}
-      <Box sx={mainContentStyle}>
-        {tab === HomeTabState.RESPONSES && <AnswerMainLayout />}
-        {tab === HomeTabState.FORMS && <HomeMainLayout />}
-      </Box>
-    </HomeLayoutWrapper>
+    </StyledHomeLayoutWrapper>
   );
 };
