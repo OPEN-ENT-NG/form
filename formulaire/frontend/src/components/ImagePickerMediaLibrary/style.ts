@@ -1,8 +1,18 @@
-import { SxProps, Theme } from "@mui/material";
+import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
+import { blockProps } from "~/core/utils";
+import { IContainerProps } from "./types";
 
-export const containerStyle: SxProps<Theme> = {
+export const StyledContainer = styled(Box, {
+  shouldForwardProp: blockProps("isMobile"),
+})<IContainerProps>(({ isMobile = false }) => ({
   position: "relative",
-};
+  ...(isMobile && {
+    "> .MuiBox-root": {
+      minWidth: 100,
+      minHeight: 100,
+    },
+  }),
+}));
 
 export const imagePickerContainerStyle = (currentSrc: string | null): SxProps<Theme> => ({
   display: "flex",

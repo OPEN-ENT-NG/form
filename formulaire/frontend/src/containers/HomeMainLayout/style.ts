@@ -1,15 +1,21 @@
-import { SxProps, Theme } from "@cgi-learning-hub/ui";
+import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
+import { blockProps } from "~/core/utils";
+import { IMainContentInnerWrapperProps } from "./types";
 
-export const mainContentInnerStyle: SxProps<Theme> = {
+export const StyledMainContentInnerWrapper = styled(Box, {
+  shouldForwardProp: blockProps("isMobile", "dragCursorStyle"),
+})<IMainContentInnerWrapperProps>(({ isMobile = false, dragCursorStyle = null }) => ({
   height: "100%",
   display: "flex",
   justifyContent: "flex-start",
 
   flexDirection: "column",
-  gap: "3rem",
-  paddingTop: "2rem",
-};
+  gap: !isMobile ? "3rem" : "1rem",
+  paddingTop: !isMobile ? "2rem" : "1rem",
+
+  ...dragCursorStyle,
+}));
 
 export const searchStyle: SxProps<Theme> = {
   ...spaceBetweenBoxStyle,

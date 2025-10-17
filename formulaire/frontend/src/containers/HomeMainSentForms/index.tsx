@@ -8,10 +8,10 @@ import { useHome } from "~/providers/HomeProvider";
 import { IHomeMainSentFormsProps } from "./types";
 import { SentForm } from "~/components/SentForm";
 import { getFormDistributions } from "~/core/models/form/utils";
-import { sentFormWrapperStyle } from "./style";
+import { sentFormWrapperMobileStyle, sentFormWrapperStyle } from "./style";
 
 export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, distributions }) => {
-  const { selectedSentForm, setSelectedSentForm } = useHome();
+  const { isMobile, selectedSentForm, setSelectedSentForm } = useHome();
   const [visibleCount, setVisibleCount] = useState(FORM_CHUNK);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
@@ -59,7 +59,7 @@ export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, dist
 
   return (
     <>
-      <Box sx={sentFormWrapperStyle}>
+      <Box sx={isMobile ? sentFormWrapperMobileStyle : sentFormWrapperStyle}>
         {sentForms.slice(0, visibleCount).map((form) => {
           return (
             <SentForm

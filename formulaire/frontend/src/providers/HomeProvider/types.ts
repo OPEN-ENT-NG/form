@@ -11,12 +11,14 @@ export interface IHomeProviderProps {
 }
 
 export type HomeProviderContextType = {
+  isMobile: boolean;
   currentFolder: IFolder;
   setCurrentFolder: (value: IFolder) => void;
   tab: HomeTabState;
   toggleTab: (tab: HomeTabState) => void;
   tabViewPref: IHomeTabViewPref;
   toggleTagViewPref: (viewMode: ViewMode) => void;
+  handleSelectedItemChange: (event: React.SyntheticEvent | null, itemId: string | null) => void;
   rootFolders: IFolder[];
   folders: IFolder[];
   setFolders: (value: IFolder[]) => void;
