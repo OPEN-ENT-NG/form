@@ -1,4 +1,7 @@
+import { Box, styled } from "@cgi-learning-hub/ui";
 import { columnBoxStyle, flexStartBoxStyle } from "~/core/style/boxStyles";
+import { blockProps } from "~/core/utils";
+import { IDatePickerWrapperProps } from "./types";
 
 export const mainColumnStyle = {
   ...flexStartBoxStyle,
@@ -11,13 +14,18 @@ export const mainColumnStyle = {
   },
 };
 
+export const pictureAndTitleMobileWrapper = {
+  ...flexStartBoxStyle,
+  paddingRight: "2rem",
+};
+
 export const fileDropZoneWrapper = {
   flexShrink: 0,
 };
 
 export const mainContentWrapper = {
   ...columnBoxStyle,
-  gap: "2rem",
+  gap: "3rem",
   flex: "1",
   overflow: "hidden",
   "& .MuiTextField-root": {
@@ -29,8 +37,17 @@ export const subContentColumnWrapper = {
   ...columnBoxStyle,
   gap: "1rem",
 };
+
 export const subContentRowWrapper = {
-  ...flexStartBoxStyle,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-start",
+  gap: "1rem",
+  height: "43px",
+};
+
+export const subContentRowMobileWrapper = {
+  ...columnBoxStyle,
   gap: "1rem",
 };
 
@@ -62,9 +79,11 @@ export const rgpdContentRowStyle = {
   marginLeft: "3.2rem",
 };
 
-export const datePickerWrapperStyle = {
-  width: "16rem",
+export const StyledDatePickerWrapper = styled(Box, {
+  shouldForwardProp: blockProps("isMobile"),
+})<IDatePickerWrapperProps>(({ isMobile = false }) => ({
+  width: isMobile ? "15rem" : "16rem",
   "& .MuiInputBase-input": {
     padding: "1rem",
   },
-};
+}));

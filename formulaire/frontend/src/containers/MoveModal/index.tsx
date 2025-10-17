@@ -1,15 +1,6 @@
 import { IModalProps } from "~/core/types";
 import { FC, SyntheticEvent, useCallback, useState } from "react";
-import {
-  Box,
-  Dialog,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  TreeView,
-  Typography,
-  Button,
-} from "@cgi-learning-hub/ui";
+import { Box, DialogActions, DialogContent, DialogTitle, TreeView, Typography, Button } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, MYFORMS_FOLDER_ID } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
@@ -20,8 +11,9 @@ import { useMoveFormsMutation } from "~/services/api/services/formulaireApi/form
 import { useMoveFoldersMutation } from "~/services/api/services/formulaireApi/folderApi";
 import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 import { moveMainTextStyle, treeviewContainerStyle, treeviewTextStyle } from "./style";
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 
-export const MoveFolderModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
+export const MoveModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
   const { selectedFolders, selectedForms, currentFolder, folders, setSelectedForms, setSelectedFolders } = useHome();
   const [targetFolder, setTargetFolder] = useState(currentFolder);
@@ -31,7 +23,7 @@ export const MoveFolderModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
 
   const treeViewItems = buildFolderTree(folders, selectedFolders);
   const handleSelectedItemChange = useCallback(
-    (event: SyntheticEvent, itemId: string | null) => {
+    (event: SyntheticEvent | null, itemId: string | null) => {
       if (!itemId) {
         setTargetFolder(folders[0]);
         return;
@@ -77,7 +69,7 @@ export const MoveFolderModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   }, [moveForms, moveFolders, selectedFolders, selectedForms, targetFolder]);
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} fullWidth>
+    <ResponsiveDialog open={isOpen} onClose={handleClose} fullWidth>
       <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
         {t("formulaire.move.title")}
       </DialogTitle>
@@ -139,6 +131,6 @@ export const MoveFolderModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           {t("formulaire.move")}
         </Button>
       </DialogActions>
-    </Dialog>
+    </ResponsiveDialog>
   );
 };

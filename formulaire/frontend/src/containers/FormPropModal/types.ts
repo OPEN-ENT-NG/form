@@ -28,3 +28,7 @@ export interface IFormCheckBoxProp {
   field: FormPropField;
   tooltip?: string;
 }
+
+export interface IDatePickerWrapperProps {
+  isMobile?: boolean;
+}

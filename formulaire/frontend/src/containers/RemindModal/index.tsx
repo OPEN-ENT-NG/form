@@ -2,7 +2,6 @@ import {
   Box,
   Link,
   Typography,
-  Dialog,
   DialogTitle,
   DialogContent,
   Loader,
@@ -24,11 +23,11 @@ import {
   mainContentColumnWrapper,
   StyledChip,
   subContentColumnWrapper,
-  editorContainerStyle,
-  dialogStyle,
   buttonStyle,
   loaderContainerStyle,
   HiddenContent,
+  dialogStyle,
+  StyledEditorContainer,
 } from "./style";
 import { useGetFormDistributionsQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { DisplayContentType } from "./enums";
@@ -39,19 +38,18 @@ import { PRIMARY_MAIN_COLOR } from "~/core/style/colors";
 import { useSendReminderMutation } from "~/services/api/services/formulaireApi/formApi";
 import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import { EditorMode } from "~/components/CreationQuestionTypes/CreationQuestionFreetext/enums";
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 
 export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { selectedForms, resetSelected } = useHome();
+  const { isMobile, selectedForms, resetSelected } = useHome();
   const [displayContent, setDisplayContent] = useState<DisplayContentType>(DisplayContentType.LOADING);
   const [statusResponse, setStatusResponse] = useState<IStatusResponseState>(initialStatusResponseState);
   const [sendReminder] = useSendReminderMutation();
   const [showRemind, setShowRemind] = useState<boolean>(false);
   const { isAnsweredActive, isNotAnsweredActive } = statusResponse;
   const { id: formId, title: formTitle } = selectedForms[0];
-  const rootElement = document.getElementById("root");
-  const host = rootElement?.getAttribute("data-host") ?? null;
-  const formUrl = createFormUrl(host, formId);
+  const formUrl = createFormUrl(window.location.origin, formId);
   const defaultDescription = t("formulaire.remind.default.body", {
     0: formUrl || "",
     1: formUrl || "",
@@ -137,7 +135,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       </Box>
       {distributions?.length && (
         <Box>
-          <DistributionTable distributions={tableDatas} />
+          <DistributionTable distributions={tableDatas} isMobile={isMobile} />
         </Box>
       )}
     </>
@@ -146,8 +144,8 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const writeRemindContent = (
     <>
       <Typography>{t(remindDescription)}</Typography>
-      <Box sx={{ display: "flex", alignItems: "center", width: "60%" }}>
-        <Typography sx={{ width: "16rem" }}>{t("formulaire.remind.subject.label")}</Typography>
+      <Box sx={{ display: "flex", alignItems: "center", ...(!isMobile ? { width: "60%" } : {}) }}>
+        <Typography sx={{ width: `${isMobile ? 20 : 16}rem` }}>{t("formulaire.remind.subject.label")}</Typography>
         <TextField
           variant="standard"
           fullWidth
@@ -157,9 +155,9 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           }}
         />
       </Box>
-      <Box sx={{ ...editorContainerStyle, display: showRemind ? "block" : "none" }}>
+      <StyledEditorContainer isMobile={isMobile} showRemind={showRemind}>
         {isOpen && <Editor id="postContent" content={defaultDescription} mode={EditorMode.EDIT} ref={editorRef} />}
-      </Box>
+      </StyledEditorContainer>
 
       <Box sx={subContentColumnWrapper}>
         <Typography>{t("formulaire.remind.link")}</Typography>
@@ -174,7 +172,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
             {formUrl}
           </Link>
         ) : (
-          //todo : add empty i18n key
+          //TODO : add empty i18n key
           <Typography>{}</Typography>
         )}
       </Box>
@@ -249,7 +247,13 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   }, [isOpen]);
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD} fullWidth sx={dialogStyle}>
+    <ResponsiveDialog
+      open={isOpen}
+      onClose={handleClose}
+      maxWidth={BreakpointVariant.MD}
+      fullWidth
+      slotProps={dialogStyle}
+    >
       <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
         {t("formulaire.remind.title")}
       </DialogTitle>
@@ -268,6 +272,6 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           </Button>
         ))}
       </DialogActions>
-    </Dialog>
+    </ResponsiveDialog>
   );
 };

@@ -6,10 +6,10 @@ import { FormBreadcrumbs } from "~/components/Breadcrumbs";
 import { useHome } from "~/providers/HomeProvider";
 import {
   emptyStateWrapperStyle,
-  mainContentInnerStyle,
   resourceContainerStyle,
   searchBarStyle,
   searchStyle,
+  StyledMainContentInnerWrapper,
   viewTitleStyle,
 } from "./style";
 import { HomeMainFolders } from "../HomeMainFolders";
@@ -88,7 +88,7 @@ export const HomeMainLayout: FC = () => {
   const breadcrumbsTexts = useMemo(() => (currentFolder.name ? [currentFolder.name] : []), [currentFolder.name]);
 
   return (
-    <Box sx={{ ...mainContentInnerStyle, ...getDragCursorStyle(activeDragItem, isValidDrop) }}>
+    <StyledMainContentInnerWrapper dragCursorStyle={getDragCursorStyle(activeDragItem, isValidDrop)}>
       <Box sx={searchStyle}>
         <SearchInput
           placeholder={t("formulaire.search.placeholder")}
@@ -160,6 +160,6 @@ export const HomeMainLayout: FC = () => {
           </Box>
         )}
       </DndContext>
-    </Box>
+    </StyledMainContentInnerWrapper>
   );
 };

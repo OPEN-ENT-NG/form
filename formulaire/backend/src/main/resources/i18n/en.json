@@ -462,6 +462,9 @@
 
   "formulaire.error.duplicate.type": "Vous pouvez seulement dupliquer une question ou une section !",
   "formulaire.error.question.duplicate": "Impossible d'avoir deux questions conditionnelle dans une même section",
+  
+  "formulaire.modal.open.form.blocked.title": "Éditer un formulaire",
+  "formulaire.modal.open.form.blocked.body": "L'édition des formulaires est optimisée pour les écrans plus larges.",
 
   "group.HeadTeacher": "Professeurs principaux de {{0}}.",
   "group.Direction": "Directeurs de {{0}}.",

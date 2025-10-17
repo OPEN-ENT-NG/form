@@ -8,15 +8,16 @@ export interface IModalProviderProps {
 export interface IDisplayModalsState {
   [ModalType.FOLDER_CREATE]: boolean;
   [ModalType.FOLDER_RENAME]: boolean;
-  [ModalType.FORM_IMPORT]: boolean;
+  [ModalType.MOVE]: boolean;
+  [ModalType.DELETE]: boolean;
   [ModalType.FORM_PROP_CREATE]: boolean;
   [ModalType.FORM_PROP_UPDATE]: boolean;
-  [ModalType.FORM_FOLDER_DELETE]: boolean;
-  [ModalType.MOVE]: boolean;
-  [ModalType.EXPORT]: boolean;
+  [ModalType.FORM_OPEN_BLOCKED]: boolean;
   [ModalType.FORM_SHARE]: boolean;
-  [ModalType.REMIND]: boolean;
-  [ModalType.ANSWERS]: boolean;
+  [ModalType.FORM_IMPORT]: boolean;
+  [ModalType.FORM_EXPORT]: boolean;
+  [ModalType.FORM_REMIND]: boolean;
+  [ModalType.FORM_ANSWERS]: boolean;
   [ModalType.FORM_ELEMENT_CREATE]: boolean;
   [ModalType.QUESTION_CREATE]: boolean;
   [ModalType.QUESTION_UNDO]: boolean;

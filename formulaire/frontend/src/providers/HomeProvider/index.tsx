@@ -1,4 +1,5 @@
 import { FC, createContext, useContext, useMemo, useState, useEffect, useCallback } from "react";
+import { useMediaQuery } from "@cgi-learning-hub/ui";
 import { HomeProviderContextType, IHomeProviderProps, IHomeTabViewPref } from "./types";
 import { initTabViewPref, initUserWorfklowRights, initUserTabRights, useRootFolders } from "./utils";
 import { IFolder } from "~/core/models/folder/types";
@@ -11,6 +12,7 @@ import { IDistribution } from "~/core/models/distribution/types";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useEdificeClient } from "@edifice.io/react";
 import { workflowRights } from "~/core/rights";
+import { MOBILE_MAX_WIDTH } from "~/core/constants";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
 
@@ -23,6 +25,7 @@ export const useHome = () => {
 };
 
 export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
+  const isMobile = useMediaQuery(`(max-width: ${MOBILE_MAX_WIDTH}px)`);
   const rootFolders = useRootFolders();
 
   // DIRTY initialisation du state tab avec le param tab url, à virer quand on en aura plus besoin
@@ -69,6 +72,24 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       }
     },
     [tabViewPref, tab],
+  );
+
+  const handleSelectedItemChange = useCallback(
+    (event: React.SyntheticEvent | null, itemId: string | null) => {
+      if (!itemId) {
+        setCurrentFolder(folders[0]);
+        return;
+      }
+      const folderId = parseInt(itemId);
+
+      if (!isNaN(folderId)) {
+        const selectedFolder = folders.find((folder) => folder.id === folderId);
+        if (selectedFolder) {
+          setCurrentFolder(selectedFolder);
+        }
+      }
+    },
+    [folders, setCurrentFolder],
   );
 
   const resetSelected = useCallback(() => {
@@ -132,12 +153,14 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
 
   const value = useMemo<HomeProviderContextType>(
     () => ({
+      isMobile,
       currentFolder,
       setCurrentFolder,
       tab,
       toggleTab,
       tabViewPref,
       toggleTagViewPref,
+      handleSelectedItemChange,
       rootFolders,
       folders,
       setFolders,
@@ -156,6 +179,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       userWorkflowRights,
     }),
     [
+      isMobile,
       currentFolder,
       tab,
       rootFolders,
@@ -167,6 +191,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
       isActionBarOpen,
       tabViewPref,
       toggleTagViewPref,
+      handleSelectedItemChange,
       distributions,
       sentForms,
     ],

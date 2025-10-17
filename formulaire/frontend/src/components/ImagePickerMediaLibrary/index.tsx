@@ -7,7 +7,6 @@ import { MediaLibrary, MediaLibraryRef } from "@edifice.io/react/multimedia";
 import { useEdificeClient, useWorkspaceFile } from "@edifice.io/react";
 import { createPortal } from "react-dom";
 import {
-  containerStyle,
   imagePickerContainerStyle,
   emptyStateContentStyle,
   iconStyle,
@@ -17,6 +16,7 @@ import {
   actionButtonStyle,
   imageStyle,
   mediaLibraryStyle,
+  StyledContainer,
 } from "./style";
 import { IImagePickerMediaLibraryProps, MediaLibraryResult } from "./types";
 import { BoxComponentType } from "~/core/style/themeProps";
@@ -37,6 +37,7 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   width = "160px",
   height = "160px",
   initialSrc = null,
+  isMobile = false,
 }) => {
   const [currentSrc, setCurrentSrc] = useState<string | null>(initialSrc);
   const [isMediaLibraryOpen, setIsMediaLibraryOpen] = useState(false);
@@ -117,7 +118,7 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
 
   return (
     <Box {...getRootProps()}>
-      <Box sx={containerStyle} className="media-library-image-picker">
+      <StyledContainer isMobile={isMobile} className="media-library-image-picker">
         <Box
           sx={{
             ...imagePickerContainerStyle(currentSrc),
@@ -129,7 +130,14 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
           {!currentSrc ? (
             <Box sx={emptyStateContentStyle}>
               <AddPhotoAlternateIcon color="primary" sx={iconStyle} />
-              {isDragActive ? (
+              {isMobile ? (
+                <Typography sx={labelTextStyle}>
+                  <Box component={BoxComponentType.SPAN} fontWeight="bold">
+                    Cliquez
+                  </Box>{" "}
+                  pour choisir une image
+                </Typography>
+              ) : isDragActive ? (
                 <Typography sx={labelTextStyle}>
                   <Box component={BoxComponentType.SPAN} fontWeight="bold">
                     Glissez
@@ -148,6 +156,7 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
                   pour choisir une image
                 </Typography>
               )}
+
               {information && <Typography sx={infoTextStyle}>{information}</Typography>}
             </Box>
           ) : (
@@ -164,7 +173,7 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
             </>
           )}
         </Box>
-      </Box>
+      </StyledContainer>
       {isMediaLibraryOpen &&
         portalElement &&
         createPortal(

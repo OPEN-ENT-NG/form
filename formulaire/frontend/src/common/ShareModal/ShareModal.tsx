@@ -5,18 +5,8 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 
-import {
-  Avatar,
-  Button,
-  Checkbox,
-  Combobox,
-  Heading,
-  LoadingScreen,
-  Modal,
-  Tooltip,
-  VisuallyHidden,
-} from "@edifice.io/react";
-import { Box, Typography } from "@cgi-learning-hub/ui";
+import { Avatar, Checkbox, Combobox, LoadingScreen, Tooltip, VisuallyHidden } from "@edifice.io/react";
+import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@cgi-learning-hub/ui";
 import { IconBookmark, IconInfoCircle, IconRafterDown } from "@edifice.io/react/icons";
 import { ShareBookmark } from "./ShareBookmark";
 import { ShareBookmarkLine } from "./ShareBookmarkLine";
@@ -26,7 +16,7 @@ import { useShareBookmark } from "./hooks/useShareBookmark";
 import { buildPublicLink, userHasRight } from "./utils";
 import { COMMON, FORMULAIRE } from "~/core/constants";
 import { useShareModal } from "~/providers/ShareModalProvider";
-import { BoxComponentType } from "~/core/style/themeProps";
+import { BoxComponentType, ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { flexStartBoxStyle } from "~/core/style/boxStyles";
 import { toast } from "react-toastify";
@@ -169,12 +159,12 @@ export default function ShareResourceModal({
   };
 
   return createPortal(
-    <Modal id="share_modal" size="lg" isOpen={isOpen} onModalClose={onCancel}>
-      <Modal.Header onModalClose={onCancel}>{tEdifice("share.title")}</Modal.Header>
-      <Modal.Body>
-        <Heading headingStyle="h4" level="h3" className="mb-16">
-          {tEdifice("explorer.modal.share.usersWithAccess")}
-        </Heading>
+    <Dialog id="share_modal" maxWidth="lg" open={isOpen} onClose={onCancel}>
+      <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+        {tEdifice("share.title")}
+      </DialogTitle>
+      <DialogContent>
+        <Typography variant={TypographyVariant.H3}>{tEdifice("explorer.modal.share.usersWithAccess")}</Typography>
         <Box className="table-responsive">
           {isLoading ? (
             <LoadingScreen />
@@ -276,8 +266,10 @@ export default function ShareResourceModal({
           )}
         </Box>
         <Box component={BoxComponentType.HR} />
-        <Heading headingStyle="h4" level="h3" className="mb-16 d-flex align-items-center">
-          <Box className="me-8">{tEdifice("explorer.modal.share.search")}</Box>
+        <Box className="mb-16 d-flex align-items-center">
+          <Typography variant={TypographyVariant.H3} className="me-8">
+            {tEdifice("explorer.modal.share.search")}
+          </Typography>
           <Tooltip
             message={
               "Vos favoris de partage s’affichent en priorité dans votre liste lorsque vous recherchez un groupe ou une personne, vous pouvez les retrouver dans l’annuaire."
@@ -286,7 +278,7 @@ export default function ShareResourceModal({
           >
             <IconInfoCircle className="c-pointer" height="18" />
           </Tooltip>
-        </Heading>
+        </Box>
         <Box className="row">
           <Box className="col-10">
             <Combobox
@@ -307,9 +299,11 @@ export default function ShareResourceModal({
         {publicLink && (
           <Box>
             <Box component={BoxComponentType.HR} />
-            <Heading headingStyle="h4" level="h3" className="mb-16 d-flex align-items-center">
-              <Box className="me-8">{tForm("formulaire.share.link.access")}</Box>
-            </Heading>
+            <Box className="mb-16 d-flex align-items-center">
+              <Typography variant={TypographyVariant.H3} className="me-8">
+                {tForm("formulaire.share.link.access")}
+              </Typography>
+            </Box>
             <Box sx={flexStartBoxStyle}>
               <Typography fontStyle={"italic"}>{publicLink}</Typography>
               <Box onClick={() => handleCopyPublicLink} sx={{ cursor: "pointer" }}>
@@ -318,24 +312,16 @@ export default function ShareResourceModal({
             </Box>
           </Box>
         )}
-      </Modal.Body>
-      <Modal.Footer>
-        <Button type="button" color="tertiary" variant="ghost" onClick={onCancel}>
+      </DialogContent>
+      <DialogActions>
+        <Button variant={ComponentVariant.OUTLINED} onClick={onCancel}>
           {tEdifice("explorer.cancel")}
         </Button>
-
-        <Button
-          type="button"
-          color="primary"
-          variant="filled"
-          isLoading={isSharing}
-          onClick={() => void handleShare()}
-          disabled={isSharing}
-        >
+        <Button variant={ComponentVariant.CONTAINED} onClick={() => void handleShare()} disabled={isSharing}>
           {tEdifice("share")}
         </Button>
-      </Modal.Footer>
-    </Modal>,
+      </DialogActions>
+    </Dialog>,
     document.getElementById("portal") as HTMLElement,
   );
 }
