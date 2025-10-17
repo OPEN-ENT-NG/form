@@ -9,7 +9,6 @@ import {
   FormControl,
   MenuItem,
   Button,
-  Dialog,
   DialogTitle,
   DialogContent,
   DialogActions,
@@ -26,7 +25,9 @@ import {
   checkboxRowStyle,
   dateEndingCheckboxStyle,
   rgpdContentRowStyle,
-  datePickerWrapperStyle,
+  pictureAndTitleMobileWrapper,
+  subContentRowMobileWrapper,
+  StyledDatePickerWrapper,
 } from "./style";
 
 import { IFormCheckBoxProp, IFormPropModalProps } from "./types";
@@ -45,9 +46,11 @@ import { buildFormPayload } from "~/core/models/form/utils";
 import { BreakpointVariant, ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 
 export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {
+    isMobile,
     selectedForms,
     currentFolder: { id: currentFolderId },
     rootFolders,
@@ -69,6 +72,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
   const { data: delegateData } = useGetDelegatesQuery();
   const [createForm] = useCreateFormMutation();
   const [updateForm] = useUpdateFormMutation();
+  const [openTooltipId, setOpenTooltipId] = useState<string | null>(null);
 
   //MEDIA LIBRARY
   const handleImageChange = useCallback(
@@ -147,6 +151,15 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
     }
   }, [createForm, updateForm, mode, formId, formPropInputValue, currentFolderId, handleClose, selectedForms]);
 
+  const handleClickTooltip = (event: React.MouseEvent<SVGSVGElement>, id: string) => {
+    if (isMobile) setOpenTooltipId(id);
+    event.stopPropagation(); // Prevent checkbox toggling when clicking on the info icon
+  };
+
+  const handleCloseTooltip = () => {
+    setOpenTooltipId(null);
+  };
+
   useEffect(() => {
     if (isEndingDateEditable) {
       const openingDate = new Date(dateOpening);
@@ -186,88 +199,119 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
     return isDisabledPublic || isDisabledAnswered;
   };
 
+  const formTitleLabelAndInput = (
+    <Box sx={subContentColumnWrapper}>
+      <Typography>
+        {t("formulaire.form.create.title")} <span style={{ color: "var(--theme-palette-error-main)" }}>*</span> :
+      </Typography>
+      <TextField
+        variant={ComponentVariant.STANDARD}
+        sx={textFieldStyle}
+        placeholder={t("formulaire.form.create.placeholder")}
+        value={formPropInputValue[FormPropField.TITLE]}
+        onChange={(e) => {
+          handleFormPropInputValueChange(FormPropField.TITLE, e.target.value);
+        }}
+        slotProps={{
+          htmlInput: { style: { width: "100%" } },
+        }}
+      />
+    </Box>
+  );
+
   const formContent = (
     <>
-      <Typography mb={"1rem"}>{t("formulaire.prop.edit.title")}</Typography>
+      {!isMobile && <Typography mb={"1rem"}>{t("formulaire.prop.edit.title")}</Typography>}
       <Box sx={mainColumnStyle}>
-        <Box sx={fileDropZoneWrapper}>
-          <ImagePickerMediaLibrary
-            width="16rem"
-            height="16.3rem"
-            information={IMAGE_PICKER_INFO}
-            onImageChange={handleImageChange}
-            initialSrc={formPropInputValue[FormPropField.PICTURE]}
-          />
-        </Box>
-        <Box sx={mainContentWrapper}>
-          <Box sx={subContentColumnWrapper}>
-            <Typography>
-              {t("formulaire.form.create.title")} <span style={{ color: "var(--theme-palette-error-main)" }}>*</span> :
-            </Typography>
-            <TextField
-              variant={ComponentVariant.STANDARD}
-              sx={textFieldStyle}
-              placeholder={t("formulaire.form.create.placeholder")}
-              value={formPropInputValue[FormPropField.TITLE]}
-              onChange={(e) => {
-                handleFormPropInputValueChange(FormPropField.TITLE, e.target.value);
-              }}
-              slotProps={{
-                htmlInput: { style: { width: "100%" } },
-              }}
+        <Box sx={isMobile ? pictureAndTitleMobileWrapper : {}}>
+          <Box sx={fileDropZoneWrapper} marginRight={isMobile ? "1rem" : 0}>
+            <ImagePickerMediaLibrary
+              width={isMobile ? "13rem" : "16rem"}
+              height={isMobile ? "13rem" : "16.3rem"}
+              information={IMAGE_PICKER_INFO}
+              onImageChange={handleImageChange}
+              initialSrc={formPropInputValue[FormPropField.PICTURE]}
+              isMobile={isMobile}
             />
           </Box>
-          <Box sx={subContentRowWrapper}>
-            <Typography>{t("formulaire.date.opening")}</Typography>
-            <Box sx={datePickerWrapperStyle}>
-              <DatePicker
-                slotProps={{
-                  textField: {
-                    error: false,
-                  },
-                }}
-                minDate={dayjs()}
-                value={dayjs(formPropInputValue[FormPropField.DATE_OPENING])}
-                onChange={(value) => {
-                  handleDateChange(FormPropField.DATE_OPENING, value as Dayjs);
-                }}
-              />
-            </Box>
-            <Box
-              sx={{
-                ...dateEndingCheckboxStyle,
-                cursor: "pointer",
-              }}
-              onClick={() => {
-                setIsEndingDateEditable(!isEndingDateEditable);
-              }}
-            >
-              <Checkbox
-                sx={{ padding: "0" }}
-                disabled={isPublic}
-                checked={isEndingDateEditable}
-                onChange={() => {
-                  setIsEndingDateEditable(!isEndingDateEditable);
-                }}
-              />
-              <Typography>{t("formulaire.date.ending")}</Typography>
-            </Box>
-            {isEndingDateEditable && (
-              <Box sx={datePickerWrapperStyle}>
+          {isMobile && formTitleLabelAndInput}
+        </Box>
+        <Box sx={mainContentWrapper}>
+          {!isMobile && formTitleLabelAndInput}
+          <Box sx={isMobile ? subContentRowMobileWrapper : subContentRowWrapper}>
+            <Box sx={subContentRowWrapper}>
+              <Typography width={isMobile ? "13rem" : "unset"}>{t("formulaire.date.opening")}</Typography>
+              <StyledDatePickerWrapper isMobile={isMobile}>
                 <DatePicker
                   slotProps={{
                     textField: {
                       error: false,
+                      InputProps: {
+                        ...(isMobile && {
+                          sx: {
+                            "& .MuiPickersInputBase-sectionsContainer": {
+                              padding: "1rem 0",
+                            },
+                          },
+                        }),
+                      },
                     },
                   }}
-                  minDate={dayjs(dateOpening).add(1, "day")}
-                  value={dayjs(formPropInputValue[FormPropField.DATE_ENDING])}
+                  minDate={dayjs()}
+                  value={dayjs(formPropInputValue[FormPropField.DATE_OPENING])}
                   onChange={(value) => {
-                    handleDateChange(FormPropField.DATE_ENDING, value as Dayjs);
+                    handleDateChange(FormPropField.DATE_OPENING, value as Dayjs);
                   }}
                 />
+              </StyledDatePickerWrapper>
+              <Box
+                sx={{
+                  ...dateEndingCheckboxStyle,
+                  cursor: "pointer",
+                }}
+                onClick={() => {
+                  setIsEndingDateEditable(!isEndingDateEditable);
+                }}
+              >
+                <Checkbox
+                  sx={{ padding: "0" }}
+                  disabled={isPublic}
+                  checked={isEndingDateEditable}
+                  onChange={() => {
+                    setIsEndingDateEditable(!isEndingDateEditable);
+                  }}
+                />
+                {!isMobile && <Typography>{t("formulaire.date.ending")}</Typography>}
               </Box>
-            )}
+            </Box>
+            <Box sx={subContentRowWrapper}>
+              {isMobile && <Typography width="13rem">{t("formulaire.date.ending")}</Typography>}
+              {isEndingDateEditable && (
+                <StyledDatePickerWrapper isMobile={isMobile}>
+                  <DatePicker
+                    slotProps={{
+                      textField: {
+                        error: false,
+                        InputProps: {
+                          ...(isMobile && {
+                            sx: {
+                              "& .MuiPickersInputBase-sectionsContainer": {
+                                padding: "1rem 0",
+                              },
+                            },
+                          }),
+                        },
+                      },
+                    }}
+                    minDate={dayjs(dateOpening).add(1, "day")}
+                    value={dayjs(formPropInputValue[FormPropField.DATE_ENDING])}
+                    onChange={(value) => {
+                      handleDateChange(FormPropField.DATE_ENDING, value as Dayjs);
+                    }}
+                  />
+                </StyledDatePickerWrapper>
+              )}
+            </Box>
           </Box>
           <Box sx={subContentColumnWrapper}>
             {formCheckBoxPropsReadyList.map((item) => {
@@ -279,9 +323,8 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
               const showDescription = isDescriptionDisplay && item.field === FormPropField.DESCRIPTION;
               const showRgpd = item.field === FormPropField.HAS_RGPD && isRgpdPossible && hasRgpd;
               return (
-                <>
+                <Box key={item.field}>
                   <Box
-                    key={item.field}
                     sx={{
                       ...checkboxRowStyle,
                       cursor: isDisabled ? "not-allowed" : "pointer",
@@ -302,13 +345,17 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                     />
                     <Typography>{t(item.i18nKey)}</Typography>
                     {!!item.tooltip && (
-                      <Tooltip title={t(item.tooltip)}>
+                      <Tooltip
+                        title={t(item.tooltip)}
+                        open={isMobile ? openTooltipId === item.field : undefined}
+                        onClose={handleCloseTooltip}
+                      >
                         <InfoOutlinedIcon
+                          onClick={(e) => {
+                            handleClickTooltip(e, item.field);
+                          }}
                           color="secondary"
                           fontSize="small"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }} // Prevent checkbox toggling when clicking on the info icon
                         />
                       </Tooltip>
                     )}
@@ -348,8 +395,18 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                             htmlInput: { maxLength: 150, style: { width: "100%" } },
                           }}
                         />
-                        <Tooltip title={t("formulaire.prop.rgpd.goal.description")}>
-                          <InfoOutlinedIcon color="secondary" fontSize="small" />
+                        <Tooltip
+                          title={t("formulaire.prop.rgpd.goal.description")}
+                          open={isMobile ? openTooltipId === item.field : undefined}
+                          onClose={handleCloseTooltip}
+                        >
+                          <InfoOutlinedIcon
+                            onClick={(e) => {
+                              handleClickTooltip(e, item.field);
+                            }}
+                            color="secondary"
+                            fontSize="small"
+                          />
                         </Tooltip>
                       </Box>
                       <Box sx={rgpdContentRowStyle}>
@@ -376,7 +433,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                       <RGPDInfoBox params={delegateParam} />
                     </Box>
                   )}
-                </>
+                </Box>
               );
             })}
           </Box>
@@ -386,7 +443,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
   );
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD} fullWidth>
+    <ResponsiveDialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD} fullWidth>
       <DialogTitle>
         <Box sx={spaceBetweenBoxStyle}>
           <Typography variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
@@ -395,7 +452,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
         </Box>
       </DialogTitle>
 
-      <DialogContent>{formContent}</DialogContent>
+      <DialogContent sx={isMobile ? { paddingX: "12px !important" } : {}}>{formContent}</DialogContent>
 
       <DialogActions>
         <Button onClick={handleClose}>{t("formulaire.cancel")}</Button>
@@ -407,6 +464,6 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
           {t("formulaire.save")}
         </Button>
       </DialogActions>
-    </Dialog>
+    </ResponsiveDialog>
   );
 };

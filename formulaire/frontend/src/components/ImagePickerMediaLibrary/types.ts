@@ -6,6 +6,11 @@ export interface IImagePickerMediaLibraryProps {
   width?: string;
   height?: string;
   initialSrc?: string;
+  isMobile?: boolean;
+}
+
+export interface IContainerProps {
+  isMobile?: boolean;
 }
 
 export type MediaLibraryResult = WorkspaceElement[] | WorkspaceElement;

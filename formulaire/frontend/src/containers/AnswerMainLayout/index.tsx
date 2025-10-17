@@ -2,35 +2,45 @@ import { FC, useState } from "react";
 import { Box, SearchInput, Typography } from "@cgi-learning-hub/ui";
 import {
   emptyStateWrapperStyle,
-  mainContentInnerStyle,
   resourceContainerStyle,
   searchBarStyle,
+  StyledMainContentInnerWrapper,
 } from "~/containers/HomeMainLayout/style";
-import { HomeTabs } from "../HomeTab";
+import { HomeTabs } from "../../components/HomeTab";
 import { useHome } from "~/providers/HomeProvider";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { useEdificeClient } from "@edifice.io/react";
-import { IFormChipProps, IMenuItemProps } from "../OrganizeFilter/types";
+import { IFormChipProps, IMenuItemProps } from "../../components/OrganizeFilter/types";
 import { useSearchAndOrganize } from "~/containers/HomeMainLayout/useSearchAndOrganize";
-import { SwitchView } from "../SwitchView";
-import { OrganizeFilter } from "../OrganizeFilter";
-import { IToggleButtonItem } from "../SwitchView/types";
+import { SwitchView } from "../../components/SwitchView";
+import { OrganizeFilter } from "../../components/OrganizeFilter";
+import { IToggleButtonItem } from "../../components/SwitchView/types";
 import { useToggleButtons } from "~/containers/HomeMainLayout/utils";
 import { sentFormMenuItemDatas, sentFormsChipDatas } from "./utils";
-import { ViewMode } from "../SwitchView/enums";
+import { ViewMode } from "../../components/SwitchView/enums";
 import { HomeMainSentForms } from "~/containers/HomeMainSentForms";
 import { HomeMainSentFormTable } from "~/containers/HomeMainSentFormTable";
-import { ResourcesEmptyState } from "../SVG/RessourcesEmptyState";
+import { ResourcesEmptyState } from "../../components/SVG/RessourcesEmptyState";
 import { useTheme } from "@mui/material";
 import { centerBoxStyle } from "~/core/style/boxStyles";
-import { myAnswerHeader, myAnswerSearchStyle, tabStyle } from "./style";
+import { myAnswerSearchStyle, StyledMyAnswerHeaderWrapper, tabStyle } from "./style";
 
 export const AnswerMainLayout: FC = () => {
   const { user } = useEdificeClient();
   const userId = user?.userId;
-  const { folders, forms, currentFolder, tab, tabViewPref, distributions, sentForms, toggleTab, toggleTagViewPref } =
-    useHome();
+  const {
+    isMobile,
+    folders,
+    forms,
+    currentFolder,
+    tab,
+    tabViewPref,
+    distributions,
+    sentForms,
+    toggleTab,
+    toggleTagViewPref,
+  } = useHome();
   const viewMode = tabViewPref[tab];
   const theme = useTheme();
   const toggleButtonList: IToggleButtonItem[] = useToggleButtons();
@@ -51,20 +61,24 @@ export const AnswerMainLayout: FC = () => {
 
   const { t } = useTranslation(FORMULAIRE);
   return (
-    <Box sx={mainContentInnerStyle}>
-      <Box sx={myAnswerHeader}>
-        <Box flexShrink={0} sx={tabStyle}>
+    <StyledMainContentInnerWrapper isMobile={isMobile}>
+      <StyledMyAnswerHeaderWrapper isMobile={isMobile}>
+        <Box sx={tabStyle}>
           <HomeTabs value={tab} setValue={toggleTab} />
         </Box>
         <Box sx={myAnswerSearchStyle}>
-          <SearchInput
-            placeholder={t("formulaire.search.placeholder")}
-            sx={searchBarStyle}
-            onChange={(event) => {
-              handleSearch(event.target.value);
-            }}
-          />
-          <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
+          {!isMobile && (
+            <>
+              <SearchInput
+                placeholder={t("formulaire.search.placeholder")}
+                sx={searchBarStyle}
+                onChange={(event) => {
+                  handleSearch(event.target.value);
+                }}
+              />
+              <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
+            </>
+          )}
           <OrganizeFilter
             chipDatas={sentFormsChipDatas}
             menuItemDatas={sentFormMenuItemDatas}
@@ -75,7 +89,7 @@ export const AnswerMainLayout: FC = () => {
             forceUniqueChips={true}
           />
         </Box>
-      </Box>
+      </StyledMyAnswerHeaderWrapper>
       {filteredSentForms.length > 0 ? (
         <Box sx={resourceContainerStyle}>
           {viewMode === ViewMode.CARDS ? (
@@ -94,6 +108,6 @@ export const AnswerMainLayout: FC = () => {
           </Box>
         </Box>
       )}
-    </Box>
+    </StyledMainContentInnerWrapper>
   );
 };

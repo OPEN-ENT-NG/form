@@ -1,4 +1,4 @@
-import { Button, TextField, Typography, Dialog, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
+import { Button, TextField, Typography, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
 import { FC, useMemo, useState } from "react";
 import {
   folderModalContentStyle,
@@ -13,6 +13,7 @@ import { useHome } from "~/providers/HomeProvider";
 import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/formulaireApi/folderApi";
 import { ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder/types";
 import { isEnterPressed } from "~/core/utils";
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 
 export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }) => {
   const { currentFolder, selectedFolders } = useHome();
@@ -67,7 +68,7 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
   };
 
   return (
-    <Dialog
+    <ResponsiveDialog
       open={isOpen}
       onClose={handleClose}
       slotProps={{
@@ -105,6 +106,6 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
           {t(currentConfig.i18nButtonText)}
         </Button>
       </DialogActions>
-    </Dialog>
+    </ResponsiveDialog>
   );
 };
