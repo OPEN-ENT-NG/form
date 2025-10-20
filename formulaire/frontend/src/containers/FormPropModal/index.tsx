@@ -92,6 +92,10 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
     return dayjs(dateOpening).add(rgpdLifeTime, "month");
   }, [dateOpening, rgpdLifeTime]);
 
+  const minDate = useMemo(() => {
+    return dayjs(dateOpening).add(1, "day");
+  }, [dateOpening]);
+
   const delegateParam = useMemo(() => {
     return buildDelegatesParam(delegateData ?? null, rgpdGoal, rgpdExpirationDate);
   }, [delegateData, rgpdGoal, rgpdExpirationDate]);
@@ -303,7 +307,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                         },
                       },
                     }}
-                    minDate={dayjs(dateOpening).add(1, "day")}
+                    minDate={minDate}
                     value={dayjs(formPropInputValue[FormPropField.DATE_ENDING])}
                     onChange={(value) => {
                       handleDateChange(FormPropField.DATE_ENDING, value as Dayjs);
