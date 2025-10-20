@@ -48,3 +48,20 @@ export const emptyStateWrapperStyle: SxProps<Theme> = {
 export const subTextStyle: SxProps<Theme> = {
   textAlign: "center",
 };
+
+export const iconButtonStyle: SxProps<Theme> = {
+  position: "fixed",
+  bottom: "24px",
+  right: "16px",
+  padding: 0,
+};
+
+export const iconButtonContainerStyle: SxProps<Theme> = {
+  width: "44px",
+  height: "44px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  backgroundColor: "white",
+  borderRadius: "50%",
+};

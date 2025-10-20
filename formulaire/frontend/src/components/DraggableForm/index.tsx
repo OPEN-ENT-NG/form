@@ -33,8 +33,11 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
           onSelect(form);
         }}
         onClick={() => {
-          if (isMobile) onSelect(form);
-          else window.location.href = getFormEditPath(form.id);
+          if (isMobile) {
+            onSelect(form);
+            return;
+          }
+          window.location.href = getFormEditPath(form.id);
         }}
         propertyItems={getFormPropertyItems(form)}
         infoIcons={getIcons(form)}
