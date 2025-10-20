@@ -12,31 +12,34 @@ import { HomeMainLayoutMobile } from "../HomeMainLayoutMobile";
 export const HomeLayout: FC<IHomeLayoutProps> = ({ headerHeight }) => {
   const { isMobile, tab } = useHome();
 
-  return (
-    <StyledHomeLayoutWrapper headerHeight={headerHeight}>
-      {tab === HomeTabState.FORMS ? (
-        isMobile ? (
-          // Forms + mobile
-          <HomeMainLayoutMobile></HomeMainLayoutMobile>
-        ) : (
-          // Forms + desktop
-          <>
-            <Box sx={sidebarStyle}>
-              <Box sx={sidebarContentStyle}>
-                <HomeSidebar />
-              </Box>
-            </Box>
-            <Box sx={mainContentStyle}>
-              <HomeMainLayout />
-            </Box>
-          </>
-        )
-      ) : (
-        // Answers (mobile or not)
-        <Box sx={mainContentStyle}>
-          <AnswerMainLayout />
+  const myFormsMobileLayout = <HomeMainLayoutMobile></HomeMainLayoutMobile>;
+
+  const myFormsLayout = (
+    <>
+      <Box sx={sidebarStyle}>
+        <Box sx={sidebarContentStyle}>
+          <HomeSidebar />
         </Box>
-      )}
-    </StyledHomeLayoutWrapper>
+      </Box>
+      <Box sx={mainContentStyle}>
+        <HomeMainLayout />
+      </Box>
+    </>
   );
+
+  const myAnswersLayout = (
+    <Box sx={mainContentStyle}>
+      <AnswerMainLayout />
+    </Box>
+  );
+
+  const selectLayout = () => {
+    if (tab === HomeTabState.FORMS) {
+      if (isMobile) return myFormsMobileLayout;
+      return myFormsLayout;
+    }
+    return myAnswersLayout;
+  };
+
+  return <StyledHomeLayoutWrapper headerHeight={headerHeight}>{selectLayout()}</StyledHomeLayoutWrapper>;
 };
