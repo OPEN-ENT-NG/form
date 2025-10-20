@@ -27,7 +27,7 @@ export const DistributionTable: FC<IDistributionTableProps> = ({ distributions, 
   const displayedDatas = distributions.slice(0, maxRows);
   const hasMoreToShow = distributions.length > maxRows;
   const nameColumnTitle = `${t("formulaire.checkremind.table.name")}, ${t("formulaire.checkremind.table.surname")}`;
-  const tableBodyCellStyle = isMobile ? tableRowMobileStyle : {};
+  const tableBodyCellStyle = isMobile ? tableRowMobileStyle : undefined;
 
   return (
     <Box sx={containerStyle}>
