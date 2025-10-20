@@ -11,6 +11,8 @@ import {
   mainContentInnerStyle,
   treeViewButtonStyle,
   subTextStyle,
+  iconButtonStyle,
+  iconButtonContainerStyle,
 } from "./style";
 import { HomeMainFolders } from "../HomeMainFolders";
 import { useTranslation } from "react-i18next";
@@ -126,18 +128,8 @@ export const HomeMainLayoutMobile: FC = () => {
         </Box>
       )}
 
-      <IconButton color="primary" sx={{ position: "fixed", bottom: "24px", right: "16px", padding: 0 }}>
-        <Box
-          sx={{
-            width: "44px",
-            height: "44px",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            backgroundColor: "white",
-            borderRadius: "50%",
-          }}
-        >
+      <IconButton color="primary" sx={iconButtonStyle}>
+        <Box sx={iconButtonContainerStyle}>
           <AddCircleRoundedIcon
             sx={{ fontSize: "54px !important" }}
             onClick={() => {
