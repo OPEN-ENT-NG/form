@@ -10,7 +10,7 @@ import { getFormDistributions } from "~/core/models/form/utils";
 import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
-import { getRecapFormPath } from "~/core/pathHelper";
+import { getHrefRecapFormPath } from "~/core/pathHelper";
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 
@@ -38,7 +38,7 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
                     <IconButton
                       sx={{ color: SECONDARY_MAIN_COLOR }}
                       onClick={() => {
-                        window.location.href = getRecapFormPath(distribution.formId, distribution.id);
+                        window.location.href = getHrefRecapFormPath(distribution.formId, distribution.id);
                       }}
                     >
                       <VisibilityIcon />

@@ -6,7 +6,7 @@ import { FormBreadcrumbs } from "../Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { headerButtonsStyle, headerClassicStyle, headerCreationStyle } from "./style";
+import { headerButtonsStyle, headerOnLineStyle, headerTwoLinesStyle } from "./style";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { FormsIcon } from "../SVG/FormsIcon";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
@@ -25,7 +25,7 @@ export const Header: FC<IHeaderProps> = ({
   const formDateModification = formatDateWithTime(form?.date_modification, "formulaire.form.edit.modified");
 
   return (
-    <Box sx={isCreationPage ? headerCreationStyle : headerClassicStyle}>
+    <Box sx={isCreationPage ? headerTwoLinesStyle : headerOnLineStyle}>
       <FormBreadcrumbs
         icon={FormsIcon}
         stringItems={stringItems}

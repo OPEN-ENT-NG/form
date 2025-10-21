@@ -11,11 +11,12 @@ import { useEdificeClient } from "@edifice.io/react";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { getFormDistributions } from "~/core/models/form/utils";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
-import { getFormEditPath, getFormResultsPath } from "~/core/pathHelper";
+import { getFormEditPath, getHrefFormResultsPath } from "~/core/pathHelper";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useHandleOpenFormResponse } from "./useHandleOpenFormResponse";
 import { IForm } from "~/core/models/form/types";
 import { t } from "~/i18n";
+import { useNavigate } from "react-router-dom";
 
 export const useMapActionBarButtons = () => {
   const { isMobile, toggleModal } = useGlobal();
@@ -34,6 +35,7 @@ export const useMapActionBarButtons = () => {
     forms,
     distributions,
   } = useHome();
+  const navigate = useNavigate();
   const { user } = useEdificeClient();
   const { userFormsRights } = useShareModal();
   const [duplicateForms, { isLoading: isDuplicating }] = useDuplicateFormsMutation();
@@ -158,7 +160,7 @@ export const useMapActionBarButtons = () => {
           }
           if (hasForms && tab === HomeTabState.FORMS) {
             if (isMobile) toggleModal(ModalType.FORM_OPEN_BLOCKED);
-            else return (window.location.href = getFormEditPath(selectedForms[0].id));
+            else navigate(getFormEditPath(selectedForms[0].id));
           }
           return openFormResponseAction();
         },
@@ -222,7 +224,7 @@ export const useMapActionBarButtons = () => {
       [ActionBarButtonType.RESULTS]: {
         label: t("formulaire.results"),
         action: () => {
-          return (window.location.href = getFormResultsPath(selectedForms[0].id));
+          return (window.location.href = getHrefFormResultsPath(selectedForms[0].id));
         },
       },
       [ActionBarButtonType.REMIND]: {
