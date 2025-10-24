@@ -5,10 +5,10 @@ import { ISentFormProps } from "./types";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
 import { useMapActionBarButtons } from "~/containers/HomeView/useMapActionBarButtons";
 import { SizeAbreviation } from "~/core/enums";
-import { useHome } from "~/providers/HomeProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const SentForm: FC<ISentFormProps> = ({ form, distributions, isSelected, handleSelect }) => {
-  const { isMobile } = useHome();
+  const { isMobile } = useGlobal();
   const { getSentFormPropertyItems } = useFormItemsIcons();
   const { openFormResponseAction } = useMapActionBarButtons();
 

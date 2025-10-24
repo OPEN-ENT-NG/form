@@ -7,11 +7,11 @@ import { ModalType } from "~/core/enums";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
 import { homeSidebarWrapper } from "./style";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const HomeSidebar: FC = () => {
   const { folders, currentFolder, tab, toggleTab, handleSelectedItemChange } = useHome();
-  const { toggleModal } = useModal();
+  const { toggleModal } = useGlobal();
 
   const treeViewItems = buildFolderTree(folders);
   const { t } = useTranslation(FORMULAIRE);

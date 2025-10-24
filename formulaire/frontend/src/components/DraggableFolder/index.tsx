@@ -5,7 +5,7 @@ import { DraggableType } from "~/core/enums";
 import { FolderCard } from "@cgi-learning-hub/ui";
 import { IDraggableFolderProps } from "./types";
 import { StyledDraggableFolder } from "./style";
-import { useHome } from "~/providers/HomeProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const DraggableFolder: FC<IDraggableFolderProps> = ({
   folder,
@@ -15,7 +15,7 @@ export const DraggableFolder: FC<IDraggableFolderProps> = ({
   isSelected,
   getFolderSubtitle,
 }) => {
-  const { isMobile } = useHome();
+  const { isMobile } = useGlobal();
   const [isOvered, setIsOvered] = useState(false);
 
   const {

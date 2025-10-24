@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 
 import { useHome } from "~/providers/HomeProvider";
 import { ActionBarButtonType } from "./enums";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
 import { MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
@@ -18,8 +18,8 @@ import { IForm } from "~/core/models/form/types";
 import { t } from "~/i18n";
 
 export const useMapActionBarButtons = () => {
+  const { isMobile, toggleModal } = useGlobal();
   const {
-    isMobile,
     selectedFolders,
     selectedForms,
     selectedSentForm,
@@ -34,12 +34,8 @@ export const useMapActionBarButtons = () => {
     forms,
     distributions,
   } = useHome();
-
   const { user } = useEdificeClient();
-
   const { userFormsRights } = useShareModal();
-
-  const { toggleModal } = useModal();
   const [duplicateForms, { isLoading: isDuplicating }] = useDuplicateFormsMutation();
   const [restoreForms, { isLoading: isRestoring }] = useRestoreFormsMutation();
   const { data: userDistributions } = useGetDistributionQuery();

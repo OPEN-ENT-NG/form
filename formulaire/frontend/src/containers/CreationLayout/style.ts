@@ -1,6 +1,5 @@
-import { Box, styled } from "@cgi-learning-hub/ui";
+import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
 import { ICreationLayoutWrapperProps } from "./types";
-import { SxProps, Theme } from "@mui/material";
 
 export const CreationLayoutWrapper = styled(Box, {
   shouldForwardProp: (prop) => prop !== "headerHeight",

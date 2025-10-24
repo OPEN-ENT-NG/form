@@ -38,7 +38,7 @@ import {
 } from "./style";
 import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { IQuestion } from "~/core/models/question/types";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
@@ -66,7 +66,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   const {
     displayModals: { showQuestionUndo, showQuestionDelete },
     toggleModal,
-  } = useModal();
+  } = useGlobal();
   const [currentQuestionTitle, setCurrentQuestionTitle] = useState<string>(question.title ?? "");
   const isEditing = isCurrentEditingElement(question, currentEditingElement);
   const inputRef = useRef<HTMLInputElement>(null);

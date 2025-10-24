@@ -5,7 +5,7 @@ import { FC } from "react";
 import { CreationEditingSection } from "~/components/CreationEditingSection";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { CreateFormElementModal } from "../CreateFormElementModal";
 
@@ -15,7 +15,7 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
   const {
     displayModals: { showQuestionCreate },
     toggleModal,
-  } = useModal();
+  } = useGlobal();
 
   return (
     <Box>
