@@ -25,22 +25,14 @@ import { ResourcesEmptyState } from "../../components/SVG/RessourcesEmptyState";
 import { useTheme } from "@mui/material";
 import { centerBoxStyle } from "~/core/style/boxStyles";
 import { myAnswerSearchStyle, StyledMyAnswerHeaderWrapper, tabStyle } from "./style";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const AnswerMainLayout: FC = () => {
   const { user } = useEdificeClient();
   const userId = user?.userId;
-  const {
-    isMobile,
-    folders,
-    forms,
-    currentFolder,
-    tab,
-    tabViewPref,
-    distributions,
-    sentForms,
-    toggleTab,
-    toggleTagViewPref,
-  } = useHome();
+  const { isMobile } = useGlobal();
+  const { folders, forms, currentFolder, tab, tabViewPref, distributions, sentForms, toggleTab, toggleTagViewPref } =
+    useHome();
   const viewMode = tabViewPref[tab];
   const theme = useTheme();
   const toggleButtonList: IToggleButtonItem[] = useToggleButtons();

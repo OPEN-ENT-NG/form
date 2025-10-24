@@ -8,9 +8,11 @@ import { IHomeLayoutProps } from "./types";
 import { HomeMainLayout } from "../HomeMainLayout";
 import { AnswerMainLayout } from "~/containers/AnswerMainLayout";
 import { HomeMainLayoutMobile } from "../HomeMainLayoutMobile";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const HomeLayout: FC<IHomeLayoutProps> = ({ headerHeight }) => {
-  const { isMobile, tab } = useHome();
+  const { isMobile } = useGlobal();
+  const { tab } = useHome();
 
   const myFormsMobileLayout = <HomeMainLayoutMobile></HomeMainLayoutMobile>;
 

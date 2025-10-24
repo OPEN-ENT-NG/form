@@ -3,7 +3,7 @@ import { Box, Button } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant } from "~/core/style/themeProps";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { useCreation } from "~/providers/CreationProvider";
 import { isFormElementQuestion } from "~/core/models/question/utils";
@@ -17,7 +17,7 @@ import { hasFormResponses } from "~/core/models/form/utils";
 export const CreationMainLayout: FC = () => {
   const { form, formElementsList } = useCreation();
   const { t } = useTranslation(FORMULAIRE);
-  const { toggleModal } = useModal();
+  const { toggleModal } = useGlobal();
 
   const handleNewFormElement = () => {
     toggleModal(ModalType.FORM_ELEMENT_CREATE);

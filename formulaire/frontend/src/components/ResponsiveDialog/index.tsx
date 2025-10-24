@@ -1,10 +1,10 @@
 import { Dialog, DialogProps } from "@cgi-learning-hub/ui";
 import { FC, useMemo } from "react";
 
-import { useHome } from "~/providers/HomeProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const ResponsiveDialog: FC<DialogProps> = ({ slotProps, children, ...props }) => {
-  const { isMobile } = useHome();
+  const { isMobile } = useGlobal();
 
   const mobileSlotProps = useMemo(
     () => ({

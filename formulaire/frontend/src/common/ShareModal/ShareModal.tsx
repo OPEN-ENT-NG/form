@@ -20,6 +20,7 @@ import { BoxComponentType, ComponentVariant, TypographyFont, TypographyVariant }
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { flexStartBoxStyle } from "~/core/style/boxStyles";
 import { toast } from "react-toastify";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export type ShareOptions = {
   resourceId: ID;
@@ -123,11 +124,17 @@ export default function ShareResourceModal({
     showBookmarkInput,
   } = useShareBookmark({ shareRights, shareDispatch });
 
+  const { isMobile } = useGlobal();
+
   const { t: tEdifice } = useTranslation(COMMON);
   const { t: tForm } = useTranslation(FORMULAIRE);
 
   const searchPlaceholder = showSearchAdmlHint()
-    ? tEdifice("explorer.search.adml.hint")
+    ? isMobile
+      ? tForm("formulaire.share.search.placeholder.mobile.adml")
+      : tEdifice("explorer.search.adml.hint")
+    : isMobile
+    ? tForm("formulaire.share.search.placeholder.mobile")
     : tEdifice("explorer.modal.share.search.placeholder");
 
   const publicLink = buildPublicLink(userFormsRights, resourceId);
@@ -280,7 +287,7 @@ export default function ShareResourceModal({
           </Tooltip>
         </Box>
         <Box className="row">
-          <Box className="col-10">
+          <Box className="col-10" sx={{ input: { minWidth: "26rem", borderRadius: "1.2rem" } }}>
             <Combobox
               value={searchInputValue}
               placeholder={searchPlaceholder}
