@@ -39,10 +39,12 @@ import { useSendReminderMutation } from "~/services/api/services/formulaireApi/f
 import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import { EditorMode } from "~/components/CreationQuestionTypes/CreationQuestionFreetext/enums";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { isMobile, selectedForms, resetSelected } = useHome();
+  const { isMobile } = useGlobal();
+  const { selectedForms, resetSelected } = useHome();
   const [displayContent, setDisplayContent] = useState<DisplayContentType>(DisplayContentType.LOADING);
   const [statusResponse, setStatusResponse] = useState<IStatusResponseState>(initialStatusResponseState);
   const [sendReminder] = useSendReminderMutation();

@@ -1,12 +1,12 @@
 import { ModalType } from "~/core/enums";
 import { useEffect, useRef, useState, RefObject } from "react";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
 import { t } from "~/i18n";
 
 export const useGetHomeHeaderButtons = (): IButtonProps[] => {
-  const { toggleModal } = useModal();
+  const { toggleModal } = useGlobal();
   return [
     {
       title: t("formulaire.form.import.button"),

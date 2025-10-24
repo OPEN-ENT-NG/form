@@ -7,7 +7,7 @@ import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { CreationMainLayout } from "../CreationMainLayout";
 
@@ -15,7 +15,7 @@ export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
   const { form, formElementsList } = useCreation();
   const { t } = useTranslation(FORMULAIRE);
 
-  const { toggleModal } = useModal();
+  const { toggleModal } = useGlobal();
   if (!form) {
     return;
   }
