@@ -47,14 +47,15 @@ import { BreakpointVariant, ComponentVariant, TypographyFont, TypographyVariant 
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {
-    isMobile,
     selectedForms,
     currentFolder: { id: currentFolderId },
     rootFolders,
   } = useHome();
+  const { isMobile } = useGlobal();
   const {
     formPropInputValue,
     formPropInputValue: { dateOpening, isPublic, description, hasRgpd, rgpdGoal, rgpdLifeTime, title },
@@ -390,7 +391,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                         <TextField
                           variant={ComponentVariant.STANDARD}
                           sx={textFieldStyle}
-                          placeholder={t("formulaire.prop.rgpd.goal.input")}
+                          placeholder={t(`formulaire.prop.rgpd.goal.input${isMobile ? ".mobile" : ""}`)}
                           value={rgpdGoal}
                           onChange={(e) => {
                             handleFormPropInputValueChange(FormPropField.RGPD_GOAL, e.target.value);

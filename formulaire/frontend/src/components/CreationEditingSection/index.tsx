@@ -31,7 +31,7 @@ import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { ISection } from "~/core/models/section/types";
 import { ModalType } from "~/core/enums";
 import { DeleteConfirmationModal } from "~/containers/DeleteConfirmationModal";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
 import { UndoConfirmationModal } from "~/containers/UndoConfirmationModal";
 import { hasFormResponses } from "~/core/models/form/utils";
@@ -63,7 +63,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   const {
     displayModals: { showSectionDelete, showSectionUndo },
     toggleModal,
-  } = useModal();
+  } = useGlobal();
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
     setCurrentSectionTitle(event.target.value);

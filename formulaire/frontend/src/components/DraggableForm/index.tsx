@@ -8,10 +8,10 @@ import { LOGO_PATH } from "~/core/constants";
 
 import { dragActiveStyle } from "~/core/style/dndStyle";
 import { getFormEditPath } from "~/core/pathHelper";
-import { useHome } from "~/providers/HomeProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSelect, dragActive = false }) => {
-  const { isMobile } = useHome();
+  const { isMobile } = useGlobal();
   const { attributes, listeners, setNodeRef } = useDraggable({
     id: `draggable-form-${form.id.toString()}`,
     data: { type: DraggableType.FORM, form },

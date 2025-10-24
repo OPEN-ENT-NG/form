@@ -15,7 +15,7 @@ import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
 import { router } from "./routes";
 import { GlobalStyles } from "@cgi-learning-hub/ui";
-import { ModalProvider } from "./providers/ModalProvider";
+import { GlobalProvider } from "./providers/GlobalProvider";
 import { globalOverrideStyles } from "./core/style/global";
 import { t } from "~/i18n";
 import { useTheme } from "./hook/useTheme";
@@ -70,11 +70,11 @@ const App = () => {
         >
           <EdificeThemeProvider>
             <ThemeProviderCGI themeId={isTheme1D ? "ent1D" : themePlatform ?? "default"} options={options}>
-              <ModalProvider>
+              <GlobalProvider>
                 <GlobalStyles styles={globalOverrideStyles} />
                 <ToastContainer {...TOAST_CONFIG} />
                 <RouterProvider router={router} />
-              </ModalProvider>
+              </GlobalProvider>
             </ThemeProviderCGI>
           </EdificeThemeProvider>
         </EdificeClientProvider>
