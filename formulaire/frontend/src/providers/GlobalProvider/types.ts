@@ -1,7 +1,7 @@
 import { ReactNode } from "react";
 import { ModalType } from "src/core/enums";
 
-export interface IModalProviderProps {
+export interface IGlobalProviderProps {
   children: ReactNode;
 }
 
@@ -27,7 +27,8 @@ export interface IDisplayModalsState {
   [ModalType.ORGANIZATION]: boolean;
 }
 
-export type ModalProviderContextType = {
+export type GlobalProviderContextType = {
   displayModals: IDisplayModalsState;
   toggleModal: (modalType: ModalType) => void;
+  isMobile: boolean;
 };

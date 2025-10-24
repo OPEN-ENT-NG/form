@@ -2,7 +2,7 @@ import { useCallback, useMemo } from "react";
 
 import { useHome } from "~/providers/HomeProvider";
 import { ActionBarButtonType } from "./enums";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
 import { MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
@@ -39,7 +39,7 @@ export const useMapActionBarButtons = () => {
 
   const { userFormsRights } = useShareModal();
 
-  const { toggleModal } = useModal();
+  const { toggleModal } = useGlobal();
   const [duplicateForms, { isLoading: isDuplicating }] = useDuplicateFormsMutation();
   const [restoreForms, { isLoading: isRestoring }] = useRestoreFormsMutation();
   const { data: userDistributions } = useGetDistributionQuery();

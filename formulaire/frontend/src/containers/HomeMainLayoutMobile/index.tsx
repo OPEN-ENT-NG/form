@@ -35,12 +35,12 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import IconButton from "@mui/material/IconButton";
 import { Sidebar } from "~/components/Sidebar";
 import { ModalType } from "~/core/enums";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const HomeMainLayoutMobile: FC = () => {
   const { folders, forms, currentFolder, tab, sentForms, distributions, toggleTab, handleSelectedItemChange } =
     useHome();
-  const { toggleModal } = useModal();
+  const { toggleModal } = useGlobal();
   const theme = useTheme();
   const { t } = useTranslation(FORMULAIRE);
   const { user } = useEdificeClient();
@@ -85,8 +85,10 @@ export const HomeMainLayoutMobile: FC = () => {
         <Box sx={tabStyle}>
           <HomeTabs value={tab} setValue={toggleTab} />
         </Box>
-        <Box sx={treeViewButtonStyle} onClick={handleMenuClick}>
-          <ChevronRightRoundedIcon /> {currentFolder.name}
+        <Box sx={treeViewButtonStyle}>
+          <Box onClick={handleMenuClick}>
+            <ChevronRightRoundedIcon /> {currentFolder.name}
+          </Box>
         </Box>
         <Box sx={searchStyle}>
           <OrganizeFilter
@@ -98,7 +100,7 @@ export const HomeMainLayoutMobile: FC = () => {
             selectedMenuItem={selectedMenuItem}
           />
           <SearchInput
-            placeholder={t("formulaire.search.placeholder")}
+            placeholder={t("formulaire.search.placeholder.mobile")}
             sx={searchBarStyle}
             onChange={(event) => {
               handleSearch(event.target.value);

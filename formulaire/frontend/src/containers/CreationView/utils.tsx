@@ -7,14 +7,14 @@ import { useNavigate } from "react-router-dom";
 import { IFolder } from "~/core/models/folder/types";
 import { FORMULAIRE } from "~/core/constants";
 import { ModalType } from "~/core/enums";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const useGetCreationHeaderButtons = (
   formId: string | number | undefined,
   hasFormElements: boolean,
 ): IButtonProps[] => {
   const navigate = useNavigate();
-  const { toggleModal } = useModal();
+  const { toggleModal } = useGlobal();
 
   const buttons: (IButtonProps | undefined)[] = [
     {

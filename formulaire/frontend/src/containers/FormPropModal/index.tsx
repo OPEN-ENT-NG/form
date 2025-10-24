@@ -390,7 +390,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                         <TextField
                           variant={ComponentVariant.STANDARD}
                           sx={textFieldStyle}
-                          placeholder={t("formulaire.prop.rgpd.goal.input")}
+                          placeholder={t(`formulaire.prop.rgpd.goal.input${isMobile ? ".mobile" : ""}`)}
                           value={rgpdGoal}
                           onChange={(e) => {
                             handleFormPropInputValueChange(FormPropField.RGPD_GOAL, e.target.value);

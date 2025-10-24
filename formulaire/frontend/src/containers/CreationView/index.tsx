@@ -1,34 +1,68 @@
 import { FC } from "react";
 
-import { Box } from "@cgi-learning-hub/ui";
+import { Box, Button, EmptyState } from "@cgi-learning-hub/ui";
 import { Header } from "~/components/Header";
 import { useElementHeight } from "../HomeView/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { getRecursiveFolderParents, useGetCreationHeaderButtons } from "./utils";
 import { CreationLayout } from "../CreationLayout";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { CreateFormElementModal } from "../CreateFormElementModal";
 import { IForm } from "~/core/models/form/types";
 import { CreationOrganisationModal } from "../CreationOrganisationModal";
+import { EmptyForm } from "~/components/SVG/EmptyForm";
+import { useTranslation } from "react-i18next";
+import { FORMULAIRE } from "~/core/constants";
+import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { emptyStateWrapper } from "./style";
+import { useNavigate } from "react-router-dom";
 
 export const CreationView: FC = () => {
+  const { t } = useTranslation(FORMULAIRE);
   const { form, folders, formElementsList } = useCreation();
+  const navigate = useNavigate();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
   const headerButtons = useGetCreationHeaderButtons(form?.id, !!formElementsList.length);
 
   const {
     displayModals: { showFormElementCreate, showOrganization },
     toggleModal,
-  } = useModal();
+    isMobile,
+  } = useGlobal();
 
   const getStringFolders = (form: IForm): string[] => {
     const parentFolders = getRecursiveFolderParents(form.folder_id, folders);
     return [...parentFolders.map((folder) => folder.name), form.title];
   };
 
-  return (
-    <Box height="100%">
+  const selectView = () => {
+    return isMobile ? errorView : desktopView;
+  };
+
+  const errorView = (
+    <Box sx={emptyStateWrapper}>
+      <EmptyState
+        image={<EmptyForm />}
+        imageHeight={300}
+        color="primary.main"
+        title={""}
+        description={t("formulaire.form.edit.forbidden.caption.mobile")}
+        descriptionProps={{ variant: TypographyVariant.BODY1 }}
+      />
+      <Button
+        variant={ComponentVariant.CONTAINED}
+        onClick={() => {
+          navigate(`/`);
+        }}
+      >
+        {t("formulaire.form.edit.forbidden.button.mobile")}
+      </Button>
+    </Box>
+  );
+
+  const desktopView = (
+    <>
       <Box ref={headerRef}>
         {form && (
           <Header
@@ -57,6 +91,8 @@ export const CreationView: FC = () => {
           }}
         />
       )}
-    </Box>
+    </>
   );
+
+  return <Box height="100%">{selectView()}</Box>;
 };

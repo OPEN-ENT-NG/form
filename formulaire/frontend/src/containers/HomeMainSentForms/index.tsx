@@ -9,9 +9,11 @@ import { IHomeMainSentFormsProps } from "./types";
 import { SentForm } from "~/components/SentForm";
 import { getFormDistributions } from "~/core/models/form/utils";
 import { sentFormWrapperMobileStyle, sentFormWrapperStyle } from "./style";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, distributions }) => {
-  const { isMobile, selectedSentForm, setSelectedSentForm } = useHome();
+  const { isMobile } = useGlobal();
+  const { selectedSentForm, setSelectedSentForm } = useHome();
   const [visibleCount, setVisibleCount] = useState(FORM_CHUNK);
 
   const observerRef = useRef<IntersectionObserver | null>(null);
