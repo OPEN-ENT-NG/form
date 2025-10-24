@@ -42,7 +42,7 @@ import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
 import { isValidFormElement } from "~/core/models/formElement/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
 import { hasFormResponses } from "~/core/models/form/utils";
@@ -60,7 +60,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
     setQuestionModalSection,
     saveSection,
   } = useCreation();
-  const { toggleModal } = useModal();
+  const { toggleModal } = useGlobal();
 
   const onSaveSectionNextElement = useCallback(
     (updatedEntity: ISection, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {

@@ -8,7 +8,7 @@ import { FolderModal } from "../FolderModal";
 import { FolderModalMode } from "../FolderModal/types";
 import { HomeLayout } from "../HomeLayout";
 import { ModalType } from "~/core/enums";
-import { useModal } from "~/providers/ModalProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { FormPropModal } from "../FormPropModal";
 import { FormPropModalMode } from "../FormPropModal/enums";
 import { useHome } from "~/providers/HomeProvider";
@@ -43,8 +43,9 @@ export const HomeView: FC = () => {
       showFormAnswers,
     },
     toggleModal,
-  } = useModal();
-  const { isMobile, isActionBarOpen, tab, userWorkflowRights } = useHome();
+    isMobile,
+  } = useGlobal();
+  const { isActionBarOpen, tab, userWorkflowRights } = useHome();
   const { leftButtons, rightButtons } = useMapActionBarButtons();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 

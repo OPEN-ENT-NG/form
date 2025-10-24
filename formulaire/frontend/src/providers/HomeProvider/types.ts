@@ -11,7 +11,6 @@ export interface IHomeProviderProps {
 }
 
 export type HomeProviderContextType = {
-  isMobile: boolean;
   currentFolder: IFolder;
   setCurrentFolder: (value: IFolder) => void;
   tab: HomeTabState;
