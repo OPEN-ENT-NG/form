@@ -15,7 +15,7 @@ export enum FormPropField {
   IS_PUBLIC = "isPublic",
   IS_RESPONSE_NOTIFIED = "isResponseNotified",
   HAS_RGPD = "hasRgpd",
-  IS_PROGRESS_BAR_DISPLAYED = "isProgressBarDisplayed",
+  IS_PROGRESS_BAR_DISABLED = "isProgressBarDisabled",
   RGPD_GOAL = "rgpdGoal",
   RGPD_LIFE_TIME = "rgpdLifeTime",
 }
