@@ -295,7 +295,7 @@ public class DefaultFormService implements FormService {
             }
         }
 
-        String query = "INSERT INTO " + FORM_TABLE + " (owner_id, owner_name, title, description, is_progress_bar_displayed, " +
+        String query = "INSERT INTO " + FORM_TABLE + " (owner_id, owner_name, title, description, is_progress_bar_disabled, " +
                 "picture, date_creation, date_modification, date_opening, date_ending, multiple, anonymous, response_notified, " +
                 "editable, rgpd, rgpd_goal, rgpd_lifetime, is_public" + (public_key != null ? ", public_key" : "") + ") " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?" + (public_key != null ? ", ?" : "") + ") RETURNING *;";
@@ -304,7 +304,7 @@ public class DefaultFormService implements FormService {
                 .add(user.getUsername())
                 .add(form.getString(TITLE, ""))
                 .add(form.getString(DESCRIPTION, ""))
-                .add(form.getBoolean(IS_PROGRESS_BAR_DISPLAYED, true))
+                .add(form.getBoolean(IS_PROGRESS_BAR_DISABLED, false))
                 .add(form.getString(PICTURE, ""))
                 .add("NOW()").add("NOW()")
                 .add(form.getString(DATE_OPENING, "NOW()"))
@@ -354,7 +354,7 @@ public class DefaultFormService implements FormService {
                     }
                 }
 
-                String query = "INSERT INTO " + FORM_TABLE + " (owner_id, owner_name, title, description, is_progress_bar_displayed, " +
+                String query = "INSERT INTO " + FORM_TABLE + " (owner_id, owner_name, title, description, is_progress_bar_disabled, " +
                         "picture, date_creation, date_modification, date_opening, date_ending, multiple, anonymous, response_notified, " +
                         "editable, rgpd, rgpd_goal, rgpd_lifetime, is_public" + (public_key != null ? ", public_key" : "") + ") " +
                         "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?" + (public_key != null ? ", ?" : "") + "); ";
@@ -363,7 +363,7 @@ public class DefaultFormService implements FormService {
                         .add(user.getUsername())
                         .add(form.getString(TITLE, ""))
                         .add(form.getString(DESCRIPTION, ""))
-                        .add(form.getBoolean(IS_PROGRESS_BAR_DISPLAYED, true))
+                        .add(form.getBoolean(IS_PROGRESS_BAR_DISABLED, false))
                         .add(form.getString(PICTURE, ""))
                         .add("NOW()").add("NOW()")
                         .add(form.getString(DATE_OPENING, "NOW()"))
@@ -400,9 +400,9 @@ public class DefaultFormService implements FormService {
         String mainQuery =
                 // Duplicate FORM
                 "WITH new_form_id AS (" +
-                    "INSERT INTO " + FORM_TABLE + " (owner_id, owner_name, title, description, is_progress_bar_displayed, picture, date_opening, date_ending, " +
+                    "INSERT INTO " + FORM_TABLE + " (owner_id, owner_name, title, description, is_progress_bar_disabled, picture, date_opening, date_ending, " +
                     "multiple, anonymous, response_notified, editable, rgpd, rgpd_goal, rgpd_lifetime, is_public, public_key, original_form_id) " +
-                    "SELECT ?, ?, concat(title, ' - " + COPY + "'), description, is_progress_bar_displayed, picture, date_opening, date_ending, multiple, " +
+                    "SELECT ?, ?, concat(title, ' - " + COPY + "'), description, is_progress_bar_disabled, picture, date_opening, date_ending, multiple, " +
                     "anonymous, response_notified, editable, rgpd, rgpd_goal, rgpd_lifetime, is_public, " +
                     "CASE is_public WHEN TRUE THEN '" + UUID.randomUUID() + "' END, id " +
                     "FROM " + FORM_TABLE + " WHERE id = ? RETURNING id" +
@@ -506,7 +506,7 @@ public class DefaultFormService implements FormService {
             .onSuccess(publicKey -> {
                 String query = "WITH nbResponses AS (SELECT COUNT(*) FROM " + DISTRIBUTION_TABLE +
                         " WHERE form_id = ? AND status = ?) " +
-                        "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, is_progress_bar_displayed = ?, picture = ?, " +
+                        "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, is_progress_bar_disabled = ?, picture = ?, " +
                         "date_modification = ?, date_opening = ?, date_ending = ?, sent = ?, collab = ?, reminded = ?, archived = ?, " +
                         "multiple = CASE (SELECT count > 0 FROM nbResponses) " +
                         "WHEN false THEN ? WHEN true THEN (SELECT multiple FROM " + FORM_TABLE +" WHERE id = ?) END, " +
@@ -520,7 +520,7 @@ public class DefaultFormService implements FormService {
                         .add(FINISHED)
                         .add(form.getString(TITLE, ""))
                         .add(form.getString(DESCRIPTION, ""))
-                        .add(form.getBoolean(IS_PROGRESS_BAR_DISPLAYED, true))
+                        .add(form.getBoolean(IS_PROGRESS_BAR_DISABLED, false))
                         .add(form.getString(PICTURE, ""))
                         .add("NOW()")
                         .add(form.getString(DATE_OPENING, "NOW()"))
@@ -557,7 +557,7 @@ public class DefaultFormService implements FormService {
             .onSuccess(publicKey -> {
                 String query =
                         "WITH nbResponses AS (SELECT COUNT(*) FROM " + DISTRIBUTION_TABLE + " WHERE form_id = ? AND status = ?) " +
-                        "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, is_progress_bar_displayed = ?, picture = ?, " +
+                        "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, is_progress_bar_disabled = ?, picture = ?, " +
                         "date_modification = ?, date_opening = ?, date_ending = ?, sent = ?, collab = ?, reminded = ?, archived = ?, " +
                         "multiple = CASE (SELECT count > 0 FROM nbResponses) " +
                         "WHEN false THEN ? WHEN true THEN (SELECT multiple FROM " + FORM_TABLE +" WHERE id = ?) END, " +
@@ -572,7 +572,7 @@ public class DefaultFormService implements FormService {
                         .add(FINISHED)
                         .add(form.getTitle() != null ? form.getTitle() : "")
                         .add(form.getDescription() != null ? form.getDescription() : "")
-                        .add(form.getIsProgressBarDisplayed())
+                        .add(form.getIsProgressBarDisabled())
                         .add(form.getPicture() != null ? form.getPicture() : "")
                         .add("NOW()")
                         .add(form.getDateOpening() != null ? form.getDateOpening().toString() : "NOW()")
@@ -613,7 +613,7 @@ public class DefaultFormService implements FormService {
 
                 String query = "WITH nbResponses AS (SELECT COUNT(*) FROM " + DISTRIBUTION_TABLE +
                         " WHERE form_id = ? AND status = ?) " +
-                        "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, is_progress_bar_displayed = ?, picture = ?, " +
+                        "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, is_progress_bar_disabled = ?, picture = ?, " +
                         "date_modification = ?, date_opening = ?, date_ending = ?, sent = ?, collab = ?, reminded = ?, archived = ?, " +
                         "multiple = CASE (SELECT count > 0 FROM nbResponses) " +
                         "WHEN false THEN ? WHEN true THEN (SELECT multiple FROM " + FORM_TABLE + " WHERE id = ?) END, " +
@@ -627,7 +627,7 @@ public class DefaultFormService implements FormService {
                         .add(FINISHED)
                         .add(form.getTitle() != null ? form.getTitle() : "")
                         .add(form.getDescription() != null ? form.getDescription() : "")
-                        .add(form.getIsProgressBarDisplayed())
+                        .add(form.getIsProgressBarDisabled())
                         .add(form.getPicture() != null ? form.getPicture() : "")
                         .add("NOW()")
                         .add(form.getDateOpening() != null ? form.getDateOpening().toString() : "NOW()")
