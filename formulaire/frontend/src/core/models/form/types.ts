@@ -19,7 +19,7 @@ export interface IForm {
   public_key: string;
   response_notified: boolean;
   editable: boolean;
-  is_progress_bar_displayed: boolean;
+  is_progress_bar_disabled: boolean;
   rgpd: boolean;
   rgpd_goal: string | null;
   rgpd_lifetime: number;
@@ -45,7 +45,6 @@ export interface IFormPayload {
   date_modification: Date | null;
   date_opening: string;
   description: string | null;
-  displayed: boolean;
   editable: boolean;
   folder_id: number;
   id: number | null;
@@ -64,7 +63,7 @@ export interface IFormPayload {
   selected: null;
   sent: boolean;
   title: string;
-  is_progress_bar_displayed: boolean;
+  is_progress_bar_disabled: boolean;
 }
 
 export interface IDuplicateFormPayload {

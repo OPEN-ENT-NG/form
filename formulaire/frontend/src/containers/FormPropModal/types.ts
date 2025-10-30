@@ -18,7 +18,7 @@ export interface IFormPropInputValueState {
   [FormPropField.IS_PUBLIC]: boolean;
   [FormPropField.IS_RESPONSE_NOTIFIED]: boolean;
   [FormPropField.HAS_RGPD]: boolean;
-  [FormPropField.IS_PROGRESS_BAR_DISPLAYED]: boolean;
+  [FormPropField.IS_PROGRESS_BAR_DISABLED]: boolean;
   [FormPropField.RGPD_GOAL]: string;
   [FormPropField.RGPD_LIFE_TIME]: number;
 }
