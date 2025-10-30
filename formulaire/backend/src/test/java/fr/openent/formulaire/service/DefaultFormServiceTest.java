@@ -38,7 +38,7 @@ public class DefaultFormServiceTest {
                 .put(ID, 12)
                 .put(TITLE, "My amazing form")
                 .put(DESCRIPTION, "This is a test form")
-                .put(IS_PROGRESS_BAR_DISPLAYED, true)
+                .put(IS_PROGRESS_BAR_DISABLED, false)
                 .put(PICTURE, (String)null)
                 .put(OWNER_ID, "4265605f-3352-4f42-8cef-18e150bbf6bf")
                 .put(OWNER_NAME, "Quentin PERIE")
@@ -277,7 +277,7 @@ public class DefaultFormServiceTest {
 
         String expectedQuery =
                 "WITH nbResponses AS (SELECT COUNT(*) FROM " + DISTRIBUTION_TABLE + " WHERE form_id = ? AND status = ?) " +
-                "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, is_progress_bar_displayed = ?, picture = ?, date_modification = ?, " +
+                "UPDATE " + FORM_TABLE + " SET title = ?, description = ?, is_progress_bar_disabled = ?, picture = ?, date_modification = ?, " +
                 "date_opening = ?, date_ending = ?, sent = ?, collab = ?, reminded = ?, archived = ?, " +
                 "multiple = CASE (SELECT count > 0 FROM nbResponses) " +
                 "WHEN false THEN ? WHEN true THEN (SELECT multiple FROM " + FORM_TABLE +" WHERE id = ?) END, " +

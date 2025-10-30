@@ -17,7 +17,7 @@ export const initialFormPropInputValueState: IFormPropInputValueState = {
   [FormPropField.IS_PUBLIC]: false,
   [FormPropField.IS_RESPONSE_NOTIFIED]: false,
   [FormPropField.HAS_RGPD]: false,
-  [FormPropField.IS_PROGRESS_BAR_DISPLAYED]: false,
+  [FormPropField.IS_PROGRESS_BAR_DISABLED]: false,
   [FormPropField.RGPD_GOAL]: "",
   [FormPropField.RGPD_LIFE_TIME]: 3,
 };
@@ -48,7 +48,7 @@ export const formCheckBoxProps: IFormCheckBoxProp[] = [
   },
   // {
   //   i18nKey: "formulaire.prop.progress.label",
-  //   field: FormPropField.IS_PROGRESS_BAR_DISPLAYED,
+  //   field: FormPropField.IS_PROGRESS_BAR_DISABLED,
   // },
   // {
   //   i18nKey: "formulaire.prop.description.label",

@@ -20,7 +20,6 @@ export const buildFormPayload = (
     date_modification: form?.date_modification ?? null,
     date_opening: formPropValue[FormPropField.DATE_OPENING].toISOString(),
     description: formPropValue[FormPropField.DESCRIPTION],
-    displayed: formPropValue[FormPropField.IS_PROGRESS_BAR_DISPLAYED],
     editable: formPropValue[FormPropField.IS_EDITABLE],
     folder_id: folderId,
     id: form?.id ?? null,
@@ -39,7 +38,7 @@ export const buildFormPayload = (
     selected: null,
     sent: form?.sent ?? false,
     title: formPropValue[FormPropField.TITLE],
-    is_progress_bar_displayed: formPropValue[FormPropField.IS_PROGRESS_BAR_DISPLAYED],
+    is_progress_bar_disabled: formPropValue[FormPropField.IS_PROGRESS_BAR_DISABLED],
   };
 };
 
@@ -56,7 +55,7 @@ export const parseFormToValueState = (form: IForm): IFormPropInputValueState => 
     [FormPropField.IS_PUBLIC]: form.is_public,
     [FormPropField.IS_RESPONSE_NOTIFIED]: form.response_notified,
     [FormPropField.HAS_RGPD]: form.rgpd,
-    [FormPropField.IS_PROGRESS_BAR_DISPLAYED]: form.is_progress_bar_displayed,
+    [FormPropField.IS_PROGRESS_BAR_DISABLED]: form.is_progress_bar_disabled,
     [FormPropField.RGPD_GOAL]: form.rgpd_goal ?? "",
     [FormPropField.RGPD_LIFE_TIME]: form.rgpd_lifetime,
   };

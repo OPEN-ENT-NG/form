@@ -18,7 +18,7 @@ public class Form implements IModel<Form> {
     private Number id;
     private String title;
     private String description;
-    private Boolean isProgressBarDisplayed;
+    private Boolean isProgressBarDisabled;
     private String picture;
     private String ownerId;
     private String ownerName;
@@ -49,7 +49,7 @@ public class Form implements IModel<Form> {
         this.id = form.getNumber(ID, null);
         this.title = form.getString(TITLE,null);
         this.description = form.getString(DESCRIPTION, null);
-        this.isProgressBarDisplayed = form.getBoolean(IS_PROGRESS_BAR_DISPLAYED,true);
+        this.isProgressBarDisabled = form.getBoolean(IS_PROGRESS_BAR_DISABLED,false);
         this.picture = form.getString(PICTURE, null);
         this.ownerId = form.getString(OWNER_ID, null);
         this.ownerName = form.getString(OWNER_NAME, null);
@@ -89,7 +89,8 @@ public class Form implements IModel<Form> {
     public String getTitle() { return title;}
 
     public String getDescription() { return description; }
-    public Boolean getIsProgressBarDisplayed() { return isProgressBarDisplayed; }
+
+    public Boolean getIsProgressBarDisabled() { return isProgressBarDisabled; }
 
     public String getPicture() { return picture; }
 
@@ -149,8 +150,8 @@ public class Form implements IModel<Form> {
         return this;
     }
 
-    public Form setIsProgressBarDisplayed(Boolean isProgressBarDisplayed) {
-        this.isProgressBarDisplayed = isProgressBarDisplayed;
+    public Form setIsProgressBarDisabled(Boolean isProgressBarDisabled) {
+        this.isProgressBarDisabled = isProgressBarDisabled;
         return this;
     }
 
