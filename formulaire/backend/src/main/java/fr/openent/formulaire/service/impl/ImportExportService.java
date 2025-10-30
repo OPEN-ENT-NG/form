@@ -116,7 +116,7 @@ public class ImportExportService {
         JsonArray results = forms.getJsonArray(RESULTS);
 
         SqlStatementsBuilder s = new SqlStatementsBuilder();
-        String query = "INSERT INTO " + FORM_TABLE + " (title, description, is_progress_bar_displayed, owner_id, " +
+        String query = "INSERT INTO " + FORM_TABLE + " (title, description, is_progress_bar_disabled, owner_id, " +
                 "owner_name, date_opening, date_ending, multiple, anonymous, response_notified, editable, rgpd, " +
                 "rgpd_goal, rgpd_lifetime, is_public, public_key, original_form_id) " +
                 "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
@@ -127,16 +127,16 @@ public class ImportExportService {
             JsonArray entry = results.getJsonArray(i);
             boolean isPublic = entry.getBoolean(fields.indexOf(IS_PUBLIC));
 
-            boolean progressBarDisplayed = false;
-            int progressBarIndex = fields.indexOf(IS_PROGRESS_BAR_DISPLAYED);
+            boolean progressBarDisabled = false;
+            int progressBarIndex = fields.indexOf(IS_PROGRESS_BAR_DISABLED);
             if (progressBarIndex != -1 && progressBarIndex < entry.size()) {
-                progressBarDisplayed = entry.getBoolean(progressBarIndex);
+                progressBarDisabled = entry.getBoolean(progressBarIndex);
             }
 
             JsonArray params = new JsonArray()
                     .add(entry.getString(fields.indexOf(TITLE)))
                     .add(entry.getString(fields.indexOf(DESCRIPTION)))
-                    .add(progressBarDisplayed)
+                    .add(progressBarDisabled)
                     .add(userId)
                     .add(userName)
                     .add(entry.getString(fields.indexOf(DATE_OPENING)))
