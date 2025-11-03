@@ -1,4 +1,6 @@
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import { t } from "~/i18n";
+import { getFormPreviewPath, getHrefFormTreePath, getHomePath } from "~/core/pathHelper";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ModalType } from "~/core/enums";
@@ -20,14 +22,14 @@ export const useGetCreationHeaderButtons = (form: IForm | null, hasFormElements:
       title: t("formulaire.return"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        navigate(`/`);
+        navigate(getHomePath());
       },
     },
     {
       title: t("formulaire.visualize.path"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        if (form?.id) window.location.href = getFormTreePath(form.id);
+        if (form?.id) window.location.href = getHrefFormTreePath(form.id);
       },
     },
     hasFormElements
@@ -44,7 +46,7 @@ export const useGetCreationHeaderButtons = (form: IForm | null, hasFormElements:
       title: t("formulaire.preview"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        if (form?.id) window.location.href = getFormPreviewPath(form.id);
+        if (form?.id) navigate(getFormPreviewPath(form.id));
       },
     },
     {

@@ -1,6 +1,6 @@
 import { FC, createContext, useContext, useMemo, useState, useEffect, useCallback } from "react";
 import { HomeProviderContextType, IHomeProviderProps, IHomeTabViewPref } from "./types";
-import { initTabViewPref, initUserWorfklowRights, initUserTabRights, useRootFolders } from "./utils";
+import { initTabViewPref, initUserTabRights, useRootFolders } from "./utils";
 import { IFolder } from "~/core/models/folder/types";
 import { HomeTabState } from "./enums";
 import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
@@ -11,6 +11,7 @@ import { IDistribution } from "~/core/models/distribution/types";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useEdificeClient } from "@edifice.io/react";
 import { workflowRights } from "~/core/rights";
+import { useGlobal } from "../GlobalProvider";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
 
@@ -29,6 +30,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const urlParams = new URLSearchParams(window.location.search);
   const tabParam = urlParams.get("tab");
   const { user } = useEdificeClient();
+  const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const userTabRights = initUserTabRights(userWorkflowRights);
   const initalTabByRight = userWorkflowRights.CREATION ? HomeTabState.FORMS : HomeTabState.RESPONSES;

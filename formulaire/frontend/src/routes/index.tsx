@@ -22,6 +22,13 @@ const routes = [
         },
       },
       {
+        path: "form/:formId/preview",
+        async lazy() {
+          const { Preview } = await import("./preview");
+          return { Component: Preview };
+        },
+      },
+      {
         path: "401",
         element: <ErrorPage errorCode={401} />,
       },
