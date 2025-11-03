@@ -1,25 +1,44 @@
+import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { FORMULAIRE } from "./constants";
 
-export const getFormEditPath = (formId: string | number): string => {
-  return `${FORMULAIRE}?view=angular#/form/${formId}/edit`;
+// To use with : window.location.href
+export const getHrefHomeFormsPath = (): string => {
+  return `/${FORMULAIRE}?tab=${HomeTabState.FORMS}`;
 };
 
-export const getRespondFormPath = (formId: string | number, distributionId: string | number): string => {
+export const getHrefHomeResponsesPath = (): string => {
+  return `/${FORMULAIRE}?tab=${HomeTabState.RESPONSES}`;
+};
+
+export const getHrefRespondFormPath = (formId: string | number, distributionId: string | number): string => {
   return `${FORMULAIRE}?view=angular#/form/${formId}/${distributionId}`;
 };
 
-export const getRecapFormPath = (formId: number, distribId: string | number): string => {
+export const getHrefRecapFormPath = (formId: number, distribId: string | number): string => {
   return `${FORMULAIRE}?view=angular#/form/${formId}/${distribId}/questions/recap`;
 };
 
-export const getRgpdPath = (formId: string | number): string => {
+export const getHrefRgpdPath = (formId: string | number): string => {
   return `${FORMULAIRE}?view=angular#/form/${formId}/rgpd`;
 };
 
-export const getFormResultsPath = (formId: string | number): string => {
+export const getHrefFormResultsPath = (formId: string | number): string => {
   return `${FORMULAIRE}?view=angular#/form/${formId}/results/1`;
 };
 
-export const getFormTreePath = (formId: string | number): string => {
+export const getHrefFormTreePath = (formId: string | number): string => {
   return `${FORMULAIRE}?view=angular#/form/${formId}/tree`;
+};
+
+// To use with : useNavigate()
+export const getHomePath = (): string => {
+  return `/`;
+};
+
+export const getFormEditPath = (formId: string | number): string => {
+  return `/form/${formId}/edit`;
+};
+
+export const getFormPreviewPath = (formId: string | number): string => {
+  return `/form/${formId}/preview`;
 };
