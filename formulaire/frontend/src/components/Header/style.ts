@@ -1,12 +1,12 @@
 import { SxProps } from "@mui/material";
 import { columnBoxStyle, spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 
-export const headerClassicStyle: SxProps = {
+export const headerOnLineStyle: SxProps = {
   ...spaceBetweenBoxStyle,
   padding: "3rem 5rem 3rem 2rem",
 };
 
-export const headerCreationStyle: SxProps = {
+export const headerTwoLinesStyle: SxProps = {
   ...columnBoxStyle,
   padding: "3rem 5rem 3rem 2rem",
   rowGap: "2rem",

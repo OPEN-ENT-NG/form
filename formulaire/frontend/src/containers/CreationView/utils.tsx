@@ -2,10 +2,9 @@ import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import { t } from "~/i18n";
-import { getFormTreePath } from "~/core/pathHelper";
+import { getFormPreviewPath, getHrefFormTreePath, getHomePath } from "~/core/pathHelper";
 import { useNavigate } from "react-router-dom";
 import { IFolder } from "~/core/models/folder/types";
-import { FORMULAIRE } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { useGlobal } from "~/providers/GlobalProvider";
 
@@ -21,14 +20,14 @@ export const useGetCreationHeaderButtons = (
       title: t("formulaire.return"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        navigate(`/${FORMULAIRE}`);
+        navigate(getHomePath());
       },
     },
     {
       title: t("formulaire.visualize.path"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        if (formId) window.location.href = getFormTreePath(formId);
+        if (formId) window.location.href = getHrefFormTreePath(formId);
       },
     },
     hasFormElements
@@ -43,7 +42,9 @@ export const useGetCreationHeaderButtons = (
     {
       title: t("formulaire.preview"),
       variant: ComponentVariant.OUTLINED,
-      action: () => {},
+      action: () => {
+        if (formId) navigate(getFormPreviewPath(formId));
+      },
     },
     {
       title: t("formulaire.save"),

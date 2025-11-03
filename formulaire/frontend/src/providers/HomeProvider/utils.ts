@@ -6,9 +6,7 @@ import { IHomeTabViewPref, IUserTabRights } from "./types";
 import FolderIcon from "@mui/icons-material/Folder";
 import ShareIcon from "@mui/icons-material/Share";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { hasWorkflow } from "~/core/utils";
-import { IUserWorkflowRights, IWorkflowRights, WorkflowRights } from "~/core/rights";
-import { IUserInfo } from "@edifice.io/client";
+import { IUserWorkflowRights, WorkflowRights } from "~/core/rights";
 import { t } from "~/i18n";
 
 export const useRootFolders = (): IFolder[] => {
@@ -58,19 +56,6 @@ export const initTabViewPref = (): IHomeTabViewPref => {
   return {
     [HomeTabState.FORMS]: ViewMode.CARDS,
     [HomeTabState.RESPONSES]: ViewMode.CARDS,
-  };
-};
-
-export const initUserWorfklowRights = (
-  user: IUserInfo | undefined,
-  workflowRights: IWorkflowRights,
-): IUserWorkflowRights => {
-  return {
-    [WorkflowRights.ACCESS]: hasWorkflow(user, workflowRights.access),
-    [WorkflowRights.CREATION]: hasWorkflow(user, workflowRights.creation),
-    [WorkflowRights.RESPONSE]: hasWorkflow(user, workflowRights.response),
-    [WorkflowRights.RGPD]: hasWorkflow(user, workflowRights.rgpd),
-    [WorkflowRights.CREATION_PUBLIC]: hasWorkflow(user, workflowRights.creationPublic),
   };
 };
 

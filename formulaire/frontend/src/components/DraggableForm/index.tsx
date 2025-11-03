@@ -9,9 +9,11 @@ import { LOGO_PATH } from "~/core/constants";
 import { dragActiveStyle } from "~/core/style/dndStyle";
 import { getFormEditPath } from "~/core/pathHelper";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { useNavigate } from "react-router-dom";
 
 export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSelect, dragActive = false }) => {
   const { isMobile } = useGlobal();
+  const navigate = useNavigate();
   const { attributes, listeners, setNodeRef } = useDraggable({
     id: `draggable-form-${form.id.toString()}`,
     data: { type: DraggableType.FORM, form },
@@ -37,7 +39,7 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
             onSelect(form);
             return;
           }
-          window.location.href = getFormEditPath(form.id);
+          navigate(getFormEditPath(form.id));
         }}
         propertyItems={getFormPropertyItems(form)}
         infoIcons={getIcons(form)}
