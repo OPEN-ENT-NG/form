@@ -2,7 +2,7 @@ import { FC } from "react";
 import { Box, EmptyState, Button } from "@cgi-learning-hub/ui";
 import { useCreation } from "~/providers/CreationProvider";
 import { ICreationLayoutProps } from "./types";
-import { CreationLayoutWrapper, emptyStateWrapper } from "./style";
+import { CreationLayoutWrapper } from "./style";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
@@ -11,15 +11,17 @@ import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { CreationMainLayout } from "../CreationMainLayout";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { emptyStateWrapper } from "~/core/style/boxStyles";
 
 export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
   const { form, formElementsList } = useCreation();
   const { t } = useTranslation(FORMULAIRE);
-
   const { toggleModal } = useGlobal();
+
   if (!form) {
     return;
   }
+
   const handleNewFormElement = () => {
     toggleModal(ModalType.FORM_ELEMENT_CREATE);
   };

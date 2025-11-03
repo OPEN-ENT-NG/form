@@ -13,6 +13,8 @@ import { useGlobal } from "~/providers/GlobalProvider";
 import { useHome } from "~/providers/HomeProvider";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { useShareModal } from "~/providers/ShareModalProvider";
+import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
+import { getFormEditPath, getHrefFormResultsPath } from "~/core/pathHelper";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
 import { ActionBarButtonType } from "./enums";
@@ -36,6 +38,7 @@ export const useMapActionBarButtons = () => {
     forms,
     distributions,
   } = useHome();
+  const navigate = useNavigate();
   const { user } = useEdificeClient();
   const { userFormsRights } = useShareModal();
   const [duplicateForms, { isLoading: isDuplicating }] = useDuplicateFormsMutation();
@@ -160,7 +163,7 @@ export const useMapActionBarButtons = () => {
           }
           if (hasForms && tab === HomeTabState.FORMS) {
             if (isTablet) toggleModal(ModalType.FORM_OPEN_BLOCKED);
-            else navigate(`/form/${selectedForms[0].id}/edit`);
+            else navigate(getFormEditPath(selectedForms[0].id));
           }
           return openFormResponseAction();
         },
@@ -224,7 +227,7 @@ export const useMapActionBarButtons = () => {
       [ActionBarButtonType.RESULTS]: {
         label: t("formulaire.results"),
         action: () => {
-          return (window.location.href = getFormResultsPath(selectedForms[0].id));
+          return (window.location.href = getHrefFormResultsPath(selectedForms[0].id));
         },
       },
       [ActionBarButtonType.REMIND]: {

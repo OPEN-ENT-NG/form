@@ -10,7 +10,7 @@ import { getFormDistributions } from "~/core/models/form/utils";
 import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import { SECONDARY_MAIN_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
-import { getRecapFormPath } from "~/core/pathHelper";
+import { getHrefRecapFormPath } from "~/core/pathHelper";
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { IconButtonTooltiped } from "~/components/IconButtonTooltiped/IconButtonTooltiped";
@@ -39,7 +39,7 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
                     key={distribution.id}
                     icon={<VisibilityIcon />}
                     onClick={() => {
-                      window.location.href = getRecapFormPath(distribution.formId, distribution.id);
+                      window.location.href = getHrefRecapFormPath(distribution.formId, distribution.id);
                     }}
                     tooltipI18nKey={"formulaire.response.open"}
                     ariaLabel="edit"

@@ -1,7 +1,7 @@
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
-import { getRgpdPath, getRespondFormPath, getRecapFormPath } from "~/core/pathHelper";
+import { getHrefRgpdPath, getHrefRespondFormPath, getHrefRecapFormPath } from "~/core/pathHelper";
 import { useAddDistributionMutation } from "~/services/api/services/formulaireApi/distributionApi";
 
 export const useHandleOpenFormResponse = () => {
@@ -12,22 +12,22 @@ export const useHandleOpenFormResponse = () => {
 
     return distrib.status === DistributionStatus.TO_DO
       ? form.rgpd
-        ? getRgpdPath(form.id)
-        : getRespondFormPath(form.id, distrib.id)
-      : getRecapFormPath(form.id, distrib.id);
+        ? getHrefRgpdPath(form.id)
+        : getHrefRespondFormPath(form.id, distrib.id)
+      : getHrefRecapFormPath(form.id, distrib.id);
   };
 
   const handleMultipleResponse = async (form: IForm, distribs: IDistribution[]): Promise<string | undefined> => {
-    if (form.rgpd) return getRgpdPath(form.id);
+    if (form.rgpd) return getHrefRgpdPath(form.id);
 
     const todoDistrib = distribs.find((d) => d.status === DistributionStatus.TO_DO);
-    if (todoDistrib) return getRespondFormPath(form.id, todoDistrib.id);
+    if (todoDistrib) return getHrefRespondFormPath(form.id, todoDistrib.id);
 
     if (distribs.length === 0) return undefined;
 
     try {
       const newDistrib = await addDistribution(distribs[0].id).unwrap();
-      return getRespondFormPath(form.id, newDistrib.id);
+      return getHrefRespondFormPath(form.id, newDistrib.id);
     } catch (error) {
       console.error("create.distrib.error", error);
       return undefined;

@@ -6,6 +6,12 @@ export interface IWorkflowRights {
   rgpd: string;
   creationPublic: string;
 }
+export interface ISharedRights {
+  read: string;
+  contrib: string;
+  manager: string;
+  responder: string;
+}
 
 export interface IUserWorkflowRights {
   [WorkflowRights.ACCESS]: boolean;
@@ -13,6 +19,13 @@ export interface IUserWorkflowRights {
   [WorkflowRights.RESPONSE]: boolean;
   [WorkflowRights.RGPD]: boolean;
   [WorkflowRights.CREATION_PUBLIC]: boolean;
+}
+
+export interface IUserSharedRights {
+  [SharedRights.READ]: boolean;
+  [SharedRights.CONTRIB]: boolean;
+  [SharedRights.MANAGE]: boolean;
+  [SharedRights.RESPOND]: boolean;
 }
 
 // Enums
@@ -24,6 +37,13 @@ export enum WorkflowRights {
   CREATION_PUBLIC = "CREATION_PUBLIC",
 }
 
+export enum SharedRights {
+  READ = "READ",
+  CONTRIB = "CONTRIB",
+  MANAGE = "MANAGE",
+  RESPOND = "RESPOND",
+}
+
 // Const
 export const workflowRights: IWorkflowRights = {
   access: "fr.openent.formulaire.controllers.FormulaireController|render",
@@ -33,7 +53,7 @@ export const workflowRights: IWorkflowRights = {
   creationPublic: "fr.openent.formulaire.controllers.FormController|initCreationPublicRight",
 };
 
-export const sharingRights = {
+export const sharingRights: ISharedRights = {
   read: "fr-openent-formulaire-controllers-FormController|initReadResourceRight",
   contrib: "fr-openent-formulaire-controllers-FormController|initContribResourceRight",
   manager: "fr-openent-formulaire-controllers-FormController|initManagerResourceRight",
