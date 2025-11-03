@@ -2,6 +2,10 @@ import { useEdificeClient } from "@edifice.io/react";
 import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { IFolder } from "~/core/models/folder/types";
+import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
+import { useEdificeClient } from "@edifice.io/react";
+import { useRootFolders } from "../HomeProvider/utils";
+import { workflowRights } from "~/core/rights";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
@@ -18,6 +22,10 @@ import { useFormElementActions } from "./hook/useFormElementActions";
 import { useFormElementList } from "./hook/useFormElementsList";
 import { CreationProviderContextType, ICreationProviderProps } from "./types";
 import { isInFormElementsList, removeFormElementFromList, updateElementInList } from "./utils";
+import { IFolder } from "~/core/models/folder/types";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { useGlobal } from "../GlobalProvider";
+import { getQuestionRootById, getQuestionSectionById } from "~/hook/dnd-hooks/useCreationDnd/utils";
 
 const CreationProviderContext = createContext<CreationProviderContextType | null>(null);
 
@@ -32,6 +40,7 @@ export const useCreation = () => {
 export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const { formId } = useParams();
   const { user } = useEdificeClient();
+  const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const rootFolders = useRootFolders();
   const [currentFolder, setCurrentFolder] = useState<IFolder>(rootFolders[0]);
