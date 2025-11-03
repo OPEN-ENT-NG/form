@@ -22,6 +22,13 @@ const routes = [
           return { Component: Creation };
         },
       },
+      {
+        path: "form/:formId/preview",
+        async lazy() {
+          const { Preview } = await import("./preview");
+          return { Component: Preview };
+        },
+      },
     ],
   },
 ];
