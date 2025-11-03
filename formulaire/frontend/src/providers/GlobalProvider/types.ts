@@ -1,5 +1,8 @@
+import { IUserInfo } from "@edifice.io/client";
 import { ReactNode } from "react";
 import { ModalType } from "src/core/enums";
+import { IForm } from "~/core/models/form/types";
+import { ISharedRights, IUserSharedRights, IUserWorkflowRights, IWorkflowRights } from "~/core/rights";
 import { IQuestionType } from "~/core/models/question/types";
 
 export interface IGlobalProviderProps {
@@ -34,5 +37,7 @@ export type GlobalProviderContextType = {
   isMobile: boolean;
   isTablet: boolean;
   selectAllTextInput: (e: React.FocusEvent<HTMLInputElement>) => void;
+  initUserWorfklowRights: (user: IUserInfo | undefined, workflowRights: IWorkflowRights) => IUserWorkflowRights;
+  initUserSharedRights: (user: IUserInfo | undefined, sharedRights: ISharedRights, form: IForm) => IUserSharedRights;
   questionTypes: IQuestionType[] | undefined;
 };

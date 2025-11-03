@@ -52,3 +52,12 @@ export const cardWrapperStyle = {
   width: "100%",
   maxWidth: "95rem",
 } as const;
+
+export const emptyStateWrapper = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  gap: 3,
+} as const;
