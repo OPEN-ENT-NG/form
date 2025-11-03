@@ -18,6 +18,7 @@ import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
+import { getHomePath } from "~/core/pathHelper";
 
 export const CreationView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -73,7 +74,7 @@ export const CreationView: FC = () => {
       <Button
         variant={ComponentVariant.CONTAINED}
         onClick={() => {
-          navigate(`/`);
+          navigate(getHomePath());
         }}
       >
         {t("formulaire.form.edit.forbidden.button.mobile")}
