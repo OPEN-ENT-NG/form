@@ -19,6 +19,7 @@ import { CreationOrganisationModal } from "../CreationOrganisationModal";
 import { useElementHeight } from "../HomeView/utils";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "./style";
 import { getRecursiveFolderParents, useGetCreationHeaderButtons } from "./utils";
+import { getHomePath } from "~/core/pathHelper";
 
 export const CreationView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -79,7 +80,7 @@ export const CreationView: FC = () => {
       <Button
         variant={ComponentVariant.CONTAINED}
         onClick={() => {
-          navigate(`/`);
+          navigate(getHomePath());
         }}
       >
         {t("formulaire.form.edit.forbidden.button.mobile")}

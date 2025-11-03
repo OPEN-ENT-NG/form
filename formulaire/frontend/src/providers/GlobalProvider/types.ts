@@ -1,5 +1,8 @@
+import { IUserInfo } from "@edifice.io/client";
 import { ReactNode } from "react";
 import { ModalType } from "src/core/enums";
+import { IForm } from "~/core/models/form/types";
+import { ISharedRights, IUserSharedRights, IUserWorkflowRights, IWorkflowRights } from "~/core/rights";
 
 export interface IGlobalProviderProps {
   children: ReactNode;
@@ -32,4 +35,6 @@ export type GlobalProviderContextType = {
   toggleModal: (modalType: ModalType) => void;
   isMobile: boolean;
   selectAllTextInput: (e: React.FocusEvent<HTMLInputElement>) => void;
+  initUserWorfklowRights: (user: IUserInfo | undefined, workflowRights: IWorkflowRights) => IUserWorkflowRights;
+  initUserSharedRights: (user: IUserInfo | undefined, sharedRights: ISharedRights, form: IForm) => IUserSharedRights;
 };

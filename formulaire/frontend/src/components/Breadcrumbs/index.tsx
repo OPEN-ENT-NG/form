@@ -7,6 +7,7 @@ import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
 import { IFormBreadcrumbsProps } from "./types";
+import { getHomePath } from "~/core/pathHelper";
 
 export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   icon: Icon,
@@ -53,7 +54,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
             hasSeparator={separator != null}
             isLast={isLast}
             onClick={() => {
-              if (isHeader && !isCreationPage) navigate("/");
+              if (isHeader && !isCreationPage) navigate(getHomePath());
             }}
           >
             {content}
