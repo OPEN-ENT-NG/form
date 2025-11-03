@@ -51,3 +51,12 @@ export const cardWrapperStyle = {
   rowGap: "1.6rem",
   columnGap: "calc((100% - 3 * 30rem) / 2)",
 } as const;
+
+export const emptyStateWrapper = {
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  width: "100%",
+  gap: 3,
+} as const;

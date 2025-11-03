@@ -7,6 +7,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
+import { getHomePath } from "~/core/pathHelper";
 
 export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   icon: Icon,
@@ -51,7 +52,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
             hasSeparator={separator != null}
             isLast={isLast}
             onClick={() => {
-              if (isHeader) navigate("/");
+              if (isHeader) navigate(getHomePath());
             }}
           >
             {content}
