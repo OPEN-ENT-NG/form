@@ -3,7 +3,6 @@ import {
   Alert,
   Box,
   ClickAwayListener,
-  EllipsisWithTooltip,
   IconButton,
   Paper,
   Stack,
@@ -225,16 +224,12 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             <DragIndicatorRoundedIcon sx={dragIconStyle} />
           </Box>
           <Box sx={questionTitleStyle}>
-            <EllipsisWithTooltip
-              slotProps={{
-                text: {
-                  variant: TypographyVariant.H6,
-                  color: question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR,
-                },
-              }}
+            <Typography
+              color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}
+              variant={TypographyVariant.H6}
             >
               {question.title || t("formulaire.question.title.empty")}
-            </EllipsisWithTooltip>
+            </Typography>
             {question.mandatory && (
               <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR} sx={mandatoryTitleStyle}>
                 *
