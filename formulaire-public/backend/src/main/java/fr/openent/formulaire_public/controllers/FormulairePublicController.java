@@ -30,8 +30,11 @@ public class FormulairePublicController extends ControllerHelper {
     @ApiDoc("Render view")
     public void renderPublic(HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, user -> {
-            JsonObject context = new JsonObject().put("notLoggedIn", user == null);
-            renderView(request, context, "formulaire_public.html", null);
+            JsonObject params = new JsonObject()
+                .put("notLoggedIn", user == null);
+                .put(HOST, safeConfig.getString(HOST, null))
+                .put(THEME_PLATFORM, safeConfig.getString(THEME_PLATFORM, "default"));
+            renderView(request, params, "formulaire_public.html", null);
         });
     }
 

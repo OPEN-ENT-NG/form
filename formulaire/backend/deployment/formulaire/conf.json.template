@@ -27,6 +27,7 @@
         "pdf-connector-id": "exportpdf",
         "auth": "${nodePdfToken}",
         "url" : "${nodePdfUri}"
-    }
+    },
+    "theme-platform": "${themePlatform}"
   }
 }
