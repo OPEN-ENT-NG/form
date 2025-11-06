@@ -40,7 +40,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
         const isLast = index === stringItems.length - 1;
         const shouldEllipsis = isLast && stringItems.length >= maxItemsBeforeCollaspse;
         const content = shouldEllipsis ? (
-          <EllipsisWithTooltip typographyProps={{ fontSize: "2.4rem" }}>{stringItem}</EllipsisWithTooltip>
+          <EllipsisWithTooltip slotProps={{ text: { fontSize: "2.4rem" } }}>{stringItem}</EllipsisWithTooltip>
         ) : (
           stringItem
         );

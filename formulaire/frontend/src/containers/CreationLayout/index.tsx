@@ -35,8 +35,7 @@ export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
             description={t("formulaire.form.edit.empty.caption", { buttonText: t("formulaire.add.element") })}
             color="primary.main"
             imageHeight={300}
-            titleProps={{ variant: "h4" }}
-            descriptionProps={{ variant: "body2" }}
+            slotProps={{ title: { variant: "h4" }, description: { variant: "body2" } }}
           />
           <Button variant={ComponentVariant.CONTAINED} onClick={handleNewFormElement}>
             {t("formulaire.add.element")}

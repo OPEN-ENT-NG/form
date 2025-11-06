@@ -49,7 +49,7 @@ export const CreationView: FC = () => {
         color="primary.main"
         title={""}
         description={t("formulaire.form.edit.forbidden.caption.mobile")}
-        descriptionProps={{ variant: TypographyVariant.BODY1 }}
+        slotProps={{ description: { variant: TypographyVariant.BODY1 } }}
       />
       <Button
         variant={ComponentVariant.CONTAINED}

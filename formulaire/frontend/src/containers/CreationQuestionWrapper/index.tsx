@@ -224,9 +224,11 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
           </Box>
           <Box sx={questionTitleStyle}>
             <EllipsisWithTooltip
-              typographyProps={{
-                variant: TypographyVariant.H6,
-                color: question.title ? undefined : TEXT_SECONDARY_COLOR,
+              slotProps={{
+                text: {
+                  variant: TypographyVariant.H6,
+                  color: question.title ? undefined : TEXT_SECONDARY_COLOR,
+                },
               }}
             >
               {question.title || t("formulaire.question.title.empty")}

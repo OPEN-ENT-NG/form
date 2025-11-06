@@ -35,8 +35,7 @@ export const ResponseView: FC = () => {
             description={t("formulaire.form.edit.empty.caption", { buttonText: t("formulaire.add.element") })}
             color="primary.main"
             imageHeight={300}
-            titleProps={{ variant: "h4" }}
-            descriptionProps={{ variant: "body2" }}
+            slotProps={{ title: { variant: "h4" }, description: { variant: "body2" } }}
           />
           <Button variant={ComponentVariant.CONTAINED} onClick={headerButtons[0].action}>
             {headerButtons[0].title}

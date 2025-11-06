@@ -11,8 +11,7 @@ import { getNextPositionIfValid } from "./utils";
 import { toast } from "react-toastify";
 
 export const ResponseLayout: FC = () => {
-  const { form, formElementsList, progress, updateProgress, saveResponse, responsesMap } =
-    useResponse();
+  const { form, formElementsList, progress, updateProgress, saveResponse, responsesMap } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
   const [currentElement, setCurrentElement] = useState<IFormElement>(formElementsList[0] ?? null);
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
