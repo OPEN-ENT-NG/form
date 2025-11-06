@@ -1,5 +1,5 @@
 import { FC } from "react";
-import { Typography, Dialog, DialogTitle, DialogContent, Box, Stack, Card, Tooltip } from "@cgi-learning-hub/ui";
+import { Dialog, DialogTitle, DialogContent, Box, Stack, Card, Tooltip, Typography } from "@cgi-learning-hub/ui";
 import { TypographyFont, TypographyVariant } from "~/core/style/themeProps";
 import { useTranslation } from "react-i18next";
 import { DEFAULT_NB_CHILDREN, DEFAULT_NB_CHOICES, FORMULAIRE } from "~/core/constants";
@@ -145,7 +145,7 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
                       >
                         <Stack spacing={1.5} sx={questionStackStyle}>
                           <Typography
-                            variant={TypographyVariant.H5}
+                            variant={TypographyVariant.BODY2}
                             fontWeight={TypographyFont.BOLD}
                             color={SECONDARY}
                             sx={questionTextStyle}

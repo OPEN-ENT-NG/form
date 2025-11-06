@@ -16,6 +16,9 @@ export const options: ThemeOptions = {
     h4: {
       fontSize: "1.8rem",
     },
+    h5: {
+      fontSize: "1.8rem",
+    },
     h6: {
       fontSize: "1.6rem",
     },
