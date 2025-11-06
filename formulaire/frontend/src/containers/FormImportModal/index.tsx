@@ -27,6 +27,8 @@ import { getAcceptedFileType } from "./utils";
 import { IImportAnalyzeResponse, IImportUploadResponse } from "~/core/models/import/types";
 import { emptySplitFormulaireApi } from "~/services/api/services/formulaireApi/emptySplitFormulaireApi";
 import { toast } from "react-toastify";
+import { TypographyVariant } from "~/core/style/themeProps";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -102,7 +104,7 @@ export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       }}
     >
       <DialogTitle>
-        <Typography variant="h2" fontWeight="bold">
+        <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
           {t("formulaire.import")}
         </Typography>
       </DialogTitle>

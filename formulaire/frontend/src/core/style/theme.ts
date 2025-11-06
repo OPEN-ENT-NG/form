@@ -1,5 +1,6 @@
 import { ThemeOptions } from "@cgi-learning-hub/ui";
 import { CSS_PRIMARY_MAIN_COLOR } from "./cssColors";
+import { TypographyFontStyle } from "./themeProps";
 
 export const options: ThemeOptions = {
   typography: {
@@ -51,7 +52,7 @@ export const options: ThemeOptions = {
       styleOverrides: {
         root: {
           fontSize: "1.4rem",
-          fontWeight: "bold",
+          fontWeight: TypographyFontStyle.BOLD,
         },
       },
     },
@@ -59,7 +60,7 @@ export const options: ThemeOptions = {
       styleOverrides: {
         root: {
           fontSize: "2rem",
-          fontWeight: "bold",
+          fontWeight: TypographyFontStyle.BOLD,
         },
       },
     },

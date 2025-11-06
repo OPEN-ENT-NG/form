@@ -14,13 +14,14 @@ import {
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 
-import { BreakpointVariant, ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { ExportFormat } from "./enum";
 import { dialogContentStyle, exportContainerStyle, radioGroupStyle } from "./style";
 import { useExportZipMutation, useLazyExportPdfFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useHome } from "~/providers/HomeProvider";
 import { useVerifyExportAndDownloadZipMutation } from "~/services/api/services/archiveApi/importExportApi";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -59,7 +60,7 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
 
   return (
     <ResponsiveDialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD} fullWidth>
-      <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+      <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
         {t("formulaire.export")}
       </DialogTitle>
       <DialogContent sx={dialogContentStyle}>
@@ -74,7 +75,7 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
                 setSelectedFormat(ExportFormat.ZIP);
               }}
             >
-              <Typography variant={TypographyVariant.BODY1} fontWeight={TypographyFont.BOLD}>
+              <Typography variant={TypographyVariant.BODY1} fontWeight={TypographyFontStyle.BOLD}>
                 {t("formulaire.format.zip")}
               </Typography>
               <Typography variant={TypographyVariant.BODY1}>{t("formulaire.export.explanation.zip")}</Typography>
@@ -87,7 +88,7 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
                 setSelectedFormat(ExportFormat.PDF);
               }}
             >
-              <Typography variant={TypographyVariant.BODY1} fontWeight={TypographyFont.BOLD}>
+              <Typography variant={TypographyVariant.BODY1} fontWeight={TypographyFontStyle.BOLD}>
                 {t("formulaire.format.pdf")}
               </Typography>
               <Typography variant={TypographyVariant.BODY1}>{t("formulaire.export.explanation.pdf")}</Typography>

@@ -17,7 +17,7 @@ import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
 import { chipOptions, chooseContent, createFormUrl, initialStatusResponseState } from "./utils";
 import { IButtonProps, IModalProps } from "~/core/types";
-import { BreakpointVariant, ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import {
   chipWrapper,
   mainContentColumnWrapper,
@@ -34,7 +34,7 @@ import { DisplayContentType } from "./enums";
 import { IStatusResponseState } from "./types";
 import { DistributionTable } from "~/components/DistributionTable";
 import { transformDistributionsToTableData } from "~/core/models/distribution/utils";
-import { PRIMARY_MAIN_COLOR } from "~/core/style/colors";
+import { PRIMARY_MAIN_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { useSendReminderMutation } from "~/services/api/services/formulaireApi/formApi";
 import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
 import { EditorMode } from "~/components/CreationQuestionTypes/CreationQuestionFreetext/enums";
@@ -257,7 +257,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       fullWidth
       slotProps={dialogStyle}
     >
-      <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+      <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
         {t("formulaire.remind.title")}
       </DialogTitle>
       <DialogContent sx={mainContentColumnWrapper}>{renderContent()}</DialogContent>

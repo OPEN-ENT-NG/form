@@ -15,6 +15,8 @@ import { ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder
 import { isEnterPressed } from "~/core/utils";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { TypographyVariant } from "~/core/style/themeProps";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }) => {
   const { currentFolder, selectedFolders } = useHome();
@@ -80,7 +82,7 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
       }}
     >
       <DialogTitle>
-        <Typography variant="h2" fontWeight="bold">
+        <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
           {t(currentConfig.i18nTitle)}
         </Typography>
       </DialogTitle>

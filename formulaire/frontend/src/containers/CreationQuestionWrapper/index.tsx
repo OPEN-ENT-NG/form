@@ -51,7 +51,7 @@ import {
 } from "~/core/models/question/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { getQuestionContentByType } from "./utils";
-import { ERROR_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -229,7 +229,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
               slotProps={{
                 text: {
                   variant: TypographyVariant.H6,
-                  color: question.title ? undefined : TEXT_SECONDARY_COLOR,
+                  color: question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR,
                 },
               }}
             >

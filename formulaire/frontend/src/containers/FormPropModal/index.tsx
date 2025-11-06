@@ -37,13 +37,13 @@ import { useTranslation } from "react-i18next";
 import { FORMULAIRE, IMAGE_PICKER_INFO } from "~/core/constants";
 import dayjs, { Dayjs } from "dayjs";
 import { buildDelegatesParam, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";
-import { GREY_DARK_COLOR } from "~/core/style/colors";
+import { GREY_DARK_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import RGPDInfoBox from "~/components/RgpdInfoBox";
 import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
 import { useHome } from "~/providers/HomeProvider";
 import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formulaireApi/formApi";
 import { buildFormPayload } from "~/core/models/form/utils";
-import { BreakpointVariant, ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
@@ -454,7 +454,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
     <ResponsiveDialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD} fullWidth>
       <DialogTitle>
         <Box sx={spaceBetweenBoxStyle}>
-          <Typography variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+          <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
             {modalTitle}
           </Typography>
         </Box>
