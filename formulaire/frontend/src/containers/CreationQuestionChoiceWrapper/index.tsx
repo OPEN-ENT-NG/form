@@ -32,6 +32,7 @@ import {
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
 import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({
   question,
@@ -40,6 +41,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   choiceValueI18nKey = null,
 }) => {
   const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
+  const { selectAllTextInput } = useGlobal();
   const { t } = useTranslation(FORMULAIRE);
   const [newChoiceValue, setNewChoiceValue] = useState<string>("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -137,6 +139,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                       value={choice.value}
                       variant={ComponentVariant.STANDARD}
                       fullWidth
+                      onFocus={selectAllTextInput}
                       onChange={(e) => {
                         updateChoice(index, e.target.value);
                       }}
@@ -176,6 +179,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     variant={ComponentVariant.STANDARD}
                     placeholder={t("formulaire.question.label")}
                     fullWidth
+                    onFocus={selectAllTextInput}
                     onBlur={() => {
                       handleNewChoice(false, newChoiceValue);
                       setNewChoiceValue("");

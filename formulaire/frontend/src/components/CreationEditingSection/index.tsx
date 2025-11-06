@@ -63,6 +63,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   const {
     displayModals: { showSectionDelete, showSectionUndo },
     toggleModal,
+    selectAllTextInput,
   } = useGlobal();
 
   const handleTitleChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -134,6 +135,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                     placeholder={t("formulaire.section.title.empty")}
                     value={currentSectionTitle}
                     onChange={handleTitleChange}
+                    onFocus={selectAllTextInput}
                     onKeyDown={(e) => {
                       if (isEnterPressed(e) && currentEditingElement) {
                         const updated = {

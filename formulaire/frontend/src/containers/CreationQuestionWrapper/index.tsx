@@ -66,6 +66,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   const {
     displayModals: { showQuestionUndo, showQuestionDelete },
     toggleModal,
+    selectAllTextInput,
   } = useGlobal();
   const [currentQuestionTitle, setCurrentQuestionTitle] = useState<string>(question.title ?? "");
   const isEditing = isCurrentEditingElement(question, currentEditingElement);
@@ -157,6 +158,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                   sx={editingQuestionTitleStyle}
                   placeholder={t("formulaire.question.title.empty")}
                   value={currentQuestionTitle}
+                  onFocus={selectAllTextInput}
                   onChange={handleTitleChange}
                 />
               </Box>
@@ -224,9 +226,11 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
           </Box>
           <Box sx={questionTitleStyle}>
             <EllipsisWithTooltip
-              typographyProps={{
-                variant: TypographyVariant.H6,
-                color: question.title ? undefined : TEXT_SECONDARY_COLOR,
+              slotProps={{
+                text: {
+                  variant: TypographyVariant.H6,
+                  color: question.title ? undefined : TEXT_SECONDARY_COLOR,
+                },
               }}
             >
               {question.title || t("formulaire.question.title.empty")}

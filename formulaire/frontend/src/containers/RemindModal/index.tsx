@@ -43,7 +43,7 @@ import { useGlobal } from "~/providers/GlobalProvider";
 
 export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { isMobile } = useGlobal();
+  const { isMobile, selectAllTextInput } = useGlobal();
   const { selectedForms, resetSelected } = useHome();
   const [displayContent, setDisplayContent] = useState<DisplayContentType>(DisplayContentType.LOADING);
   const [statusResponse, setStatusResponse] = useState<IStatusResponseState>(initialStatusResponseState);
@@ -152,6 +152,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           variant="standard"
           fullWidth
           value={remindObject}
+          onFocus={selectAllTextInput}
           onChange={(e) => {
             setRemindObject(e.target.value);
           }}

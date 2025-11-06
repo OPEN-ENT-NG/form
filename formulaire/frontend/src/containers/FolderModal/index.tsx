@@ -14,9 +14,11 @@ import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api
 import { ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder/types";
 import { isEnterPressed } from "~/core/utils";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }) => {
   const { currentFolder, selectedFolders } = useHome();
+  const { selectAllTextInput } = useGlobal();
   const { t } = useTranslation(FORMULAIRE);
   const [newName, setNewName] = useState<string>(mode === FolderModalMode.RENAME ? selectedFolders[0]?.name : "");
   const [createFolder] = useCreateFolderMutation();
@@ -89,6 +91,7 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
           variant="standard"
           sx={folderModalTextFieldStyle}
           value={newName}
+          onFocus={selectAllTextInput}
           onChange={(e) => {
             setNewName(e.target.value);
           }}

@@ -55,7 +55,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
     currentFolder: { id: currentFolderId },
     rootFolders,
   } = useHome();
-  const { isMobile } = useGlobal();
+  const { isMobile, selectAllTextInput } = useGlobal();
   const {
     formPropInputValue,
     formPropInputValue: { dateOpening, isPublic, description, hasRgpd, rgpdGoal, rgpdLifeTime, title },
@@ -214,6 +214,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
         sx={textFieldStyle}
         placeholder={t("formulaire.form.create.placeholder")}
         value={formPropInputValue[FormPropField.TITLE]}
+        onFocus={selectAllTextInput}
         onChange={(e) => {
           handleFormPropInputValueChange(FormPropField.TITLE, e.target.value);
         }}
@@ -375,6 +376,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                         rows={4}
                         placeholder={t("formulaire.prop.description.placeholder")}
                         value={description}
+                        onFocus={selectAllTextInput}
                         onChange={(e) => {
                           handleFormPropInputValueChange(FormPropField.DESCRIPTION, e.target.value);
                         }}
@@ -393,6 +395,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                           sx={textFieldStyle}
                           placeholder={t(`formulaire.prop.rgpd.goal.input${isMobile ? ".mobile" : ""}`)}
                           value={rgpdGoal}
+                          onFocus={selectAllTextInput}
                           onChange={(e) => {
                             handleFormPropInputValueChange(FormPropField.RGPD_GOAL, e.target.value);
                           }}
