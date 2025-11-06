@@ -177,7 +177,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     inputRef={(el: HTMLInputElement | null) => (inputRefs.current[question.choices?.length ?? 0] = el)}
                     value={newChoiceValue}
                     variant={ComponentVariant.STANDARD}
-                    placeholder={t("formulaire.question.label")}
+                    placeholder={t("formulaire.question.option")}
                     fullWidth
                     onFocus={selectAllTextInput}
                     onBlur={() => {
