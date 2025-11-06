@@ -100,10 +100,9 @@ export const notEditingchoicesWrapperStyle: SxProps = {
   gap: 2,
 };
 
-export const choiceStyle: SxProps = {
+export const unselectedChoiceStyle: SxProps = {
   marginLeft: 1,
   "& .MuiInputBase-input": {
-    color: "text.disabled",
     cursor: "default",
     caretColor: "transparent",
   },

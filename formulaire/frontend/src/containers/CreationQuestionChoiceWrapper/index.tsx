@@ -15,7 +15,7 @@ import { useChoiceActions } from "./useChoiceActions";
 import {
   baseChoiceWrapperStyle,
   choiceInputStyle,
-  choiceStyle,
+  unselectedChoiceStyle,
   choicesWrapperStyle,
   choiceWrapperStyle,
   deleteButtonIconStyle,
@@ -221,7 +221,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                   variant={ComponentVariant.STANDARD}
                   fullWidth
                   slotProps={{ htmlInput: { readOnly: true } }}
-                  sx={choiceStyle}
+                  sx={unselectedChoiceStyle}
                 />
               </CreationQuestionChoice>
             </Box>

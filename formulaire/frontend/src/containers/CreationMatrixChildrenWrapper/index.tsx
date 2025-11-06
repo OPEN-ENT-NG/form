@@ -12,7 +12,7 @@ import { iconStyle } from "~/components/UpDownButtons/style";
 import {
   baseChoiceWrapperStyle,
   choiceInputStyle,
-  choiceStyle,
+  unselectedChoiceStyle,
   choicesWrapperStyle,
   choiceWrapperStyle,
   deleteButtonIconStyle,
@@ -175,7 +175,7 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
                   variant={ComponentVariant.STANDARD}
                   fullWidth
                   slotProps={{ htmlInput: { readOnly: true } }}
-                  sx={choiceStyle}
+                  sx={unselectedChoiceStyle}
                 />
               </CreationQuestionChoice>
             </Box>
