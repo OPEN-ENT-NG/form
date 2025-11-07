@@ -2,7 +2,7 @@ import { DEFAULT_CURSOR_STEP } from "~/core/constants";
 import { getElementById } from "~/providers/CreationProvider/utils";
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
-import { createNewFormElement, isQuestion, isSection } from "../formElement/utils";
+import { createNewFormElement, getFollowingFormElement, isQuestion, isSection } from "../formElement/utils";
 import { ISection } from "../section/types";
 import { ChoiceTypes, QuestionTypes } from "./enum";
 import {
@@ -227,6 +227,35 @@ export function shouldShowConditionalSwitch(question: IQuestion, formElements: I
 export const shouldShowMandatorySwitch = (question: IQuestion): boolean => {
   return question.questionType !== QuestionTypes.FREETEXT;
 };
+
+export const getParentSection = (question: IQuestion, formElements: IFormElement[]): ISection | null => {
+  const parents = formElements.filter((e) => e.id === question.sectionId && isSection(e));
+  return parents.length == 1 ? (parents[0] as ISection) : null;
+};
+
+export const getNextFormElements = (question: IQuestion, formElements: IFormElement[]): IFormElement[] => {
+  if (!question.conditional || !question.choices || question.choices.length <= 0) return [];
+  return question.choices.map((c) => getNextFormElement(c, formElements)).filter((e): e is IFormElement => e != null);
+};
+
+//TODO move dans un questionChoice/utils.ts all from here...
+export const getNextFormElement = (
+  choice: IQuestionChoice,
+  formElements: IFormElement[],
+  parentQuestion?: IQuestion,
+): IFormElement | undefined => {
+  if (parentQuestion && choice.isNextFormElementDefault) return getFollowingFormElement(parentQuestion, formElements);
+
+  return formElements.find(
+    (e) => e.id === choice.nextFormElementId && e.formElementType === choice.nextFormElementType,
+  );
+};
+
+export const getNextFormElementPosition = (choice: IQuestionChoice, formElements: IFormElement[]): number | null => {
+  const nextFormElement = getNextFormElement(choice, formElements);
+  return nextFormElement ? nextFormElement.position : null;
+};
+//TODO ...to here
 
 export const getQuestionTypeFromValue = (value: string | number | null | undefined): QuestionTypes | undefined => {
   if (value === null || value === undefined) return;

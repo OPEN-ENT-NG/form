@@ -124,7 +124,7 @@ prettierDocker() {
 }
 
 lintFixDocker() {
-  docker-compose run --rm node sh -c "pnpm run fix"
+  docker-compose run --rm node sh -c "pnpm run fix && pnpm run check-types"
 }
 
 checkQualityCode() {
