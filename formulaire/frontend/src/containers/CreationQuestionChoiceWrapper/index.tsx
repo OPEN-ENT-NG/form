@@ -28,6 +28,7 @@ import {
   sortWrapperStyle,
   StyledSortWrapper,
   upDownButtonsWrapperStyle,
+  customChoiceWrapperStyle,
 } from "./style";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
@@ -64,7 +65,11 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   );
 
   const sortedChoices = useMemo(() => {
-    return question.choices?.sort((a, b) => compareChoices(a, b)) ?? [];
+    return question.choices?.filter((c) => !c.isCustom).sort((a, b) => compareChoices(a, b)) ?? [];
+  }, [question.choices]);
+
+  const customChoice = useMemo(() => {
+    return question.choices?.find((c) => c.isCustom);
   }, [question.choices]);
 
   if (!question.choices) {
@@ -95,6 +100,23 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
     }
   };
 
+  const renderChoicesWhenNotEditing = () => {
+    const allChoices = customChoice ? [...sortedChoices, customChoice] : sortedChoices;
+    return allChoices.map((choice, index) => (
+      <Box key={choice.id ?? index} sx={baseChoiceWrapperStyle}>
+        <CreationQuestionChoice index={index} type={type} image={choice.image ?? undefined}>
+          <TextField
+            value={choice.value}
+            variant={ComponentVariant.STANDARD}
+            fullWidth
+            slotProps={{ htmlInput: { readOnly: true } }}
+            sx={unselectedChoiceStyle}
+          />
+        </CreationQuestionChoice>
+      </Box>
+    ));
+  };
+
   return (
     <Box>
       {isCurrentEditingElement(question, currentEditingElement) ? (
@@ -116,15 +138,13 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
               {sortedChoices.map((choice, index) => (
                 <Box key={choice.id ?? index} sx={choiceWrapperStyle}>
                   <Box sx={upDownButtonsWrapperStyle}>
-                    {!choice.isCustom && (
-                      <UpDownButtons
-                        element={choice}
-                        index={index}
-                        elementList={question.choices ?? []}
-                        hasCustomAtTheEnd={sortedChoices[sortedChoices.length - 1].isCustom}
-                        handleReorderClick={handleSwapClick}
-                      />
-                    )}
+                    <UpDownButtons
+                      element={choice}
+                      index={index}
+                      elementList={question.choices ?? []}
+                      hasCustomAtTheEnd={customChoice !== undefined}
+                      handleReorderClick={handleSwapClick}
+                    />
                   </Box>
                   <CreationQuestionChoice
                     index={index}
@@ -146,7 +166,6 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                       onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
                         handleKeyDownExistingChoice(e, index);
                       }}
-                      disabled={choice.isCustom}
                       sx={choiceInputStyle}
                     />
                   </CreationQuestionChoice>
@@ -186,14 +205,61 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     }}
                     onChange={(e) => {
                       setNewChoiceValue(e.target.value);
+                      console.log(question.choices);
                     }}
                     onKeyDown={handleKeyDownNewChoice}
                     sx={newChoiceInputStyle}
                   />
                 </CreationQuestionChoice>
               </NewChoiceWrapper>
+              {customChoice &&
+                (() => {
+                  const customChoiceIndex = question.choices.length - 1;
+                  return (
+                    <Box sx={customChoiceWrapperStyle}>
+                      <CreationQuestionChoice
+                        index={customChoiceIndex}
+                        type={type}
+                        hasImage={hasImageType(type)}
+                        updateChoiceImage={updateChoiceImage}
+                        image={customChoice.image ?? undefined}
+                        isEditing={true}
+                      >
+                        <TextField
+                          inputRef={(el: HTMLInputElement | null) => (inputRefs.current[customChoiceIndex] = el)}
+                          value={customChoice.value}
+                          variant={ComponentVariant.STANDARD}
+                          fullWidth
+                          disabled
+                          sx={choiceInputStyle}
+                        />
+                      </CreationQuestionChoice>
+                      <Box sx={deleteWrapperStyle}>
+                        {question.choices.length > 1 && (
+                          <IconButton
+                            onClick={() =>
+                              void handleDeleteChoice(customChoice.id, customChoiceIndex, customChoice.position)
+                            }
+                            size={ComponentSize.SMALL}
+                            sx={deleteButtonIconStyle}
+                          >
+                            <ClearRoundedIcon sx={iconStyle} />
+                          </IconButton>
+                        )}
+                      </Box>
+                      {question.conditional && (
+                        <CreationQuestionChoiceConditional
+                          question={question}
+                          choice={customChoice}
+                          choiceIndex={question.choices.length - 1}
+                          updateChoiceNextFormElement={updateChoiceNextFormElement}
+                        />
+                      )}
+                    </Box>
+                  );
+                })()}
             </Box>
-            {!hideCustomChoice && (
+            {!hideCustomChoice && !customChoice && (
               <Box>
                 <Typography variant={TypographyVariant.BODY2}>
                   {t("formulaire.question.add.choice.other.text")}
@@ -212,21 +278,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
           </Box>
         </ClickAwayListener>
       ) : (
-        <Box sx={notEditingchoicesWrapperStyle}>
-          {sortedChoices.map((choice, index) => (
-            <Box key={choice.id ?? index} sx={baseChoiceWrapperStyle}>
-              <CreationQuestionChoice index={index} type={type} image={choice.image ?? undefined}>
-                <TextField
-                  value={choice.value}
-                  variant={ComponentVariant.STANDARD}
-                  fullWidth
-                  slotProps={{ htmlInput: { readOnly: true } }}
-                  sx={unselectedChoiceStyle}
-                />
-              </CreationQuestionChoice>
-            </Box>
-          ))}
-        </Box>
+        <Box sx={notEditingchoicesWrapperStyle}>{renderChoicesWhenNotEditing()}</Box>
       )}
     </Box>
   );

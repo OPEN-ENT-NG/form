@@ -68,6 +68,14 @@ export const baseChoiceWrapperStyle = {
   paddingRight: "42px", //Match delete button width
 } as const;
 
+export const customChoiceWrapperStyle = {
+  display: "flex",
+  alignItems: "flex-start",
+  justifyContent: "center",
+  width: "100%",
+  paddingLeft: "56px", //Match updown buttons width
+} as const;
+
 export const choiceInputStyle: SxProps = {
   marginLeft: 1,
 };
