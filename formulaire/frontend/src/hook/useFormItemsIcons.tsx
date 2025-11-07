@@ -80,7 +80,7 @@ export const useFormItemsIcons = () => {
         icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
         text: (
           <EllipsisWithTooltip slotProps={{ text: { color: TEXT_SECONDARY_COLOR } }}>
-            {getFormNbResponsesText(form.nb_responses ?? 0)}
+              {getFormNbResponsesText(form.nb_responses ?? 0)}
           </EllipsisWithTooltip>
         ),
       },
