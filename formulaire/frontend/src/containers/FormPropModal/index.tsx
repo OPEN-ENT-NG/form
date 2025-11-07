@@ -59,11 +59,11 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
   } = useHome();
   const { isMobile, selectAllTextInput } = useGlobal();
   const {
+    formId,
     formPropInputValue,
     formPropInputValue: { dateOpening, isPublic, description, hasRgpd, rgpdGoal, rgpdLifeTime, title },
     handleFormPropInputValueChange,
     handleDateChange,
-    formId,
   } = useFormPropInputValueState(mode);
   const { t } = useTranslation(FORMULAIRE);
   const [isEndingDateEditable, setIsEndingDateEditable] = useState<boolean>(
