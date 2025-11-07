@@ -12,7 +12,7 @@ import { blockProps } from "~/core/utils";
 export const responseLayoutStyle: SxProps<Theme> = {
   ...columnBoxStyle,
   ...centerBoxStyle,
-  rowGap: "2rem",
+  rowGap: "3rem",
   paddingX: "10%",
 };
 
