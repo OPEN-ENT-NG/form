@@ -1,6 +1,6 @@
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
-import { createNewFormElement, transformFormElement } from "../formElement/utils";
+import { createNewFormElement, getFollowingFormElement, transformFormElement } from "../formElement/utils";
 import { buildQuestionPayload } from "../question/utils";
 import { ISection, ISectionDTO, ISectionPayload } from "./types";
 
@@ -62,4 +62,17 @@ export const buildSectionPayload = (section: ISection): ISectionPayload => {
 
 export const hasConditionalQuestion = (section: ISection): boolean => {
   return section.questions.some((question) => question.conditional);
+};
+
+export const getNextFormElement = (section: ISection, formElements: IFormElement[]): IFormElement | undefined => {
+  if (section.isNextFormElementDefault) return getFollowingFormElement(section, formElements);
+
+  return formElements.find(
+    (e) => e.id === section.nextFormElementId && e.formElementType === section.nextFormElementType,
+  );
+};
+
+export const getNextFormElementPosition = (section: ISection, formElements: IFormElement[]): number | null => {
+  const nextFormElement = getNextFormElement(section, formElements);
+  return nextFormElement ? nextFormElement.position : null;
 };
