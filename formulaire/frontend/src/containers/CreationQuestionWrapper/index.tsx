@@ -1,6 +1,7 @@
 import {
   Alert,
   Box,
+  EllipsisWithTooltip,
   MenuItem,
   Paper,
   Select,
@@ -8,7 +9,7 @@ import {
   Stack,
   Switch,
   TextField,
-  Typography,
+  Typography
 } from "@cgi-learning-hub/ui";
 import { useSortable } from "@dnd-kit/sortable";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
@@ -338,12 +339,16 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
           )}
           <Box mt={!form || hasFormResponses(form) ? 2 : 0} sx={headerQuestionStyle}>
             <Box sx={questionTitleStyle}>
-              <Typography
-                color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}
-                variant={TypographyVariant.H6}
+              <EllipsisWithTooltip
+              slotProps={{
+                text: {
+                  variant: TypographyVariant.H6,
+                color: question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR,
+                },
+              }}
               >
                 {question.title || t("formulaire.question.title.empty")}
-              </Typography>
+              </EllipsisWithTooltip>
               {question.mandatory && (
                 <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR} sx={mandatoryTitleStyle}>
                   *
