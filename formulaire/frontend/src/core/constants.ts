@@ -84,3 +84,7 @@ export const TOUCH_EVENT_START = "onTouchStart";
 // RESPONSIVE
 export const MOBILE_MAX_WIDTH = 920;
 export const TABLET_MAX_WIDTH = 768;
+
+// Variable types
+export const STRING = "string";
+export const FILE = "file";
