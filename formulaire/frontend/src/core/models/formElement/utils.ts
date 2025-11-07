@@ -1,4 +1,5 @@
 import { IQuestion } from "../question/types";
+import { getParentSection } from "../question/utils";
 import { ISection } from "../section/types";
 import { FormElementType } from "./enum";
 import { IFormElement, IFormElementDTO, IFormElementPayload } from "./types";
@@ -100,4 +101,20 @@ export const isQuestion = (formElement: IFormElement): formElement is IQuestion 
 
 export const isSection = (formElement: IFormElement): formElement is ISection => {
   return formElement.formElementType === FormElementType.SECTION;
+};
+
+export const getFollowingFormElement = (
+  formElement: IFormElement,
+  formElements: IFormElement[],
+): IFormElement | undefined => {
+  // Case formElement is not a formElement but a question inside a section
+  if (isQuestion(formElement) && formElement.sectionId) {
+    const parentSection = getParentSection(formElement, formElements);
+    const followingPosition = parentSection && parentSection.position ? parentSection.position + 1 : null;
+    return formElements.find((e) => e.position === followingPosition);
+  }
+
+  // Case formElement is section without target or just a solo question
+  const followingPosition = formElement.position ? formElement.position + 1 : null;
+  return formElements.find((e) => e.position === followingPosition);
 };
