@@ -29,6 +29,7 @@ import {
   StyledSortWrapper,
   upDownButtonsWrapperStyle,
   customChoiceWrapperStyle,
+  choicesWrapperWhenNotEditingStyle,
 } from "./style";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
@@ -103,16 +104,17 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   const renderChoicesWhenNotEditing = () => {
     const allChoices = customChoice ? [...sortedChoices, customChoice] : sortedChoices;
     return allChoices.map((choice, index) => (
-      <Box key={choice.id ?? index} sx={baseChoiceWrapperStyle}>
+      <Box key={choice.id ?? index} sx={choicesWrapperWhenNotEditingStyle}>
         <CreationQuestionChoice index={index} type={type} image={choice.image ?? undefined}>
           <TextField
             value={choice.value}
             variant={ComponentVariant.STANDARD}
             fullWidth
             slotProps={{ htmlInput: { readOnly: true } }}
-            sx={unselectedChoiceStyle}
+            sx={{ ...unselectedChoiceStyle, marginRight: question.conditional ? "4rem" : 0 }}
           />
         </CreationQuestionChoice>
+        {question.conditional && <CreationQuestionChoiceConditional question={question} choice={choice} />}
       </Box>
     ));
   };
@@ -135,6 +137,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
               </Box>
             </StyledSortWrapper>
             <Box sx={choicesWrapperStyle}>
+              {/* Classic choices */}
               {sortedChoices.map((choice, index) => (
                 <Box key={choice.id ?? index} sx={choiceWrapperStyle}>
                   <Box sx={upDownButtonsWrapperStyle}>
@@ -190,6 +193,8 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                   )}
                 </Box>
               ))}
+
+              {/* New empty choice */}
               <NewChoiceWrapper hasImage={hasImageType(type)}>
                 <CreationQuestionChoice index={question.choices.length} type={type}>
                   <TextField
@@ -212,6 +217,8 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                   />
                 </CreationQuestionChoice>
               </NewChoiceWrapper>
+
+              {/* Custom choice */}
               {customChoice &&
                 (() => {
                   const customChoiceIndex = question.choices.length - 1;
