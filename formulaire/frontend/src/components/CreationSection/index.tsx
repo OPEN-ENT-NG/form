@@ -36,7 +36,7 @@ import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 
 import { dragIconContainerStyle, questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
-import { AlertSeverityVariant, ComponentVariant } from "~/core/style/themeProps";
+import { AlertSeverityVariant, ComponentVariant, EditorVariant } from "~/core/style/themeProps";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
 import { isValidFormElement } from "~/core/models/formElement/utils";
@@ -49,6 +49,9 @@ import { hasFormResponses } from "~/core/models/form/utils";
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
 import { ISection } from "~/core/models/section/types";
 import { FormElementType } from "~/core/models/formElement/enum";
+import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
+import { Editor } from "@edifice.io/react/editor";
+import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -142,12 +145,15 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
           </Box>
         </Box>
         <Box sx={sectionContentStyle}>
-          <Typography
-            sx={descriptionStyle}
-            dangerouslySetInnerHTML={{
-              __html: section.description || t("formulaire.section.no.description"),
-            }}
-          />
+          <Box sx={descriptionStyle}>
+            <StyledEditorWrapper isCurrentEditingElement={true}>
+              <Editor
+                content={section.description || t("formulaire.section.no.description")}
+                mode={EditorMode.READ}
+                variant={EditorVariant.GHOST}
+              />
+            </StyledEditorWrapper>
+          </Box>
           <Box>
             {section.questions.map((question: IQuestion) => (
               <CreationQuestionWrapper key={question.id} question={question} />
