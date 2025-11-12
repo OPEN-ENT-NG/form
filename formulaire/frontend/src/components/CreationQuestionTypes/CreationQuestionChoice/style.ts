@@ -10,7 +10,6 @@ export const questionChoiceWrapperStyle: SxProps = {
 export const choiceInputStyle: SxProps = {
   display: "flex",
   width: "100%",
-  marginRight: 1,
   alignItems: "center",
 };
 
@@ -28,6 +27,7 @@ export const choiceIconStyle: SxProps = {
 
 export const imageIconStyle: SxProps = {
   color: PRIMARY_MAIN_COLOR,
+  paddingX: "0.2rem",
 };
 
 export const mediaLibraryWrapperStyle: SxProps = {

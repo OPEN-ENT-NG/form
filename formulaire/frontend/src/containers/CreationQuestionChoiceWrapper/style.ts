@@ -51,12 +51,11 @@ export const upDownButtonsWrapperStyle: SxProps = {
 export const deleteWrapperStyle: SxProps = {
   display: "flex",
   alignItems: "center",
-  minWidth: 42,
 };
 
 export const deleteButtonIconStyle: SxProps = {
-  marginLeft: 1,
   minHeight: 40,
+  padding: 0,
 };
 
 export const baseChoiceWrapperStyle = {
