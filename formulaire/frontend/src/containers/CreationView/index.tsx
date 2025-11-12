@@ -94,5 +94,9 @@ export const CreationView: FC = () => {
     </>
   );
 
-  return <Box height="100%">{selectView()}</Box>;
+  return (
+    <Box height="100%" sx={{ backgroundColor: "var(--edifice-body-bg) !important" }}>
+      {selectView()}
+    </Box>
+  );
 };
