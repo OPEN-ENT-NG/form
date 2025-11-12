@@ -163,10 +163,10 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
             <>
               <Box sx={actionsContainerStyle}>
                 <Box onClick={handleEdit} sx={actionButtonStyle}>
-                  <CreateIcon fontSize="small" />
+                  <CreateIcon />
                 </Box>
                 <Box onClick={handleDelete} sx={actionButtonStyle}>
-                  <DeleteIcon fontSize="small" />
+                  <DeleteIcon />
                 </Box>
               </Box>
               <img src={currentSrc} alt="Selected media" style={imageStyle} />

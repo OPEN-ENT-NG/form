@@ -38,6 +38,5 @@ export const mediaLibraryWrapperStyle: SxProps = {
 };
 
 export const deleteIconStyle: SxProps = {
-  height: 40,
-  marginLeft: 1,
+  height: 36,
 };
