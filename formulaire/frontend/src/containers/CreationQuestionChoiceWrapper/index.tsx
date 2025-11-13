@@ -13,7 +13,6 @@ import { iconStyle } from "~/components/UpDownButtons/style";
 import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
 import { useChoiceActions } from "./useChoiceActions";
 import {
-  baseChoiceWrapperStyle,
   choiceInputStyle,
   unselectedChoiceStyle,
   choicesWrapperStyle,

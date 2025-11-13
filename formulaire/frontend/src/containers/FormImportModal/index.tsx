@@ -27,7 +27,7 @@ import { getAcceptedFileType } from "./utils";
 import { IImportAnalyzeResponse, IImportUploadResponse } from "~/core/models/import/types";
 import { emptySplitFormulaireApi } from "~/services/api/services/formulaireApi/emptySplitFormulaireApi";
 import { toast } from "react-toastify";
-import { TypographyVariant } from "~/core/style/themeProps";
+import { TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {

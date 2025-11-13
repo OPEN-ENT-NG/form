@@ -15,7 +15,7 @@ import { ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder
 import { isEnterPressed } from "~/core/utils";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { TypographyVariant } from "~/core/style/themeProps";
+import { TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }) => {

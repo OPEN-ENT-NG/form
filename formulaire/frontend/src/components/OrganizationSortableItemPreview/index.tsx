@@ -28,9 +28,11 @@ export const OrganizationSortableItemPreview: FC<IOrganizationSortableItemPrevie
           <DragIndicatorRoundedIcon sx={iconStyle} />
         </Box>
         <EllipsisWithTooltip
-          typographyProps={{
-            variant: TypographyVariant.BODY2,
-            sx: typographyStyle,
+          slotProps={{
+            text: {
+              variant: TypographyVariant.BODY2,
+              sx: typographyStyle,
+            },
           }}
         >
           {formElement.title}
