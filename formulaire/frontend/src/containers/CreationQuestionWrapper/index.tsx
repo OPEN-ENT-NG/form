@@ -8,6 +8,7 @@ import {
   Stack,
   Switch,
   TextField,
+  Tooltip,
   Typography,
 } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
@@ -180,15 +181,21 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                 )}
 
                 <Box sx={editingQuestionIconContainerStyle}>
-                  <IconButton aria-label="duplicate" onClick={handleDuplicate}>
-                    <FileCopyRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
-                  <IconButton aria-label="delete" onClick={handleDelete}>
-                    <DeleteRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
-                  <IconButton aria-label="undo" onClick={handleUndo}>
-                    <UndoRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
+                  <Tooltip title={t("formulaire.duplicate")} placement="top" disableInteractive>
+                    <IconButton aria-label="duplicate" onClick={handleDuplicate}>
+                      <FileCopyRoundedIcon sx={editingQuestionIconStyle} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t("formulaire.delete")} placement="top" disableInteractive>
+                    <IconButton aria-label="delete" onClick={handleDelete}>
+                      <DeleteRoundedIcon sx={editingQuestionIconStyle} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t("formulaire.cancel")} placement="top" disableInteractive>
+                    <IconButton aria-label="undo" onClick={handleUndo}>
+                      <UndoRoundedIcon sx={editingQuestionIconStyle} />
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               </Box>
             </StyledPaper>

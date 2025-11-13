@@ -11,6 +11,7 @@ import {
   FormControl,
   Alert,
   EllipsisWithTooltip,
+  Tooltip,
 } from "@cgi-learning-hub/ui";
 import {
   descriptionStyle,
@@ -129,17 +130,21 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
             </Box>
             {currentEditingElement === null && (
               <Box sx={sectionIconWrapperStyle}>
-                <IconButton
-                  aria-label="duplicate"
-                  onClick={handleDuplicate}
-                  disabled={!!form && hasFormResponses(form)}
-                  sx={sectionButtonStyle}
-                >
-                  <FileCopyRoundedIcon sx={sectionButtonIconStyle} />
-                </IconButton>
-                <IconButton aria-label="edit" onClick={handleEdit} sx={sectionButtonStyle}>
-                  <EditRoundedIcon sx={sectionButtonIconStyle} />
-                </IconButton>
+                <Tooltip title={t("formulaire.duplicate")} placement="top" disableInteractive>
+                  <IconButton
+                    aria-label="duplicate"
+                    onClick={handleDuplicate}
+                    disabled={!!form && hasFormResponses(form)}
+                    sx={sectionButtonStyle}
+                  >
+                    <FileCopyRoundedIcon sx={sectionButtonIconStyle} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t("formulaire.edit")} placement="top" disableInteractive>
+                  <IconButton aria-label="edit" onClick={handleEdit} sx={sectionButtonStyle}>
+                    <EditRoundedIcon sx={sectionButtonIconStyle} />
+                  </IconButton>
+                </Tooltip>
               </Box>
             )}
           </Box>

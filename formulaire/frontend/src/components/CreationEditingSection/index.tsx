@@ -1,6 +1,16 @@
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { ICreationEditingSectionProps } from "./types";
-import { Box, Typography, IconButton, Stack, Paper, Alert, TextField, ClickAwayListener } from "@cgi-learning-hub/ui";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Stack,
+  Paper,
+  Alert,
+  TextField,
+  ClickAwayListener,
+  Tooltip,
+} from "@cgi-learning-hub/ui";
 import {
   editingSectionTitleStyle,
   editorContainerStyle,
@@ -149,33 +159,39 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                   />
                 </Box>
                 <Box sx={sectionIconWrapperStyle}>
-                  <IconButton
-                    aria-label="delete"
-                    onClick={handleDelete}
-                    disabled={!!form && hasFormResponses(form)}
-                    sx={sectionButtonStyle}
-                  >
-                    <DeleteRoundedIcon sx={sectionButtonIconStyle} />
-                  </IconButton>
-                  <IconButton aria-label="undo" onClick={handleUndo} sx={sectionButtonStyle}>
-                    <UndoRoundedIcon sx={sectionButtonIconStyle} />
-                  </IconButton>
-                  <IconButton
-                    aria-label="save"
-                    onClick={() => {
-                      if (currentEditingElement) {
-                        const updated = {
-                          ...currentEditingElement,
-                          description: editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string,
-                        } as ISection;
-                        setCurrentEditingElement(updated);
-                        void handleClickAwayEditingElement(updated);
-                      }
-                    }}
-                    sx={sectionButtonStyle}
-                  >
-                    <CheckCircleRoundedIcon sx={sectionButtonIconStyle} />
-                  </IconButton>
+                  <Tooltip title={t("formulaire.delete")} placement="top" disableInteractive>
+                    <IconButton
+                      aria-label="delete"
+                      onClick={handleDelete}
+                      disabled={!!form && hasFormResponses(form)}
+                      sx={sectionButtonStyle}
+                    >
+                      <DeleteRoundedIcon sx={sectionButtonIconStyle} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t("formulaire.cancel")} placement="top" disableInteractive>
+                    <IconButton aria-label="undo" onClick={handleUndo} sx={sectionButtonStyle}>
+                      <UndoRoundedIcon sx={sectionButtonIconStyle} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t("formulaire.validate")} placement="top" disableInteractive>
+                    <IconButton
+                      aria-label="save"
+                      onClick={() => {
+                        if (currentEditingElement) {
+                          const updated = {
+                            ...currentEditingElement,
+                            description: editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string,
+                          } as ISection;
+                          setCurrentEditingElement(updated);
+                          void handleClickAwayEditingElement(updated);
+                        }
+                      }}
+                      sx={sectionButtonStyle}
+                    >
+                      <CheckCircleRoundedIcon sx={sectionButtonIconStyle} />
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               </Box>
             </Box>
