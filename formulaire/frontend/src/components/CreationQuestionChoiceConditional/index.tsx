@@ -23,7 +23,7 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
 
   const onSaveChoiceNextElement = useCallback(
     (_: IQuestionChoice, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
-      if (updateChoiceNextFormElement && choiceIndex != undefined)
+      if (updateChoiceNextFormElement && choiceIndex !== undefined)
         updateChoiceNextFormElement(choiceIndex, targetElementId, targetElementType);
     },
     [choiceIndex, updateChoiceNextFormElement],

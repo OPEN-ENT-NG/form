@@ -15,6 +15,10 @@ import org.entcore.common.http.filter.AdminFilter;
 import org.entcore.common.http.filter.ResourceFilter;
 import org.entcore.common.user.UserUtils;
 
+import static fr.openent.form.core.constants.ConfigFields.HOST;
+import static fr.openent.form.core.constants.ConfigFields.THEME_PLATFORM;
+import static fr.openent.form.core.constants.Fields.NOT_LOGGED_IN;
+
 public class FormulairePublicController extends ControllerHelper {
     private static final Logger log = LoggerFactory.getLogger(FormulairePublicController.class);
     private EventStore eventStore;
@@ -30,8 +34,9 @@ public class FormulairePublicController extends ControllerHelper {
     @ApiDoc("Render view")
     public void renderPublic(HttpServerRequest request) {
         UserUtils.getUserInfos(eb, request, user -> {
+            JsonObject safeConfig = config.copy();
             JsonObject params = new JsonObject()
-                .put("notLoggedIn", user == null);
+                .put(NOT_LOGGED_IN, user == null)
                 .put(HOST, safeConfig.getString(HOST, null))
                 .put(THEME_PLATFORM, safeConfig.getString(THEME_PLATFORM, "default"));
             renderView(request, params, "formulaire_public.html", null);
