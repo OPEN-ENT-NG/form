@@ -131,9 +131,11 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
                 </TableCell>
                 <TableCell align="center">
                   <EllipsisWithTooltip
-                    typographyProps={{
-                      variant: TypographyVariant.BODY2,
-                      sx: { maxWidth: "30rem" },
+                    slotProps={{
+                      text: {
+                        variant: TypographyVariant.BODY2,
+                        sx: { maxWidth: "30rem" },
+                      },
                     }}
                   >
                     {form.title}

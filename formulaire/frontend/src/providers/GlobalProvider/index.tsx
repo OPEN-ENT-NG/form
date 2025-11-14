@@ -26,11 +26,16 @@ export const GlobalProvider: FC<IGlobalProviderProps> = ({ children }) => {
     }));
   };
 
+  const selectAllTextInput = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.target.select();
+  };
+
   const value = useMemo<GlobalProviderContextType>(
     () => ({
       displayModals,
       toggleModal,
       isMobile,
+      selectAllTextInput,
     }),
     [displayModals, isMobile],
   );

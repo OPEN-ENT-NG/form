@@ -71,9 +71,11 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
           <DragIndicatorRoundedIcon sx={iconStyle} />
         </Box>
         <EllipsisWithTooltip
-          typographyProps={{
-            variant: TypographyVariant.BODY2,
-            sx: typographyStyle,
+          slotProps={{
+            text: {
+              variant: TypographyVariant.BODY2,
+              sx: typographyStyle,
+            },
           }}
         >
           {element.title}

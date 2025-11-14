@@ -3,8 +3,8 @@ import { FC } from "react";
 import { Button, Typography, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { PRIMARY } from "~/core/style/colors";
-import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { PRIMARY, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 
 export const FormOpenBlockedModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
@@ -13,7 +13,7 @@ export const FormOpenBlockedModal: FC<IModalProps> = ({ isOpen, handleClose }) =
   return (
     <ResponsiveDialog open={isOpen} onClose={handleClose}>
       <DialogTitle>
-        <Typography variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+        <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
           {t("formulaire.modal.open.form.blocked.title")}
         </Typography>
       </DialogTitle>

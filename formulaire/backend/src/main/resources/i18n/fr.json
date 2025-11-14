@@ -287,6 +287,7 @@
   "formulaire.question.missing.field.choice": "Attention, la question ci-dessus nécessite au moins un choix pour être valide.",
   "formulaire.question.missing.field.title": "Attention, la question ci-dessus nécessite un titre pour être valide.",
   "formulaire.question.multipleanswer.value.mandatory": "Attention, le choix ne peut pas comporter une image seule. Veuillez aussi saisir du texte.",
+  "formulaire.question.option": "Option",
   "formulaire.question.rgpd.title": "Collecte de données à caractère personnel",
   "formulaire.question.save.image.missing.field": "Attention, le choix ne peut pas comporter une image seule. Veuillez saisir du texte.",
   "formulaire.question.save.images.missing.fields": "Attention, les choix ne peuvent pas comporter une image seule. Veuillez saisir du texte.",

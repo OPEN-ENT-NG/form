@@ -59,13 +59,15 @@ export const useFormItemsIcons = () => {
       {
         icon: <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
         text: (
-          <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>{form.owner_name}</EllipsisWithTooltip>
+          <EllipsisWithTooltip slotProps={{ text: { color: TEXT_SECONDARY_COLOR } }}>
+            {form.owner_name}
+          </EllipsisWithTooltip>
         ),
       },
       {
         icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
         text: (
-          <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+          <EllipsisWithTooltip slotProps={{ text: { color: TEXT_SECONDARY_COLOR } }}>
             {formatDateWithTime(form.date_modification, "formulaire.modified")}
           </EllipsisWithTooltip>
         ),
@@ -73,7 +75,7 @@ export const useFormItemsIcons = () => {
       {
         icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
         text: (
-          <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+          <EllipsisWithTooltip slotProps={{ text: { color: TEXT_SECONDARY_COLOR } }}>
             {`${(form.nb_responses ?? 0).toString()} ${t("formulaire.responses.count")}`}
           </EllipsisWithTooltip>
         ),
@@ -86,13 +88,15 @@ export const useFormItemsIcons = () => {
       {
         icon: <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
         text: (
-          <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>{form.owner_name}</EllipsisWithTooltip>
+          <EllipsisWithTooltip slotProps={{ text: { color: TEXT_SECONDARY_COLOR } }}>
+            {form.owner_name}
+          </EllipsisWithTooltip>
         ),
       },
       {
         icon: <CalendarIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
         text: (
-          <EllipsisWithTooltip typographyProps={{ color: TEXT_SECONDARY_COLOR }}>
+          <EllipsisWithTooltip slotProps={{ text: { color: TEXT_SECONDARY_COLOR } }}>
             {formatDateWithTime(getFirstDistributionDate(distributions), "formulaire.sentAt")}
           </EllipsisWithTooltip>
         ),
@@ -105,8 +109,10 @@ export const useFormItemsIcons = () => {
         ),
         text: (
           <EllipsisWithTooltip
-            typographyProps={{
-              color: isFormFilled(form, distributions) ? SUCCESS_MAIN_COLOR : ERROR_MAIN_COLOR,
+            slotProps={{
+              text: {
+                color: isFormFilled(form, distributions) ? SUCCESS_MAIN_COLOR : ERROR_MAIN_COLOR,
+              },
             }}
           >
             {getFormStatusText(form, distributions, formatDateWithTime)}

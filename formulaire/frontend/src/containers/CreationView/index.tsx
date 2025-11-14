@@ -33,7 +33,7 @@ export const CreationView: FC = () => {
 
   const getStringFolders = (form: IForm): string[] => {
     const parentFolders = getRecursiveFolderParents(form.folder_id, folders);
-    return [...parentFolders.map((folder) => folder.name), form.title];
+    return [...parentFolders.slice(1).map((folder) => folder.name), form.title];
   };
 
   const selectView = () => {
@@ -48,7 +48,7 @@ export const CreationView: FC = () => {
         color="primary.main"
         title={""}
         description={t("formulaire.form.edit.forbidden.caption.mobile")}
-        descriptionProps={{ variant: TypographyVariant.BODY1 }}
+        slotProps={{ description: { variant: TypographyVariant.BODY1 } }}
       />
       <Button
         variant={ComponentVariant.CONTAINED}
@@ -94,5 +94,9 @@ export const CreationView: FC = () => {
     </>
   );
 
-  return <Box height="100%">{selectView()}</Box>;
+  return (
+    <Box height="100%" sx={{ backgroundColor: "var(--edifice-body-bg) !important" }}>
+      {selectView()}
+    </Box>
+  );
 };

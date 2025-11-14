@@ -3,12 +3,12 @@ import {
   Alert,
   Box,
   ClickAwayListener,
-  EllipsisWithTooltip,
   IconButton,
   Paper,
   Stack,
   Switch,
   TextField,
+  Tooltip,
   Typography,
 } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
@@ -51,7 +51,7 @@ import {
 } from "~/core/models/question/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { getQuestionContentByType } from "./utils";
-import { ERROR_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -66,6 +66,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   const {
     displayModals: { showQuestionUndo, showQuestionDelete },
     toggleModal,
+    selectAllTextInput,
   } = useGlobal();
   const [currentQuestionTitle, setCurrentQuestionTitle] = useState<string>(question.title ?? "");
   const isEditing = isCurrentEditingElement(question, currentEditingElement);
@@ -157,6 +158,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                   sx={editingQuestionTitleStyle}
                   placeholder={t("formulaire.question.title.empty")}
                   value={currentQuestionTitle}
+                  onFocus={selectAllTextInput}
                   onChange={handleTitleChange}
                 />
               </Box>
@@ -179,15 +181,21 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                 )}
 
                 <Box sx={editingQuestionIconContainerStyle}>
-                  <IconButton aria-label="duplicate" onClick={handleDuplicate}>
-                    <FileCopyRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
-                  <IconButton aria-label="delete" onClick={handleDelete}>
-                    <DeleteRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
-                  <IconButton aria-label="undo" onClick={handleUndo}>
-                    <UndoRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
+                  <Tooltip title={t("formulaire.duplicate")} placement="top" disableInteractive>
+                    <IconButton aria-label="duplicate" onClick={handleDuplicate}>
+                      <FileCopyRoundedIcon sx={editingQuestionIconStyle} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t("formulaire.delete")} placement="top" disableInteractive>
+                    <IconButton aria-label="delete" onClick={handleDelete}>
+                      <DeleteRoundedIcon sx={editingQuestionIconStyle} />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title={t("formulaire.cancel")} placement="top" disableInteractive>
+                    <IconButton aria-label="undo" onClick={handleUndo}>
+                      <UndoRoundedIcon sx={editingQuestionIconStyle} />
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               </Box>
             </StyledPaper>
@@ -223,14 +231,12 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             <DragIndicatorRoundedIcon sx={dragIconStyle} />
           </Box>
           <Box sx={questionTitleStyle}>
-            <EllipsisWithTooltip
-              typographyProps={{
-                variant: TypographyVariant.H6,
-                color: question.title ? undefined : TEXT_SECONDARY_COLOR,
-              }}
+            <Typography
+              color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}
+              variant={TypographyVariant.H6}
             >
               {question.title || t("formulaire.question.title.empty")}
-            </EllipsisWithTooltip>
+            </Typography>
             {question.mandatory && (
               <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR} sx={mandatoryTitleStyle}>
                 *

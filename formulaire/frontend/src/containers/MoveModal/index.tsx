@@ -9,9 +9,10 @@ import { IForm } from "~/core/models/form/types";
 import { buildFolderTree } from "./utils";
 import { useMoveFormsMutation } from "~/services/api/services/formulaireApi/formApi";
 import { useMoveFoldersMutation } from "~/services/api/services/formulaireApi/folderApi";
-import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { moveMainTextStyle, treeviewContainerStyle, treeviewTextStyle } from "./style";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const MoveModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -70,7 +71,7 @@ export const MoveModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
 
   return (
     <ResponsiveDialog open={isOpen} onClose={handleClose} fullWidth>
-      <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+      <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
         {t("formulaire.move.title")}
       </DialogTitle>
       <DialogContent>
@@ -81,12 +82,12 @@ export const MoveModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
             </Typography>
             <Box>
               {selectedForms.map((form: IForm) => (
-                <Typography key={form.id} variant={TypographyVariant.H6}>
+                <Typography key={form.id} color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H6}>
                   {form.title}
                 </Typography>
               ))}
               {selectedFolders.map((folder: IFolder) => (
-                <Typography key={folder.id} variant={TypographyVariant.H6}>
+                <Typography key={folder.id} color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H6}>
                   {folder.name}
                 </Typography>
               ))}
@@ -97,7 +98,7 @@ export const MoveModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
               <Typography variant={TypographyVariant.BODY1} marginRight={5} width={60}>
                 {t("formulaire.to")}
               </Typography>
-              <Typography key={targetFolder.id} variant={TypographyVariant.H6}>
+              <Typography key={targetFolder.id} color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H6}>
                 {targetFolder.name}
               </Typography>
             </Box>
