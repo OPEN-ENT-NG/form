@@ -24,13 +24,11 @@ export const dragIconStyle: SxProps<Theme> = { transform: "rotate(90deg)", color
 
 export const questionTitleStyle: SxProps<Theme> = {
   marginBottom: 3,
-  position: "relative",
+  display: "flex",
 };
 
 export const mandatoryTitleStyle: SxProps<Theme> = {
-  position: "absolute",
-  right: -10,
-  top: "0%",
+  marginLeft: "0.5rem",
 };
 
 export const StyledPaper = styled(Paper, {

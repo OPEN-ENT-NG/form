@@ -9,6 +9,8 @@ import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElem
 import { FormElementType } from "~/core/models/formElement/enum";
 import { IQuestionChoice } from "~/core/models/question/types";
 import { nextElementSelectorWrapperStyle } from "./style";
+import { useCreation } from "~/providers/CreationProvider";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 
 export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceConditionalProps> = ({
   question,
@@ -17,10 +19,12 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
   updateChoiceNextFormElement,
 }) => {
   const { t } = useTranslation(FORMULAIRE);
+  const { currentEditingElement } = useCreation();
 
   const onSaveChoiceNextElement = useCallback(
     (_: IQuestionChoice, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
-      updateChoiceNextFormElement(choiceIndex, targetElementId, targetElementType);
+      if (updateChoiceNextFormElement && choiceIndex !== undefined)
+        updateChoiceNextFormElement(choiceIndex, targetElementId, targetElementType);
     },
     [choiceIndex, updateChoiceNextFormElement],
   );
@@ -33,7 +37,7 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
   } = useTargetNextElement({ entity: choice, positionReferenceElement: question, onSave: onSaveChoiceNextElement });
 
   return (
-    <FormControl fullWidth>
+    <FormControl fullWidth sx={{ paddingLeft: "3rem" }}>
       <Select
         variant={ComponentVariant.OUTLINED}
         value={targetNextElementId != null ? String(targetNextElementId) : TARGET_RECAP}
@@ -45,6 +49,7 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
           },
         }}
         sx={nextElementSelectorWrapperStyle}
+        disabled={!isCurrentEditingElement(question, currentEditingElement)}
       >
         {followingElement && (
           <MenuItem value={followingElement.id != null ? String(followingElement.id) : ""}>

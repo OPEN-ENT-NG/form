@@ -1,6 +1,7 @@
 import { PopoverOrigin } from "@mui/material";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { CSS_PRIMARY_LIGHT_COLOR } from "~/core/style/cssColors";
+import { TypographyFontStyle } from "~/core/style/themeProps";
 
 export const menuStyle = {
   "& .MuiPaper-root": {
@@ -16,12 +17,12 @@ export const buttonStyle = {
 
 export const sortTitleStyle = {
   paddingBottom: ".5rem",
-  fontWeight: "bold",
+  fontWeight: TypographyFontStyle.BOLD,
 };
 
 export const filterTitleStyle = {
   padding: "1rem 0px .5rem .5rem",
-  fontWeight: "bold",
+  fontWeight: TypographyFontStyle.BOLD,
 };
 
 export const sortContainerStyle = {

@@ -6,11 +6,13 @@ import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const CreationQuestionShortAnswer: FC<ICreationQuestionTypesProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
   const [currentQuestionPlaceholder, setCurrentQuestionPlaceholder] = useState<string>(question.placeholder ?? "");
   const { currentEditingElement, setCurrentEditingElement } = useCreation();
+  const { selectAllTextInput } = useGlobal();
 
   const handlePlaceholderChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setCurrentQuestionPlaceholder(event.target.value);
@@ -37,6 +39,7 @@ export const CreationQuestionShortAnswer: FC<ICreationQuestionTypesProps> = ({ q
         multiline
         placeholder={t("formulaire.question.type.SHORTANSWER")}
         value={currentQuestionPlaceholder}
+        onFocus={selectAllTextInput}
         onChange={handlePlaceholderChange}
         slotProps={{
           input: {
