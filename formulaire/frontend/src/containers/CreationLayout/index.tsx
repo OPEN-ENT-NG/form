@@ -5,11 +5,12 @@ import { ICreationLayoutProps } from "./types";
 import { CreationLayoutWrapper, emptyStateWrapper } from "./style";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { ComponentVariant } from "~/core/style/themeProps";
+import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { CreationMainLayout } from "../CreationMainLayout";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
   const { form, formElementsList } = useCreation();
@@ -33,8 +34,10 @@ export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
             description={t("formulaire.form.edit.empty.caption", { buttonText: t("formulaire.add.element") })}
             color="primary.main"
             imageHeight={300}
-            titleProps={{ variant: "h4" }}
-            descriptionProps={{ variant: "body2" }}
+            slotProps={{
+              title: { color: TEXT_PRIMARY_COLOR, variant: TypographyVariant.H4 },
+              description: { variant: TypographyVariant.BODY2 },
+            }}
           />
           <Button variant={ComponentVariant.CONTAINED} onClick={handleNewFormElement}>
             {t("formulaire.add.element")}

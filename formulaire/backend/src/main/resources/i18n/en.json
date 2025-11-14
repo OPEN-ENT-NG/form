@@ -316,6 +316,7 @@
   "formulaire.question.value.step": "Valeur du pas",
   "formulaire.question.value.label": "Label de la valeur : ",
   "formulaire.question.label": "Label",
+  "formulaire.question.option": "Option",
   "formulaire.question.selected.result": "Résultat sélectionné : ",
   "formulaire.question.multipleanswer.value.mandatory": "Attention, le choix ne peut pas comporter une image seule. Veuillez aussi saisir du texte.",
 

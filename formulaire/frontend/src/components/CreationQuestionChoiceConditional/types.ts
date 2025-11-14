@@ -4,8 +4,8 @@ import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 export interface ICreationQuestionChoiceConditionalProps {
   question: IQuestion;
   choice: IQuestionChoice;
-  choiceIndex: number;
-  updateChoiceNextFormElement: (
+  choiceIndex?: number;
+  updateChoiceNextFormElement?: (
     index: number | null,
     nextFormElementId: number | undefined,
     nextFormElementType: FormElementType | undefined,

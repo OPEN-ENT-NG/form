@@ -30,11 +30,8 @@ export enum TypographyVariant {
   CAPTION = "caption",
 }
 
-export enum TypographyFont {
-  BOLD = "bold",
-}
-
 export enum TypographyFontStyle {
+  BOLD = "bold",
   ITALIC = "italic",
 }
 

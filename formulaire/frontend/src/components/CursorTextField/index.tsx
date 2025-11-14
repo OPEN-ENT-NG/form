@@ -8,6 +8,7 @@ import { useTranslation } from "react-i18next";
 import { getInputSlotProps } from "./utils";
 import { CursorProp } from "../CreationQuestionTypes/CreationQuestionCursor/enums";
 import { cursorTextFieldStyle } from "./style";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const CursorTextField: FC<ICursorTextFieldProps> = ({
   type,
@@ -18,6 +19,7 @@ export const CursorTextField: FC<ICursorTextFieldProps> = ({
   stepValue,
 }) => {
   const { t } = useTranslation(FORMULAIRE);
+  const { selectAllTextInput } = useGlobal();
   const isTypeNumber = type == CursorTextFieldType.NUMBER;
   const slotProps = getInputSlotProps(isCurrentEditingElement, isTypeNumber, inputValue, stepValue);
 
@@ -27,6 +29,7 @@ export const CursorTextField: FC<ICursorTextFieldProps> = ({
       variant={type == CursorTextFieldType.NUMBER ? ComponentVariant.OUTLINED : ComponentVariant.STANDARD}
       {...(isTypeNumber ? { size: ComponentSize.SMALL } : { placeholder: t("formulaire.question.label") })}
       slotProps={slotProps}
+      onFocus={selectAllTextInput}
       onChange={onChange}
       sx={cursorTextFieldStyle}
     />

@@ -51,12 +51,11 @@ export const upDownButtonsWrapperStyle: SxProps = {
 export const deleteWrapperStyle: SxProps = {
   display: "flex",
   alignItems: "center",
-  minWidth: 42,
 };
 
 export const deleteButtonIconStyle: SxProps = {
-  marginLeft: 1,
   minHeight: 40,
+  padding: 0,
 };
 
 export const baseChoiceWrapperStyle = {
@@ -66,6 +65,22 @@ export const baseChoiceWrapperStyle = {
   width: "100%",
   paddingLeft: "56px", //Match updown buttons width
   paddingRight: "42px", //Match delete button width
+} as const;
+
+export const choicesWrapperWhenNotEditingStyle = {
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  width: "100%",
+  paddingLeft: "60px", //Match updown buttons width (+2px idkw)
+} as const;
+
+export const customChoiceWrapperStyle = {
+  display: "flex",
+  alignItems: "flex-start",
+  justifyContent: "center",
+  width: "100%",
+  paddingLeft: "56px", //Match updown buttons width
 } as const;
 
 export const choiceInputStyle: SxProps = {
@@ -100,10 +115,9 @@ export const notEditingchoicesWrapperStyle: SxProps = {
   gap: 2,
 };
 
-export const choiceStyle: SxProps = {
+export const unselectedChoiceStyle: SxProps = {
   marginLeft: 1,
   "& .MuiInputBase-input": {
-    color: "text.disabled",
     cursor: "default",
     caretColor: "transparent",
   },

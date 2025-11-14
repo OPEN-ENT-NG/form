@@ -16,11 +16,12 @@ import { useShareBookmark } from "./hooks/useShareBookmark";
 import { buildPublicLink, userHasRight } from "./utils";
 import { COMMON, FORMULAIRE } from "~/core/constants";
 import { useShareModal } from "~/providers/ShareModalProvider";
-import { BoxComponentType, ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { BoxComponentType, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { flexStartBoxStyle } from "~/core/style/boxStyles";
 import { toast } from "react-toastify";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export type ShareOptions = {
   resourceId: ID;
@@ -167,11 +168,13 @@ export default function ShareResourceModal({
 
   return createPortal(
     <Dialog id="share_modal" maxWidth="lg" open={isOpen} onClose={onCancel}>
-      <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+      <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
         {tEdifice("share.title")}
       </DialogTitle>
       <DialogContent>
-        <Typography variant={TypographyVariant.H3}>{tEdifice("explorer.modal.share.usersWithAccess")}</Typography>
+        <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H3}>
+          {tEdifice("explorer.modal.share.usersWithAccess")}
+        </Typography>
         <Box className="table-responsive">
           {isLoading ? (
             <LoadingScreen />
@@ -274,7 +277,7 @@ export default function ShareResourceModal({
         </Box>
         <Box component={BoxComponentType.HR} />
         <Box className="mb-16 d-flex align-items-center">
-          <Typography variant={TypographyVariant.H3} className="me-8">
+          <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H3} className="me-8">
             {tEdifice("explorer.modal.share.search")}
           </Typography>
           <Tooltip
@@ -307,7 +310,7 @@ export default function ShareResourceModal({
           <Box>
             <Box component={BoxComponentType.HR} />
             <Box className="mb-16 d-flex align-items-center">
-              <Typography variant={TypographyVariant.H3} className="me-8">
+              <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H3} className="me-8">
                 {tForm("formulaire.share.link.access")}
               </Typography>
             </Box>
