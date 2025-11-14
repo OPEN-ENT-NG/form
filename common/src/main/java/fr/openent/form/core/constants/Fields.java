@@ -209,6 +209,7 @@ public class Fields {
     public static final String NB_LINES = "nb_lines";
     public static final String NEW = "new";
     public static final String NODE = "node";
+    public static final String NOT_LOGGED_IN = "notLoggedIn";
     public static final String NULL = "null";
     public static final String OK = "ok";
     public static final String PARENT = "parent";

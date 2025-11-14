@@ -2,9 +2,10 @@ import { FC } from "react";
 import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";
 import { IUndoConfirmationModalProps } from "./types";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const UndoConfirmationModal: FC<IUndoConfirmationModalProps> = ({ isOpen, handleClose, element }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -25,7 +26,7 @@ export const UndoConfirmationModal: FC<IUndoConfirmationModalProps> = ({ isOpen,
 
   return (
     <Dialog open={isOpen} onClose={handleClose} fullWidth>
-      <DialogTitle variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+      <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
         {t("formulaire.cancel")}
       </DialogTitle>
       <DialogContent>

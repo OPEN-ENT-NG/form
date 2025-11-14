@@ -14,9 +14,13 @@ import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api
 import { ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder/types";
 import { isEnterPressed } from "~/core/utils";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { useGlobal } from "~/providers/GlobalProvider";
+import { TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }) => {
   const { currentFolder, selectedFolders } = useHome();
+  const { selectAllTextInput } = useGlobal();
   const { t } = useTranslation(FORMULAIRE);
   const [newName, setNewName] = useState<string>(mode === FolderModalMode.RENAME ? selectedFolders[0]?.name : "");
   const [createFolder] = useCreateFolderMutation();
@@ -78,7 +82,7 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
       }}
     >
       <DialogTitle>
-        <Typography variant="h2" fontWeight="bold">
+        <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
           {t(currentConfig.i18nTitle)}
         </Typography>
       </DialogTitle>
@@ -89,6 +93,7 @@ export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }
           variant="standard"
           sx={folderModalTextFieldStyle}
           value={newName}
+          onFocus={selectAllTextInput}
           onChange={(e) => {
             setNewName(e.target.value);
           }}
