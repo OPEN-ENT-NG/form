@@ -12,8 +12,8 @@ import {
   useMoveFormsMutation,
   useUpdateFormMutation,
 } from "~/services/api/services/formulaireApi/formApi";
-import { PRIMARY } from "~/core/style/colors";
-import { ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
+import { PRIMARY, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { IForm, IFormPayload } from "~/core/models/form/types";
 import { toast } from "react-toastify";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
@@ -93,7 +93,7 @@ export const DeleteModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       }}
     >
       <DialogTitle>
-        <Typography variant={TypographyVariant.H2} fontWeight={TypographyFont.BOLD}>
+        <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
           {t(getTitle(selectedForms, selectedFolders))}
         </Typography>
       </DialogTitle>

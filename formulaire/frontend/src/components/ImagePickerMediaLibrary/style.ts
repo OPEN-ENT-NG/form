@@ -1,6 +1,7 @@
 import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
 import { blockProps } from "~/core/utils";
 import { IContainerProps } from "./types";
+import { CSS_COMMON_WHITE_COLOR } from "~/core/style/cssColors";
 
 export const StyledContainer = styled(Box, {
   shouldForwardProp: blockProps("isMobile"),
@@ -56,10 +57,10 @@ export const infoTextStyle: SxProps<Theme> = {
 
 export const actionsContainerStyle: SxProps<Theme> = {
   position: "absolute",
-  top: "0.5rem",
-  right: "0.5rem",
+  top: "0.8rem",
+  right: "0.8rem",
   display: "flex",
-  gap: "0.3rem",
+  gap: "0.5rem",
 };
 
 export const actionButtonStyle: SxProps<Theme> = {
@@ -72,10 +73,13 @@ export const actionButtonStyle: SxProps<Theme> = {
   width: "2rem",
   height: "2rem",
   cursor: "pointer",
+  "& .MuiSvgIcon-root": {
+    fontSize: "1.5rem",
+  },
   "&:hover": {
     backgroundColor: "grey.darker",
     "& .MuiSvgIcon-root": {
-      fill: "common.white",
+      fill: CSS_COMMON_WHITE_COLOR,
     },
   },
 };

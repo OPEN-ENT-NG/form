@@ -12,7 +12,7 @@ import { iconStyle } from "~/components/UpDownButtons/style";
 import {
   baseChoiceWrapperStyle,
   choiceInputStyle,
-  choiceStyle,
+  unselectedChoiceStyle,
   choicesWrapperStyle,
   choiceWrapperStyle,
   deleteButtonIconStyle,
@@ -30,9 +30,11 @@ import { ICreationMatrixChildrenWrapperProps } from "./types";
 import { IQuestion } from "~/core/models/question/types";
 import { useMatrixChildrenActions } from "./useMatrixChildrenActions";
 import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperProps> = ({ question }) => {
   const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
+  const { selectAllTextInput } = useGlobal();
   const { t } = useTranslation(FORMULAIRE);
   const [newChildTitle, setNewChildrenTitle] = useState<string>("");
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
@@ -115,6 +117,7 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
                       value={child.title}
                       variant={ComponentVariant.STANDARD}
                       fullWidth
+                      onFocus={selectAllTextInput}
                       onChange={(e) => {
                         updateChild(index, e.target.value);
                       }}
@@ -144,8 +147,9 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
                     inputRef={(el: HTMLInputElement | null) => (inputRefs.current[question.children?.length ?? 0] = el)}
                     value={newChildTitle}
                     variant={ComponentVariant.STANDARD}
-                    placeholder={t("formulaire.question.label")}
+                    placeholder={t("formulaire.question.option")}
                     fullWidth
+                    onFocus={selectAllTextInput}
                     onBlur={() => {
                       handleNewChild(newChildTitle);
                       setNewChildrenTitle("");
@@ -171,7 +175,7 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
                   variant={ComponentVariant.STANDARD}
                   fullWidth
                   slotProps={{ htmlInput: { readOnly: true } }}
-                  sx={choiceStyle}
+                  sx={unselectedChoiceStyle}
                 />
               </CreationQuestionChoice>
             </Box>

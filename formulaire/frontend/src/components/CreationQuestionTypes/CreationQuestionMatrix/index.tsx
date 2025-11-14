@@ -8,6 +8,7 @@ import { QuestionTypes } from "~/core/models/question/enum";
 import { ICreationQuestionTypesProps } from "../types";
 import { matrixStyle } from "./style";
 import { CreationMatrixChildrenWrapper } from "~/containers/CreationMatrixChildrenWrapper";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const CreationQuestionMatrix: FC<ICreationQuestionTypesProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -15,11 +16,15 @@ export const CreationQuestionMatrix: FC<ICreationQuestionTypesProps> = ({ questi
   return (
     <Box sx={matrixStyle}>
       <Box>
-        <Typography variant={TypographyVariant.H6}>{t("formulaire.matrix.columns")}</Typography>
+        <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H6}>
+          {t("formulaire.matrix.columns")}
+        </Typography>
         <CreationMatrixChildrenWrapper question={question}></CreationMatrixChildrenWrapper>
       </Box>
       <Box>
-        <Typography variant={TypographyVariant.H6}>{t("formulaire.matrix.lines")}</Typography>
+        <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H6}>
+          {t("formulaire.matrix.lines")}
+        </Typography>
         <CreationQuestionChoiceWrapper
           question={question}
           type={QuestionTypes.MATRIX}

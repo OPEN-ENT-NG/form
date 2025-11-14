@@ -19,7 +19,7 @@ import {
   StyledContainer,
 } from "./style";
 import { IImagePickerMediaLibraryProps, MediaLibraryResult } from "./types";
-import { BoxComponentType } from "~/core/style/themeProps";
+import { BoxComponentType, TypographyFontStyle } from "~/core/style/themeProps";
 import { useDropzone } from "react-dropzone";
 import {
   FORMULAIRE,
@@ -132,25 +132,25 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
               <AddPhotoAlternateIcon color="primary" sx={iconStyle} />
               {isMobile ? (
                 <Typography sx={labelTextStyle}>
-                  <Box component={BoxComponentType.SPAN} fontWeight="bold">
+                  <Box component={BoxComponentType.SPAN} fontWeight={TypographyFontStyle.BOLD}>
                     Cliquez
                   </Box>{" "}
                   pour choisir une image
                 </Typography>
               ) : isDragActive ? (
                 <Typography sx={labelTextStyle}>
-                  <Box component={BoxComponentType.SPAN} fontWeight="bold">
+                  <Box component={BoxComponentType.SPAN} fontWeight={TypographyFontStyle.BOLD}>
                     Glissez
                   </Box>{" "}
                   une image
                 </Typography>
               ) : (
                 <Typography sx={labelTextStyle}>
-                  <Box component={BoxComponentType.SPAN} fontWeight="bold">
+                  <Box component={BoxComponentType.SPAN} fontWeight={TypographyFontStyle.BOLD}>
                     Glissez-déposez
                   </Box>{" "}
                   ou{" "}
-                  <Box component={BoxComponentType.SPAN} fontWeight="bold">
+                  <Box component={BoxComponentType.SPAN} fontWeight={TypographyFontStyle.BOLD}>
                     cliquez
                   </Box>{" "}
                   pour choisir une image
@@ -163,10 +163,10 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
             <>
               <Box sx={actionsContainerStyle}>
                 <Box onClick={handleEdit} sx={actionButtonStyle}>
-                  <CreateIcon fontSize="small" />
+                  <CreateIcon />
                 </Box>
                 <Box onClick={handleDelete} sx={actionButtonStyle}>
-                  <DeleteIcon fontSize="small" />
+                  <DeleteIcon />
                 </Box>
               </Box>
               <img src={currentSrc} alt="Selected media" style={imageStyle} />
