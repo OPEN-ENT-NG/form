@@ -106,6 +106,7 @@
   "formulaire.position.selected": "Position sélectionnée",
   "formulaire.visualize.path": "Visualiser le parcours",
   "formulaire.sort": "Trier",
+  "formulaire.owner": "Propriétaire",
 
   "formulaire.delete.formulaire.unique": "Supprimer le formulaire",
   "formulaire.delete.formulaire.multiple": "Supprimer les formulaires",
