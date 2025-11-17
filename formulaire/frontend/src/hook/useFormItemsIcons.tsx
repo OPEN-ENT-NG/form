@@ -9,9 +9,9 @@ import AssignmentTurnedInIcon from "@mui/icons-material/AssignmentTurnedIn";
 import AccountBoxRoundedIcon from "@mui/icons-material/AccountBoxRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { ERROR_MAIN_COLOR, PRIMARY_MAIN_COLOR, SUCCESS_MAIN_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
-import { EllipsisWithTooltip } from "@cgi-learning-hub/ui";
+import { EllipsisWithTooltip, Tooltip } from "@cgi-learning-hub/ui";
 import { useFormatDateWithTime } from "./useFormatDateWithTime";
-import { getFormStatusText, isFormFilled } from "~/core/models/form/utils";
+import { getFormNbResponsesText, getFormStatusText, isFormFilled } from "~/core/models/form/utils";
 import { IDistribution } from "~/core/models/distribution/types";
 import { getFirstDistributionDate } from "~/core/models/distribution/utils";
 import { t } from "~/i18n";
@@ -57,7 +57,11 @@ export const useFormItemsIcons = () => {
   const getFormPropertyItems = useCallback((form: IForm) => {
     return [
       {
-        icon: <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+        icon: (
+          <Tooltip title={t("formulaire.owner")} placement="top" disableInteractive>
+            <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />
+          </Tooltip>
+        ),
         text: (
           <EllipsisWithTooltip slotProps={{ text: { color: TEXT_SECONDARY_COLOR } }}>
             {form.owner_name}
@@ -76,7 +80,7 @@ export const useFormItemsIcons = () => {
         icon: <AssignmentTurnedInIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
         text: (
           <EllipsisWithTooltip slotProps={{ text: { color: TEXT_SECONDARY_COLOR } }}>
-            {`${(form.nb_responses ?? 0).toString()} ${t("formulaire.responses.count")}`}
+            {getFormNbResponsesText(form.nb_responses ?? 0)}
           </EllipsisWithTooltip>
         ),
       },
@@ -86,7 +90,11 @@ export const useFormItemsIcons = () => {
   const getSentFormPropertyItems = useCallback((form: IForm, distributions: IDistribution[]) => {
     return [
       {
-        icon: <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />,
+        icon: (
+          <Tooltip title={t("formulaire.owner")} placement="top" disableInteractive>
+            <AccountBoxRoundedIcon sx={{ color: PRIMARY_MAIN_COLOR }} />
+          </Tooltip>
+        ),
         text: (
           <EllipsisWithTooltip slotProps={{ text: { color: TEXT_SECONDARY_COLOR } }}>
             {form.owner_name}
