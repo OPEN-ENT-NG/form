@@ -78,6 +78,11 @@ export const isFormFilled = (form: IForm, distributions: IDistribution[]): boole
   return getNbFinishedDistrib(formDistributions) > 0;
 };
 
+export const getFormNbResponsesText = (nbResponses: number) => {
+  const text = t(nbResponses > 1 ? "formulaire.responses" : "formulaire.response");
+  return `${nbResponses.toString()} ${text}`;
+};
+
 export const getFormStatusText = (
   form: IForm,
   distributions: IDistribution[],
