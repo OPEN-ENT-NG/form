@@ -3,6 +3,7 @@ import {
   Alert,
   Box,
   ClickAwayListener,
+  EllipsisWithTooltip,
   IconButton,
   Paper,
   Stack,
@@ -240,7 +241,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
               }}
             >
               {question.title || t("formulaire.question.title.empty")}
-            </Typography>
+            </EllipsisWithTooltip>
             {question.mandatory && (
               <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR} sx={mandatoryTitleStyle}>
                 *
