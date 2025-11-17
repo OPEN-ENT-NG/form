@@ -5,7 +5,15 @@ import { UseMutationResult } from "@tanstack/react-query";
 import { createPortal } from "react-dom";
 import { useTranslation } from "react-i18next";
 
-import { Avatar, Checkbox, Combobox, LoadingScreen, Tooltip, VisuallyHidden } from "@edifice.io/react";
+import {
+  Avatar,
+  Button as EdificeButton,
+  Checkbox,
+  Combobox,
+  LoadingScreen,
+  Tooltip,
+  VisuallyHidden,
+} from "@edifice.io/react";
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@cgi-learning-hub/ui";
 import { IconBookmark, IconInfoCircle, IconRafterDown } from "@edifice.io/react/icons";
 import { ShareBookmark } from "./ShareBookmark";
@@ -16,7 +24,13 @@ import { useShareBookmark } from "./hooks/useShareBookmark";
 import { buildPublicLink, userHasRight } from "./utils";
 import { COMMON, FORMULAIRE } from "~/core/constants";
 import { useShareModal } from "~/providers/ShareModalProvider";
-import { BoxComponentType, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import {
+  BoxComponentType,
+  BreakpointVariant,
+  ComponentVariant,
+  TypographyFontStyle,
+  TypographyVariant,
+} from "~/core/style/themeProps";
 import ContentCopyIcon from "@mui/icons-material/ContentCopy";
 import { flexStartBoxStyle } from "~/core/style/boxStyles";
 import { toast } from "react-toastify";
@@ -167,7 +181,7 @@ export default function ShareResourceModal({
   };
 
   return createPortal(
-    <Dialog id="share_modal" maxWidth="lg" open={isOpen} onClose={onCancel}>
+    <Dialog open={isOpen} onClose={onCancel} maxWidth={BreakpointVariant.MD} fullWidth>
       <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
         {tEdifice("share.title")}
       </DialogTitle>
@@ -229,7 +243,7 @@ export default function ShareResourceModal({
                         />
                       </Box>
                     ))}
-                  <Box component={BoxComponentType.TD}></Box>
+                  <Box component={BoxComponentType.TD} style={{ width: "80px" }}></Box>
                 </Box>
                 <ShareBookmarkLine
                   showBookmark={showBookmark}
@@ -244,7 +258,7 @@ export default function ShareResourceModal({
           )}
         </Box>
         <Box className="mt-16">
-          <Button
+          <EdificeButton
             color="tertiary"
             leftIcon={<IconBookmark />}
             rightIcon={
@@ -265,7 +279,7 @@ export default function ShareResourceModal({
             }}
           >
             {tEdifice("share.save.sharebookmark")}
-          </Button>
+          </EdificeButton>
           {showBookmarkInput && (
             <ShareBookmark
               refBookmark={refBookmark}
@@ -290,7 +304,7 @@ export default function ShareResourceModal({
           </Tooltip>
         </Box>
         <Box className="row">
-          <Box className="col-10" sx={{ input: { minWidth: "26rem", borderRadius: "1.2rem" } }}>
+          <Box className="col-12" sx={{ input: { minWidth: "26rem", borderRadius: "1.2rem" } }}>
             <Combobox
               value={searchInputValue}
               placeholder={searchPlaceholder}
