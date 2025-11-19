@@ -1,10 +1,14 @@
 import { Typography } from "@mui/material";
+import { RespondQuestionFreetext } from "~/components/RespondQuestionTypes/RespondQuestionFreetext";
+import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { t } from "~/i18n";
 
 export const getRespondQuestionContentByType = (question: IQuestion) => {
   switch (question.questionType) {
+    case QuestionTypes.FREETEXT:
+      return <RespondQuestionFreetext question={question} />;
     default:
       return (
         <Typography variant={TypographyVariant.BODY1}>
