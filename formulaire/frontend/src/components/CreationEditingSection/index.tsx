@@ -39,7 +39,7 @@ import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { ISection } from "~/core/models/section/types";
-import { ModalType } from "~/core/enums";
+import { EditorMode, ModalType } from "~/core/enums";
 import { DeleteConfirmationModal } from "~/containers/DeleteConfirmationModal";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
@@ -48,7 +48,6 @@ import { hasFormResponses } from "~/core/models/form/utils";
 import { isEnterPressed } from "~/core/utils";
 import { useCreateSectionMutation } from "~/services/api/services/formulaireApi/sectionApi";
 import { isFormElementSection } from "~/core/models/section/utils";
-import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
 
 export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);

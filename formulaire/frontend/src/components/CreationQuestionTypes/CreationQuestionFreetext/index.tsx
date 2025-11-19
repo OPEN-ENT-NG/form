@@ -4,10 +4,9 @@ import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { StyledEditorWrapper } from "./style";
-import { EditorMode } from "./enums";
 import { ClickAwayListener } from "@mui/material";
 import { EDITOR_CONTENT_HTML, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
-import { EditorVariant } from "~/core/style/themeProps";
+import { EditorMode, EditorVariant } from "~/core/enums";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);

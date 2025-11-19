@@ -83,3 +83,18 @@ export enum SizeAbreviation {
   LARGE = "lg",
   EXTRA_LARGE = "xl",
 }
+
+export enum EditorFocusPosition {
+  START = "start",
+  END = "end",
+}
+
+export enum EditorMode {
+  EDIT = "edit",
+  READ = "read",
+}
+
+export enum EditorVariant {
+  OUTLINE = "outline",
+  GHOST = "ghost",
+}
