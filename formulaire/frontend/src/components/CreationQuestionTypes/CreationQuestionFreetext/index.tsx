@@ -5,6 +5,11 @@ import { EditorVariant } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { EditorMode } from "./enums";
+import { EditorVariant } from "~/core/style/themeProps";
+import { EDITOR_CONTENT_HTML } from "~/core/constants";
+import { ClickAwayListener } from "@mui/material";
+import { EDITOR_CONTENT_HTML, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
+import { EditorMode, EditorVariant } from "~/core/enums";
 import { StyledEditorWrapper } from "./style";
 import { ICreationQuestionFreetextProps } from "./types";
 
