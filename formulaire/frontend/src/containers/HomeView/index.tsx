@@ -23,6 +23,8 @@ import { MyAnswersModal } from "../MyAnswersModal";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { WorkflowRights } from "~/core/rights";
 import { FormOpenBlockedModal } from "../FormOpenBlockedModal";
+import { homeViewStyle } from "./style";
+import { defaultViewWidth } from "~/core/constants";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -58,9 +60,9 @@ export const HomeView: FC = () => {
   };
 
   return (
-    <Box height={"100%"}>
+    <Box sx={{ ...homeViewStyle, width: isMobile ? "100%" : defaultViewWidth }}>
       {!isMobile && (
-        <Box ref={headerRef}>
+        <Box ref={headerRef} sx={{ width: "100%" }}>
           <Header stringItems={[t("formulaire.title")]} buttons={tab === HomeTabState.FORMS ? headerButtons : []} />
         </Box>
       )}
