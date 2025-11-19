@@ -15,7 +15,7 @@ import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
-import { emptyStateWrapper } from "./style";
+import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
 
 export const CreationView: FC = () => {
@@ -63,7 +63,7 @@ export const CreationView: FC = () => {
 
   const desktopView = (
     <>
-      <Box ref={headerRef}>
+      <Box ref={headerRef} sx={creationHedearStyle}>
         {form && (
           <Header
             stringItems={getStringFolders(form)}
@@ -94,9 +94,5 @@ export const CreationView: FC = () => {
     </>
   );
 
-  return (
-    <Box height="100%" sx={{ backgroundColor: "var(--edifice-body-bg) !important" }}>
-      {selectView()}
-    </Box>
-  );
+  return <Box sx={creationViewStyle}>{selectView()}</Box>;
 };

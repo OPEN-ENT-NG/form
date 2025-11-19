@@ -1,8 +1,18 @@
 export const globalOverrideStyles = {
+  body: {
+    minWidth: "inherit",
+    width: "auto",
+    backgroundColor: "var(--edifice-body-bg) !important",
+  },
+
   "main.container-fluid": {
+    width: "100%",
+    maxWidth: "none",
+    minHeight: "calc(100vh - 65px) !important",
+    margin: "0",
     padding: "0 ! important",
-    minHeight: "calc(100vh - 71px) ! important",
-    height: "calc(100vh - 71px) ! important",
+    alignItems: "center",
+    backgroundColor: "transparent !important",
   },
 
   "#media-library": {
@@ -23,7 +33,30 @@ export const globalOverrideStyles = {
     height: "3.2rem !important",
     zIndex: 1,
   },
+
   '[data-type="dnd-preview"] [role="button"]': {
     cursor: `inherit !important`,
+  },
+
+  '[data-product="neo"][data-theme="theme-demo-cgi"]': {
+    ".header": {
+      ".navbar": {
+        background: "#200a58",
+      },
+    },
+  },
+
+  ":root": {
+    "--toastify-color-light": "var(--theme-palette-common-white)",
+    "--toastify-color-dark": "var(--theme-palette-common-black)",
+    "--toastify-color-info": "var(--theme-palette-info-main)",
+    "--toastify-color-success": "var(--theme-palette-success-main)",
+    "--toastify-color-warning": "var(--theme-palette-warning-main)",
+    "--toastify-color-error": "var(--theme-palette-error-main)",
+
+    "--toastify-font-family": "helvetica",
+
+    "--toastify-text-color-light": "var(--theme-palette-text-primary)",
+    "--toastify-text-color-dark": "var(--theme-palette-common-white)",
   },
 };
