@@ -29,9 +29,12 @@ import { isEnterPressed } from "~/core/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
+import { Editor, EditorRef } from "@edifice.io/react/editor";
+import { ISection } from "~/core/models/section/types";
+import { EditorMode, ModalType } from "~/core/enums";
+import { DeleteConfirmationModal } from "~/containers/DeleteConfirmationModal";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useCreateSectionMutation } from "~/services/api/services/formulaireApi/sectionApi";
-import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
 import {
   editingSectionTitleStyle,
   sectionButtonIconStyle,
