@@ -24,7 +24,7 @@ import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { WorkflowRights } from "~/core/rights";
 import { FormOpenBlockedModal } from "../FormOpenBlockedModal";
 import { homeViewStyle } from "./style";
-import { defaultViewBackgroundColor, defaultViewWidth } from "~/core/constants";
+import { defaultViewWidth } from "~/core/constants";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
