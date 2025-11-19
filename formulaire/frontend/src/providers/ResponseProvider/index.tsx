@@ -72,8 +72,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     if (formElementsList.length <= 0) return;
     const firstElement = formElementsList[0];
     if (!firstElement.id) return;
-    updateProgress(firstElement, [firstElement.id]);
     setLongestPathsMap(getLongestPathsMap(formElementsList));
+    updateProgress(firstElement, [firstElement.id]);
   }, [formElementsList]);
 
   const saveResponse = async () => {
