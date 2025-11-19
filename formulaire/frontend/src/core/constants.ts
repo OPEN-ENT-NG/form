@@ -13,6 +13,9 @@ export const TOAST_CONFIG = {
   theme: "light" as Theme,
 };
 
+export const defaultViewWidth = "1352px";
+export const defaultViewBackgroundColor = "white";
+
 //IMAGE PICKER
 export const IMAGE_PICKER_INFO = "SVG, PNG, JPG, GIF";
 
