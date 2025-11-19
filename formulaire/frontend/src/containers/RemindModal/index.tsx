@@ -37,9 +37,9 @@ import { transformDistributionsToTableData } from "~/core/models/distribution/ut
 import { PRIMARY_MAIN_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { useSendReminderMutation } from "~/services/api/services/formulaireApi/formApi";
 import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
-import { EditorMode } from "~/components/CreationQuestionTypes/CreationQuestionFreetext/enums";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { EditorMode } from "~/core/enums";
 
 export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
