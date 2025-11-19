@@ -30,7 +30,7 @@ export const getNextPositionIfValid = (
     }
   }
 
-  if (conditionalQuestion && response && !response.choiceId) return undefined;
+  if (conditionalQuestion && (!response || !response.choiceId)) return undefined;
 
   if (conditionalQuestion && response) {
     const choices = conditionalQuestion.choices?.filter((c) => c.id === response.choiceId);

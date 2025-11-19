@@ -9,6 +9,9 @@ import { IFormElement } from "~/core/models/formElement/types";
 import { ProgressBar } from "~/components/ProgressBar";
 import { getNextPositionIfValid } from "./utils";
 import { toast } from "react-toastify";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
+import { RespondSectionWrapper } from "../RespondSectionWrapper";
 
 export const ResponseLayout: FC = () => {
   const { form, formElementsList, progress, updateProgress, saveResponse, responsesMap } = useResponse();
@@ -42,19 +45,36 @@ export const ResponseLayout: FC = () => {
   };
 
   const goNextElement = async () => {
-    //TODO gérer comme en angular (selon conditional etc.)
     if (!currentElement.position) return;
     const nextPosition = getNextPositionIfValid(currentElement, responsesMap, formElementsList);
-    if (nextPosition === undefined) {
+
+    // An error occured
+    if (nextPosition === undefined || (nextPosition && nextPosition >= formElementsList.length)) {
       toast.error(t("formulaire.response.next.invalid"));
+      return;
     }
+
+    // It's the end of the form
+    if (nextPosition === null) {
+      await saveResponse();
+      //TODO go recap (or preview endpage in case Preview)
+      return;
+    }
+
+    // We got an element for the next position
+    //TODO check if we need that later : unloadLastResponses();
+    await saveResponse();
 
     const nextElement = formElementsList.find((fe) => fe.position === nextPosition);
     if (!nextElement || !nextElement.id) return;
 
-    await saveResponse();
-    setCurrentElement(nextElement);
     updateProgress(nextElement, progress.historicFormElementIds.concat([nextElement.id]));
+    setCurrentElement(nextElement);
+  };
+
+  const getFormElementContent = () => {
+    if (isQuestion(currentElement)) return <RespondQuestionWrapper question={currentElement} />;
+    if (isSection(currentElement)) return <RespondSectionWrapper section={currentElement} />;
   };
 
   return (
@@ -67,7 +87,7 @@ export const ResponseLayout: FC = () => {
           ></ProgressBar>
         </Box>
       )}
-      <Box>{currentElement.title} //TODO response card component here</Box>
+      {getFormElementContent()}
       <StyledButtonsWrapper isFirstElement={isFirstElement} isLastElement={isLastElement}>
         {!isFirstElement && (
           <Button
@@ -79,16 +99,14 @@ export const ResponseLayout: FC = () => {
             {t("formulaire.prev")}
           </Button>
         )}
-        {!isLastElement && (
-          <Button
-            variant={ComponentVariant.CONTAINED}
-            onClick={() => {
-              void goNextElement();
-            }}
-          >
-            {t("formulaire.next")}
-          </Button>
-        )}
+        <Button
+          variant={ComponentVariant.CONTAINED}
+          onClick={() => {
+            void goNextElement();
+          }}
+        >
+          {t("formulaire.next")}
+        </Button>
       </StyledButtonsWrapper>
     </Box>
   );
