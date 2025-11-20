@@ -12,10 +12,10 @@ import { useFormElementList } from "../CreationProvider/hook/useFormElementsList
 import { useGlobal } from "../GlobalProvider";
 import { usePreviewResponse } from "./hook/usePreviewResponse";
 import { useClassicResponse } from "./hook/useClassicResponse";
-import { buildProgressObject, getLongestPathsMap, getStringifiedFormElementIdType } from "./utils";
-import { IQuestion } from "~/core/models/question/types";
-import { IResponse } from "~/core/models/response/type";
+import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { ResponsePageType } from "~/core/enums";
+import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
+import { IResponse } from "~/core/models/response/type";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -32,8 +32,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const { user } = useEdificeClient();
   const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
-  const { saveClassicResponse } = useClassicResponse();
-  const { savePreviewResponse } = usePreviewResponse();
+  const [responsesMap, setResponsesMap] = useState<Map<string, Map<number, IResponse[]>>>(new Map());
+  const { saveClassicResponses } = useClassicResponse();
+  const { initResponsesMap } = usePreviewResponse(setResponsesMap);
   const [form, setForm] = useState<IForm | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
   const [isInPreviewMode, setIsInPreviewMode] = useState<boolean>(previewMode);
@@ -42,7 +43,6 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     historicFormElementIds: [],
     longuestRemainingPath: 0,
   });
-  const [responsesMap, setResponsesMap] = useState<Map<IQuestion, IResponse[]>>(new Map());
   const [pageType, setPageType] = useState<ResponsePageType | undefined>(initialPageType);
 
   if (formId === undefined) {
@@ -88,12 +88,13 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     updateProgress(firstElement, [firstElement.id]);
   }, [formElementsList]);
 
-  const saveResponse = async () => {
-    if (isInPreviewMode) {
-      savePreviewResponse();
-      return;
-    }
-    await saveClassicResponse();
+  useEffect(() => {
+    initResponsesMap(formElementsList);
+  }, [formElementsList]);
+
+  const saveResponses = async () => {
+    if (isInPreviewMode) return;
+    await saveClassicResponses();
   };
 
   const updateProgress = (element: IFormElement, newHistoricFormElementIds: number[]) => {
@@ -118,7 +119,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       longestPathsMap,
       pageType,
       setPageType,
-      saveResponse,
+      saveResponses,
       responsesMap,
       setResponsesMap,
     }),
@@ -131,7 +132,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       longestPathsMap,
       pageType,
       setPageType,
-      saveResponse,
+      saveResponses,
       responsesMap,
       setResponsesMap,
     ],
