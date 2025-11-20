@@ -84,6 +84,15 @@ export enum SizeAbreviation {
   EXTRA_LARGE = "xl",
 }
 
+export enum ResponsePageType {
+  RGPD = "RGPD",
+  DESCRIPTION = "DESCRIPTION",
+  FORM_ELEMENT = "FORM_ELEMENT",
+  RECAP = "RECAP",
+}
+
+// Edifice text Editor
+
 export enum EditorFocusPosition {
   START = "start",
   END = "end",

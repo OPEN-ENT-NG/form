@@ -15,5 +15,6 @@ export interface IRGPDI18nParams {
 
 export interface IRGPDInfoBoxProps {
   params: IRGPDI18nParams;
+  hideBorder: boolean;
   sx?: SxProps<Theme>;
 }
