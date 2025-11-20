@@ -1,19 +1,19 @@
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack } from "@cgi-learning-hub/ui";
+import { DndContext, DragOverlay, rectIntersection } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { FC, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Stack } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
+import { OrganizationSortableItem } from "~/components/OrganizationSortableItem";
+import { OrganizationSortableItemPreview } from "~/components/OrganizationSortableItemPreview";
 import { DRAG_HORIZONTAL_TRESHOLD, FORMULAIRE } from "~/core/constants";
+import { flattenFormElements } from "~/core/models/formElement/utils";
 import { BreakpointVariant, ComponentVariant } from "~/core/style/themeProps";
 import { IModalProps } from "~/core/types";
-import { useCreation } from "~/providers/CreationProvider";
-import { OrganizationSortableItem } from "~/components/OrganizationSortableItem";
-import { contentStackStyle } from "./style";
-import { rectIntersection, DndContext, DragOverlay } from "@dnd-kit/core";
-import { verticalListSortingStrategy, SortableContext } from "@dnd-kit/sortable";
-import { formElementsListToFlattenedItemList } from "./utils";
-import { IFlattenedItem } from "./types";
 import { useOrganizationModalDnd } from "~/hook/dnd-hooks/useOrganizationModalDnd";
-import { OrganizationSortableItemPreview } from "~/components/OrganizationSortableItemPreview";
-import { flattenFormElements } from "~/core/models/formElement/utils";
+import { useCreation } from "~/providers/CreationProvider";
+import { contentStackStyle } from "./style";
+import { IFlattenedItem } from "./types";
+import { formElementsListToFlattenedItemList } from "./utils";
 
 export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -22,6 +22,7 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
   const [flattenedFormElementsList, setFlattenedFormElementsList] = useState<IFlattenedItem[]>(() =>
     formElementsListToFlattenedItemList(formElementsList),
   );
+
   const sortedIds = useMemo(() => flattenedFormElementsList.map(({ id }) => id), [flattenedFormElementsList]);
 
   useEffect(() => {

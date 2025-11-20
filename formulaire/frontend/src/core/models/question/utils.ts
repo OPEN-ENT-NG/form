@@ -1,7 +1,10 @@
 import { DEFAULT_CURSOR_STEP } from "~/core/constants";
+import { getElementById } from "~/providers/CreationProvider/utils";
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
 import { createNewFormElement } from "../formElement/utils";
+import { ISection } from "../section/types";
+import { isFormElementSection } from "../section/utils";
 import { ChoiceTypes, QuestionTypes } from "./enum";
 import {
   IQuestion,
@@ -12,12 +15,21 @@ import {
   IQuestionSpecificFields,
   IQuestionSpecificFieldsPayload,
 } from "./types";
-import { getElementById } from "~/providers/CreationProvider/utils";
-import { ISection } from "../section/types";
-import { isFormElementSection } from "../section/utils";
 
 export const isFormElementQuestion = (formElement: IFormElement): boolean => {
   return formElement.formElementType === FormElementType.QUESTION;
+};
+
+export const isFormElementQuestionRoot = (formElement: IFormElement): boolean => {
+  if (!isFormElementQuestion(formElement)) return false;
+  const question = formElement as IQuestion;
+  return !!question.position && !question.sectionId && !question.sectionPosition;
+};
+
+export const isFormElementQuestionSection = (formElement: IFormElement): boolean => {
+  if (!isFormElementQuestion(formElement)) return false;
+  const question = formElement as IQuestion;
+  return !question.position && !!question.sectionId && !!question.sectionPosition;
 };
 
 export const isQuestionChoice = (item: object): item is IQuestionChoice => {
