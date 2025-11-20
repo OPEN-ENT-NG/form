@@ -1,0 +1,248 @@
+import { DragOverEvent, DragStartEvent } from "@dnd-kit/core";
+import { IFormElement } from "~/core/models/formElement/types";
+import { IQuestion } from "~/core/models/question/types";
+import { isFormElementQuestionRoot, isFormElementQuestionSection } from "~/core/models/question/utils";
+import { ISection } from "~/core/models/section/types";
+import { isFormElementSection } from "~/core/models/section/utils";
+import { DndElementType } from "./enum";
+
+export const isString = (value: unknown): value is string => {
+  return typeof value === "string";
+};
+
+export const getOverDndElementType = (over: DragOverEvent["over"]): DndElementType | null => {
+  if (!isString(over?.data.current?.dndElementType)) return null;
+  return over.data.current.dndElementType as DndElementType;
+};
+
+export const getDndElementType = (element: IFormElement): DndElementType => {
+  if (isFormElementQuestionSection(element)) return DndElementType.QUESTION_SECTION;
+  if (isFormElementQuestionRoot(element)) return DndElementType.QUESTION_ROOT;
+  return DndElementType.SECTION;
+};
+
+export const getElementById = (formElementsList: IFormElement[], elementId: number | null): IFormElement | null => {
+  if (elementId === null) return null;
+  const element = formElementsList
+    .flatMap((item) => {
+      if (isFormElementSection(item)) {
+        return [item, ...(item as ISection).questions];
+      }
+      return item;
+    })
+    .find((item) => item.id === elementId);
+  if (!element) return null;
+  return element;
+};
+
+export const getSectionById = (formElementsList: IFormElement[], sectionId: number | null): ISection | null => {
+  if (!sectionId) return null;
+  const section = formElementsList.find((e) => isFormElementSection(e) && e.id === sectionId);
+  if (!section) return null;
+  return section as ISection;
+};
+
+export const getQuestionRootById = (formElementsList: IFormElement[], questionId: number): IQuestion | null => {
+  const question = formElementsList.find((e) => isFormElementQuestionRoot(e) && e.id === questionId);
+  if (!question) return null;
+  return question as IQuestion;
+};
+
+export const getQuestionSectionById = (formElementsList: IFormElement[], questionId: number): IQuestion | null => {
+  for (const element of formElementsList) {
+    if (isFormElementSection(element)) {
+      const section = element as ISection;
+      const question = section.questions.find((q) => q.id === questionId);
+      if (question) return question;
+    }
+  }
+  return null;
+};
+
+export const getElementId = (dndObject: DragOverEvent["over"] | DragStartEvent["active"]): number | null => {
+  const dndElementType = dndObject?.data.current?.dndElementType as string;
+  if (!dndElementType) return null;
+
+  const rawId = dndObject?.id;
+
+  if (isString(rawId)) {
+    const prefix = `${dndElementType}-`;
+
+    if (rawId.startsWith(prefix)) {
+      const numericPart = rawId.replace(prefix, "");
+      const parsed = Number(numericPart);
+      return isNaN(parsed) ? null : parsed;
+    }
+  }
+  return null;
+};
+
+export const isActiveOverItSelf = (activeId: number | null, over: DragOverEvent["over"]): boolean => {
+  if (!over?.id || !activeId) return true;
+  return activeId === over.id;
+};
+
+export const isActiveSection = (active: IFormElement): active is ISection => {
+  return isFormElementSection(active);
+};
+
+export const isActiveQuestionRoot = (active: IFormElement): active is IQuestion => {
+  return isFormElementQuestionRoot(active);
+};
+
+export const isActiveQuestionSection = (active: IFormElement): active is IQuestion => {
+  return isFormElementQuestionSection(active);
+};
+
+export const isOverSectionTop = (overDndElementType: DndElementType | null) => {
+  return overDndElementType === DndElementType.SECTION_TOP;
+};
+
+export const isOverSectionBottom = (overDndElementType: DndElementType | null): boolean => {
+  return overDndElementType === DndElementType.SECTION_BOTTOM;
+};
+
+export const isOverQuestionSection = (
+  overDndElementType: DndElementType | null,
+  over: IFormElement,
+): over is IQuestion => {
+  return overDndElementType === DndElementType.QUESTION_SECTION;
+};
+
+export const isOverSection = (overDndElementType: DndElementType | null, over: IFormElement): over is ISection => {
+  return overDndElementType === DndElementType.SECTION;
+};
+
+export const isOverQuestionRoot = (
+  overDndElementType: DndElementType | null,
+  over: IFormElement,
+): over is IQuestion => {
+  return overDndElementType === DndElementType.QUESTION_ROOT;
+};
+
+export const getOverSection = (
+  overElement: IFormElement,
+  overDndElementType: DndElementType | null,
+  formElementsList: IFormElement[],
+): ISection => {
+  return isOverQuestionSection(overDndElementType, overElement)
+    ? (getElementById(formElementsList, overElement.sectionId) as ISection)
+    : (overElement as ISection);
+};
+
+export const getTargetQuestionPositionInSection = (
+  section: ISection,
+  overElement: IFormElement,
+  overDndElementType: DndElementType | null,
+): number => {
+  if (isOverQuestionSection(overDndElementType, overElement)) return overElement.sectionPosition!;
+  if (isOverSectionTop(overDndElementType)) return 1;
+  if (isOverSectionBottom(overDndElementType)) return section.questions.length + 1;
+  return 1;
+};
+
+export const getTargetRootPosition = (
+  activeSection: ISection,
+  overElement: IFormElement,
+  overDndElementType: DndElementType,
+): number | null => {
+  if (isOverQuestionRoot(overDndElementType, overElement)) return overElement.position ?? null;
+
+  if (isOverSectionTop(overDndElementType)) return activeSection.position ?? null;
+
+  if (isOverSectionBottom(overDndElementType)) return activeSection.position ? activeSection.position + 1 : null;
+
+  return null;
+};
+
+export const removeRootElement = (elements: IFormElement[], elementToRemove: IFormElement): IFormElement[] => {
+  const elementsBefore = elements.filter((e) => e.position! < elementToRemove.position!);
+  const elementsAfter = elements.filter((e) => e.position! > elementToRemove.position!);
+  const elementsAfterWithNewPos = elementsAfter.map((e) => ({
+    ...e,
+    position: (e.position ?? 0) - 1,
+  }));
+  return [...elementsBefore, ...elementsAfterWithNewPos];
+};
+
+export const addRootElement = (
+  elements: IFormElement[],
+  elementToAdd: IFormElement,
+  targetElement: IFormElement,
+  after: boolean,
+): IFormElement[] => {
+  const targetElementPos = targetElement.position;
+  if (!targetElementPos) return elements;
+  const targetElementToAddPos = after ? targetElementPos + 1 : targetElementPos;
+  const elementsBefore = elements.filter((e) => e.position! < targetElementToAddPos);
+  const elementsAfter = elements.filter((e) => e.position! >= targetElementToAddPos);
+  const elementsAfterWithNewPos = elementsAfter.map((e) => ({
+    ...e,
+    position: (e.position ?? 0) + 1,
+  }));
+  const newElementToAdd = {
+    ...elementToAdd,
+    position: targetElementToAddPos,
+    sectionId: null,
+    sectionPosition: null,
+  };
+  return [...elementsBefore, newElementToAdd, ...elementsAfterWithNewPos];
+};
+
+export const removeQuestionSection = (elements: IFormElement[], questionToRemove: IQuestion): IFormElement[] => {
+  const section = elements.find((e) => e.id === questionToRemove.sectionId) as ISection | undefined;
+  if (!section) return elements;
+  const questionsBefore = section.questions.filter(
+    (q) => q.id !== questionToRemove.id && q.sectionPosition && q.sectionPosition < questionToRemove.sectionPosition!,
+  );
+  const questionsAfter = section.questions.filter(
+    (q) => q.id !== questionToRemove.id && q.sectionPosition && q.sectionPosition > questionToRemove.sectionPosition!,
+  );
+  const questionsAfterWithNewPos = questionsAfter.map((q) => ({
+    ...q,
+    sectionPosition: (q.sectionPosition ?? 0) - 1,
+  }));
+  const newSection = {
+    ...section,
+    questions: [...questionsBefore, ...questionsAfterWithNewPos],
+  };
+
+  return elements.map((e) => {
+    if (e.id === newSection.id) return newSection;
+    return e;
+  });
+};
+
+export const addQuestionSection = (
+  elements: IFormElement[],
+  questionToAdd: IQuestion,
+  targetSectionPos: number,
+  targetSection: ISection,
+  after: boolean,
+): IFormElement[] => {
+  const targetQuestionToAddPos = after ? targetSectionPos + 1 : targetSectionPos;
+  const questionsBefore = targetSection.questions.filter(
+    (q) => q.sectionPosition && q.sectionPosition < targetQuestionToAddPos,
+  );
+  const questionsAfter = targetSection.questions.filter(
+    (q) => q.sectionPosition && q.sectionPosition >= targetQuestionToAddPos,
+  );
+  const questionsAfterWithNewPos = questionsAfter.map((q) => ({
+    ...q,
+    sectionPosition: (q.sectionPosition ?? 0) + 1,
+  }));
+  const newQuestionToAdd = {
+    ...questionToAdd,
+    sectionPosition: targetQuestionToAddPos,
+    position: null,
+    sectionId: targetSection.id,
+  };
+  const newSection = {
+    ...targetSection,
+    questions: [...questionsBefore, newQuestionToAdd, ...questionsAfterWithNewPos],
+  };
+  return elements.map((e) => {
+    if (e.id === newSection.id) return newSection;
+    return e;
+  });
+};
