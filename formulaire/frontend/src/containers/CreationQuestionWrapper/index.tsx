@@ -1,4 +1,3 @@
-import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Box,
@@ -11,15 +10,32 @@ import {
   Tooltip,
   Typography,
 } from "@cgi-learning-hub/ui";
-import { useTranslation } from "react-i18next";
-import { FORMULAIRE, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
-import { ICreationQuestionWrapperProps } from "./types";
-import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
+import { useSortable } from "@dnd-kit/sortable";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
-import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
-import { useCreation } from "~/providers/CreationProvider";
-import { isValidFormElement } from "~/core/models/formElement/utils";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
+import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
+import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
+import { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { getTransformStyle } from "~/components/CreationSortableItem/utils";
+import { FORMULAIRE, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
+import { ModalType } from "~/core/enums";
+import { isValidFormElement } from "~/core/models/formElement/utils";
+import { QuestionTypes } from "~/core/models/question/enum";
+import { IQuestion } from "~/core/models/question/types";
+import {
+  isCursorChoiceConsistent,
+  shouldShowConditionalSwitch,
+  shouldShowMandatorySwitch,
+} from "~/core/models/question/utils";
+import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { useCreation } from "~/providers/CreationProvider";
+import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
+import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
+import { UndoConfirmationModal } from "../UndoConfirmationModal";
 import {
   conditionalSwitchContainerStyle,
   dragIconContainerStyle,
@@ -36,22 +52,8 @@ import {
   questionTitleStyle,
   StyledPaper,
 } from "./style";
-import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
-import { IQuestion } from "~/core/models/question/types";
-import { useGlobal } from "~/providers/GlobalProvider";
-import { ModalType } from "~/core/enums";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
-import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
-import { UndoConfirmationModal } from "../UndoConfirmationModal";
-import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
-import {
-  isCursorChoiceConsistent,
-  shouldShowConditionalSwitch,
-  shouldShowMandatorySwitch,
-} from "~/core/models/question/utils";
-import { QuestionTypes } from "~/core/models/question/enum";
+import { ICreationQuestionWrapperProps } from "./types";
 import { getQuestionContentByType } from "./utils";
-import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -71,6 +73,12 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   const [currentQuestionTitle, setCurrentQuestionTitle] = useState<string>(question.title ?? "");
   const isEditing = isCurrentEditingElement(question, currentEditingElement);
   const inputRef = useRef<HTMLInputElement>(null);
+  const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
+    id: question.id ?? 0,
+    data: { element: question },
+  });
+
+  const style = useMemo(() => getTransformStyle(transform, transition), [transform, transition]);
 
   useEffect(() => {
     if (!isEditing) setCurrentQuestionTitle(question.title ?? "");
@@ -136,7 +144,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   };
 
   return (
-    <Box>
+    <Box style={style} ref={setNodeRef}>
       {isEditing ? (
         <ClickAwayListener
           mouseEvent={MOUSE_EVENT_DOWN}
@@ -227,7 +235,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             setCurrentEditingElement(question);
           }}
         >
-          <Box sx={dragIconContainerStyle}>
+          <Box sx={dragIconContainerStyle} {...attributes} {...listeners}>
             <DragIndicatorRoundedIcon sx={dragIconStyle} />
           </Box>
           <Box sx={questionTitleStyle}>
