@@ -248,6 +248,7 @@ public class FormulaireRepositoryEvents extends SqlRepositoryEvents {
 
         // For each table we'll store in 'tableContents' a map of the name of the table with the table content of the file
         Map<String, JsonObject> tableContents = new HashMap();
+        Map<String, String> documentIdsMapping = new HashMap();
 
         importExportService.getTableContent(importPath, schema, FORM, tableContents)
             .compose(forms -> importExportService.getTableContent(importPath, schema, SECTION, tableContents))
@@ -285,9 +286,11 @@ public class FormulaireRepositoryEvents extends SqlRepositoryEvents {
             .compose(documentsIdMapping -> {
                 JsonObject questionChoices = tableContents.get(QUESTION_CHOICE);
                 updateImageIds(questionChoices.getJsonArray(FIELDS).getList(), questionChoices.getJsonArray(RESULTS), documentsIdMapping);
+                documentIdsMapping.putAll(documentsIdMapping);
                 return importExportService.importQuestionChoices(questionChoices, tableMappingIds.get(QUESTION), tableMappingIds.get(SECTION));
             })
-            .compose(newQuestionChoices -> importExportService.createFolderLinks(tableMappingIds.get(FORM), userId))
+            .compose( newQuestionChoices -> importExportService.updateImportPicture(tableContents.get(FORM), documentIdsMapping))
+            .compose(updatePicture -> importExportService.createFolderLinks(tableMappingIds.get(FORM), userId))
             .onSuccess(result -> {
                 int nbFormsImported = tableMappingIds.get(FORM).size();
                 JsonObject finalResultInfos = new JsonObject().put(STATUS, OK)
