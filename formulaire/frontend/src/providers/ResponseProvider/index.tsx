@@ -15,6 +15,7 @@ import { useClassicResponse } from "./hook/useClassicResponse";
 import { buildProgressObject, getLongestPathsMap, getStringifiedFormElementIdType } from "./utils";
 import { IQuestion } from "~/core/models/question/types";
 import { IResponse } from "~/core/models/response/type";
+import { ResponsePageType } from "~/core/enums";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -26,7 +27,7 @@ export const useResponse = () => {
   return context;
 };
 
-export const ResponseProvider: FC<IResponseProviderProps> = ({ children, previewMode }) => {
+export const ResponseProvider: FC<IResponseProviderProps> = ({ children, previewMode, initialPageType }) => {
   const { formId } = useParams();
   const { user } = useEdificeClient();
   const { initUserWorfklowRights } = useGlobal();
@@ -42,6 +43,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     longuestRemainingPath: 0,
   });
   const [responsesMap, setResponsesMap] = useState<Map<IQuestion, IResponse[]>>(new Map());
+  const [pageType, setPageType] = useState<ResponsePageType | undefined>(initialPageType);
+
   if (formId === undefined) {
     throw new Error("formId is undefined");
   }
@@ -58,9 +61,18 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   useEffect(() => {
     if (formDatas) {
       setForm(formDatas);
-      return;
+      if (!initialPageType) {
+        if (formDatas.rgpd) {
+          setPageType(ResponsePageType.RGPD);
+          return;
+        }
+        if (formDatas.description) {
+          setPageType(ResponsePageType.DESCRIPTION);
+          return;
+        }
+        setPageType(ResponsePageType.FORM_ELEMENT);
+      }
     }
-    return;
   }, [formDatas]);
 
   useEffect(() => {
@@ -104,6 +116,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       progress,
       updateProgress,
       longestPathsMap,
+      pageType,
+      setPageType,
       saveResponse,
       responsesMap,
       setResponsesMap,
@@ -115,6 +129,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       progress,
       updateProgress,
       longestPathsMap,
+      pageType,
+      setPageType,
       saveResponse,
       responsesMap,
       setResponsesMap,
