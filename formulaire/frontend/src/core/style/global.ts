@@ -3,6 +3,7 @@ export const globalOverrideStyles = {
     minWidth: "inherit",
     width: "auto",
     backgroundColor: "var(--edifice-body-bg) !important",
+    paddingBottom: "5rem",
   },
 
   "main.container-fluid": {
