@@ -1,6 +1,6 @@
 import { SxProps, Theme } from "@cgi-learning-hub/ui";
 
-export const questionStackStyle: SxProps<Theme> = {
+export const sectionStackStyle: SxProps<Theme> = {
   width: "100%",
   display: "flex",
   flexDirection: "column",

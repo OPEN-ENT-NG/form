@@ -9,15 +9,51 @@ import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { FORMULAIRE } from "~/core/constants";
 import { emptyStateWrapper } from "~/core/style/boxStyles";
+import { ResponsePageType } from "~/core/enums";
+import { RgpdLayout } from "../RgpdLayout";
 
 export const ResponseView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
-  const { form, formElementsList, isInPreviewMode } = useResponse();
+  const { form, formElementsList, isInPreviewMode, pageType } = useResponse();
   const headerButtons = useGetCreationHeaderButtons(form?.id, isInPreviewMode);
+
+  const errorPage = (
+    <Box sx={emptyStateWrapper}>
+      <EmptyState
+        image={<EmptyForm />}
+        title={t("formulaire.form.edit.empty.main")}
+        description={t("formulaire.form.edit.empty.caption", { buttonText: t("formulaire.add.element") })}
+        color="primary.main"
+        imageHeight={300}
+        slotProps={{ title: { variant: "h4" }, description: { variant: "body2" } }}
+      />
+      <Button variant={ComponentVariant.CONTAINED} onClick={headerButtons[0].action}>
+        {headerButtons[0].title}
+      </Button>
+    </Box>
+  );
+
+  const displayRightPage = () => {
+    if (!form || formElementsList.length <= 0) return errorPage;
+    switch (pageType) {
+      case ResponsePageType.RGPD:
+        return <RgpdLayout />;
+      case ResponsePageType.DESCRIPTION:
+        console.log("try displaying description page !");
+        return <></>;
+      case ResponsePageType.FORM_ELEMENT:
+        return <ResponseLayout />;
+      case ResponsePageType.RECAP:
+        console.log("try displaying recap page !");
+        return <></>;
+      default:
+        return errorPage;
+    }
+  };
 
   //TODO update l'empty state (texts, image, buttons...) when the design will be ready
   return (
-    <Box height="100%">
+    <Box sx={{ width: "100%", height: "100%", paddingX: "10%" }}>
       {form && (
         <Header
           stringItems={[form.title]}
@@ -26,22 +62,7 @@ export const ResponseView: FC = () => {
           displaySeparator
         />
       )}
-      {form && formElementsList.length > 0 && <ResponseLayout />}
-      {(!form || !formElementsList.length) && (
-        <Box sx={emptyStateWrapper}>
-          <EmptyState
-            image={<EmptyForm />}
-            title={t("formulaire.form.edit.empty.main")}
-            description={t("formulaire.form.edit.empty.caption", { buttonText: t("formulaire.add.element") })}
-            color="primary.main"
-            imageHeight={300}
-            slotProps={{ title: { variant: "h4" }, description: { variant: "body2" } }}
-          />
-          <Button variant={ComponentVariant.CONTAINED} onClick={headerButtons[0].action}>
-            {headerButtons[0].title}
-          </Button>
-        </Box>
-      )}
+      {displayRightPage()}
     </Box>
   );
 };
