@@ -63,7 +63,7 @@ export const formCheckBoxProps: IFormCheckBoxProp[] = [
 export const rgpdGoalDurationOptions = [3, 6, 9, 12];
 
 export const buildDelegatesParam = (
-  delegate: IDelegate | null,
+  delegate: IDelegate | null, //TODO delegateS est une list, ce param devrait être de type IDelegate[] | null
   rgpdGoal: string,
   expirationDate: Dayjs = dayjs(),
 ): IRGPDI18nParams => {

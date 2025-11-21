@@ -6,8 +6,9 @@ import dayjs from "dayjs";
 import { IRGPDInfoBoxProps } from "./types";
 import { FORMULAIRE } from "~/core/constants";
 import { DateFormat } from "~/core/enums";
+import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 
-const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, sx = {} }) => {
+const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, hideBorder = false, sx = { color: TEXT_SECONDARY_COLOR } }) => {
   const { t } = useTranslation(FORMULAIRE);
 
   const formattedDate = dayjs(params.expirationDate).format(DateFormat.DAY_MONTH_YEAR);
@@ -40,12 +41,9 @@ const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, sx = {} }) => {
   return (
     <Box
       sx={{
-        border: "1px solid #ddd",
-        borderRadius: 1,
-        p: 2,
+        ...(!hideBorder && { border: "1px solid #ddd", borderRadius: 1, p: 2 }),
 
         fontSize: "1.5rem",
-        color: "text.secondary",
         "& .left-spacing": {
           paddingLeft: "20px",
         },
