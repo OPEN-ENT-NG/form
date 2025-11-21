@@ -245,6 +245,7 @@
   "formulaire.prev": "Précédent",
   "formulaire.preview": "Aperçu",
   "formulaire.preview.end": "Fin de l'aperçu",
+  "formulaire.preview.error": "Vous n'avez pas les droits d'aperçu pour ce formulaire",
   "formulaire.prop.anonymous.description": "Les identifiants, noms, prénoms et établissements des répondants ne seront pas sauvegardés.",
   "formulaire.prop.anonymous.label": "Anonymiser les réponses",
   "formulaire.prop.create.title": "Créer un formulaire",
