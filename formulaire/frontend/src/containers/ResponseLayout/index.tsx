@@ -12,9 +12,10 @@ import { toast } from "react-toastify";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
 import { RespondSectionWrapper } from "../RespondSectionWrapper";
+import { ResponsePageType } from "~/core/enums";
 
 export const ResponseLayout: FC = () => {
-  const { form, formElementsList, progress, updateProgress, saveResponse, responsesMap } = useResponse();
+  const { form, formElementsList, progress, updateProgress, saveResponse, responsesMap, isInPreviewMode, setPageType } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
   const [currentElement, setCurrentElement] = useState<IFormElement>(formElementsList[0] ?? null);
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
@@ -49,15 +50,15 @@ export const ResponseLayout: FC = () => {
     const nextPosition = getNextPositionIfValid(currentElement, responsesMap, formElementsList);
 
     // An error occured
-    if (nextPosition === undefined || (nextPosition && nextPosition >= formElementsList.length)) {
+    if (nextPosition === undefined) {
       toast.error(t("formulaire.response.next.invalid"));
       return;
     }
 
     // It's the end of the form
-    if (nextPosition === null) {
+    if (nextPosition && nextPosition > formElementsList.length) {
       await saveResponse();
-      //TODO go recap (or preview endpage in case Preview)
+      setPageType(isInPreviewMode ? ResponsePageType.END_PREVIEW : ResponsePageType.RECAP);
       return;
     }
 
