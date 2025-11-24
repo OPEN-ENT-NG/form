@@ -1,16 +1,21 @@
 import { SxProps, Theme } from "@cgi-learning-hub/ui";
+import { defaultPaperShadow } from "~/core/constants";
+import { columnBoxStyle } from "~/core/style/boxStyles";
+import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 
 export const sectionStackStyle: SxProps<Theme> = {
-  width: "100%",
-  display: "flex",
-  flexDirection: "column",
+  ...columnBoxStyle,
   borderRadius: 1,
   marginBottom: 2,
-  padding: "3rem",
-  boxShadow: "1px 4px 5px 2px rgba(0, 0, 0, 0.1)",
-  rowGap: "2rem",
+  boxShadow: defaultPaperShadow,
 };
 
-export const mandatoryTitleStyle: SxProps<Theme> = {
-  marginLeft: "0.5rem",
+export const sectionHeaderWrapperStyle: SxProps<Theme> = {
+  display: "flex",
+  alignItems: "center",
+  backgroundColor: SECONDARY_MAIN_COLOR,
+  borderRadius: 1,
+  borderBottomLeftRadius: 0,
+  borderBottomRightRadius: 0,
+  padding: "2rem 3.2rem 1.6rem",
 };
