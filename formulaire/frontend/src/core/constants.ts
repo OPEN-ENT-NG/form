@@ -15,6 +15,7 @@ export const TOAST_CONFIG = {
 
 export const defaultViewMaxWidth = "1400px";
 export const defaultViewBackgroundColor = "white";
+export const defaultPaperShadow = "1px 4px 5px 2px rgba(0, 0, 0, 0.1)";
 
 //IMAGE PICKER
 export const IMAGE_PICKER_INFO = "SVG, PNG, JPG, GIF";
