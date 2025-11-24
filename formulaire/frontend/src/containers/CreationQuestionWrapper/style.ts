@@ -3,6 +3,7 @@ import { Paper, styled } from "@cgi-learning-hub/ui";
 import { GREY_MAIN_COLOR } from "~/core/style/colors";
 import { IStyledPaperProps } from "./types";
 import { CSS_ERROR_MAIN_COLOR, CSS_WARNING_LIGHT_COLOR } from "~/core/style/cssColors";
+import { defaultPaperShadow } from "~/core/constants";
 
 export const questionStackStyle: SxProps<Theme> = {
   display: "flex",
@@ -10,7 +11,7 @@ export const questionStackStyle: SxProps<Theme> = {
   borderRadius: 1,
   marginBottom: 2,
   padding: "0rem 3rem 3rem 3rem",
-  boxShadow: "1px 4px 5px 2px rgba(0, 0, 0, 0.1)",
+  boxShadow: defaultPaperShadow,
 };
 
 export const dragIconContainerStyle: SxProps<Theme> = {
@@ -39,7 +40,7 @@ export const StyledPaper = styled(Paper, {
   borderLeft: "4px solid",
   marginBottom: "16px",
   paddingTop: "3rem",
-  boxShadow: "1px 4px 5px 2px rgba(0, 0, 0, 0.1)",
+  boxShadow: defaultPaperShadow,
   borderColor: isValidFormElement ? "transparent !important" : `${CSS_ERROR_MAIN_COLOR} !important`,
 }));
 

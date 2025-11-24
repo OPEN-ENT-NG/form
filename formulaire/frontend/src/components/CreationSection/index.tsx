@@ -150,7 +150,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
         </Box>
         <Box sx={sectionContentStyle}>
           <Box sx={descriptionStyle}>
-            <StyledEditorWrapper isCurrentEditingElement={true}>
+            <StyledEditorWrapper isCurrentEditingElement={false}>
               <Editor
                 content={section.description || t("formulaire.section.no.description")}
                 mode={EditorMode.READ}
