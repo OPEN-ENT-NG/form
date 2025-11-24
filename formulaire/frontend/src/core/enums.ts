@@ -90,6 +90,7 @@ export enum ResponsePageType {
   DESCRIPTION = "DESCRIPTION",
   FORM_ELEMENT = "FORM_ELEMENT",
   RECAP = "RECAP",
+  END_PREVIEW = "END_PREVIEW",
 }
 
 // Edifice text Editor
