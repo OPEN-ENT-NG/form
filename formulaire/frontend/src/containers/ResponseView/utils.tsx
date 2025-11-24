@@ -4,7 +4,7 @@ import { t } from "~/i18n";
 import { getFormEditPath, getHrefHomeResponsesPath } from "~/core/pathHelper";
 import { useNavigate } from "react-router-dom";
 
-export const useGetCreationHeaderButtons = (
+export const useGetResponseHeaderButtons = (
   formId: string | number | undefined,
   isInPreviewMode: boolean,
 ): IButtonProps[] => {
