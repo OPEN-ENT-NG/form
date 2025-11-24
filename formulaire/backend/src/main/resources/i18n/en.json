@@ -19,6 +19,7 @@
   "formulaire.organize": "Organiser",
   "formulaire.preview": "Aperçu",
   "formulaire.preview.end": "Fin de l'aperçu",
+  "formulaire.preview.error": "Vous n'avez pas les droits d'aperçu pour ce formulaire",
   "formulaire.search": "Rechercher",
   "formulaire.search.placeholder": "Rechercher (titre, auteur)",
   "formulaire.search.placeholder.mobile": "Rechercher (titre, ...)",
