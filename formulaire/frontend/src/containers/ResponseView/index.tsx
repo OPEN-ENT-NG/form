@@ -3,32 +3,35 @@ import { Box, Button, EmptyState } from "@cgi-learning-hub/ui";
 import { useResponse } from "~/providers/ResponseProvider";
 import { Header } from "~/components/Header";
 import { ResponseLayout } from "../ResponseLayout";
-import { useGetCreationHeaderButtons } from "../ResponseView/utils";
+import { useGetResponseHeaderButtons } from "../ResponseView/utils";
 import { useTranslation } from "react-i18next";
-import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { FORMULAIRE } from "~/core/constants";
 import { emptyStateWrapper } from "~/core/style/boxStyles";
 import { ResponsePageType } from "~/core/enums";
 import { RgpdLayout } from "../RgpdLayout";
+import { DescriptionLayout } from "../DescriptionLayout";
+import { EndPreviewLayout } from "../EndPreviewLayout";
+import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
+import { ErrorPreview } from "~/components/SVG/ErrorPreview";
 
 export const ResponseView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const { form, formElementsList, isInPreviewMode, pageType } = useResponse();
-  const headerButtons = useGetCreationHeaderButtons(form?.id, isInPreviewMode);
+  const headerButtons = useGetResponseHeaderButtons(form?.id, isInPreviewMode);
 
   const errorPage = (
     <Box sx={emptyStateWrapper}>
       <EmptyState
-        image={<EmptyForm />}
-        title={t("formulaire.form.edit.empty.main")}
-        description={t("formulaire.form.edit.empty.caption", { buttonText: t("formulaire.add.element") })}
-        color="primary.main"
+        image={<ErrorPreview />}
+        color={SECONDARY_MAIN_COLOR}
+        title=""
+        description={t("formulaire.preview.error")}
         imageHeight={300}
         slotProps={{ title: { variant: TypographyVariant.H4 }, description: { variant: TypographyVariant.BODY2 } }}
       />
       <Button variant={ComponentVariant.CONTAINED} onClick={headerButtons[0].action}>
-        {headerButtons[0].title}
+        {t("formulaire.return")}
       </Button>
     </Box>
   );
@@ -39,25 +42,25 @@ export const ResponseView: FC = () => {
       case ResponsePageType.RGPD:
         return <RgpdLayout />;
       case ResponsePageType.DESCRIPTION:
-        console.log("try displaying description page !");
-        return <></>;
+        return <DescriptionLayout />;
       case ResponsePageType.FORM_ELEMENT:
         return <ResponseLayout />;
       case ResponsePageType.RECAP:
         console.log("try displaying recap page !");
         return <></>;
+      case ResponsePageType.END_PREVIEW:
+        return <EndPreviewLayout />;
       default:
         return errorPage;
     }
   };
 
-  //TODO update l'empty state (texts, image, buttons...) when the design will be ready
   return (
     <Box sx={{ width: "100%", height: "100%", paddingX: "10%" }}>
       {form && (
         <Header
           stringItems={[form.title]}
-          buttons={formElementsList.length ? headerButtons : []}
+          buttons={formElementsList.length && pageType != ResponsePageType.END_PREVIEW ? headerButtons : []}
           form={form}
           displaySeparator
         />
