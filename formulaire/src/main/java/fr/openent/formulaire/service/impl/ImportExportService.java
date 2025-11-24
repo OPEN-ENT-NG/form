@@ -9,6 +9,7 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
+import org.apache.commons.lang3.StringUtils;
 import org.entcore.common.folders.FolderImporter;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
@@ -117,8 +118,8 @@ public class ImportExportService {
 
         SqlStatementsBuilder s = new SqlStatementsBuilder();
         String query = "INSERT INTO " + FORM_TABLE + " (title, description, owner_id, owner_name, date_opening, date_ending, " +
-                "multiple, anonymous, response_notified, editable, rgpd, rgpd_goal, rgpd_lifetime, is_public, public_key, original_form_id) " +
-                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
+                "multiple, anonymous, response_notified, editable, rgpd, rgpd_goal, rgpd_lifetime, is_public, public_key, original_form_id, picture) " +
+                "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) " +
                 "RETURNING original_form_id, id;";
 
         s.raw(TRANSACTION_BEGIN_QUERY);
@@ -141,7 +142,8 @@ public class ImportExportService {
                     .add(entry.getInteger(fields.indexOf(RGPD_LIFETIME)))
                     .add(isPublic)
                     .add(isPublic ? UUID.randomUUID().toString() : null)
-                    .add(entry.getInteger(fields.indexOf(ID)));
+                    .add(entry.getInteger(fields.indexOf(ID)))
+                    .add(entry.getString(fields.indexOf(PICTURE)));
             s.prepared(query, params);
         }
         s.raw(TRANSACTION_COMMIT_QUERY);
@@ -459,5 +461,31 @@ public class ImportExportService {
             map.put(entry.getInteger(keyName), entry.getString(valueName));
         }
         return map;
+    }
+
+    public Future<JsonArray> updateImportPicture(JsonObject entries, Map<String, String> documentIdsMapping) {
+        Promise<JsonArray> promise = Promise.promise();
+        Integer formId = entries.getInteger(ID);
+        String key = entries.getString(IMAGE) != null && StringUtils.isNoneEmpty(entries.getString(IMAGE)) ? entries.getString(IMAGE) : "";
+        if (key.contains(IMAGE_PATH_PREFIX)) {
+           key = key.replace(IMAGE_PATH_PREFIX, "");
+           if (documentIdsMapping.containsKey(key)) {
+               SqlStatementsBuilder s = new SqlStatementsBuilder();
+               s.raw(TRANSACTION_BEGIN_QUERY);
+               String query = "UPDATE " + FORM_TABLE + " SET picture = ? WHERE id = ?" +
+                       "RETURNING id;";
+               JsonArray params = new JsonArray().add( IMAGE_PATH_PREFIX + documentIdsMapping.get(key)).add(formId);
+
+               s.prepared(query, params);
+               s.raw(TRANSACTION_COMMIT_QUERY);
+               String errorMessage = "[Formulaire@ImportExportService::updatePicture] Failed to update picture with imported picture id : ";
+               sql.transaction(s.build(), SqlResult.validResultsHandler(FutureHelper.handlerEither(promise, errorMessage)));
+           } else {
+               promise.complete(new JsonArray().add(formId));
+           }
+        } else {
+            promise.complete(new JsonArray().add(formId));
+        }
+        return promise.future();
     }
 }
