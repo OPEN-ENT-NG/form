@@ -27,8 +27,14 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
   const style = useMemo(() => getTransformStyle(transform, transition), [transform, transition]);
 
   return (
-    <Box style={style} ref={setNodeRef}>
-      {isEditing ? <CreationEditingSection section={section} /> : <CreationSection section={section} />}
+    <Box style={style}>
+      {isEditing ? (
+        <CreationEditingSection section={section} />
+      ) : (
+        <Box ref={setNodeRef}>
+          <CreationSection section={section} />
+        </Box>
+      )}
       {showQuestionCreate && questionModalSection?.id === section.id && (
         <CreateFormElementModal
           isOpen={showQuestionCreate}

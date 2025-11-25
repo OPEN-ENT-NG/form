@@ -144,7 +144,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   };
 
   return (
-    <Box style={style} ref={setNodeRef}>
+    <Box style={isEditing ? undefined : style}>
       {isEditing ? (
         <ClickAwayListener
           mouseEvent={MOUSE_EVENT_DOWN}
@@ -235,7 +235,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             setCurrentEditingElement(question);
           }}
         >
-          <Box sx={dragIconContainerStyle} {...attributes} {...listeners}>
+          <Box sx={dragIconContainerStyle} ref={setNodeRef} {...attributes} {...listeners}>
             <DragIndicatorRoundedIcon sx={dragIconStyle} />
           </Box>
           <Box sx={questionTitleStyle}>

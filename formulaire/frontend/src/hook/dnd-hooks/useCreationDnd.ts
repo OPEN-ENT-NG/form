@@ -13,7 +13,7 @@ export function useCreationDnd(
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 1 },
+      activationConstraint: { distance: 10 },
     }),
   );
 
