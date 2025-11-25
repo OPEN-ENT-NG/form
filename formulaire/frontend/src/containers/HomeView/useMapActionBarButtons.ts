@@ -5,19 +5,21 @@ import { ActionBarButtonType } from "./enums";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
-import { MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
+import { FORMULAIRE, MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
 import { useShareModal } from "~/providers/ShareModalProvider";
 import { useEdificeClient } from "@edifice.io/react";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { getFormDistributions } from "~/core/models/form/utils";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
-import { getFormEditPath, getFormResultsPath } from "~/core/pathHelper";
+import { getFormResultsPath } from "~/core/pathHelper";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useHandleOpenFormResponse } from "./useHandleOpenFormResponse";
 import { IForm } from "~/core/models/form/types";
 import { t } from "~/i18n";
+import { useNavigate } from "react-router-dom";
 
 export const useMapActionBarButtons = () => {
+  const navigate = useNavigate();
   const { isMobile, toggleModal } = useGlobal();
   const {
     selectedFolders,
@@ -158,7 +160,7 @@ export const useMapActionBarButtons = () => {
           }
           if (hasForms && tab === HomeTabState.FORMS) {
             if (isMobile) toggleModal(ModalType.FORM_OPEN_BLOCKED);
-            else return (window.location.href = getFormEditPath(selectedForms[0].id));
+            else navigate(`/form/${selectedForms[0].id}/edit`);
           }
           return openFormResponseAction();
         },

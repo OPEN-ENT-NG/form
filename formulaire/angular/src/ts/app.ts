@@ -23,6 +23,7 @@ routes.define(function($routeProvider){
 		.when('/list/responses', { action: 'formsResponses' })
 		.when('/form/create', { action: 'createForm' })
 		.when('/form/:formId/edit', { action: 'editForm' })
+		.when('/form/:formId/preview', { action: 'previewForm' })
 		.when('/form/:formId/tree', { action: 'treeViewForm' })
 		.when('/form/:formId/properties', { action: 'propForm' })
 		.when('/form/:formId/results/empty', { action: 'emptyResults' })
