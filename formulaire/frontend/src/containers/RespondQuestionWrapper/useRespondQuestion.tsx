@@ -16,7 +16,8 @@ export const useRespondQuestion = (question: IQuestion) => {
     if (!formElementIdType || !questionId) return [];
 
     const questionResponsesMap = responsesMap.get(formElementIdType);
-    return questionResponsesMap?.get(questionId)?.slice() ?? [];
+    const responses = questionResponsesMap?.get(questionId);
+    return responses ? responses.map((r) => ({ ...r })) : [];
   };
 
   const updateQuestionResponses = (newResponses: IResponse[]) => {

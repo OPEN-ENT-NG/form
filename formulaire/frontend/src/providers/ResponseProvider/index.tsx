@@ -1,4 +1,4 @@
-import { FC, createContext, useContext, useEffect, useMemo, useState } from "react";
+import { FC, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { ResponseProviderContextType, IResponseProviderProps, IProgressProps } from "./types";
 import { useParams } from "react-router-dom";
 import { IForm } from "~/core/models/form/types";
@@ -10,12 +10,12 @@ import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/ques
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
 import { useFormElementList } from "../CreationProvider/hook/useFormElementsList";
 import { useGlobal } from "../GlobalProvider";
-import { usePreviewResponse } from "./hook/usePreviewResponse";
 import { useClassicResponse } from "./hook/useClassicResponse";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { ResponsePageType } from "~/core/enums";
 import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
 import { IResponse } from "~/core/models/response/type";
+import { initResponsesMap } from "./utils";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -34,7 +34,6 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const [responsesMap, setResponsesMap] = useState<Map<string, Map<number, IResponse[]>>>(new Map());
   const { saveClassicResponses } = useClassicResponse();
-  const { initResponsesMap } = usePreviewResponse(setResponsesMap);
   const [form, setForm] = useState<IForm | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
   const [isInPreviewMode, setIsInPreviewMode] = useState<boolean>(previewMode);
@@ -44,6 +43,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     longuestRemainingPath: 0,
   });
   const [pageType, setPageType] = useState<ResponsePageType | undefined>(initialPageType);
+  const hasInitializedRsponsesMap = useRef(false);
 
   if (formId === undefined) {
     throw new Error("formId is undefined");
@@ -89,7 +89,11 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   }, [formElementsList]);
 
   useEffect(() => {
-    initResponsesMap(formElementsList);
+    if (!hasInitializedRsponsesMap.current && formElementsList.length <= 0) {
+      const initializedResponsesMap = initResponsesMap(formElementsList);
+      setResponsesMap(initializedResponsesMap);
+      hasInitializedRsponsesMap.current = true;
+    }
   }, [formElementsList]);
 
   const saveResponses = async () => {

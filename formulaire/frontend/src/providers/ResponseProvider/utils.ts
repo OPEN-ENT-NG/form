@@ -1,7 +1,32 @@
+import { IFormElement } from "~/core/models/formElement/types";
+import { getStringifiedFormElementIdType, isQuestion, isSection } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 import { IResponse } from "~/core/models/response/type";
 import { createNewResponse } from "~/core/models/response/utils";
+
+export const initResponsesMap = (formElements: IFormElement[]) => {
+  const responsesMap = new Map();
+  formElements.map((formElement) => {
+    const formElementResponsesMap = new Map();
+
+    if (isQuestion(formElement)) {
+      const questionResponses = initResponseAccordingToType(formElement);
+      formElementResponsesMap.set(formElement.id, questionResponses);
+    }
+
+    if (isSection(formElement)) {
+      formElement.questions.map((question) => {
+        const questionResponses = initResponseAccordingToType(question);
+        formElementResponsesMap.set(question.id, questionResponses);
+      });
+    }
+
+    responsesMap.set(getStringifiedFormElementIdType(formElement), formElementResponsesMap);
+  });
+
+  return responsesMap;
+};
 
 export const initResponseAccordingToType = (question: IQuestion): IResponse[] => {
   if (!question.id) return [];
