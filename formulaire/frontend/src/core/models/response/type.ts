@@ -7,16 +7,16 @@ export interface IResponseFile {
 
 //TODO update typages as needed
 export interface IResponse {
-  id: number | undefined;
+  id: number | null;
   questionId: number;
   choiceId: number | undefined;
   answer: string | Date | number | undefined;
-  distributionId: number;
-  originalId: number;
-  customAnswer: string;
+  distributionId: number | undefined;
+  originalId: number | undefined;
+  customAnswer: string | undefined;
   files: IResponseFile[];
   selected: boolean;
   selectedIndexList: boolean[]; // For multiple answer in preview
-  choicePosition: number; // For question type ranking to order
+  choicePosition: number | undefined; // For question type ranking to order
   image?: string | null; // For question type multiple answer
 }

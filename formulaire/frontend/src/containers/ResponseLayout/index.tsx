@@ -15,7 +15,16 @@ import { RespondSectionWrapper } from "../RespondSectionWrapper";
 import { ResponsePageType } from "~/core/enums";
 
 export const ResponseLayout: FC = () => {
-  const { form, formElementsList, progress, updateProgress, saveResponse, responsesMap, isInPreviewMode, setPageType } = useResponse();
+  const {
+    form,
+    formElementsList,
+    progress,
+    updateProgress,
+    saveResponses,
+    responsesMap,
+    isInPreviewMode,
+    setPageType,
+  } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
   const [currentElement, setCurrentElement] = useState<IFormElement>(formElementsList[0] ?? null);
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
@@ -40,7 +49,7 @@ export const ResponseLayout: FC = () => {
 
     if (!prevElement) return;
 
-    await saveResponse();
+    await saveResponses();
     setCurrentElement(prevElement);
     updateProgress(prevElement, progress.historicFormElementIds.slice(0, -1));
   };
@@ -57,14 +66,14 @@ export const ResponseLayout: FC = () => {
 
     // It's the end of the form
     if (nextPosition && nextPosition > formElementsList.length) {
-      await saveResponse();
+      await saveResponses();
       setPageType(isInPreviewMode ? ResponsePageType.END_PREVIEW : ResponsePageType.RECAP);
       return;
     }
 
     // We got an element for the next position
     //TODO check if we need that later : unloadLastResponses();
-    await saveResponse();
+    await saveResponses();
 
     const nextElement = formElementsList.find((fe) => fe.position === nextPosition);
     if (!nextElement || !nextElement.id) return;
