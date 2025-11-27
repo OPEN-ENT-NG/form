@@ -3,7 +3,6 @@ import { ResponsePageType } from "~/core/enums";
 import { IForm } from "~/core/models/form/types";
 import { FormElementType } from "~/core/models/formElement/enum";
 import { IFormElement } from "~/core/models/formElement/types";
-import { IQuestion } from "~/core/models/question/types";
 import { IResponse } from "~/core/models/response/type";
 
 export interface IResponseProviderProps {
@@ -22,9 +21,9 @@ export type ResponseProviderContextType = {
   longestPathsMap: Map<string, number>;
   pageType: ResponsePageType | undefined;
   setPageType: Dispatch<SetStateAction<ResponsePageType | undefined>>;
-  saveResponse: () => Promise<void>;
-  responsesMap: Map<IQuestion, IResponse[]>;
-  setResponsesMap: Dispatch<SetStateAction<Map<IQuestion, IResponse[]>>>;
+  saveResponses: () => Promise<void>;
+  responsesMap: Map<string, Map<number, IResponse[]>>;
+  setResponsesMap: Dispatch<SetStateAction<Map<string, Map<number, IResponse[]>>>>;
 };
 
 export interface IFormElementIdType {
