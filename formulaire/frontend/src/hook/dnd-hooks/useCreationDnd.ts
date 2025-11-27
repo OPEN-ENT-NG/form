@@ -4,12 +4,14 @@ import { CURSOR_STYLE_GRABBING } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
 import { ISection } from "~/core/models/section/types";
 import { isFormElementSection } from "~/core/models/section/utils";
+import { DndMove } from "./enum";
+import { getDndMove, moveRootElements } from "./utils";
 
 export function useCreationDnd(
   formElementsList: IFormElement[],
   setFormElementsList: Dispatch<SetStateAction<IFormElement[]>>,
 ) {
-  const [activeItem, setActiveItem] = useState<IFormElement | null>(null);
+  const [activeId, setActiveId] = useState<number | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -18,9 +20,15 @@ export function useCreationDnd(
   );
 
   const handleDragStart = ({ active }: DragStartEvent) => {
+    if(typeof active.id !== "number") return;
     console.log("drag start", active.id);
     document.body.style.cursor = CURSOR_STYLE_GRABBING;
-    // Find all items that are part of the active drag (current grabbed item and its children)
+    setActiveId(active.id);
+  };
+
+  const handleDragOver = ({ over }: DragOverEvent) => {
+    console.log("drag over", formElementsList);
+    console.log(over?.id);
     const activeItem =
       formElementsList
         .flatMap((item) => {
@@ -29,17 +37,24 @@ export function useCreationDnd(
           }
           return item;
         })
-        .find((item) => item.id === active.id) || null;
-    setActiveItem(activeItem);
-  };
-
-  const handleDragOver = ({ over }: DragOverEvent) => {
-    console.log("niko", over);
-    const overId = over?.id as number | null;
-    const overItem = formElementsList.find((el) => el.id === overId);
-    if (!activeItem || !overItem) return;
-    // Move Section into Section is not allowed
-    if (isFormElementSection(activeItem) && isFormElementSection(overItem)) return;
+        .find((item) => item.id === activeId) || null;
+    if (activeItem?.id === over?.id) return;
+    const dndMove = getDndMove(activeItem, over, formElementsList);
+    switch (dndMove) {
+      case DndMove.SWITCH_ROOT_ELEMENTS:
+        const overElement = formElementsList.find((item) => item.id === over?.id);
+        if (!overElement || !activeItem) return;
+        setFormElementsList((prevList) => 
+          moveRootElements(prevList, activeItem, overElement)
+        );
+        break;
+      case DndMove.SWITCH_QUESTIONS_SECTION:
+        // logique
+        break;
+      case DndMove.SWITCH_QUESTION_SECTION_WITH_QUESTION_ROOT:
+        // logique
+        break;
+    }
   };
 
   const handleDragEnd = () => {
@@ -47,7 +62,7 @@ export function useCreationDnd(
   };
 
   return {
-    activeItem,
+    activeId,
     sensors,
     handleDragStart,
     handleDragOver,

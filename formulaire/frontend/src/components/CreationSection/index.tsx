@@ -36,6 +36,7 @@ import {
 } from "./style";
 import { ICreationSectionProps } from "./types";
 
+import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Editor } from "@edifice.io/react/editor";
 import { useTranslation } from "react-i18next";
@@ -48,6 +49,7 @@ import { isValidFormElement } from "~/core/models/formElement/utils";
 import { ISection } from "~/core/models/section/types";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
 import { AlertSeverityVariant, ComponentVariant, EditorVariant } from "~/core/style/themeProps";
+import { BOTTOM_OF_SECTION_ID, TOP_OF_SECTION_ID } from "~/hook/dnd-hooks/utils";
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
@@ -125,6 +127,14 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
     [section.questions],
   );
 
+  const { setNodeRef: setHeaderDroppableNodeRef } = useDroppable({
+    id: `${TOP_OF_SECTION_ID}${section.id}`,
+  });
+
+  const { setNodeRef: setFooterDroppableNodeRef } = useDroppable({
+    id: `${BOTTOM_OF_SECTION_ID}${section.id}`,
+  });
+
   return (
     <Box>
       <Stack component={Paper} sx={sectionStackStyle}>
@@ -160,7 +170,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
           </Box>
         </Box>
         <Box sx={sectionContentStyle}>
-          <Box sx={descriptionStyle}>
+          <Box ref={setHeaderDroppableNodeRef} sx={descriptionStyle}>
             <StyledEditorWrapper isCurrentEditingElement={true}>
               <Editor
                 content={section.description || t("formulaire.section.no.description")}
@@ -176,7 +186,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
               ))}
             </SortableContext>
           </Box>
-          <Box sx={sectionFooterStyle}>
+          <Box ref={setFooterDroppableNodeRef} sx={sectionFooterStyle}>
             <Box sx={nextElementSelectorWrapperStyle}>
               {!hasConditionalQuestion(section) && (
                 <FormControl fullWidth>

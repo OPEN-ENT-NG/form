@@ -28,10 +28,12 @@ export const CreationMainLayout: FC = () => {
   };
 
   // Use our custom hook to manage drag state & handlers
-  const { activeItem, handleDragStart, handleDragOver, handleDragEnd, sensors } = useCreationDnd(
+  const { activeId, handleDragStart, handleDragOver, handleDragEnd, sensors } = useCreationDnd(
     formElementsList,
     setFormElementsList,
   );
+
+  const activeItem = formElementsList.find((item) => item.id === activeId) || null;
 
   return (
     <Box sx={outerContainerStyle}>
@@ -46,7 +48,7 @@ export const CreationMainLayout: FC = () => {
           >
             <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
               {formElementsList.map((formElement) => (
-                <CreationSortableItem key={crypto.randomUUID()} formElement={formElement} />
+                <CreationSortableItem key={formElement.id} formElement={formElement} />
               ))}
             </SortableContext>
             <DragOverlay>
