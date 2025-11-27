@@ -45,7 +45,7 @@ export const createNewQuestion = (
   stableId?: string,
 ): IQuestion => {
   const formElement = createNewFormElement(FormElementType.QUESTION, formId, title);
-  const defaultSection: IQuestion = {
+  const defaultQuestion: IQuestion = {
     questionType: questionTypeCode,
     statement: null,
     mandatory: false,
@@ -61,7 +61,7 @@ export const createNewQuestion = (
     stableId: stableId ? stableId : null,
     ...formElement,
   };
-  return defaultSection;
+  return defaultQuestion;
 };
 
 export const createNewQuestionChoice = (
