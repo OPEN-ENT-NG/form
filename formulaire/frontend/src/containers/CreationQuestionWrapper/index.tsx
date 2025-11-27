@@ -25,11 +25,13 @@ import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 import {
   isCursorChoiceConsistent,
+  isFormElementQuestionRoot,
   shouldShowConditionalSwitch,
   shouldShowMandatorySwitch,
 } from "~/core/models/question/utils";
 import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { DndElementType } from "~/hook/dnd-hooks/enum";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
@@ -75,7 +77,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   const inputRef = useRef<HTMLInputElement>(null);
   const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
     id: question.id ?? 0,
-    data: { element: question },
+    data: { element: question, dndElementType: isFormElementQuestionRoot(question) ? DndElementType.QUESTION_ROOT : DndElementType.QUESTION_SECTION },
   });
 
   const style = useMemo(() => getTransformStyle(transform, transition), [transform, transition]);

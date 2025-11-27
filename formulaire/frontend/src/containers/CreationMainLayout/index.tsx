@@ -9,6 +9,7 @@ import { ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { useCreationDnd } from "~/hook/dnd-hooks/useCreationDnd";
+import { getActiveFormElement } from "~/hook/dnd-hooks/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { actionButtonStyle, elementListStyle, innerContainerStyle, outerContainerStyle } from "./style";
@@ -19,7 +20,7 @@ export const CreationMainLayout: FC = () => {
   const { toggleModal } = useGlobal();
 
   const sortedIds = useMemo(
-    () => formElementsList.map((formElement) => formElement.id).filter((id): id is number => id != null),
+    () => formElementsList.flatMap((formElement) => formElement.id).filter((id): id is number => id != null),
     [formElementsList],
   );
 
@@ -33,7 +34,7 @@ export const CreationMainLayout: FC = () => {
     setFormElementsList,
   );
 
-  const activeItem = formElementsList.find((item) => item.id === activeId) || null;
+  const activeItem = getActiveFormElement(activeId, formElementsList);
 
   return (
     <Box sx={outerContainerStyle}>

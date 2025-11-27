@@ -2,10 +2,8 @@ import { DragOverEvent, DragStartEvent, PointerSensor, useSensor, useSensors } f
 import { Dispatch, SetStateAction, useState } from "react";
 import { CURSOR_STYLE_GRABBING } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
-import { ISection } from "~/core/models/section/types";
-import { isFormElementSection } from "~/core/models/section/utils";
-import { DndMove } from "./enum";
-import { getDndMove, moveRootElements } from "./utils";
+import { ActiveElementType, DndElementType, DndMove } from "./enum";
+import { getActiveElementType, getActiveFormElement, getDndMove, getOverDndElementType, isActiveOverItSelf, moveRootElements } from "./utils";
 
 export function useCreationDnd(
   formElementsList: IFormElement[],
@@ -21,25 +19,20 @@ export function useCreationDnd(
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     if(typeof active.id !== "number") return;
-    console.log("drag start", active.id);
     document.body.style.cursor = CURSOR_STYLE_GRABBING;
     setActiveId(active.id);
   };
 
   const handleDragOver = ({ over }: DragOverEvent) => {
-    console.log("drag over", formElementsList);
-    console.log(over?.id);
-    const activeItem =
-      formElementsList
-        .flatMap((item) => {
-          if (isFormElementSection(item)) {
-            return [item, ...(item as ISection).questions];
-          }
-          return item;
-        })
-        .find((item) => item.id === activeId) || null;
-    if (activeItem?.id === over?.id) return;
-    const dndMove = getDndMove(activeItem, over, formElementsList);
+    if (isActiveOverItSelf(activeId, over)) return;
+    const activeItem = getActiveFormElement(activeId, formElementsList);
+
+    const overDndElementType: DndElementType | null = getOverDndElementType(over);
+    const activeElementType: ActiveElementType | null = getActiveElementType(activeItem);
+    if (!overDndElementType || !activeElementType) return;
+
+    const dndMove = getDndMove(activeElementType, overDndElementType);
+
     switch (dndMove) {
       case DndMove.SWITCH_ROOT_ELEMENTS:
         const overElement = formElementsList.find((item) => item.id === over?.id);
@@ -49,7 +42,7 @@ export function useCreationDnd(
         );
         break;
       case DndMove.SWITCH_QUESTIONS_SECTION:
-        // logique
+        
         break;
       case DndMove.SWITCH_QUESTION_SECTION_WITH_QUESTION_ROOT:
         // logique

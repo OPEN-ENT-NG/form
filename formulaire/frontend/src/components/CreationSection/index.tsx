@@ -14,7 +14,7 @@ import {
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useEffect, useState } from "react";
 import { CreationQuestionWrapper } from "~/containers/CreationQuestionWrapper";
 import { IQuestion } from "~/core/models/question/types";
 import {
@@ -37,7 +37,7 @@ import {
 import { ICreationSectionProps } from "./types";
 
 import { useDroppable } from "@dnd-kit/core";
-import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { useSortable } from "@dnd-kit/sortable";
 import { Editor } from "@edifice.io/react/editor";
 import { useTranslation } from "react-i18next";
 import { dragIconContainerStyle, questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
@@ -49,7 +49,7 @@ import { isValidFormElement } from "~/core/models/formElement/utils";
 import { ISection } from "~/core/models/section/types";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
 import { AlertSeverityVariant, ComponentVariant, EditorVariant } from "~/core/style/themeProps";
-import { BOTTOM_OF_SECTION_ID, TOP_OF_SECTION_ID } from "~/hook/dnd-hooks/utils";
+import { DndElementType } from "~/hook/dnd-hooks/enum";
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
@@ -70,7 +70,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
   const { toggleModal } = useGlobal();
   const { listeners, attributes } = useSortable({
     id: section.id ?? 0,
-    data: { element: section },
+    data: { element: section, dndElementType: DndElementType.SECTION },
   });
 
   const onSaveSectionNextElement = useCallback(
@@ -122,17 +122,14 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
     toggleModal(ModalType.QUESTION_CREATE);
   };
 
-  const sortedIds = useMemo(
-    () => section.questions.map((question) => question.id).filter((id): id is number => id != null),
-    [section.questions],
-  );
-
   const { setNodeRef: setHeaderDroppableNodeRef } = useDroppable({
-    id: `${TOP_OF_SECTION_ID}${section.id}`,
+    id: section.id ?? 0,
+    data: { element: section, dndElementType: DndElementType.SECTION_TOP },
   });
 
   const { setNodeRef: setFooterDroppableNodeRef } = useDroppable({
-    id: `${BOTTOM_OF_SECTION_ID}${section.id}`,
+    id: section.id ?? 0,
+    data: { element: section, dndElementType: DndElementType.SECTION_BOTTOM },
   });
 
   return (
@@ -180,11 +177,9 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
             </StyledEditorWrapper>
           </Box>
           <Box>
-            <SortableContext key={section.id} items={sortedIds} strategy={verticalListSortingStrategy}>
               {section.questions.map((question: IQuestion) => (
                 <CreationQuestionWrapper key={question.id} question={question} />
               ))}
-            </SortableContext>
           </Box>
           <Box ref={setFooterDroppableNodeRef} sx={sectionFooterStyle}>
             <Box sx={nextElementSelectorWrapperStyle}>

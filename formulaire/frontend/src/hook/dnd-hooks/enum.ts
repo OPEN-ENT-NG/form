@@ -1,4 +1,4 @@
-export enum OverElementType {
+export enum DndElementType {
   QUESTION_ROOT = "QUESTION_ROOT",
   QUESTION_SECTION = "QUESTION_SECTION",
   SECTION = "SECTION",
@@ -30,7 +30,6 @@ export enum DndMove {
   // QR->ST 
   // QR->SB 
   // QS->QR
-  // QR->ST
-  // QR->SB
   SWITCH_QUESTION_SECTION_WITH_QUESTION_ROOT = "SWITCH_QUESTION_SECTION_WITH_QUESTION_ROOT",
 }
+

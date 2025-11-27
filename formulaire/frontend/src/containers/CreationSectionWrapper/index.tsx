@@ -5,6 +5,7 @@ import { CreationEditingSection } from "~/components/CreationEditingSection";
 import { CreationSection } from "~/components/CreationSection";
 import { getTransformStyle } from "~/components/CreationSortableItem/utils";
 import { ModalType } from "~/core/enums";
+import { DndElementType } from "~/hook/dnd-hooks/enum";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
@@ -21,7 +22,7 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
 
   const { setNodeRef, transform, transition } = useSortable({
     id: section.id ?? 0,
-    data: { element: section },
+    data: { element: section, dndElementType: DndElementType.SECTION },
   });
 
   const style = useMemo(() => getTransformStyle(transform, transition), [transform, transition]);
