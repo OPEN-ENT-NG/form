@@ -1,3 +1,4 @@
+import { IFormElementIdType } from "~/providers/ResponseProvider/types";
 import { IQuestion } from "../question/types";
 import { getParentSection, isFormElementQuestion } from "../question/utils";
 import { ISection } from "../section/types";
@@ -121,4 +122,36 @@ export const getFollowingFormElement = (
   // Case formElement is section without target or just a solo question
   const followingPosition = formElement.position ? formElement.position + 1 : null;
   return formElements.find((e) => e.position === followingPosition);
+};
+
+export const createStringifiedFormElementIdType = (id: number, type: FormElementType): string => {
+  return `{
+    id: ${id},
+    type: ${type},
+  }`;
+};
+
+export const getFormElementIdType = (formElement: IFormElement): IFormElementIdType | null => {
+  if (!formElement.id || !formElement.formElementType) return null;
+  return {
+    id: formElement.id,
+    type: formElement.formElementType,
+  };
+};
+
+export const stringifyFormElementIdType = (formElementIdType: IFormElementIdType): string => {
+  return `{
+    id: ${formElementIdType.id},
+    type: ${formElementIdType.type},
+  }`;
+};
+
+export const getStringifiedFormElementIdType = (formElement: IFormElement): string | null => {
+  const formElementIdType = getFormElementIdType(formElement);
+  return formElementIdType ? stringifyFormElementIdType(formElementIdType) : null;
+};
+
+export const areEquals = (feitA: IFormElementIdType | undefined, feitB: IFormElementIdType | undefined): boolean => {
+  const areBothUndefined = feitA === undefined && feitB === undefined;
+  return areBothUndefined || Boolean(feitA && feitB && feitA.id === feitB.id && feitA.type === feitB.type);
 };

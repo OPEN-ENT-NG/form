@@ -1,14 +1,13 @@
 import { IFormElement } from "~/core/models/formElement/types";
-import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { getStringifiedFormElementIdType, isQuestion, isSection } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
 import { getNextFormElement } from "~/core/models/question/utils";
 import { IResponse } from "~/core/models/response/type";
 import { getNextFormElementPosition } from "~/core/models/section/utils";
 
-//TODO à revoir
 export const getNextPositionIfValid = (
   currentElement: IFormElement,
-  currentResponsesMap: Map<IQuestion, IResponse[]>,
+  responsesMap: Map<string, Map<number, IResponse[]>>,
   formElements: IFormElement[],
 ): number | null | undefined => {
   if (!currentElement.position) return NaN;
@@ -19,14 +18,12 @@ export const getNextPositionIfValid = (
 
   if (isQuestion(currentElement) && currentElement.conditional) {
     conditionalQuestion = currentElement;
-    const currentResponses = currentResponsesMap.get(conditionalQuestion);
-    response = currentResponses && currentResponses.length > 0 ? currentResponses[0] : null;
+    response = calculateResponseValue(conditionalQuestion, responsesMap);
   } else if (isSection(currentElement)) {
     const conditionalQuestions = currentElement.questions.filter((q) => q.conditional);
     if (conditionalQuestions.length === 1) {
       conditionalQuestion = conditionalQuestions[0];
-      const currentResponses = currentResponsesMap.get(conditionalQuestion);
-      response = currentResponses && currentResponses.length > 0 ? currentResponses[0] : null;
+      response = calculateResponseValue(conditionalQuestion, responsesMap);
     }
   }
 
@@ -45,4 +42,18 @@ export const getNextPositionIfValid = (
   }
 
   return nextPosition;
+};
+
+const calculateResponseValue = (
+  conditionalQuestion: IQuestion,
+  responsesMap: Map<string, Map<number, IResponse[]>>,
+) => {
+  const questionIdType = getStringifiedFormElementIdType(conditionalQuestion);
+  if (questionIdType) {
+    const currentResponsesMap = responsesMap.get(questionIdType);
+    const currentResponses =
+      currentResponsesMap && conditionalQuestion.id ? currentResponsesMap.get(conditionalQuestion.id) : null;
+    return currentResponses && currentResponses.length > 0 ? currentResponses[0] : null;
+  }
+  return null;
 };
