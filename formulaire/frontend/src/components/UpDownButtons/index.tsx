@@ -32,7 +32,8 @@ export const UpDownButtons: FC<IUpDownButtonsProps> = ({
       <Box sx={arrowWrapperStyle}>
         {showUp && (
           <IconButton
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               handleReorderClick(index, Direction.UP);
             }}
             size={ComponentSize.SMALL}
@@ -44,7 +45,8 @@ export const UpDownButtons: FC<IUpDownButtonsProps> = ({
       <Box sx={arrowWrapperStyle}>
         {showDown && (
           <IconButton
-            onClick={() => {
+            onClick={(e) => {
+              e.stopPropagation();
               handleReorderClick(index, Direction.DOWN);
             }}
             size={ComponentSize.SMALL}

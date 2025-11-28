@@ -2,27 +2,30 @@ import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react"
 import { IQuestion } from "~/core/models/question/types";
 import { Direction } from "~/components/OrganizationSortableItem/enum";
 import { useDeleteQuestionChoiceMutation } from "~/services/api/services/formulaireApi/questionChoiceApi";
-import { fixChoicesPositions, isCurrentEditingElement, updateElementInList } from "~/providers/CreationProvider/utils";
+import { fixChoicesPositions } from "~/providers/CreationProvider/utils";
 import { PositionActionType } from "~/providers/CreationProvider/enum";
-import { compareChoicesByValue, swapChoicesAndSort } from "./utils";
+import { compareChoices, compareChoicesByValue, swapChoicesAndSort } from "./utils";
 import { createNewQuestionChoice } from "~/core/models/question/utils";
-import { t } from "~/i18n";
-import { IFormElement } from "~/core/models/formElement/types";
 import { FormElementType } from "~/core/models/formElement/enum";
 
-export const useChoiceActions = (
-  question: IQuestion,
-  currentEditingElement: IFormElement | null,
-  setCurrentEditingElement: (q: IQuestion) => void,
-  setFormElementsList: Dispatch<SetStateAction<IFormElement[]>>,
-  choiceValueI18nKey?: string | null,
-) => {
+export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: (q: IQuestion) => void) => {
   const [currentSortDirection, setCurrentSortDirection] = useState<Direction>(Direction.DOWN);
   const [deleteQuestionChoice] = useDeleteQuestionChoiceMutation();
 
   const isExistingCustomChoice = question.choices?.some((choice) => choice.isCustom);
   const setQuestion = setCurrentEditingElement as Dispatch<SetStateAction<IQuestion>>;
-  const choices = useMemo(() => question.choices || [], [question]);
+  const choices = useMemo(
+    () =>
+      (question.choices || [])
+        .sort((a, b) => compareChoices(a, b))
+        .map((choice) => {
+          return {
+            ...choice,
+            ...(choice.id && { stableId: choice.id }),
+          };
+        }),
+    [question.choices],
+  );
 
   const handleDeleteChoice = useCallback(
     async (choiceId: number | null, index: number, position: number) => {
@@ -72,7 +75,7 @@ export const useChoiceActions = (
 
   const handleNewChoice = useCallback(
     (isCustom: boolean, choiceValue: string) => {
-      if (!question.choices || (isExistingCustomChoice && isCustom) || !choiceValue) return;
+      if ((isExistingCustomChoice && isCustom) || !choiceValue) return;
 
       const newChoice = createNewQuestionChoice(
         question.id,
@@ -80,6 +83,7 @@ export const useChoiceActions = (
         null,
         choiceValue,
         isCustom,
+        crypto.randomUUID(),
       );
 
       if (isExistingCustomChoice) {
@@ -132,30 +136,6 @@ export const useChoiceActions = (
     [choices, question],
   );
 
-  const preventEmptyValues = useCallback(() => {
-    if (choices.length === 0) return;
-
-    const updatedChoices = choices.map((choice) => {
-      if (!choice.value.trim()) {
-        return { ...choice, value: t(choiceValueI18nKey ?? "formulaire.option", { 0: choice.position }) };
-      }
-      return choice;
-    });
-
-    const updatedQuestion: IQuestion = {
-      ...question,
-      choices: updatedChoices,
-    };
-
-    // Synch currentEditingElement
-    if (currentEditingElement && isCurrentEditingElement(question, currentEditingElement)) setQuestion(updatedQuestion);
-
-    setFormElementsList((prevFormElementsList) => {
-      const updatedFormElementsList = updateElementInList(prevFormElementsList, updatedQuestion);
-      return updatedFormElementsList as IQuestion[];
-    });
-  }, [choices, question]);
-
   return {
     choices,
     handleDeleteChoice,
@@ -164,7 +144,6 @@ export const useChoiceActions = (
     handleNewChoice,
     updateChoice,
     updateChoiceImage,
-    preventEmptyValues,
     updateChoiceNextFormElement,
   };
 };

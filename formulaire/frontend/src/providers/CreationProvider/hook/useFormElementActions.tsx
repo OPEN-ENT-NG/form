@@ -281,8 +281,8 @@ export const useFormElementActions = (
   };
 
   const saveQuestion = useCallback(
-    async (question: IQuestion) => {
-      if (!isInFormElementsList(question, formElementsList)) return;
+    async (question: IQuestion, updatedFormElementsList?: IFormElement[]) => {
+      if (!isInFormElementsList(question, updatedFormElementsList ? updatedFormElementsList : formElementsList)) return;
 
       //Save Question
       let questionSaved = question;
@@ -380,8 +380,9 @@ export const useFormElementActions = (
   );
 
   const saveSection = useCallback(
-    async (section: ISection) => {
-      if (!isInFormElementsList(section, formElementsList)) return;
+    async (section: ISection, updatedFormElementsList?: IFormElement[]) => {
+      if (!isInFormElementsList(section, updatedFormElementsList ? updatedFormElementsList : formElementsList)) return;
+
       // Save Section
       if (section.isNew) {
         await createSections(section).unwrap();
