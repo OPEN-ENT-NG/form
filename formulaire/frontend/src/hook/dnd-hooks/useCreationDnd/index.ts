@@ -2,9 +2,10 @@ import { DragOverEvent, DragStartEvent, PointerSensor, useSensor, useSensors } f
 import { Dispatch, SetStateAction, useState } from "react";
 import { CURSOR_STYLE_GRABBING } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
-import { ActiveElementType, DndElementType, DndMove } from "./enum";
-import { getDndMove, moveRootElements } from "./mainUtils";
-import { getActiveElementType, getActiveFormElement, getOverDndElementType, isActiveOverItSelf } from "./utils";
+import { IQuestion } from "~/core/models/question/types";
+import { DndElementType, DndMove } from "./enum";
+import { getDndMove, moveQRtoQS, moveQStoQS, moveRtoR } from "./mainUtils";
+import { getElementById, getOverDndElementType, getOverSection, getTargetQuestionPositionInSection, isActiveOverItSelf } from "./utils";
 
 export function useCreationDnd(
   formElementsList: IFormElement[],
@@ -26,33 +27,51 @@ export function useCreationDnd(
 
   const handleDragOver = ({ over }: DragOverEvent) => {
     if (isActiveOverItSelf(activeId, over)) return;
-    const activeItem = getActiveFormElement(activeId, formElementsList);
+    const activeElement = getElementById(formElementsList, activeId);
+    if (!activeElement) return;
+    const overElement = getElementById(formElementsList, over?.id as number);
+    if (!overElement) return;
 
     const overDndElementType: DndElementType | null = getOverDndElementType(over);
-    const activeElementType: ActiveElementType | null = getActiveElementType(activeItem);
-    if (!overDndElementType || !activeElementType) return;
+    if (!overDndElementType) return;
 
-    const dndMove = getDndMove(activeElementType, overDndElementType);
-
+    const dndMove = getDndMove(activeElement, overDndElementType, overElement);
+    console.log("DND MOVE :", dndMove);
     switch (dndMove) {
-      case DndMove.SWITCH_ROOT_ELEMENTS:
-        const overElement = formElementsList.find((item) => item.id === over?.id);
-        if (!overElement || !activeItem) return;
-        setFormElementsList((prevList) => 
-          moveRootElements(prevList, activeItem, overElement)
+      case DndMove.R_TO_R:
+        return setFormElementsList((prevList) => 
+          moveRtoR(prevList, activeElement, overElement)
         );
-        break;
-      case DndMove.SWITCH_QUESTIONS_SECTION:
-        
-        break;
-      case DndMove.SWITCH_QUESTION_SECTION_WITH_QUESTION_ROOT:
-        // logique
-        break;
+      case DndMove.QS_TO_QS:{
+        const overSection = getOverSection(overElement, overDndElementType, formElementsList);
+          const targetSectionPos = getTargetQuestionPositionInSection(
+            overSection,
+            overElement,
+            overDndElementType
+          );
+        return setFormElementsList((prevList) =>
+          moveQStoQS(prevList, activeElement as IQuestion, overSection, targetSectionPos)
+        );}
+      case DndMove.QR_TO_QS:{
+        const overSection = getOverSection(overElement, overDndElementType, formElementsList);
+        const targetSectionPos = getTargetQuestionPositionInSection(
+            overSection,
+            overElement,
+            overDndElementType
+          );
+        return setFormElementsList((prevList) => moveQRtoQS(
+          prevList,
+          activeElement as IQuestion,
+          overSection,
+          targetSectionPos
+        ));
+      }
+      
     }
   };
 
   const handleDragEnd = () => {
-    setFormElementsList((prevList) => [...prevList]);
+    // setFormElementsList((prevList) => [...prevList]);
   };
 
   return {

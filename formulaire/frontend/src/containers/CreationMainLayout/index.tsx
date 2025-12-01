@@ -9,10 +9,10 @@ import { ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { useCreationDnd } from "~/hook/dnd-hooks/useCreationDnd";
-import { getActiveFormElement } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { actionButtonStyle, elementListStyle, innerContainerStyle, outerContainerStyle } from "./style";
+import { getElementById } from "~/hook/dnd-hooks/useCreationDnd/utils";
 
 export const CreationMainLayout: FC = () => {
   const { form, formElementsList, setFormElementsList } = useCreation();
@@ -34,7 +34,7 @@ export const CreationMainLayout: FC = () => {
     setFormElementsList,
   );
 
-  const activeItem = getActiveFormElement(activeId, formElementsList);
+  const activeItem = getElementById(formElementsList, activeId);
 
   return (
     <Box sx={outerContainerStyle}>
@@ -53,7 +53,7 @@ export const CreationMainLayout: FC = () => {
               ))}
             </SortableContext>
             <DragOverlay>
-              {activeItem != null && <CreationSortableItem key={activeItem.id} formElement={activeItem} isPreview />}
+              {activeItem != null && <CreationSortableItem formElement={activeItem} isPreview />}
             </DragOverlay>
           </DndContext>
         </Box>
