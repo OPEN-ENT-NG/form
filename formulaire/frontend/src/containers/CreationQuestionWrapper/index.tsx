@@ -31,7 +31,7 @@ import {
 } from "~/core/models/question/utils";
 import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
-import { DndElementType } from "~/hook/dnd-hooks/enum";
+import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";

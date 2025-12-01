@@ -49,7 +49,7 @@ import { isValidFormElement } from "~/core/models/formElement/utils";
 import { ISection } from "~/core/models/section/types";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
 import { AlertSeverityVariant, ComponentVariant, EditorVariant } from "~/core/style/themeProps";
-import { DndElementType } from "~/hook/dnd-hooks/enum";
+import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";

@@ -3,7 +3,8 @@ import { Dispatch, SetStateAction, useState } from "react";
 import { CURSOR_STYLE_GRABBING } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
 import { ActiveElementType, DndElementType, DndMove } from "./enum";
-import { getActiveElementType, getActiveFormElement, getDndMove, getOverDndElementType, isActiveOverItSelf, moveRootElements } from "./utils";
+import { getDndMove, moveRootElements } from "./mainUtils";
+import { getActiveElementType, getActiveFormElement, getOverDndElementType, isActiveOverItSelf } from "./utils";
 
 export function useCreationDnd(
   formElementsList: IFormElement[],
