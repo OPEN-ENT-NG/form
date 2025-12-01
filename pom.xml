@@ -41,7 +41,7 @@
     </modules>
 
     <properties>
-        <revision>2.0-SNAPSHOT</revision>
+        <revision>2.0-develop-pedago-SNAPSHOT</revision>
         <webUtilsVersion>3.2-SNAPSHOT</webUtilsVersion>
         <entCoreVersion>6.11-SNAPSHOT</entCoreVersion>
         <toolsVersion>2.0.0-final</toolsVersion>
