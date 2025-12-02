@@ -3,7 +3,7 @@ import { IQuestion } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
 import { isFormElementSection } from "~/core/models/section/utils";
 import { DndElementType, DndMove } from "./enum";
-import { addQuestionSection, addRootElement, isActiveQuestionRoot, isActiveQuestionSection, isActiveSection, isOverQuestionRoot, isOverQuestionSection, isOverSection, isOverSectionBottom, isOverSectionTop, removeQuestionSection, removeRootElement } from "./utils";
+import { addQuestionSection, addRootElement, getSectionById, isActiveQuestionRoot, isActiveQuestionSection, isActiveSection, isOverQuestionRoot, isOverQuestionSection, isOverSection, isOverSectionBottom, isOverSectionTop, removeQuestionSection, removeRootElement } from "./utils";
 
 
 // S = SECTION
@@ -65,8 +65,8 @@ export const getDndMove = (
   //
 
   // QR → QS
-  if (isActiveQR && isOverQS)
-    return DndMove.QR_TO_QS;
+  // if (isActiveQR && isOverQS)
+  //   return DndMove.QR_TO_QS;
 
   // QR → ST
   if (isActiveQR && isOverST)
@@ -128,15 +128,24 @@ export const moveQStoQS = (elements: IFormElement[], active: IQuestion, overSect
 }
 
 export const moveQRtoQS = (elements: IFormElement[], active: IQuestion, overSection: ISection, targetSectionPos: number): IFormElement[] => {
-  
-  const after = active.position! < overSection.position!;
-  
   const newElementsWithoutActiveQuestion = removeRootElement(elements, active);
-  
+  console.log("1 : ", newElementsWithoutActiveQuestion)
 
-    const newElementsWithActiveQuestionAdded = addQuestionSection(newElementsWithoutActiveQuestion, active, targetSectionPos, overSection, after);
+  const newOverSection = getSectionById(newElementsWithoutActiveQuestion, overSection.id)
+  if (!newOverSection) return elements;
 
+    const newElementsWithActiveQuestionAdded = addQuestionSection(newElementsWithoutActiveQuestion, active, targetSectionPos, newOverSection, false);
+
+    console.log("2 : ", newElementsWithActiveQuestionAdded)
     return newElementsWithActiveQuestionAdded;
+}
+
+
+export const moveQStoQR = (elements: IFormElement[], active:IQuestion, activeSection: ISection, targetRootPos: number): IFormElement[] => {
+  const newElementsWithoutActiveQuestion = removeQuestionSection(elements, active);
+  const after = targetRootPos > activeSection.position!;
+  const newElementsWithActiveAdded = addRootElement(newElementsWithoutActiveQuestion, active, activeSection, after);
+  return newElementsWithActiveAdded;
 }
 
 

@@ -75,10 +75,27 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   const [currentQuestionTitle, setCurrentQuestionTitle] = useState<string>(question.title ?? "");
   const isEditing = isCurrentEditingElement(question, currentEditingElement);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
-    id: question.id ?? 0,
-    data: { element: question, dndElementType: isFormElementQuestionRoot(question) ? DndElementType.QUESTION_ROOT : DndElementType.QUESTION_SECTION },
+  const dndElementType = useMemo(() => {
+  return isFormElementQuestionRoot(question)
+    ? DndElementType.QUESTION_ROOT
+    : DndElementType.QUESTION_SECTION;
+  }, [question]);
+
+  const {
+    setNodeRef,
+    attributes,
+    listeners,
+    transform,
+    transition,
+  } = useSortable({
+    id: `${dndElementType}-${question.id}`,
+    data: {
+      element: question,
+      dndElementType,
+      questionId: question.id,
+    },
   });
+
 
   const style = useMemo(() => getTransformStyle(transform, transition), [transform, transition]);
 

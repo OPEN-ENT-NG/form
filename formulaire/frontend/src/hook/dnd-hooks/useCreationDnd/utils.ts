@@ -1,4 +1,4 @@
-import { DragOverEvent } from "@dnd-kit/core";
+import { DragOverEvent, DragStartEvent } from "@dnd-kit/core";
 import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion } from "~/core/models/question/types";
 import { isFormElementQuestionRoot, isFormElementQuestionSection } from "~/core/models/question/utils";
@@ -15,6 +15,12 @@ export const getOverDndElementType = (over: DragOverEvent["over"]): DndElementTy
   return over.data.current.dndElementType as DndElementType;
 };
 
+export const getDndElementType = (element: IFormElement) : DndElementType => {
+  if (isFormElementQuestionSection(element)) return DndElementType.QUESTION_SECTION;
+  if (isFormElementQuestionRoot(element)) return DndElementType.QUESTION_ROOT;
+  return DndElementType.SECTION;
+}
+
 export const getElementById = (formElementsList: IFormElement[], elementId: number | null): IFormElement | null => {
   if (elementId === null) return null;
   const element = formElementsList
@@ -29,7 +35,8 @@ export const getElementById = (formElementsList: IFormElement[], elementId: numb
   return element;
 };
 
-export const getSectionById = (formElementsList: IFormElement[], sectionId: number): ISection | null => {
+export const getSectionById = (formElementsList: IFormElement[], sectionId: number | null): ISection | null => {
+  if (!sectionId) return null;
   const section = formElementsList.find(e => isFormElementSection(e) && e.id === sectionId);
   if (!section) return null;
   return section as ISection;
@@ -51,6 +58,24 @@ export const getQuestionSectionById = (formElementsList: IFormElement[], questio
   }
   return null;
 };
+
+export const getElementId  = (dndObject: DragOverEvent["over"] | DragStartEvent["active"]): number | null => {
+  const dndElementType = dndObject?.data?.current?.dndElementType;
+  if (!dndElementType) return null;
+
+  const rawId = dndObject.id;
+
+  if (isString(rawId)) {
+    const prefix = `${dndElementType}-`;
+
+    if (rawId.startsWith(prefix)) {
+      const numericPart = rawId.replace(prefix, "");
+      const parsed = Number(numericPart);
+      return isNaN(parsed) ? null : parsed;
+    }
+  }
+  return null;
+}
 
 export const isActiveOverItSelf = (activeId: number | null, over: DragOverEvent["over"]): boolean => {
   if (!over?.id || !activeId) return true;
@@ -96,11 +121,24 @@ export const getOverSection = (overElement : IFormElement, overDndElementType: D
 };
 
 export const getTargetQuestionPositionInSection = (section: ISection, overElement: IFormElement, overDndElementType: DndElementType | null): number => {
-  return isOverQuestionSection(overDndElementType, overElement) ?
-            overElement.sectionPosition! :
-            isOverSectionBottom(overDndElementType) ?
-              1 : section.questions.length + 1;
+  if (isOverQuestionSection(overDndElementType, overElement)) return overElement.sectionPosition!;
+  if(isOverSectionTop(overDndElementType)) return 1;
+  if(isOverSectionBottom(overDndElementType)) return section.questions.length + 1;
+  return 1;
 };
+
+export const getTargetRootPosition = (activeSection: ISection, overElement: IFormElement, overDndElementType: DndElementType): number | null => {
+  if(isOverQuestionRoot(overDndElementType, overElement)) 
+    return overElement.position ?? null;
+  
+  if(isOverSectionTop(overDndElementType)) 
+    return activeSection.position ?? null;
+
+  if(isOverSectionBottom(overDndElementType)) 
+    return activeSection.position ? activeSection.position+1 : null;
+
+  return null;
+}
 
 export const removeRootElement = (elements: IFormElement[], elementToRemove: IFormElement): IFormElement[] => {
   const elementsBefore = elements.filter(e => e.position! < elementToRemove.position!);

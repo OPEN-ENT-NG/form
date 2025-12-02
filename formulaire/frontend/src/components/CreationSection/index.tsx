@@ -14,7 +14,7 @@ import {
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
-import { FC, useCallback, useEffect, useState } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { CreationQuestionWrapper } from "~/containers/CreationQuestionWrapper";
 import { IQuestion } from "~/core/models/question/types";
 import {
@@ -37,7 +37,7 @@ import {
 import { ICreationSectionProps } from "./types";
 
 import { useDroppable } from "@dnd-kit/core";
-import { useSortable } from "@dnd-kit/sortable";
+import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Editor } from "@edifice.io/react/editor";
 import { useTranslation } from "react-i18next";
 import { dragIconContainerStyle, questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
@@ -50,6 +50,7 @@ import { ISection } from "~/core/models/section/types";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
 import { AlertSeverityVariant, ComponentVariant, EditorVariant } from "~/core/style/themeProps";
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
+import { getDndElementType } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
@@ -72,6 +73,12 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
     id: section.id ?? 0,
     data: { element: section, dndElementType: DndElementType.SECTION },
   });
+
+  const sortedIds = useMemo(
+      () => section.questions.map((q) => `${getDndElementType(q)}-${q.id}`
+    ),
+      [section],
+    );
 
   const onSaveSectionNextElement = useCallback(
     (updatedEntity: ISection, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
@@ -123,12 +130,12 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
   };
 
   const { setNodeRef: setHeaderDroppableNodeRef } = useDroppable({
-    id: section.id ?? 0,
+    id: `${DndElementType.SECTION_TOP}-${section.id}`,
     data: { element: section, dndElementType: DndElementType.SECTION_TOP },
   });
 
   const { setNodeRef: setFooterDroppableNodeRef } = useDroppable({
-    id: section.id ?? 0,
+    id: `${DndElementType.SECTION_BOTTOM}-${section.id}`,
     data: { element: section, dndElementType: DndElementType.SECTION_BOTTOM },
   });
 
@@ -136,7 +143,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
     <Box>
       <Stack component={Paper} sx={sectionStackStyle}>
         <Box sx={sectionHeaderWrapperStyle}>
-          <Box sx={dragIconContainerStyle} {...listeners} {...attributes}>
+          <Box ref={setHeaderDroppableNodeRef} sx={dragIconContainerStyle} {...listeners} {...attributes}>
             <DragIndicatorRoundedIcon sx={sectionDragIconStyle} />
           </Box>
           <Box sx={sectionHeaderStyle}>
@@ -167,7 +174,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
           </Box>
         </Box>
         <Box sx={sectionContentStyle}>
-          <Box ref={setHeaderDroppableNodeRef} sx={descriptionStyle}>
+          <Box sx={descriptionStyle}>
             <StyledEditorWrapper isCurrentEditingElement={true}>
               <Editor
                 content={section.description || t("formulaire.section.no.description")}
@@ -177,9 +184,11 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
             </StyledEditorWrapper>
           </Box>
           <Box>
+            <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
               {section.questions.map((question: IQuestion) => (
                 <CreationQuestionWrapper key={question.id} question={question} />
               ))}
+              </SortableContext>
           </Box>
           <Box ref={setFooterDroppableNodeRef} sx={sectionFooterStyle}>
             <Box sx={nextElementSelectorWrapperStyle}>

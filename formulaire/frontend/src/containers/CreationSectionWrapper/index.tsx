@@ -21,7 +21,7 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
   } = useGlobal();
 
   const { setNodeRef, transform, transition } = useSortable({
-    id: section.id ?? 0,
+    id: `${DndElementType.SECTION}-${section.id}`,
     data: { element: section, dndElementType: DndElementType.SECTION },
   });
 
