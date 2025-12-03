@@ -15,9 +15,9 @@ export const CreationSortableItem: FC<ICreationSortableItemProps> = ({ formEleme
       }}
     >
       {isFormElementQuestion(formElement) ? (
-        <CreationQuestionWrapper question={formElement as IQuestion} />
+        <CreationQuestionWrapper isPreview={isPreview} question={formElement as IQuestion} />
       ) : (
-        <CreationSectionWrapper section={formElement as ISection} />
+        <CreationSectionWrapper isPreview={isPreview} section={formElement as ISection} />
       )}
     </Box>
   );

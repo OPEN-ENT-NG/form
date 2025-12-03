@@ -1,6 +1,5 @@
-import { DragOverEvent, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
-import { Dispatch, SetStateAction, useState } from "react";
-import { CURSOR_STYLE_GRABBING } from "~/core/constants";
+import { DragMoveEvent, DragOverEvent, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { Dispatch, SetStateAction, useRef, useState } from "react";
 import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion } from "~/core/models/question/types";
 import { DndElementType, DndMove } from "./enum";
@@ -13,7 +12,8 @@ export function useCreationDnd(
 ) {
   const [activeId, setActiveId] = useState<number | null>(null);
 
-  const [prevOverId, setPrevOverId] = useState<string | null>(null);
+  const [isOverEnabled, setIsOverEnable] = useState<boolean>(true);
+  const pauseYRef = useRef<number | null>(null);
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
@@ -24,31 +24,40 @@ export function useCreationDnd(
   const handleDragStart = ({ active }: DragStartEvent) => {
     const activeElementId = getElementId(active);
     if (!activeElementId) return;
-    document.body.style.cursor = CURSOR_STYLE_GRABBING;
     setActiveId(activeElementId);
+    pauseYRef.current = null;
+  };
+
+  const handleDragMove = ({ delta }: DragMoveEvent) => {
+    if (!activeId) return;
+
+    if (!isOverEnabled) {
+      if (pauseYRef.current === null)
+        pauseYRef.current = delta.y;
+      else {
+        const dy = Math.abs(delta.y - pauseYRef.current);
+        if (dy > 10) {
+          setIsOverEnable(true);
+          pauseYRef.current = null;
+        }
+      }
+
+    }
   };
 
   const handleDragOver = ({ over }: DragOverEvent) => {
-    console.log("niko", prevOverId);
-    // if (!!prevOverId && prevOverId === over?.id) return;
-    console.log("\n")
-    console.log("liste : ", formElementsList)
+    if (!isOverEnabled) return;
     const overElementId = getElementId(over);
     if(!activeId || !overElementId || (activeId === overElementId)) return;
-    console.log("activeId : ", activeId);
-    console.log("overId : ", overElementId);
     const activeElement = getElementById(formElementsList, activeId);
-    console.log("activeElement : ", activeElement)
     if (!activeElement) return;
     const overElement = getElementById(formElementsList, overElementId);
-    console.log("overElement : ", overElement)
     if (!overElement) return;
 
     const overDndElementType: DndElementType | null = getOverDndElementType(over);
     if (!overDndElementType) return;
 
     const dndMove = getDndMove(activeElement, overDndElementType, overElement);
-    console.log("DND MOVE :", dndMove);
     switch (dndMove) {
       case DndMove.R_TO_R:
         setFormElementsList((prevList) => 
@@ -73,7 +82,6 @@ export function useCreationDnd(
             overElement,
             overDndElementType
           );
-          console.log("pos",targetSectionPos)
         setFormElementsList((prevList) => moveQRtoQS(
           prevList,
           activeElement as IQuestion,
@@ -97,9 +105,7 @@ export function useCreationDnd(
       }
     }
 
-    setTimeout(()=> 100);
-
-    setPrevOverId(over?.id as string);
+    setIsOverEnable(false);
   };
 
   const handleDragEnd = () => {
@@ -112,5 +118,6 @@ export function useCreationDnd(
     handleDragStart,
     handleDragOver,
     handleDragEnd,
+    handleDragMove
   };
 }

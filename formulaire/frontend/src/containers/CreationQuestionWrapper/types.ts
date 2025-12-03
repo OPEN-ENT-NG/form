@@ -8,3 +8,7 @@ export interface ICreationQuestionWrapperProps {
 export interface IStyledPaperProps {
   isValidFormElement: boolean;
 }
+
+export interface IStyledDragContainer {
+  isPreview: boolean;
+}

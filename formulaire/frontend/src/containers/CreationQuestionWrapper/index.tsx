@@ -40,7 +40,6 @@ import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
 import { UndoConfirmationModal } from "../UndoConfirmationModal";
 import {
   conditionalSwitchContainerStyle,
-  dragIconContainerStyle,
   dragIconStyle,
   editingQuestionContentStyle,
   editingQuestionFooterStyle,
@@ -52,12 +51,13 @@ import {
   questionAlertStyle,
   questionStackStyle,
   questionTitleStyle,
-  StyledPaper,
+  StyledDragContainer,
+  StyledPaper
 } from "./style";
 import { ICreationQuestionWrapperProps } from "./types";
 import { getQuestionContentByType } from "./utils";
 
-export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question }) => {
+export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question, isPreview }) => {
   const { t } = useTranslation(FORMULAIRE);
   const {
     formElementsList,
@@ -254,9 +254,9 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             setCurrentEditingElement(question);
           }}
         >
-          <Box sx={dragIconContainerStyle} {...attributes} {...listeners}>
+          <StyledDragContainer isPreview={isPreview!} {...attributes} {...listeners}>
             <DragIndicatorRoundedIcon sx={dragIconStyle} />
-          </Box>
+          </StyledDragContainer>
           <Box sx={questionTitleStyle}>
             <Typography
               color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}

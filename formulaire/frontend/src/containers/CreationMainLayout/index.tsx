@@ -30,12 +30,14 @@ export const CreationMainLayout: FC = () => {
   };
 
   // Use our custom hook to manage drag state & handlers
-  const { activeId, handleDragStart, handleDragOver, handleDragEnd, sensors } = useCreationDnd(
+  const { activeId, handleDragStart, handleDragOver, handleDragEnd, handleDragMove, sensors } = useCreationDnd(
     formElementsList,
     setFormElementsList,
   );
 
   const activeItem = getElementById(formElementsList, activeId);
+
+  console.log("aie", formElementsList)
 
   return (
     <Box sx={outerContainerStyle}>
@@ -43,10 +45,12 @@ export const CreationMainLayout: FC = () => {
         <Box sx={elementListStyle}>
           <DndContext
             sensors={sensors}
+            autoScroll={{ acceleration: 200 }}
             collisionDetection={closestCenter}
             onDragStart={handleDragStart}
             onDragOver={handleDragOver}
             onDragEnd={handleDragEnd}
+            onDragMove={handleDragMove}
           >
             <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
               {formElementsList.map((formElement) => (

@@ -40,7 +40,7 @@ import { useDroppable } from "@dnd-kit/core";
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Editor } from "@edifice.io/react/editor";
 import { useTranslation } from "react-i18next";
-import { dragIconContainerStyle, questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
+import { questionAlertStyle, StyledDragContainer } from "~/containers/CreationQuestionWrapper/style";
 import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
@@ -58,7 +58,7 @@ import { useGlobal } from "~/providers/GlobalProvider";
 import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
 import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
 
-export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
+export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section, listeners, attributes }) => {
   const { t } = useTranslation(FORMULAIRE);
   const {
     form,
@@ -69,10 +69,6 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
     saveSection,
   } = useCreation();
   const { toggleModal } = useGlobal();
-  const { listeners, attributes } = useSortable({
-    id: section.id ?? 0,
-    data: { element: section, dndElementType: DndElementType.SECTION },
-  });
 
   const sortedIds = useMemo(
       () => section.questions.map((q) => `${getDndElementType(q)}-${q.id}`
@@ -143,9 +139,9 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
     <Box>
       <Stack component={Paper} sx={sectionStackStyle}>
         <Box sx={sectionHeaderWrapperStyle}>
-          <Box ref={setHeaderDroppableNodeRef} sx={dragIconContainerStyle} {...listeners} {...attributes}>
+          <StyledDragContainer isPreview={isPreview!} ref={setHeaderDroppableNodeRef} {...listeners} {...attributes}>
             <DragIndicatorRoundedIcon sx={sectionDragIconStyle} />
-          </Box>
+          </StyledDragContainer>
           <Box sx={sectionHeaderStyle}>
             <Box sx={sectionTitleStyle}>
               <EllipsisWithTooltip>

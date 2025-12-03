@@ -12,7 +12,7 @@ import { useGlobal } from "~/providers/GlobalProvider";
 import { CreateFormElementModal } from "../CreateFormElementModal";
 import { ICreationSectionWrapperProps } from "./types";
 
-export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ section }) => {
+export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ section, isPreview }) => {
   const { currentEditingElement, questionModalSection } = useCreation();
   const isEditing = isCurrentEditingElement(section, currentEditingElement);
   const {
@@ -20,7 +20,7 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
     toggleModal,
   } = useGlobal();
 
-  const { setNodeRef, transform, transition } = useSortable({
+  const { setNodeRef, transform, transition, listeners, attributes } = useSortable({
     id: `${DndElementType.SECTION}-${section.id}`,
     data: { element: section, dndElementType: DndElementType.SECTION },
   });
@@ -29,7 +29,7 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
 
   return (
     <Box style={style} ref={setNodeRef}>
-      {isEditing ? <CreationEditingSection section={section} /> : <CreationSection section={section} />}
+      {isEditing ? <CreationEditingSection section={section} /> : <CreationSection listeners={listeners} attributes={attributes} section={section} isPreview={isPreview}/>}
       {showQuestionCreate && questionModalSection?.id === section.id && (
         <CreateFormElementModal
           isOpen={showQuestionCreate}
