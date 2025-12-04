@@ -3,8 +3,8 @@ import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion } from "~/core/models/question/types";
 import { isFormElementQuestionRoot, isFormElementQuestionSection } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { DndElementType } from "./enum";
+import { isSection } from "~/core/models/formElement/utils";
 
 export const isString = (value: unknown): value is string => {
   return typeof value === "string";
@@ -25,8 +25,8 @@ export const getElementById = (formElementsList: IFormElement[], elementId: numb
   if (elementId === null) return null;
   const element = formElementsList
     .flatMap((item) => {
-      if (isFormElementSection(item)) {
-        return [item, ...(item as ISection).questions];
+      if (isSection(item)) {
+        return [item, ...item.questions];
       }
       return item;
     })
@@ -37,7 +37,7 @@ export const getElementById = (formElementsList: IFormElement[], elementId: numb
 
 export const getSectionById = (formElementsList: IFormElement[], sectionId: number | null): ISection | null => {
   if (!sectionId) return null;
-  const section = formElementsList.find((e) => isFormElementSection(e) && e.id === sectionId);
+  const section = formElementsList.find((e) => isSection(e) && e.id === sectionId);
   if (!section) return null;
   return section as ISection;
 };
@@ -50,9 +50,8 @@ export const getQuestionRootById = (formElementsList: IFormElement[], questionId
 
 export const getQuestionSectionById = (formElementsList: IFormElement[], questionId: number): IQuestion | null => {
   for (const element of formElementsList) {
-    if (isFormElementSection(element)) {
-      const section = element as ISection;
-      const question = section.questions.find((q) => q.id === questionId);
+    if (isSection(element)) {
+      const question = element.questions.find((q) => q.id === questionId);
       if (question) return question;
     }
   }
@@ -83,7 +82,7 @@ export const isActiveOverItSelf = (activeId: number | null, over: DragOverEvent[
 };
 
 export const isActiveSection = (active: IFormElement): active is ISection => {
-  return isFormElementSection(active);
+  return isSection(active);
 };
 
 export const isActiveQuestionRoot = (active: IFormElement): active is IQuestion => {

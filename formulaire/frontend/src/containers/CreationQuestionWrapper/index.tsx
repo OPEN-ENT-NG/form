@@ -1,5 +1,5 @@
 import { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "react";
-import { Alert, Box, IconButton, Paper, Stack, Switch, TextField, Tooltip, Typography } from "@cgi-learning-hub/ui";
+import { Alert, Box, Paper, Stack, Switch, TextField, Typography } from "@cgi-learning-hub/ui";
 import { useSortable } from "@dnd-kit/sortable";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
@@ -46,6 +46,7 @@ import {
 import { ClickAwayDataType } from "~/core/enums";
 import { getQuestionContentByType } from "./utils";
 import { FORMULAIRE } from "~/core/constants";
+import { IconButtonTooltiped } from "~/components/IconButtonTooltiped/IconButtonTooltiped";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question, isPreview }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -189,21 +190,24 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
               )}
 
               <Box sx={editingQuestionIconContainerStyle}>
-                <Tooltip title={t("formulaire.duplicate")} placement="top" disableInteractive>
-                  <IconButton aria-label="duplicate" onClick={handleDuplicate}>
-                    <FileCopyRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={t("formulaire.delete")} placement="top" disableInteractive>
-                  <IconButton aria-label="delete" onClick={handleDelete}>
-                    <DeleteRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={t("formulaire.cancel")} placement="top" disableInteractive>
-                  <IconButton aria-label="undo" onClick={handleUndo}>
-                    <UndoRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
-                </Tooltip>
+                <IconButtonTooltiped
+                  icon={<FileCopyRoundedIcon sx={editingQuestionIconStyle} />}
+                  onClick={handleDuplicate}
+                  tooltipI18nKey={"formulaire.duplicate"}
+                  ariaLabel="duplicate"
+                />
+                <IconButtonTooltiped
+                  icon={<DeleteRoundedIcon sx={editingQuestionIconStyle} />}
+                  onClick={handleDelete}
+                  tooltipI18nKey={"formulaire.delete"}
+                  ariaLabel="delete"
+                />
+                <IconButtonTooltiped
+                  icon={<UndoRoundedIcon sx={editingQuestionIconStyle} />}
+                  onClick={handleUndo}
+                  tooltipI18nKey={"formulaire.cancel"}
+                  ariaLabel="undo"
+                />
               </Box>
             </Box>
           </StyledPaper>
