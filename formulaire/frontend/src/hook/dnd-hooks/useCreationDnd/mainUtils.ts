@@ -1,7 +1,7 @@
 import { IFormElement } from "~/core/models/formElement/types";
+import { isSection } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { DndElementType, DndMove } from "./enum";
 import {
   addQuestionSection,
@@ -114,7 +114,7 @@ export const moveQStoQS = (
   overSection: ISection,
   targetSectionPos: number,
 ): IFormElement[] => {
-  const activeSection = elements.find((e) => isFormElementSection(e) && e.id === active.sectionId);
+  const activeSection = elements.find((e) => isSection(e) && e.id === active.sectionId);
   if (!activeSection) return elements;
 
   const after =

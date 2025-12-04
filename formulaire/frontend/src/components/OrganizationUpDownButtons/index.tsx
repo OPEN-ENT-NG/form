@@ -1,26 +1,24 @@
 import { FC, useMemo } from "react";
 import { IOrganizationUpDownButtonsProps } from "./types";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { Box } from "@cgi-learning-hub/ui";
 import { iconStyle, StyledIconButton, upDownButtonsContainerStyle } from "./style";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import { Direction } from "../OrganizationSortableItem/enum";
-import { isFormElementQuestion } from "~/core/models/question/utils";
-import { IQuestion } from "~/core/models/question/types";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
 
 export const OrganizationUpDownButtons: FC<IOrganizationUpDownButtonsProps> = ({
   element,
   formElementsList,
   handleReorderClick = () => {},
 }) => {
-  const isSection = isFormElementSection(element);
-  const isQuestion = isFormElementQuestion(element);
+  const isElementSection = isSection(element);
+  const isElementQuestion = isQuestion(element);
 
   // Determine visibility of arrows
   const showSectionArrows = useMemo(
-    () => isQuestion && (element as IQuestion).sectionPosition,
-    [isQuestion, element, formElementsList],
+    () => isElementQuestion && element.sectionPosition,
+    [isElementQuestion, element, formElementsList],
   );
   const showUp = useMemo(
     () => !showSectionArrows && element.position && element.position > 1,
@@ -62,7 +60,7 @@ export const OrganizationUpDownButtons: FC<IOrganizationUpDownButtonsProps> = ({
         <>
           {!!showUp && (
             <StyledIconButton
-              isSection={isSection}
+              isSection={isElementSection}
               onClick={() => {
                 handleReorderClick(element, formElementsList, Direction.UP);
               }}
@@ -72,7 +70,7 @@ export const OrganizationUpDownButtons: FC<IOrganizationUpDownButtonsProps> = ({
           )}
           {!!showDown && (
             <StyledIconButton
-              isSection={isSection}
+              isSection={isElementSection}
               onClick={() => {
                 handleReorderClick(element, formElementsList, Direction.DOWN);
               }}

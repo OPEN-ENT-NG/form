@@ -1,9 +1,8 @@
 import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion } from "~/core/models/question/types";
-import { ISection } from "~/core/models/section/types";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { IFlattenedItem } from "./types";
 import { arrayMove } from "@dnd-kit/sortable";
+import { isSection } from "~/core/models/formElement/utils";
 
 /**
  * Recursively flatten a mixed list of sections and top-level questions into a single array.
@@ -27,11 +26,10 @@ export const formElementsListToFlattenedItemList = (
       depth,
     };
 
-    if (isFormElementSection(el)) {
+    if (isSection(el)) {
       // Section itself at current depth
-      const section = el as ISection;
       // Then flatten its questions at depth + 1
-      const children = formElementsListToFlattenedItemList(section.questions, section.id, depth + 1);
+      const children = formElementsListToFlattenedItemList(el.questions, el.id, depth + 1);
       return [...acc, flattened, ...children];
     }
 
@@ -52,8 +50,8 @@ export const buildTree = (flatItems: IFlattenedItem[]): IFormElement[] => {
       .filter((item) => item.parentId === null)
       // 2) build up your tree in a reduce
       .reduce<IFormElement[]>((acc, item, index) => {
-        if (isFormElementSection(item.element)) {
-          const section = item.element as ISection;
+        if (isSection(item.element)) {
+          const section = item.element;
           section.position = index + 1; //position starts at 1
 
           // collect all children of this section
@@ -91,11 +89,11 @@ const getDragDepth = (offset: number, indentationWidth: number) => {
 /** Max legal depth based on previous item */
 const getMaxDepth = (activeItem: IFlattenedItem, previousItem: IFlattenedItem | null) => {
   if (!previousItem) return 0;
-  if (isFormElementSection(activeItem.element)) {
+  if (isSection(activeItem.element)) {
     return 0;
   }
   const previousElement = previousItem.element;
-  if (isFormElementSection(previousElement)) {
+  if (isSection(previousElement)) {
     return previousItem.depth + 1;
   }
 
@@ -106,7 +104,7 @@ const getMaxDepth = (activeItem: IFlattenedItem, previousItem: IFlattenedItem | 
 const getMinDepth = (activeItem: IFlattenedItem, nextItem: IFlattenedItem | null) => {
   if (!nextItem) return 0;
 
-  if (isFormElementSection(activeItem.element)) {
+  if (isSection(activeItem.element)) {
     return 0;
   }
 

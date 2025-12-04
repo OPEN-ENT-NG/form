@@ -1,7 +1,5 @@
 import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion } from "~/core/models/question/types";
-import { isFormElementQuestion } from "~/core/models/question/utils";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { Direction } from "./enum";
 import {
   fixListPositions,
@@ -12,7 +10,7 @@ import {
 } from "~/providers/CreationProvider/utils";
 import { ISection } from "~/core/models/section/types";
 import { PositionActionType } from "~/providers/CreationProvider/enum";
-import { compareFormElements } from "~/core/models/formElement/utils";
+import { compareFormElements, isQuestion, isSection } from "~/core/models/formElement/utils";
 
 /**
  * Swap positions of two questions within the same section.
@@ -23,7 +21,7 @@ import { compareFormElements } from "~/core/models/formElement/utils";
  */
 function swapSectionPositions(formElementsList: IFormElement[], qA: IQuestion, qB: IQuestion) {
   return formElementsList.map((el) => {
-    if (isFormElementQuestion(el)) {
+    if (isQuestion(el)) {
       if (el.id === qA.id) return { ...el, sectionPosition: qB.sectionPosition };
       if (el.id === qB.id) return { ...el, sectionPosition: qA.sectionPosition };
     }
@@ -43,7 +41,7 @@ function swapQuestionWithSection(formElementsList: IFormElement[], question: IQu
     if (el.id === question.id) {
       return { ...el, position: section.position };
     }
-    if (isFormElementSection(el) && el.id === section.id) {
+    if (isSection(el) && el.id === section.id) {
       return { ...el, position: question.position };
     }
     return el;
@@ -73,27 +71,24 @@ const swapGlobalPositions = (formElementsList: IFormElement[], elA: IFormElement
  * Refactored swapFormElements with clear helper functions.
  */
 export function swapFormElements(elementA: IFormElement, elementB: IFormElement, formElementsList: IFormElement[]) {
-  if (isFormElementQuestion(elementA) && isFormElementQuestion(elementB)) {
-    const qA = elementA as IQuestion;
-    const qB = elementB as IQuestion;
-
+  if (isQuestion(elementA) && isQuestion(elementB)) {
     // Same section: swap sectionPosition only
-    if (qA.sectionId && qB.sectionId && qA.sectionId === qB.sectionId) {
-      return swapSectionPositions(formElementsList, qA, qB);
+    if (elementA.sectionId && elementB.sectionId && elementA.sectionId === elementB.sectionId) {
+      return swapSectionPositions(formElementsList, elementA, elementB);
     }
 
     // One is top-level question, other in section: swap with section
-    if (qA.position && qB.sectionId) {
-      const parentSec = formElementsList.find((el) => isFormElementSection(el) && el.id === qB.sectionId) as
+    if (elementA.position && elementB.sectionId) {
+      const parentSec = formElementsList.find((el) => isSection(el) && el.id === elementB.sectionId) as
         | ISection
         | undefined;
-      if (parentSec) return swapQuestionWithSection(formElementsList, qA, parentSec);
+      if (parentSec) return swapQuestionWithSection(formElementsList, elementA, parentSec);
     }
-    if (qA.sectionId && qB.position) {
-      const parentSec = formElementsList.find((el) => isFormElementSection(el) && el.id === qA.sectionId) as
+    if (elementA.sectionId && elementB.position) {
+      const parentSec = formElementsList.find((el) => isSection(el) && el.id === elementA.sectionId) as
         | ISection
         | undefined;
-      if (parentSec) return swapQuestionWithSection(formElementsList, qB, parentSec);
+      if (parentSec) return swapQuestionWithSection(formElementsList, elementB, parentSec);
     }
   }
 
@@ -178,7 +173,7 @@ export const isTopElement = (element: IFormElement) => {
   return !!element.position;
 };
 export const isSubElement = (element: IFormElement) => {
-  return isFormElementQuestion(element) && !!(element as IQuestion).sectionPosition;
+  return isQuestion(element) && !!element.sectionPosition;
 };
 
 export const handleTopMoveDown = (element: IFormElement, formElementList: IFormElement[]): IFormElement[] => {
@@ -186,13 +181,13 @@ export const handleTopMoveDown = (element: IFormElement, formElementList: IFormE
   if (!followingElement) return formElementList;
 
   // Case A: two top-level elements just swap
-  if (isFormElementSection(element) || isFormElementQuestion(followingElement)) {
+  if (isSection(element) || isQuestion(followingElement)) {
     return swapAndSortFormElements(element, followingElement, formElementList);
   }
 
   // Case B: a question is dropping down into a section
-  if (isFormElementQuestion(element) && isFormElementSection(followingElement)) {
-    return moveQuestionToSection(element as IQuestion, followingElement as ISection, formElementList, Direction.DOWN);
+  if (isQuestion(element) && isSection(followingElement)) {
+    return moveQuestionToSection(element, followingElement, formElementList, Direction.DOWN);
   }
 
   return formElementList;
@@ -203,20 +198,20 @@ export const handleTopMoveUp = (element: IFormElement, formElementList: IFormEle
   if (!previousElement) return formElementList;
 
   // Case A: two top-level elements just swap
-  if (isFormElementQuestion(previousElement) || isFormElementSection(element)) {
+  if (isQuestion(previousElement) || isSection(element)) {
     return swapAndSortFormElements(previousElement, element, formElementList);
   }
 
   // Case B: a question is dropping up into a section
-  if (isFormElementQuestion(element) && isFormElementSection(previousElement) && element.position) {
-    return moveQuestionToSection(element as IQuestion, previousElement as ISection, formElementList, Direction.UP);
+  if (isQuestion(element) && isSection(previousElement) && element.position) {
+    return moveQuestionToSection(element, previousElement, formElementList, Direction.UP);
   }
 
   return formElementList;
 };
 
 export const handleSubMoveDown = (subQuestion: IQuestion, formElementList: IFormElement[]): IFormElement[] => {
-  const parentSection = formElementList.find((el) => isFormElementSection(el) && el.id === subQuestion.sectionId) as
+  const parentSection = formElementList.find((el) => isSection(el) && el.id === subQuestion.sectionId) as
     | ISection
     | undefined;
   if (!parentSection || !parentSection.position) return formElementList;
@@ -236,7 +231,7 @@ export const handleSubMoveDown = (subQuestion: IQuestion, formElementList: IForm
 };
 
 export const handleSubMoveUp = (subQuestion: IQuestion, formElementList: IFormElement[]): IFormElement[] => {
-  const parentSection = formElementList.find((el) => isFormElementSection(el) && el.id === subQuestion.sectionId) as
+  const parentSection = formElementList.find((el) => isSection(el) && el.id === subQuestion.sectionId) as
     | ISection
     | undefined;
   if (!parentSection || !parentSection.position) return formElementList;

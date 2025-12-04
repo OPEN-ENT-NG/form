@@ -3,12 +3,10 @@ import {
   Box,
   EllipsisWithTooltip,
   FormControl,
-  IconButton,
   MenuItem,
   Paper,
   Select,
   Stack,
-  Tooltip,
   Typography,
 } from "@cgi-learning-hub/ui";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
@@ -23,7 +21,6 @@ import {
   nextElementSelectorWrapperStyle,
   sectionAddQuestionStyle,
   sectionButtonIconStyle,
-  sectionButtonStyle,
   sectionContentStyle,
   sectionDragIconStyle,
   sectionFooterStyle,
@@ -55,8 +52,9 @@ import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElem
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
 import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
+import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
+import { IconButtonTooltiped } from "../IconButtonTooltiped/IconButtonTooltiped";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section, listeners, attributes }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -146,21 +144,21 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
             </Box>
             {currentEditingElement === null && (
               <Box sx={sectionIconWrapperStyle}>
-                <Tooltip title={t("formulaire.duplicate")} placement="top" disableInteractive>
-                  <IconButton
-                    aria-label="duplicate"
-                    onClick={handleDuplicate}
-                    disabled={!!form && hasFormResponses(form)}
-                    sx={sectionButtonStyle}
-                  >
-                    <FileCopyRoundedIcon sx={sectionButtonIconStyle} />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={t("formulaire.edit")} placement="top" disableInteractive>
-                  <IconButton aria-label="edit" onClick={handleEdit} sx={sectionButtonStyle}>
-                    <EditRoundedIcon sx={sectionButtonIconStyle} />
-                  </IconButton>
-                </Tooltip>
+                <IconButtonTooltiped
+                  icon={<FileCopyRoundedIcon sx={sectionButtonIconStyle} />}
+                  onClick={handleDuplicate}
+                  tooltipI18nKey={"formulaire.duplicate"}
+                  ariaLabel="duplicate"
+                  disabled={!!form && hasFormResponses(form)}
+                  slotProps={{ iconButton: sectionButtonIconStyle }}
+                />
+                <IconButtonTooltiped
+                  icon={<EditRoundedIcon sx={sectionButtonIconStyle} />}
+                  onClick={handleEdit}
+                  tooltipI18nKey={"formulaire.edit"}
+                  ariaLabel="edit"
+                  slotProps={{ iconButton: sectionButtonIconStyle }}
+                />
               </Box>
             )}
           </Box>
