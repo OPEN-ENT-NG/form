@@ -5,12 +5,10 @@ import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import {
   createNewQuestion,
   createNewQuestionChoice,
-  isFormElementQuestion,
   isTypeChildrenQuestion,
   isTypeChoicesQuestion,
 } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { useUpdateFormElementsMutation } from "~/services/api/services/formulaireApi/formElementApi";
 import {
   useCreateQuestionsMutation,
@@ -32,6 +30,7 @@ import { PositionActionType } from "../enum";
 import { toast } from "react-toastify";
 import { useCallback } from "react";
 import { QuestionTypes } from "~/core/models/question/enum";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
 
 export const useFormElementActions = (
   formElementsList: IFormElement[],
@@ -53,8 +52,8 @@ export const useFormElementActions = (
   const [deleteSingleSection] = useDeleteSingleSectionMutation();
 
   const updateFormElementsList = async (newFormElementsList: IFormElement[]) => {
-    const questions = newFormElementsList.filter(isFormElementQuestion) as IQuestion[];
-    const sections = newFormElementsList.filter(isFormElementSection) as ISection[];
+    const questions = newFormElementsList.filter(isQuestion);
+    const sections = newFormElementsList.filter(isSection);
     if (!newFormElementsList.length) {
       return;
     }
@@ -76,8 +75,8 @@ export const useFormElementActions = (
     if (!toRemove.id) return;
 
     // 1. Handle nested question deletion inside a section
-    if (isFormElementQuestion(toRemove)) {
-      await handleNestedQuestionDeletion(toRemove as IQuestion);
+    if (isQuestion(toRemove)) {
+      await handleNestedQuestionDeletion(toRemove);
     }
 
     // 2. Handle removal from top-level list and references
@@ -86,7 +85,7 @@ export const useFormElementActions = (
 
   const handleNestedQuestionDeletion = async (question: IQuestion) => {
     if (!question.sectionId || !question.sectionPosition || !question.id) return;
-    const parent = getElementById(question.sectionId, formElementsList, isFormElementSection) as ISection | undefined;
+    const parent = getElementById(question.sectionId, formElementsList, isSection) as ISection | undefined;
     if (!parent) return;
 
     // Remove question and fix positions within the section
@@ -116,9 +115,9 @@ export const useFormElementActions = (
     const cleanedList = reindexedList.map(clearNextReferences(toRemove));
 
     // Persist deletion
-    if (isFormElementQuestion(toRemove)) {
+    if (isQuestion(toRemove)) {
       await deleteSingleQuestion(toRemove.id);
-    } else if (isFormElementSection(toRemove)) {
+    } else if (isSection(toRemove)) {
       await deleteSingleSection(toRemove.id);
     }
 
@@ -128,12 +127,11 @@ export const useFormElementActions = (
 
   const clearNextReferences = (removedElement: IFormElement): ((el: IFormElement) => IFormElement) => {
     // If the removed element is a question, clear any choice-level next refs
-    if (isFormElementQuestion(removedElement)) {
+    if (isQuestion(removedElement)) {
       return (el) => {
-        if (!isFormElementQuestion(el)) return el;
-        const question = el as IQuestion;
+        if (!isQuestion(el)) return el;
         // For each choice, null out nextFormElementId/type if they pointed to the removed question
-        const updatedChoices = question.choices?.map((choice) =>
+        const updatedChoices = el.choices?.map((choice) =>
           choice.nextFormElementId === removedElement.id &&
           choice.nextFormElementType === removedElement.formElementType
             ? {
@@ -143,17 +141,15 @@ export const useFormElementActions = (
               }
             : choice,
         );
-        return updatedChoices ? { ...question, choices: updatedChoices } : question;
+        return updatedChoices ? { ...el, choices: updatedChoices } : el;
       };
     }
 
     // Otherwise, it was a section: clear any section-level next refs
     return (el) => {
-      if (!isFormElementSection(el)) return el;
-      const section = el as ISection;
+      if (!isSection(el)) return el;
       const shouldClearNext =
-        section.nextFormElementId === removedElement.id &&
-        section.nextFormElementType === removedElement.formElementType;
+        el.nextFormElementId === removedElement.id && el.nextFormElementType === removedElement.formElementType;
       if (!shouldClearNext) return el;
       // If it pointed to the removed section, null out those fields
       return { ...el, nextFormElementId: null, nextFormElementType: null };
@@ -173,7 +169,7 @@ export const useFormElementActions = (
       };
 
       if (questionToDuplicate.sectionId) {
-        const parentSection = getElementById(questionToDuplicate.sectionId, formElementsList, isFormElementSection) as
+        const parentSection = getElementById(questionToDuplicate.sectionId, formElementsList, isSection) as
           | ISection
           | undefined;
 
@@ -185,10 +181,7 @@ export const useFormElementActions = (
 
       const formElementUpdatedList: IFormElement[] = questionToDuplicate.sectionId
         ? fixListPositions(
-            [
-              ...(getElementById(questionToDuplicate.sectionId, formElementsList, isFormElementSection) as ISection)
-                .questions,
-            ],
+            [...(getElementById(questionToDuplicate.sectionId, formElementsList, isSection) as ISection).questions],
             newSectionPosition ? newSectionPosition : 0,
             PositionActionType.CREATION,
           )
@@ -249,8 +242,8 @@ export const useFormElementActions = (
 
   const duplicateSection = async (sectionToDuplicate: ISection) => {
     try {
-      if (currentEditingElement && isFormElementQuestion(currentEditingElement)) {
-        await saveQuestion(currentEditingElement as IQuestion);
+      if (currentEditingElement && isQuestion(currentEditingElement)) {
+        await saveQuestion(currentEditingElement);
       }
 
       const newPosition = sectionToDuplicate.position ? sectionToDuplicate.position + 1 : null;

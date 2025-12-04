@@ -1,8 +1,6 @@
 import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion } from "~/core/models/question/types";
-import { isFormElementQuestion } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { PositionActionType } from "./enum";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
 
@@ -56,14 +54,12 @@ export const fixListPositions = (
   action: PositionActionType = PositionActionType.CREATION,
 ): IFormElement[] => {
   return formElementList.map((el) => {
-    if (isFormElementQuestion(el)) {
-      const question = el as IQuestion;
-      if (question.sectionPosition && question.sectionPosition >= positionStart)
+    if (isQuestion(el)) {
+      if (el.sectionPosition && el.sectionPosition >= positionStart)
         return {
-          ...question,
-          sectionPosition:
-            action === PositionActionType.CREATION ? question.sectionPosition + 1 : question.sectionPosition - 1,
-        } as IQuestion;
+          ...el,
+          sectionPosition: action === PositionActionType.CREATION ? el.sectionPosition + 1 : el.sectionPosition - 1,
+        };
     }
 
     if (el.position && el.position >= positionStart) {
@@ -118,7 +114,7 @@ export const fixMatrixChildrenPositions = (
 };
 
 export const isSectionOrQuestion = (element: IFormElement): boolean => {
-  return isFormElementSection(element) || isFormElementQuestion(element);
+  return isSection(element) || isQuestion(element);
 };
 
 export const getElementById = (
@@ -146,9 +142,8 @@ export const isInFormElementsList = (element: IFormElement, formElementsList: IF
 
   // Check if element exists as a question within any section
   return formElementsList.some((el) => {
-    if (isFormElementSection(el)) {
-      const section = el as ISection;
-      return section.questions.some((q) => q.id === element.id) || section.questions.some((q) => q.key === element.key);
+    if (isSection(el)) {
+      return el.questions.some((q) => q.id === element.id) || el.questions.some((q) => q.key === element.key);
     }
     return false;
   });
@@ -160,11 +155,10 @@ export const addQuestionToSection = (
   formElementsList: IFormElement[],
 ): IFormElement[] => {
   return formElementsList.map((el) => {
-    if (isFormElementSection(el) && el.id === sectionId) {
-      const section = el as ISection;
+    if (isSection(el) && el.id === sectionId) {
       return {
-        ...section,
-        questions: [...section.questions, question],
+        ...el,
+        questions: [...el.questions, question],
       };
     }
     return el;
@@ -175,13 +169,11 @@ export const getFollowingFormElement = (
   formElement: IFormElement,
   formElementsList: IFormElement[],
 ): IFormElement | null => {
-  if (isFormElementQuestion(formElement)) {
-    const question = formElement as IQuestion;
+  if (isQuestion(formElement)) {
+    const question = formElement;
 
     if (question.sectionId) {
-      const section = getElementById(question.sectionId, formElementsList, isFormElementSection) as
-        | ISection
-        | undefined;
+      const section = getElementById(question.sectionId, formElementsList, isSection) as ISection | undefined;
       if (!section) {
         return null;
       }
@@ -237,12 +229,10 @@ export const getPreviousFormElement = (
   formElement: IFormElement,
   formElementsList: IFormElement[],
 ): IFormElement | null => {
-  if (isFormElementQuestion(formElement)) {
-    const question = formElement as IQuestion;
+  if (isQuestion(formElement)) {
+    const question = formElement;
     if (question.sectionId) {
-      const section = getElementById(question.sectionId, formElementsList, isFormElementSection) as
-        | ISection
-        | undefined;
+      const section = getElementById(question.sectionId, formElementsList, isSection) as ISection | undefined;
 
       if (!section) {
         return null;
