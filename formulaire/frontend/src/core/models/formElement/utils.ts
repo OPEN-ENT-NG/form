@@ -1,7 +1,5 @@
 import { IQuestion } from "../question/types";
-import { isFormElementQuestion } from "../question/utils";
 import { ISection } from "../section/types";
-import { isFormElementSection } from "../section/utils";
 import { FormElementType } from "./enum";
 import { IFormElement, IFormElementDTO, IFormElementPayload } from "./types";
 
@@ -43,7 +41,7 @@ export const createNewFormElement = (
 };
 
 export const isValidFormElement = (element: IFormElement): boolean => {
-  return (!!element.title && element.title.trim() !== "") || isFormElementSection(element);
+  return (!!element.title && element.title.trim() !== "") || isSection(element);
 };
 
 export const buildFormElementPayload = (formElement: IFormElement): IFormElementPayload => {
@@ -58,7 +56,7 @@ export const buildFormElementPayload = (formElement: IFormElement): IFormElement
 
 export const flattenFormElements = (formElements: IFormElement[]): IFormElement[] => {
   return formElements.reduce<IFormElement[]>((acc, element) => {
-    if (isFormElementQuestion(element)) {
+    if (isQuestion(element)) {
       // Question, add it directly
       return [...acc, element];
     }
@@ -73,14 +71,11 @@ export const flattenFormElements = (formElements: IFormElement[]): IFormElement[
 export const compareFormElements = (elementA: IFormElement, elementB: IFormElement): number => {
   //If both are questions in the same section, sort by sectionPosition
 
-  const bothQuestions = isFormElementQuestion(elementA) && isFormElementQuestion(elementB);
+  const bothQuestions = isQuestion(elementA) && isQuestion(elementB);
   if (bothQuestions) {
-    const questionA = elementA as IQuestion;
-    const questionB = elementB as IQuestion;
-
-    if (questionA.sectionId && questionB.sectionId && questionA.sectionId === questionB.sectionId) {
-      const posa = questionA.sectionPosition;
-      const posb = questionB.sectionPosition;
+    if (elementA.sectionId && elementB.sectionId && elementA.sectionId === elementB.sectionId) {
+      const posa = elementA.sectionPosition;
+      const posb = elementB.sectionPosition;
 
       if (posa == null && posb == null) return 0;
       if (posa == null) return 1;

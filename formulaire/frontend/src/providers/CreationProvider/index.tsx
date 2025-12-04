@@ -9,15 +9,14 @@ import { workflowRights } from "~/core/rights";
 import { IForm } from "~/core/models/form/types";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
-import { isFormElementQuestion } from "~/core/models/question/utils";
 import { isInFormElementsList, removeFormElementFromList, updateElementInList } from "./utils";
 import { IQuestion } from "~/core/models/question/types";
 import { useFormElementList } from "./hook/useFormElementsList";
 import { useFormElementActions } from "./hook/useFormElementActions";
 import { ISection } from "~/core/models/section/types";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
 import { IFolder } from "~/core/models/folder/types";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
 
 const CreationProviderContext = createContext<CreationProviderContextType | null>(null);
 
@@ -113,12 +112,12 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
 
   const handleUndoFormElementChange = useCallback(
     (formElement: IFormElement) => {
-      if (isFormElementQuestion(formElement)) {
-        handleUndoQuestionsChange(formElement as IQuestion);
+      if (isQuestion(formElement)) {
+        handleUndoQuestionsChange(formElement);
         return;
       }
-      if (isFormElementSection(formElement)) {
-        handleUndoSectionChange(formElement as ISection);
+      if (isSection(formElement)) {
+        handleUndoSectionChange(formElement);
         return;
       }
     },
@@ -139,12 +138,12 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const handleDuplicateFormElement = useCallback(
     async (toDuplicate: IFormElement) => {
       if (!isInFormElementsList(toDuplicate, formElementsList)) return;
-      if (isFormElementQuestion(toDuplicate)) {
-        await duplicateQuestion(toDuplicate as IQuestion);
+      if (isQuestion(toDuplicate)) {
+        await duplicateQuestion(toDuplicate);
         return;
       }
-      if (isFormElementSection(toDuplicate)) {
-        await duplicateSection(toDuplicate as ISection);
+      if (isSection(toDuplicate)) {
+        await duplicateSection(toDuplicate);
         return;
       }
     },

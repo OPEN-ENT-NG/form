@@ -1,19 +1,14 @@
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { ICreationEditingSectionProps } from "./types";
-import { Box, Typography, IconButton, Stack, Paper, Alert, TextField, Tooltip } from "@cgi-learning-hub/ui";
+import { Box, Typography, Stack, Paper, Alert, TextField } from "@cgi-learning-hub/ui";
 import {
-  editingSectionTitleStyle,
   editorContainerStyle,
   newQuestionWrapperStyle,
-  sectionAddQuestionStyle,
-  sectionButtonIconStyle,
-  sectionButtonStyle,
   sectionContentStyle,
   sectionFooterStyle,
   sectionHeaderStyle,
   sectionHeaderWrapperStyle,
   sectionIconWrapperStyle,
-  sectionStackStyle,
   sectionTitleStyle,
 } from "./style";
 
@@ -23,7 +18,7 @@ import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { AlertSeverityVariant, ComponentVariant } from "~/core/style/themeProps";
 import { useTranslation } from "react-i18next";
 import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
-import { isValidFormElement } from "~/core/models/formElement/utils";
+import { isSection, isValidFormElement } from "~/core/models/formElement/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
@@ -37,8 +32,15 @@ import { UndoConfirmationModal } from "~/containers/UndoConfirmationModal";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { isEnterPressed } from "~/core/utils";
 import { useCreateSectionMutation } from "~/services/api/services/formulaireApi/sectionApi";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
+import {
+  editingSectionTitleStyle,
+  sectionAddQuestionStyle,
+  sectionButtonIconStyle,
+  sectionButtonStyle,
+  sectionStackStyle,
+} from "../CreationSection/style";
+import { IconButtonTooltiped } from "../IconButtonTooltiped/IconButtonTooltiped";
 
 export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -104,7 +106,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   };
 
   const getOrCreateTargetSection = async (): Promise<ISection> => {
-    if (currentEditingElement && isFormElementSection(currentEditingElement) && currentEditingElement.isNew) {
+    if (currentEditingElement && isSection(currentEditingElement) && currentEditingElement.isNew) {
       const sectionToCreate: ISection = {
         ...currentEditingElement,
         title: t("formulaire.section.title.default"),
@@ -123,6 +125,12 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     return updated;
   };
 
+  const updateAndSaveSection = () => {
+    const updated = updateSection();
+    void saveFormElement(updated, formElementsList);
+    setCurrentEditingElement(null);
+  };
+
   return (
     <Box>
       <Box>
@@ -139,45 +147,35 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                   onChange={handleTitleChange}
                   onFocus={selectAllTextInput}
                   onKeyDown={(e) => {
-                    if (isEnterPressed(e) && currentEditingElement) {
-                      const updated = updateSection();
-                      void saveFormElement(updated, formElementsList);
-                      setCurrentEditingElement(null);
-                    }
+                    if (isEnterPressed(e) && currentEditingElement) updateAndSaveSection();
                   }}
                 />
               </Box>
               <Box sx={sectionIconWrapperStyle}>
-                <Tooltip title={t("formulaire.delete")} placement="top" disableInteractive>
-                  <IconButton
-                    aria-label="delete"
-                    onClick={handleDelete}
-                    disabled={!!form && hasFormResponses(form)}
-                    sx={sectionButtonStyle}
-                  >
-                    <DeleteRoundedIcon sx={sectionButtonIconStyle} />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={t("formulaire.cancel")} placement="top" disableInteractive>
-                  <IconButton aria-label="undo" onClick={handleUndo} sx={sectionButtonStyle}>
-                    <UndoRoundedIcon sx={sectionButtonIconStyle} />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={t("formulaire.validate")} placement="top" disableInteractive>
-                  <IconButton
-                    aria-label="save"
-                    onClick={() => {
-                      if (currentEditingElement) {
-                        const updated = updateSection();
-                        void saveFormElement(updated, formElementsList);
-                        setCurrentEditingElement(null);
-                      }
-                    }}
-                    sx={sectionButtonStyle}
-                  >
-                    <CheckCircleRoundedIcon sx={sectionButtonIconStyle} />
-                  </IconButton>
-                </Tooltip>
+                <IconButtonTooltiped
+                  icon={<DeleteRoundedIcon sx={sectionButtonIconStyle} />}
+                  onClick={handleDelete}
+                  tooltipI18nKey={"formulaire.delete"}
+                  ariaLabel="delete"
+                  disabled={!!form && hasFormResponses(form)}
+                  slotProps={{ iconButton: sectionButtonStyle }}
+                />
+                <IconButtonTooltiped
+                  icon={<UndoRoundedIcon sx={sectionButtonIconStyle} />}
+                  onClick={handleUndo}
+                  tooltipI18nKey={"formulaire.cancel"}
+                  ariaLabel="undo"
+                  slotProps={{ iconButton: sectionButtonStyle }}
+                />
+                <IconButtonTooltiped
+                  icon={<CheckCircleRoundedIcon sx={sectionButtonIconStyle} />}
+                  onClick={() => {
+                    if (currentEditingElement) updateAndSaveSection();
+                  }}
+                  tooltipI18nKey={"formulaire.validate"}
+                  ariaLabel="save"
+                  slotProps={{ iconButton: sectionButtonStyle }}
+                />
               </Box>
             </Box>
           </Box>
@@ -195,11 +193,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
               <Box
                 sx={sectionFooterStyle}
                 onClick={() => {
-                  if (currentEditingElement) {
-                    const updated = updateSection();
-                    void saveFormElement(updated, formElementsList);
-                    setCurrentEditingElement(null);
-                  }
+                  if (currentEditingElement) updateAndSaveSection();
                   void handleAddNewQuestion();
                 }}
               >
