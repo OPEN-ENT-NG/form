@@ -6,13 +6,13 @@ import { useTranslation } from "react-i18next";
 import { CreationSortableItem } from "~/components/CreationSortableItem";
 import { FORMULAIRE } from "~/core/constants";
 import { ModalType } from "~/core/enums";
-import { hasFormResponses } from "~/core/models/form/utils";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { useCreationDnd } from "~/hook/dnd-hooks/useCreationDnd";
 import { getDndElementType, getElementById } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { actionButtonStyle, elementListStyle, innerContainerStyle, outerContainerStyle } from "./style";
+import { hasFormResponses } from "~/core/models/form/utils";
 
 export const CreationMainLayout: FC = () => {
   const { form, formElementsList, setFormElementsList, updateFormElementsList } = useCreation();

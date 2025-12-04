@@ -2,9 +2,8 @@ import { DEFAULT_CURSOR_STEP } from "~/core/constants";
 import { getElementById } from "~/providers/CreationProvider/utils";
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
-import { createNewFormElement } from "../formElement/utils";
+import { createNewFormElement, isQuestion, isSection } from "../formElement/utils";
 import { ISection } from "../section/types";
-import { isFormElementSection } from "../section/utils";
 import { ChoiceTypes, QuestionTypes } from "./enum";
 import {
   IQuestion,
@@ -16,19 +15,15 @@ import {
   IQuestionSpecificFieldsPayload,
 } from "./types";
 
-export const isFormElementQuestion = (formElement: IFormElement): boolean => {
-  return formElement.formElementType === FormElementType.QUESTION;
-};
-
-export const isFormElementQuestionRoot = (formElement: IFormElement): boolean => {
-  if (!isFormElementQuestion(formElement)) return false;
-  const question = formElement as IQuestion;
+export const isQuestionRoot = (formElement: IFormElement): boolean => {
+  if (!isQuestion(formElement)) return false;
+  const question = formElement;
   return !!question.position && !question.sectionId && !question.sectionPosition;
 };
 
-export const isFormElementQuestionSection = (formElement: IFormElement): boolean => {
-  if (!isFormElementQuestion(formElement)) return false;
-  const question = formElement as IQuestion;
+export const isQuestionSection = (formElement: IFormElement): boolean => {
+  if (!isQuestion(formElement)) return false;
+  const question = formElement;
   return !question.position && !!question.sectionId && !!question.sectionPosition;
 };
 
@@ -37,7 +32,7 @@ export const isQuestionChoice = (item: object): item is IQuestionChoice => {
 };
 
 export const getQuestionList = (formElementList: IFormElement[]): IQuestion[] => {
-  const questions = formElementList.filter((formElement) => isFormElementQuestion(formElement)) as IQuestion[];
+  const questions = formElementList.filter((formElement) => isQuestion(formElement)) as IQuestion[];
   return questions;
 };
 
@@ -218,7 +213,7 @@ export function shouldShowConditionalSwitch(question: IQuestion, formElements: I
     return true;
   }
 
-  const parentSection = getElementById(question.sectionId, formElements, isFormElementSection) as ISection | undefined;
+  const parentSection = getElementById(question.sectionId, formElements, isSection) as ISection | undefined;
 
   if (!parentSection) {
     return false;

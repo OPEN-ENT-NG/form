@@ -1,5 +1,5 @@
 import { SxProps, Theme } from "@mui/material";
-import { COMMON_WHITE_COLOR, PRIMARY_MAIN_COLOR, SECONDARY_MAIN_COLOR } from "~/core/style/colors";
+import { COMMON_WHITE_COLOR, SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 
 export const sectionHeaderWrapperStyle: SxProps<Theme> = {
   display: "flex",
@@ -49,51 +49,6 @@ export const newQuestionWrapperStyle: SxProps<Theme> = {
   flex: 1,
   display: "flex",
   justifyContent: "flex-end",
-};
-
-export const sectionButtonStyle: SxProps<Theme> = {
-  color: COMMON_WHITE_COLOR,
-};
-
-export const sectionButtonIconStyle: SxProps<Theme> = {
-  color: "inherit",
-};
-
-export const sectionDragIconStyle: SxProps<Theme> = {
-  transform: "rotate(90deg)",
-  color: COMMON_WHITE_COLOR,
-  fontSize: "3rem",
-};
-
-export const sectionStackStyle: SxProps<Theme> = {
-  display: "flex",
-  flexDirection: "column",
-  borderRadius: 1,
-  marginBottom: 2,
-};
-
-export const sectionAddQuestionStyle: SxProps<Theme> = {
-  color: SECONDARY_MAIN_COLOR,
-  "&:hover": {
-    color: PRIMARY_MAIN_COLOR,
-    cursor: "pointer",
-  },
-};
-
-export const editingSectionTitleStyle: SxProps<Theme> = {
-  color: COMMON_WHITE_COLOR,
-  "& .MuiInputBase-input": {
-    color: COMMON_WHITE_COLOR,
-  },
-  "& .MuiInputLabel-root": {
-    color: COMMON_WHITE_COLOR,
-  },
-  "& .MuiInput-underline:before": {
-    borderBottomColor: COMMON_WHITE_COLOR,
-  },
-  "& .MuiInput-underline:after": {
-    borderBottomColor: COMMON_WHITE_COLOR,
-  },
 };
 
 export const editorContainerStyle = {

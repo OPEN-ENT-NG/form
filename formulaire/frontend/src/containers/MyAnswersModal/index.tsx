@@ -1,6 +1,6 @@
 import { FC } from "react";
 import { IModalProps } from "~/core/types";
-import { Box, DialogActions, DialogContent, DialogTitle, Button, IconButton, Tooltip } from "@cgi-learning-hub/ui";
+import { Box, DialogActions, DialogContent, DialogTitle, Button } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { BoxComponentType, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
@@ -13,6 +13,7 @@ import { SECONDARY_MAIN_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { getRecapFormPath } from "~/core/pathHelper";
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { IconButtonTooltiped } from "~/components/IconButtonTooltiped/IconButtonTooltiped";
 
 export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -34,16 +35,17 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
               <Box component={BoxComponentType.LI} key={distribution.id}>
                 <Box display="flex" alignItems="center">
                   <Box>{formatDateWithTime(distribution.dateSending, "formulaire.responded.date")}</Box>
-                  <Tooltip title={t("formulaire.response.open")} key={distribution.id} placement="top" arrow>
-                    <IconButton
-                      sx={{ color: SECONDARY_MAIN_COLOR }}
-                      onClick={() => {
-                        window.location.href = getRecapFormPath(distribution.formId, distribution.id);
-                      }}
-                    >
-                      <VisibilityIcon />
-                    </IconButton>
-                  </Tooltip>
+                  <IconButtonTooltiped
+                    key={distribution.id}
+                    icon={<VisibilityIcon />}
+                    onClick={() => {
+                      window.location.href = getRecapFormPath(distribution.formId, distribution.id);
+                    }}
+                    tooltipI18nKey={"formulaire.response.open"}
+                    ariaLabel="edit"
+                    arrow
+                    slotProps={{ iconButton: { color: SECONDARY_MAIN_COLOR } }}
+                  />
                 </Box>
               </Box>
             ))}
