@@ -62,6 +62,7 @@ export const sectionStackStyle: SxProps<Theme> = {
   flexDirection: "column",
   borderRadius: 1,
   marginBottom: 2,
+  boxShadow: "1px 4px 5px 2px rgba(0, 0, 0, 0.1)",
 };
 
 export const sectionAddQuestionStyle: SxProps<Theme> = {

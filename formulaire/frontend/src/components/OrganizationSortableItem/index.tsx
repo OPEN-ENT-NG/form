@@ -1,7 +1,6 @@
 import { FC, useCallback, useMemo } from "react";
 import { Box, EllipsisWithTooltip } from "@cgi-learning-hub/ui";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { IOrganizationSortableItemProps } from "./types";
 import { iconStyle, OrganizationStyledPaper, paperContentStyle, typographyStyle } from "./style";
 import { TypographyVariant } from "~/core/style/themeProps";
@@ -21,6 +20,7 @@ import { Direction } from "./enum";
 import { useSortable } from "@dnd-kit/sortable";
 import { DRAG_HORIZONTAL_TRESHOLD } from "~/core/constants";
 import { OrganizationUpDownButtons } from "../OrganizationUpDownButtons";
+import { isSection } from "~/core/models/formElement/utils";
 
 export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ element, depth = 0 }) => {
   const { formElementsList, setFormElementsList } = useCreation();
@@ -29,7 +29,7 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
     data: { element: element },
   });
 
-  const isSection = isFormElementSection(element);
+  const isElementSection = isSection(element);
 
   const handleReorderClick = useCallback(
     (element: IFormElement, formElementList: IFormElement[], direction: Direction) => {
@@ -60,7 +60,7 @@ export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ e
     <OrganizationStyledPaper
       ref={setNodeRef}
       elevation={2}
-      isSection={isSection}
+      isSection={isElementSection}
       depth={depth * DRAG_HORIZONTAL_TRESHOLD}
       {...attributes}
       {...listeners}
