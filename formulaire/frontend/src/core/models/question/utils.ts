@@ -1,7 +1,7 @@
 import { DEFAULT_CURSOR_STEP } from "~/core/constants";
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
-import { createNewFormElement } from "../formElement/utils";
+import { createNewFormElement, isQuestion, isSection } from "../formElement/utils";
 import { ChoiceTypes, QuestionTypes } from "./enum";
 import {
   IQuestion,
@@ -14,18 +14,13 @@ import {
 } from "./types";
 import { getElementById } from "~/providers/CreationProvider/utils";
 import { ISection } from "../section/types";
-import { isFormElementSection } from "../section/utils";
-
-export const isFormElementQuestion = (formElement: IFormElement): boolean => {
-  return formElement.formElementType === FormElementType.QUESTION;
-};
 
 export const isQuestionChoice = (item: object): item is IQuestionChoice => {
   return "value" in item;
 };
 
 export const getQuestionList = (formElementList: IFormElement[]): IQuestion[] => {
-  const questions = formElementList.filter((formElement) => isFormElementQuestion(formElement)) as IQuestion[];
+  const questions = formElementList.filter((formElement) => isQuestion(formElement)) as IQuestion[];
   return questions;
 };
 
@@ -206,7 +201,7 @@ export function shouldShowConditionalSwitch(question: IQuestion, formElements: I
     return true;
   }
 
-  const parentSection = getElementById(question.sectionId, formElements, isFormElementSection) as ISection | undefined;
+  const parentSection = getElementById(question.sectionId, formElements, isSection) as ISection | undefined;
 
   if (!parentSection) {
     return false;

@@ -41,6 +41,7 @@ import {
 import { QuestionTypes } from "~/core/models/question/enum";
 import { getQuestionContentByType } from "./utils";
 import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import { IconButtonTooltiped } from "~/components/IconButtonTooltiped/IconButtonTooltiped";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -168,21 +169,24 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
               )}
 
               <Box sx={editingQuestionIconContainerStyle}>
-                <Tooltip title={t("formulaire.duplicate")} placement="top" disableInteractive>
-                  <IconButton aria-label="duplicate" onClick={handleDuplicate}>
-                    <FileCopyRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={t("formulaire.delete")} placement="top" disableInteractive>
-                  <IconButton aria-label="delete" onClick={handleDelete}>
-                    <DeleteRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={t("formulaire.cancel")} placement="top" disableInteractive>
-                  <IconButton aria-label="undo" onClick={handleUndo}>
-                    <UndoRoundedIcon sx={editingQuestionIconStyle} />
-                  </IconButton>
-                </Tooltip>
+                <IconButtonTooltiped
+                  icon={<FileCopyRoundedIcon sx={editingQuestionIconStyle} />}
+                  onClick={handleDuplicate}
+                  tooltipI18nKey={"formulaire.duplicate"}
+                  ariaLabel="duplicate"
+                />
+                <IconButtonTooltiped
+                  icon={<DeleteRoundedIcon sx={editingQuestionIconStyle} />}
+                  onClick={handleDelete}
+                  tooltipI18nKey={"formulaire.delete"}
+                  ariaLabel="delete"
+                />
+                <IconButtonTooltiped
+                  icon={<UndoRoundedIcon sx={editingQuestionIconStyle} />}
+                  onClick={handleUndo}
+                  tooltipI18nKey={"formulaire.cancel"}
+                  ariaLabel="undo"
+                />
               </Box>
             </Box>
           </StyledPaper>

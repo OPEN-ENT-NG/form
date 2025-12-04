@@ -3,7 +3,6 @@ import { ICreationSectionProps } from "./types";
 import {
   Box,
   Typography,
-  IconButton,
   Stack,
   Paper,
   Select,
@@ -11,7 +10,6 @@ import {
   FormControl,
   Alert,
   EllipsisWithTooltip,
-  Tooltip,
 } from "@cgi-learning-hub/ui";
 import {
   descriptionStyle,
@@ -19,7 +17,6 @@ import {
   nextElementSelectorWrapperStyle,
   sectionAddQuestionStyle,
   sectionButtonIconStyle,
-  sectionButtonStyle,
   sectionContentStyle,
   sectionDragIconStyle,
   sectionFooterStyle,
@@ -53,6 +50,7 @@ import { FormElementType } from "~/core/models/formElement/enum";
 import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
 import { Editor } from "@edifice.io/react/editor";
 import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
+import { IconButtonTooltiped } from "../IconButtonTooltiped/IconButtonTooltiped";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -130,21 +128,21 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
             </Box>
             {currentEditingElement === null && (
               <Box sx={sectionIconWrapperStyle}>
-                <Tooltip title={t("formulaire.duplicate")} placement="top" disableInteractive>
-                  <IconButton
-                    aria-label="duplicate"
-                    onClick={handleDuplicate}
-                    disabled={!!form && hasFormResponses(form)}
-                    sx={sectionButtonStyle}
-                  >
-                    <FileCopyRoundedIcon sx={sectionButtonIconStyle} />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip title={t("formulaire.edit")} placement="top" disableInteractive>
-                  <IconButton aria-label="edit" onClick={handleEdit} sx={sectionButtonStyle}>
-                    <EditRoundedIcon sx={sectionButtonIconStyle} />
-                  </IconButton>
-                </Tooltip>
+                <IconButtonTooltiped
+                  icon={<FileCopyRoundedIcon sx={sectionButtonIconStyle} />}
+                  onClick={handleDuplicate}
+                  tooltipI18nKey={"formulaire.duplicate"}
+                  ariaLabel="duplicate"
+                  disabled={!!form && hasFormResponses(form)}
+                  slotProps={{ iconButton: sectionButtonIconStyle }}
+                />
+                <IconButtonTooltiped
+                  icon={<EditRoundedIcon sx={sectionButtonIconStyle} />}
+                  onClick={handleEdit}
+                  tooltipI18nKey={"formulaire.edit"}
+                  ariaLabel="edit"
+                  slotProps={{ iconButton: sectionButtonIconStyle }}
+                />
               </Box>
             )}
           </Box>

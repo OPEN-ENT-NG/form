@@ -6,13 +6,11 @@ import { ComponentVariant } from "~/core/style/themeProps";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { useCreation } from "~/providers/CreationProvider";
-import { isFormElementQuestion } from "~/core/models/question/utils";
 import { CreationQuestionWrapper } from "../CreationQuestionWrapper";
-import { IQuestion } from "~/core/models/question/types";
 import { actionButtonStyle, elementListStyle, innerContainerStyle, outerContainerStyle } from "./style";
-import { ISection } from "~/core/models/section/types";
 import { CreationSectionWrapper } from "../CreationSectionWrapper";
 import { hasFormResponses } from "~/core/models/form/utils";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
 
 export const CreationMainLayout: FC = () => {
   const { form, formElementsList } = useCreation();
@@ -27,13 +25,10 @@ export const CreationMainLayout: FC = () => {
     <Box sx={outerContainerStyle}>
       <Box sx={innerContainerStyle}>
         <Box sx={elementListStyle}>
-          {formElementsList.map((element) =>
-            isFormElementQuestion(element) ? (
-              <CreationQuestionWrapper key={element.id} question={element as IQuestion} />
-            ) : (
-              <CreationSectionWrapper key={element.id} section={element as ISection} />
-            ),
-          )}
+          {formElementsList.map((element) => {
+            if (isQuestion(element)) return <CreationQuestionWrapper key={element.id} question={element} />;
+            if (isSection(element)) return <CreationSectionWrapper key={element.id} section={element} />;
+          })}
         </Box>
         <Box sx={actionButtonStyle}>
           <Button

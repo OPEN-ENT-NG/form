@@ -3,10 +3,9 @@ import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
 import { toast } from "react-toastify";
 import { t } from "~/i18n";
 import { IFormElement } from "~/core/models/formElement/types";
-import { buildQuestionPayload, isFormElementQuestion } from "~/core/models/question/utils";
-import { IQuestion } from "~/core/models/question/types";
+import { buildQuestionPayload } from "~/core/models/question/utils";
 import { buildSectionPayload } from "~/core/models/section/utils";
-import { ISection } from "~/core/models/section/types";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
 
 export const formElementApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -15,10 +14,8 @@ export const formElementApi = emptySplitFormulaireApi.injectEndpoints({
         url: `forms/${formElements[0].formId}/elements`,
         method: QueryMethod.PUT,
         body: formElements.map((formElement) => {
-          if (isFormElementQuestion(formElement)) {
-            return buildQuestionPayload(formElement as IQuestion);
-          }
-          return buildSectionPayload(formElement as ISection);
+          if (isQuestion(formElement)) return buildQuestionPayload(formElement);
+          if (isSection(formElement)) return buildSectionPayload(formElement);
         }),
       }),
       invalidatesTags: [TagName.FORM_ELEMENTS],

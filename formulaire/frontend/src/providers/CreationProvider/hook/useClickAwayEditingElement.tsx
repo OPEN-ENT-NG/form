@@ -3,9 +3,7 @@ import { ClickAwayDataType } from "~/core/enums";
 import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection, isValidFormElement } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
-import { isFormElementQuestion } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
-import { isFormElementSection } from "~/core/models/section/utils";
 import { isCurrentEditingElement, updateElementInList } from "../utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { t } from "~/i18n";
@@ -108,7 +106,7 @@ export const useClickAwayEditingElement = (
       case ClickAwayDataType.SECTION:
         if (
           !targetedElement ||
-          !isFormElementSection(targetedElement) ||
+          !isSection(targetedElement) ||
           isCurrentEditingElement(targetedElement, updatedFormElement)
         )
           return;
@@ -119,7 +117,7 @@ export const useClickAwayEditingElement = (
       case ClickAwayDataType.QUESTION:
         if (
           !targetedElement ||
-          !isFormElementQuestion(targetedElement) ||
+          !isQuestion(targetedElement) ||
           isCurrentEditingElement(targetedElement, updatedFormElement)
         )
           return;
