@@ -15,13 +15,12 @@ import { useGlobal } from "~/providers/GlobalProvider";
 import { actionButtonStyle, elementListStyle, innerContainerStyle, outerContainerStyle } from "./style";
 
 export const CreationMainLayout: FC = () => {
-  const { form, formElementsList, setFormElementsList } = useCreation();
+  const { form, formElementsList, setFormElementsList, updateFormElementsList } = useCreation();
   const { t } = useTranslation(FORMULAIRE);
   const { toggleModal } = useGlobal();
 
   const sortedIds = useMemo(
-    () => formElementsList.map((formElement) => `${getDndElementType(formElement)}-${formElement.id}`
-  ),
+    () => formElementsList.map((formElement) => `${getDndElementType(formElement)}-${formElement.id}`),
     [formElementsList],
   );
 
@@ -33,11 +32,10 @@ export const CreationMainLayout: FC = () => {
   const { activeId, handleDragStart, handleDragOver, handleDragEnd, handleDragMove, sensors } = useCreationDnd(
     formElementsList,
     setFormElementsList,
+    updateFormElementsList,
   );
 
   const activeItem = getElementById(formElementsList, activeId);
-
-  console.log("aie", formElementsList)
 
   return (
     <Box sx={outerContainerStyle}>

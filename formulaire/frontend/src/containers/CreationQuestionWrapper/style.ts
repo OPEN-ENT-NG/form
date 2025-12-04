@@ -14,8 +14,8 @@ export const questionStackStyle: SxProps<Theme> = {
 };
 
 export const StyledDragContainer = styled(Box, {
-  shouldForwardProp: (prop) => prop !== "isPreview"
-})<IStyledDragContainer>(({isPreview})=> ({
+  shouldForwardProp: (prop) => prop !== "isPreview",
+})<IStyledDragContainer>(({ isPreview }) => ({
   width: "100%",
   justifyContent: "center",
   alignItems: "center",
@@ -23,7 +23,7 @@ export const StyledDragContainer = styled(Box, {
   "&:hover": {
     cursor: isPreview ? "grabbing" : "grab",
   },
-}))
+}));
 
 export const dragIconStyle: SxProps<Theme> = { transform: "rotate(90deg)", color: GREY_MAIN_COLOR, fontSize: "3rem" };
 

@@ -37,7 +37,7 @@ import {
 import { ICreationSectionProps } from "./types";
 
 import { useDroppable } from "@dnd-kit/core";
-import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { Editor } from "@edifice.io/react/editor";
 import { useTranslation } from "react-i18next";
 import { questionAlertStyle, StyledDragContainer } from "~/containers/CreationQuestionWrapper/style";
@@ -70,11 +70,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
   } = useCreation();
   const { toggleModal } = useGlobal();
 
-  const sortedIds = useMemo(
-      () => section.questions.map((q) => `${getDndElementType(q)}-${q.id}`
-    ),
-      [section],
-    );
+  const sortedIds = useMemo(() => section.questions.map((q) => `${getDndElementType(q)}-${q.id}`), [section]);
 
   const onSaveSectionNextElement = useCallback(
     (updatedEntity: ISection, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
@@ -139,7 +135,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
     <Box>
       <Stack component={Paper} sx={sectionStackStyle}>
         <Box sx={sectionHeaderWrapperStyle}>
-          <StyledDragContainer isPreview={isPreview!} ref={setHeaderDroppableNodeRef} {...listeners} {...attributes}>
+          <StyledDragContainer isPreview={!!isPreview} ref={setHeaderDroppableNodeRef} {...listeners} {...attributes}>
             <DragIndicatorRoundedIcon sx={sectionDragIconStyle} />
           </StyledDragContainer>
           <Box sx={sectionHeaderStyle}>
@@ -184,7 +180,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
               {section.questions.map((question: IQuestion) => (
                 <CreationQuestionWrapper key={question.id} question={question} />
               ))}
-              </SortableContext>
+            </SortableContext>
           </Box>
           <Box ref={setFooterDroppableNodeRef} sx={sectionFooterStyle}>
             <Box sx={nextElementSelectorWrapperStyle}>

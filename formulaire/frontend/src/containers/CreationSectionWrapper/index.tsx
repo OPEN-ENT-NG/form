@@ -29,7 +29,11 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
 
   return (
     <Box style={style} ref={setNodeRef}>
-      {isEditing ? <CreationEditingSection section={section} /> : <CreationSection listeners={listeners} attributes={attributes} section={section} isPreview={isPreview}/>}
+      {isEditing ? (
+        <CreationEditingSection section={section} />
+      ) : (
+        <CreationSection listeners={listeners} attributes={attributes} section={section} isPreview={isPreview} />
+      )}
       {showQuestionCreate && questionModalSection?.id === section.id && (
         <CreateFormElementModal
           isOpen={showQuestionCreate}

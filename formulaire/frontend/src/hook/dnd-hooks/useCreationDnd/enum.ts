@@ -13,7 +13,7 @@ export enum DndElementType {
 // QS = QUESTION_SECTION
 export enum DndMove {
   // S->S
-  // S->QR 
+  // S->QR
   // QR->QR
   R_TO_R = "ROOT_TO_ROOT",
   // QS->QS
@@ -29,4 +29,3 @@ export enum DndMove {
   // QS -> SB (question d'une section A dans le bottom de la section A)
   QS_TO_QR = "QUESTION_SECTION_TO_QUESTION_ROOT",
 }
-

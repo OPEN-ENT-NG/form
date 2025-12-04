@@ -5,7 +5,7 @@ import { CreationProvider } from "~/providers/CreationProvider";
 export const Creation: FC = () => {
   return (
     <CreationProvider>
-        <CreationView />
+      <CreationView />
     </CreationProvider>
   );
 };

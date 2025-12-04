@@ -52,7 +52,7 @@ import {
   questionStackStyle,
   questionTitleStyle,
   StyledDragContainer,
-  StyledPaper
+  StyledPaper,
 } from "./style";
 import { ICreationQuestionWrapperProps } from "./types";
 import { getQuestionContentByType } from "./utils";
@@ -76,18 +76,10 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   const isEditing = isCurrentEditingElement(question, currentEditingElement);
   const inputRef = useRef<HTMLInputElement>(null);
   const dndElementType = useMemo(() => {
-  return isFormElementQuestionRoot(question)
-    ? DndElementType.QUESTION_ROOT
-    : DndElementType.QUESTION_SECTION;
+    return isFormElementQuestionRoot(question) ? DndElementType.QUESTION_ROOT : DndElementType.QUESTION_SECTION;
   }, [question]);
 
-  const {
-    setNodeRef,
-    attributes,
-    listeners,
-    transform,
-    transition,
-  } = useSortable({
+  const { setNodeRef, attributes, listeners, transform, transition } = useSortable({
     id: `${dndElementType}-${question.id}`,
     data: {
       element: question,
@@ -95,7 +87,6 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
       questionId: question.id,
     },
   });
-
 
   const style = useMemo(() => getTransformStyle(transform, transition), [transform, transition]);
 
