@@ -16,6 +16,7 @@ export interface IQuestion extends IFormElement {
   placeholder: string | null;
   children: IQuestion[] | null;
   specificFields: IQuestionSpecificFields | null;
+  stableId: string | number | null;
 }
 
 export interface IQuestionChoiceDTO {
@@ -46,6 +47,7 @@ export interface IQuestionChoice {
   nbResponses: number;
   image: string | null;
   isNew: boolean;
+  stableId: string | number | null;
 }
 
 export interface IQuestionSpecificFields {

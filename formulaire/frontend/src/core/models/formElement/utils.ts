@@ -98,3 +98,11 @@ export const compareFormElements = (elementA: IFormElement, elementB: IFormEleme
   if (positionB == null) return -1;
   return positionA - positionB;
 };
+
+export const isQuestion = (formElement: IFormElement): formElement is IQuestion => {
+  return formElement.formElementType === FormElementType.QUESTION;
+};
+
+export const isSection = (formElement: IFormElement): formElement is ISection => {
+  return formElement.formElementType === FormElementType.SECTION;
+};

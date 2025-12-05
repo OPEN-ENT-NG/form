@@ -20,6 +20,10 @@ export const isFormElementQuestion = (formElement: IFormElement): boolean => {
   return formElement.formElementType === FormElementType.QUESTION;
 };
 
+export const isQuestionChoice = (item: object): item is IQuestionChoice => {
+  return "value" in item;
+};
+
 export const getQuestionList = (formElementList: IFormElement[]): IQuestion[] => {
   const questions = formElementList.filter((formElement) => isFormElementQuestion(formElement)) as IQuestion[];
   return questions;
@@ -31,6 +35,7 @@ export const createNewQuestion = (
   matrixId: number | null = null,
   matrixPosition: number | null = null,
   title?: string | null,
+  stableId?: string,
 ): IQuestion => {
   const formElement = createNewFormElement(FormElementType.QUESTION, formId, title);
   const defaultSection: IQuestion = {
@@ -46,6 +51,7 @@ export const createNewQuestion = (
     placeholder: null,
     children: [],
     specificFields: null,
+    stableId: stableId ? stableId : null,
     ...formElement,
   };
   return defaultSection;
@@ -57,6 +63,7 @@ export const createNewQuestionChoice = (
   image: string | null = null,
   value?: string,
   isCustom?: boolean,
+  stableId?: string,
 ): IQuestionChoice => {
   return {
     id: null,
@@ -72,6 +79,7 @@ export const createNewQuestionChoice = (
     nbResponses: 0,
     image: image ? image : null,
     isNew: true,
+    stableId: stableId ? stableId : null,
   };
 };
 
@@ -90,6 +98,7 @@ export const transformQuestionChoice = (raw: IQuestionChoiceDTO): IQuestionChoic
     nbResponses: raw.nbResponses,
     image: raw.image ?? null,
     isNew: false,
+    stableId: null,
   };
 };
 

@@ -1,4 +1,4 @@
-import { Box, ClickAwayListener, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
+import { Box, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
 import { FC, useMemo, useRef, useState } from "react";
 import { ICreationQuestionChoiceWrapperProps } from "./types";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
@@ -6,7 +6,7 @@ import { useCreation } from "~/providers/CreationProvider";
 import { UpDownButtons } from "~/components/UpDownButtons";
 import { compareChoices, hasImageType } from "./utils";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
+import { FORMULAIRE } from "~/core/constants";
 import { BoxComponentType, ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { iconStyle } from "~/components/UpDownButtons/style";
@@ -39,38 +39,32 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   question,
   type,
   hideCustomChoice = false,
-  choiceValueI18nKey = null,
 }) => {
-  const { currentEditingElement, setCurrentEditingElement, setFormElementsList } = useCreation();
+  const { currentEditingElement, setCurrentEditingElement } = useCreation();
   const { selectAllTextInput } = useGlobal();
   const { t } = useTranslation(FORMULAIRE);
   const [newChoiceValue, setNewChoiceValue] = useState<string>("");
-  const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const inputRefs = useRef<Record<string | number, HTMLInputElement | null>>({});
+  const newChoiceRefName = "newChoice";
 
   const {
+    choices,
     handleDeleteChoice,
     handleNewChoice,
     handleSortClick,
     handleSwapClick,
-    preventEmptyValues,
     updateChoice,
     updateChoiceImage,
     updateChoiceNextFormElement,
-  } = useChoiceActions(
-    question,
-    currentEditingElement,
-    setCurrentEditingElement,
-    setFormElementsList,
-    choiceValueI18nKey,
-  );
+  } = useChoiceActions(question, setCurrentEditingElement);
 
   const sortedChoices = useMemo(() => {
-    return question.choices?.filter((c) => !c.isCustom).sort((a, b) => compareChoices(a, b)) ?? [];
-  }, [question.choices]);
+    return choices.filter((c) => !c.isCustom).sort((a, b) => compareChoices(a, b));
+  }, [choices]);
 
   const customChoice = useMemo(() => {
-    return question.choices?.find((c) => c.isCustom);
-  }, [question.choices]);
+    return choices.find((c) => c.isCustom);
+  }, [choices]);
 
   if (!question.choices) {
     return null;
@@ -80,20 +74,23 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
     if (isShiftEnterPressed(e)) {
       updateChoice(index, (e.target as HTMLInputElement).value);
       const targetIndex = index - 1 >= 0 ? index - 1 : 0;
-      inputRefs.current[targetIndex]?.focus();
+      const targetChoice = choices[targetIndex];
+      if (!targetChoice.stableId) return;
+      inputRefs.current[targetChoice.stableId]?.focus();
     } else if (isEnterPressed(e)) {
       updateChoice(index, (e.target as HTMLInputElement).value);
-      inputRefs.current[index + 1]?.focus();
+      const targetChoiceStableId = choices[index + 1] ? choices[index + 1].stableId : newChoiceRefName;
+      if (!targetChoiceStableId) return;
+      inputRefs.current[targetChoiceStableId]?.focus();
     }
   };
 
   const handleKeyDownNewChoice = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (isShiftEnterPressed(e)) {
-      handleNewChoice(false, newChoiceValue);
-      setNewChoiceValue("");
-      const index = question.choices?.length ?? 0;
-      const targetIndex = index - 1 >= 0 ? index - 1 : 0;
-      inputRefs.current[targetIndex]?.focus();
+      const targetIndex = choices.length - 1 >= 0 ? choices.length - 1 : 0;
+      const targetChoice = choices[targetIndex];
+      if (!targetChoice.stableId) return;
+      inputRefs.current[targetChoice.stableId]?.focus();
     } else if (isEnterPressed(e)) {
       handleNewChoice(false, newChoiceValue);
       setNewChoiceValue("");
@@ -103,7 +100,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   const renderChoicesWhenNotEditing = () => {
     const allChoices = customChoice ? [...sortedChoices, customChoice] : sortedChoices;
     return allChoices.map((choice, index) => (
-      <Box key={choice.id ?? index} sx={choicesWrapperWhenNotEditingStyle}>
+      <Box key={choice.stableId} sx={choicesWrapperWhenNotEditingStyle}>
         <CreationQuestionChoice index={index} type={type} image={choice.image ?? undefined}>
           <TextField
             value={choice.value}
@@ -121,168 +118,176 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   return (
     <Box>
       {isCurrentEditingElement(question, currentEditingElement) ? (
-        <ClickAwayListener
-          mouseEvent={MOUSE_EVENT_DOWN}
-          touchEvent={TOUCH_EVENT_START}
-          onClickAway={() => {
-            preventEmptyValues();
-          }}
-        >
-          <Box>
-            <StyledSortWrapper isConditional={question.conditional}>
-              <Box onClick={handleSortClick} sx={sortWrapperStyle}>
-                <SortByAlphaRoundedIcon sx={sortIconStyle} />
-                <Typography variant={TypographyVariant.BODY2}>{t("formulaire.sort")}</Typography>
-              </Box>
-            </StyledSortWrapper>
-            <Box sx={choicesWrapperStyle}>
-              {/* Classic choices */}
-              {sortedChoices.map((choice, index) => (
-                <Box key={choice.id ?? index} sx={choiceWrapperStyle}>
-                  <Box sx={upDownButtonsWrapperStyle}>
-                    <UpDownButtons
-                      element={choice}
-                      index={index}
-                      elementList={question.choices ?? []}
-                      hasCustomAtTheEnd={customChoice !== undefined}
-                      handleReorderClick={handleSwapClick}
-                    />
-                  </Box>
-                  <CreationQuestionChoice
+        <Box>
+          <StyledSortWrapper isConditional={question.conditional}>
+            <Box
+              onClick={(e) => {
+                e.stopPropagation();
+                handleSortClick();
+              }}
+              sx={sortWrapperStyle}
+            >
+              <SortByAlphaRoundedIcon sx={sortIconStyle} />
+              <Typography variant={TypographyVariant.BODY2}>{t("formulaire.sort")}</Typography>
+            </Box>
+          </StyledSortWrapper>
+          <Box sx={choicesWrapperStyle}>
+            {/* Classic choices */}
+            {sortedChoices.map((choice, index) => (
+              <Box key={choice.stableId} sx={choiceWrapperStyle}>
+                <Box sx={upDownButtonsWrapperStyle}>
+                  <UpDownButtons
+                    element={choice}
                     index={index}
-                    type={type}
-                    hasImage={hasImageType(type)}
-                    updateChoiceImage={updateChoiceImage}
-                    image={choice.image ?? undefined}
-                    isEditing={true}
-                  >
-                    <TextField
-                      inputRef={(el: HTMLInputElement | null) => (inputRefs.current[index] = el)}
-                      value={choice.value}
-                      variant={ComponentVariant.STANDARD}
-                      fullWidth
-                      onFocus={selectAllTextInput}
-                      onChange={(e) => {
-                        updateChoice(index, e.target.value);
-                      }}
-                      onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                        handleKeyDownExistingChoice(e, index);
-                      }}
-                      sx={choiceInputStyle}
-                    />
-                  </CreationQuestionChoice>
-                  <Box sx={deleteWrapperStyle}>
-                    {question.choices && question.choices.length > 1 && (
-                      <IconButton
-                        onClick={() => void handleDeleteChoice(choice.id, index, choice.position)}
-                        size={ComponentSize.SMALL}
-                        sx={deleteButtonIconStyle}
-                      >
-                        <ClearRoundedIcon sx={iconStyle} />
-                      </IconButton>
-                    )}
-                  </Box>
-                  {question.conditional && (
-                    <CreationQuestionChoiceConditional
-                      question={question}
-                      choice={choice}
-                      choiceIndex={index}
-                      updateChoiceNextFormElement={updateChoiceNextFormElement}
-                    />
-                  )}
+                    elementList={choices}
+                    hasCustomAtTheEnd={!!customChoice}
+                    handleReorderClick={handleSwapClick}
+                  />
                 </Box>
-              ))}
-
-              {/* New empty choice */}
-              <NewChoiceWrapper hasImage={hasImageType(type)}>
-                <CreationQuestionChoice index={question.choices.length} type={type}>
+                <CreationQuestionChoice
+                  index={index}
+                  type={type}
+                  hasImage={hasImageType(type)}
+                  updateChoiceImage={updateChoiceImage}
+                  image={choice.image ?? undefined}
+                  isEditing={true}
+                >
                   <TextField
-                    inputRef={(el: HTMLInputElement | null) => (inputRefs.current[question.choices?.length ?? 0] = el)}
-                    value={newChoiceValue}
+                    inputRef={(el: HTMLInputElement | null) => {
+                      if (!choice.stableId) return;
+                      inputRefs.current[choice.stableId] = el;
+                    }}
+                    value={choice.value}
                     variant={ComponentVariant.STANDARD}
-                    placeholder={t("formulaire.question.option")}
                     fullWidth
                     onFocus={selectAllTextInput}
-                    onBlur={() => {
-                      handleNewChoice(false, newChoiceValue);
-                      setNewChoiceValue("");
-                    }}
                     onChange={(e) => {
-                      setNewChoiceValue(e.target.value);
-                      console.log(question.choices);
+                      updateChoice(index, e.target.value);
                     }}
-                    onKeyDown={handleKeyDownNewChoice}
-                    sx={newChoiceInputStyle}
+                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
+                      handleKeyDownExistingChoice(e, index);
+                    }}
+                    sx={choiceInputStyle}
                   />
                 </CreationQuestionChoice>
-              </NewChoiceWrapper>
+                <Box sx={deleteWrapperStyle}>
+                  {choices.length > 1 && (
+                    <IconButton
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        void handleDeleteChoice(choice.id, index, choice.position);
+                      }}
+                      size={ComponentSize.SMALL}
+                      sx={deleteButtonIconStyle}
+                    >
+                      <ClearRoundedIcon sx={iconStyle} />
+                    </IconButton>
+                  )}
+                </Box>
+                {question.conditional && (
+                  <CreationQuestionChoiceConditional
+                    question={question}
+                    choice={choice}
+                    choiceIndex={index}
+                    updateChoiceNextFormElement={updateChoiceNextFormElement}
+                  />
+                )}
+              </Box>
+            ))}
 
-              {/* Custom choice */}
-              {customChoice &&
-                (() => {
-                  const customChoiceIndex = question.choices.length - 1;
-                  return (
-                    <Box sx={customChoiceWrapperStyle}>
-                      <CreationQuestionChoice
-                        index={customChoiceIndex}
-                        type={type}
-                        hasImage={hasImageType(type)}
-                        updateChoiceImage={updateChoiceImage}
-                        image={customChoice.image ?? undefined}
-                        isEditing={true}
-                      >
-                        <TextField
-                          inputRef={(el: HTMLInputElement | null) => (inputRefs.current[customChoiceIndex] = el)}
-                          value={customChoice.value}
-                          variant={ComponentVariant.STANDARD}
-                          fullWidth
-                          disabled
-                          sx={choiceInputStyle}
-                        />
-                      </CreationQuestionChoice>
-                      <Box sx={deleteWrapperStyle}>
-                        {question.choices.length > 1 && (
-                          <IconButton
-                            onClick={() =>
-                              void handleDeleteChoice(customChoice.id, customChoiceIndex, customChoice.position)
-                            }
-                            size={ComponentSize.SMALL}
-                            sx={deleteButtonIconStyle}
-                          >
-                            <ClearRoundedIcon sx={iconStyle} />
-                          </IconButton>
-                        )}
-                      </Box>
-                      {question.conditional && (
-                        <CreationQuestionChoiceConditional
-                          question={question}
-                          choice={customChoice}
-                          choiceIndex={question.choices.length - 1}
-                          updateChoiceNextFormElement={updateChoiceNextFormElement}
-                        />
+            {/* New empty choice */}
+            <NewChoiceWrapper key="newChoice" hasImage={hasImageType(type)}>
+              <CreationQuestionChoice index={choices.length} type={type}>
+                <TextField
+                  inputRef={(el: HTMLInputElement | null) => (inputRefs.current[newChoiceRefName] = el)}
+                  value={newChoiceValue}
+                  variant={ComponentVariant.STANDARD}
+                  placeholder={t("formulaire.question.option")}
+                  fullWidth
+                  onFocus={selectAllTextInput}
+                  onBlur={() => {
+                    handleNewChoice(false, newChoiceValue);
+                    setNewChoiceValue("");
+                  }}
+                  onChange={(e) => {
+                    setNewChoiceValue(e.target.value);
+                  }}
+                  onKeyDown={handleKeyDownNewChoice}
+                  sx={newChoiceInputStyle}
+                />
+              </CreationQuestionChoice>
+            </NewChoiceWrapper>
+
+            {/* Custom choice */}
+            {customChoice &&
+              (() => {
+                const customChoiceIndex = choices.length - 1;
+                return (
+                  <Box sx={customChoiceWrapperStyle}>
+                    <CreationQuestionChoice
+                      index={customChoiceIndex}
+                      type={type}
+                      hasImage={hasImageType(type)}
+                      updateChoiceImage={updateChoiceImage}
+                      image={customChoice.image ?? undefined}
+                      isEditing={true}
+                    >
+                      <TextField
+                        inputRef={(el: HTMLInputElement | null) => {
+                          if (!customChoice.stableId) return;
+                          inputRefs.current[customChoice.stableId] = el;
+                        }}
+                        value={customChoice.value}
+                        variant={ComponentVariant.STANDARD}
+                        fullWidth
+                        disabled
+                        sx={choiceInputStyle}
+                      />
+                    </CreationQuestionChoice>
+                    <Box sx={deleteWrapperStyle}>
+                      {choices.length > 1 && (
+                        <IconButton
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            void handleDeleteChoice(customChoice.id, customChoiceIndex, customChoice.position);
+                          }}
+                          size={ComponentSize.SMALL}
+                          sx={deleteButtonIconStyle}
+                        >
+                          <ClearRoundedIcon sx={iconStyle} />
+                        </IconButton>
                       )}
                     </Box>
-                  );
-                })()}
-            </Box>
-            {!hideCustomChoice && !customChoice && (
-              <Box>
-                <Typography variant={TypographyVariant.BODY2}>
-                  {t("formulaire.question.add.choice.other.text")}
-                  <Box
-                    component={BoxComponentType.SPAN}
-                    onClick={() => {
-                      handleNewChoice(true, t("formulaire.other"));
-                    }}
-                    sx={otherChoiceSpanStyle}
-                  >
-                    {t("formulaire.question.add.choice.other.link")}
+                    {question.conditional && (
+                      <CreationQuestionChoiceConditional
+                        question={question}
+                        choice={customChoice}
+                        choiceIndex={choices.length - 1}
+                        updateChoiceNextFormElement={updateChoiceNextFormElement}
+                      />
+                    )}
                   </Box>
-                </Typography>
-              </Box>
-            )}
+                );
+              })()}
           </Box>
-        </ClickAwayListener>
+          {!hideCustomChoice && !customChoice && (
+            <Box>
+              <Typography variant={TypographyVariant.BODY2}>
+                {t("formulaire.question.add.choice.other.text")}
+                <Box
+                  component={BoxComponentType.SPAN}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleNewChoice(true, t("formulaire.other"));
+                  }}
+                  sx={otherChoiceSpanStyle}
+                >
+                  {t("formulaire.question.add.choice.other.link")}
+                </Box>
+              </Typography>
+            </Box>
+          )}
+        </Box>
       ) : (
         <Box sx={notEditingchoicesWrapperStyle}>{renderChoicesWhenNotEditing()}</Box>
       )}
