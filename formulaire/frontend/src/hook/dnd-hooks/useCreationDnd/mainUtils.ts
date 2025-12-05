@@ -145,7 +145,6 @@ export const moveQRtoQS = (
   targetSectionPos: number,
 ): IFormElement[] => {
   const newElementsWithoutActiveQuestion = removeRootElement(elements, active);
-  console.log("1 : ", newElementsWithoutActiveQuestion);
 
   const newOverSection = getSectionById(newElementsWithoutActiveQuestion, overSection.id);
   if (!newOverSection) return elements;
@@ -158,7 +157,6 @@ export const moveQRtoQS = (
     false,
   );
 
-  console.log("2 : ", newElementsWithActiveQuestionAdded);
   return newElementsWithActiveQuestionAdded;
 };
 

@@ -245,7 +245,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             setCurrentEditingElement(question);
           }}
         >
-          <StyledDragContainer isPreview={isPreview!} {...attributes} {...listeners}>
+          <StyledDragContainer isPreview={!!isPreview} {...attributes} {...listeners}>
             <DragIndicatorRoundedIcon sx={dragIconStyle} />
           </StyledDragContainer>
           <Box sx={questionTitleStyle}>

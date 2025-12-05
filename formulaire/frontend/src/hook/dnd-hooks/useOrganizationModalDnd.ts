@@ -24,7 +24,6 @@ export function useOrganizationModalDnd(
 
   const handleDragStart = ({ active }: DragStartEvent) => {
     setActiveId(active.id as number);
-    console.log("drag start", active.id);
     document.body.style.cursor = CURSOR_STYLE_GRABBING;
     // Find all items that are part of the active drag (current grabbed item and its children)
     const activeItems = flattenedFormElementsList.filter(
