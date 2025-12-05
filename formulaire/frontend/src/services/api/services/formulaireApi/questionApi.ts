@@ -46,6 +46,7 @@ export const questionApi = emptySplitFormulaireApi.injectEndpoints({
           },
         };
       },
+      providesTags: [TagName.QUESTIONS, TagName.CHILDREN],
       transformResponse: (response: IQuestion[]) =>
         response.map((question) => ({
           ...question,

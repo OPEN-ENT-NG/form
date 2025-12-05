@@ -9,10 +9,9 @@ export const useFormElementList = (
   questionsDatas: IQuestion[] | undefined,
   resetFormElementListId: number,
 ) => {
-  const questionsIds = useMemo(
-    () => (questionsDatas ?? []).map((q) => q.id).filter((id): id is number => id !== null),
-    [questionsDatas],
-  );
+  const questionsIds = useMemo(() => {
+    return (questionsDatas ?? []).map((q) => q.id).filter((id): id is number => id !== null);
+  }, [questionsDatas]);
 
   const { data: choicesDatas } = useGetQuestionChoicesQuery(
     { questionIds: questionsIds },

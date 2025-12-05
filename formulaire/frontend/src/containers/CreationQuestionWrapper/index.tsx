@@ -1,18 +1,7 @@
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-import {
-  Alert,
-  Box,
-  ClickAwayListener,
-  IconButton,
-  Paper,
-  Stack,
-  Switch,
-  TextField,
-  Tooltip,
-  Typography,
-} from "@cgi-learning-hub/ui";
+import { Alert, Box, IconButton, Paper, Stack, Switch, TextField, Tooltip, Typography } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
+import { FORMULAIRE } from "~/core/constants";
 import { ICreationQuestionWrapperProps } from "./types";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
@@ -39,7 +28,7 @@ import {
 import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { IQuestion } from "~/core/models/question/types";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { ModalType } from "~/core/enums";
+import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
 import { UndoConfirmationModal } from "../UndoConfirmationModal";
@@ -62,6 +51,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     handleDuplicateFormElement,
     handleDeleteFormElement,
     saveQuestion,
+    setFormElementsList,
   } = useCreation();
   const {
     displayModals: { showQuestionUndo, showQuestionDelete },
@@ -82,9 +72,11 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     }
   }, [isEditing]);
 
-  const handleClickAwayEditingElement = useClickAwayEditingElement(
+  const { handleClickAway } = useClickAwayEditingElement(
     handleDeleteFormElement,
     setCurrentEditingElement,
+    formElementsList,
+    setFormElementsList,
     saveQuestion,
   );
 
@@ -136,89 +128,83 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   };
 
   return (
-    <Box>
+    <Box
+      data-type={ClickAwayDataType.QUESTION}
+      onClick={(e) => {
+        handleClickAway(e, currentEditingElement, question);
+      }}
+    >
       {isEditing ? (
-        <ClickAwayListener
-          mouseEvent={MOUSE_EVENT_DOWN}
-          touchEvent={TOUCH_EVENT_START}
-          onClickAway={() => {
-            if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
-              return;
-            }
-            void handleClickAwayEditingElement(currentEditingElement);
-          }}
-        >
-          <Box>
-            <StyledPaper isValidFormElement={isValidFormElement(question)}>
-              <Box>
-                <TextField
-                  inputRef={inputRef}
-                  variant={ComponentVariant.STANDARD}
-                  fullWidth
-                  sx={editingQuestionTitleStyle}
-                  placeholder={t("formulaire.question.title.empty")}
-                  value={currentQuestionTitle}
-                  onFocus={selectAllTextInput}
-                  onChange={handleTitleChange}
-                />
-              </Box>
+        <Box>
+          <StyledPaper isValidFormElement={isValidFormElement(question)}>
+            <Box>
+              <TextField
+                inputRef={inputRef}
+                variant={ComponentVariant.STANDARD}
+                fullWidth
+                sx={editingQuestionTitleStyle}
+                placeholder={t("formulaire.question.title.empty")}
+                value={currentQuestionTitle}
+                onFocus={selectAllTextInput}
+                onChange={handleTitleChange}
+              />
+            </Box>
 
-              <Box sx={editingQuestionContentStyle}>{getQuestionContentByType(question, inputRef)}</Box>
+            <Box sx={editingQuestionContentStyle}>{getQuestionContentByType(question, inputRef)}</Box>
 
-              <Box sx={editingQuestionFooterStyle}>
-                {shouldShowMandatorySwitch(question) && (
-                  <Box sx={mandatorySwitchContainerStyle}>
-                    <Switch checked={question.mandatory} onChange={handleMandatoryChange} />
-                    <Typography>{t("formulaire.mandatory")}</Typography>
-                  </Box>
-                )}
-
-                {shouldShowConditionalSwitch(question, formElementsList) && (
-                  <Box sx={conditionalSwitchContainerStyle}>
-                    <Switch checked={question.conditional} onChange={handleConditionalChange} />
-                    <Typography>{t("formulaire.conditional")}</Typography>
-                  </Box>
-                )}
-
-                <Box sx={editingQuestionIconContainerStyle}>
-                  <Tooltip title={t("formulaire.duplicate")} placement="top" disableInteractive>
-                    <IconButton aria-label="duplicate" onClick={handleDuplicate}>
-                      <FileCopyRoundedIcon sx={editingQuestionIconStyle} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={t("formulaire.delete")} placement="top" disableInteractive>
-                    <IconButton aria-label="delete" onClick={handleDelete}>
-                      <DeleteRoundedIcon sx={editingQuestionIconStyle} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={t("formulaire.cancel")} placement="top" disableInteractive>
-                    <IconButton aria-label="undo" onClick={handleUndo}>
-                      <UndoRoundedIcon sx={editingQuestionIconStyle} />
-                    </IconButton>
-                  </Tooltip>
+            <Box sx={editingQuestionFooterStyle}>
+              {shouldShowMandatorySwitch(question) && (
+                <Box sx={mandatorySwitchContainerStyle}>
+                  <Switch checked={question.mandatory} onChange={handleMandatoryChange} />
+                  <Typography>{t("formulaire.mandatory")}</Typography>
                 </Box>
+              )}
+
+              {shouldShowConditionalSwitch(question, formElementsList) && (
+                <Box sx={conditionalSwitchContainerStyle}>
+                  <Switch checked={question.conditional} onChange={handleConditionalChange} />
+                  <Typography>{t("formulaire.conditional")}</Typography>
+                </Box>
+              )}
+
+              <Box sx={editingQuestionIconContainerStyle}>
+                <Tooltip title={t("formulaire.duplicate")} placement="top" disableInteractive>
+                  <IconButton aria-label="duplicate" onClick={handleDuplicate}>
+                    <FileCopyRoundedIcon sx={editingQuestionIconStyle} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t("formulaire.delete")} placement="top" disableInteractive>
+                  <IconButton aria-label="delete" onClick={handleDelete}>
+                    <DeleteRoundedIcon sx={editingQuestionIconStyle} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t("formulaire.cancel")} placement="top" disableInteractive>
+                  <IconButton aria-label="undo" onClick={handleUndo}>
+                    <UndoRoundedIcon sx={editingQuestionIconStyle} />
+                  </IconButton>
+                </Tooltip>
               </Box>
-            </StyledPaper>
-            {showQuestionDelete && (
-              <DeleteConfirmationModal
-                isOpen={showQuestionDelete}
-                handleClose={() => {
-                  toggleModal(ModalType.QUESTION_DELETE);
-                }}
-                element={question}
-              />
-            )}
-            {showQuestionUndo && (
-              <UndoConfirmationModal
-                isOpen={showQuestionUndo}
-                handleClose={() => {
-                  toggleModal(ModalType.QUESTION_UNDO);
-                }}
-                element={question}
-              />
-            )}
-          </Box>
-        </ClickAwayListener>
+            </Box>
+          </StyledPaper>
+          {showQuestionDelete && (
+            <DeleteConfirmationModal
+              isOpen={showQuestionDelete}
+              handleClose={() => {
+                toggleModal(ModalType.QUESTION_DELETE);
+              }}
+              element={question}
+            />
+          )}
+          {showQuestionUndo && (
+            <UndoConfirmationModal
+              isOpen={showQuestionUndo}
+              handleClose={() => {
+                toggleModal(ModalType.QUESTION_UNDO);
+              }}
+              element={question}
+            />
+          )}
+        </Box>
       ) : (
         <Stack
           component={Paper}
