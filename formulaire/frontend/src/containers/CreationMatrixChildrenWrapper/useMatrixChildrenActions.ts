@@ -2,29 +2,29 @@ import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react"
 import { IQuestion } from "~/core/models/question/types";
 import { Direction } from "~/components/OrganizationSortableItem/enum";
 import { useDeleteSingleQuestionMutation } from "~/services/api/services/formulaireApi/questionApi";
-import {
-  fixMatrixChildrenPositions,
-  isCurrentEditingElement,
-  updateElementInList,
-} from "~/providers/CreationProvider/utils";
+import { fixMatrixChildrenPositions } from "~/providers/CreationProvider/utils";
 import { PositionActionType } from "~/providers/CreationProvider/enum";
-import { compareChildrenByTitle, swapChildrenAndSort } from "./utils";
+import { compareChildren, compareChildrenByTitle, swapChildrenAndSort } from "./utils";
 import { createNewQuestion } from "~/core/models/question/utils";
-import { t } from "~/i18n";
-import { IFormElement } from "~/core/models/formElement/types";
 import { QuestionTypes } from "~/core/models/question/enum";
 
-export const useMatrixChildrenActions = (
-  question: IQuestion,
-  currentEditingElement: IFormElement | null,
-  setCurrentEditingElement: (q: IQuestion) => void,
-  setFormElementsList: Dispatch<SetStateAction<IFormElement[]>>,
-) => {
+export const useMatrixChildrenActions = (question: IQuestion, setCurrentEditingElement: (q: IQuestion) => void) => {
   const [currentSortDirection, setCurrentSortDirection] = useState<Direction>(Direction.DOWN);
   const [deleteMatrixChild] = useDeleteSingleQuestionMutation();
 
   const setQuestion = setCurrentEditingElement as Dispatch<SetStateAction<IQuestion>>;
-  const children = useMemo(() => question.children || [], [question]);
+  const children = useMemo(
+    () =>
+      (question.children || [])
+        .sort((a, b) => compareChildren(a, b))
+        .map((child) => {
+          return {
+            ...child,
+            ...(child.id && { stableId: child.id }),
+          };
+        }),
+    [question.children],
+  );
 
   const handleDeleteChild = useCallback(
     async (childId: number | null, index: number, matrixPosition: number | null) => {
@@ -76,53 +76,30 @@ export const useMatrixChildrenActions = (
 
   const handleNewChild = useCallback(
     (childTitle: string) => {
-      if (!question.children || !childTitle) return;
+      if (!childTitle) return;
 
       const newChild = createNewQuestion(
         question.formId,
         QuestionTypes.SINGLEANSWERRADIO,
         question.id,
-        question.children.length + 1,
+        children.length + 1,
+        childTitle,
+        crypto.randomUUID(),
       );
 
       setCurrentEditingElement({ ...question, children: [...children, newChild] });
     },
-    [question, children],
-  );
-
-  const updateChild = useCallback(
-    (index: number | null, title: string) => {
-      if (index === null || !children[index]) return;
-      const updatedChildren = [...children];
-      updatedChildren[index] = { ...updatedChildren[index], title: title };
-      setCurrentEditingElement({ ...question, children: updatedChildren });
-    },
     [children, question],
   );
 
-  const preventEmptyValues = useCallback(() => {
-    if (children.length === 0) return;
-
-    const updatedChildren = children.map((child) => {
-      if (!child.title?.trim()) {
-        return { ...child, title: t("formulaire.matrix.column.label.default", { 0: child.matrixPosition }) };
-      }
-      return child;
+  const updateChild = (index: number | null, title: string) => {
+    if (index === null || index < 0) return;
+    setQuestion((prev) => {
+      const updatedChildren = [...(prev.children || [])];
+      updatedChildren[index] = { ...updatedChildren[index], title };
+      return { ...prev, children: updatedChildren };
     });
-
-    const updatedQuestion: IQuestion = {
-      ...question,
-      children: updatedChildren,
-    };
-
-    // Synch currentEditingElement
-    if (currentEditingElement && isCurrentEditingElement(question, currentEditingElement)) setQuestion(updatedQuestion);
-
-    setFormElementsList((prevFormElementsList) => {
-      const updatedFormElementsList = updateElementInList(prevFormElementsList, updatedQuestion);
-      return updatedFormElementsList as IQuestion[];
-    });
-  }, [children, question]);
+  };
 
   return {
     children: children,
@@ -131,6 +108,5 @@ export const useMatrixChildrenActions = (
     handleSortClick,
     handleNewChild,
     updateChild,
-    preventEmptyValues,
   };
 };

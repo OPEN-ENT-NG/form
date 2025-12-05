@@ -23,7 +23,7 @@ export const emptyStateWrapper: SxProps<Theme> = {
   justifyContent: "center",
   width: "100%",
   height: "100%",
-  paddingX: "3rem",
+  padding: "3rem",
   gap: 3,
   textAlign: "center",
 };

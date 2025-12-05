@@ -28,6 +28,7 @@ export enum TagName {
   SECTIONS = "SECTIONS",
   FORM_ELEMENTS = "FORM_ELEMENTS",
   CHOICE = "CHOICE",
+  CHILDREN = "CHILDREN",
 }
 
 export enum QueryMethod {
@@ -82,4 +83,10 @@ export enum SizeAbreviation {
   MEDIUM = "md",
   LARGE = "lg",
   EXTRA_LARGE = "xl",
+}
+
+export enum ClickAwayDataType {
+  ROOT = "ROOT",
+  SECTION = "SECTION",
+  QUESTION = "QUESTION",
 }

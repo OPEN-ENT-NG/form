@@ -4,7 +4,7 @@ import { CustomSVGProps } from "../types";
 export const MultipleAnswerIcon: FC<CustomSVGProps> = () => (
   <svg width="3rem" height="3rem" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="36" height="36" transform="translate(0 0.540527)" fill="white" />
-    <g clip-path="url(#clip0_662_6630)">
+    <g clipPath="url(#clip0_662_6630)">
       <path
         d="M16 29.5405C16 28.7121 16.6716 28.0405 17.5 28.0405H31.5C32.3284 28.0405 33 28.7121 33 29.5405C33 30.3689 32.3284 31.0405 31.5 31.0405H17.5C16.6716 31.0405 16 30.3689 16 29.5405Z"
         fill="#383D3E"
