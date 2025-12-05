@@ -15,11 +15,11 @@ import {
   getTargetRootPosition,
 } from "./utils";
 
-export function useCreationDnd(
+export const useCreationDnd = (
   formElementsList: IFormElement[],
   setFormElementsList: Dispatch<SetStateAction<IFormElement[]>>,
   updateFormElementsList: (formElementsList: IFormElement[]) => Promise<void>,
-) {
+) => {
   const [activeId, setActiveId] = useState<number | null>(null);
 
   const [isOverEnabled, setIsOverEnable] = useState<boolean>(true);
@@ -123,4 +123,4 @@ export function useCreationDnd(
     handleDragEnd,
     handleDragMove,
   };
-}
+};
