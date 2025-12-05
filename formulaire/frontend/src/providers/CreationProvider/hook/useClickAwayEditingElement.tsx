@@ -1,32 +1,34 @@
-import { useCallback } from "react";
+import { Dispatch, MouseEvent, SetStateAction, useCallback } from "react";
+import { ClickAwayDataType } from "~/core/enums";
 import { IFormElement } from "~/core/models/formElement/types";
-import { isValidFormElement } from "~/core/models/formElement/utils";
+import { isQuestion, isSection, isValidFormElement } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
 import { isFormElementQuestion } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
 import { isFormElementSection } from "~/core/models/section/utils";
+import { isCurrentEditingElement, updateElementInList } from "../utils";
+import { QuestionTypes } from "~/core/models/question/enum";
+import { t } from "~/i18n";
 
 export const useClickAwayEditingElement = (
   handleDeleteFormElement: (element: IFormElement) => void,
   setCurrentEditingElement: (element: IFormElement | null) => void,
-  saveQuestion?: (question: IQuestion) => Promise<void>,
-  saveSection?: (section: ISection) => Promise<void>,
+  formElementsList: IFormElement[],
+  setFormElementsList: Dispatch<SetStateAction<IFormElement[]>>,
+  saveQuestion?: (question: IQuestion, updatedFormElementsList: IFormElement[]) => Promise<void>,
+  saveSection?: (section: ISection, updatedFormElementsList: IFormElement[]) => Promise<void>,
 ) => {
-  return useCallback(
-    async (elementToUpdate: IFormElement) => {
+  const saveFormElement = useCallback(
+    async (elementToUpdate: IFormElement, updatedFormElementsList: IFormElement[]) => {
       // If the element is not new, or it is new but valid, just clear the editing state and save.
       if (!elementToUpdate.isNew || isValidFormElement(elementToUpdate)) {
         const temporaryElement = elementToUpdate;
-        if (isFormElementQuestion(temporaryElement) && saveQuestion) {
-          const currentEditingQuestion = temporaryElement as IQuestion;
-          await saveQuestion(currentEditingQuestion);
-          setCurrentEditingElement(null);
+        if (isQuestion(temporaryElement) && saveQuestion) {
+          await saveQuestion(temporaryElement, updatedFormElementsList);
           return;
         }
-        if (isFormElementSection(temporaryElement) && saveSection) {
-          const currentEditingSection = temporaryElement as ISection;
-          await saveSection(currentEditingSection);
-          setCurrentEditingElement(null);
+        if (isSection(temporaryElement) && saveSection) {
+          await saveSection(temporaryElement, updatedFormElementsList);
           return;
         }
         return;
@@ -38,4 +40,100 @@ export const useClickAwayEditingElement = (
     },
     [handleDeleteFormElement, setCurrentEditingElement],
   );
+
+  const preventEmptyValues = (currentEditingElement: IQuestion) => {
+    if (
+      !currentEditingElement.choices ||
+      !currentEditingElement.children ||
+      (!currentEditingElement.choices.length && !currentEditingElement.children.length)
+    )
+      return currentEditingElement;
+
+    const choiceValueI18nKey =
+      currentEditingElement.questionType === QuestionTypes.MATRIX
+        ? "formulaire.matrix.line.label.default"
+        : "formulaire.option";
+
+    const updatedChoicesList = currentEditingElement.choices.map((choice) => {
+      if (choice.value && choice.value.trim().length) return choice;
+      return { ...choice, value: t(choiceValueI18nKey, { 0: choice.position }) };
+    });
+
+    const updatedChildrenList = currentEditingElement.children.map((child) => {
+      if (child.title && child.title.trim().length) return child;
+      return {
+        ...child,
+        title: t("formulaire.matrix.column.label.default", { 0: child.matrixPosition }),
+      };
+    });
+
+    const updatedQuestion: IQuestion = {
+      ...currentEditingElement,
+      choices: updatedChoicesList,
+      children: updatedChildrenList,
+    };
+
+    return updatedQuestion;
+  };
+
+  const handleClickAway = (
+    e: MouseEvent<HTMLDivElement>,
+    currentEditingElement: IFormElement | null,
+    targetedElement: IFormElement | null = null,
+  ) => {
+    e.stopPropagation();
+    if (!currentEditingElement && targetedElement && isQuestion(targetedElement)) {
+      setCurrentEditingElement(targetedElement);
+      return;
+    }
+
+    if (!currentEditingElement) return;
+
+    let updatedFormElement = currentEditingElement;
+    if (isQuestion(currentEditingElement)) {
+      const updatedQuestion = preventEmptyValues(currentEditingElement);
+      setCurrentEditingElement(updatedQuestion);
+      updatedFormElement = updatedQuestion;
+    }
+
+    const updatedFormElementsList = updateElementInList(formElementsList, updatedFormElement);
+    setFormElementsList(updatedFormElementsList as IQuestion[]);
+
+    const dataType = e.currentTarget.dataset.type;
+    switch (dataType) {
+      case ClickAwayDataType.ROOT:
+        void saveFormElement(updatedFormElement, updatedFormElementsList);
+        setCurrentEditingElement(null);
+        return;
+      case ClickAwayDataType.SECTION:
+        if (
+          !targetedElement ||
+          !isFormElementSection(targetedElement) ||
+          isCurrentEditingElement(targetedElement, updatedFormElement)
+        )
+          return;
+
+        void saveFormElement(updatedFormElement, updatedFormElementsList);
+        setCurrentEditingElement(null);
+        return;
+      case ClickAwayDataType.QUESTION:
+        if (
+          !targetedElement ||
+          !isFormElementQuestion(targetedElement) ||
+          isCurrentEditingElement(targetedElement, updatedFormElement)
+        )
+          return;
+
+        void saveFormElement(updatedFormElement, updatedFormElementsList);
+        setCurrentEditingElement(targetedElement);
+        return;
+      default:
+        return;
+    }
+  };
+
+  return {
+    saveFormElement,
+    handleClickAway,
+  };
 };

@@ -1,16 +1,6 @@
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { ICreationEditingSectionProps } from "./types";
-import {
-  Box,
-  Typography,
-  IconButton,
-  Stack,
-  Paper,
-  Alert,
-  TextField,
-  ClickAwayListener,
-  Tooltip,
-} from "@cgi-learning-hub/ui";
+import { Box, Typography, IconButton, Stack, Paper, Alert, TextField, Tooltip } from "@cgi-learning-hub/ui";
 import {
   editingSectionTitleStyle,
   editorContainerStyle,
@@ -32,7 +22,7 @@ import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import { AlertSeverityVariant, ComponentVariant } from "~/core/style/themeProps";
 import { useTranslation } from "react-i18next";
-import { EDITOR_CONTENT_HTML, FORMULAIRE, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
+import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
 import { isValidFormElement } from "~/core/models/formElement/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
@@ -54,19 +44,24 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   const { t } = useTranslation(FORMULAIRE);
   const {
     form,
+    formElementsList,
     setCurrentEditingElement,
     currentEditingElement,
     handleDeleteFormElement,
     saveSection,
     setQuestionModalSection,
+    setFormElementsList,
   } = useCreation();
   const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
   const editorRef = useRef<EditorRef>(null);
+  const initialSectionDescription = useRef(section.description);
   const [createSection] = useCreateSectionMutation();
 
-  const handleClickAwayEditingElement = useClickAwayEditingElement(
+  const { saveFormElement } = useClickAwayEditingElement(
     handleDeleteFormElement,
     setCurrentEditingElement,
+    formElementsList,
+    setFormElementsList,
     undefined,
     saveSection,
   );
@@ -119,115 +114,121 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     return section;
   };
 
+  const updateSection = () => {
+    const updated = {
+      ...currentEditingElement,
+      description: editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string,
+    } as ISection;
+    setCurrentEditingElement(updated);
+    return updated;
+  };
+
   return (
     <Box>
-      <ClickAwayListener
-        mouseEvent={MOUSE_EVENT_DOWN}
-        touchEvent={TOUCH_EVENT_START}
-        onClickAway={() => {
-          const updated = {
-            ...currentEditingElement,
-            description: editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string,
-          } as ISection;
-          setCurrentEditingElement(updated);
-          void handleClickAwayEditingElement(updated);
-        }}
-      >
-        <Box>
-          <Stack component={Paper} sx={sectionStackStyle}>
-            <Box sx={sectionHeaderWrapperStyle}>
-              <Box sx={sectionHeaderStyle}>
-                <Box sx={sectionTitleStyle}>
-                  <TextField
-                    variant={ComponentVariant.STANDARD}
-                    fullWidth
-                    sx={editingSectionTitleStyle}
-                    placeholder={t("formulaire.section.title.empty")}
-                    value={currentSectionTitle}
-                    onChange={handleTitleChange}
-                    onFocus={selectAllTextInput}
-                    onKeyDown={(e) => {
-                      if (isEnterPressed(e) && currentEditingElement) {
-                        const updated = {
-                          ...currentEditingElement,
-                          description: editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string,
-                        } as ISection;
-                        setCurrentEditingElement(updated);
-                        void handleClickAwayEditingElement(updated);
+      <Box>
+        <Stack component={Paper} sx={sectionStackStyle}>
+          <Box sx={sectionHeaderWrapperStyle}>
+            <Box sx={sectionHeaderStyle}>
+              <Box sx={sectionTitleStyle}>
+                <TextField
+                  variant={ComponentVariant.STANDARD}
+                  fullWidth
+                  sx={editingSectionTitleStyle}
+                  placeholder={t("formulaire.section.title.empty")}
+                  value={currentSectionTitle}
+                  onChange={handleTitleChange}
+                  onFocus={selectAllTextInput}
+                  onKeyDown={(e) => {
+                    if (isEnterPressed(e) && currentEditingElement) {
+                      const updated = updateSection();
+                      void saveFormElement(updated, formElementsList);
+                      setCurrentEditingElement(null);
+                    }
+                  }}
+                />
+              </Box>
+              <Box sx={sectionIconWrapperStyle}>
+                <Tooltip title={t("formulaire.delete")} placement="top" disableInteractive>
+                  <IconButton
+                    aria-label="delete"
+                    onClick={handleDelete}
+                    disabled={!!form && hasFormResponses(form)}
+                    sx={sectionButtonStyle}
+                  >
+                    <DeleteRoundedIcon sx={sectionButtonIconStyle} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t("formulaire.cancel")} placement="top" disableInteractive>
+                  <IconButton aria-label="undo" onClick={handleUndo} sx={sectionButtonStyle}>
+                    <UndoRoundedIcon sx={sectionButtonIconStyle} />
+                  </IconButton>
+                </Tooltip>
+                <Tooltip title={t("formulaire.validate")} placement="top" disableInteractive>
+                  <IconButton
+                    aria-label="save"
+                    onClick={() => {
+                      if (currentEditingElement) {
+                        const updated = updateSection();
+                        void saveFormElement(updated, formElementsList);
+                        setCurrentEditingElement(null);
                       }
                     }}
-                  />
-                </Box>
-                <Box sx={sectionIconWrapperStyle}>
-                  <Tooltip title={t("formulaire.delete")} placement="top" disableInteractive>
-                    <IconButton
-                      aria-label="delete"
-                      onClick={handleDelete}
-                      disabled={!!form && hasFormResponses(form)}
-                      sx={sectionButtonStyle}
-                    >
-                      <DeleteRoundedIcon sx={sectionButtonIconStyle} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={t("formulaire.cancel")} placement="top" disableInteractive>
-                    <IconButton aria-label="undo" onClick={handleUndo} sx={sectionButtonStyle}>
-                      <UndoRoundedIcon sx={sectionButtonIconStyle} />
-                    </IconButton>
-                  </Tooltip>
-                  <Tooltip title={t("formulaire.validate")} placement="top" disableInteractive>
-                    <IconButton
-                      aria-label="save"
-                      onClick={() => {
-                        if (currentEditingElement) {
-                          const updated = {
-                            ...currentEditingElement,
-                            description: editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string,
-                          } as ISection;
-                          setCurrentEditingElement(updated);
-                          void handleClickAwayEditingElement(updated);
-                        }
-                      }}
-                      sx={sectionButtonStyle}
-                    >
-                      <CheckCircleRoundedIcon sx={sectionButtonIconStyle} />
-                    </IconButton>
-                  </Tooltip>
-                </Box>
+                    sx={sectionButtonStyle}
+                  >
+                    <CheckCircleRoundedIcon sx={sectionButtonIconStyle} />
+                  </IconButton>
+                </Tooltip>
               </Box>
             </Box>
-            <Box sx={sectionContentStyle}>
-              <Box sx={editorContainerStyle}>
-                <Editor id="postContent" content={section.description} mode={EditorMode.EDIT} ref={editorRef} />
-              </Box>
-              {!!form && !hasFormResponses(form) && (
-                <Box sx={sectionFooterStyle} onClick={() => void handleAddNewQuestion()}>
-                  <Box sx={newQuestionWrapperStyle}>
-                    <Typography sx={sectionAddQuestionStyle}>{t("formulaire.section.new.question")}</Typography>
-                  </Box>
-                </Box>
-              )}
+          </Box>
+          <Box sx={sectionContentStyle}>
+            <Box sx={editorContainerStyle}>
+              <Editor
+                id="postContent"
+                content={initialSectionDescription.current}
+                mode={EditorMode.EDIT}
+                ref={editorRef}
+                onContentChange={updateSection}
+              />
             </Box>
-          </Stack>
-          {showSectionDelete && (
-            <DeleteConfirmationModal
-              isOpen={showSectionDelete}
-              handleClose={() => {
-                toggleModal(ModalType.SECTION_DELETE);
-              }}
-              element={section}
-            />
-          )}
-          {showSectionUndo && (
-            <UndoConfirmationModal
-              isOpen={showSectionUndo}
-              handleClose={() => {
-                toggleModal(ModalType.SECTION_UNDO);
-              }}
-              element={section}
-            />
-          )}
-        </Box>
-      </ClickAwayListener>
+            {!!form && !hasFormResponses(form) && (
+              <Box
+                sx={sectionFooterStyle}
+                onClick={() => {
+                  if (currentEditingElement) {
+                    const updated = updateSection();
+                    void saveFormElement(updated, formElementsList);
+                    setCurrentEditingElement(null);
+                  }
+                  void handleAddNewQuestion();
+                }}
+              >
+                <Box sx={newQuestionWrapperStyle}>
+                  <Typography sx={sectionAddQuestionStyle}>{t("formulaire.section.new.question")}</Typography>
+                </Box>
+              </Box>
+            )}
+          </Box>
+        </Stack>
+        {showSectionDelete && (
+          <DeleteConfirmationModal
+            isOpen={showSectionDelete}
+            handleClose={() => {
+              toggleModal(ModalType.SECTION_DELETE);
+            }}
+            element={section}
+          />
+        )}
+        {showSectionUndo && (
+          <UndoConfirmationModal
+            isOpen={showSectionUndo}
+            handleClose={() => {
+              toggleModal(ModalType.SECTION_UNDO);
+            }}
+            element={section}
+          />
+        )}
+      </Box>
       {!isValidFormElement(section) && (
         <Alert
           severity={AlertSeverityVariant.WARNING}

@@ -4,6 +4,7 @@ import { isFormElementQuestion } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
 import { isFormElementSection } from "~/core/models/section/utils";
 import { PositionActionType } from "./enum";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
 
 export const removeFormElementFromList = (
   formElementsList: IFormElement[],
@@ -20,10 +21,10 @@ export const removeFormElementFromList = (
 
   return formElementsList
     .map((el) =>
-      isFormElementSection(el) && isFormElementQuestion(toRemove) && el.id === (toRemove as IQuestion).sectionId
+      isSection(el) && isQuestion(toRemove) && el.id === toRemove.sectionId
         ? {
             ...el,
-            questions: (el as ISection).questions.filter(questionFilterPredicate),
+            questions: el.questions.filter(questionFilterPredicate),
           }
         : el,
     )
@@ -37,11 +38,10 @@ export const isCurrentEditingElement = (element: IFormElement, currentEditingEle
 export const updateElementInList = (formElementList: IFormElement[], updated: IFormElement): IFormElement[] => {
   return formElementList.map((el) => {
     // If this is a section and the updated element is a question in that section
-    if (isFormElementSection(el) && isFormElementQuestion(updated) && el.id === (updated as IQuestion).sectionId) {
-      const section = el as ISection;
+    if (isSection(el) && isQuestion(updated) && el.id === updated.sectionId) {
       return {
-        ...section,
-        questions: section.questions.map((q) => (q.id === updated.id ? (updated as IQuestion) : q)),
+        ...el,
+        questions: el.questions.map((q) => (q.id === updated.id ? updated : q)),
       };
     }
 

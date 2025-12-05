@@ -4,7 +4,7 @@ import { CustomSVGProps } from "../types";
 export const SingleAnswerRadioIcon: FC<CustomSVGProps> = () => (
   <svg width="3rem" height="3rem" viewBox="0 0 36 37" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="36" height="36" transform="translate(0 0.695129)" fill="white" />
-    <g clip-path="url(#clip0_662_6662)">
+    <g clipPath="url(#clip0_662_6662)">
       <path
         d="M16 8.19513C16 7.3667 16.6716 6.69513 17.5 6.69513H31.5C32.3284 6.69513 33 7.3667 33 8.19513C33 9.02356 32.3284 9.69513 31.5 9.69513H17.5C16.6716 9.69513 16 9.02356 16 8.19513Z"
         fill="#383D3E"
