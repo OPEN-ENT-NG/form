@@ -7,7 +7,7 @@ import { useCreation } from "~/providers/CreationProvider";
 import { getRecursiveFolderParents, useGetCreationHeaderButtons } from "./utils";
 import { CreationLayout } from "../CreationLayout";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { ModalType } from "~/core/enums";
+import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { CreateFormElementModal } from "../CreateFormElementModal";
 import { IForm } from "~/core/models/form/types";
 import { CreationOrganisationModal } from "../CreationOrganisationModal";
@@ -17,10 +17,21 @@ import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
+import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 
 export const CreationView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
-  const { form, folders, formElementsList } = useCreation();
+  const {
+    form,
+    folders,
+    formElementsList,
+    handleDeleteFormElement,
+    currentEditingElement,
+    setCurrentEditingElement,
+    saveQuestion,
+    saveSection,
+    setFormElementsList,
+  } = useCreation();
   const navigate = useNavigate();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
   const headerButtons = useGetCreationHeaderButtons(form?.id, !!formElementsList.length);
@@ -30,6 +41,15 @@ export const CreationView: FC = () => {
     toggleModal,
     isMobile,
   } = useGlobal();
+
+  const { handleClickAway } = useClickAwayEditingElement(
+    handleDeleteFormElement,
+    setCurrentEditingElement,
+    formElementsList,
+    setFormElementsList,
+    saveQuestion,
+    saveSection,
+  );
 
   const getStringFolders = (form: IForm): string[] => {
     const parentFolders = getRecursiveFolderParents(form.folder_id, folders);
@@ -63,18 +83,26 @@ export const CreationView: FC = () => {
 
   const desktopView = (
     <>
-      <Box ref={headerRef} sx={creationHedearStyle}>
-        {form && (
-          <Header
-            stringItems={getStringFolders(form)}
-            buttons={headerButtons}
-            form={form}
-            isCreationPage
-            displaySeparator
-          />
-        )}
+      <Box
+        sx={creationViewStyle}
+        data-type={ClickAwayDataType.ROOT}
+        onClick={(e) => {
+          handleClickAway(e, currentEditingElement);
+        }}
+      >
+        <Box ref={headerRef} sx={creationHedearStyle}>
+          {form && (
+            <Header
+              stringItems={getStringFolders(form)}
+              buttons={headerButtons}
+              form={form}
+              isCreationPage
+              displaySeparator
+            />
+          )}
+        </Box>
+        {form && <CreationLayout headerHeight={headerHeight} />}
       </Box>
-      {form && <CreationLayout headerHeight={headerHeight} />}
       {showFormElementCreate && (
         <CreateFormElementModal
           isOpen={showFormElementCreate}

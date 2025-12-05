@@ -52,12 +52,6 @@ export const useTargetNextElement = <T extends EntityWithNextElement>({
         nextFormElementType: targetElement?.formElementType ?? null,
       } as T;
 
-      console.log("onChange", {
-        updatedEntity,
-        targetNextElementId: value,
-        targetElementType: targetElement?.formElementType ?? undefined,
-      });
-
       onSave(updatedEntity, value, targetElement?.formElementType ?? undefined);
     },
     [entity, formElementsList, onSave],

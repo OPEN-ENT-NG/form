@@ -5,7 +5,6 @@ export interface ICreationQuestionChoiceWrapperProps {
   question: IQuestion;
   type: QuestionTypes;
   hideCustomChoice?: boolean;
-  choiceValueI18nKey?: string;
 }
 
 export interface INewChoiceWrapperProps {
