@@ -4,10 +4,9 @@ import { useDraggable } from "@dnd-kit/core";
 import { DraggableType, SizeAbreviation } from "~/core/enums";
 import { Box, ResourceCard } from "@cgi-learning-hub/ui";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
-import { FORMULAIRE, LOGO_PATH } from "~/core/constants";
+import { LOGO_PATH } from "~/core/constants";
 
 import { dragActiveStyle } from "~/core/style/dndStyle";
-import { getFormEditPath } from "~/core/pathHelper";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useNavigate } from "react-router-dom";
 

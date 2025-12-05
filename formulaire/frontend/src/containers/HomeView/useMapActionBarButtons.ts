@@ -5,7 +5,7 @@ import { ActionBarButtonType } from "./enums";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { ModalType } from "~/core/enums";
 import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
-import { FORMULAIRE, MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
+import { MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
 import { useShareModal } from "~/providers/ShareModalProvider";
 import { useEdificeClient } from "@edifice.io/react";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
