@@ -83,3 +83,8 @@ export enum SizeAbreviation {
   LARGE = "lg",
   EXTRA_LARGE = "xl",
 }
+
+export enum MovementType {
+  INDENT = "indent",
+  MOVE = "move",
+}
