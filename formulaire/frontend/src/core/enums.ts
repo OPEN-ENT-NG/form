@@ -90,3 +90,8 @@ export enum ClickAwayDataType {
   SECTION = "SECTION",
   QUESTION = "QUESTION",
 }
+
+export enum MovementType {
+  INDENT = "indent",
+  MOVE = "move",
+}

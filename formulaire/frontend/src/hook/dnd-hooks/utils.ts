@@ -1,7 +1,7 @@
 import { DraggableType } from "~/core/enums";
-import { IDragItemProps } from "./types";
 import { IFolder } from "~/core/models/folder/types";
 import { IForm } from "~/core/models/form/types";
+import { IDragItemProps } from "./types";
 
 export const createItemState = (type: DraggableType, folder?: IFolder, form?: IForm): IDragItemProps => {
   return { type, folder, form };
