@@ -7,8 +7,8 @@ import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
 import { LOGO_PATH } from "~/core/constants";
 
 import { dragActiveStyle } from "~/core/style/dndStyle";
-import { getFormEditPath } from "~/core/pathHelper";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { useNavigate } from "react-router-dom";
 
 export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSelect, dragActive = false }) => {
   const { isMobile } = useGlobal();
@@ -17,7 +17,7 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
     data: { type: DraggableType.FORM, form },
     disabled: isMobile,
   });
-
+  const navigate = useNavigate();
   const { getIcons, getFormPropertyItems } = useFormItemsIcons();
 
   return (
@@ -37,7 +37,7 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
             onSelect(form);
             return;
           }
-          window.location.href = getFormEditPath(form.id);
+          navigate(`/form/${form.id}/edit`);
         }}
         propertyItems={getFormPropertyItems(form)}
         infoIcons={getIcons(form)}
