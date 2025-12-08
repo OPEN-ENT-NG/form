@@ -4,7 +4,6 @@ import { FC, useMemo } from "react";
 import { CreationEditingSection } from "~/components/CreationEditingSection";
 import { CreationSection } from "~/components/CreationSection";
 import { getTransformStyle } from "~/components/CreationSortableItem/utils";
-import { ModalType } from "~/core/enums";
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
