@@ -128,10 +128,17 @@ export const formEditorController = ng.controller('FormEditorController', ['$sco
             vm.dontSave = false;
             vm.nbFormElements = vm.formElements.all.length;
             vm.questionTypes.all = vm.form.is_public ? $scope.questionTypes.all.filter(qt => qt.code != Types.FILE) : $scope.questionTypes.all;
-            $scope.safeApply();
+            
+            if ($scope.isPreviewMode) {
+                $scope.isPreviewMode = false;
+                vm.goPreview();
+            }
+            else {
+                $scope.safeApply();
 
-            initNestedSortables();
-            $scope.safeApply();
+                initNestedSortables();
+                $scope.safeApply();
+            }
         };
 
         // Global functions
@@ -653,7 +660,7 @@ export const formEditorController = ng.controller('FormEditorController', ['$sco
         };
 
         vm.backToEditor = () : void => {
-            $scope.currentPage = Pages.EDIT_FORM;
+            window.location.href = `/formulaire#/form/${vm.form.id}/edit`;
             $scope.safeApply();
         };
 

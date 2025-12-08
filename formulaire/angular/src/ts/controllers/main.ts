@@ -45,6 +45,7 @@ export const mainController = ng.controller('MainController', ['$scope', 'route'
 		$scope.isMobile = window.screen.width <= 500;
 		$scope.responsePosition = 1;
 		$scope.historicPosition = [];
+		$scope.isPreviewMode = false;
 
 		const init = async () : Promise<void> => {
 			await $scope.questionTypes.sync();
@@ -101,6 +102,18 @@ export const mainController = ng.controller('MainController', ['$scope', 'route'
 				}
 			},
 			editForm: async (params) => {
+				$scope.currentPage = Pages.EDIT_FORM;
+				await $scope.getFormWithRights(params.formId);
+				if ($scope.canCreate() && $scope.hasShareRightContrib($scope.form)) {
+						if ($scope.form.id) window.location.href = `/formulaire#/form/${params.formId}/edit`;
+						else window.location.href = "/formulaire?tab=FORMS";
+				}
+				else {
+					$scope.redirectTo('/e403');
+				}
+			},
+			previewForm: async (params) => {
+				$scope.isPreviewMode = true;
 				$scope.currentPage = Pages.EDIT_FORM;
 				await $scope.getFormWithRights(params.formId);
 				if ($scope.canCreate() && $scope.hasShareRightContrib($scope.form)) {
