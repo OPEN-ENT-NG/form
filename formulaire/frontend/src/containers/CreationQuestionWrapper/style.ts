@@ -1,8 +1,8 @@
-import { SxProps, Theme } from "@mui/material";
 import { Paper, styled } from "@cgi-learning-hub/ui";
+import { Box, SxProps, Theme } from "@mui/material";
 import { GREY_MAIN_COLOR } from "~/core/style/colors";
-import { IStyledPaperProps } from "./types";
 import { CSS_ERROR_MAIN_COLOR, CSS_WARNING_LIGHT_COLOR } from "~/core/style/cssColors";
+import { IStyledDragContainer, IStyledPaperProps } from "./types";
 
 export const questionStackStyle: SxProps<Theme> = {
   display: "flex",
@@ -13,12 +13,17 @@ export const questionStackStyle: SxProps<Theme> = {
   boxShadow: "1px 4px 5px 2px rgba(0, 0, 0, 0.1)",
 };
 
-export const dragIconContainerStyle: SxProps<Theme> = {
+export const StyledDragContainer = styled(Box, {
+  shouldForwardProp: (prop) => prop !== "isPreview",
+})<IStyledDragContainer>(({ isPreview }) => ({
   width: "100%",
   justifyContent: "center",
   alignItems: "center",
   display: "flex",
-};
+  "&:hover": {
+    cursor: isPreview ? "grabbing" : "grab",
+  },
+}));
 
 export const dragIconStyle: SxProps<Theme> = { transform: "rotate(90deg)", color: GREY_MAIN_COLOR, fontSize: "3rem" };
 
