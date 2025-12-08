@@ -1,18 +1,22 @@
-import { FC, useCallback, useEffect, useState } from "react";
-import { ICreationSectionProps } from "./types";
 import {
+  Alert,
   Box,
-  Typography,
+  EllipsisWithTooltip,
+  FormControl,
   IconButton,
-  Stack,
+  MenuItem,
   Paper,
   Select,
-  MenuItem,
-  FormControl,
-  Alert,
-  EllipsisWithTooltip,
+  Stack,
   Tooltip,
+  Typography,
 } from "@cgi-learning-hub/ui";
+import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
+import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { CreationQuestionWrapper } from "~/containers/CreationQuestionWrapper";
+import { IQuestion } from "~/core/models/question/types";
 import {
   descriptionStyle,
   nextElementSelectorStyle,
@@ -30,31 +34,31 @@ import {
   sectionStackStyle,
   sectionTitleStyle,
 } from "./style";
-import { IQuestion } from "~/core/models/question/types";
-import { CreationQuestionWrapper } from "~/containers/CreationQuestionWrapper";
-import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
-import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
-import EditRoundedIcon from "@mui/icons-material/EditRounded";
+import { ICreationSectionProps } from "./types";
 
-import { dragIconContainerStyle, questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
-import { AlertSeverityVariant, ComponentVariant, EditorVariant } from "~/core/style/themeProps";
+import { useDroppable } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { Editor } from "@edifice.io/react/editor";
 import { useTranslation } from "react-i18next";
+import { questionAlertStyle, StyledDragContainer } from "~/containers/CreationQuestionWrapper/style";
 import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
+import { ModalType } from "~/core/enums";
+import { hasFormResponses } from "~/core/models/form/utils";
+import { FormElementType } from "~/core/models/formElement/enum";
 import { isValidFormElement } from "~/core/models/formElement/utils";
+import { ISection } from "~/core/models/section/types";
+import { hasConditionalQuestion } from "~/core/models/section/utils";
+import { AlertSeverityVariant, ComponentVariant, EditorVariant } from "~/core/style/themeProps";
+import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
+import { getDndElementType } from "~/hook/dnd-hooks/useCreationDnd/utils";
+import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { ModalType } from "~/core/enums";
-import { hasConditionalQuestion } from "~/core/models/section/utils";
-import { hasFormResponses } from "~/core/models/form/utils";
-import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
-import { ISection } from "~/core/models/section/types";
-import { FormElementType } from "~/core/models/formElement/enum";
-import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
-import { Editor } from "@edifice.io/react/editor";
 import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
+import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
 
-export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
+export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section, listeners, attributes }) => {
   const { t } = useTranslation(FORMULAIRE);
   const {
     form,
@@ -65,6 +69,8 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
     saveSection,
   } = useCreation();
   const { toggleModal } = useGlobal();
+
+  const sortedIds = useMemo(() => section.questions.map((q) => `${getDndElementType(q)}-${q.id}`), [section]);
 
   const onSaveSectionNextElement = useCallback(
     (updatedEntity: ISection, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
@@ -115,13 +121,23 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
     toggleModal(ModalType.QUESTION_CREATE);
   };
 
+  const { setNodeRef: setHeaderDroppableNodeRef } = useDroppable({
+    id: `${DndElementType.SECTION_TOP}-${section.id}`,
+    data: { element: section, dndElementType: DndElementType.SECTION_TOP },
+  });
+
+  const { setNodeRef: setFooterDroppableNodeRef } = useDroppable({
+    id: `${DndElementType.SECTION_BOTTOM}-${section.id}`,
+    data: { element: section, dndElementType: DndElementType.SECTION_BOTTOM },
+  });
+
   return (
     <Box>
       <Stack component={Paper} sx={sectionStackStyle}>
         <Box sx={sectionHeaderWrapperStyle}>
-          <Box sx={dragIconContainerStyle}>
+          <StyledDragContainer isPreview={!!isPreview} ref={setHeaderDroppableNodeRef} {...listeners} {...attributes}>
             <DragIndicatorRoundedIcon sx={sectionDragIconStyle} />
-          </Box>
+          </StyledDragContainer>
           <Box sx={sectionHeaderStyle}>
             <Box sx={sectionTitleStyle}>
               <EllipsisWithTooltip>
@@ -160,11 +176,13 @@ export const CreationSection: FC<ICreationSectionProps> = ({ section }) => {
             </StyledEditorWrapper>
           </Box>
           <Box>
-            {section.questions.map((question: IQuestion) => (
-              <CreationQuestionWrapper key={question.id} question={question} />
-            ))}
+            <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
+              {section.questions.map((question: IQuestion) => (
+                <CreationQuestionWrapper key={question.id} question={question} />
+              ))}
+            </SortableContext>
           </Box>
-          <Box sx={sectionFooterStyle}>
+          <Box ref={setFooterDroppableNodeRef} sx={sectionFooterStyle}>
             <Box sx={nextElementSelectorWrapperStyle}>
               {!hasConditionalQuestion(section) && (
                 <FormControl fullWidth>
