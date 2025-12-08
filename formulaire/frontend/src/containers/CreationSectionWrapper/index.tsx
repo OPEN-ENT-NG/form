@@ -1,16 +1,20 @@
 import { Box } from "@cgi-learning-hub/ui";
-import { CreationSection } from "~/components/CreationSection";
-import { ICreationSectionWrapperProps } from "./types";
-import { FC } from "react";
+import { useSortable } from "@dnd-kit/sortable";
+import { FC, useMemo } from "react";
 import { CreationEditingSection } from "~/components/CreationEditingSection";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { CreationSection } from "~/components/CreationSection";
+import { getTransformStyle } from "~/components/CreationSortableItem/utils";
+import { ModalType } from "~/core/enums";
+import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { useCreation } from "~/providers/CreationProvider";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { CreateFormElementModal } from "../CreateFormElementModal";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
+import { ICreationSectionWrapperProps } from "./types";
 
-export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ section }) => {
+export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ section, isPreview }) => {
   const {
     currentEditingElement,
     questionModalSection,
@@ -34,14 +38,27 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
     saveSection,
   );
 
+  const { setNodeRef, transform, transition, listeners, attributes } = useSortable({
+    id: `${DndElementType.SECTION}-${section.id}`,
+    data: { element: section, dndElementType: DndElementType.SECTION },
+  });
+
+  const style = useMemo(() => getTransformStyle(transform, transition), [transform, transition]);
+
   return (
     <Box
+      style={style}
+      ref={setNodeRef}
       data-type={ClickAwayDataType.SECTION}
       onClick={(e) => {
         handleClickAway(e, currentEditingElement, section);
       }}
     >
-      {isEditing ? <CreationEditingSection section={section} /> : <CreationSection section={section} />}
+      {isEditing ? (
+        <CreationEditingSection section={section} />
+      ) : (
+        <CreationSection listeners={listeners} attributes={attributes} section={section} isPreview={isPreview} />
+      )}
       {showQuestionCreate && questionModalSection?.id === section.id && (
         <CreateFormElementModal
           isOpen={showQuestionCreate}
