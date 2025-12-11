@@ -329,7 +329,7 @@
   "formulaire.read": "Accès",
   "formulaire.recap": "Récapitulatif",
   "formulaire.remind": "Rappel",
-  "formulaire.remind.default.body": "<div>Bonjour,<br><br>Vous n'avez toujours pas répondu au formulaire suivant : <a href=\"{0}\">{1}</a><br><br>Cordialement.</div>",
+  "formulaire.remind.default.body": "<div>Bonjour,<br><br>Vous n'avez toujours pas répondu au formulaire suivant : <a href=\"{{0}}\">{{1}}</a><br><br>Cordialement.</div>",
   "formulaire.remind.default.subject": "Vous avez un formulaire en attente de réponse",
   "formulaire.remind.description.multipleFalse": "Le message de rappel va être transmis à tous les utilisateurs qui n'ont pas encore répondu au formulaire.",
   "formulaire.remind.description.multipleTrue": "Le message de rappel va être transmis à tous les utilisateurs à qui le formulaire a été envoyé.",
