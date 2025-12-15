@@ -330,7 +330,7 @@ export default function ShareResourceModal({
             </Box>
             <Box sx={flexStartBoxStyle}>
               <Typography fontStyle={"italic"}>{publicLink}</Typography>
-              <Box onClick={() => handleCopyPublicLink} sx={{ cursor: "pointer" }}>
+              <Box onClick={() => void handleCopyPublicLink()} sx={{ cursor: "pointer" }}>
                 <ContentCopyIcon sx={{ marginLeft: "1rem", fontSize: "1.5rem" }} />
               </Box>
             </Box>
