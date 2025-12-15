@@ -127,7 +127,7 @@ export const MoveModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
         <Button
           variant={ComponentVariant.CONTAINED}
           onClick={handleMove}
-          disabled={selectedFolders.every((f) => f.parent_id === targetFolder.id)}
+          disabled={selectedFolders.length > 0 && selectedFolders.every((f) => f.parent_id === targetFolder.id)}
         >
           {t("formulaire.move")}
         </Button>
