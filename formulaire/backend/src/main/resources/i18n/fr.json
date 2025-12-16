@@ -17,6 +17,7 @@
   "formulaire.checkremind.answered": "Répondu",
   "formulaire.checkremind.name": "Utilisateurs auxquels a été envoyé le formulaire ",
   "formulaire.checkremind.notanswered": "Non répondu",
+  "formulaire.checkremind.notanswered.empty.message": "Aucune réponse en attente.",
   "formulaire.checkremind.table.name": "Nom",
   "formulaire.checkremind.table.surname": "Prénom",
   "formulaire.choice": "Choix {{0}}",

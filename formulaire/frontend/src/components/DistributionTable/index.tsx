@@ -16,7 +16,7 @@ import {
   tableRowMobileStyle,
 } from "./style";
 
-export const DistributionTable: FC<IDistributionTableProps> = ({ distributions, isMobile = false }) => {
+export const DistributionTable: FC<IDistributionTableProps> = ({ distributions, emptyMessage, isMobile = false }) => {
   const { t } = useTranslation(FORMULAIRE);
   const [maxRows, setMaxRows] = useState<number>(8);
 
@@ -57,7 +57,7 @@ export const DistributionTable: FC<IDistributionTableProps> = ({ distributions, 
             {!displayedDatas.length && (
               <TableRow sx={tableRowStyle}>
                 <TableCell colSpan={2} align="center">
-                  <Typography sx={emptyRowMessageStyle}>{t("formulaire.results.empty")}</Typography>
+                  <Typography sx={emptyRowMessageStyle}>{emptyMessage}</Typography>
                 </TableCell>
               </TableRow>
             )}
