@@ -102,6 +102,11 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
     });
   };
 
+  const getEmptyMessageForDistributionTable = () => {
+    if (isNotAnsweredActive) return t("formulaire.checkremind.notanswered.empty.message");
+    return t("formulaire.results.empty");
+  };
+
   const followContent = (
     <>
       <Typography>
@@ -137,7 +142,11 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       </Box>
       {distributions?.length && (
         <Box>
-          <DistributionTable distributions={tableDatas} isMobile={isMobile} />
+          <DistributionTable
+            distributions={tableDatas}
+            emptyMessage={getEmptyMessageForDistributionTable()}
+            isMobile={isMobile}
+          />
         </Box>
       )}
     </>
