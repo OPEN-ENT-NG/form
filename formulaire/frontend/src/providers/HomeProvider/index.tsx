@@ -96,11 +96,12 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   }, []);
 
   useEffect(() => {
-    if (formsDatas) {
-      setForms(formsDatas);
-      return;
-    }
-    return;
+    if (!formsDatas) return;
+
+    setForms(formsDatas);
+    setSelectedForms((prevSelectedForms) =>
+      prevSelectedForms.filter((selectedForm) => formsDatas.some((formData) => formData.id === selectedForm.id)),
+    );
   }, [formsDatas]);
 
   useEffect(() => {
