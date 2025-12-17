@@ -35,11 +35,12 @@ export const getQuestionContentByType = (
       return <CreationQuestionFile />;
     case QuestionTypes.MATRIX:
       return <CreationQuestionMatrix question={question} />;
-    case QuestionTypes.RANKING:
     case QuestionTypes.SINGLEANSWER:
     case QuestionTypes.MULTIPLEANSWER:
     case QuestionTypes.SINGLEANSWERRADIO:
       return <CreationQuestionChoiceWrapper question={question} type={question.questionType} />;
+    case QuestionTypes.RANKING:
+      return <CreationQuestionChoiceWrapper question={question} type={question.questionType} hideCustomChoice />;
     default:
       return (
         <Typography variant={TypographyVariant.BODY1}>
