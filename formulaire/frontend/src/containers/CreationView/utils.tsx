@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import { IFolder } from "~/core/models/folder/types";
 import { ModalType } from "~/core/enums";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { toast } from "react-toastify";
 
 export const useGetCreationHeaderButtons = (
   formId: string | number | undefined,
@@ -49,7 +50,9 @@ export const useGetCreationHeaderButtons = (
     {
       title: t("formulaire.save"),
       variant: ComponentVariant.CONTAINED,
-      action: () => {},
+      action: () => {
+        toast.success(t("formulaire.success.form.save"));
+      },
       startIcon: <SaveRoundedIcon />,
     },
   ];
