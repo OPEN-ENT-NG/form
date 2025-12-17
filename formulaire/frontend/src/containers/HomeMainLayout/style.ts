@@ -34,7 +34,7 @@ export const resourceContainerStyle: SxProps<Theme> = {
   height: "100%",
   display: "flex",
   flexDirection: "column",
-  padding: " 1rem 3rem 0 3rem",
+  padding: " 1rem 3rem 2rem 3rem",
   width: "100%",
   gap: "4rem",
 };

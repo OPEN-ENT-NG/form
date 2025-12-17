@@ -10,5 +10,5 @@ export const StyledDraggableFolder = styled(Box, {
     ...(isOvered ? overedStyle : {}),
     ...(dragActive ? dragActiveStyle : {}),
   };
-  return { width: "320px", ...styles };
+  return { ...styles };
 });
