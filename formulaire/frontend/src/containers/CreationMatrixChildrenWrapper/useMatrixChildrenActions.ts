@@ -102,7 +102,7 @@ export const useMatrixChildrenActions = (question: IQuestion, setCurrentEditingE
   };
 
   return {
-    children: children,
+    children,
     handleDeleteChild,
     handleSwapClick,
     handleSortClick,

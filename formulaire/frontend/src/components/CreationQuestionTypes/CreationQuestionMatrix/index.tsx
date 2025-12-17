@@ -19,13 +19,13 @@ export const CreationQuestionMatrix: FC<ICreationQuestionTypesProps> = ({ questi
         <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H6}>
           {t("formulaire.matrix.columns")}
         </Typography>
-        <CreationMatrixChildrenWrapper question={question}></CreationMatrixChildrenWrapper>
+        <CreationQuestionChoiceWrapper question={question} type={QuestionTypes.MATRIX} />
       </Box>
       <Box>
         <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H6}>
           {t("formulaire.matrix.lines")}
         </Typography>
-        <CreationQuestionChoiceWrapper question={question} type={QuestionTypes.MATRIX}></CreationQuestionChoiceWrapper>
+        <CreationMatrixChildrenWrapper question={question} />
       </Box>
     </Box>
   );
