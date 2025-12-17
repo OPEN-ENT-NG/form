@@ -23,7 +23,7 @@ export const sidebarStyle: SxProps<Theme> = {
 };
 
 export const sidebarContentStyle: SxProps<Theme> = {
-  height: "100%",
+  height: "calc(100vh - 96px - 70px);", // 100vh - header accueil - header plateforme
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
@@ -31,6 +31,6 @@ export const sidebarContentStyle: SxProps<Theme> = {
 
 export const mainContentStyle: SxProps<Theme> = {
   flexGrow: 1,
-  height: "100%",
+  height: "calc(100vh - 96px - 70px)", // 100vh - header accueil - header plateforme
   boxSizing: "border-box",
 };

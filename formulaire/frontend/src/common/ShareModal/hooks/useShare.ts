@@ -13,6 +13,9 @@ import { useTranslation } from "react-i18next";
 
 import { ShareOptions, ShareResourceMutation } from "../ShareModal";
 import { COMMON } from "~/core/constants";
+import { useDispatch } from "react-redux";
+import { formApi } from "~/services/api/services/formulaireApi/formApi";
+import { TagName } from "~/core/enums";
 
 interface IUseShareResourceModalProps {
   /**
@@ -87,6 +90,7 @@ export default function useShare({
 
   const toast = useToast();
   const { t } = useTranslation(COMMON);
+  const dispatcher = useDispatch();
 
   const [state, dispatch] = useReducer(reducer, initialState);
 
@@ -190,6 +194,13 @@ export default function useShare({
     }
   };
 
+  const onOdeShare = async (rights: ShareRight[]) => {
+    const result = await odeServices.share().saveRights(appCode, resourceId, rights);
+    notifySuccess(result);
+
+    dispatcher(formApi.util.invalidateTags([TagName.FORMS]));
+  };
+
   const handleShare = async () => {
     dispatch({
       type: "isSharing",
@@ -231,8 +242,9 @@ export default function useShare({
         });
         notifySuccess(result);
       } else {
-        const result = await odeServices.share().saveRights(appCode, resourceId, shares);
-        notifySuccess(result);
+        await onOdeShare(shares);
+        // const result = await odeServices.share().saveRights(appCode, resourceId, shares);
+        // notifySuccess(result);
       }
       onSuccess();
     } catch (error) {
