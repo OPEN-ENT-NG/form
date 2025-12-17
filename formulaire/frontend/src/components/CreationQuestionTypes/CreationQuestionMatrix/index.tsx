@@ -19,7 +19,7 @@ export const CreationQuestionMatrix: FC<ICreationQuestionTypesProps> = ({ questi
         <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H6}>
           {t("formulaire.matrix.columns")}
         </Typography>
-        <CreationQuestionChoiceWrapper question={question} type={QuestionTypes.MATRIX} />
+        <CreationQuestionChoiceWrapper question={question} type={QuestionTypes.MATRIX} hideCustomChoice />
       </Box>
       <Box>
         <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H6}>
