@@ -227,3 +227,12 @@ export function shouldShowConditionalSwitch(question: IQuestion, formElements: I
 export const shouldShowMandatorySwitch = (question: IQuestion): boolean => {
   return question.questionType !== QuestionTypes.FREETEXT;
 };
+
+export const getQuestionTypeFromValue = (value: string | number | null | undefined): QuestionTypes | undefined => {
+  if (value === null || value === undefined) return;
+
+  const numericValue: number = typeof value === "string" ? Number(value) : value;
+  if (Number.isNaN(numericValue)) return;
+
+  return numericValue as QuestionTypes;
+};

@@ -17,6 +17,7 @@ import { CreationQuestionMatrix } from "~/components/CreationQuestionTypes/Creat
 export const getQuestionContentByType = (
   question: IQuestion,
   questionTitleRef: RefObject<HTMLInputElement> | null = null,
+  matrixType: QuestionTypes,
 ) => {
   switch (question.questionType) {
     case QuestionTypes.FREETEXT:
@@ -34,7 +35,7 @@ export const getQuestionContentByType = (
     case QuestionTypes.FILE:
       return <CreationQuestionFile />;
     case QuestionTypes.MATRIX:
-      return <CreationQuestionMatrix question={question} />;
+      return <CreationQuestionMatrix question={question} matrixType={matrixType} />;
     case QuestionTypes.SINGLEANSWER:
     case QuestionTypes.MULTIPLEANSWER:
     case QuestionTypes.SINGLEANSWERRADIO:

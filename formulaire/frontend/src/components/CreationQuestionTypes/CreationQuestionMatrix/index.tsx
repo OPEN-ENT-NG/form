@@ -5,12 +5,12 @@ import { FORMULAIRE } from "~/core/constants";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { CreationQuestionChoiceWrapper } from "~/containers/CreationQuestionChoiceWrapper";
 import { QuestionTypes } from "~/core/models/question/enum";
-import { ICreationQuestionTypesProps } from "../types";
+import { ICreationQuestionMatrixProps } from "./types";
 import { matrixStyle } from "./style";
 import { CreationMatrixChildrenWrapper } from "~/containers/CreationMatrixChildrenWrapper";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
-export const CreationQuestionMatrix: FC<ICreationQuestionTypesProps> = ({ question }) => {
+export const CreationQuestionMatrix: FC<ICreationQuestionMatrixProps> = ({ question, matrixType }) => {
   const { t } = useTranslation(FORMULAIRE);
 
   return (
@@ -25,7 +25,7 @@ export const CreationQuestionMatrix: FC<ICreationQuestionTypesProps> = ({ questi
         <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H6}>
           {t("formulaire.matrix.lines")}
         </Typography>
-        <CreationMatrixChildrenWrapper question={question} />
+        <CreationMatrixChildrenWrapper question={question} matrixType={matrixType} />
       </Box>
     </Box>
   );
