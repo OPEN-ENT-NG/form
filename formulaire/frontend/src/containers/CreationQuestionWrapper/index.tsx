@@ -36,7 +36,7 @@ import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVar
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
 import { UndoConfirmationModal } from "../UndoConfirmationModal";
@@ -203,7 +203,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                 <Select
                   value={matrixType.toString()}
                   onChange={handleSelectMatrixType}
-                  onClick={(e) => e.stopPropagation()}
+                  onClick={preventPropagation}
                   sx={{ width: "30%", marginRight: "3rem" }}
                 >
                   <MenuItem value={QuestionTypes.SINGLEANSWERRADIO}>

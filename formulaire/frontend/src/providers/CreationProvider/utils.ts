@@ -3,6 +3,7 @@ import { IQuestion } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
 import { PositionActionType } from "./enum";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { ChangeEvent, SyntheticEvent } from "react";
 
 export const removeFormElementFromList = (
   formElementsList: IFormElement[],
@@ -254,4 +255,8 @@ export const getPreviousFormElement = (
 
   const previousElement = formElementsList.find((el) => el.position === position - 1);
   return previousElement ?? null;
+};
+
+export const preventPropagation = (e: SyntheticEvent) => {
+  e.stopPropagation();
 };

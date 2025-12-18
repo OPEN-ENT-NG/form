@@ -7,6 +7,7 @@ import { IDeleteConfirmationModalProps } from "./types";
 import { useCreation } from "~/providers/CreationProvider";
 import { useFormElementActions } from "~/providers/CreationProvider/hook/useFormElementActions";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { preventPropagation } from "~/providers/CreationProvider/utils";
 
 export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isOpen, handleClose, element }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -45,7 +46,7 @@ export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isO
   };
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} fullWidth>
+    <Dialog open={isOpen} onClose={handleClose} onClick={preventPropagation} fullWidth>
       <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
         {t("formulaire.delete")}
       </DialogTitle>

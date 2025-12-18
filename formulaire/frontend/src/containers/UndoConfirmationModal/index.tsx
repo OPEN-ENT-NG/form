@@ -6,6 +6,7 @@ import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core
 import { useCreation } from "~/providers/CreationProvider";
 import { IUndoConfirmationModalProps } from "./types";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { preventPropagation } from "~/providers/CreationProvider/utils";
 
 export const UndoConfirmationModal: FC<IUndoConfirmationModalProps> = ({ isOpen, handleClose, element }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -25,7 +26,7 @@ export const UndoConfirmationModal: FC<IUndoConfirmationModalProps> = ({ isOpen,
   };
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} fullWidth>
+    <Dialog open={isOpen} onClose={handleClose} onClick={preventPropagation} fullWidth>
       <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
         {t("formulaire.cancel")}
       </DialogTitle>
