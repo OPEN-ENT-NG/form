@@ -236,3 +236,8 @@ export const getQuestionTypeFromValue = (value: string | number | null | undefin
 
   return numericValue as QuestionTypes;
 };
+
+export const getParent = (question: IQuestion, formElementList: IFormElement[]): ISection | undefined => {
+  if (!question.sectionId) return;
+  return formElementList.find((element) => isSection(element) && element.id === question.sectionId) as ISection;
+};

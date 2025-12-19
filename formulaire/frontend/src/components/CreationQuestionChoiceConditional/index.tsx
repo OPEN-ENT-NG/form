@@ -11,6 +11,7 @@ import { IQuestionChoice } from "~/core/models/question/types";
 import { nextElementSelectorWrapperStyle } from "./style";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { getParent } from "~/core/models/question/utils";
 
 export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceConditionalProps> = ({
   question,
@@ -19,7 +20,7 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
   updateChoiceNextFormElement,
 }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { currentEditingElement } = useCreation();
+  const { currentEditingElement, formElementsList } = useCreation();
 
   const onSaveChoiceNextElement = useCallback(
     (_: IQuestionChoice, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
@@ -34,7 +35,11 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
     followingElement,
     elementsTwoPositionsAheadList,
     onChange: handleNextFormElementChange,
-  } = useTargetNextElement({ entity: choice, positionReferenceElement: question, onSave: onSaveChoiceNextElement });
+  } = useTargetNextElement({
+    entity: choice,
+    positionReferenceElement: getParent(question, formElementsList) || question,
+    onSave: onSaveChoiceNextElement,
+  });
 
   return (
     <FormControl fullWidth sx={{ paddingLeft: "3rem" }}>
