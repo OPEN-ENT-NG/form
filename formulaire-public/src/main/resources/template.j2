@@ -1,0 +1,20 @@
+{
+  "name": "fr.openent~formulaire-public",
+  "config": {
+    "main" : "fr.openent.formulaire_public.FormulairePublic",
+    "port" : 8077,
+    "app-name" : "Formulaire-public",
+    "app-address" : "/formulaire-public",
+    "path-prefix" : "formulaire-public",
+    "app-icon" : "https://{{ host }}/formulaire-public/public/img/logo.svg",
+    "host": "https://{{ host }}",
+    "ssl" : false,
+    "auto-redeploy": false,
+    "userbook-host": "https://{{ host }}",
+    "sql" : true,
+    "db-schema" : "formulaire",
+    "app-registry.port" : 8012,
+    "mode" : "prod",
+    "entcore.port" : 8009
+  }
+}

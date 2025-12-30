@@ -1,0 +1,32 @@
+{
+  "name": "fr.openent~formulaire",
+  "config": {
+    "main" : "fr.openent.formulaire.Formulaire",
+    "port" : 8067,
+    "app-name" : "Formulaire",
+    "app-address" : "/formulaire",
+    "app-icon" : "Formulaire-large",
+    "host": "https://{{ host }}",
+    "ssl" : false,
+    "auto-redeploy": false,
+    "userbook-host": "https://{{ host }}",
+    "sql" : true,
+    "db-schema" : "formulaire",
+    "app-registry.port" : 8012,
+    "mode" : "prod",
+    "entcore.port" : 8009, 
+	  "test": false,
+    {% if ha is defined and ha and inventory_hostname_short is defined and inventory_hostname_short != 'jobs' %}
+      "rgpd-cron" : "0 0 1 * * ? 2099",
+      "notify-cron": "0 0 0 */1 * ? 2099",
+    {% else %}
+      "rgpd-cron" : "{{ formRgpdCron | default('0 0 0 */1 * ? *') }}",
+      "notify-cron": "0 0 0 */1 * ? *",
+    {% endif %}
+    "zimbra-max-recipients": {{ formZimbraMaxRecipients | default('50') }},
+    "max-responses-export-PDF": {{ formMaxResponses | default('100') }},
+    "max-users-sharing": {{ formMaxUsers | default('65000') }},
+    "days-before-notif-closing": {{ formDaysBeforeNotifClosing | default('3') }},
+    "theme-platform": "{{ cgiTheme | default('ent-default') }}"
+  }
+}
