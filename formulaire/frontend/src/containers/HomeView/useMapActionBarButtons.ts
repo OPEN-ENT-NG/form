@@ -15,6 +15,11 @@ import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { useShareModal } from "~/providers/ShareModalProvider";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
 import { getFormEditPath, getHrefFormResultsPath } from "~/core/pathHelper";
+import { t } from "~/i18n";
+import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
+import { useShareModal } from "~/providers/ShareModalProvider";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
 import { ActionBarButtonType } from "./enums";
@@ -38,7 +43,6 @@ export const useMapActionBarButtons = () => {
     forms,
     distributions,
   } = useHome();
-  const navigate = useNavigate();
   const { user } = useEdificeClient();
   const { userFormsRights } = useShareModal();
   const [duplicateForms, { isLoading: isDuplicating }] = useDuplicateFormsMutation();
