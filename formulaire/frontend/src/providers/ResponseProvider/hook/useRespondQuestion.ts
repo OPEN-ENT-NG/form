@@ -39,8 +39,6 @@ export const useRespondQuestion = (
       const newQuestionResponsesMap = new Map(newResponsesMap.get(formElementIdType) || []);
       newQuestionResponsesMap.set(questionId, newResponses);
       newResponsesMap.set(formElementIdType, newQuestionResponsesMap);
-      console.log(prev);
-      console.log("Updated responsesMap:", newResponsesMap);
       return newResponsesMap;
     });
   };
