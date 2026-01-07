@@ -1,13 +1,14 @@
+import { Dispatch } from "react";
 import { FormElementType } from "~/core/models/formElement/enum";
 import { createStringifiedFormElementIdType, getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
 import { IResponse } from "~/core/models/response/type";
-import { useResponse } from "~/providers/ResponseProvider";
 
-export const useRespondQuestion = (question: IQuestion) => {
-  const { responsesMap, setResponsesMap } = useResponse();
-
-  const getQuestionResponses = (): IResponse[] => {
+export const useRespondQuestion = (
+  responsesMap: Map<string, Map<number, IResponse[]>>,
+  setResponsesMap: Dispatch<React.SetStateAction<Map<string, Map<number, IResponse[]>>>>,
+) => {
+  const getQuestionResponses = (question: IQuestion): IResponse[] => {
     const questionId = question.id;
     const sectionId = question.sectionId;
     const formElementIdType = sectionId
@@ -20,7 +21,12 @@ export const useRespondQuestion = (question: IQuestion) => {
     return responses ? responses.map((r) => ({ ...r })) : [];
   };
 
-  const updateQuestionResponses = (newResponses: IResponse[]) => {
+  const getQuestionResponse = (question: IQuestion): IResponse | null => {
+    const responses = getQuestionResponses(question);
+    return responses.length ? { ...responses[0] } : null;
+  };
+
+  const updateQuestionResponses = (question: IQuestion, newResponses: IResponse[]) => {
     const questionId = question.id;
     const sectionId = question.sectionId;
     const formElementIdType = sectionId
@@ -37,5 +43,5 @@ export const useRespondQuestion = (question: IQuestion) => {
     });
   };
 
-  return { getQuestionResponses, updateQuestionResponses };
+  return { getQuestionResponses, getQuestionResponse, updateQuestionResponses };
 };
