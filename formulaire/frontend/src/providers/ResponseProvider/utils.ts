@@ -6,23 +6,22 @@ import { IResponse } from "~/core/models/response/type";
 import { createNewResponse } from "~/core/models/response/utils";
 
 export const initResponsesMap = (formElements: IFormElement[]) => {
-  const responsesMap = new Map();
-  formElements.map((formElement) => {
-    const formElementResponsesMap = new Map();
+  const responsesMap = new Map<string, Map<number, IResponse[]>>();
 
-    if (isQuestion(formElement)) {
-      const questionResponses = initResponseAccordingToType(formElement);
-      formElementResponsesMap.set(formElement.id, questionResponses);
-    }
+  formElements.forEach((formElement) => {
+    const formElementResponsesMap = new Map<number, IResponse[]>();
 
-    if (isSection(formElement)) {
-      formElement.questions.map((question) => {
-        const questionResponses = initResponseAccordingToType(question);
-        formElementResponsesMap.set(question.id, questionResponses);
+    if (isQuestion(formElement) && formElement.id) {
+      formElementResponsesMap.set(formElement.id, initResponseAccordingToType(formElement));
+    } else if (isSection(formElement)) {
+      formElement.questions.forEach((question) => {
+        if (!question.id) return;
+        formElementResponsesMap.set(question.id, initResponseAccordingToType(question));
       });
     }
 
-    responsesMap.set(getStringifiedFormElementIdType(formElement), formElementResponsesMap);
+    const formElementIdType = getStringifiedFormElementIdType(formElement);
+    if (formElementIdType) responsesMap.set(formElementIdType, formElementResponsesMap);
   });
 
   return responsesMap;
@@ -36,14 +35,12 @@ export const initResponseAccordingToType = (question: IQuestion): IResponse[] =>
     case QuestionTypes.DATE:
     case QuestionTypes.TIME:
     case QuestionTypes.CURSOR:
+    case QuestionTypes.SINGLEANSWER:
+    case QuestionTypes.SINGLEANSWERRADIO:
       return [createNewResponse(question.id)];
 
     //TODO other question types
     case QuestionTypes.FILE:
-      return [];
-    case QuestionTypes.SINGLEANSWER:
-      return [];
-    case QuestionTypes.SINGLEANSWERRADIO:
       return [];
     case QuestionTypes.MULTIPLEANSWER:
       return [];
