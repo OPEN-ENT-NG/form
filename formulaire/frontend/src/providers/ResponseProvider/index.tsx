@@ -1,20 +1,20 @@
-import { FC, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { ResponseProviderContextType, IResponseProviderProps, IProgressProps } from "./types";
-import { useParams } from "react-router-dom";
-import { IForm } from "~/core/models/form/types";
-import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useEdificeClient } from "@edifice.io/react";
-import { workflowRights } from "~/core/rights";
+import { FC, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useParams } from "react-router-dom";
+import { ResponsePageType } from "~/core/enums";
+import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
+import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
+import { workflowRights } from "~/core/rights";
+import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
 import { useFormElementList } from "../CreationProvider/hook/useFormElementsList";
 import { useGlobal } from "../GlobalProvider";
 import { useClassicResponse } from "./hook/useClassicResponse";
+import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
-import { ResponsePageType } from "~/core/enums";
-import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
-import { IResponse } from "~/core/models/response/type";
+import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
 import { initResponsesMap } from "./utils";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
@@ -32,7 +32,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const { user } = useEdificeClient();
   const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
-  const [responsesMap, setResponsesMap] = useState<Map<string, Map<number, IResponse[]>>>(new Map());
+  const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
   const { saveClassicResponses } = useClassicResponse();
   const [form, setForm] = useState<IForm | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
@@ -44,6 +44,10 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   });
   const [pageType, setPageType] = useState<ResponsePageType | undefined>(initialPageType);
   const hasInitializedRsponsesMap = useRef(false);
+  const { getQuestionResponses, getQuestionResponse, updateQuestionResponses } = useRespondQuestion(
+    responsesMap,
+    setResponsesMap,
+  );
 
   if (formId === undefined) {
     throw new Error("formId is undefined");
@@ -89,7 +93,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   }, [formElementsList]);
 
   useEffect(() => {
-    if (!hasInitializedRsponsesMap.current && formElementsList.length <= 0) {
+    if (!hasInitializedRsponsesMap.current && formElementsList.length > 0) {
       const initializedResponsesMap = initResponsesMap(formElementsList);
       setResponsesMap(initializedResponsesMap);
       hasInitializedRsponsesMap.current = true;
@@ -126,6 +130,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       saveResponses,
       responsesMap,
       setResponsesMap,
+      getQuestionResponses,
+      getQuestionResponse,
+      updateQuestionResponses,
     }),
     [
       form,
@@ -139,6 +146,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       saveResponses,
       responsesMap,
       setResponsesMap,
+      getQuestionResponses,
+      getQuestionResponse,
+      updateQuestionResponses,
     ],
   );
 
