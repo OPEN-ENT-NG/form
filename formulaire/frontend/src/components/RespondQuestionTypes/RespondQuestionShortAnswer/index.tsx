@@ -1,32 +1,28 @@
-import { ChangeEvent, FC, useEffect, useState } from "react";
 import { Box, TextField } from "@cgi-learning-hub/ui";
-import { IRespondQuestionTypesProps } from "../types";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { useRespondQuestion } from "~/containers/RespondQuestionWrapper/useRespondQuestion";
+import { useResponse } from "~/providers/ResponseProvider";
+import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { selectAllTextInput } = useGlobal();
-  const { getQuestionResponses, updateQuestionResponses } = useRespondQuestion(question);
+  const { getQuestionResponse, updateQuestionResponses } = useResponse();
   const [answer, setAnswer] = useState<string>("");
 
   useEffect(() => {
-    const associatedResponse = getAssociatedResponse();
+    const associatedResponse = getQuestionResponse(question);
+    if (!associatedResponse) return;
     const existingAnswer = associatedResponse.answer;
     if (typeof existingAnswer === "string") setAnswer(existingAnswer);
   }, []);
 
   const handleResponseChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const associatedResponse = getQuestionResponse(question);
+    if (!question.id || !associatedResponse) return;
     setAnswer(event.target.value);
-    if (!question.id) return;
-    const associatedResponse = getAssociatedResponse();
     associatedResponse.answer = event.target.value;
-    updateQuestionResponses([associatedResponse]);
-  };
-
-  const getAssociatedResponse = () => {
-    const questionResponses = getQuestionResponses();
-    return questionResponses[0]; // SHORTANSWER question should always have only 1 response associated
+    updateQuestionResponses(question, [associatedResponse]);
   };
 
   return (
