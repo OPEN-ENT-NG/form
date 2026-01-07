@@ -21,8 +21,9 @@ export const useFormElementList = (
   const { data: childrenDatas } = useGetQuestionsChildrenQuery(questionsIds, { skip: questionsIds.length === 0 });
 
   const completeList = useMemo(() => {
+    if (!questionsDatas || !choicesDatas) return [];
     // Create a Map of choices by questionId for O(1) lookup
-    const choicesByQuestion = (choicesDatas ?? []).reduce((acc, choice) => {
+    const choicesByQuestion = choicesDatas.reduce((acc, choice) => {
       if (choice.questionId != null) {
         const existingChoices = acc.get(choice.questionId) ?? [];
         return acc.set(choice.questionId, [...existingChoices, choice]);
@@ -39,7 +40,7 @@ export const useFormElementList = (
       return acc;
     }, new Map<number, IQuestion[]>());
 
-    const { questionsBySection, questionsWithoutSectionList } = (questionsDatas ?? []).reduce(
+    const { questionsBySection, questionsWithoutSectionList } = questionsDatas.reduce(
       (acc, question) => {
         const withChoicesAndChildren = {
           ...question,

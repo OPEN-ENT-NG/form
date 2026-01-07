@@ -3,6 +3,7 @@ import { RespondQuestionCursor } from "~/components/RespondQuestionTypes/Respond
 import { RespondQuestionDate } from "~/components/RespondQuestionTypes/RespondQuestionDate";
 import { RespondQuestionFreetext } from "~/components/RespondQuestionTypes/RespondQuestionFreetext";
 import { RespondQuestionLongAnswer } from "~/components/RespondQuestionTypes/RespondQuestionLongAnswer";
+import { RespondQuestionRanking } from "~/components/RespondQuestionTypes/RespondQuestionRanking";
 import { RespondQuestionShortAnswer } from "~/components/RespondQuestionTypes/RespondQuestionShortAnswer";
 import { RespondQuestionSingleAnswer } from "~/components/RespondQuestionTypes/RespondQuestionSingleAnswer";
 import { RespondQuestionSingleAnswerRadio } from "~/components/RespondQuestionTypes/RespondQuestionSingleAnswerRadio";
@@ -30,6 +31,8 @@ export const getRespondQuestionContentByType = (question: IQuestion) => {
       return <RespondQuestionSingleAnswer question={question} />;
     case QuestionTypes.SINGLEANSWERRADIO:
       return <RespondQuestionSingleAnswerRadio question={question} />;
+    case QuestionTypes.RANKING:
+      return <RespondQuestionRanking question={question} />;
     default:
       return (
         <Typography variant={TypographyVariant.BODY1}>
