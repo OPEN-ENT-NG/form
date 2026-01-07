@@ -27,7 +27,7 @@ export const useFormElementList = (
   useEffect(() => {
     if (isDataFetching || !sectionsDatas || !questionsDatas) return;
     // Create a Map of choices by questionId for O(1) lookup
-    const choicesByQuestion = (choicesDatas ?? []).reduce((acc, choice) => {
+    const choicesByQuestion = choicesDatas.reduce((acc, choice) => {
       if (choice.questionId != null) {
         const existingChoices = acc.get(choice.questionId) ?? [];
         return acc.set(choice.questionId, [...existingChoices, choice]);
