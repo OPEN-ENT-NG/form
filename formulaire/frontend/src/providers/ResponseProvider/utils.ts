@@ -23,7 +23,7 @@ export const initResponsesMap = (formElements: IFormElement[]) => {
     const formElementIdType = getStringifiedFormElementIdType(formElement);
     if (formElementIdType) responsesMap.set(formElementIdType, formElementResponsesMap);
   });
-
+  console.log("Initialized responsesMap in utils:", responsesMap);
   return responsesMap;
 };
 
@@ -38,13 +38,16 @@ export const initResponseAccordingToType = (question: IQuestion): IResponse[] =>
     case QuestionTypes.SINGLEANSWER:
     case QuestionTypes.SINGLEANSWERRADIO:
       return [createNewResponse(question.id)];
-
+    case QuestionTypes.RANKING:
+      return question.choices
+        ? question.choices.map((choice, index) =>
+            createNewResponse(question.id as number, undefined, choice.id as number, choice.value, index),
+          )
+        : [];
     //TODO other question types
     case QuestionTypes.FILE:
       return [];
     case QuestionTypes.MULTIPLEANSWER:
-      return [];
-    case QuestionTypes.RANKING:
       return [];
     case QuestionTypes.MATRIX:
       return [];
