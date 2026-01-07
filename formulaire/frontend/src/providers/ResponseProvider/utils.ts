@@ -23,7 +23,6 @@ export const initResponsesMap = (formElements: IFormElement[]) => {
     const formElementIdType = getStringifiedFormElementIdType(formElement);
     if (formElementIdType) responsesMap.set(formElementIdType, formElementResponsesMap);
   });
-  console.log("Initialized responsesMap in utils:", responsesMap);
   return responsesMap;
 };
 
