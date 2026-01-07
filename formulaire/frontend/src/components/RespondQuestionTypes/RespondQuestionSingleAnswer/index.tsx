@@ -1,17 +1,42 @@
 import { Box } from "@cgi-learning-hub/ui";
-import { FormControl, MenuItem, Select } from "@mui/material";
-import { FC } from "react";
+import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
+import { FC, useEffect, useState } from "react";
+import { useResponse } from "~/providers/ResponseProvider";
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
+  const { getQuestionResponse, updateQuestionResponses } = useResponse();
+  const [selectedValue, setSelectedValue] = useState<string>("");
+
+  useEffect(() => {
+    const associatedResponse = getQuestionResponse(question);
+    if (!associatedResponse) return;
+
+    const existingAnswer = associatedResponse.answer;
+    if (typeof existingAnswer === "string") {
+      setSelectedValue(existingAnswer);
+    }
+  }, [question, getQuestionResponse]);
+
+  const handleChange = (event: SelectChangeEvent) => {
+    const value = event.target.value;
+    setSelectedValue(value);
+
+    const associatedResponse = getQuestionResponse(question);
+    if (!question.id || !associatedResponse) return;
+
+    associatedResponse.answer = value;
+    updateQuestionResponses(question, [associatedResponse]);
+  };
+
   return (
     <Box>
       <FormControl fullWidth>
-        <Select>
+        <Select value={selectedValue} onChange={handleChange}>
           {question.choices
             ?.sort((a, b) => a.position - b.position)
             .map((choice) => (
-              <MenuItem key={choice.id} value={choice.id ?? 0}>
+              <MenuItem key={choice.id} value={choice.value}>
                 {choice.value}
               </MenuItem>
             ))}
