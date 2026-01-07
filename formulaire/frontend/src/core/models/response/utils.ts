@@ -20,7 +20,7 @@ export const createNewResponse = (
     files: [],
     selected: false,
     selectedIndexList: [], // For multiple answer in preview
-    choicePosition: choicePosition ? choicePosition : undefined, // For question type ranking to order
+    choicePosition: choicePosition !== undefined ? choicePosition : undefined, // For question type ranking to order
     image: null, // For question type multiple answer
   };
 };
