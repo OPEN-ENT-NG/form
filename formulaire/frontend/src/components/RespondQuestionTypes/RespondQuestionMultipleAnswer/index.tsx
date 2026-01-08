@@ -66,33 +66,32 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
         {question.choices
           ?.sort((a, b) => a.position - b.position)
           .map((choice) => (
-            <Box key={choice.id}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    checked={isChoiceSelected(choice.id)}
-                    onChange={() => {
-                      handleToggle(choice.id);
-                    }}
-                  />
-                }
-                label={
-                  <Box sx={customAnswerStyle}>
-                    <Typography>{choice.value}</Typography>
-                    {choice.isCustom && (
-                      <>
-                        <Typography>:</Typography>
-                        <TextField
-                          variant="standard"
-                          value={customAnswer}
-                          onChange={handleCustomResponseChange}
-                        ></TextField>
-                      </>
-                    )}
-                  </Box>
-                }
-              />
-            </Box>
+            <FormControlLabel
+              key={choice.id}
+              control={
+                <Checkbox
+                  checked={isChoiceSelected(choice.id)}
+                  onChange={() => {
+                    handleToggle(choice.id);
+                  }}
+                />
+              }
+              label={
+                <Box sx={customAnswerStyle}>
+                  <Typography>{choice.value}</Typography>
+                  {choice.isCustom && (
+                    <>
+                      <Typography>:</Typography>
+                      <TextField
+                        variant="standard"
+                        value={customAnswer}
+                        onChange={handleCustomResponseChange}
+                      ></TextField>
+                    </>
+                  )}
+                </Box>
+              }
+            />
           ))}
       </FormControl>
     </Box>
