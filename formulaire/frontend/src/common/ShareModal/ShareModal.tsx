@@ -14,7 +14,16 @@ import {
   Tooltip,
   VisuallyHidden,
 } from "@edifice.io/react";
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@cgi-learning-hub/ui";
+import {
+  Box,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  IconButton,
+  Typography,
+} from "@cgi-learning-hub/ui";
 import { IconBookmark, IconInfoCircle, IconRafterDown } from "@edifice.io/react/icons";
 import { ShareBookmark } from "./ShareBookmark";
 import { ShareBookmarkLine } from "./ShareBookmarkLine";
@@ -27,6 +36,7 @@ import { useShareModal } from "~/providers/ShareModalProvider";
 import {
   BoxComponentType,
   BreakpointVariant,
+  ComponentSize,
   ComponentVariant,
   TypographyFontStyle,
   TypographyVariant,
@@ -330,9 +340,9 @@ export default function ShareResourceModal({
             </Box>
             <Box sx={flexStartBoxStyle}>
               <Typography fontStyle={"italic"}>{publicLink}</Typography>
-              <Box onClick={() => void handleCopyPublicLink()} sx={{ cursor: "pointer" }}>
-                <ContentCopyIcon sx={{ marginLeft: "1rem", fontSize: "1.5rem" }} />
-              </Box>
+              <IconButton onClick={() => void handleCopyPublicLink()} sx={{ marginLeft: "0.5rem" }} color="secondary">
+                <ContentCopyIcon sx={{ fontSize: "1.8rem !important" }} />
+              </IconButton>
             </Box>
           </Box>
         )}
