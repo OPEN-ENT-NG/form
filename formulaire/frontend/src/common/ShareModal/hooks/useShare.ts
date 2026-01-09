@@ -8,8 +8,9 @@ import {
   type ShareRightActionDisplayName,
   type ShareRightWithVisibles,
 } from "@edifice.io/client";
-import { useUser, useToast } from "@edifice.io/react";
+import { useUser } from "@edifice.io/react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { ShareOptions, ShareResourceMutation } from "../ShareModal";
 import { COMMON } from "~/core/constants";
@@ -88,7 +89,6 @@ export default function useShare({
 }: IUseShareResourceModalProps) {
   const { user, avatar } = useUser();
 
-  const toast = useToast();
   const { t } = useTranslation(COMMON);
   const dispatcher = useDispatch();
 
