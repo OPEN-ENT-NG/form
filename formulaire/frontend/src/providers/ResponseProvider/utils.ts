@@ -38,6 +38,7 @@ export const initResponseAccordingToType = (question: IQuestion): IResponse[] =>
     case QuestionTypes.SINGLEANSWERRADIO:
       return [createNewResponse(question.id)];
     case QuestionTypes.RANKING:
+    case QuestionTypes.MULTIPLEANSWER:
       return question.choices
         ? question.choices.map((choice, index) =>
             createNewResponse(question.id as number, undefined, choice.id as number, choice.value, index),
@@ -45,8 +46,6 @@ export const initResponseAccordingToType = (question: IQuestion): IResponse[] =>
         : [];
     //TODO other question types
     case QuestionTypes.FILE:
-      return [];
-    case QuestionTypes.MULTIPLEANSWER:
       return [];
     case QuestionTypes.MATRIX:
       return [];
