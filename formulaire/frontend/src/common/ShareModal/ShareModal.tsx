@@ -36,7 +36,6 @@ import { useShareModal } from "~/providers/ShareModalProvider";
 import {
   BoxComponentType,
   BreakpointVariant,
-  ComponentSize,
   ComponentVariant,
   TypographyFontStyle,
   TypographyVariant,
