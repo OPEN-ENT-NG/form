@@ -133,7 +133,6 @@ export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: 
         isNextFormElementDefault: false,
       };
 
-      if (updatedChoices[index].id === 623) console.log(updatedChoices[index]);
       setCurrentEditingElement({ ...question, choices: updatedChoices });
     },
     [choices, question],

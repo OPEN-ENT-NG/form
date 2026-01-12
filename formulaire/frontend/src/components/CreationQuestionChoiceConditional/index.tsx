@@ -31,8 +31,6 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
     [choiceIndex, updateChoiceNextFormElement],
   );
 
-  // if (question.id === 466) console.log(choice);
-
   const {
     followingElement,
     elementsTwoPositionsAheadList,
