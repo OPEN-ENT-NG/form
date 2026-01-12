@@ -41,9 +41,7 @@ import { questionAlertStyle, StyledDragContainer } from "~/containers/CreationQu
 import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
-import { FormElementType } from "~/core/models/formElement/enum";
 import { isValidFormElement } from "~/core/models/formElement/utils";
-import { ISection } from "~/core/models/section/types";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
 import { AlertSeverityVariant, ComponentVariant, EditorVariant, TypographyFontStyle } from "~/core/style/themeProps";
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
@@ -56,6 +54,8 @@ import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/en
 import { IconButtonTooltiped } from "../IconButtonTooltiped/IconButtonTooltiped";
 import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { getDescription, isDescriptionEmpty } from "./utils";
+import { ISection } from "~/core/models/section/types";
+import { FormElementType } from "~/core/models/formElement/enum";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section, listeners, attributes }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -72,18 +72,18 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
   const sortedIds = useMemo(() => section.questions.map((q) => `${getDndElementType(q)}-${q.id}`), [section]);
 
   const onSaveSectionNextElement = useCallback(
-    (updatedEntity: ISection, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
+    (updatedSection: ISection, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
       void saveSection({
-        ...updatedEntity,
+        ...updatedSection,
         nextFormElementId: targetElementId ?? null,
         nextFormElementType: targetElementType ?? null,
+        isNextFormElementDefault: false,
       });
     },
     [saveSection],
   );
 
   const {
-    targetNextElementId,
     followingElement,
     elementsTwoPositionsAheadList,
     onChange: handleNextFormElementChange,
@@ -173,7 +173,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
                 <FormControl fullWidth>
                   <Select
                     variant={ComponentVariant.OUTLINED}
-                    value={targetNextElementId != null ? String(targetNextElementId) : TARGET_RECAP}
+                    value={section.nextFormElementId != null ? String(section.nextFormElementId) : TARGET_RECAP}
                     onChange={handleNextFormElementChange}
                     displayEmpty
                     MenuProps={{

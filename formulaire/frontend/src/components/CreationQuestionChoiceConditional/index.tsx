@@ -10,7 +10,7 @@ import { FormElementType } from "~/core/models/formElement/enum";
 import { IQuestionChoice } from "~/core/models/question/types";
 import { nextElementSelectorWrapperStyle } from "./style";
 import { useCreation } from "~/providers/CreationProvider";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
 import { getParent } from "~/core/models/question/utils";
 
 export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceConditionalProps> = ({
@@ -24,14 +24,16 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
 
   const onSaveChoiceNextElement = useCallback(
     (_: IQuestionChoice, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
-      if (updateChoiceNextFormElement && choiceIndex !== undefined)
+      if (updateChoiceNextFormElement && choiceIndex !== undefined) {
         updateChoiceNextFormElement(choiceIndex, targetElementId, targetElementType);
+      }
     },
     [choiceIndex, updateChoiceNextFormElement],
   );
 
+  // if (question.id === 466) console.log(choice);
+
   const {
-    targetNextElementId,
     followingElement,
     elementsTwoPositionsAheadList,
     onChange: handleNextFormElementChange,
@@ -45,8 +47,13 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
     <FormControl fullWidth sx={{ paddingLeft: "3rem" }}>
       <Select
         variant={ComponentVariant.OUTLINED}
-        value={targetNextElementId != null ? String(targetNextElementId) : TARGET_RECAP}
+        value={choice.nextFormElementId != null ? String(choice.nextFormElementId) : TARGET_RECAP}
         onChange={handleNextFormElementChange}
+        onClick={(e) => {
+          if (isCurrentEditingElement(question, currentEditingElement)) {
+            preventPropagation(e);
+          }
+        }}
         displayEmpty
         MenuProps={{
           PaperProps: {

@@ -15,13 +15,13 @@ import {
   IQuestionSpecificFieldsPayload,
 } from "./types";
 
-export const isQuestionRoot = (formElement: IFormElement): boolean => {
+export const isQuestionRoot = (formElement: IFormElement): formElement is IQuestion => {
   if (!isQuestion(formElement)) return false;
   const question = formElement;
   return !!question.position && !question.sectionId && !question.sectionPosition;
 };
 
-export const isQuestionSection = (formElement: IFormElement): boolean => {
+export const isQuestionSection = (formElement: IFormElement): formElement is IQuestion => {
   if (!isQuestion(formElement)) return false;
   const question = formElement;
   return !question.position && !!question.sectionId && !!question.sectionPosition;

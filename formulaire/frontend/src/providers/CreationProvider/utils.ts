@@ -3,7 +3,7 @@ import { IQuestion } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
 import { PositionActionType } from "./enum";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
-import { ChangeEvent, SyntheticEvent } from "react";
+import { SyntheticEvent } from "react";
 
 export const removeFormElementFromList = (
   formElementsList: IFormElement[],
@@ -121,7 +121,7 @@ export const isSectionOrQuestion = (element: IFormElement): boolean => {
 export const getElementById = (
   id: number | null,
   formElementsList: IFormElement[],
-  formElementTypePredicate: (element: IFormElement) => boolean,
+  formElementTypePredicate: (element: IFormElement) => boolean, //TODO useless non ??
 ): IFormElement | undefined => {
   return formElementsList.find((el) => el.id === id && formElementTypePredicate(el));
 };

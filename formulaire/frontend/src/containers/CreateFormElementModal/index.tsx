@@ -43,7 +43,7 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
     return null;
   }
 
-  const handleFormElementCreation = (questionTypeCode: QuestionTypes | undefined = undefined) => {
+  const handleFormElementCreation = (questionTypeCode: QuestionTypes | undefined) => {
     const newFormElement: IFormElement =
       questionTypeCode !== undefined ? createNewQuestion(form.id, questionTypeCode) : createNewSection(form.id);
     newFormElement.selected = true;

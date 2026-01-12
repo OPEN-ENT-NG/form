@@ -14,6 +14,7 @@ import { useCreation } from "~/providers/CreationProvider";
 import { contentStackStyle } from "./style";
 import { IFlattenedItem } from "./types";
 import { formElementsListToFlattenedItemList } from "./utils";
+import { updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
 
 export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -47,9 +48,10 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
   );
 
   const handleConfirm = useCallback(() => {
-    void updateFormElementsList(flattenFormElements(formElementsList));
+    const updatedFormElementsList = updateNextTargetElements(formElementsList);
+    void updateFormElementsList(flattenFormElements(updatedFormElementsList));
     handleClose();
-  }, [updateFormElementsList, formElementsList, handleClose]);
+  }, [updateNextTargetElements, updateFormElementsList, formElementsList, handleClose]);
 
   const handleResetAndClose = useCallback(() => {
     setResetFormElementListId((prev) => prev + 1);
