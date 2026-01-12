@@ -111,6 +111,7 @@ export default function ShareResourceModal({
     handleShare,
     toggleRight,
     handleDeleteRow,
+    hasBlankRight,
   } = useShare({
     appCode,
     resourceId,
@@ -350,7 +351,11 @@ export default function ShareResourceModal({
         <Button variant={ComponentVariant.OUTLINED} onClick={onCancel}>
           {tEdifice("explorer.cancel")}
         </Button>
-        <Button variant={ComponentVariant.CONTAINED} onClick={() => void handleShare()} disabled={isSharing}>
+        <Button
+          variant={ComponentVariant.CONTAINED}
+          onClick={() => void handleShare()}
+          disabled={isSharing || hasBlankRight}
+        >
           {tEdifice("share")}
         </Button>
       </DialogActions>

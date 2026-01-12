@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 
 import {
   odeServices,
@@ -119,6 +119,11 @@ export default function useShare({
       }
     })();
   }, [resourceId]);
+
+  const hasBlankRight = useMemo(
+    () => !state.shareRights.rights.some((right) => right.actions.some((action) => action.id !== "read")),
+    [state.shareRights],
+  );
 
   const toggleRight = (shareRight: ShareRight, actionName: ShareRightActionDisplayName) => {
     const { rights, ...props } = state.shareRights;
@@ -282,5 +287,6 @@ export default function useShare({
     handleDeleteRow,
     handleShare,
     toggleRight,
+    hasBlankRight,
   };
 }
