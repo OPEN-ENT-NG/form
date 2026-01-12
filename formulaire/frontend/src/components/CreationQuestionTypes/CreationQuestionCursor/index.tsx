@@ -37,6 +37,8 @@ export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ questi
     cursorProp: CursorProp,
     inputType: CursorTextFieldType,
   ) => {
+    if (inputType === CursorTextFieldType.NUMBER && isNaN(Number(event.target.value))) return;
+
     const value = inputType === CursorTextFieldType.NUMBER ? Number(event.target.value) : event.target.value;
     const updatedSpecificFields = {
       ...currentQuestionSpecificFields,

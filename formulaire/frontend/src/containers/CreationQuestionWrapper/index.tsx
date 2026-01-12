@@ -27,6 +27,7 @@ import { IQuestion } from "~/core/models/question/types";
 import {
   getQuestionTypeFromValue,
   isCursorChoiceConsistent,
+  isMinAndMaxConsistent,
   isQuestionRoot,
   shouldShowConditionalSwitch,
   shouldShowMandatorySwitch,
@@ -313,6 +314,14 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
           severity={AlertSeverityVariant.WARNING}
           title={t("formulaire.question.field.error")}
           children={t("formulaire.question.cursor.inconsistency.between.values")}
+          sx={questionAlertStyle}
+        />
+      )}
+      {question.questionType === QuestionTypes.CURSOR && !isMinAndMaxConsistent(question) && (
+        <Alert
+          severity={AlertSeverityVariant.WARNING}
+          title={t("formulaire.question.field.error")}
+          children={t("formulaire.question.cursor.inconsistency.between.min.max")}
           sx={questionAlertStyle}
         />
       )}
