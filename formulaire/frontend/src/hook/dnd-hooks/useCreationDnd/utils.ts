@@ -43,13 +43,18 @@ export const getSectionById = (formElementsList: IFormElement[], sectionId: numb
   return section as ISection;
 };
 
-export const getQuestionRootById = (formElementsList: IFormElement[], questionId: number): IQuestion | null => {
+export const getQuestionRootById = (formElementsList: IFormElement[], questionId: number | null): IQuestion | null => {
+  if (questionId == null) return null;
   const question = formElementsList.find((e) => isQuestionRoot(e) && e.id === questionId);
   if (!question) return null;
   return question as IQuestion;
 };
 
-export const getQuestionSectionById = (formElementsList: IFormElement[], questionId: number): IQuestion | null => {
+export const getQuestionSectionById = (
+  formElementsList: IFormElement[],
+  questionId: number | null,
+): IQuestion | null => {
+  if (questionId == null) return null;
   for (const element of formElementsList) {
     if (isSection(element)) {
       const section = element;
