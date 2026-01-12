@@ -25,7 +25,7 @@ export const useFormElementList = (
   const [completeList, setCompleteList] = useState<IFormElement[]>([]);
 
   useEffect(() => {
-    if (isDataFetching || !sectionsDatas || !questionsDatas) return;
+    if (isDataFetching || !sectionsDatas || !questionsDatas || !choicesDatas || !childrenDatas) return;
     // Create a Map of choices by questionId for O(1) lookup
     const choicesByQuestion = choicesDatas.reduce((acc, choice) => {
       if (choice.questionId != null) {
@@ -36,7 +36,7 @@ export const useFormElementList = (
     }, new Map<number, IQuestionChoice[]>());
 
     // Create a Map of children by questionId for O(1) lookup
-    const childrenByQuestion = (childrenDatas ?? []).reduce((acc, child) => {
+    const childrenByQuestion = childrenDatas.reduce((acc, child) => {
       if (child.matrixId != null) {
         const existingChildren = acc.get(child.matrixId) ?? [];
         return acc.set(child.matrixId, [...existingChildren, child]);
