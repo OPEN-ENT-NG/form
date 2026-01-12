@@ -1,7 +1,7 @@
 import { IDelegate } from "~/core/models/delegate/types";
 import { FormPropField } from "./enums";
 import { IFormCheckBoxProp, IFormPropInputValueState } from "./types";
-import { IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
+import { IRGPDData, IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
 import dayjs, { Dayjs } from "dayjs";
 import { t } from "~/i18n";
 
@@ -63,34 +63,36 @@ export const formCheckBoxProps: IFormCheckBoxProp[] = [
 export const rgpdGoalDurationOptions = [3, 6, 9, 12];
 
 export const buildDelegatesParam = (
-  delegate: IDelegate | null,
+  delegates: IDelegate[] | null,
   rgpdGoal: string,
   expirationDate: Dayjs = dayjs(),
-): IRGPDI18nParams => {
-  if (delegate) {
-    return {
-      finalite: rgpdGoal.length ? rgpdGoal : t("formulaire.prop.rgpd.goal.default"),
-      expirationDate: expirationDate,
-      rectoratName: delegate.entity,
-      rectoratEmail: delegate.mail,
-      rectoratAddress: delegate.address,
-      rectoratPostalCode: delegate.zipcode ? delegate.zipcode.toString() : "",
-      rectoratCity: delegate.city,
-      villeName: delegate.entity,
-      villeEmail: delegate.mail,
-    };
-  }
+): IRGPDData => {
+  const delegatesParams: IRGPDI18nParams[] =
+    delegates && delegates.length > 0
+      ? delegates.map((delegate) => ({
+          rectoratName: delegate.entity,
+          rectoratEmail: delegate.mail,
+          rectoratAddress: delegate.address,
+          rectoratPostalCode: delegate.zipcode ? delegate.zipcode.toString() : "",
+          rectoratCity: delegate.city,
+          villeName: delegate.entity,
+          villeEmail: delegate.mail,
+        }))
+      : [
+          {
+            rectoratName: "du Rectorat de Paris",
+            rectoratEmail: "dpd@ac-paris.fr",
+            rectoratAddress: "12 boulevard d'Indochine",
+            rectoratPostalCode: "75019",
+            rectoratCity: "Paris",
+            villeName: "de la Ville de Paris",
+            villeEmail: "dpd.paris@paris.fr",
+          },
+        ];
 
-  // Valeurs par défaut si pas de délégué
   return {
     finalite: rgpdGoal.length ? rgpdGoal : t("formulaire.prop.rgpd.goal.default"),
     expirationDate: expirationDate,
-    rectoratName: "du Rectorat de Paris",
-    rectoratEmail: "dpd@ac-paris.fr",
-    rectoratAddress: "12 boulevard d'Indochine",
-    rectoratPostalCode: "75019",
-    rectoratCity: "Paris",
-    villeName: "de la Ville de Paris",
-    villeEmail: "dpd.paris@paris.fr",
+    delegates: delegatesParams,
   };
 };

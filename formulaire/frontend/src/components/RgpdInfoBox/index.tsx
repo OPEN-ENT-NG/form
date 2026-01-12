@@ -12,8 +12,8 @@ const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, sx = {} }) => {
 
   const formattedDate = dayjs(params.expirationDate).format(DateFormat.DAY_MONTH_YEAR);
 
-  const formatI18n = (key: string, params: string[]): string => {
-    return params.reduce((translatedText, param, index) => {
+  const formatI18n = (key: string, values: string[]): string => {
+    return values.reduce((translatedText, param, index) => {
       const placeholder = `{{${index.toString()}}}`;
       return translatedText.replace(placeholder, param);
     }, t(key));
@@ -21,29 +21,12 @@ const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, sx = {} }) => {
 
   const introHTML = formatI18n("formulaire.prop.rgpd.description.intro", [params.finalite, formattedDate]);
 
-  const rectoratHTML = formatI18n("formulaire.prop.rgpd.description.delegates", [
-    params.rectoratName,
-    params.rectoratEmail,
-    params.rectoratAddress,
-    params.rectoratPostalCode,
-    params.rectoratCity,
-  ]);
-
-  const villeHTML = formatI18n("formulaire.prop.rgpd.description.delegates", [
-    params.villeName,
-    params.villeEmail,
-    "",
-    "",
-    "",
-  ]);
-
   return (
     <Box
       sx={{
         border: "1px solid #ddd",
         borderRadius: 1,
         p: 2,
-
         fontSize: "1.5rem",
         color: "text.secondary",
         "& .left-spacing": {
@@ -53,10 +36,19 @@ const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, sx = {} }) => {
       }}
     >
       <div dangerouslySetInnerHTML={{ __html: introHTML }} />
-      <ul>
-        <li dangerouslySetInnerHTML={{ __html: rectoratHTML }} />
-        <li dangerouslySetInnerHTML={{ __html: villeHTML }} />
-      </ul>
+      <Box component="ul" sx={{ py: 0, m: 0, pl: 2 }}>
+        {params.delegates.map((delegate, index) => {
+          const rectoratHTML = formatI18n("formulaire.prop.rgpd.description.delegates", [
+            delegate.rectoratName,
+            delegate.rectoratEmail,
+            delegate.rectoratAddress,
+            delegate.rectoratPostalCode,
+            delegate.rectoratCity,
+          ]);
+
+          return <Box key={index} component="li" sx={{ py: 0.5 }} dangerouslySetInnerHTML={{ __html: rectoratHTML }} />;
+        })}
+      </Box>
     </Box>
   );
 };
