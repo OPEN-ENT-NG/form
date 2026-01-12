@@ -7,7 +7,10 @@ export const isDescriptionEmpty = (section: ISection) => {
   const container: HTMLDivElement = document.createElement("div");
   container.innerHTML = section.description;
 
-  return container.textContent?.trim().length === 0;
+  const hasText = container.textContent?.trim().length > 0;
+  const hasMeaningfulElement = container.querySelector("img, video, iframe, svg") !== null;
+
+  return !hasText && !hasMeaningfulElement;
 };
 
 export const getDescription = (section: ISection): string | null => {
