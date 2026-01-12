@@ -2,7 +2,7 @@ import { SxProps, Theme } from "@cgi-learning-hub/ui";
 import { flexStartBoxStyle, spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 
 export const mainContentInnerStyle: SxProps<Theme> = {
-  height: "calc(96vh - 43px)",
+  height: "calc(96vh - 43px)", //remove header height
   display: "flex",
   justifyContent: "flex-start",
   flexDirection: "column",

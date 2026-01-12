@@ -12,8 +12,8 @@ const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, sx = {} }) => {
 
   const formattedDate = dayjs(params.expirationDate).format(DateFormat.DAY_MONTH_YEAR);
 
-  const formatI18n = (key: string, values: string[]): string => {
-    return values.reduce((translatedText, param, index) => {
+  const formatI18n = (key: string, params: string[]): string => {
+    return params.reduce((translatedText, param, index) => {
       const placeholder = `{{${index.toString()}}}`;
       return translatedText.replace(placeholder, param);
     }, t(key));
