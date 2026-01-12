@@ -16,33 +16,32 @@ export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }
   useEffect(() => {
     const associatedResponse = getQuestionResponse(question);
 
-    const newFiles: ICustomFile[] =
-      associatedResponse?.files.map((file) => toCustomFile(file)) ?? [];
+    const newFiles: ICustomFile[] = associatedResponse?.files.map((file) => toCustomFile(file)) ?? [];
     setFiles(newFiles);
   }, [question, getQuestionResponse]);
 
   const handleOnDrop = (acceptedFiles: File[]) => {
     const associatedResponse = getQuestionResponse(question);
     const prevFiles: IResponseFile[] = associatedResponse?.files ?? [];
-    const uploadedFiles: IResponseFile[]= acceptedFiles.map((file)=> toResponseFile(file))
+    const uploadedFiles: IResponseFile[] = acceptedFiles.map((file) => toResponseFile(file));
     const newFiles: IResponseFile[] = [...prevFiles, ...uploadedFiles];
 
-    updateQuestionResponses(question, [createResponse(question, newFiles.slice(0,MAX_FILES_SAVE))])
+    updateQuestionResponses(question, [createResponse(question, newFiles.slice(0, MAX_FILES_SAVE))]);
   };
 
   const handleDeleteFile = (file: ICustomFile) => {
     const associatedResponse = getQuestionResponse(question);
     const prevFiles: IResponseFile[] = associatedResponse?.files ?? [];
-    const newFiles: IResponseFile[] = prevFiles.filter(f => f.id!==file.id)
+    const newFiles: IResponseFile[] = prevFiles.filter((f) => f.id !== file.id);
 
-    updateQuestionResponses(question, [createResponse(question, newFiles.slice(0,MAX_FILES_SAVE))])
-  }
+    updateQuestionResponses(question, [createResponse(question, newFiles.slice(0, MAX_FILES_SAVE))]);
+  };
 
   return (
     <Box>
       <FileList files={files} onDelete={handleDeleteFile} />
       <Dropzone
-      disabled={files.length >= MAX_FILES_SAVE}
+        disabled={files.length >= MAX_FILES_SAVE}
         width="100%"
         height="16rem"
         maxFiles={MAX_FILES_SAVE}

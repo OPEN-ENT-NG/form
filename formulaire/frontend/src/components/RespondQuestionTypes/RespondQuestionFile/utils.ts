@@ -12,27 +12,27 @@ export const toResponseFile = (file: File): IResponseFile => {
   };
 };
 
-export const toCustomFile = (responseFile: IResponseFile) : ICustomFile => {
-    return {
-      id: responseFile.id.toString(),
-          name: responseFile.filename,
-          size: responseFile.size ?? 0,
-          isDeletable: true
-        }
-}
+export const toCustomFile = (responseFile: IResponseFile): ICustomFile => {
+  return {
+    id: responseFile.id.toString(),
+    name: responseFile.filename,
+    size: responseFile.size ?? 0,
+    isDeletable: true,
+  };
+};
 
 export const createResponse = (question: IQuestion, responseFiles: IResponseFile[]): IResponse => {
   return {
-          id: null,
-          questionId: question.id ?? 0,
-          choiceId: undefined,
-          answer:undefined,
-          distributionId:  undefined,
-          originalId:  undefined,
-          customAnswer:  undefined,
-          files: responseFiles,
-          selected: true,
-          selectedIndexList: [], 
-          choicePosition: undefined,
-      }
-}
+    id: null,
+    questionId: question.id ?? 0,
+    choiceId: undefined,
+    answer: undefined,
+    distributionId: undefined,
+    originalId: undefined,
+    customAnswer: undefined,
+    files: responseFiles,
+    selected: true,
+    selectedIndexList: [],
+    choicePosition: undefined,
+  };
+};
