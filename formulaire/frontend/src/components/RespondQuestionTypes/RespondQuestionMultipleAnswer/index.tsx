@@ -1,14 +1,18 @@
-import { Box, Checkbox, FormControl, FormControlLabel, TextField, Typography } from "@cgi-learning-hub/ui";
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { Box, Checkbox, FormControlLabel, TextField, Typography } from "@cgi-learning-hub/ui";
+import { ChangeEvent, FC, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { FORMULAIRE } from "~/core/constants";
 import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
+import { ChoiceImage } from "../style";
 import { IRespondQuestionTypesProps } from "../types";
-import { customAnswerStyle } from "./style";
+import { choiceBoxStyle, customAnswerStyle, StyledFormControl } from "./style";
 
 export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { getQuestionResponses, updateQuestionResponses } = useResponse();
   const [reponses, setResponses] = useState<IResponse[]>([]);
   const [customAnswer, setCustomAnswer] = useState<string>("");
+  const { t } = useTranslation(FORMULAIRE);
 
   useEffect(() => {
     const associatedResponses = getQuestionResponses(question);
@@ -18,8 +22,8 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
       const customChoiceId = question.choices?.find((choice) => choice.isCustom)?.id;
       if (!customChoiceId) return;
       const customResponse = associatedResponses.find((response) => response.choiceId === customChoiceId);
-      if (customResponse && customResponse.customAnswer) {
-        setCustomAnswer(customResponse.customAnswer);
+      if (customResponse) {
+        setCustomAnswer(customResponse.customAnswer ?? "");
       }
     }
   }, [question, getQuestionResponses]);
@@ -60,40 +64,48 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
 
     updateQuestionResponses(question, updatedReponses);
   };
+
+  const hasOneChoiceWithImage = useMemo(() => {
+    return question.choices?.some((choice) => choice.image) ?? false;
+  }, [question.choices]);
+
   return (
     <Box>
-      <FormControl>
+      <StyledFormControl hasOneChoiceWithImage={hasOneChoiceWithImage}>
         {question.choices
           ?.sort((a, b) => a.position - b.position)
           .map((choice) => (
-            <FormControlLabel
-              key={choice.id}
-              control={
-                <Checkbox
-                  checked={isChoiceSelected(choice.id)}
-                  onChange={() => {
-                    handleToggle(choice.id);
-                  }}
-                />
-              }
-              label={
-                <Box sx={customAnswerStyle}>
-                  <Typography>{choice.value}</Typography>
-                  {choice.isCustom && (
-                    <>
-                      <Typography>:</Typography>
-                      <TextField
-                        variant="standard"
-                        value={customAnswer}
-                        onChange={handleCustomResponseChange}
-                      ></TextField>
-                    </>
-                  )}
-                </Box>
-              }
-            />
+            <Box key={choice.id} sx={choiceBoxStyle}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={isChoiceSelected(choice.id)}
+                    onChange={() => {
+                      handleToggle(choice.id);
+                    }}
+                  />
+                }
+                label={
+                  <Box sx={customAnswerStyle}>
+                    <Typography>{choice.value}</Typography>
+                    {choice.isCustom && (
+                      <>
+                        <Typography>:</Typography>
+                        <TextField
+                          variant="standard"
+                          value={customAnswer}
+                          placeholder={t("formulaire.response.custom.write")}
+                          onChange={handleCustomResponseChange}
+                        ></TextField>
+                      </>
+                    )}
+                  </Box>
+                }
+              />
+              {choice.image && <ChoiceImage src={choice.image} alt={choice.value} />}
+            </Box>
           ))}
-      </FormControl>
+      </StyledFormControl>
     </Box>
   );
 };
