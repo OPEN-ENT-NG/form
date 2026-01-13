@@ -281,6 +281,7 @@
   "formulaire.question.cursor.default.min.val": "1",
   "formulaire.question.cursor.default.step": "1",
   "formulaire.question.cursor.inconsistency.between.values": "Attention, le pas doit être un multiple de la différence entre la valeur maximale et la valeur minimum du curseur.",
+  "formulaire.question.cursor.inconsistency.between.min.max": "Attention, la valeur minimum doit toujours être strictement inférieure à la valeur maximum.",
   "formulaire.question.date.empty": "Date au format : jj/mm/aaaa",
   "formulaire.question.field.error" : "Question éronnée",
   "formulaire.question.file.empty": "Dépôt de fichier",

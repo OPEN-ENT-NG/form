@@ -25,6 +25,7 @@ import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
 import { iconBoxStyle, tableCheckboxStyle, tableContainerStyle, tablePaginationStyle } from "./style";
 import { IHomeMainFormsTableProps } from "./types";
 import { ColumnId } from "./enums";
+import { preventPropagation } from "~/providers/CreationProvider/utils";
 
 export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   const { selectedForms, setSelectedForms } = useHome();
@@ -124,9 +125,7 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
                     onChange={() => {
                       handleClick(form);
                     }}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                    }}
+                    onClick={preventPropagation}
                   />
                 </TableCell>
                 <TableCell align="center">

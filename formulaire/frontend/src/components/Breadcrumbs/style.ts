@@ -3,8 +3,8 @@ import { IBreadCrumbItemWrapperProps, IBreadCrumbProps } from "./types";
 import { blockProps } from "~/core/utils";
 
 export const StyledBreadCrumbItemWrapper = styled(Typography, {
-  shouldForwardProp: blockProps("textColor", "isHeader", "hasSeparator", "isLast"),
-})<IBreadCrumbItemWrapperProps>(({ textColor, isHeader, hasSeparator, isLast }) => ({
+  shouldForwardProp: blockProps("textColor", "isHeader", "isCreationPage", "hasSeparator", "isLast"),
+})<IBreadCrumbItemWrapperProps>(({ textColor, isHeader, isCreationPage, hasSeparator, isLast }) => ({
   color: textColor,
   fontSize: isHeader ? "2.4rem" : "2rem",
   marginLeft: hasSeparator ? "" : "-1rem",
@@ -15,12 +15,13 @@ export const StyledBreadCrumbItemWrapper = styled(Typography, {
   ...(!isLast && {
     flexShrink: 0,
   }),
-  ...(isHeader && {
-    "&:hover": {
-      cursor: "pointer",
-      textDecoration: "underline",
-    },
-  }),
+  ...(isHeader &&
+    !isCreationPage && {
+      "&:hover": {
+        cursor: "pointer",
+        textDecoration: "underline",
+      },
+    }),
 }));
 
 export const StyledBreadCrumb = styled(Breadcrumbs, {

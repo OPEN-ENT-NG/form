@@ -1,10 +1,11 @@
 import { DragOverEvent, DragStartEvent } from "@dnd-kit/core";
 import { IFormElement } from "~/core/models/formElement/types";
 import { isSection } from "~/core/models/formElement/utils";
-import { IQuestion } from "~/core/models/question/types";
+import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { isQuestionRoot, isQuestionSection } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
 import { DndElementType } from "./enum";
+import { getFollowingFormElement } from "~/providers/CreationProvider/utils";
 
 export const isString = (value: unknown): value is string => {
   return typeof value === "string";
@@ -42,13 +43,18 @@ export const getSectionById = (formElementsList: IFormElement[], sectionId: numb
   return section as ISection;
 };
 
-export const getQuestionRootById = (formElementsList: IFormElement[], questionId: number): IQuestion | null => {
+export const getQuestionRootById = (formElementsList: IFormElement[], questionId: number | null): IQuestion | null => {
+  if (questionId == null) return null;
   const question = formElementsList.find((e) => isQuestionRoot(e) && e.id === questionId);
   if (!question) return null;
   return question as IQuestion;
 };
 
-export const getQuestionSectionById = (formElementsList: IFormElement[], questionId: number): IQuestion | null => {
+export const getQuestionSectionById = (
+  formElementsList: IFormElement[],
+  questionId: number | null,
+): IQuestion | null => {
+  if (questionId == null) return null;
   for (const element of formElementsList) {
     if (isSection(element)) {
       const section = element;
@@ -245,4 +251,98 @@ export const addQuestionSection = (
     if (e.id === newSection.id) return newSection;
     return e;
   });
+};
+
+export const updateNextTargetElements = (formElementsList: IFormElement[]): IFormElement[] => {
+  const updatedFormElementsList: IFormElement[] = [];
+
+  formElementsList.forEach((formElement) => {
+    // Case SECTION
+    if (isSection(formElement)) {
+      const conditionalQuestion = formElement.questions.find((question) => question.conditional);
+
+      // WITHOUT conditional question
+      if (!conditionalQuestion || !conditionalQuestion.choices) {
+        const updatedSection = {
+          ...formElement,
+          ...calculateNewTargetData(formElement, formElement, formElementsList),
+        } as ISection;
+
+        updatedFormElementsList.push(updatedSection);
+        return;
+      }
+
+      // WITH conditional question
+      const updatedChoices = [...conditionalQuestion.choices];
+      conditionalQuestion.choices.forEach((choice, index) => {
+        updatedChoices[index] = {
+          ...choice,
+          ...calculateNewTargetData(choice, formElement, formElementsList),
+        };
+      });
+
+      const updatedQuestion = {
+        ...conditionalQuestion,
+        choices: updatedChoices,
+      } as IQuestion;
+
+      updatedFormElementsList.push(updatedQuestion);
+      return;
+    }
+
+    // Case QUESTION root conditionnal
+    if (isQuestionRoot(formElement) && formElement.conditional && formElement.choices) {
+      const updatedChoices = [...formElement.choices];
+      formElement.choices.forEach((choice, index) => {
+        updatedChoices[index] = {
+          ...choice,
+          ...calculateNewTargetData(choice, formElement, formElementsList),
+        };
+      });
+
+      const updatedQuestion = {
+        ...formElement,
+        choices: updatedChoices,
+      } as IQuestion;
+
+      updatedFormElementsList.push(updatedQuestion);
+      return;
+    }
+
+    // Case question classic sans target
+    updatedFormElementsList.push(formElement);
+  });
+
+  return updatedFormElementsList;
+};
+
+export const calculateNewTargetData = (
+  entity: ISection | IQuestionChoice,
+  formElementRef: IFormElement, // either the ISection itself or the IQuestion parent of the IQuestionChoice
+  formElementsList: IFormElement[],
+) => {
+  // Si currentTarget is not default
+  if (!entity.isNextFormElementDefault) {
+    const target = formElementsList.find(
+      (el) => el.id === entity.nextFormElementId && el.formElementType === entity.nextFormElementType,
+    );
+
+    if (
+      (entity.nextFormElementId === null && entity.nextFormElementType === null) || // Si la target est la fin du form OU
+      (target && target.position && formElementRef.position && target.position > formElementRef.position) // Si la target existe toujours ET est bien DERRIERE l'élément courant
+    )
+      return {}; // Alors on change rien
+  }
+
+  // Si la target n'existe plus
+  // OU se retrouve avant
+  // OU currentTarget is default
+  // alors on force a next target default (en recuperant id + type)
+  const followingElement = entity.position ? getFollowingFormElement(formElementRef, formElementsList) : undefined;
+
+  return {
+    nextFormElementId: followingElement?.id ?? null,
+    nextFormElementType: followingElement?.formElementType ?? null,
+    isNextFormElementDefault: true,
+  };
 };

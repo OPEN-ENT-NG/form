@@ -8,7 +8,11 @@ import { compareChildren, compareChildrenByTitle, swapChildrenAndSort } from "./
 import { createNewQuestion } from "~/core/models/question/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 
-export const useMatrixChildrenActions = (question: IQuestion, setCurrentEditingElement: (q: IQuestion) => void) => {
+export const useMatrixChildrenActions = (
+  question: IQuestion,
+  matrixType: QuestionTypes,
+  setCurrentEditingElement: (q: IQuestion) => void,
+) => {
   const [currentSortDirection, setCurrentSortDirection] = useState<Direction>(Direction.DOWN);
   const [deleteMatrixChild] = useDeleteSingleQuestionMutation();
 
@@ -80,7 +84,7 @@ export const useMatrixChildrenActions = (question: IQuestion, setCurrentEditingE
 
       const newChild = createNewQuestion(
         question.formId,
-        QuestionTypes.SINGLEANSWERRADIO,
+        matrixType,
         question.id,
         children.length + 1,
         childTitle,
@@ -102,7 +106,7 @@ export const useMatrixChildrenActions = (question: IQuestion, setCurrentEditingE
   };
 
   return {
-    children: children,
+    children,
     handleDeleteChild,
     handleSwapClick,
     handleSortClick,

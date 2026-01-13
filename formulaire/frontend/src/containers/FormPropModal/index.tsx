@@ -48,6 +48,7 @@ import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { preventPropagation } from "~/providers/CreationProvider/utils";
 
 export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {
@@ -345,9 +346,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                       sx={{ padding: "0" }}
                       disabled={isDisabled}
                       checked={isChecked}
-                      onChange={(e) => {
-                        e.stopPropagation();
-                      }} // Prevent double firing of the event
+                      onChange={preventPropagation} // Prevent double firing of the event
                     />
                     <Typography>{t(item.i18nKey)}</Typography>
                     {!!item.tooltip && (

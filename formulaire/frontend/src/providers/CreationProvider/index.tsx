@@ -17,6 +17,7 @@ import { ISection } from "~/core/models/section/types";
 import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
 import { IFolder } from "~/core/models/folder/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { getQuestionRootById, getQuestionSectionById } from "~/hook/dnd-hooks/useCreationDnd/utils";
 
 const CreationProviderContext = createContext<CreationProviderContextType | null>(null);
 
@@ -84,17 +85,19 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   }, [currentEditingElement]);
 
   //USER ACTIONS
-  const handleUndoQuestionsChange = useCallback(
+  const handleUndoQuestionChanges = useCallback(
     (question: IQuestion) => {
-      if (!questionsDatas?.length) return;
-      const oldQuestion = questionsDatas.find((q) => q.id === question.id);
+      const oldQuestion = !question.sectionId
+        ? getQuestionRootById(completeList, question.id)
+        : getQuestionSectionById(completeList, question.id);
       if (!oldQuestion) return;
       setFormElementsList((prevFormElementList) => updateElementInList(prevFormElementList, oldQuestion));
+      return;
     },
-    [questionsDatas],
+    [completeList],
   );
 
-  const handleUndoSectionChange = useCallback(
+  const handleUndoSectionChanges = useCallback(
     (section: ISection) => {
       if (!sectionsDatas?.length) return;
       const oldSection = sectionsDatas.find((s) => s.id === section.id);
@@ -113,19 +116,19 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const handleUndoFormElementChange = useCallback(
     (formElement: IFormElement) => {
       if (isQuestion(formElement)) {
-        handleUndoQuestionsChange(formElement);
+        handleUndoQuestionChanges(formElement);
         return;
       }
       if (isSection(formElement)) {
-        handleUndoSectionChange(formElement);
+        handleUndoSectionChanges(formElement);
         return;
       }
     },
-    [handleUndoQuestionsChange, handleUndoSectionChange],
+    [handleUndoQuestionChanges, handleUndoSectionChanges],
   );
 
   const handleDeleteFormElement = useCallback(
-    (toRemove: IFormElement, useKey: boolean = false) => {
+    (toRemove: IFormElement, useKey: boolean) => {
       if (!useKey) {
         setFormElementsList((prevFormElementList) => removeFormElementFromList(prevFormElementList, toRemove));
         return;
