@@ -9,7 +9,7 @@ import {
   Stack,
   Switch,
   TextField,
-  Typography
+  Typography,
 } from "@cgi-learning-hub/ui";
 import { useSortable } from "@dnd-kit/sortable";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
