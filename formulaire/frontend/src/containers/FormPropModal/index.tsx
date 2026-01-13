@@ -70,7 +70,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
   const [isDescriptionDisplay, setIsDescriptionDisplay] = useState<boolean>(
     mode === FormPropModalMode.UPDATE && !!selectedForms[0]?.description,
   );
-  const { data: delegateData } = useGetDelegatesQuery();
+  const { data: delegatesDataList } = useGetDelegatesQuery();
   const [createForm] = useCreateFormMutation();
   const [updateForm] = useUpdateFormMutation();
   const [openTooltipId, setOpenTooltipId] = useState<string | null>(null);
@@ -97,9 +97,9 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
     return dayjs(dateOpening).add(1, "day");
   }, [dateOpening]);
 
-  const delegateParam = useMemo(() => {
-    return buildDelegatesParam(delegateData ?? null, rgpdGoal, rgpdExpirationDate);
-  }, [delegateData, rgpdGoal, rgpdExpirationDate]);
+  const delegatesParams = useMemo(() => {
+    return buildDelegatesParam(delegatesDataList ?? null, rgpdGoal, rgpdExpirationDate);
+  }, [delegatesDataList, rgpdGoal, rgpdExpirationDate]);
 
   const modalTitle = useMemo(
     () => (mode === FormPropModalMode.CREATE ? t("formulaire.prop.create.title") : t("formulaire.prop.edit.title")),
@@ -438,7 +438,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                           </Select>
                         </FormControl>
                       </Box>
-                      <RGPDInfoBox params={delegateParam} />
+                      <RGPDInfoBox params={delegatesParams} />
                     </Box>
                   )}
                 </Box>
@@ -467,7 +467,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
         <Button
           variant="contained"
           onClick={() => void handleSubmit()}
-          disabled={!title.length || (hasRgpd && delegateParam.finalite === t("formulaire.prop.rgpd.goal.default"))}
+          disabled={!title.length || (hasRgpd && delegatesParams.finalite === t("formulaire.prop.rgpd.goal.default"))}
         >
           {t("formulaire.save")}
         </Button>

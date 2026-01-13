@@ -21,8 +21,8 @@ export const useFormatDateWithTime = () => {
 
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 
-    const formattedDate = dayjs.utc(date).tz(userTimeZone).format(DD_MM_YYYY);
-    const formattedTime = dayjs.utc(date).tz(userTimeZone).format(HH_MM);
+    const formattedDate = dayjs(date).tz(userTimeZone).format(DD_MM_YYYY);
+    const formattedTime = dayjs(date).tz(userTimeZone).format(HH_MM);
 
     return `${text}${formattedDate}${atText}${formattedTime}`;
   };
