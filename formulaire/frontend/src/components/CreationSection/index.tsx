@@ -43,7 +43,7 @@ import { EditorMode, EditorVariant, ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { isValidFormElement } from "~/core/models/formElement/utils";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
-import { AlertSeverityVariant, ComponentVariant, EditorVariant, TypographyFontStyle } from "~/core/style/themeProps";
+import { AlertSeverityVariant, ComponentVariant, TypographyFontStyle } from "~/core/style/themeProps";
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { getDndElementType } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
