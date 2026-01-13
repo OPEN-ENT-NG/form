@@ -22,6 +22,16 @@ export const initialFormPropInputValueState: IFormPropInputValueState = {
   [FormPropField.RGPD_LIFE_TIME]: 3,
 };
 
+export const DEFAULT_DELEGATE: IRGPDI18nParams = {
+  rectoratName: "du Rectorat de Paris",
+  rectoratEmail: "dpd@ac-paris.fr",
+  rectoratAddress: "12 boulevard d'Indochine",
+  rectoratPostalCode: "75019",
+  rectoratCity: "Paris",
+  villeName: "de la Ville de Paris",
+  villeEmail: "dpd.paris@paris.fr",
+};
+
 export const formCheckBoxProps: IFormCheckBoxProp[] = [
   {
     i18nKey: "formulaire.prop.public.label",
@@ -78,17 +88,7 @@ export const buildDelegatesParam = (
           villeName: delegate.entity,
           villeEmail: delegate.mail,
         }))
-      : [
-          {
-            rectoratName: "du Rectorat de Paris",
-            rectoratEmail: "dpd@ac-paris.fr",
-            rectoratAddress: "12 boulevard d'Indochine",
-            rectoratPostalCode: "75019",
-            rectoratCity: "Paris",
-            villeName: "de la Ville de Paris",
-            villeEmail: "dpd.paris@paris.fr",
-          },
-        ];
+      : [DEFAULT_DELEGATE];
 
   return {
     finalite: rgpdGoal.length ? rgpdGoal : t("formulaire.prop.rgpd.goal.default"),

@@ -21,6 +21,16 @@ const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, sx = {} }) => {
 
   const introHTML = formatI18n("formulaire.prop.rgpd.description.intro", [params.finalite, formattedDate]);
 
+  const delegatesHTML = params.delegates.map((delegate) =>
+    formatI18n("formulaire.prop.rgpd.description.delegates", [
+      delegate.rectoratName,
+      delegate.rectoratEmail,
+      delegate.rectoratAddress,
+      delegate.rectoratPostalCode,
+      delegate.rectoratCity,
+    ]),
+  );
+
   return (
     <Box
       sx={{
@@ -37,17 +47,9 @@ const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, sx = {} }) => {
     >
       <div dangerouslySetInnerHTML={{ __html: introHTML }} />
       <Box component="ul" sx={{ py: 0, m: 0, pl: 2 }}>
-        {params.delegates.map((delegate, index) => {
-          const rectoratHTML = formatI18n("formulaire.prop.rgpd.description.delegates", [
-            delegate.rectoratName,
-            delegate.rectoratEmail,
-            delegate.rectoratAddress,
-            delegate.rectoratPostalCode,
-            delegate.rectoratCity,
-          ]);
-
-          return <Box key={index} component="li" sx={{ py: 0.5 }} dangerouslySetInnerHTML={{ __html: rectoratHTML }} />;
-        })}
+        {delegatesHTML.map((rectoratHTML, index) => (
+          <Box key={index} component="li" sx={{ py: 0.5 }} dangerouslySetInnerHTML={{ __html: rectoratHTML }} />
+        ))}
       </Box>
     </Box>
   );
