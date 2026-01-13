@@ -329,6 +329,7 @@
   "formulaire.matrix.lines": "Lignes",
   "formulaire.matrix.column.label.default": "Colonne {{0}}",
   "formulaire.matrix.line.label.default": "Ligne {{0}}",
+  "formulaire.max.files": "Maximum {{0}} fichiers",
 
   "formulaire.response": "réponse",
   "formulaire.response.empty": "Sans réponse",
