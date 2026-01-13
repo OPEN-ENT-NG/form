@@ -84,9 +84,9 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
   );
 
   const formCheckBoxPropsReadyList = useMemo(() => {
-    return (
-      isRgpdPossible ? formCheckBoxProps : formCheckBoxProps.filter((item) => item.field !== FormPropField.HAS_RGPD)
-    ).filter((item) => item.field !== FormPropField.DESCRIPTION);
+    return isRgpdPossible
+      ? formCheckBoxProps
+      : formCheckBoxProps.filter((item) => item.field !== FormPropField.HAS_RGPD);
   }, [isRgpdPossible]);
 
   const rgpdExpirationDate = useMemo(() => {
