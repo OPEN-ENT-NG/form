@@ -8,7 +8,8 @@ export const sectionHeaderWrapperStyle: SxProps<Theme> = {
   flexDirection: "column",
   backgroundColor: SECONDARY_MAIN_COLOR,
   color: COMMON_WHITE_COLOR,
-  borderRadius: 1,
+  borderTopLeftRadius: "4px",
+  borderTopRightRadius: "4px",
   paddingBottom: 2,
   paddingX: 4,
 };

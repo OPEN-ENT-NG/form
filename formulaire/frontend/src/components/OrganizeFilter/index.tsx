@@ -24,6 +24,7 @@ import {
 } from "./style";
 import { MenuItemState } from "./enum";
 import { getNextMenuItemState } from "./utils";
+import { preventPropagation } from "~/providers/CreationProvider/utils";
 
 export const OrganizeFilter: FC<IOrganizeFilterProps> = ({
   chipDatas = [],
@@ -161,13 +162,7 @@ export const OrganizeFilter: FC<IOrganizeFilterProps> = ({
             <Typography variant={TypographyVariant.BODY2} sx={filterTitleStyle}>
               {t("formulaire.filter.title.filter")}
             </Typography>
-            <MenuItem
-              disableRipple={true}
-              onClick={(e) => {
-                e.stopPropagation();
-              }}
-              sx={chipMenuItemStyle}
-            >
+            <MenuItem disableRipple={true} onClick={preventPropagation} sx={chipMenuItemStyle}>
               <Box sx={chipContainerStyle}>
                 {chipDatas.map((chip, index) => (
                   <Chip

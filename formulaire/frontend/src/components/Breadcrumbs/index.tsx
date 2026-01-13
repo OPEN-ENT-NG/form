@@ -13,6 +13,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   stringItems,
   separator = null,
   isHeader = false,
+  isCreationPage = false,
 }) => {
   const textColor = isHeader ? FORM_COLOR : CSS_TEXT_PRIMARY_COLOR;
   const navigate = useNavigate();
@@ -48,10 +49,11 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
             key={stringItem}
             textColor={textColor}
             isHeader={isHeader}
+            isCreationPage={isCreationPage}
             hasSeparator={separator != null}
             isLast={isLast}
             onClick={() => {
-              if (isHeader) navigate("/");
+              if (isHeader && !isCreationPage) navigate("/");
             }}
           >
             {content}

@@ -389,7 +389,7 @@ export const useFormElementActions = (
   const preventEmptyChoiceValues = (choices: IQuestionChoice[], isMatrix: boolean = false) => {
     return choices.map((choice) => {
       if (!choice.value.trim()) {
-        const choiceValueI18nKey = isMatrix ? "formulaire.matrix.line.label.default" : "formulaire.option";
+        const choiceValueI18nKey = isMatrix ? "formulaire.matrix.column.label.default" : "formulaire.option";
         return { ...choice, value: t(choiceValueI18nKey, { 0: choice.position }) };
       }
       return choice;

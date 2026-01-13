@@ -1,4 +1,15 @@
-import { Alert, Box, Paper, Stack, Switch, TextField, Typography } from "@cgi-learning-hub/ui";
+import {
+  Alert,
+  Box,
+  MenuItem,
+  Paper,
+  Select,
+  SelectChangeEvent,
+  Stack,
+  Switch,
+  TextField,
+  Typography,
+} from "@cgi-learning-hub/ui";
 import { useSortable } from "@dnd-kit/sortable";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
@@ -10,11 +21,13 @@ import { getTransformStyle } from "~/components/CreationSortableItem/utils";
 import { IconButtonTooltiped } from "~/components/IconButtonTooltiped/IconButtonTooltiped";
 import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
-import { isValidFormElement } from "~/core/models/formElement/utils";
+import { isQuestion, isValidFormElement } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 import {
+  getQuestionTypeFromValue,
   isCursorChoiceConsistent,
+  isMinAndMaxConsistent,
   isQuestionRoot,
   shouldShowConditionalSwitch,
   shouldShowMandatorySwitch,
@@ -24,7 +37,7 @@ import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVar
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
 import { UndoConfirmationModal } from "../UndoConfirmationModal";
@@ -46,10 +59,13 @@ import {
 } from "./style";
 import { ICreationQuestionWrapperProps } from "./types";
 import { getQuestionContentByType } from "./utils";
+import { flexStartBoxStyle } from "~/core/style/boxStyles";
+import { hasFormResponses } from "~/core/models/form/utils";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question, isPreview }) => {
   const { t } = useTranslation(FORMULAIRE);
   const {
+    form,
     formElementsList,
     currentEditingElement,
     setCurrentEditingElement,
@@ -64,6 +80,9 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     selectAllTextInput,
   } = useGlobal();
   const [currentQuestionTitle, setCurrentQuestionTitle] = useState<string>(question.title ?? "");
+  const [matrixType, setMatrixType] = useState<QuestionTypes>(
+    question.children?.[0]?.questionType ?? QuestionTypes.SINGLEANSWERRADIO,
+  );
   const isEditing = isCurrentEditingElement(question, currentEditingElement);
   const inputRef = useRef<HTMLInputElement>(null);
   const dndElementType = useMemo(() => {
@@ -146,19 +165,31 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     void handleDuplicateFormElement(question);
   };
 
+  const handleSelectMatrixType = (event: SelectChangeEvent) => {
+    const selectedQuestionType = getQuestionTypeFromValue(event.target.value);
+    if (selectedQuestionType) {
+      setCurrentEditingElement((prev) => {
+        if (!prev || !isQuestion(prev)) return prev;
+        const newChildren = prev.children?.map((child) => ({ ...child, questionType: selectedQuestionType }));
+        return { ...prev, children: newChildren };
+      });
+      setMatrixType(selectedQuestionType);
+    }
+  };
+
   return (
     <Box
       style={style}
       ref={setNodeRef}
       data-type={ClickAwayDataType.QUESTION}
-      onClick={(e) => {
+      onMouseDown={(e) => {
         handleClickAway(e, currentEditingElement, question);
       }}
     >
       {isEditing ? (
         <Box>
           <StyledPaper isValidFormElement={isValidFormElement(question)}>
-            <Box>
+            <Box sx={flexStartBoxStyle}>
               <TextField
                 inputRef={inputRef}
                 variant={ComponentVariant.STANDARD}
@@ -169,9 +200,22 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                 onFocus={selectAllTextInput}
                 onChange={handleTitleChange}
               />
+              {form && !hasFormResponses(form) && question.questionType === QuestionTypes.MATRIX && (
+                <Select
+                  value={matrixType.toString()}
+                  onChange={handleSelectMatrixType}
+                  onClick={preventPropagation}
+                  sx={{ width: "30%", marginRight: "3rem" }}
+                >
+                  <MenuItem value={QuestionTypes.SINGLEANSWERRADIO}>
+                    {t("formulaire.matrix.type.SINGLEANSWERRADIO")}
+                  </MenuItem>
+                  <MenuItem value={QuestionTypes.MULTIPLEANSWER}>{t("formulaire.matrix.type.MULTIPLEANSWER")}</MenuItem>
+                </Select>
+              )}
             </Box>
 
-            <Box sx={editingQuestionContentStyle}>{getQuestionContentByType(question, inputRef)}</Box>
+            <Box sx={editingQuestionContentStyle}>{getQuestionContentByType(question, inputRef, matrixType)}</Box>
 
             <Box sx={editingQuestionFooterStyle}>
               {shouldShowMandatorySwitch(question) && (
@@ -253,7 +297,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
               </Typography>
             )}
           </Box>
-          <Box>{getQuestionContentByType(question)}</Box>
+          <Box>{getQuestionContentByType(question, null, matrixType)}</Box>
         </Stack>
       )}
 
@@ -270,6 +314,14 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
           severity={AlertSeverityVariant.WARNING}
           title={t("formulaire.question.field.error")}
           children={t("formulaire.question.cursor.inconsistency.between.values")}
+          sx={questionAlertStyle}
+        />
+      )}
+      {question.questionType === QuestionTypes.CURSOR && !isMinAndMaxConsistent(question) && (
+        <Alert
+          severity={AlertSeverityVariant.WARNING}
+          title={t("formulaire.question.field.error")}
+          children={t("formulaire.question.cursor.inconsistency.between.min.max")}
           sx={questionAlertStyle}
         />
       )}

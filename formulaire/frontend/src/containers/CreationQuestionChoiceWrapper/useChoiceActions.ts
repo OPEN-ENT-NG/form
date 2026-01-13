@@ -130,7 +130,9 @@ export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: 
         ...updatedChoices[index],
         nextFormElementId: nextFormElementId ? nextFormElementId : null,
         nextFormElementType: nextFormElementType ? nextFormElementType : null,
+        isNextFormElementDefault: false,
       };
+
       setCurrentEditingElement({ ...question, choices: updatedChoices });
     },
     [choices, question],

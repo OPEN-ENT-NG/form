@@ -49,7 +49,7 @@ export const useClickAwayEditingElement = (
 
     const choiceValueI18nKey =
       currentEditingElement.questionType === QuestionTypes.MATRIX
-        ? "formulaire.matrix.line.label.default"
+        ? "formulaire.matrix.column.label.default"
         : "formulaire.option";
 
     const updatedChoicesList = currentEditingElement.choices.map((choice) => {
@@ -61,7 +61,7 @@ export const useClickAwayEditingElement = (
       if (child.title && child.title.trim().length) return child;
       return {
         ...child,
-        title: t("formulaire.matrix.column.label.default", { 0: child.matrixPosition }),
+        title: t("formulaire.matrix.line.label.default", { 0: child.matrixPosition }),
       };
     });
 

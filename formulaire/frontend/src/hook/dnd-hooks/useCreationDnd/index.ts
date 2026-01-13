@@ -13,6 +13,7 @@ import {
   getSectionById,
   getTargetQuestionPositionInSection,
   getTargetRootPosition,
+  updateNextTargetElements,
 } from "./utils";
 
 export const useCreationDnd = (
@@ -110,7 +111,8 @@ export const useCreationDnd = (
     const initialStr = JSON.stringify(initialListRef.current);
     const finalStr = JSON.stringify(formElementsList);
     if (initialStr !== finalStr) {
-      void updateFormElementsList(flattenFormElements(formElementsList));
+      const updatedFormElementsList = updateNextTargetElements(formElementsList);
+      void updateFormElementsList(flattenFormElements(updatedFormElementsList));
     }
     initialListRef.current = null;
   };

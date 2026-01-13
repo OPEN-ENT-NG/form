@@ -10,7 +10,8 @@ import { FormElementType } from "~/core/models/formElement/enum";
 import { IQuestionChoice } from "~/core/models/question/types";
 import { nextElementSelectorWrapperStyle } from "./style";
 import { useCreation } from "~/providers/CreationProvider";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
+import { getParent } from "~/core/models/question/utils";
 
 export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceConditionalProps> = ({
   question,
@@ -19,29 +20,38 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
   updateChoiceNextFormElement,
 }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { currentEditingElement } = useCreation();
+  const { currentEditingElement, formElementsList } = useCreation();
 
   const onSaveChoiceNextElement = useCallback(
     (_: IQuestionChoice, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
-      if (updateChoiceNextFormElement && choiceIndex !== undefined)
+      if (updateChoiceNextFormElement && choiceIndex !== undefined) {
         updateChoiceNextFormElement(choiceIndex, targetElementId, targetElementType);
+      }
     },
     [choiceIndex, updateChoiceNextFormElement],
   );
 
   const {
-    targetNextElementId,
     followingElement,
     elementsTwoPositionsAheadList,
     onChange: handleNextFormElementChange,
-  } = useTargetNextElement({ entity: choice, positionReferenceElement: question, onSave: onSaveChoiceNextElement });
+  } = useTargetNextElement({
+    entity: choice,
+    positionReferenceElement: getParent(question, formElementsList) || question,
+    onSave: onSaveChoiceNextElement,
+  });
 
   return (
     <FormControl fullWidth sx={{ paddingLeft: "3rem" }}>
       <Select
         variant={ComponentVariant.OUTLINED}
-        value={targetNextElementId != null ? String(targetNextElementId) : TARGET_RECAP}
+        value={choice.nextFormElementId != null ? String(choice.nextFormElementId) : TARGET_RECAP}
         onChange={handleNextFormElementChange}
+        onClick={(e) => {
+          if (isCurrentEditingElement(question, currentEditingElement)) {
+            preventPropagation(e);
+          }
+        }}
         displayEmpty
         MenuProps={{
           PaperProps: {

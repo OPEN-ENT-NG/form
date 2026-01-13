@@ -15,13 +15,13 @@ import {
   IQuestionSpecificFieldsPayload,
 } from "./types";
 
-export const isQuestionRoot = (formElement: IFormElement): boolean => {
+export const isQuestionRoot = (formElement: IFormElement): formElement is IQuestion => {
   if (!isQuestion(formElement)) return false;
   const question = formElement;
   return !!question.position && !question.sectionId && !question.sectionPosition;
 };
 
-export const isQuestionSection = (formElement: IFormElement): boolean => {
+export const isQuestionSection = (formElement: IFormElement): formElement is IQuestion => {
   if (!isQuestion(formElement)) return false;
   const question = formElement;
   return !question.position && !!question.sectionId && !!question.sectionPosition;
@@ -182,23 +182,23 @@ export const isTypeChildrenQuestion = (questionType: QuestionTypes): boolean => 
   return questionType == QuestionTypes.MATRIX;
 };
 
-export function isCursorChoiceConsistent(question: IQuestion): boolean {
-  if (question.questionType !== QuestionTypes.CURSOR) {
-    return true;
-  }
+export const isMinAndMaxConsistent = (question: IQuestion): boolean => {
+  if (question.questionType !== QuestionTypes.CURSOR) return true;
+  if (!question.specificFields) return false;
 
-  if (!question.specificFields) {
-    return false;
-  }
+  return question.specificFields.cursorMaxVal > question.specificFields.cursorMinVal;
+};
 
-  const minVal: number = question.specificFields.cursorMinVal;
+export const isCursorChoiceConsistent = (question: IQuestion): boolean => {
+  if (question.questionType !== QuestionTypes.CURSOR) return true;
+  if (!question.specificFields) return false;
 
-  const maxVal: number = question.specificFields.cursorMaxVal;
-
-  const step: number = question.specificFields.cursorStep ? question.specificFields.cursorStep : DEFAULT_CURSOR_STEP;
+  const minVal = question.specificFields.cursorMinVal;
+  const maxVal = question.specificFields.cursorMaxVal;
+  const step = question.specificFields.cursorStep ? question.specificFields.cursorStep : DEFAULT_CURSOR_STEP;
 
   return (maxVal - minVal) % step === 0;
-}
+};
 
 export function shouldShowConditionalSwitch(question: IQuestion, formElements: IFormElement[]): boolean {
   const isConditionalQuestionType = [QuestionTypes.SINGLEANSWER, QuestionTypes.SINGLEANSWERRADIO].includes(
@@ -226,4 +226,18 @@ export function shouldShowConditionalSwitch(question: IQuestion, formElements: I
 
 export const shouldShowMandatorySwitch = (question: IQuestion): boolean => {
   return question.questionType !== QuestionTypes.FREETEXT;
+};
+
+export const getQuestionTypeFromValue = (value: string | number | null | undefined): QuestionTypes | undefined => {
+  if (value === null || value === undefined) return;
+
+  const numericValue: number = typeof value === "string" ? Number(value) : value;
+  if (Number.isNaN(numericValue)) return;
+
+  return numericValue as QuestionTypes;
+};
+
+export const getParent = (question: IQuestion, formElementList: IFormElement[]): ISection | undefined => {
+  if (!question.sectionId) return;
+  return formElementList.find((element) => isSection(element) && element.id === question.sectionId) as ISection;
 };

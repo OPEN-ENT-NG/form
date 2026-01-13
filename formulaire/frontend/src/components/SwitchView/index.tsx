@@ -5,7 +5,7 @@ import { ISwitchViewProps } from "./types";
 import { switchViewStyle, switchViewItemStyle } from "./style";
 import { ViewMode } from "./enums";
 
-export const SwitchView: FC<ISwitchViewProps> = ({ viewMode = ViewMode.CARDS, toggleButtonList, onChange }) => {
+export const SwitchView: FC<ISwitchViewProps> = ({ viewMode, toggleButtonList, onChange }) => {
   return (
     <ToggleButtonGroup
       value={viewMode}
