@@ -46,6 +46,7 @@ import { ISection } from "~/core/models/section/types";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
 import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { AlertSeverityVariant, ComponentVariant, EditorVariant, TypographyFontStyle } from "~/core/style/themeProps";
+import { AlertSeverityVariant, ComponentVariant, TypographyFontStyle } from "~/core/style/themeProps";
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { getDndElementType, updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
