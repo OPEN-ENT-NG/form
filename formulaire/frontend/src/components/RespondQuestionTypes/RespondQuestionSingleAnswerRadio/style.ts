@@ -1,16 +1,10 @@
-import { FormControl, styled, SxProps } from "@cgi-learning-hub/ui";
+import { RadioGroup, styled, SxProps } from "@cgi-learning-hub/ui";
 import { blockProps } from "~/core/utils";
-import { IStyledFormControlProps } from "./types";
+import { IChoicesRadioGroupProps } from "./types";
 
-export const customAnswerStyle = {
-  display: "flex",
-  gap: "1rem",
-  alignItems: "center",
-};
-
-export const StyledFormControl = styled(FormControl, {
+export const ChoicesRadioGroup = styled(RadioGroup, {
   shouldForwardProp: blockProps("hasOneChoiceWithImage"),
-})<IStyledFormControlProps>(({ hasOneChoiceWithImage }) => ({
+})<IChoicesRadioGroupProps>(({ hasOneChoiceWithImage }) => ({
   flexDirection: hasOneChoiceWithImage ? "row" : "column",
   display: "flex",
   flexFlow: hasOneChoiceWithImage ? "wrap" : "column",
@@ -21,5 +15,10 @@ export const StyledFormControl = styled(FormControl, {
 export const choiceBoxStyle: SxProps = {
   display: "flex",
   flexDirection: "column",
+};
+
+export const customAnswerStyle = {
+  display: "flex",
   gap: "1rem",
+  alignItems: "center",
 };
