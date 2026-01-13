@@ -46,9 +46,9 @@ export const initResponseAccordingToType = (question: IQuestion, choices?: IQues
     case QuestionTypes.TIME:
     case QuestionTypes.CURSOR:
     case QuestionTypes.SINGLEANSWER:
-    case QuestionTypes.SINGLEANSWERRADIO:
       return [createNewResponse(question.id)];
     case QuestionTypes.RANKING:
+    case QuestionTypes.SINGLEANSWERRADIO:
     case QuestionTypes.MULTIPLEANSWER:
       return (
         questionChoices?.map((choice, index) =>

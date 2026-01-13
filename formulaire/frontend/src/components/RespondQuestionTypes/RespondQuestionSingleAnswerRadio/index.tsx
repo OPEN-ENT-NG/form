@@ -1,43 +1,105 @@
-import { Box, FormControl, FormControlLabel, Radio, RadioGroup } from "@cgi-learning-hub/ui";
-import { ChangeEvent, FC, useEffect, useState } from "react";
+import { Box, FormControl, FormControlLabel, Radio, TextField, Typography } from "@cgi-learning-hub/ui";
+import { ChangeEvent, FC, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { FORMULAIRE } from "~/core/constants";
+import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
+import { ChoiceImage } from "../style";
 import { IRespondQuestionTypesProps } from "../types";
+import { choiceBoxStyle, ChoicesRadioGroup, customAnswerStyle } from "./style";
 
 export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, updateQuestionResponses } = useResponse();
+  const { getQuestionResponse, getQuestionResponses, updateQuestionResponses } = useResponse();
   const [selectedValue, setSelectedValue] = useState<string>("");
+  const [customAnswer, setCustomAnswer] = useState<string>("");
+  const { t } = useTranslation(FORMULAIRE);
 
   useEffect(() => {
-    const associatedResponse = getQuestionResponse(question);
-    if (!associatedResponse) return;
+    const associatedResponses = getQuestionResponses(question);
 
-    const existingAnswer = associatedResponse.answer;
+    const selectedResponse = associatedResponses.find((response) => response.selected);
+
+    const existingAnswer = selectedResponse?.answer ?? "";
     if (typeof existingAnswer === "string") {
       setSelectedValue(existingAnswer);
     }
+    const customChoiceId = question.choices?.find((choice) => choice.isCustom)?.id;
+    if (!customChoiceId) return;
+    const customResponse = associatedResponses.find((response) => response.choiceId === customChoiceId);
+    if (customResponse) {
+      setCustomAnswer(customResponse.customAnswer ?? "");
+    }
   }, [question, getQuestionResponse]);
+
+  const hasOneChoiceWithImage = useMemo(() => {
+    return question.choices?.some((choice) => choice.image) ?? false;
+  }, [question.choices]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
     const value = event.target.value;
     setSelectedValue(value);
 
-    const associatedResponse = getQuestionResponse(question);
-    if (!question.id || !associatedResponse) return;
+    const associatedResponses = getQuestionResponses(question);
+    const newResponses: IResponse[] = associatedResponses.map((response) => {
+      return { ...response, selected: response.answer === value };
+    });
 
-    associatedResponse.answer = value;
-    updateQuestionResponses(question, [associatedResponse]);
+    updateQuestionResponses(question, newResponses);
+  };
+
+  const handleCustomResponseChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newCustomAnswer = e.target.value;
+    const existingResponses = getQuestionResponses(question);
+
+    const customChoiceId = question.choices?.find((choice) => choice.isCustom)?.id;
+    if (!customChoiceId) return;
+
+    const updatedReponses = existingResponses.map((response) => {
+      if (response.choiceId === customChoiceId) {
+        return { ...response, customAnswer: newCustomAnswer };
+      }
+      return response;
+    });
+
+    updateQuestionResponses(question, updatedReponses);
   };
 
   return (
     <Box>
       <FormControl>
-        <RadioGroup value={selectedValue || ""} onChange={handleChange}>
+        <ChoicesRadioGroup
+          hasOneChoiceWithImage={hasOneChoiceWithImage}
+          value={selectedValue || ""}
+          onChange={handleChange}
+        >
           {question.choices
             ?.sort((a, b) => a.position - b.position)
             .map((choice) => (
-              <FormControlLabel key={choice.id} value={choice.value} control={<Radio />} label={choice.value} />
+              <Box key={choice.id} sx={choiceBoxStyle}>
+                <FormControlLabel
+                  value={choice.value}
+                  control={<Radio />}
+                  label={
+                    <Box sx={customAnswerStyle}>
+                      <Typography>{choice.value}</Typography>
+                      {choice.isCustom && (
+                        <>
+                          <Typography>:</Typography>
+                          <TextField
+                            variant="standard"
+                            value={customAnswer}
+                            placeholder={t("formulaire.response.custom.write")}
+                            onChange={handleCustomResponseChange}
+                          ></TextField>
+                        </>
+                      )}
+                    </Box>
+                  }
+                />
+                {choice.image && <ChoiceImage src={choice.image} alt={choice.value} />}
+              </Box>
             ))}
-        </RadioGroup>
+        </ChoicesRadioGroup>
       </FormControl>
     </Box>
   );
