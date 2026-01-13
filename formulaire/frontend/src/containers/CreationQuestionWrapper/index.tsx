@@ -182,7 +182,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
       style={style}
       ref={setNodeRef}
       data-type={ClickAwayDataType.QUESTION}
-      onClick={(e) => {
+      onMouseDown={(e) => {
         handleClickAway(e, currentEditingElement, question);
       }}
     >

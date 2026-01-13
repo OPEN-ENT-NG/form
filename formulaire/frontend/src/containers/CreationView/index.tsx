@@ -86,7 +86,7 @@ export const CreationView: FC = () => {
       <Box
         sx={creationViewStyle}
         data-type={ClickAwayDataType.ROOT}
-        onClick={(e) => {
+        onMouseDown={(e) => {
           handleClickAway(e, currentEditingElement);
         }}
       >
