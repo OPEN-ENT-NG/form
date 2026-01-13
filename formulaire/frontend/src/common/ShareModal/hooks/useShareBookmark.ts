@@ -1,8 +1,9 @@
 import { Dispatch, useId, useRef, useState } from "react";
 
 import { ShareRightWithVisibles, odeServices } from "@edifice.io/client";
-import { useToast, useToggle } from "@edifice.io/react";
+import { useToggle } from "@edifice.io/react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { ShareAction } from "./useShare";
 import { COMMON } from "~/core/constants";
@@ -18,7 +19,6 @@ export type BookmarkProps = {
 };
 
 export const useShareBookmark = ({ shareRights, shareDispatch }: IUseShareBookmarkProps) => {
-  const toast = useToast();
   const { t } = useTranslation(COMMON);
 
   const refBookmark = useRef<HTMLInputElement>(null);

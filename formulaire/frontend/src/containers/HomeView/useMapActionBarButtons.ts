@@ -78,7 +78,7 @@ export const useMapActionBarButtons = () => {
     return forms.filter((form) => form.folder_id === currentFolder.id);
   }, [forms, currentFolder.id]);
 
-  const unselectAll = useCallback(() => {
+  const unselectAll = useCallback((): void => {
     if (tab === HomeTabState.FORMS) {
       setSelectedFolders([]);
       setSelectedForms([]);
@@ -368,5 +368,5 @@ export const useMapActionBarButtons = () => {
     selectedSentForm,
   ]);
 
-  return { leftButtons, rightButtons, openFormResponseAction };
+  return { leftButtons, rightButtons, openFormResponseAction, unselectAll };
 };

@@ -48,7 +48,7 @@ export const HomeView: FC = () => {
     isMobile,
   } = useGlobal();
   const { isActionBarOpen, tab, userWorkflowRights } = useHome();
-  const { leftButtons, rightButtons } = useMapActionBarButtons();
+  const { leftButtons, rightButtons, unselectAll } = useMapActionBarButtons();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
   const actionBarMobileSlotProps = {
@@ -106,6 +106,7 @@ export const HomeView: FC = () => {
           isOpen={showFormPropCreate}
           handleClose={() => {
             toggleModal(ModalType.FORM_PROP_CREATE);
+            unselectAll();
           }}
           mode={FormPropModalMode.CREATE}
           isRgpdPossible={userWorkflowRights[WorkflowRights.RGPD]}
@@ -116,6 +117,7 @@ export const HomeView: FC = () => {
           isOpen={showFormPropUpdate}
           handleClose={() => {
             toggleModal(ModalType.FORM_PROP_UPDATE);
+            unselectAll();
           }}
           mode={FormPropModalMode.UPDATE}
           isRgpdPossible={userWorkflowRights[WorkflowRights.RGPD]}
