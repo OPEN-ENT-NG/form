@@ -12,7 +12,7 @@ import {
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { FC, useCallback, useMemo } from "react";
 import { CreationQuestionWrapper } from "~/containers/CreationQuestionWrapper";
 import { IQuestion } from "~/core/models/question/types";
 import {
@@ -41,20 +41,21 @@ import { questionAlertStyle, StyledDragContainer } from "~/containers/CreationQu
 import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
-import { FormElementType } from "~/core/models/formElement/enum";
 import { isValidFormElement } from "~/core/models/formElement/utils";
-import { ISection } from "~/core/models/section/types";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
-import { AlertSeverityVariant, ComponentVariant, EditorVariant } from "~/core/style/themeProps";
+import { AlertSeverityVariant, ComponentVariant, EditorVariant, TypographyFontStyle } from "~/core/style/themeProps";
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { getDndElementType } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
 import { useCreation } from "~/providers/CreationProvider";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
 import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
 import { IconButtonTooltiped } from "../IconButtonTooltiped/IconButtonTooltiped";
+import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import { getDescription, isDescriptionEmpty } from "./utils";
+import { ISection } from "~/core/models/section/types";
+import { FormElementType } from "~/core/models/formElement/enum";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section, listeners, attributes }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -71,39 +72,22 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
   const sortedIds = useMemo(() => section.questions.map((q) => `${getDndElementType(q)}-${q.id}`), [section]);
 
   const onSaveSectionNextElement = useCallback(
-    (updatedEntity: ISection, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
+    (updatedSection: ISection, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
       void saveSection({
-        ...updatedEntity,
+        ...updatedSection,
         nextFormElementId: targetElementId ?? null,
         nextFormElementType: targetElementType ?? null,
+        isNextFormElementDefault: false,
       });
     },
     [saveSection],
   );
 
   const {
-    targetNextElementId,
     followingElement,
     elementsTwoPositionsAheadList,
     onChange: handleNextFormElementChange,
   } = useTargetNextElement({ entity: section, positionReferenceElement: section, onSave: onSaveSectionNextElement });
-
-  //TITLE
-  const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
-
-  useEffect(() => {
-    if (!isCurrentEditingElement(section, currentEditingElement)) setCurrentSectionTitle(section.title ?? "");
-  }, [section.title]);
-
-  useEffect(() => {
-    if (!currentEditingElement || !isCurrentEditingElement(section, currentEditingElement)) {
-      return;
-    }
-    setCurrentEditingElement({
-      ...section,
-      title: currentSectionTitle,
-    });
-  }, [currentSectionTitle, setCurrentEditingElement]);
 
   //ACTIONS
   const handleDuplicate = () => {
@@ -165,12 +149,15 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
         </Box>
         <Box sx={sectionContentStyle}>
           <Box sx={descriptionStyle}>
-            <StyledEditorWrapper isCurrentEditingElement={true}>
-              <Editor
-                content={section.description || t("formulaire.section.no.description")}
-                mode={EditorMode.READ}
-                variant={EditorVariant.GHOST}
-              />
+            <StyledEditorWrapper
+              isCurrentEditingElement={true}
+              sx={{
+                ...(isDescriptionEmpty(section)
+                  ? { fontStyle: TypographyFontStyle.ITALIC, color: TEXT_SECONDARY_COLOR }
+                  : {}),
+              }}
+            >
+              <Editor content={getDescription(section)} mode={EditorMode.READ} variant={EditorVariant.GHOST} />
             </StyledEditorWrapper>
           </Box>
           <Box>
@@ -186,7 +173,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
                 <FormControl fullWidth>
                   <Select
                     variant={ComponentVariant.OUTLINED}
-                    value={targetNextElementId != null ? String(targetNextElementId) : TARGET_RECAP}
+                    value={section.nextFormElementId != null ? String(section.nextFormElementId) : TARGET_RECAP}
                     onChange={handleNextFormElementChange}
                     displayEmpty
                     MenuProps={{

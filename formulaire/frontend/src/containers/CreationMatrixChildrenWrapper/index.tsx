@@ -32,7 +32,7 @@ import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { compareChildren } from "./utils";
 
-export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperProps> = ({ question }) => {
+export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperProps> = ({ question, matrixType }) => {
   const { currentEditingElement, setCurrentEditingElement } = useCreation();
   const { selectAllTextInput } = useGlobal();
   const { t } = useTranslation(FORMULAIRE);
@@ -41,7 +41,7 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
   const newChildRefName = "newChild";
 
   const { handleDeleteChild, handleNewChild, handleSortClick, handleSwapClick, updateChild, children } =
-    useMatrixChildrenActions(question, setCurrentEditingElement);
+    useMatrixChildrenActions(question, matrixType, setCurrentEditingElement);
 
   const sortedChildren = useMemo(() => {
     return children.sort((a, b) => compareChildren(a, b));

@@ -49,7 +49,7 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
       style={style}
       ref={setNodeRef}
       data-type={ClickAwayDataType.SECTION}
-      onClick={(e) => {
+      onMouseDown={(e) => {
         handleClickAway(e, currentEditingElement, section);
       }}
     >

@@ -31,6 +31,7 @@ export const Header: FC<IHeaderProps> = ({
         stringItems={stringItems}
         separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem" }} />}
         isHeader
+        isCreationPage={isCreationPage}
       />
       <Box sx={headerButtonsStyle}>
         {isCreationPage && formDateModification && <Banner icon={CheckCircleRoundedIcon} text={formDateModification} />}
