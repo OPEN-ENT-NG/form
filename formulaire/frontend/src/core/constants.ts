@@ -19,6 +19,7 @@ export const defaultPaperShadow = "1px 4px 5px 2px rgba(0, 0, 0, 0.1)";
 
 //IMAGE PICKER
 export const IMAGE_PICKER_INFO = "SVG, PNG, JPG, GIF";
+export const MAX_FILES_SAVE = 10;
 
 //DATE FORMAT
 export const DD_MM_YYYY = "DD/MM/YYYY";
