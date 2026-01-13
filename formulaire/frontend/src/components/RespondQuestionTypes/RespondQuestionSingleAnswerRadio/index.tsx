@@ -40,7 +40,6 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
     setSelectedValue(value);
 
     const associatedResponses = getQuestionResponses(question);
-    console.log(associatedResponses);
     const newResponses: IResponse[] = associatedResponses.map((response) => {
       return { ...response, selected: response.answer === value };
     });
