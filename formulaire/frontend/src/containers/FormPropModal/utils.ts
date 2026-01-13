@@ -46,14 +46,14 @@ export const formCheckBoxProps: IFormCheckBoxProp[] = [
     field: FormPropField.IS_RESPONSE_NOTIFIED,
     tooltip: "formulaire.prop.notified.description",
   },
-  {
-    i18nKey: "formulaire.prop.progress.label",
-    field: FormPropField.IS_PROGRESS_BAR_DISABLED,
-  },
-  {
-    i18nKey: "formulaire.prop.description.label",
-    field: FormPropField.DESCRIPTION,
-  },
+  // {
+  //   i18nKey: "formulaire.prop.progress.label",
+  //   field: FormPropField.IS_PROGRESS_BAR_DISABLED,
+  // },
+  // {
+  //   i18nKey: "formulaire.prop.description.label",
+  //   field: FormPropField.DESCRIPTION,
+  // },
   {
     i18nKey: "formulaire.prop.rgpd.label",
     field: FormPropField.HAS_RGPD,
