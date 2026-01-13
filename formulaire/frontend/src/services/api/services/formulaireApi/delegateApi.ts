@@ -3,9 +3,8 @@ import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
 export const delegateApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
-    getDelegates: builder.query<IDelegate, void>({
+    getDelegates: builder.query<IDelegate[], void>({
       query: () => "delegates",
-      transformResponse: (response: IDelegate[]) => response[0],
     }),
   }),
   overrideExisting: false,

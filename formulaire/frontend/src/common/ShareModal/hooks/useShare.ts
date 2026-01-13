@@ -1,4 +1,4 @@
-import { useEffect, useReducer } from "react";
+import { useEffect, useMemo, useReducer } from "react";
 
 import {
   odeServices,
@@ -8,8 +8,9 @@ import {
   type ShareRightActionDisplayName,
   type ShareRightWithVisibles,
 } from "@edifice.io/client";
-import { useUser, useToast } from "@edifice.io/react";
+import { useUser } from "@edifice.io/react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { ShareOptions, ShareResourceMutation } from "../ShareModal";
 import { COMMON } from "~/core/constants";
@@ -88,7 +89,6 @@ export default function useShare({
 }: IUseShareResourceModalProps) {
   const { user, avatar } = useUser();
 
-  const toast = useToast();
   const { t } = useTranslation(COMMON);
   const dispatcher = useDispatch();
 
@@ -119,6 +119,11 @@ export default function useShare({
       }
     })();
   }, [resourceId]);
+
+  const hasBlankRight = useMemo(
+    () => !state.shareRights.rights.some((right) => right.actions.some((action) => action.id !== "read")),
+    [state.shareRights],
+  );
 
   const toggleRight = (shareRight: ShareRight, actionName: ShareRightActionDisplayName) => {
     const { rights, ...props } = state.shareRights;
@@ -282,5 +287,6 @@ export default function useShare({
     handleDeleteRow,
     handleShare,
     toggleRight,
+    hasBlankRight,
   };
 }

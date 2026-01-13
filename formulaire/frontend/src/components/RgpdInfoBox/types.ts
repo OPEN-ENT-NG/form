@@ -2,8 +2,6 @@ import { SxProps, Theme } from "@cgi-learning-hub/ui";
 import { Dayjs } from "dayjs";
 
 export interface IRGPDI18nParams {
-  finalite: string;
-  expirationDate: Dayjs;
   rectoratName: string;
   rectoratEmail: string;
   rectoratAddress: string;
@@ -13,7 +11,13 @@ export interface IRGPDI18nParams {
   villeEmail: string;
 }
 
+export interface IRGPDData {
+  finalite: string;
+  expirationDate: Dayjs;
+  delegates: IRGPDI18nParams[];
+}
+
 export interface IRGPDInfoBoxProps {
-  params: IRGPDI18nParams;
+  params: IRGPDData;
   sx?: SxProps<Theme>;
 }

@@ -2,7 +2,7 @@ import { SxProps, Theme } from "@cgi-learning-hub/ui";
 import { flexStartBoxStyle, spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 
 export const mainContentInnerStyle: SxProps<Theme> = {
-  height: "100%",
+  height: "calc(96vh - 43px)", //remove header height
   display: "flex",
   justifyContent: "flex-start",
   flexDirection: "column",
@@ -29,7 +29,7 @@ export const searchBarStyle: SxProps<Theme> = {
 
 export const resourceContainerStyle: SxProps<Theme> = {
   overflowY: "auto",
-  height: "100%",
+  flex: 1,
   display: "flex",
   flexDirection: "column",
   padding: " 1rem 3rem 2rem 3rem",
