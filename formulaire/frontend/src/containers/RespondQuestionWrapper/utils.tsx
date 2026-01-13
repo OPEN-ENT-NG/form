@@ -1,6 +1,7 @@
 import { Typography } from "@mui/material";
 import { RespondQuestionCursor } from "~/components/RespondQuestionTypes/RespondQuestionCursor";
 import { RespondQuestionDate } from "~/components/RespondQuestionTypes/RespondQuestionDate";
+import { RespondQuestionFile } from "~/components/RespondQuestionTypes/RespondQuestionFile";
 import { RespondQuestionFreetext } from "~/components/RespondQuestionTypes/RespondQuestionFreetext";
 import { RespondQuestionLongAnswer } from "~/components/RespondQuestionTypes/RespondQuestionLongAnswer";
 import { RespondQuestionMatrix } from "~/components/RespondQuestionTypes/RespondQuestionMatrix";
@@ -39,6 +40,8 @@ export const getRespondQuestionContentByType = (question: IQuestion) => {
       return <RespondQuestionMultipleAnswer question={question} />;
     case QuestionTypes.MATRIX:
       return <RespondQuestionMatrix question={question} />;
+    case QuestionTypes.FILE:
+      return <RespondQuestionFile question={question} />;
     default:
       return (
         <Typography variant={TypographyVariant.BODY1}>

@@ -222,6 +222,7 @@
   "formulaire.matrix.line.label.default": "Ligne {{0}}",
   "formulaire.matrix.type.MULTIPLEANSWER": "Matrice à choix multiple",
   "formulaire.matrix.type.SINGLEANSWERRADIO": "Matrice à choix unique",
+  "formulaire.max.files": "Maximum {{0}} fichiers",
   "formulaire.mine": "Mon formulaire",
   "formulaire.modal.open.form.blocked.title": "Éditer un formulaire",
   "formulaire.modal.open.form.blocked.body": "L'édition des formulaires est optimisée pour les écrans plus larges.",
