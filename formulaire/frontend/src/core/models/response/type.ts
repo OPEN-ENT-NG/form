@@ -1,8 +1,9 @@
 export interface IResponseFile {
-  id: number;
-  responseId: number;
+  id: number | string;
+  responseId: number | null;
   filename: string;
   type: string;
+  size?: number;
 }
 
 //TODO update typages as needed
