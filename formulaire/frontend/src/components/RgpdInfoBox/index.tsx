@@ -8,7 +8,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { DateFormat } from "~/core/enums";
 import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 
-const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, hideBorder = false, sx = { color: TEXT_SECONDARY_COLOR } }) => {
+const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, hideBorder, sx = { color: TEXT_SECONDARY_COLOR } }) => {
   const { t } = useTranslation(FORMULAIRE);
 
   const formattedDate = dayjs(params.expirationDate).format(DateFormat.DAY_MONTH_YEAR);
