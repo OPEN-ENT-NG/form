@@ -72,8 +72,6 @@ export const getFirstDistribution = (distributions: IDistribution[]): IDistribut
   if (distributions.length === 0) return undefined;
 
   return distributions.reduce((first, current) => {
-    console.log("🚀 ~ getFirstDistribution ~ current:", current);
-    console.log("🚀 ~ getFirstDistribution ~ first:", first);
     if (!current.dateSending) return first;
     if (!first.dateSending) return current;
     return new Date(current.dateSending) < new Date(first.dateSending) ? current : first;
