@@ -87,47 +87,54 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell></TableCell>
-            {question.choices?.map((choice, index) => <TableCell key={index}>{choice.value}</TableCell>)}
+            <TableCell sx={{ width: "10%" }}></TableCell>
+            {question.choices?.map((choice, index) => (
+              <TableCell align="center" key={index}>
+                {choice.value}
+              </TableCell>
+            ))}
             <TableCell></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {question.children?.map((child) => (
-            <TableRow key={child.id}>
-              <TableCell>{child.title}</TableCell>
+          {question.children
+            ?.sort((a, b) => {
+              return (a.matrixPosition ?? 0) - (b.matrixPosition ?? 0);
+            })
+            .map((child) => (
+              <TableRow key={child.id}>
+                <TableCell sx={{ width: "10%" }}>{child.title}</TableCell>
+                {question.choices?.map((choice) => (
+                  <TableCell align="center" key={choice.id}>
+                    {child.questionType === QuestionTypes.MULTIPLEANSWER ? (
+                      <Checkbox
+                        checked={isSelected(child.id, choice.id)}
+                        onChange={() => {
+                          toggleCheckbox(child.id, choice.id);
+                        }}
+                      />
+                    ) : (
+                      <Radio
+                        checked={isSelected(child.id, choice.id)}
+                        onChange={() => {
+                          toggleRadio(child.id, choice.id);
+                        }}
+                      />
+                    )}
+                  </TableCell>
+                ))}
 
-              {question.choices?.map((choice) => (
-                <TableCell key={choice.id}>
-                  {child.questionType === QuestionTypes.MULTIPLEANSWER ? (
-                    <Checkbox
-                      checked={isSelected(child.id, choice.id)}
-                      onChange={() => {
-                        toggleCheckbox(child.id, choice.id);
-                      }}
-                    />
-                  ) : (
-                    <Radio
-                      checked={isSelected(child.id, choice.id)}
-                      onChange={() => {
-                        toggleRadio(child.id, choice.id);
-                      }}
-                    />
-                  )}
+                <TableCell width="3rem">
+                  <IconButton
+                    onClick={() => {
+                      clearRow(child.id);
+                    }}
+                  >
+                    <ClearIcon />
+                  </IconButton>
                 </TableCell>
-              ))}
-
-              <TableCell>
-                <IconButton
-                  onClick={() => {
-                    clearRow(child.id);
-                  }}
-                >
-                  <ClearIcon />
-                </IconButton>
-              </TableCell>
-            </TableRow>
-          ))}
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </TableContainer>

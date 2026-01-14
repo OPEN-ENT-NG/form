@@ -24,6 +24,7 @@ export const RespondQuestionTime: FC<IRespondQuestionTypesProps> = ({ question }
     if (!question.id || !associatedResponse) return;
 
     setLocalTime(value);
+    if (!value || !value.isValid()) return;
     associatedResponse.answer = dayjsToTimeString(value);
     updateQuestionResponses(question, [associatedResponse]);
   };
