@@ -17,8 +17,22 @@ export const choiceBoxStyle: SxProps = {
   flexDirection: "column",
 };
 
-export const customAnswerStyle = {
+export const customAnswerStyle: SxProps = {
   display: "flex",
   gap: "1rem",
+  alignItems: "flex-start",
+  flexDirection: "column",
+  marginTop: ".5rem",
+};
+
+export const labelStyle: SxProps = {
+  display: "flex",
   alignItems: "center",
+  gap: ".5rem",
+  height: "3.2rem",
+};
+
+export const formControlLabelStyle: SxProps = {
+  display: "flex",
+  alignItems: "flex-start",
 };
