@@ -68,7 +68,9 @@ export const getLatestDistribution = (distributions: IDistribution[]): IDistribu
   }, distributions[0]);
 };
 
-export const getFirstDistribution = (distributions: IDistribution[]): IDistribution => {
+export const getFirstDistribution = (distributions: IDistribution[]): IDistribution | undefined => {
+  if (distributions.length === 0) return undefined;
+
   return distributions.reduce((first, current) => {
     console.log("🚀 ~ getFirstDistribution ~ current:", current);
     console.log("🚀 ~ getFirstDistribution ~ first:", first);
@@ -83,9 +85,6 @@ export const getNbFinishedDistrib = (distributions: IDistribution[]): number => 
 };
 
 export const getFirstDistributionDate = (distributions: IDistribution[]): Date => {
-  console.log("🚀 ~ getFirstDistributionDate ~ distributions:", distributions);
   const firstDistrib = getFirstDistribution(distributions);
-  console.log("🚀 ~ getFirstDistributionDate ~ firstDistrib:", firstDistrib);
-  console.log("🚀 ~ getFirstDistributionDate ~ dateSending:", firstDistrib.dateSending);
-  return firstDistrib.dateSending ? new Date(firstDistrib.dateSending) : new Date();
+  return firstDistrib?.dateSending ? new Date(firstDistrib.dateSending) : new Date();
 };
