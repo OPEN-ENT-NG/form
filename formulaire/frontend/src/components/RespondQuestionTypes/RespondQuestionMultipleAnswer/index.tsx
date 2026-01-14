@@ -6,7 +6,7 @@ import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
 import { ChoiceImage } from "../style";
 import { IRespondQuestionTypesProps } from "../types";
-import { choiceBoxStyle, customAnswerStyle, StyledFormControl } from "./style";
+import { choiceBoxStyle, customAnswerStyle, formControlLabelStyle, labelStyle, StyledFormControl } from "./style";
 
 export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { getQuestionResponses, updateQuestionResponses } = useResponse();
@@ -77,6 +77,7 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
           .map((choice) => (
             <Box key={choice.id} sx={choiceBoxStyle}>
               <FormControlLabel
+                sx={formControlLabelStyle}
                 control={
                   <Checkbox
                     checked={isChoiceSelected(choice.id)}
@@ -87,22 +88,24 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
                 }
                 label={
                   <Box sx={customAnswerStyle}>
-                    <Typography>{choice.value}</Typography>
-                    {choice.isCustom && (
-                      <>
-                        <Typography>:</Typography>
-                        <TextField
-                          variant="standard"
-                          value={customAnswer}
-                          placeholder={t("formulaire.response.custom.write")}
-                          onChange={handleCustomResponseChange}
-                        ></TextField>
-                      </>
-                    )}
+                    <Box sx={labelStyle}>
+                      <Typography>{choice.value}</Typography>
+                      {choice.isCustom && (
+                        <>
+                          <Typography>:</Typography>
+                          <TextField
+                            variant="standard"
+                            value={customAnswer}
+                            placeholder={t("formulaire.response.custom.write")}
+                            onChange={handleCustomResponseChange}
+                          ></TextField>
+                        </>
+                      )}
+                    </Box>
+                    {choice.image && <ChoiceImage src={choice.image} alt={choice.value} />}
                   </Box>
                 }
               />
-              {choice.image && <ChoiceImage src={choice.image} alt={choice.value} />}
             </Box>
           ))}
       </StyledFormControl>
