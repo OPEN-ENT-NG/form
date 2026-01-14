@@ -6,7 +6,7 @@ export const questionStackStyle: SxProps<Theme> = {
   ...columnBoxStyle,
   borderRadius: 1,
   marginBottom: 2,
-  padding: "3rem",
+  padding: "4rem",
   boxShadow: defaultPaperShadow,
   rowGap: "2rem",
 };

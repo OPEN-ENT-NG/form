@@ -6,7 +6,7 @@ import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
 import { ChoiceImage } from "../style";
 import { IRespondQuestionTypesProps } from "../types";
-import { choiceBoxStyle, ChoicesRadioGroup, customAnswerStyle } from "./style";
+import { choiceBoxStyle, ChoicesRadioGroup, customAnswerStyle, formControlLabelStyle, labelStyle } from "./style";
 
 export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { getQuestionResponse, getQuestionResponses, updateQuestionResponses } = useResponse();
@@ -78,25 +78,28 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
               <Box key={choice.id} sx={choiceBoxStyle}>
                 <FormControlLabel
                   value={choice.value}
+                  sx={formControlLabelStyle}
                   control={<Radio />}
                   label={
                     <Box sx={customAnswerStyle}>
-                      <Typography>{choice.value}</Typography>
-                      {choice.isCustom && (
-                        <>
-                          <Typography>:</Typography>
-                          <TextField
-                            variant="standard"
-                            value={customAnswer}
-                            placeholder={t("formulaire.response.custom.write")}
-                            onChange={handleCustomResponseChange}
-                          ></TextField>
-                        </>
-                      )}
+                      <Box sx={labelStyle}>
+                        <Typography>{choice.value}</Typography>
+                        {choice.isCustom && (
+                          <>
+                            <Typography>:</Typography>
+                            <TextField
+                              variant="standard"
+                              value={customAnswer}
+                              placeholder={t("formulaire.response.custom.write")}
+                              onChange={handleCustomResponseChange}
+                            ></TextField>
+                          </>
+                        )}
+                      </Box>
+                      {choice.image && <ChoiceImage src={choice.image} alt={choice.value} />}
                     </Box>
                   }
                 />
-                {choice.image && <ChoiceImage src={choice.image} alt={choice.value} />}
               </Box>
             ))}
         </ChoicesRadioGroup>
