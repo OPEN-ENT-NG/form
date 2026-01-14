@@ -1,4 +1,6 @@
 import { Box, DatePicker } from "@cgi-learning-hub/ui";
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs, isDayjs } from "dayjs";
 import { FC, useEffect, useState } from "react";
 import { useResponse } from "~/providers/ResponseProvider";
@@ -29,14 +31,17 @@ export const RespondQuestionDate: FC<IRespondQuestionTypesProps> = ({ question }
     if (!question.id || !associatedResponse) return;
 
     setLocalDate(value);
-    const dateToSave: Date | undefined = value?.toDate();
+    if (!value?.isValid()) return;
+    const dateToSave: Date = value.toDate();
     associatedResponse.answer = dateToSave;
     updateQuestionResponses(question, [associatedResponse]);
   };
 
   return (
     <Box>
-      <DatePicker adapterLocale="fr" value={localDate} onChange={handleDateChange} />
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker adapterLocale="fr" value={localDate} onChange={handleDateChange} />
+      </LocalizationProvider>
     </Box>
   );
 };
