@@ -2,12 +2,6 @@ import { FormControl, styled, SxProps } from "@cgi-learning-hub/ui";
 import { blockProps } from "~/core/utils";
 import { IStyledFormControlProps } from "./types";
 
-export const customAnswerStyle = {
-  display: "flex",
-  gap: "1rem",
-  alignItems: "center",
-};
-
 export const StyledFormControl = styled(FormControl, {
   shouldForwardProp: blockProps("hasOneChoiceWithImage"),
 })<IStyledFormControlProps>(({ hasOneChoiceWithImage }) => ({
@@ -22,4 +16,24 @@ export const choiceBoxStyle: SxProps = {
   display: "flex",
   flexDirection: "column",
   gap: "1rem",
+};
+
+export const customAnswerStyle: SxProps = {
+  display: "flex",
+  gap: "1rem",
+  alignItems: "flex-start",
+  flexDirection: "column",
+  marginTop: ".4rem",
+};
+
+export const labelStyle: SxProps = {
+  display: "flex",
+  alignItems: "center",
+  gap: ".5rem",
+  height: "3.2rem",
+};
+
+export const formControlLabelStyle: SxProps = {
+  display: "flex",
+  alignItems: "flex-start",
 };
