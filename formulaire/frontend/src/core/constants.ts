@@ -13,7 +13,7 @@ export const TOAST_CONFIG = {
   theme: "light" as Theme,
 };
 
-export const defaultViewWidth = "1352px";
+export const defaultViewMaxWidth = "1620px";
 export const defaultViewBackgroundColor = "white";
 
 //IMAGE PICKER
@@ -82,5 +82,5 @@ export const MOUSE_EVENT_DOWN = "onMouseDown";
 export const TOUCH_EVENT_START = "onTouchStart";
 
 // RESPONSIVE
-export const MOBILE_MAX_WIDTH = 576;
+export const MOBILE_MAX_WIDTH = 920;
 export const TABLET_MAX_WIDTH = 768;
