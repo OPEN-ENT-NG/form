@@ -20,6 +20,7 @@ import org.entcore.common.sql.SqlStatementsBuilder;
 import static fr.openent.form.core.constants.Constants.TRANSACTION_BEGIN_QUERY;
 import static fr.openent.form.core.constants.Constants.TRANSACTION_COMMIT_QUERY;
 import static fr.openent.form.core.constants.Fields.*;
+import static fr.openent.form.core.constants.Tables.QUESTION_CHOICE_TABLE;
 import static fr.openent.form.core.constants.Tables.QUESTION_TABLE;
 import static fr.openent.form.core.constants.Tables.SECTION_TABLE;
 import static fr.openent.form.helpers.SqlHelper.getParamsForUpdateDateModifFormRequest;
@@ -28,7 +29,7 @@ import static fr.openent.form.helpers.SqlHelper.getUpdateDateModifFormRequest;
 public class DefaultSectionService implements SectionService {
     private final Sql sql = Sql.getInstance();
     private static final Logger log = LoggerFactory.getLogger(DefaultSectionService.class);
-    
+
     @Override
     @Deprecated
     public void list(String formId, Handler<Either<String, JsonArray>> handler) {
@@ -119,13 +120,42 @@ public class DefaultSectionService implements SectionService {
 
     @Override
     public void delete(JsonObject section, Handler<Either<String, JsonObject>> handler) {
-        String query = "DELETE FROM " + SECTION_TABLE + " WHERE id = ?;";
-        JsonArray params = new JsonArray().add(section.getInteger(ID).toString());
+        int sectionId = section.getInteger(ID);
+        String formId = section.getInteger(FORM_ID).toString();
 
-        query += getUpdateDateModifFormRequest();
-        params.addAll(getParamsForUpdateDateModifFormRequest(section.getInteger(FORM_ID).toString()));
+        SqlStatementsBuilder statement = new SqlStatementsBuilder();
+        statement.raw(TRANSACTION_BEGIN_QUERY);
 
-        sql.prepared(query, params, SqlResult.validUniqueResultHandler(handler));
+        // Clean references in sections pointing to the deleted section
+        String cleanSectionsQuery = "UPDATE " + SECTION_TABLE + " SET next_form_element_id = NULL, " +
+                "next_form_element_type = NULL, is_next_form_element_default = TRUE " +
+                "WHERE next_form_element_id = ? AND next_form_element_type = ?;";
+        statement.prepared(cleanSectionsQuery, new JsonArray().add(sectionId).add(FormElementTypes.SECTION.toString()));
+
+        // Clean references in question_choice pointing to the deleted section
+        String cleanChoicesQuery = "UPDATE " + QUESTION_CHOICE_TABLE + " SET next_form_element_id = NULL, " +
+                "next_form_element_type = NULL, is_next_form_element_default = TRUE " +
+                "WHERE next_form_element_id = ? AND next_form_element_type = ?;";
+        statement.prepared(cleanChoicesQuery, new JsonArray().add(sectionId).add(FormElementTypes.SECTION.toString()));
+
+        // Delete the section
+        String deleteQuery = "DELETE FROM " + SECTION_TABLE + " WHERE id = ?;";
+        statement.prepared(deleteQuery, new JsonArray().add(sectionId));
+
+        // Update form modification date
+        statement.prepared(getUpdateDateModifFormRequest(), getParamsForUpdateDateModifFormRequest(formId));
+
+        statement.raw(TRANSACTION_COMMIT_QUERY);
+
+        sql.transaction(statement.build(), SqlResult.validResultsHandler(event -> {
+            if (event.isRight()) {
+                handler.handle(new Either.Right<>(new JsonObject()));
+            } else {
+                String errorMessage = "[Formulaire@DefaultSectionService::delete] Fail to delete section with id " + sectionId + " : ";
+                log.error(errorMessage + event.left().getValue());
+                handler.handle(new Either.Left<>(event.left().getValue()));
+            }
+        }));
     }
 
 
