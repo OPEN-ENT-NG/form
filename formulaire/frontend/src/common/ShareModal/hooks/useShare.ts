@@ -121,7 +121,7 @@ export default function useShare({
   }, [resourceId]);
 
   const hasBlankRight = useMemo(
-    () => !state.shareRights.rights.some((right) => right.actions.some((action) => action.id !== "read")),
+    () => state.shareRights.rights.some((right) => right.actions.length === 1 && right.actions[0].id === "read"),
     [state.shareRights],
   );
 
