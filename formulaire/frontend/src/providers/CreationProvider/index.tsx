@@ -1,23 +1,23 @@
-import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
-import { CreationProviderContextType, ICreationProviderProps } from "./types";
-import { IFormElement } from "~/core/models/formElement/types";
-import { useParams } from "react-router-dom";
-import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useEdificeClient } from "@edifice.io/react";
-import { initUserWorfklowRights, useRootFolders } from "../HomeProvider/utils";
-import { workflowRights } from "~/core/rights";
+import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { useParams } from "react-router-dom";
+import { IFolder } from "~/core/models/folder/types";
 import { IForm } from "~/core/models/form/types";
+import { IFormElement } from "~/core/models/formElement/types";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { IQuestion } from "~/core/models/question/types";
+import { ISection } from "~/core/models/section/types";
+import { workflowRights } from "~/core/rights";
+import { getQuestionRootById, getQuestionSectionById } from "~/hook/dnd-hooks/useCreationDnd/utils";
+import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
+import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
-import { isInFormElementsList, removeFormElementFromList, updateElementInList } from "./utils";
-import { IQuestion } from "~/core/models/question/types";
-import { useFormElementList } from "./hook/useFormElementsList";
+import { initUserWorfklowRights, useRootFolders } from "../HomeProvider/utils";
 import { useFormElementActions } from "./hook/useFormElementActions";
-import { ISection } from "~/core/models/section/types";
-import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
-import { IFolder } from "~/core/models/folder/types";
-import { isQuestion, isSection } from "~/core/models/formElement/utils";
-import { getQuestionRootById, getQuestionSectionById } from "~/hook/dnd-hooks/useCreationDnd/utils";
+import { useFormElementList } from "./hook/useFormElementsList";
+import { CreationProviderContextType, ICreationProviderProps } from "./types";
+import { isInFormElementsList, removeFormElementFromList, updateElementInList } from "./utils";
 
 const CreationProviderContext = createContext<CreationProviderContextType | null>(null);
 
@@ -48,11 +48,16 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   //DATA
   const { data: foldersDatas } = useGetFoldersQuery(undefined, { skip: !userWorkflowRights.CREATION });
   const { data: formDatas } = useGetFormQuery({ formId }, { skip: !userWorkflowRights.CREATION });
-  const { data: questionsDatas } = useGetQuestionsQuery({ formId });
-  const { data: sectionsDatas } = useGetSectionsQuery({ formId });
+  const { data: questionsDatas, isFetching: isQuestionsFetching } = useGetQuestionsQuery({ formId });
+  const { data: sectionsDatas, isFetching: isSectionsFetching } = useGetSectionsQuery({ formId });
 
   //CUSTOM HOOKS
-  const { completeList } = useFormElementList(sectionsDatas, questionsDatas, resetFormElementListId);
+  const { completeList } = useFormElementList(
+    sectionsDatas,
+    questionsDatas,
+    resetFormElementListId,
+    isQuestionsFetching || isSectionsFetching,
+  );
   const { duplicateQuestion, duplicateSection, saveQuestion, saveSection, updateFormElementsList } =
     useFormElementActions(formElementsList, formId, currentEditingElement, setFormElementsList);
 
@@ -73,9 +78,8 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   }, [formDatas]);
 
   useEffect(() => {
-    if (!sectionsDatas && !questionsDatas) return;
     setFormElementsList(completeList);
-  }, [questionsDatas, sectionsDatas, completeList]);
+  }, [completeList]);
 
   useEffect(() => {
     if (currentEditingElement && isInFormElementsList(currentEditingElement, formElementsList)) {
