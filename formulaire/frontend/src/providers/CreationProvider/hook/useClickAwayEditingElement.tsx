@@ -2,11 +2,11 @@ import { Dispatch, MouseEvent, SetStateAction, useCallback } from "react";
 import { ClickAwayDataType } from "~/core/enums";
 import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection, isValidFormElement } from "~/core/models/formElement/utils";
+import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
-import { isCurrentEditingElement, updateElementInList } from "../utils";
-import { QuestionTypes } from "~/core/models/question/enum";
 import { t } from "~/i18n";
+import { isCurrentEditingElement, updateElementInList } from "../utils";
 
 export const useClickAwayEditingElement = (
   handleDeleteFormElement: (element: IFormElement) => void,

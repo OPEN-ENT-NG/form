@@ -1,4 +1,5 @@
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
 import { useGetQuestionsChildrenQuery } from "~/services/api/services/formulaireApi/questionApi";
@@ -8,6 +9,7 @@ export const useFormElementList = (
   sectionsDatas: ISection[] | undefined,
   questionsDatas: IQuestion[] | undefined,
   resetFormElementListId: number,
+  isDataFetching: boolean
 ) => {
   const questionsIds = useMemo(() => {
     return (questionsDatas ?? []).map((q) => q.id).filter((id): id is number => id !== null);
@@ -20,7 +22,10 @@ export const useFormElementList = (
 
   const { data: childrenDatas } = useGetQuestionsChildrenQuery(questionsIds, { skip: questionsIds.length === 0 });
 
-  const completeList = useMemo(() => {
+  const [ completeList, setCompleteList] = useState<IFormElement[]>([]);
+
+  useEffect(() => {
+    if(isDataFetching || !sectionsDatas || !questionsDatas) return;
     // Create a Map of choices by questionId for O(1) lookup
     const choicesByQuestion = (choicesDatas ?? []).reduce((acc, choice) => {
       if (choice.questionId != null) {
@@ -74,10 +79,10 @@ export const useFormElementList = (
       questions: section.id != null ? questionsBySection.get(section.id) ?? [] : [],
     }));
 
-    return [...sectionsWithQuestions, ...questionsWithoutSectionList].sort(
+    setCompleteList( [...sectionsWithQuestions, ...questionsWithoutSectionList].sort(
       (a, b) => (a.position ?? Infinity) - (b.position ?? Infinity),
-    );
-  }, [sectionsDatas, questionsDatas, choicesDatas, childrenDatas, resetFormElementListId]);
+    ))
+  }, [sectionsDatas, questionsDatas, choicesDatas, childrenDatas, resetFormElementListId, isDataFetching]);
 
   return { completeList };
 };
