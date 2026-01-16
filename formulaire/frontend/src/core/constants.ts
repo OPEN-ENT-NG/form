@@ -13,7 +13,7 @@ export const TOAST_CONFIG = {
   theme: "light" as Theme,
 };
 
-export const defaultViewMaxWidth = "1620px";
+export const defaultViewMaxWidth = "1400px";
 export const defaultViewBackgroundColor = "white";
 
 //IMAGE PICKER

@@ -8,6 +8,7 @@ export const mainContentInnerStyle: SxProps<Theme> = {
   flexDirection: "column",
   gap: "1rem",
   paddingTop: "1rem",
+  width: "100%",
 };
 
 export const treeViewButtonStyle: SxProps<Theme> = {

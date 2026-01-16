@@ -47,7 +47,7 @@ export const columnBoxStyle = {
 
 export const cardWrapperStyle = {
   display: "grid",
-  gridTemplateColumns: "repeat(auto-fit, minmax(min(30rem, 100%), 1fr))",
+  gridTemplateColumns: "repeat(auto-fill, minmax(min(30rem, 100%), 1fr))",
   gap: "1.6rem",
   width: "100%",
 } as const;
