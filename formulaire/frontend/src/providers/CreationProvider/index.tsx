@@ -52,7 +52,12 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const { data: sectionsDatas, isFetching: isSectionsFetching } = useGetSectionsQuery({ formId });
 
   //CUSTOM HOOKS
-  const { completeList } = useFormElementList(sectionsDatas, questionsDatas, resetFormElementListId, isQuestionsFetching || isSectionsFetching);
+  const { completeList } = useFormElementList(
+    sectionsDatas,
+    questionsDatas,
+    resetFormElementListId,
+    isQuestionsFetching || isSectionsFetching,
+  );
   const { duplicateQuestion, duplicateSection, saveQuestion, saveSection, updateFormElementsList } =
     useFormElementActions(formElementsList, formId, currentEditingElement, setFormElementsList);
 
