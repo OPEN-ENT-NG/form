@@ -21,6 +21,7 @@ import { getTransformStyle } from "~/components/CreationSortableItem/utils";
 import { IconButtonTooltiped } from "~/components/IconButtonTooltiped/IconButtonTooltiped";
 import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
+import { hasFormResponses } from "~/core/models/form/utils";
 import { isQuestion, isValidFormElement } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
@@ -32,6 +33,7 @@ import {
   shouldShowConditionalSwitch,
   shouldShowMandatorySwitch,
 } from "~/core/models/question/utils";
+import { flexStartBoxStyle } from "~/core/style/boxStyles";
 import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
@@ -59,8 +61,6 @@ import {
 } from "./style";
 import { ICreationQuestionWrapperProps } from "./types";
 import { getQuestionContentByType } from "./utils";
-import { flexStartBoxStyle } from "~/core/style/boxStyles";
-import { hasFormResponses } from "~/core/models/form/utils";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question, isPreview }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -281,7 +281,17 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             setCurrentEditingElement(question);
           }}
         >
-          <StyledDragContainer isPreview={!!isPreview} {...attributes} {...listeners}>
+          <StyledDragContainer
+            isPreview={!!isPreview}
+            {...attributes}
+            {...listeners}
+            onClick={(e) => {
+              e.stopPropagation();
+            }}
+            onMouseDown={(e) => {
+              e.stopPropagation();
+            }}
+          >
             <DragIndicatorRoundedIcon sx={dragIconStyle} />
           </StyledDragContainer>
           <Box sx={questionTitleStyle}>
