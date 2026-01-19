@@ -29,7 +29,7 @@ export const useResponse = () => {
   return context;
 };
 
-export const ResponseProvider: FC<IResponseProviderProps> = ({ children, previewMode, initialPageType }) => {
+export const ResponseProvider: FC<IResponseProviderProps> = ({ children, previewMode = false, initialPageType }) => {
   const { formId } = useParams();
   const { user } = useEdificeClient();
   const { initUserWorfklowRights } = useGlobal();
