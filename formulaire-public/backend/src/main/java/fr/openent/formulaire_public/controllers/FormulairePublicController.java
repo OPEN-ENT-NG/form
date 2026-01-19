@@ -33,6 +33,7 @@ public class FormulairePublicController extends ControllerHelper {
     @Get("")
     @ApiDoc("Render view")
     public void renderPublic(HttpServerRequest request) {
+        final String view = request.params().get("view");
         UserUtils.getUserInfos(eb, request, user -> {
             JsonObject safeConfig = config.copy();
             JsonObject params = new JsonObject()
