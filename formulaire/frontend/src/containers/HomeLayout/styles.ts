@@ -27,10 +27,12 @@ export const sidebarContentStyle: SxProps<Theme> = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
+  width: "100%",
 };
 
 export const mainContentStyle: SxProps<Theme> = {
   flexGrow: 1,
   height: "calc(100vh - 96px - 70px)", // 100vh - header accueil - header plateforme
   boxSizing: "border-box",
+  width: "100%",
 };

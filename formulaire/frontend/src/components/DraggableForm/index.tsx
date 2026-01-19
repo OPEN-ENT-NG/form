@@ -21,10 +21,10 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
   const { getIcons, getFormPropertyItems } = useFormItemsIcons();
 
   return (
-    <Box ref={setNodeRef} sx={{ ...(dragActive ? dragActiveStyle : {}) }} {...attributes} {...listeners}>
+    <Box ref={setNodeRef} sx={{ ...(dragActive ? dragActiveStyle : {}), width: "100%" }} {...attributes} {...listeners}>
       <ResourceCard
         key={form.id}
-        width="30rem"
+        width="100%"
         title={form.title}
         image={form.picture ?? undefined}
         defaultImage={LOGO_PATH}

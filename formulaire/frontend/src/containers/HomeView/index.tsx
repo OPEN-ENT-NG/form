@@ -24,7 +24,7 @@ import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { WorkflowRights } from "~/core/rights";
 import { FormOpenBlockedModal } from "../FormOpenBlockedModal";
 import { homeViewStyle } from "./style";
-import { defaultViewWidth } from "~/core/constants";
+import { defaultViewMaxWidth } from "~/core/constants";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -60,7 +60,7 @@ export const HomeView: FC = () => {
   };
 
   return (
-    <Box sx={{ ...homeViewStyle, width: isMobile ? "100%" : defaultViewWidth }}>
+    <Box sx={{ ...homeViewStyle, maxWidth: isMobile ? "inherit" : defaultViewMaxWidth }}>
       {!isMobile && (
         <Box ref={headerRef} sx={{ width: "100%" }}>
           <Header stringItems={[t("formulaire.title")]} buttons={tab === HomeTabState.FORMS ? headerButtons : []} />
