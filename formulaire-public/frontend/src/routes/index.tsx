@@ -1,21 +1,25 @@
 import { createHashRouter } from "react-router-dom";
-
 import Root from "~/app/root";
-import ErrorPage from "~/components/PageError";
+import Page404 from "~/components/Page404";
 
 const routes = [
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />,
+    errorElement: <Page404 />,
     children: [
       {
         index: true,
         async lazy() {
-          const { Home } = await import("./home");
-          return {
-            Component: Home,
-          };
+          const { Error404 } = await import("./e404");
+          return { Component: Error404 };
+        },
+      },
+      {
+        path: "form/:formKey",
+        async lazy() {
+          const { Response } = await import("./response");
+          return { Component: Response };
         },
       },
     ],
