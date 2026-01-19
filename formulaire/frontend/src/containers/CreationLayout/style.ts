@@ -1,12 +1,13 @@
 import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
 import { ICreationLayoutWrapperProps } from "./types";
-import { defaultViewWidth } from "~/core/constants";
+import { defaultViewMaxWidth } from "~/core/constants";
 
 export const CreationLayoutWrapper = styled(Box, {
   shouldForwardProp: (prop) => prop !== "headerHeight",
 })<ICreationLayoutWrapperProps>(({ headerHeight = 71 }) => ({
   display: "flex",
-  width: defaultViewWidth,
+  width: "100%",
+  maxWidth: defaultViewMaxWidth,
   height: `calc(100% - ${headerHeight.toString()}px)`,
 }));
 

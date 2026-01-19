@@ -59,7 +59,7 @@ export const DraggableFolder: FC<IDraggableFolderProps> = ({
     <StyledDraggableFolder ref={setNodeRef} {...attributes} {...listeners} dragActive={dragActive} isOvered={isOvered}>
       <FolderCard
         key={folder.id}
-        width={isMobile ? "auto" : "30rem"}
+        width={"auto"}
         title={folder.name}
         subtitle={getFolderSubtitle(folder)}
         onSelect={() => {

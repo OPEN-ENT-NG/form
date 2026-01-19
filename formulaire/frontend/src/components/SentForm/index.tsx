@@ -15,7 +15,7 @@ export const SentForm: FC<ISentFormProps> = ({ form, distributions, isSelected, 
   return (
     <ResourceCard
       key={form.id}
-      width="30rem"
+      width="100%"
       title={form.title}
       {...(form.picture && { image: form.picture })}
       defaultImage={LOGO_PATH}
