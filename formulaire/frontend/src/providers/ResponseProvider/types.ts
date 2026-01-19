@@ -9,7 +9,7 @@ import { IResponse } from "~/core/models/response/type";
 
 export interface IResponseProviderProps {
   children: ReactNode;
-  previewMode: boolean;
+  previewMode?: boolean;
   initialPageType?: ResponsePageType;
 }
 
