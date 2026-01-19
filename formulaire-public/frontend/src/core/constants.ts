@@ -1,3 +1,93 @@
+import { Theme, ToastPosition } from "react-toastify";
+
 export const FORMULAIRE_PUBLIC = "formulaire-public";
+export const ARCHIVE = "archive";
+export const COMMON = "common";
 
 export const DEFAULT_THEME = "default";
+
+export const TOAST_CONFIG = {
+  position: "top-right" as ToastPosition,
+  autoClose: 5000,
+  theme: "light" as Theme,
+};
+
+export const defaultViewWidth = "1352px";
+export const defaultViewBackgroundColor = "white";
+export const defaultPaperShadow = "1px 4px 5px 2px rgba(0, 0, 0, 0.1)";
+
+//IMAGE PICKER
+export const IMAGE_PICKER_INFO = "SVG, PNG, JPG, GIF";
+export const MAX_FILES_SAVE = 10;
+
+//DATE FORMAT
+export const DD_MM_YYYY = "DD/MM/YYYY";
+export const FULL_DATE_WITH_TIME_FORMAT = "DD MMMM YYYY HH:mm";
+export const HH_MM = "HH:mm";
+
+//IMG PATH
+export const LOGO_PATH = "/formulaire/public/img/logo.svg";
+
+//ROOT FOLDERS ID
+export const MYFORMS_FOLDER_ID = 1;
+export const SHARED_FOLDER_ID = 2;
+export const TRASH_FOLDER_ID = 3;
+
+export const FORM_CHUNK = 9;
+
+//EXPORT
+export const PDF_EXTENSION = ".pdf";
+export const ZIP_EXTENSION = ".zip";
+export const LINK_HTML_ELEMENT = "a";
+
+//MISC
+export const ID = "id";
+export const DEFAULT_PAGINATION_LIMIT = 10;
+
+//MEDIA LIBRARY
+export const PROTECTED_VISIBILITY = "protected";
+
+//FILE EXTENSIONS
+export const IMAGE_CONTENT_TYPE = "image/*";
+export const PNG_EXTENSION = ".png";
+export const JPG_EXTENSION = ".jpg";
+export const JPEG_EXTENSION = ".jpeg";
+export const GIF_EXTENSION = ".gif";
+export const SVG_EXTENSION = ".svg";
+
+//QUESTIONS
+export const DEFAULT_NB_CHOICES = 3;
+export const DEFAULT_NB_CHILDREN = 3;
+export const DEFAULT_CURSOR_STEP = 1;
+
+//TARGET NEXT ELEMENT
+export const TARGET_RECAP = "targetRecap";
+
+//CURSOR STYLES
+export const CURSOR_STYLE_GRABBING = "grabbing";
+export const CURSOR_STYLE_DEFAULT = "default";
+
+//DND
+export const DRAG_HORIZONTAL_TRESHOLD = 40;
+
+//EDITOR
+export const EDITOR_CONTENT_HTML = "html";
+
+//MOUSE EVENTS
+export const MOUSE_EVENT_DOWN = "onMouseDown";
+export const TOUCH_EVENT_START = "onTouchStart";
+
+// RESPONSIVE
+export const MOBILE_MAX_WIDTH = 576;
+export const TABLET_MAX_WIDTH = 768;
+
+// Variable types
+export const STRING = "string";
+export const FILE = "file";
+
+// Cookies
+export const DOMAIN: string = "domain";
+export const EXPIRES: string = "expires";
+export const PATH: string = "path";
+export const SAMESITE: string = "samesite";
+export const SECURE: string = "secure";

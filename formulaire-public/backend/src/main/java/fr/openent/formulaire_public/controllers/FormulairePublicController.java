@@ -39,7 +39,11 @@ public class FormulairePublicController extends ControllerHelper {
                 .put(NOT_LOGGED_IN, user == null)
                 .put(HOST, safeConfig.getString(HOST, null))
                 .put(THEME_PLATFORM, safeConfig.getString(THEME_PLATFORM, "default"));
-            renderView(request, params, "formulaire_public.html", null);
+            if ("angular".equals(view)) {
+                renderView(request, params, "formulaire_public.html", null);
+            } else {
+                renderView(request, params, "index.html", null);
+            }
         });
     }
 
