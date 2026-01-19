@@ -37,8 +37,8 @@ import static fr.openent.form.core.constants.Tables.DB_SCHEMA;
 
 public class Formulaire extends BaseServer {
 	private static final Logger log = LoggerFactory.getLogger(Formulaire.class);
-	final EventBus eb = getEventBus(vertx);
-	final TimelineHelper timelineHelper = new TimelineHelper(vertx, eb, config);
+	private EventBus eb;
+	private TimelineHelper timelineHelper;
 
 	@Override
 	public void start(Promise<Void> startPromise) throws Exception {
@@ -46,7 +46,11 @@ public class Formulaire extends BaseServer {
 		super.start(promise);
 
 		promise.future()
-				.compose(init -> StorageFactory.build(vertx, config, new FormulaireApplicationStorage(timelineHelper, eb)))
+				.compose(init -> {
+					eb = getEventBus(vertx);
+					timelineHelper = new TimelineHelper(vertx, eb, config);
+					return StorageFactory.build(vertx, config, new FormulaireApplicationStorage(timelineHelper, eb));
+				})
 				.compose(storageFactory -> SharedDataHelper.getInstance().getMulti("server", "archiveConfig")
 						.map(formulaireConfigMap -> Pair.of(storageFactory, formulaireConfigMap)))
 				.compose(configPair -> initFormulaire(configPair.getLeft(), configPair.getRight()))
