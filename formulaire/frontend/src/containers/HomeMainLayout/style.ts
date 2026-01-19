@@ -9,11 +9,11 @@ export const StyledMainContentInnerWrapper = styled(Box, {
   height: "100%",
   display: "flex",
   justifyContent: "flex-start",
-
   flexDirection: "column",
   gap: !isMobile ? "3rem" : "1rem",
   paddingTop: !isMobile ? "2rem" : "1rem",
-
+  boxSizing: "border-box",
+  width: "100%",
   ...dragCursorStyle,
 }));
 
@@ -37,6 +37,7 @@ export const resourceContainerStyle: SxProps<Theme> = {
   padding: " 1rem 3rem 2rem 3rem",
   width: "100%",
   gap: "4rem",
+  boxSizing: "border-box",
 };
 
 export const searchBarStyle: SxProps<Theme> = {
