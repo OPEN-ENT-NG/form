@@ -4,6 +4,7 @@ import {
   IFormPayload,
   IFormReminderPayload,
   IFormRight,
+  IPublicFormDTO,
 } from "~/core/models/form/types.ts";
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 import { QueryMethod, TagName } from "~/core/enums.ts";
@@ -257,7 +258,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
-    getPublicForm: builder.query<IForm, { formKey: string }>({
+    getPublicForm: builder.query<IPublicFormDTO, { formKey: string }>({
       query: ({ formKey }) => ({
         url: `forms/key/${formKey}`,
         method: QueryMethod.GET,
