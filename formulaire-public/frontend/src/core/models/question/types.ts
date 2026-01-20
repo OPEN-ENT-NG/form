@@ -1,6 +1,21 @@
 import { FormElementType } from "../formElement/enum";
-import { IFormElement } from "../formElement/types";
+import { IFormElement, IFormElementDTO } from "../formElement/types";
 import { ChoiceTypes, QuestionTypes } from "./enum";
+
+export interface IQuestionDTO extends IFormElementDTO {
+  question_type: QuestionTypes;
+  statement: string | null;
+  mandatory: boolean;
+  section_id: number | null;
+  section_position: number | null;
+  conditional: boolean;
+  matrix_id: number | null;
+  matrix_position: number | null;
+  choices: IQuestionChoice[] | null;
+  placeholder: string | null;
+  children: IQuestionDTO[] | null;
+  specific_fields: IQuestionSpecificFields | null;
+}
 
 // Model Interfaces
 export interface IQuestion extends IFormElement {
