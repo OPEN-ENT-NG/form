@@ -1,6 +1,6 @@
 import { FormElementType } from "../formElement/enum";
 import { IFormElement, IFormElementDTO } from "../formElement/types";
-import { IQuestion, IQuestionPayload } from "../question/types";
+import { IQuestion, IQuestionDTO, IQuestionPayload } from "../question/types";
 
 export interface ISectionDTO extends IFormElementDTO {
   description: string;
@@ -8,6 +8,7 @@ export interface ISectionDTO extends IFormElementDTO {
   next_form_element_id: number;
   next_form_element_type: FormElementType;
   is_next_form_element_default: boolean;
+  questions: IQuestionDTO[];
 }
 
 export interface ISection extends IFormElement {
