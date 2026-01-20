@@ -9,6 +9,7 @@ export interface IFormElementDTO {
   form_element_type: FormElementType;
   selected: boolean;
   label: string;
+  specificFields?: IQuestionSpecificFields | null;
 }
 
 export interface IFormElement {
