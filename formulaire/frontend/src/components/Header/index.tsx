@@ -1,20 +1,20 @@
 import { Box, Button } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 
-import { IHeaderProps } from "./types";
-import { FormBreadcrumbs } from "../Breadcrumbs";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
-import { headerButtonsStyle, headerStyle } from "./style";
 import { ComponentVariant } from "~/core/style/themeProps";
-import { FormsIcon } from "../SVG/FormsIcon";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import { Banner } from "../Banner";
 import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
+import { Banner } from "../Banner";
+import { FormBreadcrumbs } from "../Breadcrumbs";
+import { FormsIcon } from "../SVG/FormsIcon";
+import { headerButtonsStyle, headerStyle } from "./style";
+import { IHeaderProps } from "./types";
 
 export const Header: FC<IHeaderProps> = ({
-  stringItems,
+  items,
   buttons,
   isCreationPage = false,
   displaySeparator = false,
@@ -28,7 +28,7 @@ export const Header: FC<IHeaderProps> = ({
     <Box sx={headerStyle}>
       <FormBreadcrumbs
         icon={FormsIcon}
-        stringItems={stringItems}
+        items={items}
         separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem" }} />}
         isHeader
         isCreationPage={isCreationPage}
