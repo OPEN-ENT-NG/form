@@ -2,7 +2,7 @@ import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "~/components/Header";
 import { FORMULAIRE } from "~/core/constants";
-import { ActionBar, Box } from "@cgi-learning-hub/ui";
+import { ActionBar, Box, Typography } from "@cgi-learning-hub/ui";
 import { useGetHomeHeaderButtons, useElementHeight } from "./utils";
 import { FolderModal } from "../FolderModal";
 import { FolderModalMode } from "../FolderModal/types";
@@ -63,7 +63,10 @@ export const HomeView: FC = () => {
     <Box sx={{ ...homeViewStyle, maxWidth: isMobile ? "inherit" : defaultViewMaxWidth }}>
       {!isMobile && (
         <Box ref={headerRef} sx={{ width: "100%" }}>
-          <Header stringItems={[t("formulaire.title")]} buttons={tab === HomeTabState.FORMS ? headerButtons : []} />
+          <Header
+            items={[<Typography variant="h1">{t("formulaire.title")}</Typography>]}
+            buttons={tab === HomeTabState.FORMS ? headerButtons : []}
+          />
         </Box>
       )}
       <HomeLayout headerHeight={headerHeight} />

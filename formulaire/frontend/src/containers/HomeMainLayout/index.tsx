@@ -107,7 +107,7 @@ export const HomeMainLayout: FC = () => {
         />
       </Box>
       <Box sx={viewTitleStyle}>
-        <FormBreadcrumbs icon={currentFolder.icon ?? FolderIcon} stringItems={breadcrumbsTexts} />
+        <FormBreadcrumbs icon={currentFolder.icon ?? FolderIcon} items={breadcrumbsTexts} />
         <SwitchView viewMode={viewMode} toggleButtonList={toggleButtonList} onChange={toggleTagViewPref} />
       </Box>
       <DndContext

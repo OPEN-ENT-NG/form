@@ -1,16 +1,16 @@
 import { FC } from "react";
 
-import { IFormBreadcrumbsProps } from "./types";
 import { Box, EllipsisWithTooltip, Link } from "@cgi-learning-hub/ui";
-import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
-import { FORMULAIRE } from "~/core/constants";
-import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
 import { useNavigate } from "react-router-dom";
+import { FORMULAIRE } from "~/core/constants";
+import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
+import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
+import { IFormBreadcrumbsProps } from "./types";
 
 export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   icon: Icon,
-  stringItems,
+  items,
   separator = null,
   isHeader = false,
   isCreationPage = false,
@@ -25,7 +25,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
       maxItems={maxItemsBeforeCollaspse}
       itemsAfterCollapse={2}
       hasSeparator={separator != null}
-      shouldEllipsis={stringItems.length >= maxItemsBeforeCollaspse}
+      shouldEllipsis={items.length >= maxItemsBeforeCollaspse}
     >
       {isHeader ? (
         <Link underline="hover" color={FORM_COLOR} href={`/${FORMULAIRE}`} sx={{ flexShrink: 0 }}>
@@ -36,17 +36,17 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
           <Icon height="2.3rem"></Icon>
         </Box>
       )}
-      {stringItems.map((stringItem, index) => {
-        const isLast = index === stringItems.length - 1;
-        const shouldEllipsis = isLast && stringItems.length >= maxItemsBeforeCollaspse;
+      {items.map((item, index) => {
+        const isLast = index === items.length - 1;
+        const shouldEllipsis = isLast && items.length >= maxItemsBeforeCollaspse;
         const content = shouldEllipsis ? (
-          <EllipsisWithTooltip slotProps={{ text: { fontSize: "2.4rem" } }}>{stringItem}</EllipsisWithTooltip>
+          <EllipsisWithTooltip slotProps={{ text: { fontSize: "2.4rem" } }}>{item}</EllipsisWithTooltip>
         ) : (
-          stringItem
+          item
         );
         return (
           <StyledBreadCrumbItemWrapper
-            key={stringItem}
+            key={index}
             textColor={textColor}
             isHeader={isHeader}
             isCreationPage={isCreationPage}
