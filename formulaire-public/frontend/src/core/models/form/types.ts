@@ -1,5 +1,5 @@
 import { FormPropField } from "~/core/enums";
-import { IFormElement } from "../formElement/types";
+import { IFormElement, IFormElementDTO } from "../formElement/types";
 
 export interface IForm {
   id: number;
@@ -31,9 +31,13 @@ export interface IForm {
   nb_responses: number | null;
   infoImg: IInfoImg;
   rights: string[];
-  form_elements: IFormElement[];
+  formElements: IFormElement[];
   distribution_key: string;
   distribution_captcha: number;
+}
+
+export interface IPublicFormDTO extends IForm {
+  form_elements: IFormElementDTO[];
 }
 
 export interface IInfoImg {

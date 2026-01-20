@@ -129,6 +129,7 @@ public class FormController extends ControllerHelper {
                 HashMap<Integer, JsonObject> sectionsMapped = new HashMap<>();
                 for (Object s : sections) {
                     JsonObject section = (JsonObject)s;
+                    section.put(FORM_ELEMENT_TYPE, "SECTION");
                     section.put(QUESTIONS, new JsonArray());
                     sectionsMapped.put(section.getInteger(ID), section);
                 }
@@ -191,6 +192,7 @@ public class FormController extends ControllerHelper {
                                 JsonObject question = (JsonObject)q;
                                 question.put(CHILDREN, new JsonArray());
                                 question.put(CHOICES, new JsonArray());
+                                question.put(FORM_ELEMENT_TYPE, "QUESTION");
 
                                 // Fill question with questionChildren
                                 JsonArray questionChildren = childrenMapped.get(question.getInteger(ID));

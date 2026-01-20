@@ -9,7 +9,7 @@ import { usePublicResponse } from "./hook/usePublicResponse";
 import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
-import { initResponsesMap, updateStorage } from "./utils";
+import { initResponsesMap, parseFormDatas, updateStorage } from "./utils";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -55,7 +55,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       if (!formInStorageJson) return;
       const formDatas = formInStorageJson as IForm;
       setForm(formDatas);
-      setFormElementsList(formDatas.form_elements);
+      setFormElementsList(formDatas.formElements);
       if (!initialPageType) {
         if (formDatas.rgpd) {
           setPageType(ResponsePageType.RGPD);
@@ -72,9 +72,10 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
 
   useEffect(() => {
     if (formDatas) {
-      setForm(formDatas);
-      setFormElementsList(formDatas.form_elements);
-      updateStorage(formKey, formDatas, formDatas.form_elements);
+      const parsedFormDatas = parseFormDatas(formDatas);
+      setForm(parsedFormDatas);
+      setFormElementsList(parsedFormDatas.formElements);
+      updateStorage(formKey, parsedFormDatas, parsedFormDatas.formElements);
       if (!initialPageType) {
         if (formDatas.rgpd) {
           setPageType(ResponsePageType.RGPD);
