@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 
 export interface IFormBreadcrumbsProps {
   icon: React.ElementType;
-  stringItems: string[];
+  items: ReactNode[];
   separator?: ReactNode;
   isHeader?: boolean;
   isCreationPage?: boolean;

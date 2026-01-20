@@ -6,6 +6,7 @@ export const creationViewStyle: SxProps<Theme> = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
+  backgroundColor: "white",
 };
 
 export const creationHedearStyle: SxProps<Theme> = {
