@@ -1,7 +1,7 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { FC, useMemo } from "react";
 import { getTransformStyle } from "~/components/CreationSortableItem/utils";
-import { buttonsBoxStyle, buttonStyle, GrapableBox, leftBoxStyle, SortableQuestionPaper } from "./style";
+import { buttonsBoxStyle, buttonStyle, grapableBoxStyle, leftBoxStyle, SortableQuestionPaper } from "./style";
 import { ISortableQuestionItemProps } from "./types";
 
 import { Box, IconButton, Typography } from "@cgi-learning-hub/ui";
@@ -28,14 +28,24 @@ export const SortableItem: FC<ISortableQuestionItemProps> = ({
   if (!id) return null;
 
   return (
-    <SortableQuestionPaper ref={setNodeRef} elevation={2} style={style}>
+    <SortableQuestionPaper
+      ref={setNodeRef}
+      elevation={2}
+      sx={grapableBoxStyle(isPreview)}
+      style={style}
+      {...listeners}
+      {...attributes}
+    >
       <Box sx={leftBoxStyle}>
-        <GrapableBox isPreview={isPreview} {...listeners} {...attributes}>
-          <DragIndicatorRoundedIcon />
-        </GrapableBox>
+        <DragIndicatorRoundedIcon />
         <Typography variant="body1">{label}</Typography>
       </Box>
-      <Box sx={buttonsBoxStyle}>
+      <Box
+        sx={buttonsBoxStyle}
+        onPointerDown={(e) => {
+          e.stopPropagation();
+        }}
+      >
         {!isFirst && (
           <IconButton
             sx={{ marginRight: isLast ? "4.6rem" : "0" }}

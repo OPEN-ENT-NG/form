@@ -1,6 +1,4 @@
-import { Box, Paper, styled } from "@cgi-learning-hub/ui";
-import { blockProps } from "~/core/utils";
-import { IGrapableBoxProps } from "../types";
+import { Paper, styled } from "@cgi-learning-hub/ui";
 
 export const SortableQuestionPaper = styled(Paper)(({ theme }) => ({
   display: "flex",
@@ -13,12 +11,8 @@ export const SortableQuestionPaper = styled(Paper)(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-export const GrapableBox = styled(Box, {
-  shouldForwardProp: blockProps("isPreview"),
-})<IGrapableBoxProps>(({ isPreview }) => {
-  return {
-    "&:hover": { cursor: isPreview ? "grabbing" : "grab" },
-  };
+export const grapableBoxStyle = (isPreview?: boolean) => ({
+  "&:hover": { cursor: isPreview ? "grabbing" : "grab" },
 });
 
 export const leftBoxStyle = {
@@ -29,6 +23,7 @@ export const leftBoxStyle = {
 
 export const buttonsBoxStyle = {
   display: "flex",
+  cursor: "default",
 };
 
 export const buttonStyle = { fontSize: "3rem" };
