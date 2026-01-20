@@ -1,5 +1,5 @@
 import { DEFAULT_CURSOR_STEP } from "~/core/constants";
-import { getElementById } from "../formElement/utils";
+import { getElementById, transformFormElement } from "../formElement/utils";
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
 import { createNewFormElement, getFollowingFormElement, isQuestion, isSection } from "../formElement/utils";
@@ -10,6 +10,7 @@ import {
   IQuestionChoice,
   IQuestionChoiceDTO,
   IQuestionChoicePayload,
+  IQuestionDTO,
   IQuestionPayload,
   IQuestionSpecificFields,
   IQuestionSpecificFieldsPayload,
@@ -34,6 +35,26 @@ export const isQuestionChoice = (item: object): item is IQuestionChoice => {
 export const getQuestionList = (formElementList: IFormElement[]): IQuestion[] => {
   const questions = formElementList.filter((formElement) => isQuestion(formElement)) as IQuestion[];
   return questions;
+};
+
+export const transformQuestion = (raw: IQuestionDTO): IQuestion => {
+  return {
+    ...transformFormElement(raw),
+    questionType: raw.question_type,
+    statement: raw.statement,
+    mandatory: raw.mandatory,
+    sectionId: raw.section_id,
+    sectionPosition: raw.section_position,
+    conditional: raw.conditional,
+    matrixId: raw.matrix_id,
+    matrixPosition: raw.matrix_position,
+    choices: raw.choices,
+    placeholder: raw.placeholder,
+    children: raw.children,
+    specificFields: raw.specific_fields,
+    stableId: raw.id,
+    formElementType: FormElementType.QUESTION,
+  };
 };
 
 export const createNewQuestion = (

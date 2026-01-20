@@ -104,6 +104,12 @@ export const isSection = (formElement: IFormElement): formElement is ISection =>
   return formElement.formElementType === FormElementType.SECTION;
 };
 
+export const parseIntoQuestionOrSection = (formElement: IFormElement): ISection | IQuestion => {
+  if (isSection(formElement)) return formElement;
+  if (isQuestion(formElement)) return formElement;
+  throw new Error("Unknown form element type");
+};
+
 export const getFollowingFormElement = (
   formElement: IFormElement,
   formElements: IFormElement[],
