@@ -9,29 +9,34 @@ export const initResponsesMap = (formElements: IFormElement[]) => {
   const responsesMap = new Map<string, Map<number, IResponse[]>>();
 
   formElements.forEach((formElement) => {
-    const formElementResponsesMap = new Map<IQuestion, IResponse[]>();
+    const formElementIdType = getStringifiedFormElementIdType(formElement);
+    if (!formElementIdType) return;
+    const formElementResponsesMap = new Map<number, IResponse[]>();
 
     if (isQuestion(formElement) && formElement.id) {
       if (formElement.questionType === QuestionTypes.MATRIX) {
         formElement.children?.forEach((child) => {
           if (!child.id) return;
-          formElementResponsesMap.set(child, initResponseAccordingToType(child, formElement.choices));
+          formElementResponsesMap.set(child.id, initResponseAccordingToType(child, formElement.choices));
         });
       } else {
-        formElementResponsesMap.set(formElement, initResponseAccordingToType(formElement));
+        formElementResponsesMap.set(formElement.id, initResponseAccordingToType(formElement));
       }
     } else if (isSection(formElement)) {
       formElement.questions.forEach((question) => {
         if (!question.id) return;
-        formElementResponsesMap.set(question, initResponseAccordingToType(question));
+        if (question.questionType === QuestionTypes.MATRIX) {
+          question.children?.forEach((child) => {
+            if (!child.id) return;
+            formElementResponsesMap.set(child.id, initResponseAccordingToType(child, question.choices));
+          });
+        } else {
+          formElementResponsesMap.set(question.id, initResponseAccordingToType(question));
+        }
       });
     }
 
-    formElementResponsesMap.forEach((responses, question) => {
-      const formElementIdType = getStringifiedFormElementIdType(question);
-      if (formElementIdType)
-        responsesMap.set(formElementIdType, new Map<number, IResponse[]>().set(question.id ?? 0, responses));
-    });
+    responsesMap.set(formElementIdType, formElementResponsesMap);
   });
   return responsesMap;
 };
