@@ -36,6 +36,7 @@ export const RespondQuestionLongAnswer: FC<IRespondQuestionTypesProps> = ({ ques
         ref={editorRef}
         mode={EditorMode.EDIT}
         variant={EditorVariant.OUTLINE}
+        focus={false}
       />
     </Box>
   );

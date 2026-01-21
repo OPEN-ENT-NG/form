@@ -24,7 +24,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
     const map = new Map<number, IResponse[]>();
     question.children?.forEach((child) => {
       if (!child.id) return;
-      map.set(child.id, getQuestionResponses(child));
+      map.set(child.id, getQuestionResponses({ ...child, sectionId: question.sectionId }));
     });
     setResponseMap(map);
   }, [question, getQuestionResponses]);
@@ -43,7 +43,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
 
     const updatedResponses = responses.map((r) => (r.choiceId === choiceId ? { ...r, selected: !r.selected } : r));
 
-    updateQuestionResponses(child, updatedResponses);
+    updateQuestionResponses({ ...child, sectionId: question.sectionId }, updatedResponses);
   };
 
   const toggleRadio = (childId: number | null, choiceId: number | null) => {
@@ -68,7 +68,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
       image: null,
     };
 
-    updateQuestionResponses(child, [updatedResponse]);
+    updateQuestionResponses({ ...child, sectionId: question.sectionId }, [updatedResponse]);
   };
 
   const clearRow = (childId: number | null) => {
