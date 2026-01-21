@@ -1,12 +1,15 @@
 import { SxProps, Theme } from "@cgi-learning-hub/ui";
 
-export const creationViewStyle: SxProps<Theme> = {
-  width: "100%",
-  height: "100%",
-  display: "flex",
-  flexDirection: "column",
-  alignItems: "center",
-  backgroundColor: "white",
+export const creationViewStyle = (isTheme1D: boolean): SxProps<Theme> => {
+  return {
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    backgroundColor: isTheme1D ? "white" : "unset",
+    flex: 1,
+  };
 };
 
 export const creationHedearStyle: SxProps<Theme> = {

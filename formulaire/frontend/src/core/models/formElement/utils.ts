@@ -1,4 +1,4 @@
-import { IQuestion } from "../question/types";
+import { IQuestion, IQuestionChoice } from "../question/types";
 import { ISection } from "../section/types";
 import { FormElementType } from "./enum";
 import { IFormElement, IFormElementDTO, IFormElementPayload } from "./types";
@@ -100,4 +100,22 @@ export const isQuestion = (formElement: IFormElement): formElement is IQuestion 
 
 export const isSection = (formElement: IFormElement): formElement is ISection => {
   return formElement.formElementType === FormElementType.SECTION;
+};
+
+export const getExistingChoices = (formElements: IFormElement[]): IQuestionChoice[] => {
+  return formElements
+    .filter((el) => !el.isNew)
+    .flatMap((el) => {
+      if (isQuestion(el)) {
+        return el.choices?.filter((choice) => choice.id !== null) || [];
+      }
+      if (isSection(el)) {
+        return el.questions
+          .filter((el) => !el.isNew)
+          .flatMap((question) => {
+            return question.choices?.filter((choice) => choice.id !== null) || [];
+          });
+      }
+      return [];
+    });
 };

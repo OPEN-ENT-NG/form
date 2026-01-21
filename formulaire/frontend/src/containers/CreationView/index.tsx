@@ -18,6 +18,7 @@ import { CreationOrganisationModal } from "../CreationOrganisationModal";
 import { useElementHeight } from "../HomeView/utils";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "./style";
 import { getRecursiveFolderParents, useGetCreationHeaderButtons } from "./utils";
+import { useTheme } from "~/hook/useTheme";
 
 export const CreationView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -50,6 +51,7 @@ export const CreationView: FC = () => {
     saveQuestion,
     saveSection,
   );
+  const { isTheme1D } = useTheme();
 
   const getStringFolders = (form: IForm): string[] => {
     const parentFolders = getRecursiveFolderParents(form.folder_id, folders);
@@ -84,7 +86,7 @@ export const CreationView: FC = () => {
   const desktopView = (
     <>
       <Box
-        sx={creationViewStyle}
+        sx={creationViewStyle(isTheme1D)}
         data-type={ClickAwayDataType.ROOT}
         onMouseDown={(e) => {
           handleClickAway(e, currentEditingElement);
@@ -122,5 +124,5 @@ export const CreationView: FC = () => {
     </>
   );
 
-  return <Box sx={creationViewStyle}>{selectView()}</Box>;
+  return <Box sx={creationViewStyle(isTheme1D)}>{selectView()}</Box>;
 };

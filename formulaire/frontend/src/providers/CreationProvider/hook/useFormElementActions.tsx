@@ -1,6 +1,10 @@
+import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { FORMULAIRE } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
+import { getExistingChoices, isQuestion, isSection } from "~/core/models/formElement/utils";
+import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import {
   createNewQuestion,
@@ -9,6 +13,7 @@ import {
   isTypeChoicesQuestion,
 } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
+import { updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useUpdateFormElementsMutation } from "~/services/api/services/formulaireApi/formElementApi";
 import {
   useCreateQuestionsMutation,
@@ -25,12 +30,8 @@ import {
   useDeleteSingleSectionMutation,
   useUpdateSectionsMutation,
 } from "~/services/api/services/formulaireApi/sectionApi";
-import { fixListPositions, getElementById, isInFormElementsList } from "../utils";
 import { PositionActionType } from "../enum";
-import { toast } from "react-toastify";
-import { useCallback } from "react";
-import { QuestionTypes } from "~/core/models/question/enum";
-import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { fixListPositions, getElementById, isInFormElementsList } from "../utils";
 
 export const useFormElementActions = (
   formElementsList: IFormElement[],
@@ -54,20 +55,30 @@ export const useFormElementActions = (
   const updateFormElementsList = async (newFormElementsList: IFormElement[]) => {
     const questions = newFormElementsList.filter(isQuestion);
     const sections = newFormElementsList.filter(isSection);
+    const allExistingChoices = getExistingChoices(newFormElementsList);
     if (!newFormElementsList.length) {
       return;
     }
 
     if (questions.length && !sections.length) {
       await updateQuestions(questions);
+      if (allExistingChoices.length) {
+        await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
+      }
       return;
     }
     if (sections.length && !questions.length) {
       await updateSections(sections);
+      if (allExistingChoices.length) {
+        await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
+      }
       return;
     }
 
     await updateFormElements(newFormElementsList);
+    if (allExistingChoices.length) {
+      await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
+    }
     return;
   };
 
@@ -122,7 +133,7 @@ export const useFormElementActions = (
     }
 
     // Push updated list to backend
-    await updateFormElementsList(cleanedList);
+    await updateFormElementsList(updateNextTargetElements(cleanedList));
   };
 
   const clearNextReferences = (removedElement: IFormElement): ((el: IFormElement) => IFormElement) => {

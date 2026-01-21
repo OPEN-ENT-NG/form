@@ -112,6 +112,8 @@ export const useCreationDnd = (
     const finalStr = JSON.stringify(formElementsList);
     if (initialStr !== finalStr) {
       const updatedFormElementsList = updateNextTargetElements(formElementsList);
+      console.log("nikoo", updatedFormElementsList);
+      console.log("nikooo", formElementsList);
       void updateFormElementsList(flattenFormElements(updatedFormElementsList));
     }
     initialListRef.current = null;

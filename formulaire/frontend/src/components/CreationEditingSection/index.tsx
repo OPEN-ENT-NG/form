@@ -1,9 +1,7 @@
+import { Alert, Box, Button, Paper, Stack, TextField, Typography } from "@cgi-learning-hub/ui";
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-import { ICreationEditingSectionProps } from "./types";
-import { Box, Typography, Stack, Paper, Alert, TextField } from "@cgi-learning-hub/ui";
 import {
   editorContainerStyle,
-  newQuestionWrapperStyle,
   sectionContentStyle,
   sectionFooterStyle,
   sectionHeaderStyle,
@@ -11,31 +9,31 @@ import {
   sectionIconWrapperStyle,
   sectionTitleStyle,
 } from "./style";
+import { ICreationEditingSectionProps } from "./types";
 
+import { Editor, EditorRef } from "@edifice.io/react/editor";
+import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
-import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
-import { AlertSeverityVariant, ComponentVariant } from "~/core/style/themeProps";
 import { useTranslation } from "react-i18next";
-import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
-import { isSection, isValidFormElement } from "~/core/models/formElement/utils";
-import { useCreation } from "~/providers/CreationProvider";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
-import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
-import { Editor, EditorRef } from "@edifice.io/react/editor";
-import { ISection } from "~/core/models/section/types";
-import { ModalType } from "~/core/enums";
-import { DeleteConfirmationModal } from "~/containers/DeleteConfirmationModal";
-import { useGlobal } from "~/providers/GlobalProvider";
 import { questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
+import { DeleteConfirmationModal } from "~/containers/DeleteConfirmationModal";
 import { UndoConfirmationModal } from "~/containers/UndoConfirmationModal";
+import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
+import { ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
+import { isSection, isValidFormElement } from "~/core/models/formElement/utils";
+import { ISection } from "~/core/models/section/types";
+import { AlertSeverityVariant, ComponentVariant } from "~/core/style/themeProps";
 import { isEnterPressed } from "~/core/utils";
+import { useCreation } from "~/providers/CreationProvider";
+import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
+import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { useCreateSectionMutation } from "~/services/api/services/formulaireApi/sectionApi";
 import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
 import {
   editingSectionTitleStyle,
-  sectionAddQuestionStyle,
   sectionButtonIconStyle,
   sectionButtonStyle,
   sectionStackStyle,
@@ -126,6 +124,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   };
 
   const updateAndSaveSection = () => {
+    if (currentEditingElement?.isNew) return;
     const updated = updateSection();
     void saveFormElement(updated, formElementsList);
     setCurrentEditingElement(null);
@@ -190,16 +189,17 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
               />
             </Box>
             {!!form && !hasFormResponses(form) && (
-              <Box
-                sx={sectionFooterStyle}
-                onClick={() => {
-                  if (currentEditingElement) updateAndSaveSection();
-                  void handleAddNewQuestion();
-                }}
-              >
-                <Box sx={newQuestionWrapperStyle}>
-                  <Typography sx={sectionAddQuestionStyle}>{t("formulaire.section.new.question")}</Typography>
-                </Box>
+              <Box sx={sectionFooterStyle}>
+                <Button
+                  onClick={(e) => {
+                    preventPropagation(e);
+                    if (currentEditingElement) updateAndSaveSection();
+                    void handleAddNewQuestion();
+                  }}
+                  variant="text"
+                >
+                  <Typography color="secondary">{t("formulaire.section.new.question")}</Typography>
+                </Button>
               </Box>
             )}
           </Box>

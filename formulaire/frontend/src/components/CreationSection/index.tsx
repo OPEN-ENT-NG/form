@@ -1,6 +1,7 @@
 import {
   Alert,
   Box,
+  Button,
   EllipsisWithTooltip,
   FormControl,
   MenuItem,
@@ -12,14 +13,13 @@ import {
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
-import { FC, useCallback, useMemo } from "react";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { CreationQuestionWrapper } from "~/containers/CreationQuestionWrapper";
 import { IQuestion } from "~/core/models/question/types";
 import {
   descriptionStyle,
   nextElementSelectorStyle,
   nextElementSelectorWrapperStyle,
-  sectionAddQuestionStyle,
   sectionButtonIconStyle,
   sectionContentStyle,
   sectionDragIconStyle,
@@ -41,21 +41,21 @@ import { questionAlertStyle, StyledDragContainer } from "~/containers/CreationQu
 import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
+import { FormElementType } from "~/core/models/formElement/enum";
 import { isValidFormElement } from "~/core/models/formElement/utils";
+import { ISection } from "~/core/models/section/types";
 import { hasConditionalQuestion } from "~/core/models/section/utils";
+import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { AlertSeverityVariant, ComponentVariant, EditorVariant, TypographyFontStyle } from "~/core/style/themeProps";
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
-import { getDndElementType } from "~/hook/dnd-hooks/useCreationDnd/utils";
+import { getDndElementType, updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
 import { useCreation } from "~/providers/CreationProvider";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
 import { EditorMode } from "../CreationQuestionTypes/CreationQuestionFreetext/enums";
+import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
 import { IconButtonTooltiped } from "../IconButtonTooltiped/IconButtonTooltiped";
-import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { getDescription, isDescriptionEmpty } from "./utils";
-import { ISection } from "~/core/models/section/types";
-import { FormElementType } from "~/core/models/formElement/enum";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section, listeners, attributes }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -66,10 +66,14 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
     handleDuplicateFormElement,
     setQuestionModalSection,
     saveSection,
+    formElementsList,
+    updateFormElementsList,
   } = useCreation();
   const { toggleModal } = useGlobal();
 
   const sortedIds = useMemo(() => section.questions.map((q) => `${getDndElementType(q)}-${q.id}`), [section]);
+
+  const [isUpdatingNextTarget, setIsUpdatingNextTarget] = useState(false);
 
   const onSaveSectionNextElement = useCallback(
     (updatedSection: ISection, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
@@ -112,6 +116,24 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
     id: `${DndElementType.SECTION_BOTTOM}-${section.id}`,
     data: { element: section, dndElementType: DndElementType.SECTION_BOTTOM },
   });
+
+  useEffect(() => {
+    if (
+      followingElement &&
+      !followingElement.isNew &&
+      followingElement.position === formElementsList.length &&
+      section.isNextFormElementDefault &&
+      !section.nextFormElementId &&
+      !hasConditionalQuestion(section)
+    ) {
+      if (!isUpdatingNextTarget) {
+        setIsUpdatingNextTarget(true);
+        void updateFormElementsList(updateNextTargetElements(formElementsList));
+      }
+    } else {
+      setIsUpdatingNextTarget(false);
+    }
+  }, [followingElement, formElementsList]);
 
   return (
     <Box>
@@ -173,7 +195,11 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
                 <FormControl fullWidth>
                   <Select
                     variant={ComponentVariant.OUTLINED}
-                    value={section.nextFormElementId != null ? String(section.nextFormElementId) : TARGET_RECAP}
+                    value={
+                      section.nextFormElementId != null && followingElement
+                        ? String(section.nextFormElementId)
+                        : TARGET_RECAP
+                    }
                     onChange={handleNextFormElementChange}
                     displayEmpty
                     MenuProps={{
@@ -203,9 +229,9 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
             </Box>
             <Box sx={sectionNewQuestionStyle}>
               {!!form && !hasFormResponses(form) && (
-                <Typography sx={sectionAddQuestionStyle} onClick={handleAddNewQuestion}>
-                  {t("formulaire.section.new.question")}
-                </Typography>
+                <Button variant="text" onClick={handleAddNewQuestion}>
+                  <Typography color="secondary">{t("formulaire.section.new.question")}</Typography>
+                </Button>
               )}
             </Box>
           </Box>
