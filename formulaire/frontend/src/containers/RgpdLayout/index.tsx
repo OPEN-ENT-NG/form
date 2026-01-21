@@ -14,12 +14,15 @@ import { useResponse } from "~/providers/ResponseProvider";
 import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
 
 import { buildDelegatesParam } from "../FormPropModal/utils";
+import dayjs from "dayjs";
+import { IRGPDData } from "~/components/RgpdInfoBox/types";
+import { ResponsePageType } from "~/core/enums";
 import { rgpdLayoutStyle, rgpdStackStyle } from "./style";
 
 export const RgpdLayout: FC = () => {
   const { form, setPageType } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
-  const { data: delegatesData } = useGetDelegatesQuery();
+  const { data: delegatesDatas } = useGetDelegatesQuery();
 
   const rgpdExpirationDate = useMemo(() => {
     if (!form) return;
@@ -28,8 +31,8 @@ export const RgpdLayout: FC = () => {
 
   const delegatesParam = useMemo(() => {
     if (!form || !form.rgpd_goal) return {} as IRGPDData;
-    return buildDelegatesParam(delegatesData ?? null, form.rgpd_goal, rgpdExpirationDate);
-  }, [delegatesData, rgpdExpirationDate]);
+    return buildDelegatesParam(delegatesDatas ?? null, form.rgpd_goal, rgpdExpirationDate);
+  }, [delegatesDatas, rgpdExpirationDate]);
 
   const startForm = () => {
     setPageType(form?.description ? ResponsePageType.DESCRIPTION : ResponsePageType.FORM_ELEMENT);

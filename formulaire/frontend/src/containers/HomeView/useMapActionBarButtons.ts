@@ -145,7 +145,7 @@ export const useMapActionBarButtons = () => {
 
     const redirectPath = await handleOpenFormResponse(choosenForm, userDistributions);
     if (redirectPath) {
-      window.location.href = redirectPath;
+      navigate(redirectPath);
     }
   };
 

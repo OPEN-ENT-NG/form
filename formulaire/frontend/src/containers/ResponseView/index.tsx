@@ -20,7 +20,7 @@ import { RgpdLayout } from "../RgpdLayout";
 export const ResponseView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const { form, formElementsList, isInPreviewMode, pageType } = useResponse();
-  const headerButtons = useGetResponseHeaderButtons(form?.id, isInPreviewMode);
+  const headerButtons = useGetResponseHeaderButtons(form?.id, isInPreviewMode, pageType);
 
   const errorPage = (
     <Box sx={emptyStateWrapper}>
@@ -57,16 +57,15 @@ export const ResponseView: FC = () => {
     }
   };
 
+  const getHeaderButtons = () => {
+    return formElementsList.length && pageType != ResponsePageType.END_PREVIEW && pageType != ResponsePageType.RECAP
+      ? headerButtons
+      : [];
+  };
+
   return (
     <Box sx={{ width: "100%", height: "100%", paddingX: "10%" }}>
-      {form && (
-        <Header
-          items={[form.title]}
-          buttons={formElementsList.length && pageType != ResponsePageType.END_PREVIEW ? headerButtons : []}
-          form={form}
-          displaySeparator
-        />
-      )}
+      {form && <Header items={[form.title]} buttons={getHeaderButtons()} form={form} displaySeparator />}
       {displayRightPage()}
     </Box>
   );

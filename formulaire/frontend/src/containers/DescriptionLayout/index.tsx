@@ -14,6 +14,11 @@ export const DescriptionLayout: FC = () => {
   const { form, setPageType } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
 
+  const goRgpd = () => {
+    setPageType(ResponsePageType.RGPD);
+    return;
+  };
+
   const goFirstFormElement = () => {
     setPageType(ResponsePageType.FORM_ELEMENT);
     return;
@@ -26,7 +31,7 @@ export const DescriptionLayout: FC = () => {
         <Typography>{form?.description}</Typography>
       </Stack>
       <Box sx={spaceBetweenBoxStyle}>
-        <Button variant={ComponentVariant.CONTAINED} disabled>
+        <Button variant={ComponentVariant.OUTLINED} onClick={goRgpd}>
           {t("formulaire.prev")}
         </Button>
         <Button variant={ComponentVariant.CONTAINED} onClick={goFirstFormElement}>

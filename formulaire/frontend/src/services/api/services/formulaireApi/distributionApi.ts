@@ -10,24 +10,24 @@ import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
 export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
-    getDistribution: builder.query<IDistribution[], void>({
-      query: () => ({
-        url: `distributions/listMine`,
+    getDistribution: builder.query<IDistribution, number | string>({
+      query: (distributionId: number | string) => ({
+        url: `distributions/${distributionId}`,
         method: QueryMethod.GET,
       }),
       providesTags: [TagName.DISTRIBUTION],
-      transformResponse: (rawDatas: IDistributionDTO[]) => transformDistributions(rawDatas),
+      transformResponse: (rawDatas: IDistributionDTO) => transformDistribution(rawDatas),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error("formulaire.error.distributionService.list", err);
-          toast.error(t("formulaire.error.distributionService.list", { ns: FORMULAIRE }));
+          console.error("formulaire.error.distributionService.get", err);
+          toast.error(t("formulaire.error.distributionService.get", { ns: FORMULAIRE }));
         }
       },
     }),
-    getFormDistributions: builder.query<IDistribution[], number>({
-      query: (id: number) => `/distributions/forms/${id.toString()}/list`,
+    getFormDistributions: builder.query<IDistribution[], number | string>({
+      query: (id: number | string) => `/distributions/forms/${id.toString()}/list`,
       transformResponse: (rawDatas: IDistributionDTO[]) => transformDistributions(rawDatas),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
