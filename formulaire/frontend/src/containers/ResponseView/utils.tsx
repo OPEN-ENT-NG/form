@@ -4,13 +4,17 @@ import { getFormEditPath, getHrefHomeResponsesPath } from "~/core/pathHelper";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
 import { t } from "~/i18n";
+import { getFormEditPath, getHrefHomeResponsesPath } from "~/core/pathHelper";
+import { useNavigate } from "react-router-dom";
+import { ResponsePageType } from "~/core/enums";
 
 export const useGetResponseHeaderButtons = (
   formId: string | number | undefined,
   isInPreviewMode: boolean,
+  pageType: ResponsePageType = ResponsePageType.FORM_ELEMENT,
 ): IButtonProps[] => {
   const navigate = useNavigate();
-  const buttonTitleKey = isInPreviewMode ? "formulaire.backToEditor" : "formulaire.saveAndQuit";
+  const buttonTitleKey = getButtonTitleKey(isInPreviewMode, pageType);
 
   const buttons: (IButtonProps | undefined)[] = [
     {
@@ -26,4 +30,15 @@ export const useGetResponseHeaderButtons = (
   ];
 
   return buttons.filter(Boolean) as IButtonProps[];
+};
+
+const getButtonTitleKey = (isInPreviewMode: boolean, pageType: ResponsePageType = ResponsePageType.FORM_ELEMENT) => {
+  if (isInPreviewMode) return "formulaire.backToEditor";
+  switch (pageType) {
+    case ResponsePageType.RGPD:
+    case ResponsePageType.DESCRIPTION:
+      return "formulaire.quit";
+    default:
+      return "formulaire.saveAndQuit";
+  }
 };

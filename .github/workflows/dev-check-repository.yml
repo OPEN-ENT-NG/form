@@ -54,9 +54,15 @@ jobs:
         working-directory: ./formulaire/frontend
         run: pnpm test
         # Test React Formulaire-public
+      - name: Update .npmrc with token
+        run: |
+          sed -i 's|${TIPTAP_PRO_TOKEN}|${{ secrets.TIPTAP_PRO_TOKEN }}|g' .npmrc
+        working-directory: ./formulaire/frontend=
       - name: Run pnpm install
         working-directory: ./formulaire-public/frontend
         run: pnpm install
+        env:
+          TIPTAP_PRO_TOKEN: ${{ secrets.TIPTAP_PRO_TOKEN }}
       - name: Check Lint Fix and Typescript (ESLint)
         working-directory: ./formulaire-public/frontend
         run: pnpm run fix && pnpm run check-types

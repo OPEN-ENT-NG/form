@@ -18,6 +18,10 @@ import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
 import { initResponsesMap } from "./utils";
+import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
+import { IDistribution } from "~/core/models/distribution/types";
+import { DistributionStatus } from "~/core/models/distribution/enums";
+import { getHrefRecapFormPath } from "~/core/pathHelper";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -30,13 +34,14 @@ export const useResponse = () => {
 };
 
 export const ResponseProvider: FC<IResponseProviderProps> = ({ children, previewMode = false, initialPageType }) => {
-  const { formId } = useParams();
+  const { formId, distributionId } = useParams();
   const { user } = useEdificeClient();
   const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
   const { saveClassicResponses } = useClassicResponse();
   const [form, setForm] = useState<IForm | null>(null);
+  const [distribution, setDistribution] = useState<IDistribution | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
   const [isInPreviewMode, setIsInPreviewMode] = useState<boolean>(previewMode);
   const [longestPathsMap, setLongestPathsMap] = useState<Map<string, number>>(new Map<string, number>());
@@ -51,7 +56,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     setResponsesMap,
   );
 
-  if (formId === undefined) {
+  if (formId === undefined || distributionId === undefined) {
     throw new Error("formId is undefined");
   }
 
@@ -62,10 +67,11 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   );
   const { data: questionsDatas } = useGetQuestionsQuery({ formId });
   const { data: sectionsDatas } = useGetSectionsQuery({ formId });
+  const { data: userDistribution } = useGetDistributionQuery(distributionId);
   const { completeList } = useFormElementList(sectionsDatas, questionsDatas);
 
   useEffect(() => {
-    if (formDatas) {
+    if (formDatas && distribution) {
       setForm(formDatas);
       if (!initialPageType) {
         if (formDatas.rgpd) {
@@ -79,7 +85,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
         setPageType(ResponsePageType.FORM_ELEMENT);
       }
     }
-  }, [formDatas]);
+  }, [formDatas, distribution]);
 
   useEffect(() => {
     if (!sectionsDatas && !questionsDatas) return;
@@ -101,6 +107,21 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       hasInitializedRsponsesMap.current = true;
     }
   }, [formElementsList]);
+
+  useEffect(() => {
+    if (!userDistribution) {
+      // TODO navigate Error404
+      console.log("Distribution not found");
+      return;
+    }
+
+    if (userDistribution.status != DistributionStatus.TO_DO) {
+      window.location.href = getHrefRecapFormPath(Number(formId), userDistribution.id);
+      return;
+    }
+
+    setDistribution(userDistribution);
+  }, [userDistribution]);
 
   const saveResponses = async () => {
     if (isInPreviewMode) return;

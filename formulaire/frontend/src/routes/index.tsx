@@ -30,6 +30,20 @@ const routes = [
         },
       },
       {
+        path: "form/:formId/:distributionId",
+        async lazy() {
+          const { Response } = await import("./response");
+          return { Component: Response };
+        },
+      },
+      {
+        path: "form/:formId/:distributionId/recap",
+        async lazy() {
+          const { Response } = await import("./response");
+          return { Component: Response };
+        },
+      },
+      {
         path: "401",
         element: <ErrorPage errorCode={401} />,
       },
