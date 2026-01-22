@@ -110,6 +110,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
 
   useEffect(() => {
     if (!userDistribution) {
+      // if distributionId === "new"
+      // créer une nouvelle distrib (selon si multiple ou pas etc. cf main dans angular)
+
       // TODO navigate Error404
       console.log("Distribution not found");
       return;
