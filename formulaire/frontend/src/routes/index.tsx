@@ -1,12 +1,11 @@
 import { createHashRouter } from "react-router-dom";
 import Root from "~/app/root";
-import ErrorPage from "~/components/PageError";
+import { ErrorPage } from "~/components/ErrorPage";
 
 const routes = [
   {
     path: "/",
     element: <Root />,
-    errorElement: <ErrorPage />,
     children: [
       {
         index: true,
@@ -21,6 +20,18 @@ const routes = [
           const { Creation } = await import("./creation");
           return { Component: Creation };
         },
+      },
+      {
+        path: "401",
+        element: <ErrorPage errorCode={401} />,
+      },
+      {
+        path: "403",
+        element: <ErrorPage errorCode={403} />,
+      },
+      {
+        path: "*",
+        element: <ErrorPage errorCode={404} />,
       },
     ],
   },

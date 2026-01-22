@@ -1,5 +1,9 @@
 import { FORMULAIRE } from "./constants";
 
+export const getHrefErrorPath = (errorCode: number): string => {
+  return `#/${errorCode}`;
+};
+
 export const getFormEditPath = (formId: string | number): string => {
   return `${FORMULAIRE}?view=angular#/form/${formId}/edit`;
 };

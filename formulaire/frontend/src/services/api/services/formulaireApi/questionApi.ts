@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { IQuestion, IQuestionType } from "~/core/models/question/types";
 import { FormElementType } from "~/core/models/formElement/enum";
 import { buildQuestionPayload } from "~/core/models/question/utils";
+import { handleErrorApi } from "~/core/utils";
 
 export const questionApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -26,8 +27,7 @@ export const questionApi = emptySplitFormulaireApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error(t("formulaire.error.questionService.list"), err);
-          toast.error(t("formulaire.error.questionService.list"));
+          handleErrorApi(err, "formulaire.error.questionService.list");
         }
       },
     }),
