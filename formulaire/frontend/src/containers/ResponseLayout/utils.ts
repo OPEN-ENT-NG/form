@@ -53,7 +53,7 @@ const calculateResponseValue = (
     const currentResponsesMap = responsesMap.get(questionIdType);
     const currentResponses =
       currentResponsesMap && conditionalQuestion.id ? currentResponsesMap.get(conditionalQuestion.id) : null;
-    return currentResponses && currentResponses.length > 0 ? currentResponses[0] : null;
+    return currentResponses?.find((r) => r.choiceId != null && r.selected) ?? null;
   }
   return null;
 };

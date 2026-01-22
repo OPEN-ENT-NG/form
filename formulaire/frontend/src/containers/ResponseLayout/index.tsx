@@ -65,7 +65,7 @@ export const ResponseLayout: FC = () => {
     }
 
     // It's the end of the form
-    if (nextPosition && nextPosition > formElementsList.length) {
+    if (nextPosition === null || (nextPosition && nextPosition > formElementsList.length)) {
       await saveResponses();
       setPageType(isInPreviewMode ? ResponsePageType.END_PREVIEW : ResponsePageType.RECAP);
       return;
