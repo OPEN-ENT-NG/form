@@ -63,9 +63,15 @@ public class FormulaireRepositoryEvents extends SqlRepositoryEvents {
     @Override
     public void exportResources(JsonArray resourcesIds, boolean exportDocuments, boolean exportSharedResources, String exportId,
                                 String userId, JsonArray groups, String exportPath, String locale, String host, final Handler<ExportResourceResult> handler) {
-
         if (resourcesIds == null || resourcesIds.isEmpty()) {
-            handler.handle(new ExportResourceResult(true, exportPath));
+            log.info("No forms to export");
+            createExportDirectory(exportPath, locale, path -> {
+                if (path == null) {
+                    handler.handle(ExportResourceResult.KO);
+                } else {
+                    handler.handle(new ExportResourceResult(true, path));
+                }
+            });
             return;
         }
 
@@ -105,7 +111,7 @@ public class FormulaireRepositoryEvents extends SqlRepositoryEvents {
                 // Directory creation and continue the export
                 createExportDirectory(exportPath, locale, path -> {
                     if (path != null) {
-                        exportTables(infos, new JsonArray(), fieldsToNull, exportDocuments, path, exported, suceeded -> new ExportResourceResult(suceeded, path));
+                        exportTables(infos, new JsonArray(), fieldsToNull, exportDocuments, path, exported, succeeded -> handler.handle(new ExportResourceResult(succeeded, path)));
                     }
                     else {
                         handler.handle(new ExportResourceResult(exported.get(), null));
