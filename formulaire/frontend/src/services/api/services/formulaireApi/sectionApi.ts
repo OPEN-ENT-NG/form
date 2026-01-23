@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { ISection, ISectionDTO } from "~/core/models/section/types";
 import { buildSectionPayload, transformSection, transformSections } from "~/core/models/section/utils";
 import { t } from "~/i18n";
+import { handleErrorApi } from "~/core/utils";
 
 export const sectionApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -18,8 +19,7 @@ export const sectionApi = emptySplitFormulaireApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error(t("formulaire.error.sectionService.list"), err);
-          toast.error(t("formulaire.error.sectionService.list"));
+          handleErrorApi(err, "formulaire.error.sectionService.list");
         }
       },
     }),
