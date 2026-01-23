@@ -10,6 +10,7 @@ import { QueryMethod, TagName } from "~/core/enums.ts";
 import { toast } from "react-toastify";
 import { t } from "~/i18n";
 import { FORMULAIRE, ID, LINK_HTML_ELEMENT, PDF_EXTENSION, TRASH_FOLDER_ID, ZIP_EXTENSION } from "~/core/constants";
+import { handleErrorApi } from "~/core/utils.ts";
 
 export const formApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -38,8 +39,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error("formulaire.error.formService.get", err);
-          toast.error(t("formulaire.error.formService.get"));
+          handleErrorApi(err, "formulaire.error.formService.get");
         }
       },
     }),
