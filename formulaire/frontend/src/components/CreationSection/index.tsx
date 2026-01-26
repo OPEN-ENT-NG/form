@@ -68,6 +68,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
     saveSection,
     formElementsList,
     updateFormElementsList,
+    isDragging,
   } = useCreation();
   const { toggleModal } = useGlobal();
 
@@ -119,6 +120,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
 
   useEffect(() => {
     if (
+      !isDragging &&
       followingElement &&
       !followingElement.isNew &&
       followingElement.position === formElementsList.length &&

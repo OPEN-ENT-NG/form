@@ -21,7 +21,7 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
   updateChoiceNextFormElement,
 }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { currentEditingElement, formElementsList, updateFormElementsList } = useCreation();
+  const { currentEditingElement, formElementsList, updateFormElementsList, isDragging } = useCreation();
 
   const onSaveChoiceNextElement = useCallback(
     (_: IQuestionChoice, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
@@ -46,6 +46,7 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
 
   useEffect(() => {
     if (
+      !isDragging &&
       !question.isNew &&
       followingElement &&
       !followingElement.isNew &&

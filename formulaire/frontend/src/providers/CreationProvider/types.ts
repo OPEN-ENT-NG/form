@@ -28,4 +28,6 @@ export type CreationProviderContextType = {
   setQuestionModalSection: Dispatch<SetStateAction<ISection | null>>;
   updateFormElementsList: (formElementsList: IFormElement[]) => Promise<void>;
   setResetFormElementListId: Dispatch<SetStateAction<number>>;
+  isDragging: boolean;
+  setIsDragging: Dispatch<SetStateAction<boolean>>;
 };

@@ -41,6 +41,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const [currentEditingElement, setCurrentEditingElement] = useState<IFormElement | null>(null);
   const [questionModalSection, setQuestionModalSection] = useState<ISection | null>(null);
   const [resetFormElementListId, setResetFormElementListId] = useState(0);
+  const [isDragging, setIsDragging] = useState(false);
   if (formId === undefined) {
     throw new Error("formId is undefined");
   }
@@ -177,6 +178,8 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       setQuestionModalSection,
       updateFormElementsList,
       setResetFormElementListId,
+      isDragging,
+      setIsDragging,
     }),
     [currentFolder, folders, form, formElementsList, currentEditingElement, questionModalSection],
   );
