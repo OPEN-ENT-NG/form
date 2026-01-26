@@ -130,7 +130,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
     ) {
       if (!isUpdatingNextTarget) {
         setIsUpdatingNextTarget(true);
-        void updateFormElementsList(updateNextTargetElements(formElementsList));
+        void updateFormElementsList(updateNextTargetElements(formElementsList), true);
       }
     } else {
       setIsUpdatingNextTarget(false);

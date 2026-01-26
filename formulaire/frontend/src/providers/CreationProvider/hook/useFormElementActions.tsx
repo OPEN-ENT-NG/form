@@ -52,7 +52,7 @@ export const useFormElementActions = (
   const [deleteSingleQuestion] = useDeleteSingleQuestionMutation();
   const [deleteSingleSection] = useDeleteSingleSectionMutation();
 
-  const updateFormElementsList = async (newFormElementsList: IFormElement[]) => {
+  const updateFormElementsList = async (newFormElementsList: IFormElement[], updateChoices?: boolean) => {
     const questions = newFormElementsList.filter(isQuestion);
     const sections = newFormElementsList.filter(isSection);
     const allExistingChoices = getExistingChoices(newFormElementsList);
@@ -62,21 +62,21 @@ export const useFormElementActions = (
 
     if (questions.length && !sections.length) {
       await updateQuestions(questions);
-      if (allExistingChoices.length) {
+      if (allExistingChoices.length && updateChoices) {
         await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
       }
       return;
     }
     if (sections.length && !questions.length) {
       await updateSections(sections);
-      if (allExistingChoices.length) {
+      if (allExistingChoices.length && updateChoices) {
         await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
       }
       return;
     }
 
     await updateFormElements(newFormElementsList);
-    if (allExistingChoices.length) {
+    if (allExistingChoices.length && updateChoices) {
       await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
     }
     return;
@@ -107,7 +107,7 @@ export const useFormElementActions = (
     );
 
     await deleteSingleQuestion(question.id);
-    await updateFormElementsList(updatedQuestions);
+    await updateFormElementsList(updatedQuestions, true);
   };
 
   const handleTopLevelDeletion = async (toRemove: IFormElement) => {
@@ -133,7 +133,7 @@ export const useFormElementActions = (
     }
 
     // Push updated list to backend
-    await updateFormElementsList(updateNextTargetElements(cleanedList));
+    await updateFormElementsList(updateNextTargetElements(cleanedList), true);
   };
 
   const clearNextReferences = (removedElement: IFormElement): ((el: IFormElement) => IFormElement) => {
@@ -198,7 +198,7 @@ export const useFormElementActions = (
           )
         : fixListPositions(formElementsList, newPosition ? newPosition : 0, PositionActionType.CREATION);
 
-      await updateFormElementsList(formElementUpdatedList);
+      await updateFormElementsList(formElementUpdatedList, true);
 
       const newQuestion: IQuestion = await createSingleQuestion(duplicatedQuestion).unwrap();
       const newChoices: IQuestionChoice[] =
@@ -263,7 +263,7 @@ export const useFormElementActions = (
         newPosition ? newPosition : 0,
         PositionActionType.CREATION,
       );
-      await updateFormElementsList(formElementUpdatedList);
+      await updateFormElementsList(formElementUpdatedList, true);
       const newSection: ISection = await createSections(duplicatedSection).unwrap();
       await Promise.all(
         sectionToDuplicate.questions.map(async (question) => {

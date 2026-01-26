@@ -109,13 +109,6 @@ export const getExistingChoices = (formElements: IFormElement[]): IQuestionChoic
       if (isQuestion(el)) {
         return el.choices?.filter((choice) => choice.id !== null) || [];
       }
-      if (isSection(el)) {
-        return el.questions
-          .filter((el) => !el.isNew)
-          .flatMap((question) => {
-            return question.choices?.filter((choice) => choice.id !== null) || [];
-          });
-      }
       return [];
     });
 };

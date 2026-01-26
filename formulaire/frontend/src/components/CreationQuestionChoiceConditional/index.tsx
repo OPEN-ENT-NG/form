@@ -55,7 +55,7 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
     ) {
       if (!isUpdatingNextTarget) {
         setIsUpdatingNextTarget(true);
-        void updateFormElementsList(updateNextTargetElements(formElementsList));
+        void updateFormElementsList(updateNextTargetElements(formElementsList), true);
       }
     } else {
       setIsUpdatingNextTarget(false);
