@@ -170,32 +170,17 @@ export const getFollowingFormElement = (
   formElement: IFormElement,
   formElementsList: IFormElement[],
 ): IFormElement | null => {
-  if (isQuestion(formElement)) {
-    const question = formElement;
+  let position = formElement.position;
 
-    if (question.sectionId) {
-      const section = getElementById(question.sectionId, formElementsList, isSection) as ISection | undefined;
-      if (!section) {
-        return null;
-      }
-
-      const pos = question.sectionPosition;
-      if (pos === null) {
-        return null;
-      }
-
-      const nextInSection = section.questions.find((q) => q.sectionPosition === pos + 1);
-      return nextInSection ?? null;
-    }
-  }
-  const position = formElement.position;
-  if (!position) {
-    return null;
+  if (isQuestion(formElement) && formElement.sectionId) {
+    const section = getElementById(formElement.sectionId, formElementsList, isSection) as ISection | undefined;
+    if (!section) return null;
+    position = section.position;
   }
 
-  const followingElement = formElementsList.find((el) => el.position === position + 1);
-
-  return followingElement ? followingElement : null;
+  if (!position) return null;
+  const nextPosition = position + 1;
+  return formElementsList.find((el) => el.position === nextPosition) ?? null;
 };
 
 const collectFollowing = (el: IFormElement, formElementsList: IFormElement[], acc: IFormElement[]): IFormElement[] => {

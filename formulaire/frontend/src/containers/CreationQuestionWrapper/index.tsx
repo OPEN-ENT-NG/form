@@ -24,7 +24,7 @@ import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { isQuestion, isValidFormElement } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
-import { IQuestion } from "~/core/models/question/types";
+import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import {
   getQuestionTypeFromValue,
   isCursorChoiceConsistent,
@@ -39,7 +39,11 @@ import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVar
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
-import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
+import {
+  getFollowingFormElement,
+  isCurrentEditingElement,
+  preventPropagation,
+} from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
 import { UndoConfirmationModal } from "../UndoConfirmationModal";
@@ -145,8 +149,19 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   };
 
   const handleConditionalChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const updatedChoices = question.choices?.map((choice) => {
+      const followingElement = getFollowingFormElement(question, formElementsList);
+      return {
+        ...choice,
+        isNextFormElementDefault: true,
+        nextFormElementId: followingElement?.id ?? null,
+        nextFormElementType: followingElement?.formElementType ?? null,
+      };
+    });
+
     const updatedQuestion: IQuestion = {
       ...question,
+      choices: updatedChoices ?? question.choices,
       conditional: event.target.checked,
       mandatory: event.target.checked,
     };
