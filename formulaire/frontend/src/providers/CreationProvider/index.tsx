@@ -132,7 +132,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   );
 
   const handleDeleteFormElement = useCallback(
-    (toRemove: IFormElement, useKey: boolean) => {
+    (toRemove: IFormElement, useKey: boolean = false) => {
       if (!useKey) {
         setFormElementsList((prevFormElementList) => removeFormElementFromList(prevFormElementList, toRemove));
         return;

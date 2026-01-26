@@ -206,12 +206,7 @@ export const useFormElementActions = (
       const newChildrens: IQuestion[] =
         isTypeChildrenQuestion(questionToDuplicate.questionType) && questionToDuplicate.children
           ? questionToDuplicate.children
-              .filter((child) => {
-                // filter out any child that has no title
-                child.formId = questionToDuplicate.formId;
-                child.matrixId = questionToDuplicate.matrixId;
-                return !!child.title;
-              })
+              .filter((child) => !!child.title) // filter out any child that has no title
               .map((child) => {
                 // for each remaining child, create a fresh IQuestion
                 const duplicatedChild: IQuestion = createNewQuestion(

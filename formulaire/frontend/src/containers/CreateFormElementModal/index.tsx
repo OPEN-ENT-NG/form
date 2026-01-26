@@ -43,7 +43,7 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
     return null;
   }
 
-  const handleFormElementCreation = (questionTypeCode: QuestionTypes | undefined) => {
+  const handleFormElementCreation = (questionTypeCode?: QuestionTypes) => {
     const newFormElement: IFormElement =
       questionTypeCode !== undefined ? createNewQuestion(form.id, questionTypeCode) : createNewSection(form.id);
     newFormElement.selected = true;
@@ -109,11 +109,7 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
         },
       }}
     >
-      <DialogTitle>
-        <Typography color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
-          {t("formulaire.element.new.title")}
-        </Typography>
-      </DialogTitle>
+      <DialogTitle>{t("formulaire.element.new.title")}</DialogTitle>
 
       <DialogContent sx={createFormElementModalContentStyle}>
         <Stack spacing={3}>
