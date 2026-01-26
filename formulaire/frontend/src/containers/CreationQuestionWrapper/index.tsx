@@ -24,7 +24,7 @@ import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { isQuestion, isValidFormElement } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
-import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
+import { IQuestion } from "~/core/models/question/types";
 import {
   getQuestionTypeFromValue,
   isCursorChoiceConsistent,

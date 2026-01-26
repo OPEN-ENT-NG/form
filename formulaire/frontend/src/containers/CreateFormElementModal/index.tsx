@@ -4,7 +4,7 @@ import { TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps"
 import { useTranslation } from "react-i18next";
 import { DEFAULT_NB_CHILDREN, DEFAULT_NB_CHOICES, FORMULAIRE } from "~/core/constants";
 import { ButtonBase, Grid2 } from "@mui/material";
-import { SECONDARY, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { SECONDARY } from "~/core/style/colors";
 import { useGetQuestionTypesQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { displayTypeDescription, displayTypeName } from "./utils";
 import { ICreateFormElementModalProps } from "./types";
