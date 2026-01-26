@@ -80,7 +80,6 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
           },
         }}
         sx={nextElementSelectorWrapperStyle}
-        disabled={!isCurrentEditingElement(question, currentEditingElement)}
       >
         {followingElement && (
           <MenuItem value={followingElement.id != null ? String(followingElement.id) : ""}>
