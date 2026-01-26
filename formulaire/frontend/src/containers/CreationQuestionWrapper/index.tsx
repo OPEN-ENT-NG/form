@@ -220,7 +220,11 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             <Box sx={editingQuestionFooterStyle}>
               {shouldShowMandatorySwitch(question) && (
                 <Box sx={mandatorySwitchContainerStyle}>
-                  <Switch checked={question.mandatory} onChange={handleMandatoryChange} />
+                  <Switch
+                    checked={question.mandatory}
+                    onChange={handleMandatoryChange}
+                    disabled={question.conditional}
+                  />
                   <Typography>{t("formulaire.mandatory")}</Typography>
                 </Box>
               )}
