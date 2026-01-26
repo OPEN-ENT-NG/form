@@ -34,6 +34,7 @@ import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/Creat
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
 import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { QuestionTypes } from "~/core/models/question/enum";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({
   question,
@@ -95,6 +96,12 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
       handleNewChoice(false, newChoiceValue);
       setNewChoiceValue("");
     }
+  };
+
+  const getPlaceholder = () => {
+    return question.questionType === QuestionTypes.MATRIX
+      ? t("formulaire.matrix.column.label.default", { 0: "" })
+      : t("formulaire.question.option");
   };
 
   const renderChoicesWhenNotEditing = () => {
@@ -202,7 +209,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                   inputRef={(el: HTMLInputElement | null) => (inputRefs.current[newChoiceRefName] = el)}
                   value={newChoiceValue}
                   variant={ComponentVariant.STANDARD}
-                  placeholder={t("formulaire.question.option")}
+                  placeholder={getPlaceholder()}
                   fullWidth
                   onFocus={selectAllTextInput}
                   onBlur={() => {
