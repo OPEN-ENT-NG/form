@@ -1,22 +1,24 @@
 import { Box, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
-import { FC, useMemo, useRef, useState } from "react";
-import { ICreationQuestionChoiceWrapperProps } from "./types";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
-import { useCreation } from "~/providers/CreationProvider";
-import { UpDownButtons } from "~/components/UpDownButtons";
-import { compareChoices, hasImageType } from "./utils";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
+import { FC, FocusEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
+import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
+import { UpDownButtons } from "~/components/UpDownButtons";
+import { iconStyle } from "~/components/UpDownButtons/style";
 import { FORMULAIRE } from "~/core/constants";
 import { BoxComponentType, ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
-import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import { iconStyle } from "~/components/UpDownButtons/style";
-import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
-import { useChoiceActions } from "./useChoiceActions";
+import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
+import { useCreation } from "~/providers/CreationProvider";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
 import {
   choiceInputStyle,
-  unselectedChoiceStyle,
   choicesWrapperStyle,
+  choicesWrapperWhenNotEditingStyle,
   choiceWrapperStyle,
+  customChoiceWrapperStyle,
   deleteButtonIconStyle,
   deleteWrapperStyle,
   newChoiceInputStyle,
@@ -26,14 +28,12 @@ import {
   sortIconStyle,
   sortWrapperStyle,
   StyledSortWrapper,
+  unselectedChoiceStyle,
   upDownButtonsWrapperStyle,
-  customChoiceWrapperStyle,
-  choicesWrapperWhenNotEditingStyle,
 } from "./style";
-import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
-import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
-import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
-import { useGlobal } from "~/providers/GlobalProvider";
+import { ICreationQuestionChoiceWrapperProps } from "./types";
+import { useChoiceActions } from "./useChoiceActions";
+import { compareChoices, hasImageType } from "./utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({
@@ -47,6 +47,8 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   const [newChoiceValue, setNewChoiceValue] = useState<string>("");
   const inputRefs = useRef<Record<string | number, HTMLInputElement | null>>({});
   const newChoiceRefName = "newChoice";
+
+  const [changeFocus, setChangeFocus] = useState(false);
 
   const {
     choices,
@@ -66,6 +68,24 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   const customChoice = useMemo(() => {
     return choices.find((c) => c.isCustom);
   }, [choices]);
+
+  useEffect(() => {
+    if (newChoiceValue) {
+      handleNewChoice(false, newChoiceValue);
+      setNewChoiceValue("");
+      setChangeFocus(true);
+    }
+  }, [newChoiceValue]);
+
+  useEffect(() => {
+    if (changeFocus && sortedChoices.length) {
+      const lastChoice = sortedChoices[sortedChoices.length - 1];
+      if (lastChoice.stableId) {
+        inputRefs.current[lastChoice.stableId]?.focus();
+        setChangeFocus(false);
+      }
+    }
+  }, [sortedChoices]);
 
   if (!question.choices) {
     return null;
@@ -167,7 +187,9 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     value={choice.value}
                     variant={ComponentVariant.STANDARD}
                     fullWidth
-                    onFocus={selectAllTextInput}
+                    onFocus={(e) => {
+                      if (!changeFocus) selectAllTextInput(e as FocusEvent<HTMLInputElement>);
+                    }}
                     onChange={(e) => {
                       updateChoice(index, e.target.value);
                     }}

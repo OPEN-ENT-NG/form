@@ -292,6 +292,7 @@ export const updateNextTargetElements = (formElementsList: IFormElement[]): IFor
       } as ISection;
 
       updatedFormElementsList.push(updatedSection);
+      updatedFormElementsList.push(updatedQuestion);
       return;
     }
 
