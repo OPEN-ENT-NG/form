@@ -54,7 +54,6 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
       question.choices?.find((choice) => choice.isNextFormElementDefault && !choice.nextFormElementId)
     ) {
       if (!isUpdatingNextTarget) {
-        console.log("tata", question);
         setIsUpdatingNextTarget(true);
         void updateFormElementsList(updateNextTargetElements(formElementsList), true);
       }
