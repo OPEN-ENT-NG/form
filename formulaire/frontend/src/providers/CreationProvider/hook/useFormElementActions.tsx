@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { Dispatch, SetStateAction, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { FORMULAIRE } from "~/core/constants";
@@ -38,6 +38,7 @@ export const useFormElementActions = (
   formId: string,
   currentEditingElement: IFormElement | null,
   setFormElementsList: (list: IFormElement[]) => void,
+  setIsUpdating: Dispatch<SetStateAction<boolean>>,
 ) => {
   const { t } = useTranslation(FORMULAIRE);
 
@@ -60,11 +61,13 @@ export const useFormElementActions = (
       return;
     }
 
+    setIsUpdating(true);
     if (questions.length && !sections.length) {
       await updateQuestions(questions);
       if (allExistingChoices.length && updateChoices) {
         await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
       }
+      setIsUpdating(false);
       return;
     }
     if (sections.length && !questions.length) {
@@ -72,6 +75,7 @@ export const useFormElementActions = (
       if (allExistingChoices.length && updateChoices) {
         await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
       }
+      setIsUpdating(false);
       return;
     }
 
@@ -79,6 +83,7 @@ export const useFormElementActions = (
     if (allExistingChoices.length && updateChoices) {
       await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
     }
+    setIsUpdating(false);
     return;
   };
 

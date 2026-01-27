@@ -114,7 +114,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     }
   }, [isEditing]);
 
-  useEffect(()=> {
+  useEffect(() => {
     setMatrixType(question.children?.[0]?.questionType ?? QuestionTypes.SINGLEANSWERRADIO);
   }, [question.children]);
 
