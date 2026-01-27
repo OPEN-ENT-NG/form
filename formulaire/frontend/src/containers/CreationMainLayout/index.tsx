@@ -15,7 +15,14 @@ import { actionButtonStyle, elementListStyle, innerContainerStyle, outerContaine
 import { hasFormResponses } from "~/core/models/form/utils";
 
 export const CreationMainLayout: FC = () => {
-  const { form, formElementsList, setFormElementsList, updateFormElementsList, setIsDragging } = useCreation();
+  const {
+    form,
+    formElementsList,
+    setFormElementsList,
+    updateFormElementsList,
+    setIsDragging,
+    setResetFormElementListId,
+  } = useCreation();
   const { t } = useTranslation(FORMULAIRE);
   const { toggleModal } = useGlobal();
 
@@ -34,6 +41,7 @@ export const CreationMainLayout: FC = () => {
     setFormElementsList,
     updateFormElementsList,
     setIsDragging,
+    setResetFormElementListId,
   );
 
   const activeItem = getElementById(formElementsList, activeId);

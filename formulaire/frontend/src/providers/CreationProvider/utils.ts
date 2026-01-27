@@ -4,6 +4,8 @@ import { ISection } from "~/core/models/section/types";
 import { PositionActionType } from "./enum";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { SyntheticEvent } from "react";
+import { toast } from "react-toastify";
+import { t } from "~/i18n";
 
 export const removeFormElementFromList = (
   formElementsList: IFormElement[],
@@ -244,4 +246,15 @@ export const getPreviousFormElement = (
 
 export const preventPropagation = (e: SyntheticEvent) => {
   e.stopPropagation();
+};
+
+export const checkForDoubleConditionnalInSections = (formElementsList: IFormElement[]): boolean => {
+  // Check if some sections have more than 1 conditionnal question
+  const hasProblematicSection = formElementsList.some(
+    (element) => isSection(element) && element.questions.filter((q) => q.conditional).length > 1,
+  );
+
+  if (hasProblematicSection) toast.error(t("formulaire.section.save.multiple.conditional"));
+
+  return hasProblematicSection;
 };

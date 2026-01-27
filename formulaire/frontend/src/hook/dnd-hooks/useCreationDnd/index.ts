@@ -15,12 +15,14 @@ import {
   getTargetRootPosition,
   updateNextTargetElements,
 } from "./utils";
+import { checkForDoubleConditionnalInSections } from "~/providers/CreationProvider/utils";
 
 export const useCreationDnd = (
   formElementsList: IFormElement[],
   setFormElementsList: Dispatch<SetStateAction<IFormElement[]>>,
   updateFormElementsList: (formElementsList: IFormElement[]) => Promise<void>,
   setIsDragging: Dispatch<SetStateAction<boolean>>,
+  setResetFormElementListId: Dispatch<SetStateAction<number>>,
 ) => {
   const [activeId, setActiveId] = useState<number | null>(null);
 
@@ -113,6 +115,10 @@ export const useCreationDnd = (
     const initialStr = JSON.stringify(initialListRef.current);
     const finalStr = JSON.stringify(formElementsList);
     if (initialStr !== finalStr) {
+      if (checkForDoubleConditionnalInSections(formElementsList)) {
+        setResetFormElementListId((prev) => prev + 1);
+        return;
+      }
       const updatedFormElementsList = updateNextTargetElements(formElementsList);
       void updateFormElementsList(flattenFormElements(updatedFormElementsList));
     }

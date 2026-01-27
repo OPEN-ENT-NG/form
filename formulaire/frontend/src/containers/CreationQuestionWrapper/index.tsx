@@ -65,6 +65,7 @@ import {
 } from "./style";
 import { ICreationQuestionWrapperProps } from "./types";
 import { getQuestionContentByType } from "./utils";
+import { toast } from "react-toastify";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question, isPreview }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -181,6 +182,10 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   };
 
   const handleDuplicate = () => {
+    if (question.conditional && question.sectionId) {
+      toast.error(t("formulaire.error.question.duplicate"));
+      return;
+    }
     void handleDuplicateFormElement(question);
   };
 
