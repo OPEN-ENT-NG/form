@@ -30,4 +30,6 @@ export type CreationProviderContextType = {
   setResetFormElementListId: Dispatch<SetStateAction<number>>;
   isDragging: boolean;
   setIsDragging: Dispatch<SetStateAction<boolean>>;
+  newChoiceValue: string;
+  setNewChoiceValue: Dispatch<SetStateAction<string>>;  
 };

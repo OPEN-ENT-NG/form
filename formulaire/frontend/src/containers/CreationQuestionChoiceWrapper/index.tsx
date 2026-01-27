@@ -1,13 +1,14 @@
 import { Box, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
-import { FC, FocusEvent, useEffect, useMemo, useRef, useState } from "react";
+import { FC, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { UpDownButtons } from "~/components/UpDownButtons";
 import { iconStyle } from "~/components/UpDownButtons/style";
 import { FORMULAIRE } from "~/core/constants";
+import { QuestionTypes } from "~/core/models/question/enum";
 import { BoxComponentType, ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
 import { useCreation } from "~/providers/CreationProvider";
@@ -34,21 +35,17 @@ import {
 import { ICreationQuestionChoiceWrapperProps } from "./types";
 import { useChoiceActions } from "./useChoiceActions";
 import { compareChoices, hasImageType } from "./utils";
-import { QuestionTypes } from "~/core/models/question/enum";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({
   question,
   type,
   hideCustomChoice = false,
 }) => {
-  const { currentEditingElement, setCurrentEditingElement } = useCreation();
+  const { currentEditingElement, setCurrentEditingElement, newChoiceValue, setNewChoiceValue } = useCreation();
   const { selectAllTextInput } = useGlobal();
   const { t } = useTranslation(FORMULAIRE);
-  const [newChoiceValue, setNewChoiceValue] = useState<string>("");
   const inputRefs = useRef<Record<string | number, HTMLInputElement | null>>({});
   const newChoiceRefName = "newChoice";
-
-  const [changeFocus, setChangeFocus] = useState(false);
 
   const {
     choices,
@@ -62,30 +59,15 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   } = useChoiceActions(question, setCurrentEditingElement);
 
   const sortedChoices = useMemo(() => {
-    return choices.filter((c) => !c.isCustom).sort((a, b) => compareChoices(a, b));
+    return [...choices]
+      .filter(c => !c.isCustom)
+      .sort((a, b) => compareChoices(a, b));
   }, [choices]);
+
 
   const customChoice = useMemo(() => {
     return choices.find((c) => c.isCustom);
   }, [choices]);
-
-  useEffect(() => {
-    if (newChoiceValue) {
-      handleNewChoice(false, newChoiceValue);
-      setNewChoiceValue("");
-      setChangeFocus(true);
-    }
-  }, [newChoiceValue]);
-
-  useEffect(() => {
-    if (changeFocus && sortedChoices.length) {
-      const lastChoice = sortedChoices[sortedChoices.length - 1];
-      if (lastChoice.stableId) {
-        inputRefs.current[lastChoice.stableId]?.focus();
-        setChangeFocus(false);
-      }
-    }
-  }, [sortedChoices]);
 
   if (!question.choices) {
     return null;
@@ -187,9 +169,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                     value={choice.value}
                     variant={ComponentVariant.STANDARD}
                     fullWidth
-                    onFocus={(e) => {
-                      if (!changeFocus) selectAllTextInput(e as FocusEvent<HTMLInputElement>);
-                    }}
+                    onFocus={selectAllTextInput}
                     onChange={(e) => {
                       updateChoice(index, e.target.value);
                     }}

@@ -51,6 +51,8 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     saveSection,
     setQuestionModalSection,
     setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue
   } = useCreation();
   const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
   const editorRef = useRef<EditorRef>(null);
@@ -62,6 +64,8 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     setCurrentEditingElement,
     formElementsList,
     setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue,
     undefined,
     saveSection,
   );

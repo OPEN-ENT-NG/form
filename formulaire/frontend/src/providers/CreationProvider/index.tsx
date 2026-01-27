@@ -43,6 +43,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const [resetFormElementListId, setResetFormElementListId] = useState(0);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
+  const [newChoiceValue, setNewChoiceValue] = useState<string>("");
   if (formId === undefined) {
     throw new Error("formId is undefined");
   }
@@ -184,8 +185,10 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       setResetFormElementListId,
       isDragging,
       setIsDragging,
+      newChoiceValue,
+      setNewChoiceValue
     }),
-    [currentFolder, folders, form, formElementsList, currentEditingElement, questionModalSection],
+    [currentFolder, folders, form, formElementsList, currentEditingElement, questionModalSection, isDragging, newChoiceValue],
   );
 
   return <CreationProviderContext.Provider value={value}>{children}</CreationProviderContext.Provider>;

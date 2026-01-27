@@ -318,16 +318,6 @@ export const useFormElementActions = (
           },
         );
 
-        if (choicesToUpdateList.length) {
-          await updateMultipleChoiceQuestions({
-            questionChoices: preventEmptyChoiceValues(
-              choicesToUpdateList,
-              question.questionType === QuestionTypes.MATRIX,
-            ),
-            formId: String(question.formId),
-          }).unwrap();
-        }
-
         if (choicesToCreateList.length) {
           await createMultipleChoiceQuestions({
             questionChoices: preventEmptyChoiceValues(
@@ -339,6 +329,17 @@ export const useFormElementActions = (
             formId: String(question.formId),
           }).unwrap();
         }
+        
+        if (choicesToUpdateList.length) {
+          await updateMultipleChoiceQuestions({
+            questionChoices: preventEmptyChoiceValues(
+              choicesToUpdateList,
+              question.questionType === QuestionTypes.MATRIX,
+            ),
+            formId: String(question.formId),
+          }).unwrap();
+        }
+
       }
 
       //Save Childrens

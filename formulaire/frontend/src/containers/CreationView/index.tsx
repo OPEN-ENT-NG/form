@@ -9,6 +9,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { IForm } from "~/core/models/form/types";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { useGlobal } from "~/providers/GlobalProvider";
@@ -18,7 +19,6 @@ import { CreationOrganisationModal } from "../CreationOrganisationModal";
 import { useElementHeight } from "../HomeView/utils";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "./style";
 import { getRecursiveFolderParents, useGetCreationHeaderButtons } from "./utils";
-import { useTheme } from "~/hook/useTheme";
 
 export const CreationView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -32,6 +32,8 @@ export const CreationView: FC = () => {
     saveQuestion,
     saveSection,
     setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue
   } = useCreation();
   const navigate = useNavigate();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
@@ -48,6 +50,8 @@ export const CreationView: FC = () => {
     setCurrentEditingElement,
     formElementsList,
     setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue,
     saveQuestion,
     saveSection,
   );
