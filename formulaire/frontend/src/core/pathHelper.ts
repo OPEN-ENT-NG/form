@@ -3,7 +3,7 @@ import { FORMULAIRE } from "./constants";
 
 // To use with : window.location.href
 export const getHrefErrorPath = (errorCode: number): string => {
-    return `#/${errorCode}`;
+  return `#/${errorCode}`;
 };
 
 export const getHrefHomeFormsPath = (): string => {

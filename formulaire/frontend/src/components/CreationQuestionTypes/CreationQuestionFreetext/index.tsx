@@ -3,6 +3,7 @@ import { FC, useEffect, useRef } from "react";
 import { EDITOR_CONTENT_HTML } from "~/core/constants";
 import { EditorVariant } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";
+import { StyledEditorWrapper } from "./style";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { EditorMode } from "./enums";
 import { StyledEditorWrapper } from "./style";
@@ -10,7 +11,6 @@ import { ICreationQuestionFreetextProps } from "./types";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { EditorMode, EditorVariant } from "./enums";
 import { EDITOR_CONTENT_HTML } from "~/core/constants";
-import { StyledEditorWrapper } from "./style";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
