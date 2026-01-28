@@ -10,7 +10,6 @@ import {
   sectionTitleStyle,
 } from "./style";
 import { ICreationEditingSectionProps } from "./types";
-
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
@@ -20,7 +19,7 @@ import { questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
 import { DeleteConfirmationModal } from "~/containers/DeleteConfirmationModal";
 import { UndoConfirmationModal } from "~/containers/UndoConfirmationModal";
 import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
-import { ModalType } from "~/core/enums";
+import { EditorMode, ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { isSection, isValidFormElement } from "~/core/models/formElement/utils";
 import { ISection } from "~/core/models/section/types";
@@ -29,10 +28,6 @@ import { isEnterPressed } from "~/core/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
-import { Editor, EditorRef } from "@edifice.io/react/editor";
-import { ISection } from "~/core/models/section/types";
-import { EditorMode, ModalType } from "~/core/enums";
-import { DeleteConfirmationModal } from "~/containers/DeleteConfirmationModal";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useCreateSectionMutation } from "~/services/api/services/formulaireApi/sectionApi";
 import {
