@@ -14,9 +14,9 @@ import {
   TablePagination,
   TableRow,
   Tooltip,
+  Typography,
 } from "@cgi-learning-hub/ui";
 import { getPageForms, initialTableProps, useColumns } from "./utils";
-import { Typography } from "@cgi-learning-hub/ui";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { IForm } from "~/core/models/form/types";
 import dayjs from "dayjs";
