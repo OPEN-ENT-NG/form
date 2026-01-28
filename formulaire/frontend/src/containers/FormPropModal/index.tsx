@@ -1,54 +1,55 @@
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
-  Typography,
-  TextField,
-  DatePicker,
-  Checkbox,
-  Tooltip,
-  Select,
-  FormControl,
-  MenuItem,
-  Button,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Box,
+  Button,
+  Checkbox,
+  DatePicker,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  FormControl,
+  FormControlLabel,
+  MenuItem,
+  Select,
+  TextField,
+  Tooltip,
+  Typography,
 } from "@cgi-learning-hub/ui";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import {
+  checkboxRowStyle,
+  contentRowWrapper,
   fileDropZoneWrapper,
   mainColumnStyle,
   mainContentWrapper,
+  pictureAndTitleMobileWrapper,
+  rgpdContentRowStyle,
+  StyledDatePickerWrapper,
   subContentColumnWrapper,
+  subContentRowMobileWrapper,
   subContentRowWrapper,
   textFieldStyle,
-  checkboxRowStyle,
-  dateEndingCheckboxStyle,
-  rgpdContentRowStyle,
-  pictureAndTitleMobileWrapper,
-  subContentRowMobileWrapper,
-  StyledDatePickerWrapper,
 } from "./style";
 
-import { IFormCheckBoxProp, IFormPropModalProps } from "./types";
-import { FormPropField, FormPropModalMode } from "./enums";
-import { useFormPropInputValueState } from "./useFormPropValueState";
-import { useTranslation } from "react-i18next";
-import { FORMULAIRE, IMAGE_PICKER_INFO } from "~/core/constants";
 import dayjs, { Dayjs } from "dayjs";
-import { buildDelegatesParam, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";
-import { GREY_DARK_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
-import RGPDInfoBox from "~/components/RgpdInfoBox";
-import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
-import { useHome } from "~/providers/HomeProvider";
-import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formulaireApi/formApi";
-import { buildFormPayload } from "~/core/models/form/utils";
-import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import { useTranslation } from "react-i18next";
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
-import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
-import { useGlobal } from "~/providers/GlobalProvider";
+import RGPDInfoBox from "~/components/RgpdInfoBox";
+import { FORMULAIRE, IMAGE_PICKER_INFO } from "~/core/constants";
+import { buildFormPayload } from "~/core/models/form/utils";
+import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
+import { GREY_DARK_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { preventPropagation } from "~/providers/CreationProvider/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
+import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
+import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formulaireApi/formApi";
+import { FormPropField, FormPropModalMode } from "./enums";
+import { IFormCheckBoxProp, IFormPropModalProps } from "./types";
+import { useFormPropInputValueState } from "./useFormPropValueState";
+import { buildDelegatesParam, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";
 
 export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {
@@ -245,7 +246,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
         </Box>
         <Box sx={mainContentWrapper}>
           {!isMobile && formTitleLabelAndInput}
-          <Box sx={isMobile ? subContentRowMobileWrapper : subContentRowWrapper}>
+          <Box sx={isMobile ? subContentRowMobileWrapper : contentRowWrapper}>
             <Box sx={subContentRowWrapper}>
               <Typography width={isMobile ? "13rem" : "unset"}>{t("formulaire.date.opening")}</Typography>
               <StyledDatePickerWrapper isMobile={isMobile}>
@@ -271,25 +272,21 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                   }}
                 />
               </StyledDatePickerWrapper>
-              <Box
-                sx={{
-                  ...dateEndingCheckboxStyle,
-                  cursor: "pointer",
-                }}
-                onClick={() => {
-                  setIsEndingDateEditable(!isEndingDateEditable);
-                }}
-              >
-                <Checkbox
-                  sx={{ padding: "0" }}
-                  disabled={isPublic}
-                  checked={isEndingDateEditable}
-                  onChange={() => {
-                    setIsEndingDateEditable(!isEndingDateEditable);
-                  }}
-                />
-                {!isMobile && <Typography>{t("formulaire.date.ending")}</Typography>}
-              </Box>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    disabled={isPublic}
+                    checked={isEndingDateEditable}
+                    onChange={() => {
+                      setIsEndingDateEditable(!isEndingDateEditable);
+                    }}
+                    onClick={() => {
+                      setIsEndingDateEditable(!isEndingDateEditable);
+                    }}
+                  />
+                }
+                label={!isMobile && <Typography>{t("formulaire.date.ending")}</Typography>}
+              />
             </Box>
             <Box sx={subContentRowWrapper}>
               {isMobile && <Typography width="13rem">{t("formulaire.date.ending")}</Typography>}

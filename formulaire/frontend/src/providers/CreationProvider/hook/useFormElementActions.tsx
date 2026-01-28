@@ -1,6 +1,10 @@
+import { Dispatch, SetStateAction, useCallback } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { FORMULAIRE } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
+import { getExistingChoices, isQuestion, isSection } from "~/core/models/formElement/utils";
+import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import {
   createNewQuestion,
@@ -9,6 +13,7 @@ import {
   isTypeChoicesQuestion,
 } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
+import { updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useUpdateFormElementsMutation } from "~/services/api/services/formulaireApi/formElementApi";
 import {
   useCreateQuestionsMutation,
@@ -25,18 +30,16 @@ import {
   useDeleteSingleSectionMutation,
   useUpdateSectionsMutation,
 } from "~/services/api/services/formulaireApi/sectionApi";
-import { fixListPositions, getElementById, isInFormElementsList } from "../utils";
 import { PositionActionType } from "../enum";
-import { toast } from "react-toastify";
-import { useCallback } from "react";
-import { QuestionTypes } from "~/core/models/question/enum";
-import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { fixListPositions, getElementById, isInFormElementsList } from "../utils";
 
 export const useFormElementActions = (
   formElementsList: IFormElement[],
   formId: string,
   currentEditingElement: IFormElement | null,
   setFormElementsList: (list: IFormElement[]) => void,
+  setIsUpdating: Dispatch<SetStateAction<boolean>>,
+  setIsQuestionSaving?: Dispatch<SetStateAction<boolean>>,
 ) => {
   const { t } = useTranslation(FORMULAIRE);
 
@@ -51,23 +54,37 @@ export const useFormElementActions = (
   const [deleteSingleQuestion] = useDeleteSingleQuestionMutation();
   const [deleteSingleSection] = useDeleteSingleSectionMutation();
 
-  const updateFormElementsList = async (newFormElementsList: IFormElement[]) => {
+  const updateFormElementsList = async (newFormElementsList: IFormElement[], updateChoices?: boolean) => {
     const questions = newFormElementsList.filter(isQuestion);
     const sections = newFormElementsList.filter(isSection);
+    const allExistingChoices = getExistingChoices(newFormElementsList);
     if (!newFormElementsList.length) {
       return;
     }
 
+    setIsUpdating(true);
     if (questions.length && !sections.length) {
       await updateQuestions(questions);
+      if (allExistingChoices.length && updateChoices) {
+        await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
+      }
+      setIsUpdating(false);
       return;
     }
     if (sections.length && !questions.length) {
       await updateSections(sections);
+      if (allExistingChoices.length && updateChoices) {
+        await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
+      }
+      setIsUpdating(false);
       return;
     }
 
     await updateFormElements(newFormElementsList);
+    if (allExistingChoices.length && updateChoices) {
+      await updateMultipleChoiceQuestions({ questionChoices: allExistingChoices, formId });
+    }
+    setIsUpdating(false);
     return;
   };
 
@@ -96,7 +113,7 @@ export const useFormElementActions = (
     );
 
     await deleteSingleQuestion(question.id);
-    await updateFormElementsList(updatedQuestions);
+    await updateFormElementsList(updatedQuestions, true);
   };
 
   const handleTopLevelDeletion = async (toRemove: IFormElement) => {
@@ -122,7 +139,7 @@ export const useFormElementActions = (
     }
 
     // Push updated list to backend
-    await updateFormElementsList(cleanedList);
+    await updateFormElementsList(updateNextTargetElements(cleanedList), true);
   };
 
   const clearNextReferences = (removedElement: IFormElement): ((el: IFormElement) => IFormElement) => {
@@ -187,7 +204,7 @@ export const useFormElementActions = (
           )
         : fixListPositions(formElementsList, newPosition ? newPosition : 0, PositionActionType.CREATION);
 
-      await updateFormElementsList(formElementUpdatedList);
+      await updateFormElementsList(formElementUpdatedList, true);
 
       const newQuestion: IQuestion = await createSingleQuestion(duplicatedQuestion).unwrap();
       const newChoices: IQuestionChoice[] =
@@ -206,12 +223,7 @@ export const useFormElementActions = (
       const newChildrens: IQuestion[] =
         isTypeChildrenQuestion(questionToDuplicate.questionType) && questionToDuplicate.children
           ? questionToDuplicate.children
-              .filter((child) => {
-                // filter out any child that has no title
-                child.formId = questionToDuplicate.formId;
-                child.matrixId = questionToDuplicate.matrixId;
-                return !!child.title;
-              })
+              .filter((child) => !!child.title) // filter out any child that has no title
               .map((child) => {
                 // for each remaining child, create a fresh IQuestion
                 const duplicatedChild: IQuestion = createNewQuestion(
@@ -257,7 +269,7 @@ export const useFormElementActions = (
         newPosition ? newPosition : 0,
         PositionActionType.CREATION,
       );
-      await updateFormElementsList(formElementUpdatedList);
+      await updateFormElementsList(formElementUpdatedList, true);
       const newSection: ISection = await createSections(duplicatedSection).unwrap();
       await Promise.all(
         sectionToDuplicate.questions.map(async (question) => {
@@ -277,6 +289,7 @@ export const useFormElementActions = (
     async (question: IQuestion, updatedFormElementsList?: IFormElement[]) => {
       if (!isInFormElementsList(question, updatedFormElementsList ? updatedFormElementsList : formElementsList)) return;
 
+      setIsQuestionSaving?.(true);
       //Save Question
       let questionSaved = question;
       if (question.isNew) {
@@ -307,24 +320,25 @@ export const useFormElementActions = (
           },
         );
 
+        if (choicesToCreateList.length) {
+          await createMultipleChoiceQuestions({
+            questionChoices: preventEmptyChoiceValues(
+              choicesToCreateList,
+              question.questionType === QuestionTypes.MATRIX,
+            ).map((choice) => ({
+              ...choice,
+              questionId: questionSaved.id,
+            })),
+            formId: String(question.formId),
+          }).unwrap();
+        }
+
         if (choicesToUpdateList.length) {
           await updateMultipleChoiceQuestions({
             questionChoices: preventEmptyChoiceValues(
               choicesToUpdateList,
               question.questionType === QuestionTypes.MATRIX,
             ),
-            formId: String(question.formId),
-          }).unwrap();
-        }
-
-        if (choicesToCreateList.length) {
-          await createMultipleChoiceQuestions({
-            questionChoices: preventEmptyChoiceValues(
-              choicesToCreateList,
-              question.questionType === QuestionTypes.MATRIX,
-            ).map((choice) => {
-              return { ...choice, questionId: questionSaved.id };
-            }),
             formId: String(question.formId),
           }).unwrap();
         }
@@ -368,6 +382,8 @@ export const useFormElementActions = (
           ).unwrap();
         }
       }
+
+      setIsQuestionSaving?.(false);
     },
     [isInFormElementsList, formElementsList],
   );

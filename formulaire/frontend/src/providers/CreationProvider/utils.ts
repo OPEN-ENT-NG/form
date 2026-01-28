@@ -4,6 +4,8 @@ import { ISection } from "~/core/models/section/types";
 import { PositionActionType } from "./enum";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { SyntheticEvent } from "react";
+import { toast } from "react-toastify";
+import { t } from "~/i18n";
 
 export const removeFormElementFromList = (
   formElementsList: IFormElement[],
@@ -170,32 +172,17 @@ export const getFollowingFormElement = (
   formElement: IFormElement,
   formElementsList: IFormElement[],
 ): IFormElement | null => {
-  if (isQuestion(formElement)) {
-    const question = formElement;
+  let position = formElement.position;
 
-    if (question.sectionId) {
-      const section = getElementById(question.sectionId, formElementsList, isSection) as ISection | undefined;
-      if (!section) {
-        return null;
-      }
-
-      const pos = question.sectionPosition;
-      if (pos === null) {
-        return null;
-      }
-
-      const nextInSection = section.questions.find((q) => q.sectionPosition === pos + 1);
-      return nextInSection ?? null;
-    }
-  }
-  const position = formElement.position;
-  if (!position) {
-    return null;
+  if (isQuestion(formElement) && formElement.sectionId) {
+    const section = getElementById(formElement.sectionId, formElementsList, isSection) as ISection | undefined;
+    if (!section) return null;
+    position = section.position;
   }
 
-  const followingElement = formElementsList.find((el) => el.position === position + 1);
-
-  return followingElement ? followingElement : null;
+  if (!position) return null;
+  const nextPosition = position + 1;
+  return formElementsList.find((el) => el.position === nextPosition) ?? null;
 };
 
 const collectFollowing = (el: IFormElement, formElementsList: IFormElement[], acc: IFormElement[]): IFormElement[] => {
@@ -259,4 +246,15 @@ export const getPreviousFormElement = (
 
 export const preventPropagation = (e: SyntheticEvent) => {
   e.stopPropagation();
+};
+
+export const checkForDoubleConditionnalInSections = (formElementsList: IFormElement[]): boolean => {
+  // Check if some sections have more than 1 conditionnal question
+  const hasProblematicSection = formElementsList.some(
+    (element) => isSection(element) && element.questions.filter((q) => q.conditional).length > 1,
+  );
+
+  if (hasProblematicSection) toast.error(t("formulaire.section.save.multiple.conditional"));
+
+  return hasProblematicSection;
 };

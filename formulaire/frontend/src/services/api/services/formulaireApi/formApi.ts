@@ -1,3 +1,6 @@
+import { toast } from "react-toastify";
+import { FORMULAIRE, ID, LINK_HTML_ELEMENT, PDF_EXTENSION, TRASH_FOLDER_ID, ZIP_EXTENSION } from "~/core/constants";
+import { QueryMethod, TagName } from "~/core/enums.ts";
 import {
   IDuplicateFormPayload,
   IForm,
@@ -5,12 +8,9 @@ import {
   IFormReminderPayload,
   IFormRight,
 } from "~/core/models/form/types.ts";
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
-import { QueryMethod, TagName } from "~/core/enums.ts";
-import { toast } from "react-toastify";
-import { t } from "~/i18n";
-import { FORMULAIRE, ID, LINK_HTML_ELEMENT, PDF_EXTENSION, TRASH_FOLDER_ID, ZIP_EXTENSION } from "~/core/constants";
 import { handleErrorApi } from "~/core/utils.ts";
+import { t } from "~/i18n";
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
 export const formApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -34,7 +34,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         url: `forms/${formId}`,
         method: QueryMethod.GET,
       }),
-      providesTags: [TagName.FORMS],
+      providesTags: [TagName.FORMS, TagName.FORM_ELEMENTS, TagName.CHOICE, TagName.SECTIONS, TagName.QUESTIONS],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
