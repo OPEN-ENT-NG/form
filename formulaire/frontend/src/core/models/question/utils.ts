@@ -109,8 +109,8 @@ export const transformQuestionChoice = (raw: IQuestionChoiceDTO): IQuestionChoic
   };
 };
 
-export const transformQuestionChoices = (rawQuestionChoices: IQuestionChoiceDTO[]): IQuestionChoice[] => {
-  return rawQuestionChoices.map(transformQuestionChoice);
+export const transformQuestionChoices = (rawQuestionChoices: IQuestionChoiceDTO[] | null): IQuestionChoice[] => {
+  return rawQuestionChoices?.map(transformQuestionChoice) ?? [];
 };
 
 export const buildQuestionPayload = (question: IQuestion): IQuestionPayload => {

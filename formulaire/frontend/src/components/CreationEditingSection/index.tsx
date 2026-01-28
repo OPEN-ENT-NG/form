@@ -52,10 +52,11 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     setQuestionModalSection,
     setFormElementsList,
     newChoiceValue,
-    setNewChoiceValue
+    setNewChoiceValue,
   } = useCreation();
   const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
   const editorRef = useRef<EditorRef>(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const initialSectionDescription = useRef(section.description);
   const [createSection] = useCreateSectionMutation();
 
@@ -93,6 +94,12 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     });
   }, [currentSectionTitle, setCurrentEditingElement]);
 
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      titleInputRef.current?.focus();
+    });
+  }, []);
+
   const handleDelete = () => {
     toggleModal(ModalType.SECTION_DELETE);
   };
@@ -128,9 +135,12 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   };
 
   const updateAndSaveSection = () => {
-    if (currentEditingElement?.isNew) return;
     const updated = updateSection();
-    void saveFormElement(updated, formElementsList);
+    if (currentEditingElement?.isNew) {
+      void createSection(updated).unwrap();
+    } else {
+      void saveFormElement(updated, formElementsList);
+    }
     setCurrentEditingElement(null);
   };
 
@@ -142,6 +152,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
             <Box sx={sectionHeaderStyle}>
               <Box sx={sectionTitleStyle}>
                 <TextField
+                  inputRef={titleInputRef}
                   variant={ComponentVariant.STANDARD}
                   fullWidth
                   sx={editingSectionTitleStyle}
@@ -190,6 +201,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                 mode={EditorMode.EDIT}
                 ref={editorRef}
                 onContentChange={updateSection}
+                focus={false}
               />
             </Box>
             {!!form && !hasFormResponses(form) && (

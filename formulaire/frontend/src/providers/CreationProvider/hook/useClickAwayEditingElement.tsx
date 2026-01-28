@@ -20,7 +20,6 @@ export const useClickAwayEditingElement = (
   saveQuestion?: (question: IQuestion, updatedFormElementsList: IFormElement[]) => Promise<void>,
   saveSection?: (section: ISection, updatedFormElementsList: IFormElement[]) => Promise<void>,
 ) => {
-  
   const saveFormElement = useCallback(
     async (elementToUpdate: IFormElement, updatedFormElementsList: IFormElement[]) => {
       // If the element is not new, or it is new but valid, just clear the editing state and save.
@@ -79,39 +78,39 @@ export const useClickAwayEditingElement = (
     return updatedQuestion;
   };
 
-  const getQuestionWithNewChoice = 
-      (question: IQuestion): IQuestion => {
-        const choices = question.choices?.sort((a, b) => compareChoices(a, b))
-                .map((choice) => {
-                  return {
-                    ...choice,
-                    ...(choice.id && { stableId: choice.id }),
-                  };
-                }) ??[];
+  const getQuestionWithNewChoice = (question: IQuestion): IQuestion => {
+    const choices =
+      question.choices
+        ?.sort((a, b) => compareChoices(a, b))
+        .map((choice) => {
+          return {
+            ...choice,
+            ...(choice.id && { stableId: choice.id }),
+          };
+        }) ?? [];
 
-        const isExistingCustomChoice = question.choices?.some((choice) => choice.isCustom);
-  
-        const newChoice = createNewQuestionChoice(
-          question.id,
-          isExistingCustomChoice ? choices.length : choices.length + 1,
-          null,
-          newChoiceValue,
-          false,
-          crypto.randomUUID(),
-        );
-  
-        if (isExistingCustomChoice) {
-          const customChoice = choices.find((c) => c.isCustom);
-          if (customChoice) {
-            const updatedChoices = choices
-              .slice(0, -1)
-              .concat(newChoice, { ...customChoice, position: customChoice.position + 1 });
-            return { ...question, choices: updatedChoices };
-          }
-        }
-        return { ...question, choices: [...choices, newChoice] };
+    const isExistingCustomChoice = question.choices?.some((choice) => choice.isCustom);
+
+    const newChoice = createNewQuestionChoice(
+      question.id,
+      isExistingCustomChoice ? choices.length : choices.length + 1,
+      null,
+      newChoiceValue,
+      false,
+      crypto.randomUUID(),
+    );
+
+    if (isExistingCustomChoice) {
+      const customChoice = choices.find((c) => c.isCustom);
+      if (customChoice) {
+        const updatedChoices = choices
+          .slice(0, -1)
+          .concat(newChoice, { ...customChoice, position: customChoice.position + 1 });
+        return { ...question, choices: updatedChoices };
       }
-    
+    }
+    return { ...question, choices: [...choices, newChoice] };
+  };
 
   const handleClickAway = (
     e: MouseEvent<HTMLDivElement>,
@@ -129,9 +128,8 @@ export const useClickAwayEditingElement = (
     let updatedFormElement = currentEditingElement;
     if (isQuestion(currentEditingElement)) {
       const question = newChoiceValue ? getQuestionWithNewChoice(currentEditingElement) : currentEditingElement;
-        if(newChoiceValue) 
-          setNewChoiceValue("");
-        
+      if (newChoiceValue) setNewChoiceValue("");
+
       const updatedQuestion = preventEmptyValues(question);
       setCurrentEditingElement(updatedQuestion);
       updatedFormElement = updatedQuestion;

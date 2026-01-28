@@ -59,11 +59,8 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   } = useChoiceActions(question, setCurrentEditingElement);
 
   const sortedChoices = useMemo(() => {
-    return [...choices]
-      .filter(c => !c.isCustom)
-      .sort((a, b) => compareChoices(a, b));
+    return [...choices].filter((c) => !c.isCustom).sort((a, b) => compareChoices(a, b));
   }, [choices]);
-
 
   const customChoice = useMemo(() => {
     return choices.find((c) => c.isCustom);

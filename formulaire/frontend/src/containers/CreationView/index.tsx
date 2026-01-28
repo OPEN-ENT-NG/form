@@ -33,7 +33,7 @@ export const CreationView: FC = () => {
     saveSection,
     setFormElementsList,
     newChoiceValue,
-    setNewChoiceValue
+    setNewChoiceValue,
   } = useCreation();
   const navigate = useNavigate();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
