@@ -1,15 +1,15 @@
-import { FC, useCallback } from "react";
-import { IFolder } from "~/core/models/folder/types";
-
 import { Box } from "@cgi-learning-hub/ui";
+import { FC, useCallback } from "react";
+
+import { DraggableFolder } from "~/components/DraggableFolder";
+import { IFolder } from "~/core/models/folder/types";
+import { isSelectedFolder } from "~/core/models/folder/utils";
+import { cardWrapperStyle } from "~/core/style/boxStyles";
+import { isDraggedItemFolder, isDraggedItemForm } from "~/hook/dnd-hooks/utils";
+import { useFolderSubtitle } from "~/hook/useFolderSubtitle";
 import { useHome } from "~/providers/HomeProvider";
 
 import { IHomeMainFolderProps } from "./types";
-import { isSelectedFolder } from "~/core/models/folder/utils";
-import { DraggableFolder } from "~/components/DraggableFolder";
-import { useFolderSubtitle } from "~/hook/useFolderSubtitle";
-import { isDraggedItemFolder, isDraggedItemForm } from "~/hook/dnd-hooks/utils";
-import { cardWrapperStyle } from "~/core/style/boxStyles";
 
 export const HomeMainFolders: FC<IHomeMainFolderProps> = ({ folders, activeItem = null }) => {
   const { setCurrentFolder, selectedFolders, setSelectedFolders } = useHome();

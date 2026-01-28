@@ -11,9 +11,11 @@ import {
 } from "@cgi-learning-hub/ui";
 import ClearIcon from "@mui/icons-material/Clear";
 import { FC, useEffect, useState } from "react";
+
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
+
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question }) => {

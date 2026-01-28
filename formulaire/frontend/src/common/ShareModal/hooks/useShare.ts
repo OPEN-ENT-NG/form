@@ -1,5 +1,3 @@
-import { useEffect, useMemo, useReducer } from "react";
-
 import {
   odeServices,
   PutShareResponse,
@@ -9,14 +7,16 @@ import {
   type ShareRightWithVisibles,
 } from "@edifice.io/client";
 import { useUser } from "@edifice.io/react";
+import { useEffect, useMemo, useReducer } from "react";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
 import { toast } from "react-toastify";
 
-import { ShareOptions, ShareResourceMutation } from "../ShareModal";
 import { COMMON } from "~/core/constants";
-import { useDispatch } from "react-redux";
-import { formApi } from "~/services/api/services/formulaireApi/formApi";
 import { TagName } from "~/core/enums";
+import { formApi } from "~/services/api/services/formulaireApi/formApi";
+
+import { ShareOptions, ShareResourceMutation } from "../ShareModal";
 
 interface IUseShareResourceModalProps {
   /**

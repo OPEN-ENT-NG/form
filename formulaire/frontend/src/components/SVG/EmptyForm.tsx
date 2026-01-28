@@ -1,4 +1,5 @@
 import { FC } from "react";
+
 import { CustomSVGProps } from "./types";
 
 export const EmptyForm: FC<CustomSVGProps> = ({ fill = "currentColor" }) => (

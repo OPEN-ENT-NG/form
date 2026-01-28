@@ -1,7 +1,9 @@
 import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
-import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
+
 import { searchStyle } from "~/containers/HomeMainLayout/style";
+import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { blockProps } from "~/core/utils";
+
 import { IMyAnswerHeaderWrapperProps } from "./types";
 
 export const StyledMyAnswerHeaderWrapper = styled(Box, {

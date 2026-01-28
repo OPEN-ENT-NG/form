@@ -1,5 +1,5 @@
-import { IForm } from "~/core/models/form/types";
 import { IDistribution } from "~/core/models/distribution/types";
+import { IForm } from "~/core/models/form/types";
 
 export interface IHomeMainSentFormTableProps {
   sentForms: IForm[];

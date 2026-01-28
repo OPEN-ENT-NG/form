@@ -1,10 +1,12 @@
 import { ReactNode } from "react";
-import { IFolder } from "~/core/models/folder/types";
-import { HomeTabState } from "./enums";
-import { IForm } from "~/core/models/form/types";
+
 import { ViewMode } from "~/components/SwitchView/enums";
 import { IDistribution } from "~/core/models/distribution/types";
+import { IFolder } from "~/core/models/folder/types";
+import { IForm } from "~/core/models/form/types";
 import { IUserWorkflowRights } from "~/core/rights";
+
+import { HomeTabState } from "./enums";
 
 export interface IHomeProviderProps {
   children: ReactNode;

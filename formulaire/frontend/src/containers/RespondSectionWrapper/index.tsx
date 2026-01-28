@@ -1,12 +1,14 @@
-import { FC } from "react";
-import { IRespondSectionWrapperProps } from "./types";
 import { Box, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
-import { COMMON_WHITE_COLOR } from "~/core/style/colors";
-import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
 import { Editor } from "@edifice.io/react/editor";
-import { EditorMode, EditorVariant } from "~/core/enums";
+import { FC } from "react";
+
 import { descriptionStyle, sectionContentStyle } from "~/components/CreationSection/style";
+import { EditorMode, EditorVariant } from "~/core/enums";
+import { COMMON_WHITE_COLOR } from "~/core/style/colors";
+
+import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
 import { sectionHeaderWrapperStyle, sectionStackStyle } from "./style";
+import { IRespondSectionWrapperProps } from "./types";
 
 export const RespondSectionWrapper: FC<IRespondSectionWrapperProps> = ({ section }) => {
   return (

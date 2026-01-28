@@ -1,7 +1,7 @@
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
-import { getHrefRgpdPath, getHrefRespondFormPath, getHrefRecapFormPath } from "~/core/pathHelper";
+import { getHrefRecapFormPath, getHrefRespondFormPath, getHrefRgpdPath } from "~/core/pathHelper";
 import { useAddDistributionMutation } from "~/services/api/services/formulaireApi/distributionApi";
 
 export const useHandleOpenFormResponse = () => {

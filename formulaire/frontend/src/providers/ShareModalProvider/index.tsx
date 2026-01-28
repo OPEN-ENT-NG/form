@@ -1,8 +1,10 @@
-import { FC, useContext, useEffect, useMemo, useState, createContext } from "react";
-import { ShareModalProviderContextType, IShareModalProviderProps, IUserFormsRight } from "./types";
+import { createContext, FC, useContext, useEffect, useMemo, useState } from "react";
+
 import { useGetUserFormsRightsQuery } from "~/services/api/services/formulaireApi/formApi";
-import { buildUserFormsRight } from "./utils";
+
 import { useHome } from "../HomeProvider";
+import { IShareModalProviderProps, IUserFormsRight, ShareModalProviderContextType } from "./types";
+import { buildUserFormsRight } from "./utils";
 
 const ShareModalProviderContext = createContext<ShareModalProviderContextType | null>(null);
 

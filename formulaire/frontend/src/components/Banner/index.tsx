@@ -1,8 +1,10 @@
 import { Box, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
-import { IBannerProps } from "./types";
-import { bannerStyle, iconStyle } from "./style";
+
 import { TypographyVariant } from "~/core/style/themeProps";
+
+import { bannerStyle, iconStyle } from "./style";
+import { IBannerProps } from "./types";
 
 export const Banner: FC<IBannerProps> = ({ icon: Icon, text }) => {
   return (

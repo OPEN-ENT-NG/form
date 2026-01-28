@@ -1,9 +1,11 @@
+import dayjs, { Dayjs } from "dayjs";
+
+import { IRGPDData, IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
 import { IDelegate } from "~/core/models/delegate/types";
+import { t } from "~/i18n";
+
 import { FormPropField } from "./enums";
 import { IFormCheckBoxProp, IFormPropInputValueState } from "./types";
-import { IRGPDData, IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
-import dayjs, { Dayjs } from "dayjs";
-import { t } from "~/i18n";
 
 export const initialFormPropInputValueState: IFormPropInputValueState = {
   [FormPropField.TITLE]: "",

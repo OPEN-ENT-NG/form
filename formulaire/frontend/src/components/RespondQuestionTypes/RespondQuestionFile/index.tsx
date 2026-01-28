@@ -1,9 +1,11 @@
 import { Box, Dropzone, FileList } from "@cgi-learning-hub/ui";
 import { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE, MAX_FILES_SAVE } from "~/core/constants";
 import { IResponseFile } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
+
 import { IRespondQuestionTypesProps } from "../types";
 import { ICustomFile } from "./types";
 import { createResponse, toCustomFile, toResponseFile } from "./utils";

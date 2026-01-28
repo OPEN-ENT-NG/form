@@ -1,6 +1,7 @@
 import { EllipsisWithTooltip, FormControl, MenuItem, Select } from "@cgi-learning-hub/ui";
 import { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { FormElementType } from "~/core/models/formElement/enum";
@@ -11,6 +12,7 @@ import { updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils"
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
+
 import { nextElementSelectorStyle } from "../CreationSection/style";
 import { nextElementSelectorWrapperStyle } from "./style";
 import { ICreationQuestionChoiceConditionalProps } from "./types";

@@ -1,4 +1,5 @@
 import { Theme, ToastPosition } from "react-toastify";
+
 import { RightStringified } from "~/providers/ShareModalProvider/types";
 
 export const FORMULAIRE = "formulaire";

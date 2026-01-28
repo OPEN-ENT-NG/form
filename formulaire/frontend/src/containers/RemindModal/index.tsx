@@ -1,45 +1,47 @@
 import {
-  Box,
-  Link,
-  Typography,
-  DialogTitle,
-  DialogContent,
-  Loader,
-  DialogActions,
-  Button,
-  TextField,
   Badge,
+  Box,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Link,
+  Loader,
+  TextField,
+  Typography,
 } from "@cgi-learning-hub/ui";
-import { FC, useEffect, useRef, useState } from "react";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
+import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
+import { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
-import { useHome } from "~/providers/HomeProvider";
-import { chipOptions, chooseContent, createFormUrl, initialStatusResponseState } from "./utils";
-import { IButtonProps, IModalProps } from "~/core/types";
-import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import {
-  chipWrapper,
-  mainContentColumnWrapper,
-  StyledChip,
-  subContentColumnWrapper,
-  buttonStyle,
-  loaderContainerStyle,
-  HiddenContent,
-  dialogStyle,
-  StyledEditorContainer,
-} from "./style";
-import { useGetFormDistributionsQuery } from "~/services/api/services/formulaireApi/distributionApi";
-import { DisplayContentType } from "./enums";
-import { IStatusResponseState } from "./types";
+
 import { DistributionTable } from "~/components/DistributionTable";
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
+import { EditorMode } from "~/core/enums";
 import { transformDistributionsToTableData } from "~/core/models/distribution/utils";
 import { PRIMARY_MAIN_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
-import { useSendReminderMutation } from "~/services/api/services/formulaireApi/formApi";
-import GroupRoundedIcon from "@mui/icons-material/GroupRounded";
-import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import { IButtonProps, IModalProps } from "~/core/types";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { EditorMode } from "~/core/enums";
+import { useHome } from "~/providers/HomeProvider";
+import { useGetFormDistributionsQuery } from "~/services/api/services/formulaireApi/distributionApi";
+import { useSendReminderMutation } from "~/services/api/services/formulaireApi/formApi";
+
+import { DisplayContentType } from "./enums";
+import {
+  buttonStyle,
+  chipWrapper,
+  dialogStyle,
+  HiddenContent,
+  loaderContainerStyle,
+  mainContentColumnWrapper,
+  StyledChip,
+  StyledEditorContainer,
+  subContentColumnWrapper,
+} from "./style";
+import { IStatusResponseState } from "./types";
+import { chipOptions, chooseContent, createFormUrl, initialStatusResponseState } from "./utils";
 
 export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);

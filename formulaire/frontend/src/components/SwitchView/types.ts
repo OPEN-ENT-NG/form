@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+
 import { ViewMode } from "./enums";
 
 export interface IToggleButtonItem {

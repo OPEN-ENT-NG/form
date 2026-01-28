@@ -1,6 +1,7 @@
-import { MenuItemState } from "./enum";
-import { IForm } from "~/core/models/form/types";
 import { IDistribution } from "~/core/models/distribution/types";
+import { IForm } from "~/core/models/form/types";
+
+import { MenuItemState } from "./enum";
 
 export interface IOrganizeFilterProps {
   chipDatas?: IFormChipProps[];

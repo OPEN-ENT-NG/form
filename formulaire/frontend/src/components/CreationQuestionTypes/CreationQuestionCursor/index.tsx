@@ -1,14 +1,16 @@
-import { FC, useEffect, useState } from "react";
-import { ICreationQuestionTypesProps } from "../types";
 import { Box } from "@cgi-learning-hub/ui";
-import { cursorItemStyle, cursorLineStyle, cursorPropsStyle } from "./style";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
-import { useCreation } from "~/providers/CreationProvider";
-import { IQuestionSpecificFields } from "~/core/models/question/types";
-import { initDefaultSpecificFields, useGetCursorTextFieldProps } from "./utils";
+import { FC, useEffect, useState } from "react";
+
 import { CursorTextField } from "~/components/CursorTextField";
-import { CursorProp } from "./enums";
 import { CursorTextFieldType } from "~/components/CursorTextField/enums";
+import { IQuestionSpecificFields } from "~/core/models/question/types";
+import { useCreation } from "~/providers/CreationProvider";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+
+import { ICreationQuestionTypesProps } from "../types";
+import { CursorProp } from "./enums";
+import { cursorItemStyle, cursorLineStyle, cursorPropsStyle } from "./style";
+import { initDefaultSpecificFields, useGetCursorTextFieldProps } from "./utils";
 
 export const CreationQuestionCursor: FC<ICreationQuestionTypesProps> = ({ question }) => {
   const { currentEditingElement, setCurrentEditingElement } = useCreation();

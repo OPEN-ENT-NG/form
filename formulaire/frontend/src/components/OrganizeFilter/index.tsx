@@ -1,14 +1,16 @@
-import { FC, useState, MouseEvent, useMemo, useCallback, useEffect } from "react";
 import { Box, Button, MenuItem } from "@cgi-learning-hub/ui";
-import { Menu, Divider, Chip, Typography } from "@mui/material";
-import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
+import { Chip, Divider, Menu, Typography } from "@mui/material";
+import { FC, MouseEvent, useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
-import { useTranslation } from "react-i18next";
-import { IFormChipProps, IMenuItemProps, IOrganizeFilterProps } from "./types";
-import FilterAltIcon from "@mui/icons-material/FilterAlt";
-import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
-import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { preventPropagation } from "~/providers/CreationProvider/utils";
+
+import { MenuItemState } from "./enum";
 import {
   buttonStyle,
   chipContainerStyle,
@@ -22,9 +24,8 @@ import {
   sortMenuItem,
   sortTitleStyle,
 } from "./style";
-import { MenuItemState } from "./enum";
+import { IFormChipProps, IMenuItemProps, IOrganizeFilterProps } from "./types";
 import { getNextMenuItemState } from "./utils";
-import { preventPropagation } from "~/providers/CreationProvider/utils";
 
 export const OrganizeFilter: FC<IOrganizeFilterProps> = ({
   chipDatas = [],

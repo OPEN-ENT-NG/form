@@ -1,4 +1,5 @@
-import { styled, Box } from "@cgi-learning-hub/ui";
+import { Box, styled } from "@cgi-learning-hub/ui";
+
 import { IEditorWrapperProps } from "./types";
 
 const flexContainerStyles = {

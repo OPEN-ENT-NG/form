@@ -1,6 +1,7 @@
-import { IForm } from "~/core/models/form/types";
-import { DeleteModalVariant } from "./enum";
 import { IFolder } from "~/core/models/folder/types";
+import { IForm } from "~/core/models/form/types";
+
+import { DeleteModalVariant } from "./enum";
 
 export const getCorrectValue = (forms: IForm[], folders: IFolder[]): DeleteModalVariant => {
   if (forms.length === 1 && !folders.length) {

@@ -1,14 +1,16 @@
 import { TextField } from "@cgi-learning-hub/ui";
 import { FC } from "react";
-import { ICursorTextFieldProps } from "./types";
-import { ComponentSize, ComponentVariant } from "~/core/style/themeProps";
-import { CursorTextFieldType } from "./enums";
-import { FORMULAIRE } from "~/core/constants";
 import { useTranslation } from "react-i18next";
-import { getInputSlotProps } from "./utils";
-import { CursorProp } from "../CreationQuestionTypes/CreationQuestionCursor/enums";
-import { cursorTextFieldStyle } from "./style";
+
+import { FORMULAIRE } from "~/core/constants";
+import { ComponentSize, ComponentVariant } from "~/core/style/themeProps";
 import { useGlobal } from "~/providers/GlobalProvider";
+
+import { CursorProp } from "../CreationQuestionTypes/CreationQuestionCursor/enums";
+import { CursorTextFieldType } from "./enums";
+import { cursorTextFieldStyle } from "./style";
+import { ICursorTextFieldProps } from "./types";
+import { getInputSlotProps } from "./utils";
 
 export const CursorTextField: FC<ICursorTextFieldProps> = ({
   type,

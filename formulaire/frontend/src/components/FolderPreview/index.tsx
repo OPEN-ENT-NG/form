@@ -1,10 +1,12 @@
 import { Box, FolderCard } from "@cgi-learning-hub/ui";
 import { FC } from "react";
+
 import { isSelectedFolder } from "~/core/models/folder/utils";
-import { useHome } from "~/providers/HomeProvider";
-import { IFolderPreviewProps } from "./types";
-import { useFolderSubtitle } from "~/hook/useFolderSubtitle";
 import { cardPreviewStyle } from "~/core/style/dndStyle";
+import { useFolderSubtitle } from "~/hook/useFolderSubtitle";
+import { useHome } from "~/providers/HomeProvider";
+
+import { IFolderPreviewProps } from "./types";
 
 export const FolderPreview: FC<IFolderPreviewProps> = ({ folder }) => {
   const { selectedFolders } = useHome();

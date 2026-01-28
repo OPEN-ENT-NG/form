@@ -1,4 +1,5 @@
 import { SxProps, Theme } from "@mui/material";
+
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const createFormElementModalPaperStyle: SxProps<Theme> = {

@@ -3,6 +3,9 @@ import { FC, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { toast } from "react-toastify";
+
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { FORMULAIRE, TRASH_FOLDER_ID } from "~/core/constants";
 import { IForm, IFormPayload } from "~/core/models/form/types";
 import { PRIMARY, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
@@ -15,6 +18,7 @@ import {
   useMoveFormsMutation,
   useUpdateFormMutation,
 } from "~/services/api/services/formulaireApi/formApi";
+
 import { deleteModalStyle } from "./style";
 import { getText, getTitle } from "./utils";
 

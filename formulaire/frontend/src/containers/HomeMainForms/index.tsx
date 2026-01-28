@@ -1,14 +1,14 @@
+import { Box, Loader } from "@cgi-learning-hub/ui";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 
-import { Box, Loader } from "@cgi-learning-hub/ui";
+import { DraggableForm } from "~/components/DraggableForm";
+import { FORM_CHUNK } from "~/core/constants";
+import { DraggableType } from "~/core/enums";
+import { IForm } from "~/core/models/form/types";
+import { cardWrapperStyle } from "~/core/style/boxStyles";
+import { useHome } from "~/providers/HomeProvider";
 
 import { IHomeMainFormsProps } from "./types";
-import { FORM_CHUNK } from "~/core/constants";
-import { IForm } from "~/core/models/form/types";
-import { useHome } from "~/providers/HomeProvider";
-import { DraggableType } from "~/core/enums";
-import { DraggableForm } from "~/components/DraggableForm";
-import { cardWrapperStyle } from "~/core/style/boxStyles";
 
 export const HomeMainForms: FC<IHomeMainFormsProps> = ({ forms, activeItem = null }) => {
   const { selectedForms, setSelectedForms } = useHome();

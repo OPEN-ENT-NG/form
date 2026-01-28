@@ -1,13 +1,15 @@
+import { Box, Button, TreeView } from "@cgi-learning-hub/ui";
 import { FC } from "react";
-import { useHome } from "~/providers/HomeProvider";
-import { buildFolderTree } from "./utils";
-import { TreeView, Box, Button } from "@cgi-learning-hub/ui";
-import { HomeTabs } from "~/components/HomeTab";
-import { ModalType } from "~/core/enums";
 import { useTranslation } from "react-i18next";
+
+import { HomeTabs } from "~/components/HomeTab";
 import { FORMULAIRE, SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
-import { homeSidebarWrapper } from "./style";
+import { ModalType } from "~/core/enums";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
+
+import { homeSidebarWrapper } from "./style";
+import { buildFolderTree } from "./utils";
 
 export const HomeSidebar: FC = () => {
   const { folders, currentFolder, tab, toggleTab, handleSelectedItemChange } = useHome();

@@ -1,7 +1,9 @@
 import { Box, Paper, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
-import { GREY_MAIN_COLOR } from "~/core/style/colors";
+
 import { defaultPaperShadow } from "~/core/constants";
+import { GREY_MAIN_COLOR } from "~/core/style/colors";
 import { CSS_ERROR_MAIN_COLOR, CSS_WARNING_LIGHT_COLOR } from "~/core/style/cssColors";
+
 import { IStyledDragContainer, IStyledPaperProps } from "./types";
 
 export const questionStackStyle: SxProps<Theme> = {

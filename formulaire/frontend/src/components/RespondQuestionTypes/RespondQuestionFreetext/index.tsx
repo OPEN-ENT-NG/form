@@ -1,8 +1,10 @@
-import { FC } from "react";
 import { Box } from "@cgi-learning-hub/ui";
-import { IRespondQuestionTypesProps } from "../types";
 import { Editor } from "@edifice.io/react/editor";
+import { FC } from "react";
+
 import { EditorMode, EditorVariant } from "~/core/enums";
+
+import { IRespondQuestionTypesProps } from "../types";
 import { editorWrapperStyle } from "./style";
 
 export const RespondQuestionFreetext: FC<IRespondQuestionTypesProps> = ({ question }) => {

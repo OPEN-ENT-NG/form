@@ -1,4 +1,5 @@
 import { toast } from "react-toastify";
+
 import { FORMULAIRE, ID, LINK_HTML_ELEMENT, PDF_EXTENSION, TRASH_FOLDER_ID, ZIP_EXTENSION } from "~/core/constants";
 import { QueryMethod, TagName } from "~/core/enums.ts";
 import {
@@ -10,6 +11,7 @@ import {
 } from "~/core/models/form/types.ts";
 import { handleErrorApi } from "~/core/utils.ts";
 import { t } from "~/i18n";
+
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
 export const formApi = emptySplitFormulaireApi.injectEndpoints({

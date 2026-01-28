@@ -1,6 +1,8 @@
 import { MouseEvent } from "react";
-import { Direction } from "../OrganizationSortableItem/enum";
+
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
+
+import { Direction } from "../OrganizationSortableItem/enum";
 
 export interface IUpDownButtonsProps {
   element: IQuestionChoice | IQuestion;

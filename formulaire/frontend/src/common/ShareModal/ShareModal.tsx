@@ -1,19 +1,3 @@
-import { ReactNode, useState } from "react";
-
-import { ID, PutShareResponse, RightStringified, ShareRight } from "@edifice.io/client";
-import { UseMutationResult } from "@tanstack/react-query";
-import { createPortal } from "react-dom";
-import { useTranslation } from "react-i18next";
-
-import {
-  Avatar,
-  Button as EdificeButton,
-  Checkbox,
-  Combobox,
-  LoadingScreen,
-  Tooltip,
-  VisuallyHidden,
-} from "@edifice.io/react";
 import {
   Box,
   Button,
@@ -24,15 +8,27 @@ import {
   IconButton,
   Typography,
 } from "@cgi-learning-hub/ui";
+import { ID, PutShareResponse, RightStringified, ShareRight } from "@edifice.io/client";
+import {
+  Avatar,
+  Button as EdificeButton,
+  Checkbox,
+  Combobox,
+  LoadingScreen,
+  Tooltip,
+  VisuallyHidden,
+} from "@edifice.io/react";
 import { IconBookmark, IconInfoCircle, IconRafterDown } from "@edifice.io/react/icons";
-import { ShareBookmark } from "./ShareBookmark";
-import { ShareBookmarkLine } from "./ShareBookmarkLine";
-import { useSearch } from "./hooks/useSearch";
-import useShare from "./hooks/useShare";
-import { useShareBookmark } from "./hooks/useShareBookmark";
-import { buildPublicLink, userHasRight } from "./utils";
+import ContentCopyIcon from "@mui/icons-material/ContentCopy";
+import { UseMutationResult } from "@tanstack/react-query";
+import { ReactNode, useState } from "react";
+import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+
 import { COMMON, FORMULAIRE } from "~/core/constants";
-import { useShareModal } from "~/providers/ShareModalProvider";
+import { flexStartBoxStyle } from "~/core/style/boxStyles";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import {
   BoxComponentType,
   BreakpointVariant,
@@ -40,11 +36,15 @@ import {
   TypographyFontStyle,
   TypographyVariant,
 } from "~/core/style/themeProps";
-import ContentCopyIcon from "@mui/icons-material/ContentCopy";
-import { flexStartBoxStyle } from "~/core/style/boxStyles";
-import { toast } from "react-toastify";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { useShareModal } from "~/providers/ShareModalProvider";
+
+import { useSearch } from "./hooks/useSearch";
+import useShare from "./hooks/useShare";
+import { useShareBookmark } from "./hooks/useShareBookmark";
+import { ShareBookmark } from "./ShareBookmark";
+import { ShareBookmarkLine } from "./ShareBookmarkLine";
+import { buildPublicLink, userHasRight } from "./utils";
 
 export type ShareOptions = {
   resourceId: ID;

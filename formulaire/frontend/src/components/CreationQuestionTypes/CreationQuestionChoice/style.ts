@@ -1,4 +1,5 @@
 import { SxProps } from "@mui/material";
+
 import { PRIMARY_MAIN_COLOR } from "~/core/style/colors";
 
 export const questionChoiceWrapperStyle: SxProps = {
