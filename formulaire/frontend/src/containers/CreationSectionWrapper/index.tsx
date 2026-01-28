@@ -1,6 +1,7 @@
 import { Box } from "@cgi-learning-hub/ui";
 import { useSortable } from "@dnd-kit/sortable";
 import { FC, useMemo } from "react";
+
 import { CreationEditingSection } from "~/components/CreationEditingSection";
 import { CreationSection } from "~/components/CreationSection";
 import { getTransformStyle } from "~/components/CreationSortableItem/utils";
@@ -10,6 +11,7 @@ import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
+
 import { CreateFormElementModal } from "../CreateFormElementModal";
 import { ICreationSectionWrapperProps } from "./types";
 

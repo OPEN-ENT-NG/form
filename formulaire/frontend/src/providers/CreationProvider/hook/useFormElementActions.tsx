@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+
 import { FORMULAIRE } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getExistingChoices, isQuestion, isSection } from "~/core/models/formElement/utils";
@@ -30,6 +31,7 @@ import {
   useDeleteSingleSectionMutation,
   useUpdateSectionsMutation,
 } from "~/services/api/services/formulaireApi/sectionApi";
+
 import { PositionActionType } from "../enum";
 import { fixListPositions, getElementById, isInFormElementsList } from "../utils";
 

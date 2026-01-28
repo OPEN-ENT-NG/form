@@ -1,6 +1,8 @@
 import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
+
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { blockProps } from "~/core/utils";
+
 import { IMainContentInnerWrapperProps } from "./types";
 
 export const StyledMainContentInnerWrapper = styled(Box, {

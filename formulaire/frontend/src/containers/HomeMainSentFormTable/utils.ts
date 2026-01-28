@@ -1,6 +1,7 @@
-import { IColumn } from "../HomeMainFormsTable/types";
-import { ColumnId } from "../HomeMainFormsTable/enums";
 import { t } from "~/i18n";
+
+import { ColumnId } from "../HomeMainFormsTable/enums";
+import { IColumn } from "../HomeMainFormsTable/types";
 
 export const useSentFormColumns: () => IColumn[] = () => {
   return [

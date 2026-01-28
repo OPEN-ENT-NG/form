@@ -2,6 +2,11 @@ import { Box, IconButton } from "@cgi-learning-hub/ui";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import { FC, useMemo } from "react";
+
+import { ComponentSize } from "~/core/style/themeProps";
+
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import { FC, useMemo } from "react";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { ComponentSize } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";

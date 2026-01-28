@@ -1,12 +1,14 @@
-import { FC } from "react";
 import { Box, Button, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
-import { descriptionLayoutStyle, descriptionStackStyle } from "./style";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE } from "~/core/constants";
+import { ResponsePageType } from "~/core/enums";
+import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useResponse } from "~/providers/ResponseProvider";
-import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
-import { ResponsePageType } from "~/core/enums";
+
+import { descriptionLayoutStyle, descriptionStackStyle } from "./style";
 
 export const DescriptionLayout: FC = () => {
   const { form, setPageType } = useResponse();

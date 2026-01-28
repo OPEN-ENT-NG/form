@@ -1,9 +1,10 @@
 import { IFormElementIdType } from "~/providers/ResponseProvider/types";
+
 import { IQuestion, IQuestionChoice } from "../question/types";
+import { getParentSection } from "../question/utils";
 import { ISection } from "../section/types";
 import { FormElementType } from "./enum";
 import { IFormElement, IFormElementDTO, IFormElementPayload } from "./types";
-import { getParentSection } from "../question/utils";
 
 export const transformFormElement = (raw: IFormElementDTO): IFormElement => {
   return {

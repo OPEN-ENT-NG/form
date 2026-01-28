@@ -1,6 +1,8 @@
 import { IFormElement } from "~/core/models/formElement/types";
+import { compareFormElements, isQuestion, isSection } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
-import { Direction } from "./enum";
+import { ISection } from "~/core/models/section/types";
+import { PositionActionType } from "~/providers/CreationProvider/enum";
 import {
   fixListPositions,
   getFollowingFormElement,
@@ -8,9 +10,8 @@ import {
   removeFormElementFromList,
   updateElementInList,
 } from "~/providers/CreationProvider/utils";
-import { ISection } from "~/core/models/section/types";
-import { PositionActionType } from "~/providers/CreationProvider/enum";
-import { compareFormElements, isQuestion, isSection } from "~/core/models/formElement/utils";
+
+import { Direction } from "./enum";
 
 /**
  * Swap positions of two questions within the same section.

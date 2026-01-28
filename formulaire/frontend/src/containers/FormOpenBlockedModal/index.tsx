@@ -1,11 +1,12 @@
-import { IModalProps } from "~/core/types";
+import { Button, DialogActions, DialogContent, DialogTitle, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
-import { Button, Typography, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
+
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { FORMULAIRE } from "~/core/constants";
 import { PRIMARY, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { IModalProps } from "~/core/types";
 
 export const FormOpenBlockedModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);

@@ -1,6 +1,8 @@
 import { Box, styled } from "@cgi-learning-hub/ui";
+
 import { columnBoxStyle, flexStartBoxStyle } from "~/core/style/boxStyles";
 import { blockProps } from "~/core/utils";
+
 import { IDatePickerWrapperProps } from "./types";
 
 export const mainColumnStyle = {

@@ -1,9 +1,11 @@
 import { Box, FormControl, FormControlLabel, Radio, TextField, Typography } from "@cgi-learning-hub/ui";
 import { ChangeEvent, FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE } from "~/core/constants";
 import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
+
 import { ChoiceImage } from "../style";
 import { IRespondQuestionTypesProps } from "../types";
 import { choiceBoxStyle, ChoicesRadioGroup, customAnswerStyle, formControlLabelStyle, labelStyle } from "./style";

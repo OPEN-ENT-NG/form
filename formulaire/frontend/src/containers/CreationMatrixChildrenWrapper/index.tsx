@@ -1,16 +1,30 @@
+import { Box, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
 import { Box, TextField, Typography } from "@cgi-learning-hub/ui";
 import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
 import { FC, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
+
+import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
+import { UpDownButtons } from "~/components/UpDownButtons";
+import { iconStyle } from "~/components/UpDownButtons/style";
 import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
+import { useCreation } from "~/providers/CreationProvider";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
+
 import {
   baseChoiceWrapperStyle,
+  choiceInputStyle,
   choicesWrapperStyle,
   newChoiceInputStyle,
   NewChoiceWrapper,
@@ -19,6 +33,8 @@ import {
   sortWrapperStyle,
   StyledSortWrapper,
   unselectedChoiceStyle,
+  unselectedChoiceStyle,
+  upDownButtonsWrapperStyle,
 } from "../CreationQuestionChoiceWrapper/style";
 import { EditableChildrenRow } from "./EditableChildrenRow";
 import { ICreationMatrixChildrenWrapperProps } from "./types";

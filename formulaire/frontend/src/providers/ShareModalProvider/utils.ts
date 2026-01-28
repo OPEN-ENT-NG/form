@@ -1,6 +1,7 @@
-import { IForm, IFormRight } from "~/core/models/form/types";
-import { RightStringified, IUserFormsRight } from "./types";
 import { COMMENT_RIGHT, CONTRIB_RIGHT, MANAGER_RIGHT } from "~/core/constants";
+import { IForm, IFormRight } from "~/core/models/form/types";
+
+import { IUserFormsRight, RightStringified } from "./types";
 
 export const buildUserFormsRight = (datas: IFormRight[], forms: IForm[]) => {
   // Mapping object from raw action identifiers to our RightStringified values

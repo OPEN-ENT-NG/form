@@ -1,11 +1,13 @@
-import { FC } from "react";
 import { Tab, Tabs } from "@cgi-learning-hub/ui";
-import { IHomeTabsProps } from "./types";
-import { HomeTabState } from "~/providers/HomeProvider/enums";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
+
 import { tabStyle } from "./style";
+import { IHomeTabsProps } from "./types";
 
 export const HomeTabs: FC<IHomeTabsProps> = ({ value, setValue }) => {
   const { userWorkflowRights } = useHome();

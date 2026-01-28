@@ -1,6 +1,7 @@
 import { useEdificeClient } from "@edifice.io/react";
-import { FC, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+
 import { ResponsePageType } from "~/core/enums";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
@@ -9,6 +10,7 @@ import { workflowRights } from "~/core/rights";
 import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
+
 import { useFormElementList } from "../CreationProvider/hook/useFormElementsList";
 import { useGlobal } from "../GlobalProvider";
 import { useClassicResponse } from "./hook/useClassicResponse";

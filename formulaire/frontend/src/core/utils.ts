@@ -1,10 +1,12 @@
-import { KeyName } from "./enums";
 import { IUserInfo } from "@edifice.io/client";
-import { IForm } from "./models/form/types";
-import { sharingRights } from "./rights";
 import { toast } from "react-toastify";
+
 import { t } from "~/i18n";
+
+import { KeyName } from "./enums";
+import { IForm } from "./models/form/types";
 import { getHrefErrorPath } from "./pathHelper";
+import { sharingRights } from "./rights";
 
 // KeyDown
 export const isEnterPressed = (event: React.KeyboardEvent) => {

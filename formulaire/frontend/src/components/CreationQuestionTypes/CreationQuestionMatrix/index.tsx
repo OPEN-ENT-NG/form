@@ -1,14 +1,16 @@
-import { FC } from "react";
 import { Box, Typography } from "@cgi-learning-hub/ui";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
-import { TypographyVariant } from "~/core/style/themeProps";
-import { CreationQuestionChoiceWrapper } from "~/containers/CreationQuestionChoiceWrapper";
-import { QuestionTypes } from "~/core/models/question/enum";
-import { ICreationQuestionMatrixProps } from "./types";
-import { matrixStyle } from "./style";
+
 import { CreationMatrixChildrenWrapper } from "~/containers/CreationMatrixChildrenWrapper";
+import { CreationQuestionChoiceWrapper } from "~/containers/CreationQuestionChoiceWrapper";
+import { FORMULAIRE } from "~/core/constants";
+import { QuestionTypes } from "~/core/models/question/enum";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { TypographyVariant } from "~/core/style/themeProps";
+
+import { matrixStyle } from "./style";
+import { ICreationQuestionMatrixProps } from "./types";
 
 export const CreationQuestionMatrix: FC<ICreationQuestionMatrixProps> = ({ question, matrixType }) => {
   const { t } = useTranslation(FORMULAIRE);

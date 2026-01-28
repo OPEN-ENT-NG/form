@@ -1,4 +1,5 @@
 import { SxProps, Theme } from "@mui/material";
+
 import { centerBoxStyle } from "~/core/style/boxStyles";
 
 export const tablePaginationStyle = {

@@ -1,7 +1,9 @@
-import { styled, Chip, Box } from "@cgi-learning-hub/ui";
+import { Box, Chip, styled } from "@cgi-learning-hub/ui";
+
 import { columnBoxStyle, flexStartBoxStyle } from "~/core/style/boxStyles";
-import { ICustomChipProps, IEditorContainerProps, IHiddenContentProps } from "./types";
 import { blockProps } from "~/core/utils";
+
+import { ICustomChipProps, IEditorContainerProps, IHiddenContentProps } from "./types";
 
 export const StyledChip = styled(Chip, {
   shouldForwardProp: blockProps("isActive"),

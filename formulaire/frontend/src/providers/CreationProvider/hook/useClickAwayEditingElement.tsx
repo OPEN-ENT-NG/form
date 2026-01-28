@@ -1,4 +1,5 @@
 import { Dispatch, MouseEvent, SetStateAction, useCallback } from "react";
+
 import { compareChoices } from "~/containers/CreationQuestionChoiceWrapper/utils";
 import { ClickAwayDataType } from "~/core/enums";
 import { IFormElement } from "~/core/models/formElement/types";
@@ -8,6 +9,7 @@ import { IQuestion } from "~/core/models/question/types";
 import { createNewQuestionChoice } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
 import { t } from "~/i18n";
+
 import { isCurrentEditingElement, updateElementInList } from "../utils";
 
 export const useClickAwayEditingElement = (

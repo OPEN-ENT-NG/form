@@ -1,15 +1,16 @@
-import { FC } from "react";
-import { IDraggableFormProps } from "./types";
-import { useDraggable } from "@dnd-kit/core";
-import { DraggableType, SizeAbreviation } from "~/core/enums";
 import { Box, ResourceCard } from "@cgi-learning-hub/ui";
-import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
-import { LOGO_PATH } from "~/core/constants";
-
-import { dragActiveStyle } from "~/core/style/dndStyle";
-import { useGlobal } from "~/providers/GlobalProvider";
+import { useDraggable } from "@dnd-kit/core";
+import { FC } from "react";
 import { useNavigate } from "react-router-dom";
+
+import { LOGO_PATH } from "~/core/constants";
+import { DraggableType, SizeAbreviation } from "~/core/enums";
 import { getFormEditPath } from "~/core/pathHelper";
+import { dragActiveStyle } from "~/core/style/dndStyle";
+import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
+import { useGlobal } from "~/providers/GlobalProvider";
+
+import { IDraggableFormProps } from "./types";
 
 export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSelect, dragActive = false }) => {
   const { isMobile } = useGlobal();

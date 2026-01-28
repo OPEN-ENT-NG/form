@@ -7,6 +7,7 @@ import globals from "globals";
 import * as tseslint from "typescript-eslint";
 import prettierPlugin from "eslint-plugin-prettier";
 import prettierConfig from "eslint-config-prettier";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 
 export default tseslint.config(
   {
@@ -38,6 +39,7 @@ export default tseslint.config(
       react: reactPlugin,
       import: importPlugin,
       prettier: prettierPlugin,
+      "simple-import-sort": simpleImportSort,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -54,6 +56,8 @@ export default tseslint.config(
       "no-duplicate-imports": "error",
       "@typescript-eslint/no-unused-expressions": "error",
       "@typescript-eslint/restrict-template-expressions": "off",
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
       // Règle Prettier
       "prettier/prettier": ["warn"],
 

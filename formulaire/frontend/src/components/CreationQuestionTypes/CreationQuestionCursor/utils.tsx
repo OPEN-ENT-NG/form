@@ -1,9 +1,11 @@
 import { Typography } from "@mui/material";
-import { IQuestion, IQuestionSpecificFields } from "~/core/models/question/types";
-import { cursorValueNameStyle } from "./style";
-import { CursorProp } from "./enums";
+
 import { CursorTextFieldType } from "~/components/CursorTextField/enums";
+import { IQuestion, IQuestionSpecificFields } from "~/core/models/question/types";
 import { t } from "~/i18n";
+
+import { CursorProp } from "./enums";
+import { cursorValueNameStyle } from "./style";
 
 export const initDefaultSpecificFields = (question: IQuestion): IQuestionSpecificFields => {
   return {

@@ -1,18 +1,20 @@
-import { IModalProps } from "~/core/types";
+import { Box, Button, DialogActions, DialogContent, DialogTitle, TreeView, Typography } from "@cgi-learning-hub/ui";
 import { FC, SyntheticEvent, useCallback, useState } from "react";
-import { Box, DialogActions, DialogContent, DialogTitle, TreeView, Typography, Button } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
+
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { FORMULAIRE, MYFORMS_FOLDER_ID } from "~/core/constants";
-import { useHome } from "~/providers/HomeProvider";
 import { IFolder } from "~/core/models/folder/types";
 import { IForm } from "~/core/models/form/types";
-import { buildFolderTree } from "./utils";
-import { useMoveFormsMutation } from "~/services/api/services/formulaireApi/formApi";
-import { useMoveFoldersMutation } from "~/services/api/services/formulaireApi/folderApi";
-import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { moveMainTextStyle, treeviewContainerStyle, treeviewTextStyle } from "./style";
-import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import { IModalProps } from "~/core/types";
+import { useHome } from "~/providers/HomeProvider";
+import { useMoveFoldersMutation } from "~/services/api/services/formulaireApi/folderApi";
+import { useMoveFormsMutation } from "~/services/api/services/formulaireApi/formApi";
+
+import { moveMainTextStyle, treeviewContainerStyle, treeviewTextStyle } from "./style";
+import { buildFolderTree } from "./utils";
 
 export const MoveModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);

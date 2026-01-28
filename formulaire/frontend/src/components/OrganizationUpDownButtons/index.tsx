@@ -1,11 +1,13 @@
-import { FC, useMemo } from "react";
-import { IOrganizationUpDownButtonsProps } from "./types";
 import { Box } from "@cgi-learning-hub/ui";
-import { iconStyle, StyledIconButton, upDownButtonsContainerStyle } from "./style";
-import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
-import { Direction } from "../OrganizationSortableItem/enum";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import { FC, useMemo } from "react";
+
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
+
+import { Direction } from "../OrganizationSortableItem/enum";
+import { iconStyle, StyledIconButton, upDownButtonsContainerStyle } from "./style";
+import { IOrganizationUpDownButtonsProps } from "./types";
 
 export const OrganizationUpDownButtons: FC<IOrganizationUpDownButtonsProps> = ({
   element,

@@ -1,12 +1,12 @@
-import { Dispatch, useId, useRef, useState } from "react";
-
-import { ShareRightWithVisibles, odeServices } from "@edifice.io/client";
+import { odeServices, ShareRightWithVisibles } from "@edifice.io/client";
 import { useToggle } from "@edifice.io/react";
+import { Dispatch, useId, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
-import { ShareAction } from "./useShare";
 import { COMMON } from "~/core/constants";
+
+import { ShareAction } from "./useShare";
 
 interface IUseShareBookmarkProps {
   shareRights: ShareRightWithVisibles;

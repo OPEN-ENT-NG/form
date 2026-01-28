@@ -9,12 +9,35 @@ import {
   Stack,
   Typography,
 } from "@cgi-learning-hub/ui";
+import { useDroppable } from "@dnd-kit/core";
+import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
+import { Editor } from "@edifice.io/react/editor";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import { CreationQuestionWrapper } from "~/containers/CreationQuestionWrapper";
+import { questionAlertStyle, StyledDragContainer } from "~/containers/CreationQuestionWrapper/style";
+import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
+import { EditorMode, EditorVariant, ModalType } from "~/core/enums";
+import { hasFormResponses } from "~/core/models/form/utils";
+import { FormElementType } from "~/core/models/formElement/enum";
+import { isValidFormElement } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
+import { ISection } from "~/core/models/section/types";
+import { hasConditionalQuestion } from "~/core/models/section/utils";
+import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import { AlertSeverityVariant, ComponentVariant, TypographyFontStyle } from "~/core/style/themeProps";
+import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
+import { getDndElementType, updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
+import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
+import { useCreation } from "~/providers/CreationProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
+
+import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
+import { IconButtonTooltiped } from "../IconButtonTooltiped/IconButtonTooltiped";
 import {
   descriptionStyle,
   nextElementSelectorStyle,
@@ -31,28 +54,7 @@ import {
   sectionTitleStyle,
 } from "./style";
 import { ICreationSectionProps } from "./types";
-import { useDroppable } from "@dnd-kit/core";
-import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
-import { Editor } from "@edifice.io/react/editor";
-import { useTranslation } from "react-i18next";
-import { questionAlertStyle, StyledDragContainer } from "~/containers/CreationQuestionWrapper/style";
-import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
-import { EditorMode, EditorVariant, ModalType } from "~/core/enums";
-import { hasFormResponses } from "~/core/models/form/utils";
-import { FormElementType } from "~/core/models/formElement/enum";
-import { isValidFormElement } from "~/core/models/formElement/utils";
-import { ISection } from "~/core/models/section/types";
-import { hasConditionalQuestion } from "~/core/models/section/utils";
-import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
-import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
-import { getDndElementType, updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
-import { useCreation } from "~/providers/CreationProvider";
-import { useGlobal } from "~/providers/GlobalProvider";
-import { IconButtonTooltiped } from "../IconButtonTooltiped/IconButtonTooltiped";
 import { getDescription, isDescriptionEmpty } from "./utils";
-import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
-import { StyledEditorWrapper } from "../CreationQuestionTypes/CreationQuestionFreetext/style";
-import { AlertSeverityVariant, ComponentVariant, TypographyFontStyle } from "~/core/style/themeProps";
 
 export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section, listeners, attributes }) => {
   const { t } = useTranslation(FORMULAIRE);

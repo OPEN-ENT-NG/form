@@ -1,6 +1,7 @@
-import { IFolder } from "~/core/models/folder/types";
 import { CustomTreeViewItem, ICON_TYPE } from "@cgi-learning-hub/ui";
+
 import { MYFORMS_FOLDER_ID, SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
+import { IFolder } from "~/core/models/folder/types";
 
 export const buildFolderTree = (folders: IFolder[]): CustomTreeViewItem[] => {
   const rootFolders = folders.filter(

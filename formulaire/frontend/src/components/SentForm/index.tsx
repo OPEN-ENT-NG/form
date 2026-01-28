@@ -1,11 +1,13 @@
-import { FC } from "react";
 import { ResourceCard } from "@cgi-learning-hub/ui";
-import { LOGO_PATH } from "~/core/constants";
-import { ISentFormProps } from "./types";
-import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
+import { FC } from "react";
+
 import { useMapActionBarButtons } from "~/containers/HomeView/useMapActionBarButtons";
+import { LOGO_PATH } from "~/core/constants";
 import { SizeAbreviation } from "~/core/enums";
+import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
 import { useGlobal } from "~/providers/GlobalProvider";
+
+import { ISentFormProps } from "./types";
 
 export const SentForm: FC<ISentFormProps> = ({ form, distributions, isSelected, handleSelect }) => {
   const { isMobile } = useGlobal();

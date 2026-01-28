@@ -1,41 +1,42 @@
-import { FC, useState } from "react";
 import { Box, SearchInput, TreeView } from "@cgi-learning-hub/ui";
+import { DndContext } from "@dnd-kit/core";
+import { useEdificeClient } from "@edifice.io/react";
+import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
+import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { Typography, useTheme } from "@mui/material";
+import IconButton from "@mui/material/IconButton";
+import { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
 
+import { HomeTabs } from "~/components/HomeTab";
+import { OrganizeFilter } from "~/components/OrganizeFilter";
+import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
+import { Sidebar } from "~/components/Sidebar";
+import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
+import { FORMULAIRE } from "~/core/constants";
+import { ModalType } from "~/core/enums";
+import { centerBoxStyle } from "~/core/style/boxStyles";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { useHome } from "~/providers/HomeProvider";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
+
+import { StyledMyAnswerHeaderWrapper, tabStyle } from "../AnswerMainLayout/style";
+import { HomeMainFolders } from "../HomeMainFolders";
+import { HomeMainForms } from "../HomeMainForms";
+import { useSearchAndOrganize } from "../HomeMainLayout/useSearchAndOrganize";
+import { formMenuItemDatas, formsChipDatas, getEmptyStateDescription } from "../HomeMainLayout/utils";
+import { buildFolderTree } from "../HomeSidebar/utils";
 import {
   emptyStateWrapperStyle,
+  iconButtonContainerStyle,
+  iconButtonStyle,
+  mainContentInnerStyle,
   resourceContainerStyle,
   searchBarStyle,
   searchStyle,
-  mainContentInnerStyle,
-  treeViewButtonStyle,
   subTextStyle,
-  iconButtonStyle,
-  iconButtonContainerStyle,
+  treeViewButtonStyle,
 } from "./style";
-import { HomeMainFolders } from "../HomeMainFolders";
-import { useTranslation } from "react-i18next";
-import { HomeMainForms } from "../HomeMainForms";
-import { FORMULAIRE } from "~/core/constants";
-import { OrganizeFilter } from "~/components/OrganizeFilter";
-import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
-import { formsChipDatas, getEmptyStateDescription, formMenuItemDatas } from "../HomeMainLayout/utils";
-import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
-import { useEdificeClient } from "@edifice.io/react";
-import { buildFolderTree } from "../HomeSidebar/utils";
-import { centerBoxStyle } from "~/core/style/boxStyles";
-import { HomeTabState } from "~/providers/HomeProvider/enums";
-import { HomeTabs } from "~/components/HomeTab";
-import { useSearchAndOrganize } from "../HomeMainLayout/useSearchAndOrganize";
-import { StyledMyAnswerHeaderWrapper, tabStyle } from "../AnswerMainLayout/style";
-import { DndContext } from "@dnd-kit/core";
-import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
-import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
-import IconButton from "@mui/material/IconButton";
-import { Sidebar } from "~/components/Sidebar";
-import { ModalType } from "~/core/enums";
-import { useGlobal } from "~/providers/GlobalProvider";
 
 export const HomeMainLayoutMobile: FC = () => {
   const { folders, forms, currentFolder, tab, sentForms, distributions, toggleTab, handleSelectedItemChange } =

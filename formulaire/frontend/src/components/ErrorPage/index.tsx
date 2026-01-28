@@ -1,12 +1,14 @@
-import { FC } from "react";
-import { useNavigate } from "react-router-dom";
 import { Box, Button, EmptyState } from "@cgi-learning-hub/ui";
+import { FC } from "react";
+import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
+
+import { FORMULAIRE } from "~/core/constants";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+
 import { EmptyForm } from "../SVG/EmptyForm";
 import { emptyStateWrapper } from "./style";
-import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
-import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
-import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { IErrorCodeProps } from "./types";
 
 export const ErrorPage: FC<IErrorCodeProps> = ({ errorCode }) => {

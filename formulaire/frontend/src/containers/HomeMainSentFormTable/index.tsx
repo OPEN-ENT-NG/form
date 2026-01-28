@@ -1,9 +1,3 @@
-import { ChangeEvent, FC, useState } from "react";
-
-import { IHomeMainSentFormTableProps } from "./types";
-import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
-import { useTranslation } from "react-i18next";
-import { useHome } from "~/providers/HomeProvider";
 import {
   Checkbox,
   TableBody,
@@ -14,14 +8,21 @@ import {
   TableRow,
   Typography,
 } from "@cgi-learning-hub/ui";
-import { TypographyVariant } from "~/core/style/themeProps";
-import { IForm } from "~/core/models/form/types";
-import { getPageForms, initialTableProps } from "../HomeMainFormsTable/utils";
-import { tablePaginationStyle } from "../HomeMainFormsTable/style";
-import { getFormDistributions, getFormStatusText, isFormFilled } from "~/core/models/form/utils";
-import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
-import { ERROR_MAIN_COLOR, SUCCESS_MAIN_COLOR } from "~/core/style/colors";
+import { ChangeEvent, FC, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
 import { getFirstDistributionDate } from "~/core/models/distribution/utils";
+import { IForm } from "~/core/models/form/types";
+import { getFormDistributions, getFormStatusText, isFormFilled } from "~/core/models/form/utils";
+import { ERROR_MAIN_COLOR, SUCCESS_MAIN_COLOR } from "~/core/style/colors";
+import { TypographyVariant } from "~/core/style/themeProps";
+import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
+import { useHome } from "~/providers/HomeProvider";
+
+import { tablePaginationStyle } from "../HomeMainFormsTable/style";
+import { getPageForms, initialTableProps } from "../HomeMainFormsTable/utils";
+import { IHomeMainSentFormTableProps } from "./types";
 import { useSentFormColumns } from "./utils";
 
 export const HomeMainSentFormTable: FC<IHomeMainSentFormTableProps> = ({ sentForms, distributions }) => {
