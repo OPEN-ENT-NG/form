@@ -1,9 +1,9 @@
-import { FC, createContext, useContext, useMemo, useState } from "react";
-import { IDisplayModalsState, GlobalProviderContextType, IGlobalProviderProps } from "./types";
-import { initialDisplayModalsState } from "./utils";
-import { ModalType } from "~/core/enums";
 import { useMediaQuery } from "@cgi-learning-hub/ui";
+import { FC, createContext, useContext, useMemo, useState } from "react";
 import { MOBILE_MAX_WIDTH } from "~/core/constants";
+import { ModalType } from "~/core/enums";
+import { GlobalProviderContextType, IDisplayModalsState, IGlobalProviderProps } from "./types";
+import { initialDisplayModalsState } from "./utils";
 
 const GlobalProviderContext = createContext<GlobalProviderContextType | null>(null);
 
@@ -29,6 +29,7 @@ export const GlobalProvider: FC<IGlobalProviderProps> = ({ children }) => {
   const selectAllTextInput = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
   };
+  console.log("niko", displayModals);
 
   const value = useMemo<GlobalProviderContextType>(
     () => ({

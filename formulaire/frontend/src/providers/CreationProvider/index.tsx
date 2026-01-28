@@ -195,6 +195,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       setIsDragging,
       newChoiceValue,
       setNewChoiceValue,
+      setIsUpdating,
     }),
     [
       currentFolder,
