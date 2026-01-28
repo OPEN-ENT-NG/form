@@ -1,8 +1,10 @@
-import { IFormElement } from "~/core/models/formElement/types";
-import { IQuestion } from "~/core/models/question/types";
-import { IFlattenedItem } from "./types";
 import { arrayMove } from "@dnd-kit/sortable";
+
+import { IFormElement } from "~/core/models/formElement/types";
 import { isSection } from "~/core/models/formElement/utils";
+import { IQuestion } from "~/core/models/question/types";
+
+import { IFlattenedItem } from "./types";
 
 /**
  * Recursively flatten a mixed list of sections and top-level questions into a single array.

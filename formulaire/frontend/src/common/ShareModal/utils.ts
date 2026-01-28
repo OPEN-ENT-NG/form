@@ -1,4 +1,5 @@
 import { ID, ShareRight, ShareRightAction, ShareRightActionDisplayName } from "@edifice.io/client";
+
 import { IUserFormsRight } from "~/providers/ShareModalProvider/types";
 
 export const hasRight = (shareRight: ShareRight, shareAction: ShareRightAction): boolean => {

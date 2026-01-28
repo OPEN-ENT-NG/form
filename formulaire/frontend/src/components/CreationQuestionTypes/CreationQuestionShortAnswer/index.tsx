@@ -1,12 +1,14 @@
-import { FC, useEffect, useState } from "react";
-import { ICreationQuestionTypesProps } from "../types";
 import { Box, TextField } from "@cgi-learning-hub/ui";
-import { ComponentVariant } from "~/core/style/themeProps";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE } from "~/core/constants";
+import { ComponentVariant } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
+
+import { ICreationQuestionTypesProps } from "../types";
 
 export const CreationQuestionShortAnswer: FC<ICreationQuestionTypesProps> = ({ question }) => {
   const { t } = useTranslation(FORMULAIRE);

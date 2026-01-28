@@ -1,10 +1,12 @@
 import { DragOverEvent, DragStartEvent } from "@dnd-kit/core";
+
 import { IFormElement } from "~/core/models/formElement/types";
 import { isSection } from "~/core/models/formElement/utils";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { isQuestionRoot, isQuestionSection } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
 import { getFollowingFormElement } from "~/providers/CreationProvider/utils";
+
 import { DndElementType } from "./enum";
 
 export const isString = (value: unknown): value is string => {

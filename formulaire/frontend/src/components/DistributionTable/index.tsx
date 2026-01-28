@@ -1,20 +1,22 @@
+import { Box, Button, Paper, Table, TableCell, TableHead, TableRow, Typography } from "@cgi-learning-hub/ui";
 import { FC, useState } from "react";
-import { Box, Button, Table, TableCell, TableHead, TableRow, Paper, Typography } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE } from "~/core/constants";
-import { IDistributionTableProps } from "./types";
+
 import {
-  tableStyle,
   containerStyle,
-  paperStyle,
-  headerRowStyle,
-  headerCellStyle,
-  tableRowStyle,
   emptyRowMessageStyle,
+  headerCellStyle,
+  headerRowStyle,
+  paperStyle,
   seeMoreButtonStyle,
   StyledTableBody,
   tableRowMobileStyle,
+  tableRowStyle,
+  tableStyle,
 } from "./style";
+import { IDistributionTableProps } from "./types";
 
 export const DistributionTable: FC<IDistributionTableProps> = ({ distributions, emptyMessage, isMobile = false }) => {
   const { t } = useTranslation(FORMULAIRE);

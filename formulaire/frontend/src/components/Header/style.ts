@@ -1,4 +1,5 @@
 import { SxProps, Theme } from "@cgi-learning-hub/ui";
+
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 
 export const headerStyle = (isTheme1D: boolean): SxProps<Theme> => {

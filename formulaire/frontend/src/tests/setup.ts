@@ -1,5 +1,5 @@
 import { cleanup } from "@testing-library/react";
-import { expect, afterEach, vi } from "vitest";
+import { afterEach, expect, vi } from "vitest";
 import * as matchers from "vitest-dom/matchers";
 
 export * from "react-router-dom";

@@ -2,9 +2,10 @@ import { Box, Drawer, IconButton } from "@cgi-learning-hub/ui";
 import CloseIcon from "@mui/icons-material/Close";
 import React, { FC, useEffect, useRef } from "react";
 
+import { KeyName } from "~/core/enums";
+
 import { sidebarStyle } from "./style";
 import { ISidebarProps } from "./types";
-import { KeyName } from "~/core/enums";
 
 export const Sidebar: FC<ISidebarProps> = ({ isOpen, onClose, children }) => {
   const closeButtonRef = useRef<HTMLButtonElement>(null);

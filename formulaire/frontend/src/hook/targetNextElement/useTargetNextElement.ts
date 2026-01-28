@@ -1,5 +1,6 @@
 import { SelectChangeEvent } from "@mui/material";
 import { useCallback } from "react";
+
 import { TARGET_RECAP } from "~/core/constants";
 import { useCreation } from "~/providers/CreationProvider";
 import {
@@ -8,6 +9,7 @@ import {
   getFollowingFormElement,
   isSectionOrQuestion,
 } from "~/providers/CreationProvider/utils";
+
 import { FormElementWithNextElement, IUseTargetNextElementConfig } from "./types";
 
 export const useTargetNextElement = <T extends FormElementWithNextElement>({

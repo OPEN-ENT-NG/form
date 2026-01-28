@@ -1,4 +1,5 @@
 import { SxProps, Theme } from "@cgi-learning-hub/ui";
+
 import { flexStartBoxStyle, spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 
 export const mainContentInnerStyle: SxProps<Theme> = {

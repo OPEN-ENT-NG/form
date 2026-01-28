@@ -1,34 +1,34 @@
 import {
   Button,
   CustomFile,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   Dropzone,
   FileList,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
   Typography,
 } from "@cgi-learning-hub/ui";
-
 import { FC, useEffect, useState } from "react";
-
-import { dropZoneSlotProps, formImportModalContentStyle, formImportModalStyle } from "./style";
 import { useTranslation } from "react-i18next";
+import { useDispatch } from "react-redux";
+import { toast } from "react-toastify";
+
 import { FORMULAIRE } from "~/core/constants";
+import { TagName } from "~/core/enums";
+import { IImportAnalyzeResponse, IImportUploadResponse } from "~/core/models/import/types";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { IModalProps } from "~/core/types";
 import {
   useLazyAnalyzeImportFormsQuery,
   useLazyLaunchImportFormsQuery,
   useUploadImportFormsMutation,
 } from "~/services/api/services/archiveApi/importExportApi";
-import { useDispatch } from "react-redux";
-import { TagName } from "~/core/enums";
-import { getAcceptedFileType } from "./utils";
-import { IImportAnalyzeResponse, IImportUploadResponse } from "~/core/models/import/types";
 import { emptySplitFormulaireApi } from "~/services/api/services/formulaireApi/emptySplitFormulaireApi";
-import { toast } from "react-toastify";
-import { TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+
+import { dropZoneSlotProps, formImportModalContentStyle, formImportModalStyle } from "./style";
+import { getAcceptedFileType } from "./utils";
 
 export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);

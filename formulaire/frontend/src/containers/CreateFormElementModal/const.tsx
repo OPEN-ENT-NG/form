@@ -1,16 +1,18 @@
+import AccessTimeFilledRoundedIcon from "@mui/icons-material/AccessTimeFilledRounded";
+import AppsIcon from "@mui/icons-material/Apps";
+import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
+import FormatListNumberedRoundedIcon from "@mui/icons-material/FormatListNumberedRounded";
+import NotesRoundedIcon from "@mui/icons-material/NotesRounded";
+import ShortTextRoundedIcon from "@mui/icons-material/ShortTextRounded";
+import TextFieldsRoundedIcon from "@mui/icons-material/TextFieldsRounded";
+import UploadFileIcon from "@mui/icons-material/UploadFile";
 import { ReactNode } from "react";
+
 import { CursorIcon } from "~/components/SVG/questionTypes/CursorIcon";
 import { MultipleAnswerIcon } from "~/components/SVG/questionTypes/MultipleAnswerIcon";
 import { SingleAnswerRadioIcon } from "~/components/SVG/questionTypes/SingleAnswerRadioIcon";
 import { UniqueIcon } from "~/components/SVG/questionTypes/UniqueIcon";
-import TextFieldsRoundedIcon from "@mui/icons-material/TextFieldsRounded";
-import ShortTextRoundedIcon from "@mui/icons-material/ShortTextRounded";
-import NotesRoundedIcon from "@mui/icons-material/NotesRounded";
-import CalendarTodayRoundedIcon from "@mui/icons-material/CalendarTodayRounded";
-import AccessTimeFilledRoundedIcon from "@mui/icons-material/AccessTimeFilledRounded";
-import UploadFileIcon from "@mui/icons-material/UploadFile";
-import AppsIcon from "@mui/icons-material/Apps";
-import FormatListNumberedRoundedIcon from "@mui/icons-material/FormatListNumberedRounded";
+
 import { questionIconStyle } from "./style";
 
 export const questionTypeIcons: Record<number, ReactNode> = {

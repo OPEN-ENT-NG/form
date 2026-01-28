@@ -1,12 +1,12 @@
-import { Ref } from "react";
-
-import { FormControl, Button } from "@edifice.io/react";
+import { Box } from "@cgi-learning-hub/ui";
+import { Button, FormControl } from "@edifice.io/react";
 import { IconSave } from "@edifice.io/react/icons";
+import { Ref } from "react";
 import { useTranslation } from "react-i18next";
 
-import { BookmarkProps } from "./hooks/useShareBookmark";
-import { Box } from "@cgi-learning-hub/ui";
 import { COMMON } from "~/core/constants";
+
+import { BookmarkProps } from "./hooks/useShareBookmark";
 export const ShareBookmark = ({
   bookmark,
   refBookmark,

@@ -1,13 +1,14 @@
 import { Box, Button } from "@cgi-learning-hub/ui";
-import { FC } from "react";
-
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE } from "~/core/constants";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
 import { useTheme } from "~/hook/useTheme";
+
 import { Banner } from "../Banner";
 import { FormBreadcrumbs } from "../Breadcrumbs";
 import { FormsIcon } from "../SVG/FormsIcon";

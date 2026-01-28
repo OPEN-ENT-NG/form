@@ -1,18 +1,22 @@
 import { Box, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
-import { FC, useMemo, useRef, useState } from "react";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
-import { useCreation } from "~/providers/CreationProvider";
-import { UpDownButtons } from "~/components/UpDownButtons";
-import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
-import { ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
+import { FC, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
+import { UpDownButtons } from "~/components/UpDownButtons";
 import { iconStyle } from "~/components/UpDownButtons/style";
+import { FORMULAIRE } from "~/core/constants";
+import { ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
+import { useCreation } from "~/providers/CreationProvider";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
+
 import {
   baseChoiceWrapperStyle,
   choiceInputStyle,
-  unselectedChoiceStyle,
   choicesWrapperStyle,
   choiceWrapperStyle,
   deleteButtonIconStyle,
@@ -23,13 +27,11 @@ import {
   sortIconStyle,
   sortWrapperStyle,
   StyledSortWrapper,
+  unselectedChoiceStyle,
   upDownButtonsWrapperStyle,
 } from "../CreationQuestionChoiceWrapper/style";
-import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { ICreationMatrixChildrenWrapperProps } from "./types";
 import { useMatrixChildrenActions } from "./useMatrixChildrenActions";
-import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
-import { useGlobal } from "~/providers/GlobalProvider";
 import { compareChildren } from "./utils";
 
 export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperProps> = ({ question, matrixType }) => {
