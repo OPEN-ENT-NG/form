@@ -4,8 +4,7 @@ import { Box } from "@cgi-learning-hub/ui";
 import { IconBookmark, IconClose, IconRafterDown } from "@edifice.io/react/icons";
 import { useTranslation } from "react-i18next";
 
-import { hasRight } from "./utils";
-import { showShareRightLine } from "./utils";
+import { hasRight, showShareRightLine } from "./utils";
 import { BoxComponentType } from "~/core/style/themeProps";
 
 export const ShareBookmarkLine = ({
