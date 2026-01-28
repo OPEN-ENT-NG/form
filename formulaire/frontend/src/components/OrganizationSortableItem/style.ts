@@ -1,4 +1,5 @@
 import { IconButton, Paper, styled, SxProps } from "@cgi-learning-hub/ui";
+
 import { IStyledPaperProps } from "./types";
 
 export const OrganizationStyledPaper = styled(Paper, {

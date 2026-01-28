@@ -1,5 +1,6 @@
 import { DEFAULT_CURSOR_STEP } from "~/core/constants";
 import { getElementById } from "~/providers/CreationProvider/utils";
+
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
 import { createNewFormElement, getFollowingFormElement, isQuestion, isSection } from "../formElement/utils";

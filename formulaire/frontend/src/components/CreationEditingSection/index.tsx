@@ -1,20 +1,11 @@
 import { Alert, Box, Button, Paper, Stack, TextField, Typography } from "@cgi-learning-hub/ui";
-import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
-import {
-  editorContainerStyle,
-  sectionContentStyle,
-  sectionFooterStyle,
-  sectionHeaderStyle,
-  sectionHeaderWrapperStyle,
-  sectionIconWrapperStyle,
-  sectionTitleStyle,
-} from "./style";
-import { ICreationEditingSectionProps } from "./types";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import CheckCircleRoundedIcon from "@mui/icons-material/CheckCircleRounded";
 import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
+import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
 import { DeleteConfirmationModal } from "~/containers/DeleteConfirmationModal";
 import { UndoConfirmationModal } from "~/containers/UndoConfirmationModal";
@@ -30,6 +21,7 @@ import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/us
 import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useCreateSectionMutation } from "~/services/api/services/formulaireApi/sectionApi";
+
 import {
   editingSectionTitleStyle,
   sectionButtonIconStyle,
@@ -37,6 +29,16 @@ import {
   sectionStackStyle,
 } from "../CreationSection/style";
 import { IconButtonTooltiped } from "../IconButtonTooltiped/IconButtonTooltiped";
+import {
+  editorContainerStyle,
+  sectionContentStyle,
+  sectionFooterStyle,
+  sectionHeaderStyle,
+  sectionHeaderWrapperStyle,
+  sectionIconWrapperStyle,
+  sectionTitleStyle,
+} from "./style";
+import { ICreationEditingSectionProps } from "./types";
 
 export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ section }) => {
   const { t } = useTranslation(FORMULAIRE);

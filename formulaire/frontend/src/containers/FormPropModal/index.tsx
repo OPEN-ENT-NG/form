@@ -15,7 +15,25 @@ import {
   Typography,
 } from "@cgi-learning-hub/ui";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
+import dayjs, { Dayjs } from "dayjs";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import RGPDInfoBox from "~/components/RgpdInfoBox";
+import { FORMULAIRE, IMAGE_PICKER_INFO } from "~/core/constants";
+import { buildFormPayload } from "~/core/models/form/utils";
+import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
+import { GREY_DARK_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import { preventPropagation } from "~/providers/CreationProvider/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
+import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
+import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formulaireApi/formApi";
+
+import { FormPropField, FormPropModalMode } from "./enums";
 import {
   checkboxRowStyle,
   contentRowWrapper,
@@ -30,23 +48,6 @@ import {
   subContentRowWrapper,
   textFieldStyle,
 } from "./style";
-
-import dayjs, { Dayjs } from "dayjs";
-import { useTranslation } from "react-i18next";
-import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
-import { ResponsiveDialog } from "~/components/ResponsiveDialog";
-import RGPDInfoBox from "~/components/RgpdInfoBox";
-import { FORMULAIRE, IMAGE_PICKER_INFO } from "~/core/constants";
-import { buildFormPayload } from "~/core/models/form/utils";
-import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
-import { GREY_DARK_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
-import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { preventPropagation } from "~/providers/CreationProvider/utils";
-import { useGlobal } from "~/providers/GlobalProvider";
-import { useHome } from "~/providers/HomeProvider";
-import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
-import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formulaireApi/formApi";
-import { FormPropField, FormPropModalMode } from "./enums";
 import { IFormCheckBoxProp, IFormPropModalProps } from "./types";
 import { useFormPropInputValueState } from "./useFormPropValueState";
 import { buildDelegatesParam, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";

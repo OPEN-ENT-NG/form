@@ -1,4 +1,5 @@
 import { Box, styled } from "@cgi-learning-hub/ui";
+
 import { IStyledDroppableTreeItemProps } from "./types";
 
 export const StyledDroppableTreeItem = styled(Box, {

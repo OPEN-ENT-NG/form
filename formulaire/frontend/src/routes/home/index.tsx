@@ -1,4 +1,5 @@
 import { FC } from "react";
+
 import { HomeView } from "~/containers/HomeView";
 import { HomeProvider } from "~/providers/HomeProvider";
 import { ShareModalProvider } from "~/providers/ShareModalProvider";

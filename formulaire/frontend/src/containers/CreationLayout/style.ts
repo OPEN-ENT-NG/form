@@ -1,7 +1,9 @@
 import { Box, styled } from "@cgi-learning-hub/ui";
-import { ICreationLayoutWrapperProps } from "./types";
+
 import { defaultViewMaxWidth } from "~/core/constants";
 import { blockProps } from "~/core/utils";
+
+import { ICreationLayoutWrapperProps } from "./types";
 
 export const CreationLayoutWrapper = styled(Box, {
   shouldForwardProp: blockProps("headerHeight"),

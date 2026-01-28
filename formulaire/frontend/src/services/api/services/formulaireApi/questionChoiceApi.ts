@@ -1,9 +1,11 @@
-import { QueryMethod, TagName } from "~/core/enums";
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
-import { t } from "~/i18n";
 import { toast } from "react-toastify";
+
+import { QueryMethod, TagName } from "~/core/enums";
 import { IQuestionChoice, IQuestionChoiceDTO } from "~/core/models/question/types";
 import { buildQuestionChoicePayload, transformQuestionChoices } from "~/core/models/question/utils";
+import { t } from "~/i18n";
+
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
 
 export const questionChoiceApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({

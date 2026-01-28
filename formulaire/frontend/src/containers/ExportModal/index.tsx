@@ -1,27 +1,28 @@
-import { IModalProps } from "~/core/types";
-import { ChangeEvent, FC, useState } from "react";
 import {
   Box,
+  Button,
   DialogActions,
   DialogContent,
   DialogTitle,
-  Typography,
-  Button,
   Loader,
   Radio,
   RadioGroup,
+  Typography,
 } from "@cgi-learning-hub/ui";
+import { ChangeEvent, FC, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
 
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { FORMULAIRE } from "~/core/constants";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { ExportFormat } from "./enum";
-import { dialogContentStyle, exportContainerStyle, radioGroupStyle } from "./style";
-import { useExportZipMutation, useLazyExportPdfFormQuery } from "~/services/api/services/formulaireApi/formApi";
+import { IModalProps } from "~/core/types";
 import { useHome } from "~/providers/HomeProvider";
 import { useVerifyExportAndDownloadZipMutation } from "~/services/api/services/archiveApi/importExportApi";
-import { ResponsiveDialog } from "~/components/ResponsiveDialog";
-import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { useExportZipMutation, useLazyExportPdfFormQuery } from "~/services/api/services/formulaireApi/formApi";
+
+import { ExportFormat } from "./enum";
+import { dialogContentStyle, exportContainerStyle, radioGroupStyle } from "./style";
 
 export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);

@@ -1,9 +1,11 @@
 import { Box } from "@cgi-learning-hub/ui";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { FC, useEffect, useRef, useState } from "react";
+
 import { EDITOR_CONTENT_HTML } from "~/core/constants";
 import { EditorMode, EditorVariant } from "~/core/enums";
 import { useResponse } from "~/providers/ResponseProvider";
+
 import { IRespondQuestionTypesProps } from "../types";
 import { respondQuestionLongAnswerStyle } from "./style";
 

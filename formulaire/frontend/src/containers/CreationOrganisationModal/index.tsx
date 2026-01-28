@@ -3,19 +3,21 @@ import { DndContext, DragOverlay, rectIntersection } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { FC, ReactNode, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { OrganizationSortableItem } from "~/components/OrganizationSortableItem";
 import { OrganizationSortableItemPreview } from "~/components/OrganizationSortableItemPreview";
 import { DRAG_HORIZONTAL_TRESHOLD, FORMULAIRE } from "~/core/constants";
 import { flattenFormElements } from "~/core/models/formElement/utils";
 import { BreakpointVariant, ComponentVariant } from "~/core/style/themeProps";
 import { IModalProps } from "~/core/types";
+import { updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useOrganizationModalDnd } from "~/hook/dnd-hooks/useOrganizationModalDnd";
 import { useCreation } from "~/providers/CreationProvider";
+import { checkForDoubleConditionnalInSections } from "~/providers/CreationProvider/utils";
+
 import { contentStackStyle } from "./style";
 import { IFlattenedItem } from "./types";
 import { formElementsListToFlattenedItemList } from "./utils";
-import { updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
-import { checkForDoubleConditionnalInSections } from "~/providers/CreationProvider/utils";
 
 export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);

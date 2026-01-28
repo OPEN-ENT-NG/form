@@ -1,4 +1,5 @@
 import { SxProps, Theme } from "@mui/material";
+
 import { COMMON_WHITE_COLOR, SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 
 export const sectionHeaderWrapperStyle: SxProps<Theme> = {

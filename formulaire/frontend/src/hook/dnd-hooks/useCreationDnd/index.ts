@@ -1,8 +1,11 @@
 import { DragMoveEvent, DragOverEvent, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { Dispatch, SetStateAction, useRef, useState } from "react";
+
 import { IFormElement } from "~/core/models/formElement/types";
 import { flattenFormElements } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
+import { checkForDoubleConditionnalInSections } from "~/providers/CreationProvider/utils";
+
 import { DndElementType, DndMove } from "./enum";
 import { getDndMove, moveQRtoQS, moveQStoQR, moveQStoQS, moveRtoR } from "./mainUtils";
 import {
@@ -15,7 +18,6 @@ import {
   getTargetRootPosition,
   updateNextTargetElements,
 } from "./utils";
-import { checkForDoubleConditionnalInSections } from "~/providers/CreationProvider/utils";
 
 export const useCreationDnd = (
   formElementsList: IFormElement[],

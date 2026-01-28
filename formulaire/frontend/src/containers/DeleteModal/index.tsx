@@ -1,22 +1,24 @@
-import { IModalProps } from "~/core/types";
+import { Button, DialogActions, DialogContent, DialogTitle, Typography } from "@cgi-learning-hub/ui";
 import { FC, useCallback } from "react";
-import { Button, Typography, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { FORMULAIRE, TRASH_FOLDER_ID } from "~/core/constants";
-import { deleteModalStyle } from "./style";
+import { IForm, IFormPayload } from "~/core/models/form/types";
+import { PRIMARY, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import { IModalProps } from "~/core/types";
 import { useHome } from "~/providers/HomeProvider";
-import { getText, getTitle } from "./utils";
 import { useDeleteFoldersMutation } from "~/services/api/services/formulaireApi/folderApi";
 import {
   useDeleteFormMutation,
   useMoveFormsMutation,
   useUpdateFormMutation,
 } from "~/services/api/services/formulaireApi/formApi";
-import { PRIMARY, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
-import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { IForm, IFormPayload } from "~/core/models/form/types";
-import { toast } from "react-toastify";
-import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+
+import { deleteModalStyle } from "./style";
+import { getText, getTitle } from "./utils";
 
 export const DeleteModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { selectedForms, selectedFolders, resetSelected, currentFolder } = useHome();

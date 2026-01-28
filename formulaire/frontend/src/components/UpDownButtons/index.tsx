@@ -1,12 +1,14 @@
-import { FC, useMemo } from "react";
 import { Box, IconButton } from "@cgi-learning-hub/ui";
-import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
+import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import { FC, useMemo } from "react";
+
+import { ComponentSize } from "~/core/style/themeProps";
+
 import { Direction } from "../OrganizationSortableItem/enum";
-import { IUpDownButtonsProps } from "./types";
 import { upDownButtonsContainerStyle } from "../OrganizationUpDownButtons/style";
 import { arrowWrapperStyle, iconStyle } from "./style";
-import { ComponentSize } from "~/core/style/themeProps";
+import { IUpDownButtonsProps } from "./types";
 
 export const UpDownButtons: FC<IUpDownButtonsProps> = ({
   element,

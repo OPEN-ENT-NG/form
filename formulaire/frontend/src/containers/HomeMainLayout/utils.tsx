@@ -1,15 +1,16 @@
+import AppsIcon from "@mui/icons-material/Apps";
+import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
+
 import { ChipsID, MenuItemsID, MenuItemState } from "~/components/OrganizeFilter/enum";
 import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
+import { ViewMode } from "~/components/SwitchView/enums";
+import { IToggleButtonItem } from "~/components/SwitchView/types";
 import { MYFORMS_FOLDER_ID, SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
 import { CursorStyle } from "~/core/enums";
 import { IFolder } from "~/core/models/folder/types";
 import { IForm } from "~/core/models/form/types";
 import { IDragItemProps } from "~/hook/dnd-hooks/types";
 import { isDraggedItemFolder, isDraggedItemForm } from "~/hook/dnd-hooks/utils";
-import AppsIcon from "@mui/icons-material/Apps";
-import FormatListBulletedIcon from "@mui/icons-material/FormatListBulleted";
-import { IToggleButtonItem } from "~/components/SwitchView/types";
-import { ViewMode } from "~/components/SwitchView/enums";
 
 export const formsChipDatas: IFormChipProps[] = [
   {

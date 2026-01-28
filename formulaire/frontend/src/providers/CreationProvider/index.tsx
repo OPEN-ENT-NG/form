@@ -1,6 +1,7 @@
 import { useEdificeClient } from "@edifice.io/react";
 import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
+
 import { IFolder } from "~/core/models/folder/types";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
@@ -13,6 +14,7 @@ import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folder
 import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
+
 import { useGlobal } from "../GlobalProvider";
 import { useRootFolders } from "../HomeProvider/utils";
 import { useFormElementActions } from "./hook/useFormElementActions";

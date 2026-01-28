@@ -1,13 +1,15 @@
-import { useMemo } from "react";
-import { IFolder } from "~/core/models/folder/types";
-import { HomeTabState, RootFolderIds } from "./enums";
-import { ViewMode } from "~/components/SwitchView/enums";
-import { IHomeTabViewPref, IUserTabRights } from "./types";
+import DeleteIcon from "@mui/icons-material/Delete";
 import FolderIcon from "@mui/icons-material/Folder";
 import ShareIcon from "@mui/icons-material/Share";
-import DeleteIcon from "@mui/icons-material/Delete";
+import { useMemo } from "react";
+
+import { ViewMode } from "~/components/SwitchView/enums";
+import { IFolder } from "~/core/models/folder/types";
 import { IUserWorkflowRights, WorkflowRights } from "~/core/rights";
 import { t } from "~/i18n";
+
+import { HomeTabState, RootFolderIds } from "./enums";
+import { IHomeTabViewPref, IUserTabRights } from "./types";
 
 export const useRootFolders = (): IFolder[] => {
   const rootFolders = useMemo<IFolder[]>(

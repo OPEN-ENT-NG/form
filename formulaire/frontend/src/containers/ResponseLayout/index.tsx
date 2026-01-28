@@ -1,18 +1,20 @@
-import { FC, useEffect, useState } from "react";
 import { Box, Button } from "@cgi-learning-hub/ui";
-import { responseLayoutStyle, StyledButtonsWrapper } from "./style";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+
+import { ProgressBar } from "~/components/ProgressBar";
 import { FORMULAIRE } from "~/core/constants";
+import { ResponsePageType } from "~/core/enums";
+import { IFormElement } from "~/core/models/formElement/types";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { useResponse } from "~/providers/ResponseProvider";
-import { IFormElement } from "~/core/models/formElement/types";
-import { ProgressBar } from "~/components/ProgressBar";
-import { getNextPositionIfValid } from "./utils";
-import { toast } from "react-toastify";
-import { isQuestion, isSection } from "~/core/models/formElement/utils";
+
 import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
 import { RespondSectionWrapper } from "../RespondSectionWrapper";
-import { ResponsePageType } from "~/core/enums";
+import { responseLayoutStyle, StyledButtonsWrapper } from "./style";
+import { getNextPositionIfValid } from "./utils";
 
 export const ResponseLayout: FC = () => {
   const {

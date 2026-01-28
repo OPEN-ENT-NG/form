@@ -18,6 +18,8 @@ import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
 import { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+
 import { getTransformStyle } from "~/components/CreationSortableItem/utils";
 import { IconButtonTooltiped } from "~/components/IconButtonTooltiped/IconButtonTooltiped";
 import { FORMULAIRE } from "~/core/constants";
@@ -46,6 +48,7 @@ import {
   preventPropagation,
 } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
+
 import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
 import { UndoConfirmationModal } from "../UndoConfirmationModal";
 import {
@@ -66,7 +69,6 @@ import {
 } from "./style";
 import { ICreationQuestionWrapperProps } from "./types";
 import { getQuestionContentByType } from "./utils";
-import { toast } from "react-toastify";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question, isPreview }) => {
   const { t } = useTranslation(FORMULAIRE);

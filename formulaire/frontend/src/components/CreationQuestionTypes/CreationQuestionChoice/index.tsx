@@ -1,8 +1,13 @@
+import { Box, Checkbox, IconButton, Radio, Typography } from "@cgi-learning-hub/ui";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
 import { FC, ReactNode, useCallback, useState } from "react";
-import { Box, IconButton, Typography, Checkbox, Radio } from "@cgi-learning-hub/ui";
-import { IMAGE_PICKER_INFO } from "~/core/constants";
-import { ICreationQuestionChoiceProps } from "./types";
+
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
+import { IMAGE_PICKER_INFO } from "~/core/constants";
+import { QuestionTypes } from "~/core/models/question/enum";
+import { ComponentSize } from "~/core/style/themeProps";
+
 import {
   choiceIconStyle,
   choiceInputStyle,
@@ -11,10 +16,7 @@ import {
   mediaLibraryWrapperStyle,
   questionChoiceWrapperStyle,
 } from "./style";
-import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
-import { ComponentSize } from "~/core/style/themeProps";
-import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import { QuestionTypes } from "~/core/models/question/enum";
+import { ICreationQuestionChoiceProps } from "./types";
 
 export const CreationQuestionChoice: FC<ICreationQuestionChoiceProps> = ({
   children,

@@ -1,7 +1,9 @@
 import { Box, Typography } from "@cgi-learning-hub/ui";
 import { Slider } from "@mui/material";
 import { FC, useEffect, useState } from "react";
+
 import { useResponse } from "~/providers/ResponseProvider";
+
 import { IRespondQuestionTypesProps } from "../types";
 import { respondQuestionCursorStyle } from "./style";
 

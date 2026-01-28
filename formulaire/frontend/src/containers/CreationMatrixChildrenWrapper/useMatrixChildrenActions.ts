@@ -1,12 +1,14 @@
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
-import { IQuestion } from "~/core/models/question/types";
+
 import { Direction } from "~/components/OrganizationSortableItem/enum";
-import { useDeleteSingleQuestionMutation } from "~/services/api/services/formulaireApi/questionApi";
-import { fixMatrixChildrenPositions } from "~/providers/CreationProvider/utils";
-import { PositionActionType } from "~/providers/CreationProvider/enum";
-import { compareChildren, compareChildrenByTitle, swapChildrenAndSort } from "./utils";
-import { createNewQuestion } from "~/core/models/question/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
+import { IQuestion } from "~/core/models/question/types";
+import { createNewQuestion } from "~/core/models/question/utils";
+import { PositionActionType } from "~/providers/CreationProvider/enum";
+import { fixMatrixChildrenPositions } from "~/providers/CreationProvider/utils";
+import { useDeleteSingleQuestionMutation } from "~/services/api/services/formulaireApi/questionApi";
+
+import { compareChildren, compareChildrenByTitle, swapChildrenAndSort } from "./utils";
 
 export const useMatrixChildrenActions = (
   question: IQuestion,

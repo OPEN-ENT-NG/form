@@ -1,13 +1,14 @@
-import { FC } from "react";
-
 import { Box, EllipsisWithTooltip, Link } from "@cgi-learning-hub/ui";
+import { FC } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { FORMULAIRE } from "~/core/constants";
+import { getHomePath } from "~/core/pathHelper";
 import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
+
 import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
 import { IFormBreadcrumbsProps } from "./types";
-import { getHomePath } from "~/core/pathHelper";
 
 export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   icon: Icon,
