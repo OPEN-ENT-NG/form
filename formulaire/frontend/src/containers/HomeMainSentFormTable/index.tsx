@@ -12,9 +12,8 @@ import {
   TableHead,
   TablePagination,
   TableRow,
+  Typography,
 } from "@cgi-learning-hub/ui";
-import { useSentFormColumns } from "./utils";
-import { Typography } from "@cgi-learning-hub/ui";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { IForm } from "~/core/models/form/types";
 import { getPageForms, initialTableProps } from "../HomeMainFormsTable/utils";
@@ -23,6 +22,7 @@ import { getFormDistributions, getFormStatusText, isFormFilled } from "~/core/mo
 import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
 import { ERROR_MAIN_COLOR, SUCCESS_MAIN_COLOR } from "~/core/style/colors";
 import { getFirstDistributionDate } from "~/core/models/distribution/utils";
+import { useSentFormColumns } from "./utils";
 
 export const HomeMainSentFormTable: FC<IHomeMainSentFormTableProps> = ({ sentForms, distributions }) => {
   const { selectedSentForm, setSelectedSentForm } = useHome();
