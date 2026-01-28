@@ -52,7 +52,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     setQuestionModalSection,
     setFormElementsList,
     newChoiceValue,
-    setNewChoiceValue
+    setNewChoiceValue,
   } = useCreation();
   const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
   const editorRef = useRef<EditorRef>(null);
