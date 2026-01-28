@@ -39,6 +39,7 @@ export const useFormElementActions = (
   currentEditingElement: IFormElement | null,
   setFormElementsList: (list: IFormElement[]) => void,
   setIsUpdating: Dispatch<SetStateAction<boolean>>,
+  setIsQuestionSaving?: Dispatch<SetStateAction<boolean>>,
 ) => {
   const { t } = useTranslation(FORMULAIRE);
 
@@ -288,6 +289,7 @@ export const useFormElementActions = (
     async (question: IQuestion, updatedFormElementsList?: IFormElement[]) => {
       if (!isInFormElementsList(question, updatedFormElementsList ? updatedFormElementsList : formElementsList)) return;
 
+      setIsQuestionSaving?.(true);
       //Save Question
       let questionSaved = question;
       if (question.isNew) {
@@ -323,13 +325,14 @@ export const useFormElementActions = (
             questionChoices: preventEmptyChoiceValues(
               choicesToCreateList,
               question.questionType === QuestionTypes.MATRIX,
-            ).map((choice) => {
-              return { ...choice, questionId: questionSaved.id };
-            }),
+            ).map((choice) => ({
+              ...choice,
+              questionId: questionSaved.id,
+            })),
             formId: String(question.formId),
           }).unwrap();
         }
-        
+
         if (choicesToUpdateList.length) {
           await updateMultipleChoiceQuestions({
             questionChoices: preventEmptyChoiceValues(
@@ -339,7 +342,6 @@ export const useFormElementActions = (
             formId: String(question.formId),
           }).unwrap();
         }
-
       }
 
       //Save Childrens
@@ -380,6 +382,8 @@ export const useFormElementActions = (
           ).unwrap();
         }
       }
+
+      setIsQuestionSaving?.(false);
     },
     [isInFormElementsList, formElementsList],
   );

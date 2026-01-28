@@ -44,6 +44,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [newChoiceValue, setNewChoiceValue] = useState<string>("");
+  const [isQuestionSaving, setIsQuestionSaving] = useState(false);
   if (formId === undefined) {
     throw new Error("formId is undefined");
   }
@@ -62,10 +63,17 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
     sectionsDatas,
     questionsDatas,
     resetFormElementListId,
-    isQuestionsFetching || isSectionsFetching || isUpdating,
+    isQuestionsFetching || isSectionsFetching || isUpdating || isQuestionSaving,
   );
   const { duplicateQuestion, duplicateSection, saveQuestion, saveSection, updateFormElementsList } =
-    useFormElementActions(formElementsList, formId, currentEditingElement, setFormElementsList, setIsUpdating);
+    useFormElementActions(
+      formElementsList,
+      formId,
+      currentEditingElement,
+      setFormElementsList,
+      setIsUpdating,
+      setIsQuestionSaving,
+    );
 
   useEffect(() => {
     if (foldersDatas) {
@@ -186,9 +194,18 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       isDragging,
       setIsDragging,
       newChoiceValue,
-      setNewChoiceValue
+      setNewChoiceValue,
     }),
-    [currentFolder, folders, form, formElementsList, currentEditingElement, questionModalSection, isDragging, newChoiceValue],
+    [
+      currentFolder,
+      folders,
+      form,
+      formElementsList,
+      currentEditingElement,
+      questionModalSection,
+      isDragging,
+      newChoiceValue,
+    ],
   );
 
   return <CreationProviderContext.Provider value={value}>{children}</CreationProviderContext.Provider>;
