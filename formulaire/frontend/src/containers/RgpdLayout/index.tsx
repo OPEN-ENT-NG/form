@@ -14,7 +14,7 @@ import { useResponse } from "~/providers/ResponseProvider";
 import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
 
 import { buildDelegatesParam } from "../FormPropModal/utils";
-import { rgpdLayoutStyle, rgpdStackStyle } from "./style"
+import { rgpdLayoutStyle, rgpdStackStyle } from "./style";
 
 export const RgpdLayout: FC = () => {
   const { form, setPageType } = useResponse();

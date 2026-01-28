@@ -4,10 +4,10 @@ import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
+import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
-import { IResponse } from "~/core/models/response/type";
 
 export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { getQuestionResponses, updateQuestionResponses } = useResponse();

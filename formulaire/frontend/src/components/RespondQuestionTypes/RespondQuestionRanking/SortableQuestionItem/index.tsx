@@ -7,7 +7,7 @@ import { FC, useMemo } from "react";
 
 import { getTransformStyle } from "~/components/CreationSortableItem/utils";
 
-import { buttonsBoxStyle, buttonStyle, GrapableBox, grapableBoxStyle, leftBoxStyle, SortableQuestionPaper } from "./style";
+import { buttonsBoxStyle, buttonStyle, grapableBoxStyle, leftBoxStyle, SortableQuestionPaper } from "./style";
 import { ISortableQuestionItemProps } from "./types";
 
 export const SortableItem: FC<ISortableQuestionItemProps> = ({
