@@ -1,13 +1,13 @@
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
-import { Dialog, DialogActions, DialogContent, DialogTitle, Button, Typography } from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { IDeleteConfirmationModalProps } from "./types";
 import { useCreation } from "~/providers/CreationProvider";
 import { useFormElementActions } from "~/providers/CreationProvider/hook/useFormElementActions";
-import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { preventPropagation } from "~/providers/CreationProvider/utils";
+import { IDeleteConfirmationModalProps } from "./types";
 
 export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isOpen, handleClose, element }) => {
   const { t } = useTranslation(FORMULAIRE);

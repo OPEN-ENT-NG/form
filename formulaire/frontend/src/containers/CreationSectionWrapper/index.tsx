@@ -4,13 +4,13 @@ import { FC, useMemo } from "react";
 import { CreationEditingSection } from "~/components/CreationEditingSection";
 import { CreationSection } from "~/components/CreationSection";
 import { getTransformStyle } from "~/components/CreationSortableItem/utils";
+import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { useCreation } from "~/providers/CreationProvider";
+import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { CreateFormElementModal } from "../CreateFormElementModal";
-import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { ICreationSectionWrapperProps } from "./types";
 
 export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ section, isPreview }) => {
@@ -20,8 +20,11 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
     handleDeleteFormElement,
     setCurrentEditingElement,
     saveSection,
+    saveQuestion,
     formElementsList,
     setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue
   } = useCreation();
   const isEditing = isCurrentEditingElement(section, currentEditingElement);
   const {
@@ -33,7 +36,9 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
     setCurrentEditingElement,
     formElementsList,
     setFormElementsList,
-    undefined,
+    newChoiceValue,
+    setNewChoiceValue,
+    saveQuestion,
     saveSection,
   );
 

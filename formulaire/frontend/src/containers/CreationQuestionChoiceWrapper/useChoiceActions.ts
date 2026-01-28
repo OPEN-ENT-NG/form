@@ -1,12 +1,12 @@
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
-import { IQuestion } from "~/core/models/question/types";
 import { Direction } from "~/components/OrganizationSortableItem/enum";
-import { useDeleteQuestionChoiceMutation } from "~/services/api/services/formulaireApi/questionChoiceApi";
-import { fixChoicesPositions } from "~/providers/CreationProvider/utils";
-import { PositionActionType } from "~/providers/CreationProvider/enum";
-import { compareChoices, compareChoicesByValue, swapChoicesAndSort } from "./utils";
-import { createNewQuestionChoice } from "~/core/models/question/utils";
 import { FormElementType } from "~/core/models/formElement/enum";
+import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
+import { createNewQuestionChoice } from "~/core/models/question/utils";
+import { PositionActionType } from "~/providers/CreationProvider/enum";
+import { fixChoicesPositions } from "~/providers/CreationProvider/utils";
+import { useDeleteQuestionChoiceMutation } from "~/services/api/services/formulaireApi/questionChoiceApi";
+import { compareChoices, compareChoicesByValue, swapChoicesAndSort } from "./utils";
 
 export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: (q: IQuestion) => void) => {
   const [currentSortDirection, setCurrentSortDirection] = useState<Direction>(Direction.DOWN);
@@ -74,8 +74,8 @@ export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: 
   }, [choices, currentSortDirection, question]);
 
   const handleNewChoice = useCallback(
-    (isCustom: boolean, choiceValue: string) => {
-      if ((isExistingCustomChoice && isCustom) || !choiceValue) return;
+    (isCustom: boolean, choiceValue: string): IQuestionChoice | null => {
+      if ((isExistingCustomChoice && isCustom) || !choiceValue) return null;
 
       const newChoice = createNewQuestionChoice(
         question.id,
@@ -94,10 +94,11 @@ export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: 
             .concat(newChoice, { ...customChoice, position: customChoice.position + 1 });
           setCurrentEditingElement({ ...question, choices: updatedChoices });
         }
-        return;
+        return newChoice;
       }
 
       setCurrentEditingElement({ ...question, choices: [...choices, newChoice] });
+      return newChoice;
     },
     [question, choices, isExistingCustomChoice],
   );

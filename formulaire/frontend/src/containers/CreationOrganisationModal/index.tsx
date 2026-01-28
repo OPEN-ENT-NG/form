@@ -15,6 +15,7 @@ import { contentStackStyle } from "./style";
 import { IFlattenedItem } from "./types";
 import { formElementsListToFlattenedItemList } from "./utils";
 import { updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
+import { checkForDoubleConditionnalInSections } from "~/providers/CreationProvider/utils";
 
 export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -48,6 +49,7 @@ export const CreationOrganisationModal: FC<IModalProps> = ({ isOpen, handleClose
   );
 
   const handleConfirm = useCallback(() => {
+    if (checkForDoubleConditionnalInSections(formElementsList)) return;
     const updatedFormElementsList = updateNextTargetElements(formElementsList);
     void updateFormElementsList(flattenFormElements(updatedFormElementsList));
     handleClose();

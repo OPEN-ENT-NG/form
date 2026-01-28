@@ -1,22 +1,25 @@
 import { Box, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
-import { FC, useMemo, useRef, useState } from "react";
-import { ICreationQuestionChoiceWrapperProps } from "./types";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
-import { useCreation } from "~/providers/CreationProvider";
-import { UpDownButtons } from "~/components/UpDownButtons";
-import { compareChoices, hasImageType } from "./utils";
-import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
-import { BoxComponentType, ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
-import { iconStyle } from "~/components/UpDownButtons/style";
 import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
-import { useChoiceActions } from "./useChoiceActions";
+import { FC, useMemo, useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
+import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
+import { UpDownButtons } from "~/components/UpDownButtons";
+import { iconStyle } from "~/components/UpDownButtons/style";
+import { FORMULAIRE } from "~/core/constants";
+import { QuestionTypes } from "~/core/models/question/enum";
+import { BoxComponentType, ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
+import { useCreation } from "~/providers/CreationProvider";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
 import {
   choiceInputStyle,
-  unselectedChoiceStyle,
   choicesWrapperStyle,
+  choicesWrapperWhenNotEditingStyle,
   choiceWrapperStyle,
+  customChoiceWrapperStyle,
   deleteButtonIconStyle,
   deleteWrapperStyle,
   newChoiceInputStyle,
@@ -26,24 +29,21 @@ import {
   sortIconStyle,
   sortWrapperStyle,
   StyledSortWrapper,
+  unselectedChoiceStyle,
   upDownButtonsWrapperStyle,
-  customChoiceWrapperStyle,
-  choicesWrapperWhenNotEditingStyle,
 } from "./style";
-import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
-import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
-import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
-import { useGlobal } from "~/providers/GlobalProvider";
+import { ICreationQuestionChoiceWrapperProps } from "./types";
+import { useChoiceActions } from "./useChoiceActions";
+import { compareChoices, hasImageType } from "./utils";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({
   question,
   type,
   hideCustomChoice = false,
 }) => {
-  const { currentEditingElement, setCurrentEditingElement } = useCreation();
+  const { currentEditingElement, setCurrentEditingElement, newChoiceValue, setNewChoiceValue } = useCreation();
   const { selectAllTextInput } = useGlobal();
   const { t } = useTranslation(FORMULAIRE);
-  const [newChoiceValue, setNewChoiceValue] = useState<string>("");
   const inputRefs = useRef<Record<string | number, HTMLInputElement | null>>({});
   const newChoiceRefName = "newChoice";
 
@@ -59,8 +59,11 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   } = useChoiceActions(question, setCurrentEditingElement);
 
   const sortedChoices = useMemo(() => {
-    return choices.filter((c) => !c.isCustom).sort((a, b) => compareChoices(a, b));
+    return [...choices]
+      .filter(c => !c.isCustom)
+      .sort((a, b) => compareChoices(a, b));
   }, [choices]);
+
 
   const customChoice = useMemo(() => {
     return choices.find((c) => c.isCustom);
@@ -95,6 +98,12 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
       handleNewChoice(false, newChoiceValue);
       setNewChoiceValue("");
     }
+  };
+
+  const getPlaceholder = () => {
+    return question.questionType === QuestionTypes.MATRIX
+      ? t("formulaire.matrix.column.label.default", { 0: "" })
+      : t("formulaire.question.option");
   };
 
   const renderChoicesWhenNotEditing = () => {
@@ -202,7 +211,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                   inputRef={(el: HTMLInputElement | null) => (inputRefs.current[newChoiceRefName] = el)}
                   value={newChoiceValue}
                   variant={ComponentVariant.STANDARD}
-                  placeholder={t("formulaire.question.option")}
+                  placeholder={getPlaceholder()}
                   fullWidth
                   onFocus={selectAllTextInput}
                   onBlur={() => {

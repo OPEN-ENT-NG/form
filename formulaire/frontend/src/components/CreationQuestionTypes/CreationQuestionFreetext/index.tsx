@@ -5,9 +5,8 @@ import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { StyledEditorWrapper } from "./style";
 import { EditorMode } from "./enums";
-import { ClickAwayListener } from "@mui/material";
-import { EDITOR_CONTENT_HTML, MOUSE_EVENT_DOWN, TOUCH_EVENT_START } from "~/core/constants";
 import { EditorVariant } from "~/core/style/themeProps";
+import { EDITOR_CONTENT_HTML } from "~/core/constants";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
@@ -25,44 +24,30 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
     }
   }, []);
 
-  // Save question when we this component is not the edited one anymore
-  const handleUpdateStatement = (newStatement: string) => {
-    if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) {
-      return;
-    }
+  const updateStatement = () => {
+    if (!currentEditingElement || !isCurrentEditingElement(question, currentEditingElement)) return;
 
     const updatedQuestion = {
       ...question,
-      statement: newStatement,
+      statement: editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string,
     };
 
     setCurrentEditingElement(updatedQuestion);
   };
 
   return (
-    <>
+    <StyledEditorWrapper isCurrentEditingElement={true}>
       {isCurrentEditingElement(question, currentEditingElement) ? (
-        <ClickAwayListener
-          mouseEvent={MOUSE_EVENT_DOWN}
-          touchEvent={TOUCH_EVENT_START}
-          onClickAway={() => {
-            handleUpdateStatement(editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string);
-          }}
-        >
-          <StyledEditorWrapper isCurrentEditingElement={true}>
-            <Editor
-              content={question.statement}
-              ref={editorRef}
-              mode={EditorMode.EDIT}
-              variant={EditorVariant.OUTLINE}
-            />
-          </StyledEditorWrapper>
-        </ClickAwayListener>
+        <Editor
+          content={question.statement}
+          ref={editorRef}
+          onContentChange={updateStatement}
+          mode={EditorMode.EDIT}
+          variant={EditorVariant.OUTLINE}
+        />
       ) : (
-        <StyledEditorWrapper isCurrentEditingElement={false}>
-          <Editor content={question.statement} ref={editorRef} mode={EditorMode.READ} variant={EditorVariant.GHOST} />
-        </StyledEditorWrapper>
+        <Editor content={question.statement} ref={editorRef} mode={EditorMode.READ} variant={EditorVariant.GHOST} />
       )}
-    </>
+    </StyledEditorWrapper>
   );
 };

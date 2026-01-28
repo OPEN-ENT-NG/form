@@ -9,6 +9,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { IForm } from "~/core/models/form/types";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { useGlobal } from "~/providers/GlobalProvider";
@@ -31,6 +32,8 @@ export const CreationView: FC = () => {
     saveQuestion,
     saveSection,
     setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue
   } = useCreation();
   const navigate = useNavigate();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
@@ -47,9 +50,12 @@ export const CreationView: FC = () => {
     setCurrentEditingElement,
     formElementsList,
     setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue,
     saveQuestion,
     saveSection,
   );
+  const { isTheme1D } = useTheme();
 
   const getStringFolders = (form: IForm): string[] => {
     const parentFolders = getRecursiveFolderParents(form.folder_id, folders);
@@ -84,7 +90,7 @@ export const CreationView: FC = () => {
   const desktopView = (
     <>
       <Box
-        sx={creationViewStyle}
+        sx={creationViewStyle(isTheme1D)}
         data-type={ClickAwayDataType.ROOT}
         onMouseDown={(e) => {
           handleClickAway(e, currentEditingElement);
@@ -122,5 +128,5 @@ export const CreationView: FC = () => {
     </>
   );
 
-  return <Box sx={creationViewStyle}>{selectView()}</Box>;
+  return <Box sx={creationViewStyle(isTheme1D)}>{selectView()}</Box>;
 };

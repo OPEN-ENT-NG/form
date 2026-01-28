@@ -38,12 +38,17 @@ export const subContentColumnWrapper = {
   gap: "1rem",
 };
 
+export const contentRowWrapper = {
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "flex-start",
+};
+
 export const subContentRowWrapper = {
   display: "flex",
   alignItems: "center",
   justifyContent: "flex-start",
   gap: "1rem",
-  height: "43px",
 };
 
 export const subContentRowMobileWrapper = {
