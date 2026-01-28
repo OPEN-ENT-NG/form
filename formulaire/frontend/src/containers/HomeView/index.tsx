@@ -1,29 +1,31 @@
+import { ActionBar, Box, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
+
 import { Header } from "~/components/Header";
 import { defaultViewMaxWidth, FORMULAIRE } from "~/core/constants";
-import { ActionBar, Box, Typography } from "@cgi-learning-hub/ui";
-import { useGetHomeHeaderButtons, useElementHeight } from "./utils";
+import { ModalType } from "~/core/enums";
+import { WorkflowRights } from "~/core/rights";
+import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
+
+import { DeleteModal } from "../DeleteModal";
+import { ExportModal } from "../ExportModal";
 import { FolderModal } from "../FolderModal";
 import { FolderModalMode } from "../FolderModal/types";
-import { HomeLayout } from "../HomeLayout";
-import { ModalType } from "~/core/enums";
-import { useGlobal } from "~/providers/GlobalProvider";
+import { FormImportModal } from "../FormImportModal";
+import { FormOpenBlockedModal } from "../FormOpenBlockedModal";
 import { FormPropModal } from "../FormPropModal";
 import { FormPropModalMode } from "../FormPropModal/enums";
-import { useHome } from "~/providers/HomeProvider";
-import { useMapActionBarButtons } from "./useMapActionBarButtons";
-import { DeleteModal } from "../DeleteModal";
-import { FormImportModal } from "../FormImportModal";
-import { MoveModal } from "../MoveModal";
-import { ExportModal } from "../ExportModal";
 import { FormShareModal } from "../FormShareModal";
-import { RemindModal } from "../RemindModal";
+import { HomeLayout } from "../HomeLayout";
+import { MoveModal } from "../MoveModal";
 import { MyAnswersModal } from "../MyAnswersModal";
-import { HomeTabState } from "~/providers/HomeProvider/enums";
-import { WorkflowRights } from "~/core/rights";
-import { FormOpenBlockedModal } from "../FormOpenBlockedModal";
+import { RemindModal } from "../RemindModal";
 import { homeViewStyle } from "./style";
+import { useMapActionBarButtons } from "./useMapActionBarButtons";
+import { useElementHeight, useGetHomeHeaderButtons } from "./utils";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);

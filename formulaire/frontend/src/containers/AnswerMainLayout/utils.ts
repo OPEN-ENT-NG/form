@@ -1,9 +1,10 @@
+import { IDistribution } from "~/core/models/distribution/types";
+import { getFirstDistributionDate } from "~/core/models/distribution/utils";
 import { IForm } from "~/core/models/form/types";
+import { getFormDistributions, isFormFilled } from "~/core/models/form/utils";
+
 import { ChipsID, MenuItemsID, MenuItemState } from "../../components/OrganizeFilter/enum";
 import { IFormChipProps, IMenuItemProps } from "../../components/OrganizeFilter/types";
-import { IDistribution } from "~/core/models/distribution/types";
-import { getFormDistributions, isFormFilled } from "~/core/models/form/utils";
-import { getFirstDistributionDate } from "~/core/models/distribution/utils";
 
 export const sentFormsChipDatas: IFormChipProps[] = [
   {

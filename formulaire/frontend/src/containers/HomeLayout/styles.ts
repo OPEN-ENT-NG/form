@@ -1,7 +1,9 @@
 import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
-import { IHomeLayoutWrapperProps } from "./types";
+
 import { CSS_DIVIDER_COLOR } from "~/core/style/cssColors";
 import { blockProps } from "~/core/utils";
+
+import { IHomeLayoutWrapperProps } from "./types";
 
 export const StyledHomeLayoutWrapper = styled(Box, {
   shouldForwardProp: blockProps("headerHeight"),

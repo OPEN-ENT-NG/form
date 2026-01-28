@@ -1,11 +1,12 @@
+import { FolderCard } from "@cgi-learning-hub/ui";
 import { useDndMonitor, useDraggable, useDroppable } from "@dnd-kit/core";
 import { FC, useState } from "react";
-import { DraggableType } from "~/core/enums";
 
-import { FolderCard } from "@cgi-learning-hub/ui";
-import { IDraggableFolderProps } from "./types";
-import { StyledDraggableFolder } from "./style";
+import { DraggableType } from "~/core/enums";
 import { useGlobal } from "~/providers/GlobalProvider";
+
+import { StyledDraggableFolder } from "./style";
+import { IDraggableFolderProps } from "./types";
 
 export const DraggableFolder: FC<IDraggableFolderProps> = ({
   folder,

@@ -1,18 +1,20 @@
-import { FC } from "react";
 import { Box, EllipsisWithTooltip } from "@cgi-learning-hub/ui";
-import { IOrganizationSortableItemPreviewProps } from "./types";
-import { useCreation } from "~/providers/CreationProvider";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
+import { FC } from "react";
+
+import { DRAG_HORIZONTAL_TRESHOLD } from "~/core/constants";
+import { isSection } from "~/core/models/formElement/utils";
+import { TypographyVariant } from "~/core/style/themeProps";
+import { useCreation } from "~/providers/CreationProvider";
+
 import {
   iconStyle,
   OrganizationStyledPaper,
   paperContentStyle,
   typographyStyle,
 } from "../OrganizationSortableItem/style";
-import { TypographyVariant } from "~/core/style/themeProps";
-import { DRAG_HORIZONTAL_TRESHOLD } from "~/core/constants";
 import { OrganizationUpDownButtons } from "../OrganizationUpDownButtons";
-import { isSection } from "~/core/models/formElement/utils";
+import { IOrganizationSortableItemPreviewProps } from "./types";
 
 export const OrganizationSortableItemPreview: FC<IOrganizationSortableItemPreviewProps> = ({
   formElement,

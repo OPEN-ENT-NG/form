@@ -1,31 +1,33 @@
-import { FC, useState } from "react";
 import { Box, SearchInput, Typography } from "@cgi-learning-hub/ui";
+import { useEdificeClient } from "@edifice.io/react";
+import { useTheme } from "@mui/material";
+import { FC, useState } from "react";
+import { useTranslation } from "react-i18next";
+
 import {
   emptyStateWrapperStyle,
   resourceContainerStyle,
   searchBarStyle,
   StyledMainContentInnerWrapper,
 } from "~/containers/HomeMainLayout/style";
-import { HomeTabs } from "../../components/HomeTab";
-import { useHome } from "~/providers/HomeProvider";
-import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
-import { useEdificeClient } from "@edifice.io/react";
-import { IFormChipProps, IMenuItemProps } from "../../components/OrganizeFilter/types";
 import { useSearchAndOrganize } from "~/containers/HomeMainLayout/useSearchAndOrganize";
-import { SwitchView } from "../../components/SwitchView";
-import { OrganizeFilter } from "../../components/OrganizeFilter";
-import { IToggleButtonItem } from "../../components/SwitchView/types";
 import { useToggleButtons } from "~/containers/HomeMainLayout/utils";
-import { sentFormMenuItemDatas, sentFormsChipDatas } from "./utils";
-import { ViewMode } from "../../components/SwitchView/enums";
 import { HomeMainSentForms } from "~/containers/HomeMainSentForms";
 import { HomeMainSentFormTable } from "~/containers/HomeMainSentFormTable";
-import { ResourcesEmptyState } from "../../components/SVG/RessourcesEmptyState";
-import { useTheme } from "@mui/material";
+import { FORMULAIRE } from "~/core/constants";
 import { centerBoxStyle } from "~/core/style/boxStyles";
-import { myAnswerSearchStyle, StyledMyAnswerHeaderWrapper, tabStyle } from "./style";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
+
+import { HomeTabs } from "../../components/HomeTab";
+import { OrganizeFilter } from "../../components/OrganizeFilter";
+import { IFormChipProps, IMenuItemProps } from "../../components/OrganizeFilter/types";
+import { ResourcesEmptyState } from "../../components/SVG/RessourcesEmptyState";
+import { SwitchView } from "../../components/SwitchView";
+import { ViewMode } from "../../components/SwitchView/enums";
+import { IToggleButtonItem } from "../../components/SwitchView/types";
+import { myAnswerSearchStyle, StyledMyAnswerHeaderWrapper, tabStyle } from "./style";
+import { sentFormMenuItemDatas, sentFormsChipDatas } from "./utils";
 
 export const AnswerMainLayout: FC = () => {
   const { user } = useEdificeClient();

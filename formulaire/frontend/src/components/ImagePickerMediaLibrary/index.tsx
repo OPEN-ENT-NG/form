@@ -1,26 +1,13 @@
+import { useEdificeClient, useWorkspaceFile } from "@edifice.io/react";
+import { MediaLibrary, MediaLibraryRef } from "@edifice.io/react/multimedia";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import CreateIcon from "@mui/icons-material/Create";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { Box, Typography } from "@mui/material";
 import { FC, useEffect, useRef, useState } from "react";
-import { MediaLibrary, MediaLibraryRef } from "@edifice.io/react/multimedia";
-import { useEdificeClient, useWorkspaceFile } from "@edifice.io/react";
 import { createPortal } from "react-dom";
-import {
-  imagePickerContainerStyle,
-  emptyStateContentStyle,
-  iconStyle,
-  labelTextStyle,
-  infoTextStyle,
-  actionsContainerStyle,
-  actionButtonStyle,
-  imageStyle,
-  mediaLibraryStyle,
-  StyledContainer,
-} from "./style";
-import { IImagePickerMediaLibraryProps, MediaLibraryResult } from "./types";
-import { BoxComponentType, TypographyFontStyle } from "~/core/style/themeProps";
 import { useDropzone } from "react-dropzone";
+
 import {
   FORMULAIRE,
   GIF_EXTENSION,
@@ -30,6 +17,21 @@ import {
   PROTECTED_VISIBILITY,
   SVG_EXTENSION,
 } from "~/core/constants";
+import { BoxComponentType, TypographyFontStyle } from "~/core/style/themeProps";
+
+import {
+  actionButtonStyle,
+  actionsContainerStyle,
+  emptyStateContentStyle,
+  iconStyle,
+  imagePickerContainerStyle,
+  imageStyle,
+  infoTextStyle,
+  labelTextStyle,
+  mediaLibraryStyle,
+  StyledContainer,
+} from "./style";
+import { IImagePickerMediaLibraryProps, MediaLibraryResult } from "./types";
 
 export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   information,

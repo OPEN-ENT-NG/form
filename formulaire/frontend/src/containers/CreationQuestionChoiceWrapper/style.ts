@@ -1,6 +1,8 @@
+import { Box, styled } from "@cgi-learning-hub/ui";
 import { SxProps } from "@mui/material";
+
 import { PRIMARY_DARKER_COLOR, PRIMARY_MAIN_COLOR } from "~/core/style/colors";
-import { styled, Box } from "@cgi-learning-hub/ui";
+
 import { INewChoiceWrapperProps } from "./types";
 
 export const sortWrapperStyle: SxProps = {

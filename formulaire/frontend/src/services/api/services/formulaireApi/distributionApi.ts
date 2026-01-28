@@ -1,10 +1,12 @@
-import { IDistribution, IDistributionDTO } from "~/core/models/distribution/types.ts";
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
-import { QueryMethod, TagName } from "~/core/enums";
-import { FORMULAIRE } from "~/core/constants.ts";
-import { t } from "~/i18n.ts";
 import { toast } from "react-toastify";
+
+import { FORMULAIRE } from "~/core/constants.ts";
+import { QueryMethod, TagName } from "~/core/enums";
+import { IDistribution, IDistributionDTO } from "~/core/models/distribution/types.ts";
 import { transformDistribution, transformDistributions } from "~/core/models/distribution/utils.ts";
+import { t } from "~/i18n.ts";
+
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
 export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({

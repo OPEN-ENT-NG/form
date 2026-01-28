@@ -1,9 +1,11 @@
-import { IFolder, ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder/types.ts";
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
-import { QueryMethod, TagName } from "~/core/enums.ts";
 import { toast } from "react-toastify";
-import { t } from "~/i18n";
+
 import { FORMULAIRE } from "~/core/constants";
+import { QueryMethod, TagName } from "~/core/enums.ts";
+import { ICreateFolderPayload, IFolder, IUpdateFolderPayload } from "~/core/models/folder/types.ts";
+import { t } from "~/i18n";
+
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
 export const folderApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({

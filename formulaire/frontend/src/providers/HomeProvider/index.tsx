@@ -1,17 +1,19 @@
-import { FC, createContext, useContext, useMemo, useState, useEffect, useCallback } from "react";
-import { HomeProviderContextType, IHomeProviderProps, IHomeTabViewPref } from "./types";
-import { initTabViewPref, initUserTabRights, useRootFolders } from "./utils";
-import { IFolder } from "~/core/models/folder/types";
-import { HomeTabState } from "./enums";
-import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
-import { IForm } from "~/core/models/form/types";
-import { useGetFormsQuery, useGetSentFormsQuery } from "~/services/api/services/formulaireApi/formApi";
+import { useEdificeClient } from "@edifice.io/react";
+import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
+
 import { ViewMode } from "~/components/SwitchView/enums";
 import { IDistribution } from "~/core/models/distribution/types";
-import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
-import { useEdificeClient } from "@edifice.io/react";
+import { IFolder } from "~/core/models/folder/types";
+import { IForm } from "~/core/models/form/types";
 import { workflowRights } from "~/core/rights";
+import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
+import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
+import { useGetFormsQuery, useGetSentFormsQuery } from "~/services/api/services/formulaireApi/formApi";
+
 import { useGlobal } from "../GlobalProvider";
+import { HomeTabState } from "./enums";
+import { HomeProviderContextType, IHomeProviderProps, IHomeTabViewPref } from "./types";
+import { initTabViewPref, initUserTabRights, useRootFolders } from "./utils";
 
 const HomeProviderContext = createContext<HomeProviderContextType | null>(null);
 

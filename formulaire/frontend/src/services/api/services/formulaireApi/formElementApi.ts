@@ -1,11 +1,13 @@
-import { QueryMethod, TagName } from "~/core/enums";
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
 import { toast } from "react-toastify";
-import { t } from "~/i18n";
+
+import { QueryMethod, TagName } from "~/core/enums";
 import { IFormElement } from "~/core/models/formElement/types";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { buildQuestionPayload } from "~/core/models/question/utils";
 import { buildSectionPayload } from "~/core/models/section/utils";
-import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { t } from "~/i18n";
+
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
 
 export const formElementApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({

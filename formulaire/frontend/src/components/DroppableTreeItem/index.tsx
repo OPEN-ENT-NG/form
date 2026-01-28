@@ -1,10 +1,12 @@
 import { useDroppable } from "@dnd-kit/core";
 import { FC, useMemo } from "react";
-import { IDroppableTreeItemProps } from "./types";
+
 import { SHARED_FOLDER_ID, TRASH_FOLDER_ID } from "~/core/constants";
-import { StyledDroppableTreeItem } from "./style";
-import { IDragItemProps } from "~/hook/dnd-hooks/types";
 import { DraggableType } from "~/core/enums";
+import { IDragItemProps } from "~/hook/dnd-hooks/types";
+
+import { StyledDroppableTreeItem } from "./style";
+import { IDroppableTreeItemProps } from "./types";
 import { getClippedRect } from "./utils";
 
 export const DroppableTreeItem: FC<IDroppableTreeItemProps> = ({ treeItemId, treeRootRect }) => {

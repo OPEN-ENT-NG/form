@@ -1,10 +1,19 @@
-import { FC, useCallback, useMemo } from "react";
 import { Box, EllipsisWithTooltip } from "@cgi-learning-hub/ui";
+import { useSortable } from "@dnd-kit/sortable";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
-import { IOrganizationSortableItemProps } from "./types";
-import { iconStyle, OrganizationStyledPaper, paperContentStyle, typographyStyle } from "./style";
+import { FC, useCallback, useMemo } from "react";
+
+import { DRAG_HORIZONTAL_TRESHOLD } from "~/core/constants";
+import { IFormElement } from "~/core/models/formElement/types";
+import { isSection } from "~/core/models/formElement/utils";
+import { IQuestion } from "~/core/models/question/types";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";
+
+import { OrganizationUpDownButtons } from "../OrganizationUpDownButtons";
+import { Direction } from "./enum";
+import { iconStyle, OrganizationStyledPaper, paperContentStyle, typographyStyle } from "./style";
+import { IOrganizationSortableItemProps } from "./types";
 import {
   getTransformStyle,
   handleSubMoveDown,
@@ -14,13 +23,6 @@ import {
   isSubElement,
   isTopElement,
 } from "./utils";
-import { IFormElement } from "~/core/models/formElement/types";
-import { IQuestion } from "~/core/models/question/types";
-import { Direction } from "./enum";
-import { useSortable } from "@dnd-kit/sortable";
-import { DRAG_HORIZONTAL_TRESHOLD } from "~/core/constants";
-import { OrganizationUpDownButtons } from "../OrganizationUpDownButtons";
-import { isSection } from "~/core/models/formElement/utils";
 
 export const OrganizationSortableItem: FC<IOrganizationSortableItemProps> = ({ element, depth = 0 }) => {
   const { formElementsList, setFormElementsList } = useCreation();

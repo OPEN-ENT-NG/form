@@ -1,5 +1,5 @@
-import { PutShareResponse, ShareRight, odeServices } from "@edifice.io/client";
-import { UseMutationOptions, UseMutationResult, useMutation } from "@tanstack/react-query";
+import { odeServices, PutShareResponse, ShareRight } from "@edifice.io/client";
+import { useMutation, UseMutationOptions, UseMutationResult } from "@tanstack/react-query";
 
 const useShareMutation = ({
   application,

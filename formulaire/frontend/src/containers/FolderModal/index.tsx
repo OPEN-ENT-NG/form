@@ -1,5 +1,17 @@
-import { Button, TextField, Typography, DialogTitle, DialogContent, DialogActions } from "@cgi-learning-hub/ui";
+import { Button, DialogActions, DialogContent, DialogTitle, TextField, Typography } from "@cgi-learning-hub/ui";
 import { FC, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
+import { FORMULAIRE } from "~/core/constants";
+import { ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder/types";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import { isEnterPressed } from "~/core/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
+import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/formulaireApi/folderApi";
+
 import {
   folderModalContentStyle,
   folderModalStyle,
@@ -7,16 +19,6 @@ import {
   folderModalTextFieldStyle,
 } from "./style";
 import { FolderModalMode, IFolderModalProps } from "./types";
-import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
-import { useHome } from "~/providers/HomeProvider";
-import { useCreateFolderMutation, useUpdateFolderMutation } from "~/services/api/services/formulaireApi/folderApi";
-import { ICreateFolderPayload, IUpdateFolderPayload } from "~/core/models/folder/types";
-import { isEnterPressed } from "~/core/utils";
-import { ResponsiveDialog } from "~/components/ResponsiveDialog";
-import { useGlobal } from "~/providers/GlobalProvider";
-import { TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 
 export const FolderModal: FC<IFolderModalProps> = ({ isOpen, handleClose, mode }) => {
   const { currentFolder, selectedFolders } = useHome();

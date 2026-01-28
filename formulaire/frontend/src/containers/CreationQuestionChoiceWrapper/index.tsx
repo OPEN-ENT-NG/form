@@ -3,6 +3,7 @@ import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
 import { FC, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
+
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { iconStyle } from "~/components/UpDownButtons/style";
@@ -14,6 +15,7 @@ import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { EditableChoiceRow } from "./EditableChoiceRow";
+
 import {
   choiceInputStyle,
   choicesWrapperStyle,

@@ -1,6 +1,7 @@
-import { FC } from "react";
 import { Box, Typography } from "@cgi-learning-hub/ui";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE } from "~/core/constants";
 import { TypographyVariant } from "~/core/style/themeProps";
 

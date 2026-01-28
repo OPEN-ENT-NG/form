@@ -1,9 +1,9 @@
+import { ToggleButton, ToggleButtonGroup } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 
-import { ToggleButton, ToggleButtonGroup } from "@cgi-learning-hub/ui";
-import { ISwitchViewProps } from "./types";
-import { switchViewStyle, switchViewItemStyle } from "./style";
 import { ViewMode } from "./enums";
+import { switchViewItemStyle, switchViewStyle } from "./style";
+import { ISwitchViewProps } from "./types";
 
 export const SwitchView: FC<ISwitchViewProps> = ({ viewMode, toggleButtonList, onChange }) => {
   return (

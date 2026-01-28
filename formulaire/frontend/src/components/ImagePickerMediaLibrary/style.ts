@@ -1,7 +1,9 @@
 import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
-import { blockProps } from "~/core/utils";
-import { IContainerProps } from "./types";
+
 import { CSS_COMMON_WHITE_COLOR } from "~/core/style/cssColors";
+import { blockProps } from "~/core/utils";
+
+import { IContainerProps } from "./types";
 
 export const StyledContainer = styled(Box, {
   shouldForwardProp: blockProps("isMobile"),
