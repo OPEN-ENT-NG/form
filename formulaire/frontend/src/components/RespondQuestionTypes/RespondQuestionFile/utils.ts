@@ -1,5 +1,6 @@
 import { IQuestion } from "~/core/models/question/types";
 import { IResponse, IResponseFile } from "~/core/models/response/type";
+
 import { ICustomFile } from "./types";
 
 export const toResponseFile = (file: File): IResponseFile => {

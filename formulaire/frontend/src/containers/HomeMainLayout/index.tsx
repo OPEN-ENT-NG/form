@@ -1,9 +1,32 @@
-import { FC, useMemo, useState } from "react";
 import { Box, SearchInput } from "@cgi-learning-hub/ui";
+import { DndContext, DragOverlay, pointerWithin } from "@dnd-kit/core";
+import { useEdificeClient } from "@edifice.io/react";
+import FolderIcon from "@mui/icons-material/Folder";
 import { Typography, useTheme } from "@mui/material";
-import { FormBreadcrumbs } from "~/components/Breadcrumbs";
+import { FC, useMemo, useState } from "react";
+import { useTranslation } from "react-i18next";
 
+import { FormBreadcrumbs } from "~/components/Breadcrumbs";
+import { DroppableTreeItem } from "~/components/DroppableTreeItem";
+import { FolderPreview } from "~/components/FolderPreview";
+import { FormPreview } from "~/components/FormPreview";
+import { OrganizeFilter } from "~/components/OrganizeFilter";
+import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
+import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
+import { SwitchView } from "~/components/SwitchView";
+import { ViewMode } from "~/components/SwitchView/enums";
+import { IToggleButtonItem } from "~/components/SwitchView/types";
+import { FORMULAIRE } from "~/core/constants";
+import { centerBoxStyle } from "~/core/style/boxStyles";
+import { useFormFolderDnd } from "~/hook/dnd-hooks/useFormFolderDnd";
+import { isDraggedItemFolder, isDraggedItemForm } from "~/hook/dnd-hooks/utils";
 import { useHome } from "~/providers/HomeProvider";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
+
+import { HomeMainFolders } from "../HomeMainFolders";
+import { HomeMainForms } from "../HomeMainForms";
+import { HomeMainFormsTable } from "../HomeMainFormsTable";
+import { buildFlatFolderTree } from "../HomeSidebar/utils";
 import {
   emptyStateWrapperStyle,
   resourceContainerStyle,
@@ -12,36 +35,14 @@ import {
   StyledMainContentInnerWrapper,
   viewTitleStyle,
 } from "./style";
-import { HomeMainFolders } from "../HomeMainFolders";
-import { useTranslation } from "react-i18next";
-import { HomeMainForms } from "../HomeMainForms";
-import { FORMULAIRE } from "~/core/constants";
-import { OrganizeFilter } from "~/components/OrganizeFilter";
-import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
+import { useSearchAndOrganize } from "./useSearchAndOrganize";
 import {
+  formMenuItemDatas,
   formsChipDatas,
   getDragCursorStyle,
   getEmptyStateDescription,
-  formMenuItemDatas,
   useToggleButtons,
 } from "./utils";
-import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
-import { useEdificeClient } from "@edifice.io/react";
-import { DndContext, DragOverlay, pointerWithin } from "@dnd-kit/core";
-import { useFormFolderDnd } from "~/hook/dnd-hooks/useFormFolderDnd";
-import { isDraggedItemFolder, isDraggedItemForm } from "~/hook/dnd-hooks/utils";
-import { FolderPreview } from "~/components/FolderPreview";
-import { buildFlatFolderTree } from "../HomeSidebar/utils";
-import { DroppableTreeItem } from "~/components/DroppableTreeItem";
-import { useSearchAndOrganize } from "./useSearchAndOrganize";
-import { FormPreview } from "~/components/FormPreview";
-import { SwitchView } from "~/components/SwitchView";
-import { ViewMode } from "~/components/SwitchView/enums";
-import { IToggleButtonItem } from "~/components/SwitchView/types";
-import FolderIcon from "@mui/icons-material/Folder";
-import { centerBoxStyle } from "~/core/style/boxStyles";
-import { HomeTabState } from "~/providers/HomeProvider/enums";
-import { HomeMainFormsTable } from "../HomeMainFormsTable";
 
 export const HomeMainLayout: FC = () => {
   const {

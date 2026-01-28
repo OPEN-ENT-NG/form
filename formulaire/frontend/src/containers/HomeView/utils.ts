@@ -1,9 +1,10 @@
+import { RefObject, useEffect, useRef, useState } from "react";
+
 import { ModalType } from "~/core/enums";
-import { useEffect, useRef, useState, RefObject } from "react";
-import { useGlobal } from "~/providers/GlobalProvider";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
 import { t } from "~/i18n";
+import { useGlobal } from "~/providers/GlobalProvider";
 
 export const useGetHomeHeaderButtons = (): IButtonProps[] => {
   const { toggleModal } = useGlobal();

@@ -1,17 +1,19 @@
+import { Box, Button, EmptyState } from "@cgi-learning-hub/ui";
 import { FC } from "react";
-import { Box, EmptyState, Button } from "@cgi-learning-hub/ui";
-import { useCreation } from "~/providers/CreationProvider";
-import { ICreationLayoutProps } from "./types";
-import { CreationLayoutWrapper } from "./style";
 import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
-import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+
 import { EmptyForm } from "~/components/SVG/EmptyForm";
-import { useGlobal } from "~/providers/GlobalProvider";
+import { FORMULAIRE } from "~/core/constants";
 import { ModalType } from "~/core/enums";
-import { CreationMainLayout } from "../CreationMainLayout";
-import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { emptyStateWrapper } from "~/core/style/boxStyles";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { useCreation } from "~/providers/CreationProvider";
+import { useGlobal } from "~/providers/GlobalProvider";
+
+import { CreationMainLayout } from "../CreationMainLayout";
+import { CreationLayoutWrapper } from "./style";
+import { ICreationLayoutProps } from "./types";
 
 export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
   const { form, formElementsList } = useCreation();

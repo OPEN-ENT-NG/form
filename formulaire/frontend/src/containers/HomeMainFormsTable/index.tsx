@@ -1,8 +1,3 @@
-import { ChangeEvent, FC, MouseEvent, useEffect, useState } from "react";
-
-import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
-import { useTranslation } from "react-i18next";
-import { useHome } from "~/providers/HomeProvider";
 import {
   Box,
   Checkbox,
@@ -16,16 +11,22 @@ import {
   Tooltip,
   Typography,
 } from "@cgi-learning-hub/ui";
-import { getPageForms, initialTableProps, useColumns } from "./utils";
-import { TypographyVariant } from "~/core/style/themeProps";
-import { IForm } from "~/core/models/form/types";
 import dayjs from "dayjs";
+import { ChangeEvent, FC, MouseEvent, useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
+
+import { DEFAULT_PAGINATION_LIMIT, FORMULAIRE } from "~/core/constants";
 import { DateFormat } from "~/core/enums";
+import { IForm } from "~/core/models/form/types";
+import { TypographyVariant } from "~/core/style/themeProps";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
+import { preventPropagation } from "~/providers/CreationProvider/utils";
+import { useHome } from "~/providers/HomeProvider";
+
+import { ColumnId } from "./enums";
 import { iconBoxStyle, tableCheckboxStyle, tableContainerStyle, tablePaginationStyle } from "./style";
 import { IHomeMainFormsTableProps } from "./types";
-import { ColumnId } from "./enums";
-import { preventPropagation } from "~/providers/CreationProvider/utils";
+import { getPageForms, initialTableProps, useColumns } from "./utils";
 
 export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   const { selectedForms, setSelectedForms } = useHome();

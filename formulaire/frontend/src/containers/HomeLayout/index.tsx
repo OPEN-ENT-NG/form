@@ -1,14 +1,16 @@
-import { FC } from "react";
 import { Box } from "@cgi-learning-hub/ui";
-import { useHome } from "~/providers/HomeProvider";
-import { sidebarStyle, sidebarContentStyle, mainContentStyle, StyledHomeLayoutWrapper } from "./styles";
-import { HomeTabState } from "~/providers/HomeProvider/enums";
-import { HomeSidebar } from "../HomeSidebar";
-import { IHomeLayoutProps } from "./types";
-import { HomeMainLayout } from "../HomeMainLayout";
+import { FC } from "react";
+
 import { AnswerMainLayout } from "~/containers/AnswerMainLayout";
-import { HomeMainLayoutMobile } from "../HomeMainLayoutMobile";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
+
+import { HomeMainLayout } from "../HomeMainLayout";
+import { HomeMainLayoutMobile } from "../HomeMainLayoutMobile";
+import { HomeSidebar } from "../HomeSidebar";
+import { mainContentStyle, sidebarContentStyle, sidebarStyle, StyledHomeLayoutWrapper } from "./styles";
+import { IHomeLayoutProps } from "./types";
 
 export const HomeLayout: FC<IHomeLayoutProps> = ({ headerHeight }) => {
   const { isMobile } = useGlobal();

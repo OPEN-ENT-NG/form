@@ -1,7 +1,7 @@
-import { useCallback, useMemo } from "react";
-
 import { useEdificeClient } from "@edifice.io/react";
+import { useCallback, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+
 import { MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
@@ -22,6 +22,7 @@ import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { useShareModal } from "~/providers/ShareModalProvider";
 import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
+
 import { ActionBarButtonType } from "./enums";
 import { useHandleOpenFormResponse } from "./useHandleOpenFormResponse";
 

@@ -1,24 +1,26 @@
-import { FC } from "react";
-
 import { Box, Button, EmptyState } from "@cgi-learning-hub/ui";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
+
 import { Header } from "~/components/Header";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
+import { IForm } from "~/core/models/form/types";
+import { getHomePath } from "~/core/pathHelper";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { useGlobal } from "~/providers/GlobalProvider";
+
 import { CreateFormElementModal } from "../CreateFormElementModal";
 import { CreationLayout } from "../CreationLayout";
 import { CreationOrganisationModal } from "../CreationOrganisationModal";
 import { useElementHeight } from "../HomeView/utils";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "./style";
 import { getRecursiveFolderParents, useGetCreationHeaderButtons } from "./utils";
-import { getHomePath } from "~/core/pathHelper";
 
 export const CreationView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);

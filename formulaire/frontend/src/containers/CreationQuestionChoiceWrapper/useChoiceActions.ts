@@ -1,10 +1,13 @@
 import { Dispatch, SetStateAction, useCallback, useMemo, useState } from "react";
+
 import { Direction } from "~/components/OrganizationSortableItem/enum";
 import { FormElementType } from "~/core/models/formElement/enum";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { createNewQuestionChoice } from "~/core/models/question/utils";
 import { PositionActionType } from "~/providers/CreationProvider/enum";
 import { fixChoicesPositions } from "~/providers/CreationProvider/utils";
+import { useDeleteQuestionChoiceMutation } from "~/services/api/services/formulaireApi/questionChoiceApi";
+
 import {
   useDeleteQuestionChoiceMutation,
   useUpdateMultipleChoiceQuestionsMutation,

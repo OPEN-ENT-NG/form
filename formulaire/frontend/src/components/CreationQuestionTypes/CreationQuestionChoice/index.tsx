@@ -2,10 +2,15 @@ import { Box, Checkbox, IconButton, Radio, Typography } from "@cgi-learning-hub/
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
 import { FC, ReactNode, useCallback, useState } from "react";
+
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { IMAGE_PICKER_INFO } from "~/core/constants";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { ComponentSize } from "~/core/style/themeProps";
+import { IMAGE_PICKER_INFO } from "~/core/constants";
+import { QuestionTypes } from "~/core/models/question/enum";
+import { ComponentSize } from "~/core/style/themeProps";
+
 import {
   choiceIconStyle,
   choiceInputStyle,

@@ -16,24 +16,10 @@ import {
   Typography,
 } from "@cgi-learning-hub/ui";
 import InfoOutlinedIcon from "@mui/icons-material/InfoOutlined";
-import { FC, useCallback, useEffect, useMemo, useState } from "react";
-import {
-  checkboxRowStyle,
-  contentRowWrapper,
-  fileDropZoneWrapper,
-  mainColumnStyle,
-  mainContentWrapper,
-  pictureAndTitleMobileWrapper,
-  rgpdContentRowStyle,
-  StyledDatePickerWrapper,
-  subContentColumnWrapper,
-  subContentRowMobileWrapper,
-  subContentRowWrapper,
-  textFieldStyle,
-} from "./style";
-
 import dayjs, { Dayjs } from "dayjs";
+import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import RGPDInfoBox from "~/components/RgpdInfoBox";
@@ -53,7 +39,22 @@ import { useGlobal } from "~/providers/GlobalProvider";
 import { useHome } from "~/providers/HomeProvider";
 import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
 import { useCreateFormMutation, useUpdateFormMutation } from "~/services/api/services/formulaireApi/formApi";
+
 import { FormPropField, FormPropModalMode } from "./enums";
+import {
+  checkboxRowStyle,
+  contentRowWrapper,
+  fileDropZoneWrapper,
+  mainColumnStyle,
+  mainContentWrapper,
+  pictureAndTitleMobileWrapper,
+  rgpdContentRowStyle,
+  StyledDatePickerWrapper,
+  subContentColumnWrapper,
+  subContentRowMobileWrapper,
+  subContentRowWrapper,
+  textFieldStyle,
+} from "./style";
 import { IFormCheckBoxProp, IFormPropModalProps } from "./types";
 import { useFormPropInputValueState } from "./useFormPropValueState";
 import { buildDelegatesParam, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";

@@ -1,6 +1,8 @@
 import { IconButton, Tooltip } from "@cgi-learning-hub/ui";
 import { FC } from "react";
+
 import { t } from "~/i18n";
+
 import { IIconButtonTooltipedProps } from "./types";
 
 export const IconButtonTooltiped: FC<IIconButtonTooltipedProps> = ({

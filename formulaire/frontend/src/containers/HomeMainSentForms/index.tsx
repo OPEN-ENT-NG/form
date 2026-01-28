@@ -1,15 +1,15 @@
+import { Box, Loader } from "@cgi-learning-hub/ui";
 import { FC, useCallback, useEffect, useRef, useState } from "react";
 
-import { Box, Loader } from "@cgi-learning-hub/ui";
-
+import { SentForm } from "~/components/SentForm";
 import { FORM_CHUNK } from "~/core/constants";
 import { IForm } from "~/core/models/form/types";
-import { useHome } from "~/providers/HomeProvider";
-import { IHomeMainSentFormsProps } from "./types";
-import { SentForm } from "~/components/SentForm";
 import { getFormDistributions } from "~/core/models/form/utils";
-import { sentFormWrapperMobileStyle, sentFormWrapperStyle } from "./style";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
+
+import { sentFormWrapperMobileStyle, sentFormWrapperStyle } from "./style";
+import { IHomeMainSentFormsProps } from "./types";
 
 export const HomeMainSentForms: FC<IHomeMainSentFormsProps> = ({ sentForms, distributions }) => {
   const { isMobile } = useGlobal();

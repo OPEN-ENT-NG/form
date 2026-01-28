@@ -1,8 +1,9 @@
-import { IColumn, TablePaginationProps } from "./types";
-import { ColumnId } from "./enums";
 import { DEFAULT_PAGINATION_LIMIT } from "~/core/constants";
 import { IForm } from "~/core/models/form/types";
 import { t } from "~/i18n";
+
+import { ColumnId } from "./enums";
+import { IColumn, TablePaginationProps } from "./types";
 
 export const useColumns: () => IColumn[] = () => {
   return [

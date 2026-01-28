@@ -1,4 +1,5 @@
 import { IDistribution } from "~/core/models/distribution/types";
+
 import { DisplayContentType, StatusResponseType } from "./enums";
 import { IStatusResponseState } from "./types";
 

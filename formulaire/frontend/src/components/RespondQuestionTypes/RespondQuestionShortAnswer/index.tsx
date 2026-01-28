@@ -1,8 +1,10 @@
 import { Box, TextField } from "@cgi-learning-hub/ui";
 import { ChangeEvent, FC, useEffect, useState } from "react";
+
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResponse } from "~/providers/ResponseProvider";
+
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {

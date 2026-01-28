@@ -1,11 +1,13 @@
-import { IFormElement } from "~/core/models/formElement/types";
-import { IQuestion } from "~/core/models/question/types";
-import { ISection } from "~/core/models/section/types";
-import { PositionActionType } from "./enum";
-import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { SyntheticEvent } from "react";
 import { toast } from "react-toastify";
+
+import { IFormElement } from "~/core/models/formElement/types";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { IQuestion } from "~/core/models/question/types";
+import { ISection } from "~/core/models/section/types";
 import { t } from "~/i18n";
+
+import { PositionActionType } from "./enum";
 
 export const removeFormElementFromList = (
   formElementsList: IFormElement[],

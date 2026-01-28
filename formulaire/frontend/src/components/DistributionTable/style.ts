@@ -1,6 +1,8 @@
 import { styled, SxProps, TableBody } from "@cgi-learning-hub/ui";
-import { ITableBodyProps } from "./types";
+
 import { blockProps } from "~/core/utils";
+
+import { ITableBodyProps } from "./types";
 
 export const tableStyle: SxProps = {
   tableLayout: "fixed",

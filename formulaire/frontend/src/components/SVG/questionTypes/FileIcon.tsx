@@ -1,4 +1,5 @@
 import type { FC } from "react";
+
 import { CustomSVGProps } from "../types";
 
 export const FileIcon: FC<CustomSVGProps> = ({ height = "100%" }) => (
