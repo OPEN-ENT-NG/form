@@ -51,6 +51,7 @@ export default tseslint.config(
       "@typescript-eslint/no-invalid-void-type": "off",
       "react-refresh/only-export-components": "off",
       "no-unused-expressions": "off",
+      "no-duplicate-imports": "error",
       "@typescript-eslint/no-unused-expressions": "error",
       "@typescript-eslint/restrict-template-expressions": "off",
       // Règle Prettier

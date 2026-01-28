@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "~/components/Header";
-import { FORMULAIRE } from "~/core/constants";
+import { defaultViewMaxWidth, FORMULAIRE } from "~/core/constants";
 import { ActionBar, Box, Typography } from "@cgi-learning-hub/ui";
 import { useGetHomeHeaderButtons, useElementHeight } from "./utils";
 import { FolderModal } from "../FolderModal";
@@ -24,7 +24,6 @@ import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { WorkflowRights } from "~/core/rights";
 import { FormOpenBlockedModal } from "../FormOpenBlockedModal";
 import { homeViewStyle } from "./style";
-import { defaultViewMaxWidth } from "~/core/constants";
 
 export const HomeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
