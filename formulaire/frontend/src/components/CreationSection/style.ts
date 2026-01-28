@@ -1,5 +1,5 @@
 import { SxProps, Theme } from "@mui/material";
-import { COMMON_WHITE_COLOR, PRIMARY_MAIN_COLOR, SECONDARY_MAIN_COLOR } from "~/core/style/colors";
+import { COMMON_WHITE_COLOR, SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 
 export const sectionHeaderWrapperStyle: SxProps<Theme> = {
   display: "flex",
@@ -64,14 +64,6 @@ export const sectionStackStyle: SxProps<Theme> = {
   borderRadius: 1,
   marginBottom: 2,
   boxShadow: "1px 4px 5px 2px rgba(0, 0, 0, 0.1)",
-};
-
-export const sectionAddQuestionStyle: SxProps<Theme> = {
-  color: SECONDARY_MAIN_COLOR,
-  "&:hover": {
-    color: PRIMARY_MAIN_COLOR,
-    cursor: "pointer",
-  },
 };
 
 export const editingSectionTitleStyle: SxProps<Theme> = {

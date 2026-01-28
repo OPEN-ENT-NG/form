@@ -41,6 +41,10 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const [currentEditingElement, setCurrentEditingElement] = useState<IFormElement | null>(null);
   const [questionModalSection, setQuestionModalSection] = useState<ISection | null>(null);
   const [resetFormElementListId, setResetFormElementListId] = useState(0);
+  const [isUpdating, setIsUpdating] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const [newChoiceValue, setNewChoiceValue] = useState<string>("");
+  const [isQuestionSaving, setIsQuestionSaving] = useState(false);
   if (formId === undefined) {
     throw new Error("formId is undefined");
   }
@@ -48,18 +52,28 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   //DATA
   const { data: foldersDatas } = useGetFoldersQuery(undefined, { skip: !userWorkflowRights.CREATION });
   const { data: formDatas } = useGetFormQuery({ formId }, { skip: !userWorkflowRights.CREATION });
-  const { data: questionsDatas, isFetching: isQuestionsFetching } = useGetQuestionsQuery({ formId });
-  const { data: sectionsDatas, isFetching: isSectionsFetching } = useGetSectionsQuery({ formId });
+  const { data: questionsDatas, isFetching: isQuestionsFetching } = useGetQuestionsQuery(
+    { formId },
+    { skip: isUpdating },
+  );
+  const { data: sectionsDatas, isFetching: isSectionsFetching } = useGetSectionsQuery({ formId }, { skip: isUpdating });
 
   //CUSTOM HOOKS
   const { completeList } = useFormElementList(
     sectionsDatas,
     questionsDatas,
     resetFormElementListId,
-    isQuestionsFetching || isSectionsFetching,
+    isQuestionsFetching || isSectionsFetching || isUpdating || isQuestionSaving,
   );
   const { duplicateQuestion, duplicateSection, saveQuestion, saveSection, updateFormElementsList } =
-    useFormElementActions(formElementsList, formId, currentEditingElement, setFormElementsList);
+    useFormElementActions(
+      formElementsList,
+      formId,
+      currentEditingElement,
+      setFormElementsList,
+      setIsUpdating,
+      setIsQuestionSaving,
+    );
 
   useEffect(() => {
     if (foldersDatas) {
@@ -132,7 +146,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   );
 
   const handleDeleteFormElement = useCallback(
-    (toRemove: IFormElement, useKey: boolean) => {
+    (toRemove: IFormElement, useKey: boolean = false) => {
       if (!useKey) {
         setFormElementsList((prevFormElementList) => removeFormElementFromList(prevFormElementList, toRemove));
         return;
@@ -177,8 +191,21 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       setQuestionModalSection,
       updateFormElementsList,
       setResetFormElementListId,
+      isDragging,
+      setIsDragging,
+      newChoiceValue,
+      setNewChoiceValue,
     }),
-    [currentFolder, folders, form, formElementsList, currentEditingElement, questionModalSection],
+    [
+      currentFolder,
+      folders,
+      form,
+      formElementsList,
+      currentEditingElement,
+      questionModalSection,
+      isDragging,
+      newChoiceValue,
+    ],
   );
 
   return <CreationProviderContext.Provider value={value}>{children}</CreationProviderContext.Provider>;

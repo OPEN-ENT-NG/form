@@ -4,8 +4,8 @@ import { isSection } from "~/core/models/formElement/utils";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { isQuestionRoot, isQuestionSection } from "~/core/models/question/utils";
 import { ISection } from "~/core/models/section/types";
-import { DndElementType } from "./enum";
 import { getFollowingFormElement } from "~/providers/CreationProvider/utils";
+import { DndElementType } from "./enum";
 
 export const isString = (value: unknown): value is string => {
   return typeof value === "string";
@@ -286,6 +286,12 @@ export const updateNextTargetElements = (formElementsList: IFormElement[]): IFor
         choices: updatedChoices,
       } as IQuestion;
 
+      const updatedSection = {
+        ...formElement,
+        questions: formElement.questions.map((q) => (q === conditionalQuestion ? updatedQuestion : q)),
+      } as ISection;
+
+      updatedFormElementsList.push(updatedSection);
       updatedFormElementsList.push(updatedQuestion);
       return;
     }

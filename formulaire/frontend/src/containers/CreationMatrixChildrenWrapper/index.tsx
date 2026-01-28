@@ -148,7 +148,7 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
                   inputRef={(el: HTMLInputElement | null) => (inputRefs.current[newChildRefName] = el)}
                   value={newChildTitle}
                   variant={ComponentVariant.STANDARD}
-                  placeholder={t("formulaire.question.option")}
+                  placeholder={t("formulaire.matrix.line.label.default", { 0: "" })}
                   fullWidth
                   onFocus={selectAllTextInput}
                   onBlur={() => {

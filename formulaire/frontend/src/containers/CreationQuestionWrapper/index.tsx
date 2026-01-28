@@ -39,7 +39,11 @@ import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVar
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
-import { isCurrentEditingElement, preventPropagation } from "~/providers/CreationProvider/utils";
+import {
+  getFollowingFormElement,
+  isCurrentEditingElement,
+  preventPropagation,
+} from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { DeleteConfirmationModal } from "../DeleteConfirmationModal";
 import { UndoConfirmationModal } from "../UndoConfirmationModal";
@@ -61,6 +65,7 @@ import {
 } from "./style";
 import { ICreationQuestionWrapperProps } from "./types";
 import { getQuestionContentByType } from "./utils";
+import { toast } from "react-toastify";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question, isPreview }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -73,6 +78,8 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     handleDeleteFormElement,
     saveQuestion,
     setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue
   } = useCreation();
   const {
     displayModals: { showQuestionUndo, showQuestionDelete },
@@ -110,11 +117,17 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     }
   }, [isEditing]);
 
+  useEffect(() => {
+    setMatrixType(question.children?.[0]?.questionType ?? QuestionTypes.SINGLEANSWERRADIO);
+  }, [question.children]);
+
   const { handleClickAway } = useClickAwayEditingElement(
     handleDeleteFormElement,
     setCurrentEditingElement,
     formElementsList,
     setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue,
     saveQuestion,
   );
 
@@ -145,8 +158,19 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   };
 
   const handleConditionalChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const updatedChoices = question.choices?.map((choice) => {
+      const followingElement = getFollowingFormElement(question, formElementsList);
+      return {
+        ...choice,
+        isNextFormElementDefault: true,
+        nextFormElementId: followingElement?.id ?? null,
+        nextFormElementType: followingElement?.formElementType ?? null,
+      };
+    });
+
     const updatedQuestion: IQuestion = {
       ...question,
+      choices: updatedChoices ?? question.choices,
       conditional: event.target.checked,
       mandatory: event.target.checked,
     };
@@ -162,6 +186,10 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   };
 
   const handleDuplicate = () => {
+    if (question.conditional && question.sectionId) {
+      toast.error(t("formulaire.error.question.duplicate"));
+      return;
+    }
     void handleDuplicateFormElement(question);
   };
 
@@ -220,7 +248,11 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             <Box sx={editingQuestionFooterStyle}>
               {shouldShowMandatorySwitch(question) && (
                 <Box sx={mandatorySwitchContainerStyle}>
-                  <Switch checked={question.mandatory} onChange={handleMandatoryChange} />
+                  <Switch
+                    checked={question.mandatory}
+                    onChange={handleMandatoryChange}
+                    disabled={question.conditional}
+                  />
                   <Typography>{t("formulaire.mandatory")}</Typography>
                 </Box>
               )}

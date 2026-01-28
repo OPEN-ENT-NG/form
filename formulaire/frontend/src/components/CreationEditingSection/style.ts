@@ -43,11 +43,6 @@ export const sectionFooterStyle: SxProps<Theme> = {
   paddingTop: 2,
   display: "flex",
   alignItems: "center",
-};
-
-export const newQuestionWrapperStyle: SxProps<Theme> = {
-  flex: 1,
-  display: "flex",
   justifyContent: "flex-end",
 };
 
