@@ -1,6 +1,4 @@
 import { useMediaQuery } from "@cgi-learning-hub/ui";
-import { FC, createContext, useContext, useMemo, useState } from "react";
-import { MOBILE_MAX_WIDTH } from "~/core/constants";
 import { IUserInfo } from "@edifice.io/client";
 import { createContext, FC, useContext, useMemo, useState } from "react";
 
@@ -16,9 +14,6 @@ import {
   WorkflowRights,
 } from "~/core/rights";
 import { hasSharedRight, hasWorkflow } from "~/core/utils";
-import { ModalType } from "~/core/enums";
-import { GlobalProviderContextType, IDisplayModalsState, IGlobalProviderProps } from "./types";
-import { initialDisplayModalsState } from "./utils";
 
 import { GlobalProviderContextType, IDisplayModalsState, IGlobalProviderProps } from "./types";
 import { initialDisplayModalsState } from "./utils";
