@@ -1,8 +1,7 @@
-import { Box, EllipsisWithTooltip, Link } from "@cgi-learning-hub/ui";
+import { Box, EllipsisWithTooltip, IconButton } from "@cgi-learning-hub/ui";
 import { FC } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 
-import { FORMULAIRE } from "~/core/constants";
 import { getHomePath } from "~/core/pathHelper";
 import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
@@ -15,7 +14,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   items,
   separator = null,
   isHeader = false,
-  isCreationPage = false,
+  shouldNavigate = false,
 }) => {
   const textColor = isHeader ? FORM_COLOR : CSS_TEXT_PRIMARY_COLOR;
   const navigate = useNavigate();
@@ -30,9 +29,9 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
       shouldEllipsis={items.length >= maxItemsBeforeCollaspse}
     >
       {isHeader ? (
-        <Link underline="hover" color={FORM_COLOR} href={`/${FORMULAIRE}`} sx={{ flexShrink: 0 }}>
+        <IconButton component={RouterLink} to={getHomePath()} disableRipple sx={{ flexShrink: 0, color: FORM_COLOR }}>
           <Icon height="3rem" width="3rem"></Icon>
-        </Link>
+        </IconButton>
       ) : (
         <Box color={GREY_DARKER_COLOR}>
           <Icon height="2.3rem"></Icon>
@@ -51,11 +50,11 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
             key={index}
             textColor={textColor}
             isHeader={isHeader}
-            isCreationPage={isCreationPage}
+            shouldNavigate={shouldNavigate}
             hasSeparator={separator != null}
             isLast={isLast}
             onClick={() => {
-              if (isHeader && !isCreationPage) navigate(getHomePath());
+              if (isHeader && shouldNavigate) navigate(getHomePath());
             }}
           >
             {content}

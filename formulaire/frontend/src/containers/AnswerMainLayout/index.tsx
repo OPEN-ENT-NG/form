@@ -55,7 +55,7 @@ export const AnswerMainLayout: FC = () => {
 
   const { t } = useTranslation(FORMULAIRE);
   return (
-    <StyledMainContentInnerWrapper isMobile={isMobile}>
+    <StyledMainContentInnerWrapper isMobile={isMobile} nbChildrenToMargin={1}>
       <StyledMyAnswerHeaderWrapper isMobile={isMobile}>
         <Box sx={tabStyle}>
           <HomeTabs value={tab} setValue={toggleTab} />
