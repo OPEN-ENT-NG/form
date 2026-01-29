@@ -1,4 +1,4 @@
-import { Box, Button, EmptyState } from "@cgi-learning-hub/ui";
+import { Box, Button, EmptyState, Loader } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -21,6 +21,7 @@ export const ResponseView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const { form, formElementsList, isInPreviewMode, pageType } = useResponse();
   const headerButtons = useGetResponseHeaderButtons(form?.id, isInPreviewMode, pageType);
+  const isNotReady = !form || formElementsList.length <= 0;
 
   const errorPage = (
     <Box sx={emptyStateWrapper}>
@@ -28,7 +29,7 @@ export const ResponseView: FC = () => {
         image={<ErrorPreview />}
         color={SECONDARY_MAIN_COLOR}
         title=""
-        description={t("formulaire.preview.error")}
+        description={t(isInPreviewMode ? "formulaire.preview.error" : "formulaire.error.403")}
         imageHeight={300}
         slotProps={{ title: { variant: TypographyVariant.H4 }, description: { variant: TypographyVariant.BODY2 } }}
       />
@@ -39,7 +40,7 @@ export const ResponseView: FC = () => {
   );
 
   const displayRightPage = () => {
-    if (!form || formElementsList.length <= 0) return errorPage;
+    if (isNotReady) return <Loader />;
     switch (pageType) {
       case ResponsePageType.RGPD:
         return <RgpdLayout />;
@@ -64,7 +65,7 @@ export const ResponseView: FC = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", height: "100%", paddingX: "10%" }}>
+    <Box sx={{ width: "100%", height: "100%", paddingX: "10%", ...(isNotReady && { margin: "auto" }) }}>
       {form && <Header items={[form.title]} buttons={getHeaderButtons()} form={form} displaySeparator />}
       {displayRightPage()}
     </Box>

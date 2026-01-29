@@ -4,6 +4,7 @@ import { FORMULAIRE } from "~/core/constants.ts";
 import { QueryMethod, TagName } from "~/core/enums";
 import { IDistribution, IDistributionDTO } from "~/core/models/distribution/types.ts";
 import { transformDistribution, transformDistributions } from "~/core/models/distribution/utils.ts";
+import { handleErrorApi } from "~/core/utils.ts";
 import { t } from "~/i18n.ts";
 
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
@@ -21,8 +22,7 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error("formulaire.error.distributionService.get", err);
-          toast.error(t("formulaire.error.distributionService.get", { ns: FORMULAIRE }));
+          handleErrorApi(err, "formulaire.error.distributionService.get");
         }
       },
     }),
