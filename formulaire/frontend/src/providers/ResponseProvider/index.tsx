@@ -90,8 +90,10 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     if (formElementsList.length <= 0) return;
     const firstElement = formElementsList[0];
     if (!firstElement.id) return;
-    setLongestPathsMap(getLongestPathsMap(formElementsList));
-    updateProgress(firstElement, [firstElement.id]);
+    const newLongestPathsMap = getLongestPathsMap(formElementsList);
+    setLongestPathsMap(newLongestPathsMap);
+
+    updateProgress(firstElement, [firstElement.id], newLongestPathsMap);
   }, [formElementsList]);
 
   useEffect(() => {
@@ -107,10 +109,14 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     await saveClassicResponses();
   };
 
-  const updateProgress = (element: IFormElement, newHistoricFormElementIds: number[]) => {
+  const updateProgress = (
+    element: IFormElement,
+    newHistoricFormElementIds: number[],
+    newLongestPathsMap?: Map<string, number>,
+  ) => {
     const feit = getStringifiedFormElementIdType(element);
     if (feit) {
-      const longestRemainingPath = longestPathsMap.get(feit);
+      const longestRemainingPath = newLongestPathsMap ? newLongestPathsMap.get(feit) : longestPathsMap.get(feit);
       if (longestRemainingPath !== undefined) {
         const newProgress = buildProgressObject(newHistoricFormElementIds, longestRemainingPath);
         setProgress(newProgress);

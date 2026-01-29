@@ -18,6 +18,7 @@ import { IHeaderProps } from "./types";
 export const Header: FC<IHeaderProps> = ({
   items,
   buttons,
+  shouldNavigate = false,
   isCreationPage = false,
   displaySeparator = false,
   form = null,
@@ -36,7 +37,7 @@ export const Header: FC<IHeaderProps> = ({
           items={items}
           separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem" }} />}
           isHeader
-          isCreationPage={isCreationPage}
+          shouldNavigate={shouldNavigate}
           showCollapse={showCollapse}
         />
         <Box sx={saveBoxStyle}>

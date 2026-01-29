@@ -7,6 +7,7 @@ import globals from "globals";
 import * as tseslint from "typescript-eslint";
 import prettierPlugin from "eslint-plugin-prettier";
 import prettierConfig from "eslint-config-prettier";
+import simpleImportSort from "eslint-plugin-simple-import-sort";
 
 export default tseslint.config(
   {
@@ -38,6 +39,7 @@ export default tseslint.config(
       react: reactPlugin,
       import: importPlugin,
       prettier: prettierPlugin,
+      "simple-import-sort": simpleImportSort,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
@@ -51,8 +53,20 @@ export default tseslint.config(
       "@typescript-eslint/no-invalid-void-type": "off",
       "react-refresh/only-export-components": "off",
       "no-unused-expressions": "off",
+      "no-duplicate-imports": "error",
       "@typescript-eslint/no-unused-expressions": "error",
       "@typescript-eslint/restrict-template-expressions": "off",
+      "simple-import-sort/imports": "error",
+      "simple-import-sort/exports": "error",
+
+      // Erreurs runtime fréquentes
+      "@typescript-eslint/no-floating-promises": "error",
+      "@typescript-eslint/no-misused-promises": "error",
+      "@typescript-eslint/no-unsafe-assignment": "error",
+      "@typescript-eslint/no-unsafe-member-access": "error",
+      "@typescript-eslint/no-unsafe-call": "error",
+      "@typescript-eslint/no-unsafe-return": "error",
+
       // Règle Prettier
       "prettier/prettier": ["warn"],
 
