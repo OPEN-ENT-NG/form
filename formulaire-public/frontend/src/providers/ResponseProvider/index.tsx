@@ -1,10 +1,12 @@
-import { FC, createContext, useContext, useEffect, useMemo, useRef, useState } from "react";
+import { createContext, FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+
 import { ResponsePageType } from "~/core/enums";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
 import { useGetPublicFormQuery } from "~/services/api/formulaireApi/formApi";
+
 import { usePublicResponse } from "./hook/usePublicResponse";
 import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";

@@ -2,8 +2,10 @@ import { Box } from "@cgi-learning-hub/ui";
 import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE_PUBLIC } from "~/core/constants";
 import { useResponse } from "~/providers/ResponseProvider";
+
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
