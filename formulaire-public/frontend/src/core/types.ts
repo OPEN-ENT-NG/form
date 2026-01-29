@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+
 import { ComponentVariant } from "./style/themeProps";
 
 export interface IModalProps {

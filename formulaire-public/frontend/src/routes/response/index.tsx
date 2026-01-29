@@ -1,9 +1,10 @@
 import { FC } from "react";
-import { ResponseProvider } from "~/providers/ResponseProvider";
+import { useParams } from "react-router-dom";
+
+import SorryPage from "~/components/SorryPage";
 import { ResponseView } from "~/containers/ResponseView";
 import { getCookie } from "~/core/cookieUtils";
-import { useParams } from "react-router-dom";
-import SorryPage from "~/components/SorryPage";
+import { ResponseProvider } from "~/providers/ResponseProvider";
 
 export const Response: FC = () => {
   const { formKey } = useParams();

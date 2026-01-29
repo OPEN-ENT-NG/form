@@ -1,4 +1,5 @@
 import { createHashRouter } from "react-router-dom";
+
 import Root from "~/app/root";
 import Page404 from "~/components/Page404";
 

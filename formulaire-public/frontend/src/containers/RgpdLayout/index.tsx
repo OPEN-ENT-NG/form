@@ -1,18 +1,20 @@
-import { FC, useMemo } from "react";
 import { Box, Button, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
-import { rgpdLayoutStyle, rgpdStackStyle } from "./style";
+import dayjs from "dayjs";
+import { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+
+import RGPDInfoBox from "~/components/RgpdInfoBox";
+import { IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
 import { FORMULAIRE_PUBLIC } from "~/core/constants";
-import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
-import { useResponse } from "~/providers/ResponseProvider";
+import { ResponsePageType } from "~/core/enums";
 import { flexEndBoxStyle } from "~/core/style/boxStyles";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
-import RGPDInfoBox from "~/components/RgpdInfoBox";
+import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { useResponse } from "~/providers/ResponseProvider";
 import { useGetDelegatesQuery } from "~/services/api/formulaireApi/delegateApi";
+
+import { rgpdLayoutStyle, rgpdStackStyle } from "./style";
 import { buildDelegatesParam } from "./utils";
-import dayjs from "dayjs";
-import { IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
-import { ResponsePageType } from "~/core/enums";
 
 export const RgpdLayout: FC = () => {
   const { form, setPageType } = useResponse();
