@@ -6,6 +6,7 @@ import { EditorMode, EditorVariant } from "~/core/enums";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { StyledEditorWrapper } from "./style";
+import { ICreationQuestionFreetextProps } from "./types";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
