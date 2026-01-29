@@ -61,7 +61,7 @@ export const ResponseView: FC = () => {
     <Box sx={{ width: "100%", height: "100%", paddingX: "10%" }}>
       {form && (
         <Header
-          stringItems={[form.title]}
+          items={[form.title]}
           buttons={formElementsList.length && pageType != ResponsePageType.END_PREVIEW ? headerButtons : []}
           form={form}
           displaySeparator
