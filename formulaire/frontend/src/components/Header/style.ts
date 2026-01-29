@@ -5,7 +5,7 @@ import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 export const headerStyle = (isTheme1D: boolean): SxProps<Theme> => {
   return {
     ...spaceBetweenBoxStyle,
-    padding: "3rem 5rem 3rem 2rem",
+    padding: "2rem 5rem 2rem 2rem",
     display: "flex",
     flexWrap: "wrap",
     gap: "1.5rem",
