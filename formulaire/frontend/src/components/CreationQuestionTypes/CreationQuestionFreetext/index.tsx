@@ -11,6 +11,7 @@ import { StyledEditorWrapper } from "./style";
 import { ICreationQuestionFreetextProps } from "./types";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { StyledEditorWrapper } from "./style";
+import { ICreationQuestionFreetextProps } from "./types";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
