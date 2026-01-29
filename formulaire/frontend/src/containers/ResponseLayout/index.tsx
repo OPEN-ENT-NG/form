@@ -23,9 +23,9 @@ export const ResponseLayout: FC = () => {
     progress,
     updateProgress,
     saveResponses,
-    responsesMap,
     isInPreviewMode,
     setPageType,
+    getQuestionResponses,
   } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
   const [currentElement, setCurrentElement] = useState<IFormElement>(formElementsList[0] ?? null);
@@ -58,7 +58,7 @@ export const ResponseLayout: FC = () => {
 
   const goNextElement = async () => {
     if (!currentElement.position) return;
-    const nextPosition = getNextPositionIfValid(currentElement, responsesMap, formElementsList);
+    const nextPosition = getNextPositionIfValid(currentElement, formElementsList, getQuestionResponses);
 
     // An error occured
     if (nextPosition === undefined) {
