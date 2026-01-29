@@ -26,6 +26,22 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    getAllMyDistributions: builder.query<IDistribution[], void>({
+      query: () => ({
+        url: `distributions/listMine`,
+        method: QueryMethod.GET,
+      }),
+      providesTags: [TagName.DISTRIBUTION],
+      transformResponse: (rawDatas: IDistributionDTO[]) => transformDistributions(rawDatas),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.distributionService.list", err);
+          toast.error(t("formulaire.error.distributionService.list", { ns: FORMULAIRE }));
+        }
+      },
+    }),
     getFormDistributions: builder.query<IDistribution[], number | string>({
       query: (id: number | string) => `/distributions/forms/${id.toString()}/list`,
       transformResponse: (rawDatas: IDistributionDTO[]) => transformDistributions(rawDatas),
@@ -57,4 +73,9 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useGetDistributionQuery, useGetFormDistributionsQuery, useAddDistributionMutation } = distributionApi;
+export const {
+  useGetDistributionQuery,
+  useGetAllMyDistributionsQuery,
+  useGetFormDistributionsQuery,
+  useAddDistributionMutation,
+} = distributionApi;

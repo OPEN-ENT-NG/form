@@ -3,10 +3,14 @@ import { createContext, FC, useContext, useEffect, useMemo, useRef, useState } f
 import { useParams } from "react-router-dom";
 
 import { ResponsePageType } from "~/core/enums";
+import { DistributionStatus } from "~/core/models/distribution/enums";
+import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
+import { getHrefRecapFormPath } from "~/core/pathHelper";
 import { workflowRights } from "~/core/rights";
+import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
@@ -18,10 +22,6 @@ import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
 import { initResponsesMap } from "./utils";
-import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
-import { IDistribution } from "~/core/models/distribution/types";
-import { DistributionStatus } from "~/core/models/distribution/enums";
-import { getHrefRecapFormPath } from "~/core/pathHelper";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -65,10 +65,10 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     { formId },
     { skip: previewMode ? !userWorkflowRights.CREATION : !userWorkflowRights.RESPONSE },
   );
-  const { data: questionsDatas } = useGetQuestionsQuery({ formId });
-  const { data: sectionsDatas } = useGetSectionsQuery({ formId });
+  const { data: questionsDatas, isFetching: isQuestionsFetching } = useGetQuestionsQuery({ formId });
+  const { data: sectionsDatas, isFetching: isSectionsFetching } = useGetSectionsQuery({ formId });
   const { data: userDistribution } = useGetDistributionQuery(distributionId);
-  const { completeList } = useFormElementList(sectionsDatas, questionsDatas);
+  const { completeList } = useFormElementList(sectionsDatas, questionsDatas, isQuestionsFetching || isSectionsFetching);
 
   useEffect(() => {
     if (formDatas && distribution) {

@@ -14,9 +14,6 @@ import { useResponse } from "~/providers/ResponseProvider";
 import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
 
 import { buildDelegatesParam } from "../FormPropModal/utils";
-import dayjs from "dayjs";
-import { IRGPDData } from "~/components/RgpdInfoBox/types";
-import { ResponsePageType } from "~/core/enums";
 import { rgpdLayoutStyle, rgpdStackStyle } from "./style";
 
 export const RgpdLayout: FC = () => {
