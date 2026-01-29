@@ -1,6 +1,7 @@
-import { IDelegate } from "~/core/models/delegate/types";
-import { IRGPDData, IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
 import dayjs, { Dayjs } from "dayjs";
+
+import { IRGPDData, IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
+import { IDelegate } from "~/core/models/delegate/types";
 import { t } from "~/i18n";
 
 export const rgpdGoalDurationOptions = [3, 6, 9, 12];

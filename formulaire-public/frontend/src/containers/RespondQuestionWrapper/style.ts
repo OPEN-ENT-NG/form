@@ -1,4 +1,5 @@
 import { SxProps, Theme } from "@cgi-learning-hub/ui";
+
 import { defaultPaperShadow } from "~/core/constants";
 import { columnBoxStyle } from "~/core/style/boxStyles";
 

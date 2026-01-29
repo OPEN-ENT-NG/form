@@ -1,9 +1,11 @@
-import { DD_MM_YYYY, HH_MM } from "~/core/constants";
-import dayjs from "dayjs";
 import "dayjs/locale/fr";
 import "dayjs/locale/en";
-import utc from "dayjs/plugin/utc";
+
+import dayjs from "dayjs";
 import timezone from "dayjs/plugin/timezone";
+import utc from "dayjs/plugin/utc";
+
+import { DD_MM_YYYY, HH_MM } from "~/core/constants";
 import { t } from "~/i18n";
 
 dayjs.extend(utc);

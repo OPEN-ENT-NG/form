@@ -1,4 +1,5 @@
 import { ThemeOptions } from "@cgi-learning-hub/ui";
+
 import { CSS_PRIMARY_MAIN_COLOR } from "./cssColors";
 import { TypographyFontStyle } from "./themeProps";
 

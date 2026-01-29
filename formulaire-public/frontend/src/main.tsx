@@ -1,24 +1,26 @@
-import React, { useEffect, useState } from "react";
+import "@edifice.io/bootstrap/dist/index.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import { ThemeProvider as ThemeProviderCGI, ThemeProviderProps } from "@cgi-learning-hub/theme";
-import "@edifice.io/bootstrap/dist/index.css";
+import { GlobalStyles } from "@cgi-learning-hub/ui";
 import { EdificeClientProvider, EdificeThemeProvider } from "@edifice.io/react";
 import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import React, { useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
-import "react-toastify/dist/ReactToastify.css";
-import { DEFAULT_THEME, TOAST_CONFIG } from "./core/constants";
-import { setupStore } from "./store";
-import { options } from "./core/style/theme";
-import { ToastContainer } from "react-toastify";
 import { RouterProvider } from "react-router-dom";
-import { router } from "./routes";
-import { GlobalStyles } from "@cgi-learning-hub/ui";
-import { GlobalProvider } from "./providers/GlobalProvider";
-import { globalOverrideStyles } from "./core/style/global";
+import { ToastContainer } from "react-toastify";
+
 import { t } from "~/i18n";
+
+import { DEFAULT_THEME, TOAST_CONFIG } from "./core/constants";
+import { globalOverrideStyles } from "./core/style/global";
+import { options } from "./core/style/theme";
 import { useTheme } from "./hook/useTheme";
+import { GlobalProvider } from "./providers/GlobalProvider";
+import { router } from "./routes";
+import { setupStore } from "./store";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {

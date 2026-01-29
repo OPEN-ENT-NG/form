@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/naming-convention */
-import { FC } from "react";
 import { Box } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import dayjs from "dayjs";
-import { IRGPDInfoBoxProps } from "./types";
+import { FC } from "react";
+import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE_PUBLIC } from "~/core/constants";
 import { DateFormat } from "~/core/enums";
 import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+
+import { IRGPDInfoBoxProps } from "./types";
 
 const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, hideBorder, sx = { color: TEXT_SECONDARY_COLOR } }) => {
   const { t } = useTranslation(FORMULAIRE_PUBLIC);

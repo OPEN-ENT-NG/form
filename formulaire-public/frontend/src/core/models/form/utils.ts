@@ -1,11 +1,11 @@
 import { FormPropField } from "~/core/enums";
-import { IFormPropInputValueState, IPublicFormDTO } from "./types";
-import { IFormPayload, IForm } from "./types";
+import { t } from "~/i18n";
+
+import { DistributionStatus } from "../distribution/enums";
 import { IDistribution } from "../distribution/types";
 import { getFirstDistribution, getLatestDistribution, getNbFinishedDistrib } from "../distribution/utils";
-import { DistributionStatus } from "../distribution/enums";
-import { t } from "~/i18n";
 import { transformFormElements } from "../formElement/utils";
+import { IForm, IFormPayload, IFormPropInputValueState, IPublicFormDTO } from "./types";
 
 export const transformPublicForm = (raw: IPublicFormDTO): IForm => {
   return {
