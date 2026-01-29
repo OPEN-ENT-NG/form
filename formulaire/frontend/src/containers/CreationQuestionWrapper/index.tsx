@@ -17,6 +17,7 @@ import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
 import { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 import { getTransformStyle } from "~/components/CreationSortableItem/utils";
 import { IconButtonTooltiped } from "~/components/IconButtonTooltiped/IconButtonTooltiped";
 import { FORMULAIRE } from "~/core/constants";
@@ -55,6 +56,7 @@ import {
   editingQuestionIconContainerStyle,
   editingQuestionIconStyle,
   editingQuestionTitleStyle,
+  headerQuestionStyle,
   mandatorySwitchContainerStyle,
   mandatoryTitleStyle,
   questionAlertStyle,
@@ -65,7 +67,6 @@ import {
 } from "./style";
 import { ICreationQuestionWrapperProps } from "./types";
 import { getQuestionContentByType } from "./utils";
-import { toast } from "react-toastify";
 
 export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question, isPreview }) => {
   const { t } = useTranslation(FORMULAIRE);
@@ -326,17 +327,27 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
           >
             <DragIndicatorRoundedIcon sx={dragIconStyle} />
           </StyledDragContainer>
-          <Box sx={questionTitleStyle}>
-            <Typography
-              color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}
-              variant={TypographyVariant.H6}
-            >
-              {question.title || t("formulaire.question.title.empty")}
-            </Typography>
-            {question.mandatory && (
-              <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR} sx={mandatoryTitleStyle}>
-                *
+          <Box sx={headerQuestionStyle}>
+            <Box sx={questionTitleStyle}>
+              <Typography
+                color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}
+                variant={TypographyVariant.H6}
+              >
+                {question.title || t("formulaire.question.title.empty")}
               </Typography>
+              {question.mandatory && (
+                <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR} sx={mandatoryTitleStyle}>
+                  *
+                </Typography>
+              )}
+            </Box>
+            {form && !hasFormResponses(form) && question.questionType === QuestionTypes.MATRIX && (
+              <Select value={matrixType.toString()} disabled sx={{ width: "fit-content" }}>
+                <MenuItem value={QuestionTypes.SINGLEANSWERRADIO}>
+                  {t("formulaire.matrix.type.SINGLEANSWERRADIO")}
+                </MenuItem>
+                <MenuItem value={QuestionTypes.MULTIPLEANSWER}>{t("formulaire.matrix.type.MULTIPLEANSWER")}</MenuItem>
+              </Select>
             )}
           </Box>
           <Box>{getQuestionContentByType(question, null, matrixType)}</Box>
