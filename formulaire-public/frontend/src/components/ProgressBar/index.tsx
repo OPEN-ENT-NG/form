@@ -1,8 +1,10 @@
-import { FC } from "react";
 import { Step, StepLabel, Stepper } from "@cgi-learning-hub/ui";
-import { IProgressBarProps } from "./types";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
+import { FC } from "react";
+
 import { GREY_MAIN_COLOR, PRIMARY_LIGHT_COLOR, PRIMARY_MAIN_COLOR } from "~/core/style/colors";
+
+import { IProgressBarProps } from "./types";
 
 export const ProgressBar: FC<IProgressBarProps> = ({ nbActiveSteps, nbRemainingSteps }) => {
   const steps = Array.from({ length: nbActiveSteps + nbRemainingSteps });

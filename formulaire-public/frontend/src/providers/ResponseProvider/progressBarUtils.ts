@@ -1,5 +1,4 @@
 import { IFormElement } from "~/core/models/formElement/types";
-import { IFormElementIdType } from "./types";
 import {
   areEquals,
   getFollowingFormElement,
@@ -10,6 +9,8 @@ import {
   stringifyFormElementIdType,
 } from "~/core/models/formElement/utils";
 import { getNextFormElement, getNextFormElements } from "~/core/models/question/utils";
+
+import { IFormElementIdType } from "./types";
 
 export const buildProgressObject = (historicFormElementIds: number[], longuestRemainingPath: number) => {
   return {

@@ -1,9 +1,11 @@
 import { Box, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE_PUBLIC } from "~/core/constants";
 import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { BoxComponentType, TypographyVariant } from "~/core/style/themeProps";
+
 import { mandatoryTitleStyle, questionStackStyle } from "./style";
 import { IRespondQuestionWrapperProps } from "./types";
 import { getRespondQuestionContentByType } from "./utils";

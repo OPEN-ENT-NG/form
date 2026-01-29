@@ -1,15 +1,5 @@
-import {
-  IDuplicateFormPayload,
-  IForm,
-  IFormPayload,
-  IFormReminderPayload,
-  IFormRight,
-  IPublicFormDTO,
-} from "~/core/models/form/types.ts";
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
-import { QueryMethod, TagName } from "~/core/enums.ts";
 import { toast } from "react-toastify";
-import { t } from "~/i18n";
+
 import {
   FORMULAIRE_PUBLIC,
   ID,
@@ -18,6 +8,18 @@ import {
   TRASH_FOLDER_ID,
   ZIP_EXTENSION,
 } from "~/core/constants";
+import { QueryMethod, TagName } from "~/core/enums.ts";
+import {
+  IDuplicateFormPayload,
+  IForm,
+  IFormPayload,
+  IFormReminderPayload,
+  IFormRight,
+  IPublicFormDTO,
+} from "~/core/models/form/types.ts";
+import { t } from "~/i18n";
+
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
 export const formApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({

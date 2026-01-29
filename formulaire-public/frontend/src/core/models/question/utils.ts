@@ -1,8 +1,15 @@
 import { DEFAULT_CURSOR_STEP } from "~/core/constants";
-import { getElementById, transformFormElement } from "../formElement/utils";
+
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
-import { createNewFormElement, getFollowingFormElement, isQuestion, isSection } from "../formElement/utils";
+import {
+  createNewFormElement,
+  getElementById,
+  getFollowingFormElement,
+  isQuestion,
+  isSection,
+  transformFormElement,
+} from "../formElement/utils";
 import { ISection } from "../section/types";
 import { ChoiceTypes, QuestionTypes } from "./enum";
 import {
@@ -50,7 +57,7 @@ export const transformQuestion = (raw: IQuestionDTO): IQuestion => {
     matrixPosition: raw.matrix_position,
     choices: raw.choices,
     placeholder: raw.placeholder,
-    children: raw.children,
+    children: raw.children?.map(transformQuestion) ?? [],
     specificFields: raw.specific_fields,
     stableId: raw.id,
     formElementType: FormElementType.QUESTION,
