@@ -1,7 +1,9 @@
 import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
+
 import { centerBoxStyle, columnBoxStyle, flexEndBoxStyle, spaceBetweenBoxStyle } from "~/core/style/boxStyles";
-import { IButtonsWrapperProps } from "./types";
 import { blockProps } from "~/core/utils";
+
+import { IButtonsWrapperProps } from "./types";
 
 export const responseLayoutStyle: SxProps<Theme> = {
   ...columnBoxStyle,

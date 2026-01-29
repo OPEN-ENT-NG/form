@@ -1,10 +1,11 @@
+import { Box, EllipsisWithTooltip, Link } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 
-import { IFormBreadcrumbsProps } from "./types";
-import { Box, EllipsisWithTooltip, Link } from "@cgi-learning-hub/ui";
 import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
-import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
+
+import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
+import { IFormBreadcrumbsProps } from "./types";
 
 export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   icon: Icon,

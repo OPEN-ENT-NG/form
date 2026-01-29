@@ -1,14 +1,15 @@
 import { Box, Button } from "@cgi-learning-hub/ui";
-import { FC } from "react";
-
-import { IHeaderProps } from "./types";
-import { FormBreadcrumbs } from "../Breadcrumbs";
 import NavigateNextIcon from "@mui/icons-material/NavigateNext";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
+
 import { FORMULAIRE_PUBLIC } from "~/core/constants";
-import { headerButtonsStyle, headerStyle } from "./style";
 import { ComponentVariant } from "~/core/style/themeProps";
+
+import { FormBreadcrumbs } from "../Breadcrumbs";
 import { FormsIcon } from "../SVG/FormsIcon";
+import { headerButtonsStyle, headerStyle } from "./style";
+import { IHeaderProps } from "./types";
 
 export const Header: FC<IHeaderProps> = ({ stringItems, buttons, displaySeparator = false }) => {
   const { t } = useTranslation(FORMULAIRE_PUBLIC);

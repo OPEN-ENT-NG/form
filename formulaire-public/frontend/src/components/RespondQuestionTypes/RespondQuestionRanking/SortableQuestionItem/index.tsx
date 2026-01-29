@@ -1,14 +1,13 @@
-import { useSortable } from "@dnd-kit/sortable";
-import { FC, useMemo } from "react";
-import { getTransformStyle } from "./utils";
-import { buttonsBoxStyle, buttonStyle, GrapableBox, leftBoxStyle, SortableQuestionPaper } from "./style";
-import { ISortableQuestionItemProps } from "./types";
-
 import { Box, IconButton, Typography } from "@cgi-learning-hub/ui";
-
+import { useSortable } from "@dnd-kit/sortable";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownRounded";
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
+import { FC, useMemo } from "react";
+
+import { buttonsBoxStyle, buttonStyle, GrapableBox, leftBoxStyle, SortableQuestionPaper } from "./style";
+import { ISortableQuestionItemProps } from "./types";
+import { getTransformStyle } from "./utils";
 
 export const SortableItem: FC<ISortableQuestionItemProps> = ({
   id,

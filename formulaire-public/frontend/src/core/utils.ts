@@ -1,5 +1,6 @@
-import { KeyName } from "./enums";
 import { IUserInfo } from "@edifice.io/client";
+
+import { KeyName } from "./enums";
 import { IForm } from "./models/form/types";
 import { sharingRights } from "./rights";
 

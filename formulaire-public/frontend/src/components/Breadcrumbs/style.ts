@@ -1,6 +1,8 @@
 import { Breadcrumbs, styled, Typography } from "@cgi-learning-hub/ui";
-import { IBreadCrumbItemWrapperProps, IBreadCrumbProps } from "./types";
+
 import { blockProps } from "~/core/utils";
+
+import { IBreadCrumbItemWrapperProps, IBreadCrumbProps } from "./types";
 
 export const StyledBreadCrumbItemWrapper = styled(Typography, {
   shouldForwardProp: blockProps("textColor", "isHeader", "isCreationPage", "hasSeparator", "isLast"),
