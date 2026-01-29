@@ -89,7 +89,7 @@ export const HomeMainLayout: FC = () => {
   const breadcrumbsTexts = useMemo(() => (currentFolder.name ? [currentFolder.name] : []), [currentFolder.name]);
 
   return (
-    <StyledMainContentInnerWrapper dragCursorStyle={getDragCursorStyle(activeDragItem, isValidDrop)}>
+    <StyledMainContentInnerWrapper nbChildrenToMargin={2} sx={{ ...getDragCursorStyle(activeDragItem, isValidDrop) }}>
       <Box sx={searchStyle}>
         <SearchInput
           placeholder={t("formulaire.search.placeholder")}

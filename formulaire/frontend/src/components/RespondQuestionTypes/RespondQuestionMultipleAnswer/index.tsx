@@ -59,7 +59,11 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
 
     const updatedReponses = existingResponses.map((response) => {
       if (response.choiceId === customChoiceId) {
-        return { ...response, customAnswer: newCustomAnswer };
+        return {
+          ...response,
+          customAnswer: newCustomAnswer,
+          selected: newCustomAnswer.trim() !== "",
+        };
       }
       return response;
     });

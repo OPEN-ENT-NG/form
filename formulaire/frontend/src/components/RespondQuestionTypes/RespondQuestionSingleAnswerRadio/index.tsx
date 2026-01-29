@@ -58,9 +58,14 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
 
     const updatedReponses = existingResponses.map((response) => {
       if (response.choiceId === customChoiceId) {
-        return { ...response, customAnswer: newCustomAnswer };
+        if (response.answer) setSelectedValue(response.answer.toString());
+        return {
+          ...response,
+          customAnswer: newCustomAnswer,
+          selected: newCustomAnswer.trim() !== "",
+        };
       }
-      return response;
+      return { ...response, selected: false };
     });
 
     updateQuestionResponses(question, updatedReponses);

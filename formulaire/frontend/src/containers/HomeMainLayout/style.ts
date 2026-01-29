@@ -6,18 +6,23 @@ import { blockProps } from "~/core/utils";
 import { IMainContentInnerWrapperProps } from "./types";
 
 export const StyledMainContentInnerWrapper = styled(Box, {
-  shouldForwardProp: blockProps("isMobile", "dragCursorStyle"),
-})<IMainContentInnerWrapperProps>(({ isMobile = false, dragCursorStyle = null }) => ({
+  shouldForwardProp: blockProps("isMobile", "nbChildrenToMargin"),
+})<IMainContentInnerWrapperProps>(({ isMobile = false, nbChildrenToMargin }) => ({
+  ...mainContentInnerWrapper,
+  [`& > *:nth-child(-n + ${nbChildrenToMargin})`]: {
+    marginBottom: !isMobile ? "3rem" : "1rem",
+  },
+  paddingTop: !isMobile ? "2rem" : "1rem",
+}));
+
+export const mainContentInnerWrapper = {
   height: "100%",
   display: "flex",
   justifyContent: "flex-start",
   flexDirection: "column",
-  gap: !isMobile ? "3rem" : "1rem",
-  paddingTop: !isMobile ? "2rem" : "1rem",
   boxSizing: "border-box",
   width: "100%",
-  ...dragCursorStyle,
-}));
+} as const;
 
 export const searchStyle: SxProps<Theme> = {
   ...spaceBetweenBoxStyle,

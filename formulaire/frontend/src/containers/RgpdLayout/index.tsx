@@ -4,7 +4,7 @@ import { FC, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 
 import RGPDInfoBox from "~/components/RgpdInfoBox";
-import { IRGPDI18nParams } from "~/components/RgpdInfoBox/types";
+import { IRGPDData } from "~/components/RgpdInfoBox/types";
 import { FORMULAIRE } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
 import { flexEndBoxStyle } from "~/core/style/boxStyles";
@@ -27,7 +27,7 @@ export const RgpdLayout: FC = () => {
   }, [form]);
 
   const delegatesParam = useMemo(() => {
-    if (!form || !form.rgpd_goal) return {} as IRGPDI18nParams;
+    if (!form || !form.rgpd_goal) return {} as IRGPDData;
     return buildDelegatesParam(delegatesData ?? null, form.rgpd_goal, rgpdExpirationDate);
   }, [delegatesData, rgpdExpirationDate]);
 
@@ -44,7 +44,7 @@ export const RgpdLayout: FC = () => {
       </Stack>
       <Box sx={flexEndBoxStyle}>
         <Button variant={ComponentVariant.CONTAINED} onClick={startForm}>
-          {t(`formulaire.${form?.is_public ? "public." : ""}respond.form`)}
+          {t(`formulaire.respond.form`)}
         </Button>
       </Box>
     </Box>
