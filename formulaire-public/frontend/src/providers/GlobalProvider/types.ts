@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+
 import { ModalType } from "~/core/enums";
 
 export interface IGlobalProviderProps {

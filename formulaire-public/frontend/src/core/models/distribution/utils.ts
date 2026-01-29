@@ -1,5 +1,5 @@
-import { IDistributionDTO, IDistribution, IPersonResponseData } from "./types";
 import { DistributionStatus } from "./enums";
+import { IDistribution, IDistributionDTO, IPersonResponseData } from "./types";
 
 export const transformDistribution = (raw: IDistributionDTO): IDistribution => {
   return {

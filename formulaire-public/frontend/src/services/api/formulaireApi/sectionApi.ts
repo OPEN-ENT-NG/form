@@ -1,9 +1,11 @@
-import { QueryMethod, TagName } from "~/core/enums";
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
 import { toast } from "react-toastify";
+
+import { QueryMethod, TagName } from "~/core/enums";
 import { ISection, ISectionDTO } from "~/core/models/section/types";
 import { buildSectionPayload, transformSection, transformSections } from "~/core/models/section/utils";
 import { t } from "~/i18n";
+
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
 
 export const sectionApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({

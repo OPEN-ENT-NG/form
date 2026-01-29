@@ -1,18 +1,20 @@
-import { FC } from "react";
 import { Box, EmptyState } from "@cgi-learning-hub/ui";
-import { useResponse } from "~/providers/ResponseProvider";
-import { Header } from "~/components/Header";
-import { ResponseLayout } from "../ResponseLayout";
+import { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { TypographyVariant } from "~/core/style/themeProps";
+
+import { Header } from "~/components/Header";
+import { ErrorPreview } from "~/components/SVG/ErrorPreview";
 import { FORMULAIRE_PUBLIC } from "~/core/constants";
-import { emptyStateWrapper } from "~/core/style/boxStyles";
 import { ResponsePageType } from "~/core/enums";
-import { RgpdLayout } from "../RgpdLayout";
+import { emptyStateWrapper } from "~/core/style/boxStyles";
+import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
+import { TypographyVariant } from "~/core/style/themeProps";
+import { useResponse } from "~/providers/ResponseProvider";
+
 import { DescriptionLayout } from "../DescriptionLayout";
 import { RecapLayout } from "../RecapLayout";
-import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
-import { ErrorPreview } from "~/components/SVG/ErrorPreview";
+import { ResponseLayout } from "../ResponseLayout";
+import { RgpdLayout } from "../RgpdLayout";
 
 export const ResponseView: FC = () => {
   const { t } = useTranslation(FORMULAIRE_PUBLIC);
