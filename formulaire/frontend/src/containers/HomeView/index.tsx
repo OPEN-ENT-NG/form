@@ -67,6 +67,7 @@ export const HomeView: FC = () => {
           <Header
             items={[<Typography variant="h1">{t("formulaire.title")}</Typography>]}
             buttons={tab === HomeTabState.FORMS ? headerButtons : []}
+            shouldNavigate
           />
         </Box>
       )}

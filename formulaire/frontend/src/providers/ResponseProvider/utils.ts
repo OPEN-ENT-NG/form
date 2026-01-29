@@ -50,8 +50,8 @@ export const initResponseAccordingToType = (question: IQuestion, choices?: IQues
     case QuestionTypes.DATE:
     case QuestionTypes.TIME:
     case QuestionTypes.CURSOR:
-    case QuestionTypes.SINGLEANSWER:
       return [createNewResponse(question.id)];
+    case QuestionTypes.SINGLEANSWER:
     case QuestionTypes.RANKING:
     case QuestionTypes.SINGLEANSWERRADIO:
     case QuestionTypes.MULTIPLEANSWER:
@@ -60,7 +60,6 @@ export const initResponseAccordingToType = (question: IQuestion, choices?: IQues
           createNewResponse(question.id as number, undefined, choice.id as number, choice.value, index),
         ) ?? []
       );
-    //TODO other question types
     case QuestionTypes.FILE:
       return [];
     default:
