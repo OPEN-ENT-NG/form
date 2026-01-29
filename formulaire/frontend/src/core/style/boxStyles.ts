@@ -59,5 +59,6 @@ export const emptyStateWrapper = {
   alignItems: "center",
   justifyContent: "center",
   width: "100%",
+  minHeight: "calc(100vh - 71px)",
   gap: 3,
 } as const;
