@@ -5,14 +5,14 @@ export interface IFormBreadcrumbsProps {
   items: ReactNode[];
   separator?: ReactNode;
   isHeader?: boolean;
-  isCreationPage?: boolean;
+  shouldNavigate?: boolean;
   displaySeparator?: boolean;
 }
 
 export interface IBreadCrumbItemWrapperProps {
   textColor: string;
   isHeader: boolean;
-  isCreationPage: boolean;
+  shouldNavigate: boolean;
   hasSeparator: boolean;
   isLast: boolean;
 }
