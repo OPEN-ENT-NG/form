@@ -139,6 +139,7 @@ export const useClickAwayEditingElement = (
     setFormElementsList(updatedFormElementsList as IQuestion[]);
 
     const dataType = e.currentTarget.dataset.type;
+
     switch (dataType) {
       case ClickAwayDataType.ROOT:
         void saveFormElement(updatedFormElement, updatedFormElementsList);

@@ -1,35 +1,28 @@
-import { Box, IconButton, TextField, Typography } from "@cgi-learning-hub/ui";
-import { FC, useMemo, useRef, useState } from "react";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
-import { useCreation } from "~/providers/CreationProvider";
-import { UpDownButtons } from "~/components/UpDownButtons";
-import { useTranslation } from "react-i18next";
-import { FORMULAIRE } from "~/core/constants";
-import { ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
-import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
+import { Box, TextField, Typography } from "@cgi-learning-hub/ui";
 import SortByAlphaRoundedIcon from "@mui/icons-material/SortByAlphaRounded";
-import { iconStyle } from "~/components/UpDownButtons/style";
+import { FC, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
+import { FORMULAIRE } from "~/core/constants";
+import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
+import { useCreation } from "~/providers/CreationProvider";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { useGlobal } from "~/providers/GlobalProvider";
 import {
   baseChoiceWrapperStyle,
-  choiceInputStyle,
-  unselectedChoiceStyle,
   choicesWrapperStyle,
-  choiceWrapperStyle,
-  deleteButtonIconStyle,
-  deleteWrapperStyle,
   newChoiceInputStyle,
   NewChoiceWrapper,
   notEditingchoicesWrapperStyle,
   sortIconStyle,
   sortWrapperStyle,
   StyledSortWrapper,
-  upDownButtonsWrapperStyle,
+  unselectedChoiceStyle,
 } from "../CreationQuestionChoiceWrapper/style";
-import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
+import { EditableChildrenRow } from "./EditableChildrenRow";
 import { ICreationMatrixChildrenWrapperProps } from "./types";
 import { useMatrixChildrenActions } from "./useMatrixChildrenActions";
-import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
-import { useGlobal } from "~/providers/GlobalProvider";
 import { compareChildren } from "./utils";
 
 export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperProps> = ({ question, matrixType }) => {
@@ -44,14 +37,14 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
     useMatrixChildrenActions(question, matrixType, setCurrentEditingElement);
 
   const sortedChildren = useMemo(() => {
-    return children.sort((a, b) => compareChildren(a, b));
+    return [...children].sort((a, b) => compareChildren(a, b));
   }, [children]);
 
   if (!question.children) {
     return null;
   }
 
-  const handleKeyDownExistingChild = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleKeyDownExistingChild = (e: React.KeyboardEvent<HTMLDivElement>, index: number) => {
     if (isShiftEnterPressed(e)) {
       updateChild(index, (e.target as HTMLInputElement).value);
       const targetIndex = index - 1 >= 0 ? index - 1 : 0;
@@ -66,7 +59,7 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
     }
   };
 
-  const handleKeyDownNewChild = (e: React.KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDownNewChild = (e: React.KeyboardEvent<HTMLDivElement>) => {
     if (isShiftEnterPressed(e)) {
       const targetIndex = children.length - 1 >= 0 ? children.length - 1 : 0;
       const targetChoice = children[targetIndex];
@@ -96,51 +89,19 @@ export const CreationMatrixChildrenWrapper: FC<ICreationMatrixChildrenWrapperPro
           </StyledSortWrapper>
           <Box sx={choicesWrapperStyle}>
             {sortedChildren.map((child, index) => (
-              <Box key={child.stableId} sx={choiceWrapperStyle}>
-                <Box sx={upDownButtonsWrapperStyle}>
-                  <UpDownButtons
-                    element={child}
-                    index={index}
-                    elementList={children}
-                    hasCustomAtTheEnd={false}
-                    handleReorderClick={handleSwapClick}
-                  />
-                </Box>
-                <CreationQuestionChoice index={index} type={question.questionType} isEditing={true}>
-                  <TextField
-                    inputRef={(el: HTMLInputElement | null) => {
-                      if (!child.stableId) return;
-                      inputRefs.current[child.stableId] = el;
-                    }}
-                    value={child.title}
-                    variant={ComponentVariant.STANDARD}
-                    fullWidth
-                    onFocus={selectAllTextInput}
-                    onChange={(e) => {
-                      updateChild(index, e.target.value);
-                    }}
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                      handleKeyDownExistingChild(e, index);
-                    }}
-                    disabled={false}
-                    sx={choiceInputStyle}
-                  />
-                </CreationQuestionChoice>
-                <Box sx={deleteWrapperStyle}>
-                  {children.length > 1 && (
-                    <IconButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        void handleDeleteChild(child.id, index, child.matrixPosition);
-                      }}
-                      size={ComponentSize.SMALL}
-                      sx={deleteButtonIconStyle}
-                    >
-                      <ClearRoundedIcon sx={iconStyle} />
-                    </IconButton>
-                  )}
-                </Box>
-              </Box>
+              <EditableChildrenRow
+                key={child.stableId}
+                child={child}
+                index={index}
+                children={children}
+                question={question}
+                inputRefs={inputRefs}
+                selectAllTextInput={selectAllTextInput}
+                updateChild={updateChild}
+                handleDeleteChild={handleDeleteChild}
+                handleSwapClick={handleSwapClick}
+                handleKeyDownExistingChild={handleKeyDownExistingChild}
+              />
             ))}
             <NewChoiceWrapper key="newChoice" hasImage={false}>
               <CreationQuestionChoice index={children.length}>

@@ -16,7 +16,7 @@ export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: 
   const setQuestion = setCurrentEditingElement as Dispatch<SetStateAction<IQuestion>>;
   const choices = useMemo(
     () =>
-      (question.choices || [])
+      [...(question.choices || [])]
         .sort((a, b) => compareChoices(a, b))
         .map((choice) => {
           return {

@@ -29,7 +29,6 @@ export const GlobalProvider: FC<IGlobalProviderProps> = ({ children }) => {
   const selectAllTextInput = (e: React.FocusEvent<HTMLInputElement>) => {
     e.target.select();
   };
-  console.log("niko", displayModals);
 
   const value = useMemo<GlobalProviderContextType>(
     () => ({
