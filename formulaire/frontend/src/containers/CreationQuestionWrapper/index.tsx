@@ -68,7 +68,7 @@ import {
 import { ICreationQuestionWrapperProps } from "./types";
 import { getQuestionContentByType } from "./utils";
 
-export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question, isPreview }) => {
+export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ question, isPreview, isRoot }) => {
   const { t } = useTranslation(FORMULAIRE);
   const {
     form,
@@ -209,6 +209,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
   return (
     <Box
       style={style}
+      sx={{margin: isRoot ? "0 3.2rem" : "0"}}
       ref={setNodeRef}
       data-type={ClickAwayDataType.QUESTION}
       onMouseDown={(e) => {

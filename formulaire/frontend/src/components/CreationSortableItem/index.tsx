@@ -12,7 +12,7 @@ export const CreationSortableItem: FC<ICreationSortableItemProps> = ({ formEleme
         opacity: isPreview ? 0.5 : 1,
       }}
     >
-      {isQuestion(formElement) && <CreationQuestionWrapper isPreview={isPreview} question={formElement} />}
+      {isQuestion(formElement) && <CreationQuestionWrapper isPreview={isPreview} isRoot question={formElement} />}
       {isSection(formElement) && <CreationSectionWrapper isPreview={isPreview} section={formElement} />}
     </Box>
   );

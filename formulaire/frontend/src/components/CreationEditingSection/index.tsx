@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Paper, Stack, TextField, Typography } from "@cgi-learning-hub/ui";
+import { Alert, Box, Button, Stack, TextField, Typography } from "@cgi-learning-hub/ui";
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import {
   editorContainerStyle,
@@ -147,7 +147,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   return (
     <Box>
       <Box>
-        <Stack component={Paper} sx={sectionStackStyle}>
+        <Stack sx={sectionStackStyle}>
           <Box sx={sectionHeaderWrapperStyle}>
             <Box sx={sectionHeaderStyle}>
               <Box sx={sectionTitleStyle}>
