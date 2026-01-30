@@ -68,7 +68,7 @@ export const DeleteModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       await Promise.allSettled(promises);
 
       if (currentFolder.id !== TRASH_FOLDER_ID) {
-        toast.success(t("formulaire.success.forms.archive"));
+        toast.success(t("formulaire.success.forms.archive." + (selectedForms.length > 1 ? "plural" : "singular")));
       }
       if (currentFolder.id === TRASH_FOLDER_ID) {
         toast.success(t("formulaire.success.forms.delete", { ns: FORMULAIRE }));
