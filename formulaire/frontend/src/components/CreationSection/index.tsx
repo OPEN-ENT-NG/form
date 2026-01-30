@@ -7,7 +7,7 @@ import {
   MenuItem,
   Select,
   Stack,
-  Typography
+  Typography,
 } from "@cgi-learning-hub/ui";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import EditRoundedIcon from "@mui/icons-material/EditRounded";

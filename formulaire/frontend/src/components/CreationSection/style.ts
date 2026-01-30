@@ -68,7 +68,7 @@ export const sectionStackStyle: SxProps<Theme> = {
   flexDirection: "column",
   borderRadius: 1,
   marginBottom: 2,
-  background: "transparent !important"
+  background: "transparent !important",
 };
 
 export const editingSectionTitleStyle: SxProps<Theme> = {
