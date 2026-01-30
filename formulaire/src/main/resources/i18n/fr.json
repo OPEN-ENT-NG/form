@@ -393,7 +393,7 @@
   "formulaire.warning.send.missing.responses.missing": "Vous n'avez pas répondu à toutes les questions obligatoires !",
   "formulaire.yes": "Oui",
   "group.AdminLocal": "Administrateurs locaux de {0}.",
-  "group.Direction": "Directeurs de {0}",
+  "group.Direction": "Directeurs de {0}.",
   "group.Discipline": "Enseignants de discipline {0}.",
   "group.Func": "Personnels de fonction {0}.",
   "group.Guest": "Invités du groupe {0}.",
