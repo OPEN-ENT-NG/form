@@ -323,6 +323,7 @@ export const useMapActionBarButtons = () => {
           ActionBarButtonType.OPEN,
           ActionBarButtonType.PROPS,
           ActionBarButtonType.DUPLICATE,
+          ActionBarButtonType.MOVE,
           ActionBarButtonType.RESULTS,
           ActionBarButtonType.REMIND,
         ];
