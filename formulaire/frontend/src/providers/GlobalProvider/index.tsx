@@ -4,6 +4,7 @@ import { MOBILE_MAX_WIDTH, TABLET_MAX_WIDTH } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { GlobalProviderContextType, IDisplayModalsState, IGlobalProviderProps } from "./types";
 import { initialDisplayModalsState } from "./utils";
+import { useGetQuestionTypesQuery } from "~/services/api/services/formulaireApi/questionApi";
 
 const GlobalProviderContext = createContext<GlobalProviderContextType | null>(null);
 
@@ -19,6 +20,8 @@ export const GlobalProvider: FC<IGlobalProviderProps> = ({ children }) => {
   const [displayModals, setDisplayModals] = useState<IDisplayModalsState>(initialDisplayModalsState);
   const isMobile = useMediaQuery(`(max-width: ${MOBILE_MAX_WIDTH}px)`);
   const isTablet = useMediaQuery(`(max-width: ${TABLET_MAX_WIDTH}px)`);
+
+  const { data: questionTypes } = useGetQuestionTypesQuery();
 
   const toggleModal = (modalType: ModalType) => {
     setDisplayModals((prevState) => ({
@@ -38,8 +41,9 @@ export const GlobalProvider: FC<IGlobalProviderProps> = ({ children }) => {
       isMobile,
       isTablet,
       selectAllTextInput,
+      questionTypes,
     }),
-    [displayModals, isMobile, isTablet],
+    [displayModals, isMobile, isTablet, questionTypes],
   );
 
   return <GlobalProviderContext.Provider value={value}>{children}</GlobalProviderContext.Provider>;
