@@ -42,7 +42,7 @@ export const CreationView: FC = () => {
   const {
     displayModals: { showFormElementCreate, showOrganization },
     toggleModal,
-    isMobile,
+    isTablet,
   } = useGlobal();
 
   const { handleClickAway } = useClickAwayEditingElement(
@@ -63,7 +63,7 @@ export const CreationView: FC = () => {
   };
 
   const selectView = () => {
-    return isMobile ? errorView : desktopView;
+    return isTablet ? errorView : desktopView;
   };
 
   const errorView = (

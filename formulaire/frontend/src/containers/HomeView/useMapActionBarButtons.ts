@@ -1,26 +1,26 @@
 import { useCallback, useMemo } from "react";
 
-import { useHome } from "~/providers/HomeProvider";
-import { ActionBarButtonType } from "./enums";
-import { useGlobal } from "~/providers/GlobalProvider";
-import { ModalType } from "~/core/enums";
-import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
-import { MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
-import { useShareModal } from "~/providers/ShareModalProvider";
 import { useEdificeClient } from "@edifice.io/react";
-import { HomeTabState } from "~/providers/HomeProvider/enums";
-import { getFormDistributions } from "~/core/models/form/utils";
-import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
-import { getFormResultsPath } from "~/core/pathHelper";
-import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
-import { useHandleOpenFormResponse } from "./useHandleOpenFormResponse";
-import { IForm } from "~/core/models/form/types";
-import { t } from "~/i18n";
 import { useNavigate } from "react-router-dom";
+import { MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
+import { ModalType } from "~/core/enums";
+import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
+import { IForm } from "~/core/models/form/types";
+import { getFormDistributions } from "~/core/models/form/utils";
+import { getFormResultsPath } from "~/core/pathHelper";
+import { t } from "~/i18n";
+import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
+import { HomeTabState } from "~/providers/HomeProvider/enums";
+import { useShareModal } from "~/providers/ShareModalProvider";
+import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
+import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
+import { ActionBarButtonType } from "./enums";
+import { useHandleOpenFormResponse } from "./useHandleOpenFormResponse";
 
 export const useMapActionBarButtons = () => {
   const navigate = useNavigate();
-  const { isMobile, toggleModal } = useGlobal();
+  const { isTablet, toggleModal } = useGlobal();
   const {
     selectedFolders,
     selectedForms,
@@ -159,7 +159,7 @@ export const useMapActionBarButtons = () => {
             return;
           }
           if (hasForms && tab === HomeTabState.FORMS) {
-            if (isMobile) toggleModal(ModalType.FORM_OPEN_BLOCKED);
+            if (isTablet) toggleModal(ModalType.FORM_OPEN_BLOCKED);
             else navigate(`/form/${selectedForms[0].id}/edit`);
           }
           return openFormResponseAction();

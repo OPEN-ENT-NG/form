@@ -31,5 +31,6 @@ export type GlobalProviderContextType = {
   displayModals: IDisplayModalsState;
   toggleModal: (modalType: ModalType) => void;
   isMobile: boolean;
+  isTablet: boolean;
   selectAllTextInput: (e: React.FocusEvent<HTMLInputElement>) => void;
 };
