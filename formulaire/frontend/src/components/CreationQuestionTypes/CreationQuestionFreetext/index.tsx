@@ -1,10 +1,11 @@
-import { FC, useEffect, useRef } from "react";
-import { ICreationQuestionFreetextProps } from "./types";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
+import { FC, useEffect, useRef } from "react";
+
 import { EDITOR_CONTENT_HTML } from "~/core/constants";
 import { EditorMode, EditorVariant } from "~/core/enums";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+
 import { StyledEditorWrapper } from "./style";
 import { ICreationQuestionFreetextProps } from "./types";
 

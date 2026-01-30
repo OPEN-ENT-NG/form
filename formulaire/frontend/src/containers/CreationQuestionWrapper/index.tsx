@@ -82,7 +82,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     saveQuestion,
     setFormElementsList,
     newChoiceValue,
-    setNewChoiceValue
+    setNewChoiceValue,
   } = useCreation();
   const {
     displayModals: { showQuestionUndo, showQuestionDelete },
