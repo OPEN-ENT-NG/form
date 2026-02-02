@@ -7,7 +7,7 @@ import { ModalType } from "~/core/enums";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
 import { IForm } from "~/core/models/form/types";
 import { getFormDistributions } from "~/core/models/form/utils";
-import { getFormEditPath, getHrefFormResultsPath } from "~/core/pathHelper";
+import { getFormEditPath, getFormResultPath } from "~/core/pathHelper";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useHome } from "~/providers/HomeProvider";
@@ -225,7 +225,7 @@ export const useMapActionBarButtons = () => {
       [ActionBarButtonType.RESULTS]: {
         label: t("formulaire.results"),
         action: () => {
-          return (window.location.href = getHrefFormResultsPath(selectedForms[0].id));
+          navigate(getFormResultPath(selectedForms[0].id));
         },
       },
       [ActionBarButtonType.REMIND]: {

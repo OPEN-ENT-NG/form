@@ -30,6 +30,13 @@ const routes = [
         },
       },
       {
+        path: "form/:formId/result",
+        async lazy() {
+          const { Result } = await import("./result");
+          return { Component: Result };
+        },
+      },
+      {
         path: "form/:formId/:distributionId",
         async lazy() {
           const { Response } = await import("./response");

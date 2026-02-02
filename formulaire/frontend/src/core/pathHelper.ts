@@ -43,3 +43,7 @@ export const getFormPreviewPath = (formId: string | number): string => {
 export const getRespondFormPath = (formId: string | number, distributionId: string | number): string => {
   return `/form/${formId}/${distributionId}`;
 };
+
+export const getFormResultPath = (formId: number): string => {
+  return `/form/${formId}/result`;
+}
