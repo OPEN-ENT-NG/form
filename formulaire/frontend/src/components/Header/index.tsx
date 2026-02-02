@@ -20,6 +20,7 @@ export const Header: FC<IHeaderProps> = ({
   isCreationPage = false,
   displaySeparator = false,
   form = null,
+  showCollapse,
 }) => {
   const formatDateWithTime = useFormatDateWithTime();
   const { t } = useTranslation(FORMULAIRE);
@@ -35,6 +36,7 @@ export const Header: FC<IHeaderProps> = ({
           separator={displaySeparator && <NavigateNextIcon sx={{ height: "2.4rem" }} />}
           isHeader
           isCreationPage={isCreationPage}
+          showCollapse={showCollapse}
         />
         <Box sx={saveBoxStyle}>
           {isCreationPage && formDateModification && (
