@@ -66,7 +66,7 @@ export const ResponseView: FC = () => {
 
   return (
     <Box sx={{ width: "100%", height: "100%", paddingX: "10%", ...(isNotReady && { margin: "auto" }) }}>
-      {form && <Header items={[form.title]} buttons={getHeaderButtons()} form={form} displaySeparator />}
+      {form && !isNotReady && <Header items={[form.title]} buttons={getHeaderButtons()} form={form} displaySeparator />}
       {displayRightPage()}
     </Box>
   );

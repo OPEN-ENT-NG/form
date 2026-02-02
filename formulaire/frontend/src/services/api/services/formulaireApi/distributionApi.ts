@@ -43,13 +43,27 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
       },
     }),
     getFormDistributions: builder.query<IDistribution[], number | string>({
-      query: (id: number | string) => `/distributions/forms/${id.toString()}/list`,
+      query: (formId: number | string) => `/distributions/forms/${formId.toString()}/list`,
       transformResponse: (rawDatas: IDistributionDTO[]) => transformDistributions(rawDatas),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (error) {
           console.error("Erreur lors de la récupération des distributions:", error);
+        }
+      },
+    }),
+    getMyFormDistributions: builder.query<IDistribution[], number | string>({
+      query: (formId: number | string) => ({
+        url: `distributions/forms/${formId}/listMine`,
+        method: QueryMethod.GET,
+      }),
+      transformResponse: (rawDatas: IDistributionDTO[]) => transformDistributions(rawDatas),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.distributionService.list");
         }
       },
     }),
@@ -77,5 +91,6 @@ export const {
   useGetDistributionQuery,
   useGetAllMyDistributionsQuery,
   useGetFormDistributionsQuery,
+  useGetMyFormDistributionsQuery,
   useAddDistributionMutation,
 } = distributionApi;

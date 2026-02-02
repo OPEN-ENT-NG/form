@@ -1,6 +1,6 @@
 import { useEdificeClient } from "@edifice.io/react";
 import { createContext, FC, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 import { ResponsePageType } from "~/core/enums";
 import { DistributionStatus } from "~/core/models/distribution/enums";
@@ -8,9 +8,13 @@ import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
-import { getHrefRecapFormPath } from "~/core/pathHelper";
+import { getRespondFormPath } from "~/core/pathHelper";
 import { workflowRights } from "~/core/rights";
-import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
+import {
+  useAddDistributionMutation,
+  useGetDistributionQuery,
+  useGetMyFormDistributionsQuery,
+} from "~/services/api/services/formulaireApi/distributionApi";
 import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
@@ -35,6 +39,7 @@ export const useResponse = () => {
 
 export const ResponseProvider: FC<IResponseProviderProps> = ({ children, previewMode = false, initialPageType }) => {
   const { formId, distributionId } = useParams();
+  const navigate = useNavigate();
   const { user } = useEdificeClient();
   const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
@@ -55,9 +60,10 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     responsesMap,
     setResponsesMap,
   );
+  const [addDistribution] = useAddDistributionMutation();
 
   if (formId === undefined || distributionId === undefined) {
-    throw new Error("formId is undefined");
+    throw new Error("formId or distributionId is undefined");
   }
 
   // Fetching data
@@ -67,31 +73,83 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   );
   const { data: questionsDatas, isFetching: isQuestionsFetching } = useGetQuestionsQuery({ formId });
   const { data: sectionsDatas, isFetching: isSectionsFetching } = useGetSectionsQuery({ formId });
-  const { data: userDistribution } = useGetDistributionQuery(distributionId);
+  const { data: distributionData } = useGetDistributionQuery(distributionId, {
+    skip: previewMode || distributionId === "new",
+  });
+  const { data: formUserDistributionsDatas } = useGetMyFormDistributionsQuery(formId, { skip: previewMode });
   const { completeList } = useFormElementList(sectionsDatas, questionsDatas, isQuestionsFetching || isSectionsFetching);
 
+  // Set form value
   useEffect(() => {
-    if (formDatas && distribution) {
+    if (formDatas) {
       setForm(formDatas);
+
+      // Checks form validity if not preview mode
+      if (
+        !previewMode &&
+        (formDatas.archived ||
+          (formDatas.date_opening && formDatas.date_opening > new Date()) ||
+          (formDatas.date_ending && formDatas.date_ending < new Date()))
+      ) {
+        navigate("/403");
+        return;
+      }
+    }
+  }, [formDatas]);
+
+  // Set distribution value
+  useEffect(() => {
+    if (previewMode || !formUserDistributionsDatas) return; // Si mode preview, pas de logique de distribution
+
+    // Si on a des data pour le distributionId donné, on utilise directement celles-ci
+    if (distributionData) {
+      setDistribution(distributionData);
+      return;
+    }
+
+    // Si distributionId est "new", on tente d'en trouver une existante ou en créer une nouvelle le cas échéant
+    if (distributionId === "new") {
+      const toDoDistrib = formUserDistributionsDatas.find((d) => d.status == DistributionStatus.TO_DO);
+      const finishedDistribs = formUserDistributionsDatas.filter((d) => d.status == DistributionStatus.FINISHED);
+      if ((form && form.multiple) || finishedDistribs.length == 0) {
+        if (toDoDistrib) setDistribution(toDoDistrib);
+        if (formUserDistributionsDatas.length <= 0) return;
+        void addDistribution(formUserDistributionsDatas[0].id)
+          .unwrap()
+          .then((newDistribution) => {
+            navigate(getRespondFormPath(formId, newDistribution.id));
+          })
+          .catch(() => {
+            navigate("/403");
+          });
+      }
+    }
+  }, [previewMode, distributionId, distributionData, form, distributionData, formUserDistributionsDatas]);
+
+  // Set page type
+  useEffect(() => {
+    if (form && (distribution || previewMode)) {
+      // Display right page
       if (!initialPageType) {
-        if (formDatas.rgpd) {
+        if (form.rgpd) {
           setPageType(ResponsePageType.RGPD);
           return;
         }
-        if (formDatas.description) {
+        if (form.description) {
           setPageType(ResponsePageType.DESCRIPTION);
           return;
         }
         setPageType(ResponsePageType.FORM_ELEMENT);
       }
     }
-  }, [formDatas, distribution]);
+  }, [form, distribution]);
 
   useEffect(() => {
     if (!sectionsDatas && !questionsDatas) return;
     setFormElementsList(completeList);
   }, [questionsDatas, sectionsDatas, completeList]);
 
+  // Update progress-bar data
   useEffect(() => {
     if (formElementsList.length <= 0) return;
     const firstElement = formElementsList[0];
@@ -102,6 +160,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     updateProgress(firstElement, [firstElement.id], newLongestPathsMap);
   }, [formElementsList]);
 
+  // Initialize responses map
   useEffect(() => {
     if (!hasInitializedRsponsesMap.current && formElementsList.length > 0) {
       const initializedResponsesMap = initResponsesMap(formElementsList);
@@ -109,24 +168,6 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       hasInitializedRsponsesMap.current = true;
     }
   }, [formElementsList]);
-
-  useEffect(() => {
-    if (!userDistribution) {
-      // if distributionId === "new"
-      // créer une nouvelle distrib (selon si multiple ou pas etc. cf main dans angular)
-
-      // TODO navigate Error404
-      console.log("Distribution not found");
-      return;
-    }
-
-    if (userDistribution.status != DistributionStatus.TO_DO) {
-      window.location.href = getHrefRecapFormPath(Number(formId), userDistribution.id);
-      return;
-    }
-
-    setDistribution(userDistribution);
-  }, [userDistribution]);
 
   const saveResponses = async () => {
     if (isInPreviewMode) return;
