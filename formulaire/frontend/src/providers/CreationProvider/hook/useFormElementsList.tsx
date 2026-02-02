@@ -9,8 +9,8 @@ import { useGetQuestionChoicesQuery } from "~/services/api/services/formulaireAp
 export const useFormElementList = (
   sectionsDatas: ISection[] | undefined,
   questionsDatas: IQuestion[] | undefined,
-  resetFormElementListId?: number,
   isDataFetching: boolean,
+  resetFormElementListId?: number,
 ) => {
   const questionsIds = useMemo(() => {
     return (questionsDatas ?? []).map((q) => q.id).filter((id): id is number => id !== null);

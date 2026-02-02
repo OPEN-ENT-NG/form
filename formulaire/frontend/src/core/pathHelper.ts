@@ -15,16 +15,8 @@ export const getHrefHomeResponsesPath = (): string => {
   return `/${FORMULAIRE}?tab=${HomeTabState.RESPONSES}`;
 };
 
-export const getHrefRespondFormPath = (formId: string | number, distributionId: string | number): string => {
-  return `${FORMULAIRE}?view=angular#/form/${formId}/${distributionId}`;
-};
-
 export const getHrefRecapFormPath = (formId: number, distribId: string | number): string => {
   return `${FORMULAIRE}?view=angular#/form/${formId}/${distribId}/questions/recap`;
-};
-
-export const getHrefRgpdPath = (formId: string | number): string => {
-  return `${FORMULAIRE}?view=angular#/form/${formId}/rgpd`;
 };
 
 export const getHrefFormResultsPath = (formId: string | number): string => {
@@ -46,4 +38,8 @@ export const getFormEditPath = (formId: string | number): string => {
 
 export const getFormPreviewPath = (formId: string | number): string => {
   return `/form/${formId}/preview`;
+};
+
+export const getRespondFormPath = (formId: string | number, distributionId: string | number): string => {
+  return `/form/${formId}/${distributionId}`;
 };

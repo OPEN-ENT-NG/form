@@ -21,7 +21,7 @@ export const chipOptions = [
 
 export const createFormUrl = (host: string | null, formId: number) => {
   if (!host) return null;
-  return `${host}/formulaire?view=angular#/form/${formId.toString()}/new`;
+  return `${host}/formulaire#/form/${formId.toString()}/new`;
 };
 
 export const chooseContent = (
