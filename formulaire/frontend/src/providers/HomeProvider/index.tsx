@@ -6,7 +6,7 @@ import { IDistribution } from "~/core/models/distribution/types";
 import { IFolder } from "~/core/models/folder/types";
 import { IForm } from "~/core/models/form/types";
 import { workflowRights } from "~/core/rights";
-import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
+import { useGetAllMyDistributionsQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
 import { useGetFormsQuery, useGetSentFormsQuery } from "~/services/api/services/formulaireApi/formApi";
 
@@ -58,7 +58,7 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
 
   const { data: foldersDatas } = useGetFoldersQuery(undefined, { skip: !userWorkflowRights.CREATION });
   const { data: formsDatas } = useGetFormsQuery(undefined, { skip: !userWorkflowRights.CREATION });
-  const { data: distributionsDatas } = useGetDistributionQuery();
+  const { data: distributionsDatas } = useGetAllMyDistributionsQuery();
   const { data: sentFormsDatas } = useGetSentFormsQuery();
 
   const toggleTab = useCallback((tab: HomeTabState) => {

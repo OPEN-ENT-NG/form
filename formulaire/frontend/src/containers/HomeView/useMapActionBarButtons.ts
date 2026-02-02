@@ -20,7 +20,7 @@ import { useGlobal } from "~/providers/GlobalProvider";
 import { useHome } from "~/providers/HomeProvider";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { useShareModal } from "~/providers/ShareModalProvider";
-import { useGetDistributionQuery } from "~/services/api/services/formulaireApi/distributionApi";
+import { useGetAllMyDistributionsQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useDuplicateFormsMutation, useRestoreFormsMutation } from "~/services/api/services/formulaireApi/formApi";
 
 import { ActionBarButtonType } from "./enums";
@@ -48,7 +48,7 @@ export const useMapActionBarButtons = () => {
   const { userFormsRights } = useShareModal();
   const [duplicateForms, { isLoading: isDuplicating }] = useDuplicateFormsMutation();
   const [restoreForms, { isLoading: isRestoring }] = useRestoreFormsMutation();
-  const { data: userDistributions } = useGetDistributionQuery();
+  const { data: userDistributions } = useGetAllMyDistributionsQuery();
   const handleOpenFormResponse = useHandleOpenFormResponse();
   const hasNoFolders = useMemo(() => selectedFolders.length === 0, [selectedFolders]);
   const hasOneFolder = useMemo(() => selectedFolders.length === 1, [selectedFolders]);
@@ -152,7 +152,7 @@ export const useMapActionBarButtons = () => {
 
     const redirectPath = await handleOpenFormResponse(choosenForm, userDistributions);
     if (redirectPath) {
-      window.location.href = redirectPath;
+      navigate(redirectPath);
     }
   };
 
