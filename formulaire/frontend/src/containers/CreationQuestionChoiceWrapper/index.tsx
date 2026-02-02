@@ -158,7 +158,11 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
             ))}
             {/* New empty choice */}
             <NewChoiceWrapper key="newChoice" hasImage={hasImageType(type)}>
-              <CreationQuestionChoice index={choices.length} type={type}>
+              <CreationQuestionChoice
+                index={choices.length}
+                type={type}
+                displayedIndex={customChoice ? choices.length - 1 : choices.length}
+              >
                 <TextField
                   inputRef={(el: HTMLInputElement | null) => (inputRefs.current[newChoiceRefName] = el)}
                   value={newChoiceValue}
@@ -192,6 +196,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                       updateChoiceImage={updateChoiceImage}
                       image={customChoice.image ?? undefined}
                       isEditing={true}
+                      displayedIndex={choices.length}
                     >
                       <TextField
                         inputRef={(el: HTMLInputElement | null) => {
