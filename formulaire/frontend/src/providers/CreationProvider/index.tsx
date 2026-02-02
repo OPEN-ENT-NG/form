@@ -66,8 +66,8 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const { completeList } = useFormElementList(
     sectionsDatas,
     questionsDatas,
-    resetFormElementListId,
     isQuestionsFetching || isSectionsFetching || isUpdating || isQuestionSaving,
+    resetFormElementListId,
   );
   const { duplicateQuestion, duplicateSection, saveQuestion, saveSection, updateFormElementsList } =
     useFormElementActions(
