@@ -67,13 +67,15 @@ export const getErrorCode = (err: unknown): number | string | undefined => {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-explicit-any
   const e = err as any;
   /* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access */
-  return (
-    e?.status ??
-    e?.originalStatus ??
-    e?.error?.originalStatus ??
-    e?.error ??
-    (err instanceof Error ? err.name : undefined)
-  );
+  return e?.originalStatus && !isNaN(Number(e?.originalStatus))
+    ? e?.originalStatus
+    : e?.status && !isNaN(Number(e?.status))
+    ? e?.status
+    : e?.error?.originalStatus && !isNaN(Number(e?.error?.originalStatus))
+    ? e?.error?.originalStatus
+    : e?.error?.status && !isNaN(Number(e?.error?.status))
+    ? e?.error?.status
+    : e?.error ?? (err instanceof Error ? err.name : undefined);
 };
 
 export const handleErrorApi = (err: unknown, errorMessageKey: string) => {
