@@ -20,13 +20,13 @@ export const defineRoute = <const Params extends readonly string[] | undefined =
 export const FRONT_ROUTES = {
   home: defineRoute("/"),
 
-  formEdit: defineRoute("form/:formId/edit", ["formId"]),
-  formPreview: defineRoute("form/:formId/preview", ["formId"]),
-  formResult: defineRoute("form/:formId/result", ["formId"]),
+  formEdit: defineRoute("/form/:formId/edit", ["formId"]),
+  formPreview: defineRoute("/form/:formId/preview", ["formId"]),
+  formResult: defineRoute("/form/:formId/result", ["formId"]),
 
-  formResponse: defineRoute("form/:formId/:distributionId", ["formId", "distributionId"]),
-  formResponseRecap: defineRoute("form/:formId/:distributionId/recap", ["formId", "distributionId"]),
+  formResponse: defineRoute("/form/:formId/:distributionId", ["formId", "distributionId"]),
+  formResponseRecap: defineRoute("/form/:formId/:distributionId/recap", ["formId", "distributionId"]),
 
-  error401: defineRoute("401"),
-  error403: defineRoute("403"),
+  error401: defineRoute("/401"),
+  error403: defineRoute("/403"),
 } as const;
