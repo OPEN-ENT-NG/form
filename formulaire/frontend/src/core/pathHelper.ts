@@ -26,24 +26,3 @@ export const getHrefFormResultsPath = (formId: string | number): string => {
 export const getHrefFormTreePath = (formId: string | number): string => {
   return `${FORMULAIRE}?view=angular#/form/${formId}/tree`;
 };
-
-// To use with : useNavigate()
-export const getHomePath = (): string => {
-  return `/`;
-};
-
-export const getFormEditPath = (formId: string | number): string => {
-  return `/form/${formId}/edit`;
-};
-
-export const getFormPreviewPath = (formId: string | number): string => {
-  return `/form/${formId}/preview`;
-};
-
-export const getRespondFormPath = (formId: string | number, distributionId: string | number): string => {
-  return `/form/${formId}/${distributionId}`;
-};
-
-export const getFormResultPath = (formId: number): string => {
-  return `/form/${formId}/result`;
-};

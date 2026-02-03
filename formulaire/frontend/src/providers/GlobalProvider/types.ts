@@ -1,7 +1,7 @@
 import { IUserInfo } from "@edifice.io/client";
 import { ReactNode } from "react";
-import { ModalType } from "src/core/enums";
 
+import { ModalType } from "~/core/enums";
 import { IForm } from "~/core/models/form/types";
 import { IQuestionType } from "~/core/models/question/types";
 import { ISharedRights, IUserSharedRights, IUserWorkflowRights, IWorkflowRights } from "~/core/rights";

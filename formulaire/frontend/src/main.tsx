@@ -20,7 +20,7 @@ import { getOptions } from "./core/style/theme";
 import { useTheme } from "./hook/useTheme";
 import { GlobalProvider } from "./providers/GlobalProvider";
 import { router } from "./routes";
-import { setupStore } from "./store";
+import { store } from "./store";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -37,8 +37,6 @@ if (process.env.NODE_ENV !== "production") {
     void axe.default(React, root, 1000);
   });
 }
-
-const store = setupStore();
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({

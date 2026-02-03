@@ -1,11 +1,11 @@
 import { Box, Button, EmptyState } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import { FORMULAIRE } from "~/core/constants";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 
 import { EmptyForm } from "../SVG/EmptyForm";
 import { emptyStateWrapper } from "./style";
@@ -13,7 +13,7 @@ import { IErrorCodeProps } from "./types";
 
 export const ErrorPage: FC<IErrorCodeProps> = ({ errorCode }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const navigate = useNavigate();
+  const { navigateToHome } = useFormulaireNavigation();
 
   const getDescriptionKey = () => {
     switch (errorCode) {
@@ -23,10 +23,6 @@ export const ErrorPage: FC<IErrorCodeProps> = ({ errorCode }) => {
       default:
         return "formulaire.error.404";
     }
-  };
-
-  const handleBack = () => {
-    navigate("/");
   };
 
   return (
@@ -42,7 +38,12 @@ export const ErrorPage: FC<IErrorCodeProps> = ({ errorCode }) => {
           description: { variant: TypographyVariant.BODY2 },
         }}
       />
-      <Button variant={ComponentVariant.CONTAINED} onClick={handleBack}>
+      <Button
+        variant={ComponentVariant.CONTAINED}
+        onClick={() => {
+          navigateToHome();
+        }}
+      >
         {t("formulaire.error.backToMenu")}
       </Button>
     </Box>
