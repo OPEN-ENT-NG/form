@@ -3,6 +3,7 @@ import { ChangeEvent, FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
+import { ResponsePageType } from "~/core/enums";
 import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
 
@@ -11,10 +12,11 @@ import { IRespondQuestionTypesProps } from "../types";
 import { choiceBoxStyle, customAnswerStyle, formControlLabelStyle, labelStyle, StyledFormControl } from "./style";
 
 export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponses, updateQuestionResponses } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, pageType } = useResponse();
   const [reponses, setResponses] = useState<IResponse[]>([]);
   const [customAnswer, setCustomAnswer] = useState<string>("");
   const { t } = useTranslation(FORMULAIRE);
+  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponses = getQuestionResponses(question);
@@ -76,8 +78,8 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
   }, [question.choices]);
 
   return (
-    <Box>
-      <StyledFormControl hasOneChoiceWithImage={hasOneChoiceWithImage}>
+    <>
+      <StyledFormControl hasOneChoiceWithImage={hasOneChoiceWithImage} disabled={isPageTypeRecap}>
         {question.choices
           ?.sort((a, b) => a.position - b.position)
           .map((choice) => (
@@ -104,6 +106,7 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
                             value={customAnswer}
                             placeholder={t("formulaire.response.custom.write")}
                             onChange={handleCustomResponseChange}
+                            disabled={isPageTypeRecap}
                           ></TextField>
                         </>
                       )}
@@ -115,6 +118,6 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
             </Box>
           ))}
       </StyledFormControl>
-    </Box>
+    </>
   );
 };

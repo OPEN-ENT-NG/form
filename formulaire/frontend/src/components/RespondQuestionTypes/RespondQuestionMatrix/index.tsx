@@ -12,6 +12,7 @@ import {
 import ClearIcon from "@mui/icons-material/Clear";
 import { FC, useEffect, useState } from "react";
 
+import { ResponsePageType } from "~/core/enums";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
@@ -19,8 +20,9 @@ import { useResponse } from "~/providers/ResponseProvider";
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponses, updateQuestionResponses } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, pageType } = useResponse();
   const [responseMap, setResponseMap] = useState<Map<number, IResponse[]>>(new Map());
+  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const map = new Map<number, IResponse[]>();
@@ -110,6 +112,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
                   <TableCell align="center" key={choice.id}>
                     {child.questionType === QuestionTypes.MULTIPLEANSWER ? (
                       <Checkbox
+                        disabled={isPageTypeRecap}
                         checked={isSelected(child.id, choice.id)}
                         onChange={() => {
                           toggleCheckbox(child.id, choice.id);
@@ -117,6 +120,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
                       />
                     ) : (
                       <Radio
+                        disabled={isPageTypeRecap}
                         checked={isSelected(child.id, choice.id)}
                         onChange={() => {
                           toggleRadio(child.id, choice.id);

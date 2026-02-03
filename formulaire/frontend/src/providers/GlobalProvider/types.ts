@@ -32,6 +32,7 @@ export interface IDisplayModalsState {
   [ModalType.ORGANIZATION]: boolean;
   [ModalType.FORM_RESULT_PDF]: boolean;
   [ModalType.FORM_RESULT_CSV]: boolean;
+  [ModalType.SEND_FORM]: boolean;
 }
 
 export type GlobalProviderContextType = {

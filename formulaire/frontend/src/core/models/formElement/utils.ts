@@ -1,5 +1,6 @@
 import { IFormElementIdType } from "~/providers/ResponseProvider/types";
 
+import { QuestionTypes } from "../question/enum";
 import { IQuestion, IQuestionChoice } from "../question/types";
 import { getParentSection } from "../question/utils";
 import { ISection } from "../section/types";
@@ -69,6 +70,22 @@ export const flattenFormElements = (formElements: IFormElement[]): IFormElement[
     const questions = section.questions;
     return [...acc, section, ...questions];
   }, []);
+};
+
+export const getAllQuestions = (formElements: IFormElement[]): IQuestion[] => {
+  return flattenFormElements(formElements).filter((el) => isQuestion(el));
+};
+
+export const getAllQuestionsAndChildren = (formElements: IFormElement[]): IQuestion[] => {
+  const questions = getAllQuestions(formElements);
+
+  const matrixQuestions = questions.filter((q) => q.questionType === QuestionTypes.MATRIX);
+  const childrenList = matrixQuestions
+    .map((q) => q.children)
+    .filter((children) => !!children)
+    .flat();
+
+  return [...questions, ...childrenList];
 };
 
 export const compareFormElements = (elementA: IFormElement, elementB: IFormElement): number => {

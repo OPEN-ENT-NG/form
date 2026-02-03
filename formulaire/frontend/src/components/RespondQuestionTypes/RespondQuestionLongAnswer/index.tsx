@@ -3,7 +3,7 @@ import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { FC, useEffect, useRef, useState } from "react";
 
 import { EDITOR_CONTENT_HTML } from "~/core/constants";
-import { EditorMode, EditorVariant } from "~/core/enums";
+import { EditorMode, EditorVariant, ResponsePageType } from "~/core/enums";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
@@ -11,8 +11,9 @@ import { respondQuestionLongAnswerStyle } from "./style";
 
 export const RespondQuestionLongAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const editorRef = useRef<EditorRef>(null);
-  const { getQuestionResponse, updateQuestionResponses } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
   const [answer, setAnswer] = useState<string>("");
+  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponse = getQuestionResponse(question);
@@ -31,13 +32,13 @@ export const RespondQuestionLongAnswer: FC<IRespondQuestionTypesProps> = ({ ques
   };
 
   return (
-    <Box sx={respondQuestionLongAnswerStyle}>
+    <Box sx={{ ...(!isPageTypeRecap && respondQuestionLongAnswerStyle) }}>
       <Editor
         onContentChange={handleResponseChange}
-        content={answer}
+        content={answer} //TODO
         ref={editorRef}
-        mode={EditorMode.EDIT}
-        variant={EditorVariant.OUTLINE}
+        mode={isPageTypeRecap ? EditorMode.READ : EditorMode.EDIT}
+        variant={isPageTypeRecap ? EditorVariant.GHOST : EditorVariant.OUTLINE}
         focus={false}
       />
     </Box>

@@ -1,16 +1,19 @@
 import { Box, Typography } from "@cgi-learning-hub/ui";
-import { Slider } from "@mui/material";
+import { Slider, Stack } from "@mui/material";
+import { t } from "i18next";
 import { FC, useEffect, useState } from "react";
 
+import { ResponsePageType } from "~/core/enums";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
 import { respondQuestionCursorStyle } from "./style";
 
 export const RespondQuestionCursor: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, updateQuestionResponses } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
   const [value, setValue] = useState<number | null>(null);
   const { cursorMinVal, cursorMaxVal } = question.specificFields ?? {};
+  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   const marks = [
     cursorMinVal != null && { value: cursorMinVal, label: cursorMinVal },
@@ -36,7 +39,12 @@ export const RespondQuestionCursor: FC<IRespondQuestionTypesProps> = ({ question
     updateQuestionResponses(question, [associatedResponse]);
   };
 
-  return (
+  return isPageTypeRecap ? (
+    <Stack direction="row" gap={1}>
+      <Typography>{t("formulaire.selected.value")}</Typography>
+      <Typography>{}</Typography> //TODO
+    </Stack>
+  ) : (
     <Box sx={respondQuestionCursorStyle}>
       {question.specificFields?.cursorMinLabel && <Typography>{question.specificFields.cursorMinLabel}</Typography>}
       <Slider

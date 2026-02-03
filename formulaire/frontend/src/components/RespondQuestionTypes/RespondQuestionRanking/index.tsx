@@ -3,6 +3,7 @@ import { closestCenter, DndContext, DragOverEvent, DragOverlay } from "@dnd-kit/
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { FC, useEffect, useMemo, useState } from "react";
 
+import { ResponsePageType } from "~/core/enums";
 import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
 
@@ -11,9 +12,10 @@ import { SortableItem } from "./SortableQuestionItem";
 import { overlayBoxStyle } from "./style";
 
 export const RespondQuestionRanking: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponses, updateQuestionResponses } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, pageType } = useResponse();
   const [orderedChoiceIds, setOrderedChoiceIds] = useState<number[]>([]);
   const [activeId, setActiveId] = useState<number | null>(null);
+  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponses = getQuestionResponses(question);
@@ -107,34 +109,34 @@ export const RespondQuestionRanking: FC<IRespondQuestionTypesProps> = ({ questio
     return question.choices?.find((choice) => choice.id === activeId) || null;
   }, [activeId, question.choices]);
 
-  return (
-    <Box>
-      <DndContext
-        collisionDetection={closestCenter}
-        onDragStart={handleDragStart}
-        onDragOver={handleDragOver}
-        onDragEnd={handleDragEnd}
-      >
-        <SortableContext items={orderedChoiceIds.map((id) => id.toString())} strategy={verticalListSortingStrategy}>
-          <Box display="flex" flexDirection="column">
-            {sortedChoices.map((choice, index) => (
-              <SortableItem
-                key={choice.id}
-                id={choice.id}
-                label={choice.value}
-                handleMoveQuestion={moveChoice}
-                isFirst={index === 0}
-                isLast={index === sortedChoices.length - 1}
-              />
-            ))}
-          </Box>
-        </SortableContext>
-        <DragOverlay>
-          <Box sx={overlayBoxStyle}>
-            {activeChoice ? <SortableItem id={activeChoice.id} label={activeChoice.value} isPreview /> : null}
-          </Box>
-        </DragOverlay>
-      </DndContext>
-    </Box>
+  return isPageTypeRecap ? (
+    <Box>{}</Box> //TODO
+  ) : (
+    <DndContext
+      collisionDetection={closestCenter}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragEnd={handleDragEnd}
+    >
+      <SortableContext items={orderedChoiceIds.map((id) => id.toString())} strategy={verticalListSortingStrategy}>
+        <Box display="flex" flexDirection="column">
+          {sortedChoices.map((choice, index) => (
+            <SortableItem
+              key={choice.id}
+              id={choice.id}
+              label={choice.value}
+              handleMoveQuestion={moveChoice}
+              isFirst={index === 0}
+              isLast={index === sortedChoices.length - 1}
+            />
+          ))}
+        </Box>
+      </SortableContext>
+      <DragOverlay>
+        <Box sx={overlayBoxStyle}>
+          {activeChoice ? <SortableItem id={activeChoice.id} label={activeChoice.value} isPreview /> : null}
+        </Box>
+      </DragOverlay>
+    </DndContext>
   );
 };

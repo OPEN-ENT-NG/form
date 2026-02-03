@@ -4,16 +4,18 @@ import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
+import { ResponsePageType } from "~/core/enums";
 import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponses, updateQuestionResponses } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, pageType } = useResponse();
   const [selectedValue, setSelectedValue] = useState<string>("");
   const [customAnswer, setCustomAnswer] = useState<string>("");
   const { t } = useTranslation(FORMULAIRE);
+  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponses = getQuestionResponses(question);
@@ -62,9 +64,9 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
   };
 
   return (
-    <Box>
+    <>
       <FormControl fullWidth>
-        <Select value={selectedValue} onChange={handleChange}>
+        <Select value={selectedValue} onChange={handleChange} disabled={isPageTypeRecap}>
           <MenuItem value="">{t("formulaire.options.select")}</MenuItem>
           {question.choices
             ?.sort((a, b) => a.position - b.position)
@@ -76,17 +78,20 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
         </Select>
         {question.choices?.find((choice) => choice.value === selectedValue && choice.isCustom) && (
           <>
-            <Typography sx={{ py: "1rem" }}>{t("formulaire.response.custom.label")} :</Typography>
+            <Typography sx={{ py: "1rem" }}>
+              {t(isPageTypeRecap ? "formulaire.response.custom.value" : "formulaire.response.custom.explanation")} :
+            </Typography>
             <TextField
               fullWidth
               variant="standard"
               value={customAnswer}
               placeholder={t("formulaire.response.custom.write")}
               onChange={handleCustomResponseChange}
+              disabled={isPageTypeRecap}
             />
           </>
         )}
       </FormControl>
-    </Box>
+    </>
   );
 };

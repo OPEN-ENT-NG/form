@@ -55,6 +55,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     longuestRemainingPath: 0,
   });
   const [pageType, setPageType] = useState<ResponsePageType | undefined>(initialPageType);
+  const [currentElement, setCurrentElement] = useState<IFormElement | null>(null);
   const hasInitializedRsponsesMap = useRef(false);
   const { getQuestionResponses, getQuestionResponse, updateQuestionResponses } = useRespondQuestion(
     responsesMap,
@@ -62,7 +63,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   );
   const [addDistribution] = useAddDistributionMutation();
 
-  if (formId === undefined || distributionId === undefined) {
+  if (formId === undefined || (!previewMode && distributionId === undefined)) {
     throw new Error("formId or distributionId is undefined");
   }
 
@@ -73,8 +74,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   );
   const { data: questionsDatas, isFetching: isQuestionsFetching } = useGetQuestionsQuery({ formId });
   const { data: sectionsDatas, isFetching: isSectionsFetching } = useGetSectionsQuery({ formId });
-  const { data: distributionData } = useGetDistributionQuery(distributionId, {
-    skip: previewMode || distributionId === "new",
+  const { data: distributionData } = useGetDistributionQuery(distributionId ?? "", {
+    skip: previewMode || !distributionId || distributionId === "new",
   });
   const { data: formUserDistributionsDatas } = useGetMyFormDistributionsQuery(formId, { skip: previewMode });
   const { completeList } = useFormElementList(sectionsDatas, questionsDatas, isQuestionsFetching || isSectionsFetching);
@@ -160,7 +161,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     updateProgress(firstElement, [firstElement.id], newLongestPathsMap);
   }, [formElementsList]);
 
-  // Initialize responses map
+  // Initialize responses map and currentElement
   useEffect(() => {
     if (!hasInitializedRsponsesMap.current && formElementsList.length > 0) {
       const initializedResponsesMap = initResponsesMap(formElementsList);
@@ -200,12 +201,15 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       longestPathsMap,
       pageType,
       setPageType,
+      currentElement,
+      setCurrentElement,
       saveResponses,
       responsesMap,
       setResponsesMap,
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
+      distribution,
     }),
     [
       form,
@@ -216,12 +220,15 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       longestPathsMap,
       pageType,
       setPageType,
+      currentElement,
+      setCurrentElement,
       saveResponses,
       responsesMap,
       setResponsesMap,
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
+      distribution,
     ],
   );
 

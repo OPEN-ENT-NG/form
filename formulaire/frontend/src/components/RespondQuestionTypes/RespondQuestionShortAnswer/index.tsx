@@ -1,6 +1,7 @@
-import { Box, TextField } from "@cgi-learning-hub/ui";
+import { TextField, Typography } from "@cgi-learning-hub/ui";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 
+import { ResponsePageType } from "~/core/enums";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResponse } from "~/providers/ResponseProvider";
@@ -9,8 +10,9 @@ import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { selectAllTextInput } = useGlobal();
-  const { getQuestionResponse, updateQuestionResponses } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
   const [answer, setAnswer] = useState<string>("");
+  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponse = getQuestionResponse(question);
@@ -27,16 +29,16 @@ export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ que
     updateQuestionResponses(question, [associatedResponse]);
   };
 
-  return (
-    <Box>
-      <TextField
-        placeholder={question.placeholder ?? t("formulaire.question.type.SHORTANSWER")}
-        fullWidth
-        value={answer}
-        onChange={handleResponseChange}
-        onFocus={selectAllTextInput}
-        error={question.mandatory && !answer}
-      />
-    </Box>
+  return isPageTypeRecap ? (
+    <Typography>{}</Typography> //TODO
+  ) : (
+    <TextField
+      placeholder={question.placeholder ?? t("formulaire.question.type.SHORTANSWER")}
+      fullWidth
+      value={answer}
+      onChange={handleResponseChange}
+      onFocus={selectAllTextInput}
+      error={question.mandatory && !answer}
+    />
   );
 };

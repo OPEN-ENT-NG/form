@@ -1,13 +1,14 @@
 import { Box, Button } from "@cgi-learning-hub/ui";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { ProgressBar } from "~/components/ProgressBar";
 import { FORMULAIRE } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
-import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { getRecapFormPath } from "~/core/pathHelper";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { useResponse } from "~/providers/ResponseProvider";
 
@@ -25,12 +26,20 @@ export const ResponseLayout: FC = () => {
     saveResponses,
     isInPreviewMode,
     setPageType,
+    currentElement,
+    setCurrentElement,
     getQuestionResponses,
+    distribution,
   } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
-  const [currentElement, setCurrentElement] = useState<IFormElement>(formElementsList[0] ?? null);
+  const navigate = useNavigate();
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
   const [isLastElement, setIsLastElement] = useState<boolean>(false);
+
+  //TODO get responses for this distribution (useEffect)
+  // si progress.historicFormElementIds est empty
+  // recup les questionId voire sectionId à partir des réponses
+  // rebuild progress.historicFormElementIds à partir de ces ids (avec un sort by position)
 
   useEffect(() => {
     if (formElementsList.length > 0) {
@@ -39,7 +48,7 @@ export const ResponseLayout: FC = () => {
   }, [formElementsList]);
 
   useEffect(() => {
-    if (currentElement.position) {
+    if (currentElement?.position) {
       setIsFirstElement(currentElement.position === 1);
       setIsLastElement(currentElement.position === formElementsList.length);
     }
@@ -57,7 +66,7 @@ export const ResponseLayout: FC = () => {
   };
 
   const goNextElement = async () => {
-    if (!currentElement.position) return;
+    if (!currentElement?.position) return;
     const nextPosition = getNextPositionIfValid(currentElement, formElementsList, getQuestionResponses);
 
     // An error occured
@@ -69,7 +78,13 @@ export const ResponseLayout: FC = () => {
     // It's the end of the form
     if (nextPosition === null || (nextPosition && nextPosition > formElementsList.length)) {
       await saveResponses();
-      setPageType(isInPreviewMode ? ResponsePageType.END_PREVIEW : ResponsePageType.RECAP);
+      if (isInPreviewMode) {
+        setPageType(ResponsePageType.END_PREVIEW);
+        return;
+      }
+      if (form?.id && distribution?.id) {
+        navigate(getRecapFormPath(form.id, distribution.id));
+      }
       return;
     }
 
@@ -85,6 +100,7 @@ export const ResponseLayout: FC = () => {
   };
 
   const getFormElementContent = () => {
+    if (!currentElement) return;
     if (isQuestion(currentElement)) return <RespondQuestionWrapper question={currentElement} />;
     if (isSection(currentElement)) return <RespondSectionWrapper section={currentElement} />;
   };

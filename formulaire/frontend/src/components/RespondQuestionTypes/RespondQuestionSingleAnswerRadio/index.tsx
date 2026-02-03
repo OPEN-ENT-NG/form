@@ -3,6 +3,7 @@ import { ChangeEvent, FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
+import { ResponsePageType } from "~/core/enums";
 import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
 
@@ -11,10 +12,11 @@ import { IRespondQuestionTypesProps } from "../types";
 import { choiceBoxStyle, ChoicesRadioGroup, customAnswerStyle, formControlLabelStyle, labelStyle } from "./style";
 
 export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, getQuestionResponses, updateQuestionResponses } = useResponse();
+  const { getQuestionResponse, getQuestionResponses, updateQuestionResponses, pageType } = useResponse();
   const [selectedValue, setSelectedValue] = useState<string>("");
   const [customAnswer, setCustomAnswer] = useState<string>("");
   const { t } = useTranslation(FORMULAIRE);
+  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponses = getQuestionResponses(question);
@@ -72,8 +74,8 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
   };
 
   return (
-    <Box>
-      <FormControl>
+    <>
+      <FormControl disabled={isPageTypeRecap}>
         <ChoicesRadioGroup
           hasOneChoiceWithImage={hasOneChoiceWithImage}
           value={selectedValue || ""}
@@ -99,6 +101,7 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
                               value={customAnswer}
                               placeholder={t("formulaire.response.custom.write")}
                               onChange={handleCustomResponseChange}
+                              disabled={isPageTypeRecap}
                             ></TextField>
                           </>
                         )}
@@ -111,6 +114,6 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
             ))}
         </ChoicesRadioGroup>
       </FormControl>
-    </Box>
+    </>
   );
 };
