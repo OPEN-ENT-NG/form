@@ -46,4 +46,4 @@ export const getRespondFormPath = (formId: string | number, distributionId: stri
 
 export const getFormResultPath = (formId: number): string => {
   return `/form/${formId}/result`;
-}
+};
