@@ -1,13 +1,12 @@
 import { useEdificeClient } from "@edifice.io/react";
 import { useCallback, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { MANAGER_RIGHT, TRASH_FOLDER_ID } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { getNbFinishedDistrib } from "~/core/models/distribution/utils";
 import { IForm } from "~/core/models/form/types";
 import { getFormDistributions } from "~/core/models/form/utils";
-import { getFormEditPath, getHrefFormResultsPath } from "~/core/pathHelper";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useHome } from "~/providers/HomeProvider";
@@ -20,7 +19,7 @@ import { ActionBarButtonType } from "./enums";
 import { useHandleOpenFormResponse } from "./useHandleOpenFormResponse";
 
 export const useMapActionBarButtons = () => {
-  const navigate = useNavigate();
+  const { navigateToFormEdit, navigateToFormResult } = useFormulaireNavigation();
   const { isTablet, toggleModal } = useGlobal();
   const {
     selectedFolders,
@@ -143,10 +142,7 @@ export const useMapActionBarButtons = () => {
     const choosenForm = selectedSentForm ?? form;
     if (!choosenForm || !userDistributions?.length) return;
 
-    const redirectPath = await handleOpenFormResponse(choosenForm, userDistributions);
-    if (redirectPath) {
-      navigate(redirectPath);
-    }
+    await handleOpenFormResponse(choosenForm, userDistributions);
   };
 
   const ActionBarButtonsMap = useMemo(
@@ -161,7 +157,7 @@ export const useMapActionBarButtons = () => {
           }
           if (hasForms && tab === HomeTabState.FORMS) {
             if (isTablet) toggleModal(ModalType.FORM_OPEN_BLOCKED);
-            else navigate(getFormEditPath(selectedForms[0].id));
+            else navigateToFormEdit(selectedForms[0].id);
           }
           return openFormResponseAction();
         },
@@ -225,7 +221,7 @@ export const useMapActionBarButtons = () => {
       [ActionBarButtonType.RESULTS]: {
         label: t("formulaire.results"),
         action: () => {
-          return (window.location.href = getHrefFormResultsPath(selectedForms[0].id));
+          navigateToFormResult(selectedForms[0].id);
         },
       },
       [ActionBarButtonType.REMIND]: {

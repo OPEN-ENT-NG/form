@@ -1,12 +1,11 @@
 import { Box, Button, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import { FORMULAIRE } from "~/core/constants";
-import { getFormEditPath } from "~/core/pathHelper";
 import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { endPreviewLayoutStyle, endPreviewStackStyle } from "./style";
@@ -14,7 +13,7 @@ import { endPreviewLayoutStyle, endPreviewStackStyle } from "./style";
 export const EndPreviewLayout: FC = () => {
   const { form } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
-  const navigate = useNavigate();
+  const { navigateToFormEdit } = useFormulaireNavigation();
 
   return (
     <Box sx={endPreviewLayoutStyle}>
@@ -25,7 +24,7 @@ export const EndPreviewLayout: FC = () => {
         <Button
           variant={ComponentVariant.OUTLINED}
           onClick={() => {
-            if (form?.id) navigate(getFormEditPath(form.id));
+            if (form?.id) navigateToFormEdit(form.id);
           }}
         >
           {t("formulaire.backToEditor")}
