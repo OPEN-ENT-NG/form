@@ -1,9 +1,8 @@
-import { useNavigate } from "react-router-dom";
-
 import { ResponsePageType } from "~/core/enums";
-import { getFormEditPath, getHrefHomeResponsesPath } from "~/core/pathHelper";
+import { getHrefHomeResponsesPath } from "~/core/pathHelper";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { t } from "~/i18n";
 
 export const useGetResponseHeaderButtons = (
@@ -11,7 +10,7 @@ export const useGetResponseHeaderButtons = (
   isInPreviewMode: boolean,
   pageType: ResponsePageType = ResponsePageType.FORM_ELEMENT,
 ): IButtonProps[] => {
-  const navigate = useNavigate();
+  const { navigateToFormEdit } = useFormulaireNavigation();
   const buttonTitleKey = getButtonTitleKey(isInPreviewMode, pageType);
 
   const buttons: (IButtonProps | undefined)[] = [
@@ -21,7 +20,7 @@ export const useGetResponseHeaderButtons = (
       action: () => {
         if (formId) {
           if (!isInPreviewMode) return (window.location.href = getHrefHomeResponsesPath());
-          navigate(getFormEditPath(formId));
+          navigateToFormEdit(formId);
         }
       },
     },
