@@ -3,8 +3,8 @@ import { ReactNode } from "react";
 import { ModalType } from "src/core/enums";
 
 import { IForm } from "~/core/models/form/types";
-import { ISharedRights, IUserSharedRights, IUserWorkflowRights, IWorkflowRights } from "~/core/rights";
 import { IQuestionType } from "~/core/models/question/types";
+import { ISharedRights, IUserSharedRights, IUserWorkflowRights, IWorkflowRights } from "~/core/rights";
 
 export interface IGlobalProviderProps {
   children: ReactNode;

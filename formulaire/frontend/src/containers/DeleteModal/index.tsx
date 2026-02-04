@@ -2,8 +2,6 @@ import { Button, DialogActions, DialogContent, DialogTitle, Typography } from "@
 import { FC, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
-import { ResponsiveDialog } from "~/components/ResponsiveDialog";
-import { toast } from "react-toastify";
 
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { FORMULAIRE, TRASH_FOLDER_ID } from "~/core/constants";
