@@ -1,27 +1,40 @@
+import { Loader } from "@cgi-learning-hub/ui";
+import { skipToken } from "@reduxjs/toolkit/query";
 import { FC } from "react";
-import { type LoaderFunctionArgs, redirect } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
+import { ResultView } from "~/containers/result/ResultView";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { ResultProvider } from "~/providers/ResultProvider";
-import { formApi } from "~/services/api/services/formulaireApi/formApi";
-import { store } from "~/store";
-
-export const resultLoader = async ({ params }: LoaderFunctionArgs) => {
-  const formId = params.formId;
-
-  if (typeof formId !== "string") {
-    throw redirect("/");
-  }
-
-  try {
-    await store.dispatch(formApi.endpoints.getForm.initiate({ formId })).unwrap();
-  } catch (err) {
-    console.error("Form not found", err);
-    throw new Response("Form not found", { status: 404 });
-  }
-
-  return null;
-};
+import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 
 export const Result: FC = () => {
-  return <ResultProvider>page result</ResultProvider>;
+  const { formId } = useParams();
+  const { navigateToHome } = useFormulaireNavigation();
+
+  const formIdNumber = formId ? parseInt(formId, 10) : NaN;
+
+  const { data: currentForm, isLoading } = useGetFormQuery(
+    isNaN(formIdNumber) ? skipToken : { formId: formIdNumber.toString() },
+  );
+
+  if (!formId || isNaN(formIdNumber)) {
+    navigateToHome();
+    return null;
+  }
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
+  if (!currentForm) {
+    navigateToHome();
+    return null;
+  }
+
+  return (
+    <ResultProvider formId={formIdNumber} form={currentForm}>
+      <ResultView />
+    </ResultProvider>
+  );
 };

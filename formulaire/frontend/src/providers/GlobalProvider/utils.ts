@@ -22,4 +22,6 @@ export const initialDisplayModalsState: IDisplayModalsState = {
   [ModalType.QUESTION_DELETE]: false,
   [ModalType.SECTION_DELETE]: false,
   [ModalType.ORGANIZATION]: false,
+  [ModalType.FORM_RESULT_PDF]: false,
+  [ModalType.FORM_RESULT_CSV]: false,
 };

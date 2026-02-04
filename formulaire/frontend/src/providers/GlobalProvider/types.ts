@@ -30,6 +30,8 @@ export interface IDisplayModalsState {
   [ModalType.QUESTION_DELETE]: boolean;
   [ModalType.SECTION_DELETE]: boolean;
   [ModalType.ORGANIZATION]: boolean;
+  [ModalType.FORM_RESULT_PDF]: boolean;
+  [ModalType.FORM_RESULT_CSV]: boolean;
 }
 
 export type GlobalProviderContextType = {

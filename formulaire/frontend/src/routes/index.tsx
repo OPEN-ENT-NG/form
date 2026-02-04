@@ -33,8 +33,8 @@ const routes = [
       {
         path: FRONT_ROUTES.formResult.path,
         async lazy() {
-          const { Result, resultLoader } = await import("./result");
-          return { Component: Result, loader: resultLoader };
+          const { Result } = await import("./result");
+          return { Component: Result };
         },
       },
       {

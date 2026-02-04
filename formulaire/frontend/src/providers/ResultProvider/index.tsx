@@ -1,8 +1,4 @@
-import { skipToken } from "@reduxjs/toolkit/query";
 import { createContext, FC, useContext, useMemo } from "react";
-import { useParams } from "react-router-dom";
-
-import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 
 import { IResultProviderContextType, IResultProviderProps } from "./types";
 
@@ -16,12 +12,8 @@ export const useResult = () => {
   return context;
 };
 
-export const ResultProvider: FC<IResultProviderProps> = ({ children }) => {
-  const { formId } = useParams<{ formId: string }>();
-  const { data: currentForm } = useGetFormQuery(formId ? { formId } : skipToken);
-  console.log(currentForm);
-
-  const value = useMemo<IResultProviderContextType>(() => ({}), []);
+export const ResultProvider: FC<IResultProviderProps> = ({ children, formId, form }) => {
+  const value = useMemo<IResultProviderContextType>(() => ({ formId, form }), [formId, form]);
 
   return <ResultProviderContext.Provider value={value}>{children}</ResultProviderContext.Provider>;
 };

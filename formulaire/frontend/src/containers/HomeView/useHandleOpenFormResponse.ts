@@ -13,11 +13,13 @@ export const useHandleOpenFormResponse = () => {
   const navigate = useNavigate();
 
   const handleSingleResponse = (form: IForm, distrib?: IDistribution): void => {
-    if (!distrib) return undefined;
+    if (!distrib) return;
 
-    distrib.status === DistributionStatus.TO_DO
-      ? navigateToFormResponse(form.id, distrib.id)
-      : navigate(getHrefRecapFormPath(form.id, distrib.id));
+    if (distrib.status === DistributionStatus.TO_DO) {
+      navigateToFormResponse(form.id, distrib.id);
+    } else {
+      navigate(getHrefRecapFormPath(form.id, distrib.id));
+    }
   };
 
   const handleMultipleResponse = async (form: IForm, distribs: IDistribution[]): Promise<void> => {
@@ -42,6 +44,10 @@ export const useHandleOpenFormResponse = () => {
   return async (form: IForm, userDistributions: IDistribution[]): Promise<void> => {
     const formDistribs = userDistributions.filter((d) => d.formId === form.id);
 
-    return form.multiple ? handleMultipleResponse(form, formDistribs) : handleSingleResponse(form, formDistribs[0]);
+    if (form.multiple) {
+      await handleMultipleResponse(form, formDistribs);
+    } else {
+      handleSingleResponse(form, formDistribs[0]);
+    }
   };
 };
