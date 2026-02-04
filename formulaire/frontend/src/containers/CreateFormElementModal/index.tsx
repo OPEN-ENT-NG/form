@@ -14,17 +14,6 @@ import { SECONDARY } from "~/core/style/colors";
 import { TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { questionTypeIcons } from "./const";
-import { FormElementType } from "~/core/models/formElement/enum";
-import { IFormElement } from "~/core/models/formElement/types";
-import { QuestionTypes } from "~/core/models/question/enum";
-import { IQuestion } from "~/core/models/question/types";
-import { createNewQuestion, createNewQuestionChoice, isTypeChoicesQuestion } from "~/core/models/question/utils";
-import { createNewSection } from "~/core/models/section/utils";
-import { SECONDARY } from "~/core/style/colors";
-import { TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { useCreation } from "~/providers/CreationProvider";
-import { useGetQuestionTypesQuery } from "~/services/api/services/formulaireApi/questionApi";
 
 import { questionTypeIcons } from "./const";
 import {
