@@ -1,11 +1,12 @@
 import { Box, EllipsisWithTooltip, IconButton } from "@cgi-learning-hub/ui";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { FC } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 
-import { getHomePath } from "~/core/pathHelper";
+import { FRONT_ROUTES } from "~/core/frontRoutes";
 import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 
 import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
 import { IFormBreadcrumbsProps } from "./types";
@@ -19,7 +20,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   showCollapse,
 }) => {
   const textColor = isHeader ? FORM_COLOR : CSS_TEXT_PRIMARY_COLOR;
-  const navigate = useNavigate();
+  const { navigateToHome } = useFormulaireNavigation();
   const maxItemsBeforeCollaspse = 2;
 
   return (
@@ -34,7 +35,12 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
       }}
     >
       {isHeader ? (
-        <IconButton component={RouterLink} to={getHomePath()} disableRipple sx={{ flexShrink: 0, color: FORM_COLOR }}>
+        <IconButton
+          component={RouterLink}
+          to={FRONT_ROUTES.home.build()}
+          disableRipple
+          sx={{ flexShrink: 0, color: FORM_COLOR }}
+        >
           <Icon height="3rem" width="3rem"></Icon>
         </IconButton>
       ) : (
@@ -60,7 +66,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
             hasSeparator={separator != null}
             isLast={isLast}
             onClick={() => {
-              if (isHeader && shouldNavigate) navigate(getHomePath());
+              if (isHeader && shouldNavigate) navigateToHome();
             }}
           >
             {content}

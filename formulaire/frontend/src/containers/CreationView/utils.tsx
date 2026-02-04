@@ -1,5 +1,4 @@
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { ModalType } from "~/core/enums";
 import { IFolder } from "~/core/models/folder/types";
@@ -13,14 +12,18 @@ import { toast } from "react-toastify";
 
 import { ModalType } from "~/core/enums";
 import { IFolder } from "~/core/models/folder/types";
-import { getFormPreviewPath, getHomePath, getHrefFormTreePath } from "~/core/pathHelper";
+import { getHrefFormTreePath } from "~/core/pathHelper";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 
-export const useGetCreationHeaderButtons = (form: IForm | null, hasFormElements: boolean): IButtonProps[] => {
-  const navigate = useNavigate();
+export const useGetCreationHeaderButtons = (
+  form: IForm | null,
+  hasFormElements: boolean,
+): IButtonProps[] => {
+  const { navigateToHome, navigateToFormPreview } = useFormulaireNavigation();
   const { toggleModal } = useGlobal();
 
   const buttons: (IButtonProps | undefined)[] = [
@@ -28,7 +31,7 @@ export const useGetCreationHeaderButtons = (form: IForm | null, hasFormElements:
       title: t("formulaire.return"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        navigate(getHomePath());
+        navigateToHome();
       },
     },
     {
@@ -52,7 +55,7 @@ export const useGetCreationHeaderButtons = (form: IForm | null, hasFormElements:
       title: t("formulaire.preview"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        if (form?.id) navigate(getFormPreviewPath(form.id));
+        if (form?.id) navigateToFormPreview(form?.id);
       },
     },
     {

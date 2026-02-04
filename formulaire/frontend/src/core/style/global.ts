@@ -15,6 +15,10 @@ export const globalOverrideStyles = {
     backgroundColor: "transparent !important",
   },
 
+  "main.theme-1d": {
+    backgroundColor: "white !important",
+  },
+
   "#media-library": {
     maxHeight: "fit-content",
     position: "fixed",

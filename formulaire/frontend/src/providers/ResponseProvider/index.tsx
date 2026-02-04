@@ -1,6 +1,6 @@
 import { useEdificeClient } from "@edifice.io/react";
 import { createContext, FC, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { ResponsePageType } from "~/core/enums";
 import { DistributionStatus } from "~/core/models/distribution/enums";
@@ -8,8 +8,8 @@ import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
-import { getRespondFormPath } from "~/core/pathHelper";
 import { workflowRights } from "~/core/rights";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import {
   useAddDistributionMutation,
   useGetDistributionQuery,
@@ -39,7 +39,7 @@ export const useResponse = () => {
 
 export const ResponseProvider: FC<IResponseProviderProps> = ({ children, previewMode = false, initialPageType }) => {
   const { formId, distributionId } = useParams();
-  const navigate = useNavigate();
+  const { navigateToError403, navigateToFormResponse } = useFormulaireNavigation();
   const { user } = useEdificeClient();
   const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
@@ -91,7 +91,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
           (formDatas.date_opening && formDatas.date_opening > new Date()) ||
           (formDatas.date_ending && formDatas.date_ending < new Date()))
       ) {
-        navigate("/403");
+        navigateToError403();
         return;
       }
     }
@@ -117,10 +117,10 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
         void addDistribution(formUserDistributionsDatas[0].id)
           .unwrap()
           .then((newDistribution) => {
-            navigate(getRespondFormPath(formId, newDistribution.id));
+            navigateToFormResponse(formId, newDistribution.id);
           })
           .catch(() => {
-            navigate("/403");
+            navigateToError403();
           });
       }
     }

@@ -1,14 +1,13 @@
 import { Box, Button, EmptyState } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import { Header } from "~/components/Header";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
-import { getHomePath } from "~/core/pathHelper";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
@@ -36,9 +35,9 @@ export const CreationView: FC = () => {
     newChoiceValue,
     setNewChoiceValue,
   } = useCreation();
-  const navigate = useNavigate();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
   const headerButtons = useGetCreationHeaderButtons(form, !!formElementsList.length);
+  const { navigateToHome } = useFormulaireNavigation();
 
   const {
     displayModals: { showFormElementCreate, showOrganization },
@@ -75,7 +74,7 @@ export const CreationView: FC = () => {
       <Button
         variant={ComponentVariant.CONTAINED}
         onClick={() => {
-          navigate(getHomePath());
+          navigateToHome();
         }}
       >
         {t("formulaire.form.edit.forbidden.button.mobile")}

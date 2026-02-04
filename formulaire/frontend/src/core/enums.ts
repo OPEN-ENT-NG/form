@@ -18,6 +18,8 @@ export enum ModalType {
   QUESTION_DELETE = "showQuestionDelete",
   SECTION_DELETE = "showSectionDelete",
   ORGANIZATION = "showOrganization",
+  FORM_RESULT_PDF = "showFormResultPdf",
+  FORM_RESULT_CSV = "showFormResultCsv",
 }
 
 export enum TagName {

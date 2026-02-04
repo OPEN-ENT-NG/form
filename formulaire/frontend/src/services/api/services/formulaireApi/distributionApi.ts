@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 
 import { FORMULAIRE } from "~/core/constants.ts";
-import { QueryMethod, TagName } from "~/core/enums";
+import { QueryMethod, TagName } from "~/core/enums.ts";
 import { IDistribution, IDistributionDTO } from "~/core/models/distribution/types.ts";
 import { transformDistribution, transformDistributions } from "~/core/models/distribution/utils.ts";
 import { handleErrorApi } from "~/core/utils.ts";
