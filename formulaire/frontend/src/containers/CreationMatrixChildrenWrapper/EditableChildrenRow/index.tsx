@@ -1,6 +1,7 @@
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { Box, IconButton, TextField } from "@mui/material";
 import { FC, useEffect, useState } from "react";
+
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { UpDownButtons } from "~/components/UpDownButtons";
 import { iconStyle } from "~/components/UpDownButtons/style";
@@ -12,6 +13,7 @@ import {
   upDownButtonsWrapperStyle,
 } from "~/containers/CreationQuestionChoiceWrapper/style";
 import { ComponentSize, ComponentVariant } from "~/core/style/themeProps";
+
 import { IEditableChildrenRowProps } from "./types";
 
 export const EditableChildrenRow: FC<IEditableChildrenRowProps> = ({

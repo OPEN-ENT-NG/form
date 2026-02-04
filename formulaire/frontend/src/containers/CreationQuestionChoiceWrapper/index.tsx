@@ -14,8 +14,8 @@ import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { EditableChoiceRow } from "./EditableChoiceRow";
 
+import { EditableChoiceRow } from "./EditableChoiceRow";
 import {
   choiceInputStyle,
   choicesWrapperStyle,

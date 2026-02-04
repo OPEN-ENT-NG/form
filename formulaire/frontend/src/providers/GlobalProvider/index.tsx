@@ -1,9 +1,8 @@
 import { useMediaQuery } from "@cgi-learning-hub/ui";
-import { useMediaQuery } from "@cgi-learning-hub/ui";
 import { IUserInfo } from "@edifice.io/client";
 import { createContext, FC, useContext, useMemo, useState } from "react";
 
-import { MOBILE_MAX_WIDTH } from "~/core/constants";
+import { MOBILE_MAX_WIDTH, TABLET_MAX_WIDTH } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { IForm } from "~/core/models/form/types";
 import {
@@ -15,15 +14,7 @@ import {
   WorkflowRights,
 } from "~/core/rights";
 import { hasSharedRight, hasWorkflow } from "~/core/utils";
-import { ModalType } from "~/core/enums";
-import { GlobalProviderContextType, IDisplayModalsState, IGlobalProviderProps } from "./types";
-import { initialDisplayModalsState } from "./utils";
-import { MOBILE_MAX_WIDTH, TABLET_MAX_WIDTH } from "~/core/constants";
-import { ModalType } from "~/core/enums";
-import { GlobalProviderContextType, IDisplayModalsState, IGlobalProviderProps } from "./types";
-import { initialDisplayModalsState } from "./utils";
 import { useGetQuestionTypesQuery } from "~/services/api/services/formulaireApi/questionApi";
-
 
 import { GlobalProviderContextType, IDisplayModalsState, IGlobalProviderProps } from "./types";
 import { initialDisplayModalsState } from "./utils";
