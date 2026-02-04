@@ -1,6 +1,7 @@
 import { FC } from "react";
 
 import { Box, EllipsisWithTooltip, Link } from "@cgi-learning-hub/ui";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { useNavigate } from "react-router-dom";
 import { FORMULAIRE } from "~/core/constants";
 import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
@@ -14,10 +15,11 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
   separator = null,
   isHeader = false,
   isCreationPage = false,
+  showCollapse,
 }) => {
   const textColor = isHeader ? FORM_COLOR : CSS_TEXT_PRIMARY_COLOR;
   const navigate = useNavigate();
-  const maxItemsBeforeCollaspse = 3;
+  const maxItemsBeforeCollaspse = 2;
 
   return (
     <StyledBreadCrumb
@@ -26,6 +28,9 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
       itemsAfterCollapse={2}
       hasSeparator={separator != null}
       shouldEllipsis={items.length >= maxItemsBeforeCollaspse}
+      sx={{
+        "li:last-child": { flex: 1 },
+      }}
     >
       {isHeader ? (
         <Link underline="hover" color={FORM_COLOR} href={`/${FORMULAIRE}`} sx={{ flexShrink: 0 }}>
@@ -36,6 +41,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
           <Icon height="2.3rem"></Icon>
         </Box>
       )}
+      {showCollapse ? <MoreHorizIcon /> : null}
       {items.map((item, index) => {
         const isLast = index === items.length - 1;
         const shouldEllipsis = isLast && items.length >= maxItemsBeforeCollaspse;

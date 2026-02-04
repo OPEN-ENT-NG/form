@@ -1,11 +1,11 @@
-import { QueryMethod, TagName } from "~/core/enums";
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
-import { t } from "~/i18n";
 import { toast } from "react-toastify";
-import { IQuestion, IQuestionType } from "~/core/models/question/types";
+import { QueryMethod, TagName } from "~/core/enums";
 import { FormElementType } from "~/core/models/formElement/enum";
+import { IQuestion, IQuestionType } from "~/core/models/question/types";
 import { buildQuestionPayload } from "~/core/models/question/utils";
 import { handleErrorApi } from "~/core/utils";
+import { t } from "~/i18n";
+import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
 
 export const questionApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
@@ -47,11 +47,11 @@ export const questionApi = emptySplitFormulaireApi.injectEndpoints({
         };
       },
       providesTags: [TagName.QUESTIONS, TagName.CHILDREN],
-      transformResponse: (response: IQuestion[]) =>
-        response.map((question) => ({
+      transformResponse: (response: IQuestion[] | null) =>
+        response?.map((question) => ({
           ...question,
           formElementType: FormElementType.QUESTION,
-        })),
+        })) ?? [],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;

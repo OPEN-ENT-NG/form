@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Paper, Stack, TextField, Typography } from "@cgi-learning-hub/ui";
+import { Alert, Box, Button, Stack, TextField, Typography } from "@cgi-learning-hub/ui";
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import {
   editorContainerStyle,
@@ -52,10 +52,11 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     setQuestionModalSection,
     setFormElementsList,
     newChoiceValue,
-    setNewChoiceValue
+    setNewChoiceValue,
   } = useCreation();
   const [currentSectionTitle, setCurrentSectionTitle] = useState<string>(section.title ?? "");
   const editorRef = useRef<EditorRef>(null);
+  const titleInputRef = useRef<HTMLInputElement>(null);
   const initialSectionDescription = useRef(section.description);
   const [createSection] = useCreateSectionMutation();
 
@@ -93,6 +94,12 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     });
   }, [currentSectionTitle, setCurrentEditingElement]);
 
+  useEffect(() => {
+    requestAnimationFrame(() => {
+      titleInputRef.current?.focus();
+    });
+  }, []);
+
   const handleDelete = () => {
     toggleModal(ModalType.SECTION_DELETE);
   };
@@ -128,20 +135,24 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
   };
 
   const updateAndSaveSection = () => {
-    if (currentEditingElement?.isNew) return;
     const updated = updateSection();
-    void saveFormElement(updated, formElementsList);
+    if (currentEditingElement?.isNew) {
+      void createSection(updated).unwrap();
+    } else {
+      void saveFormElement(updated, formElementsList);
+    }
     setCurrentEditingElement(null);
   };
 
   return (
     <Box>
       <Box>
-        <Stack component={Paper} sx={sectionStackStyle}>
+        <Stack sx={sectionStackStyle}>
           <Box sx={sectionHeaderWrapperStyle}>
             <Box sx={sectionHeaderStyle}>
               <Box sx={sectionTitleStyle}>
                 <TextField
+                  inputRef={titleInputRef}
                   variant={ComponentVariant.STANDARD}
                   fullWidth
                   sx={editingSectionTitleStyle}
@@ -190,6 +201,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                 mode={EditorMode.EDIT}
                 ref={editorRef}
                 onContentChange={updateSection}
+                focus={false}
               />
             </Box>
             {!!form && !hasFormResponses(form) && (

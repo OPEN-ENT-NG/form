@@ -5,7 +5,6 @@ import { FC, useMemo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
-import { UpDownButtons } from "~/components/UpDownButtons";
 import { iconStyle } from "~/components/UpDownButtons/style";
 import { FORMULAIRE } from "~/core/constants";
 import { QuestionTypes } from "~/core/models/question/enum";
@@ -14,11 +13,11 @@ import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { EditableChoiceRow } from "./EditableChoiceRow";
 import {
   choiceInputStyle,
   choicesWrapperStyle,
   choicesWrapperWhenNotEditingStyle,
-  choiceWrapperStyle,
   customChoiceWrapperStyle,
   deleteButtonIconStyle,
   deleteWrapperStyle,
@@ -30,7 +29,6 @@ import {
   sortWrapperStyle,
   StyledSortWrapper,
   unselectedChoiceStyle,
-  upDownButtonsWrapperStyle,
 } from "./style";
 import { ICreationQuestionChoiceWrapperProps } from "./types";
 import { useChoiceActions } from "./useChoiceActions";
@@ -59,11 +57,8 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
   } = useChoiceActions(question, setCurrentEditingElement);
 
   const sortedChoices = useMemo(() => {
-    return [...choices]
-      .filter(c => !c.isCustom)
-      .sort((a, b) => compareChoices(a, b));
+    return [...choices].filter((c) => !c.isCustom).sort((a, b) => compareChoices(a, b));
   }, [choices]);
-
 
   const customChoice = useMemo(() => {
     return choices.find((c) => c.isCustom);
@@ -73,7 +68,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
     return null;
   }
 
-  const handleKeyDownExistingChoice = (e: React.KeyboardEvent<HTMLInputElement>, index: number) => {
+  const handleKeyDownExistingChoice = (e: React.KeyboardEvent<HTMLDivElement>, index: number) => {
     if (isShiftEnterPressed(e)) {
       updateChoice(index, (e.target as HTMLInputElement).value);
       const targetIndex = index - 1 >= 0 ? index - 1 : 0;
@@ -143,70 +138,31 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
           <Box sx={choicesWrapperStyle}>
             {/* Classic choices */}
             {sortedChoices.map((choice, index) => (
-              <Box key={choice.stableId} sx={choiceWrapperStyle}>
-                <Box sx={upDownButtonsWrapperStyle}>
-                  <UpDownButtons
-                    element={choice}
-                    index={index}
-                    elementList={choices}
-                    hasCustomAtTheEnd={!!customChoice}
-                    handleReorderClick={handleSwapClick}
-                  />
-                </Box>
-                <CreationQuestionChoice
-                  index={index}
-                  type={type}
-                  hasImage={hasImageType(type)}
-                  updateChoiceImage={updateChoiceImage}
-                  image={choice.image ?? undefined}
-                  isEditing={true}
-                >
-                  <TextField
-                    inputRef={(el: HTMLInputElement | null) => {
-                      if (!choice.stableId) return;
-                      inputRefs.current[choice.stableId] = el;
-                    }}
-                    value={choice.value}
-                    variant={ComponentVariant.STANDARD}
-                    fullWidth
-                    onFocus={selectAllTextInput}
-                    onChange={(e) => {
-                      updateChoice(index, e.target.value);
-                    }}
-                    onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => {
-                      handleKeyDownExistingChoice(e, index);
-                    }}
-                    sx={choiceInputStyle}
-                  />
-                </CreationQuestionChoice>
-                <Box sx={deleteWrapperStyle}>
-                  {choices.length > 1 && (
-                    <IconButton
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        void handleDeleteChoice(choice.id, index, choice.position);
-                      }}
-                      size={ComponentSize.SMALL}
-                      sx={deleteButtonIconStyle}
-                    >
-                      <ClearRoundedIcon sx={iconStyle} />
-                    </IconButton>
-                  )}
-                </Box>
-                {question.conditional && (
-                  <CreationQuestionChoiceConditional
-                    question={question}
-                    choice={choice}
-                    choiceIndex={index}
-                    updateChoiceNextFormElement={updateChoiceNextFormElement}
-                  />
-                )}
-              </Box>
+              <EditableChoiceRow
+                key={choice.stableId}
+                choice={choice}
+                index={index}
+                choices={choices}
+                customChoice={customChoice}
+                type={type}
+                question={question}
+                inputRefs={inputRefs}
+                updateChoice={updateChoice}
+                updateChoiceImage={updateChoiceImage}
+                updateChoiceNextFormElement={updateChoiceNextFormElement}
+                handleDeleteChoice={handleDeleteChoice}
+                handleSwapClick={handleSwapClick}
+                handleKeyDownExistingChoice={handleKeyDownExistingChoice}
+                selectAllTextInput={selectAllTextInput}
+              />
             ))}
-
             {/* New empty choice */}
             <NewChoiceWrapper key="newChoice" hasImage={hasImageType(type)}>
-              <CreationQuestionChoice index={choices.length} type={type}>
+              <CreationQuestionChoice
+                index={choices.length}
+                type={type}
+                displayedIndex={customChoice ? choices.length - 1 : choices.length}
+              >
                 <TextField
                   inputRef={(el: HTMLInputElement | null) => (inputRefs.current[newChoiceRefName] = el)}
                   value={newChoiceValue}
@@ -240,6 +196,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                       updateChoiceImage={updateChoiceImage}
                       image={customChoice.image ?? undefined}
                       isEditing={true}
+                      displayedIndex={choices.length}
                     >
                       <TextField
                         inputRef={(el: HTMLInputElement | null) => {

@@ -1,9 +1,10 @@
-import { FC, createContext, useContext, useMemo, useState } from "react";
-import { IDisplayModalsState, GlobalProviderContextType, IGlobalProviderProps } from "./types";
-import { initialDisplayModalsState } from "./utils";
-import { ModalType } from "~/core/enums";
 import { useMediaQuery } from "@cgi-learning-hub/ui";
-import { MOBILE_MAX_WIDTH } from "~/core/constants";
+import { FC, createContext, useContext, useMemo, useState } from "react";
+import { MOBILE_MAX_WIDTH, TABLET_MAX_WIDTH } from "~/core/constants";
+import { ModalType } from "~/core/enums";
+import { GlobalProviderContextType, IDisplayModalsState, IGlobalProviderProps } from "./types";
+import { initialDisplayModalsState } from "./utils";
+import { useGetQuestionTypesQuery } from "~/services/api/services/formulaireApi/questionApi";
 
 const GlobalProviderContext = createContext<GlobalProviderContextType | null>(null);
 
@@ -18,6 +19,9 @@ export const useGlobal = () => {
 export const GlobalProvider: FC<IGlobalProviderProps> = ({ children }) => {
   const [displayModals, setDisplayModals] = useState<IDisplayModalsState>(initialDisplayModalsState);
   const isMobile = useMediaQuery(`(max-width: ${MOBILE_MAX_WIDTH}px)`);
+  const isTablet = useMediaQuery(`(max-width: ${TABLET_MAX_WIDTH}px)`);
+
+  const { data: questionTypes } = useGetQuestionTypesQuery();
 
   const toggleModal = (modalType: ModalType) => {
     setDisplayModals((prevState) => ({
@@ -35,9 +39,11 @@ export const GlobalProvider: FC<IGlobalProviderProps> = ({ children }) => {
       displayModals,
       toggleModal,
       isMobile,
+      isTablet,
       selectAllTextInput,
+      questionTypes,
     }),
-    [displayModals, isMobile],
+    [displayModals, isMobile, isTablet, questionTypes],
   );
 
   return <GlobalProviderContext.Provider value={value}>{children}</GlobalProviderContext.Provider>;

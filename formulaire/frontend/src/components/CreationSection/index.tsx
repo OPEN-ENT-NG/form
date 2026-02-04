@@ -5,7 +5,6 @@ import {
   EllipsisWithTooltip,
   FormControl,
   MenuItem,
-  Paper,
   Select,
   Stack,
   Typography,
@@ -139,7 +138,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
 
   return (
     <Box>
-      <Stack component={Paper} sx={sectionStackStyle}>
+      <Stack sx={sectionStackStyle}>
         <Box sx={sectionHeaderWrapperStyle}>
           <StyledDragContainer isPreview={!!isPreview} ref={setHeaderDroppableNodeRef} {...listeners} {...attributes}>
             <DragIndicatorRoundedIcon sx={sectionDragIconStyle} />
@@ -187,7 +186,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
           <Box>
             <SortableContext items={sortedIds} strategy={verticalListSortingStrategy}>
               {section.questions.map((question: IQuestion) => (
-                <CreationQuestionWrapper key={question.id} question={question} />
+                <CreationQuestionWrapper key={question.id} question={question} isRoot={false} />
               ))}
             </SortableContext>
           </Box>
