@@ -1,4 +1,3 @@
-import { Box } from "@cgi-learning-hub/ui";
 import { FormControl, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
