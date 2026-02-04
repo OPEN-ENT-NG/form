@@ -229,9 +229,9 @@ export const shouldShowMandatorySwitch = (question: IQuestion): boolean => {
   return question.questionType !== QuestionTypes.FREETEXT;
 };
 
-export const getParentSection = (question: IQuestion, formElements: IFormElement[]): ISection | null => {
-  const parents = formElements.filter((e) => e.id === question.sectionId && isSection(e));
-  return parents.length == 1 ? (parents[0] as ISection) : null;
+export const getParentSection = (question: IQuestion, formElementList: IFormElement[]): ISection | undefined => {
+  if (!question.sectionId) return;
+  return formElementList.find((element) => isSection(element) && element.id === question.sectionId) as ISection;
 };
 
 export const getNextFormElements = (question: IQuestion, formElements: IFormElement[]): IFormElement[] => {
@@ -265,9 +265,4 @@ export const getQuestionTypeFromValue = (value: string | number | null | undefin
   if (Number.isNaN(numericValue)) return;
 
   return numericValue as QuestionTypes;
-};
-
-export const getParent = (question: IQuestion, formElementList: IFormElement[]): ISection | undefined => {
-  if (!question.sectionId) return;
-  return formElementList.find((element) => isSection(element) && element.id === question.sectionId) as ISection;
 };

@@ -20,6 +20,7 @@ export type ResponseProviderContextType = {
   isInPreviewMode: boolean;
   setIsInPreviewMode: Dispatch<SetStateAction<boolean>>;
   progress: IProgressProps;
+  setProgress: Dispatch<SetStateAction<IProgressProps>>;
   updateProgress: (element: IFormElement, newHistoricFormElementIds: number[]) => void;
   longestPathsMap: Map<string, number>;
   pageType: ResponsePageType | undefined;
@@ -33,6 +34,7 @@ export type ResponseProviderContextType = {
   getQuestionResponse: (question: IQuestion) => IResponse | null;
   updateQuestionResponses: (question: IQuestion, newResponses: IResponse[]) => void;
   distribution: IDistribution | null;
+  responses: IResponse[];
 };
 
 export interface IFormElementIdType {

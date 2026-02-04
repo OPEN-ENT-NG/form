@@ -8,6 +8,7 @@ import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
+import { IResponse } from "~/core/models/response/type";
 import { workflowRights } from "~/core/rights";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import {
@@ -17,6 +18,7 @@ import {
 } from "~/services/api/services/formulaireApi/distributionApi";
 import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
+import { useGetDistributionResponsesQuery } from "~/services/api/services/formulaireApi/responseApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
 
 import { useFormElementList } from "../CreationProvider/hook/useFormElementsList";
@@ -44,6 +46,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
+  const [responses, setResponses] = useState<IResponse[]>([]);
   const { saveClassicResponses } = useClassicResponse();
   const [form, setForm] = useState<IForm | null>(null);
   const [distribution, setDistribution] = useState<IDistribution | null>(null);
@@ -78,6 +81,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     skip: previewMode || !distributionId || distributionId === "new",
   });
   const { data: formUserDistributionsDatas } = useGetMyFormDistributionsQuery(formId, { skip: previewMode });
+  const { data: responsesDatas } = useGetDistributionResponsesQuery(distribution?.id ?? "", {
+    skip: previewMode || !distribution?.id,
+  });
   const { completeList } = useFormElementList(sectionsDatas, questionsDatas, isQuestionsFetching || isSectionsFetching);
 
   // Set form value
@@ -126,6 +132,14 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       }
     }
   }, [previewMode, distributionId, distributionData, form, distributionData, formUserDistributionsDatas]);
+
+  // Set responses
+  useEffect(() => {
+    if (!responsesDatas) return;
+    setResponses(responsesDatas);
+    //TODO update la responseMap avec les response fetched du back
+    //TODO get les files du back en plus pour les question type FILE ?
+  }, [responsesDatas]);
 
   // Set page type
   useEffect(() => {
@@ -197,6 +211,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       isInPreviewMode,
       setIsInPreviewMode,
       progress,
+      setProgress,
       updateProgress,
       longestPathsMap,
       pageType,
@@ -210,12 +225,14 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       getQuestionResponse,
       updateQuestionResponses,
       distribution,
+      responses,
     }),
     [
       form,
       formElementsList,
       isInPreviewMode,
       progress,
+      setProgress,
       updateProgress,
       longestPathsMap,
       pageType,
@@ -229,6 +246,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       getQuestionResponse,
       updateQuestionResponses,
       distribution,
+      responses,
     ],
   );
 

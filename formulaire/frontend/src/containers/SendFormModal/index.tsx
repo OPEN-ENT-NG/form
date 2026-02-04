@@ -20,7 +20,6 @@ import { useNavigate } from "react-router-dom";
 import { FORMULAIRE } from "~/core/constants";
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { getAllQuestionsAndChildren } from "~/core/models/formElement/utils";
-import { IResponse } from "~/core/models/response/type";
 import { getHomeResponsesPath } from "~/core/pathHelper";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
@@ -30,10 +29,7 @@ import {
   useReplaceDistributionMutation,
   useUpdateDistributionMutation,
 } from "~/services/api/services/formulaireApi/distributionApi";
-import {
-  useDeleteResponsesMutation,
-  useGetDistributionResponsesQuery,
-} from "~/services/api/services/formulaireApi/responseApi";
+import { useDeleteResponsesMutation } from "~/services/api/services/formulaireApi/responseApi";
 
 import { ISendFormModalProps } from "./types";
 
@@ -41,19 +37,11 @@ export const SendFormModal: FC<ISendFormModalProps> = ({ isOpen, handleClose, di
   const { t } = useTranslation(FORMULAIRE);
   const { user } = useEdificeClient();
   const navigate = useNavigate();
-  const { formElementsList, progress } = useResponse();
+  const { formElementsList, progress, responses } = useResponse();
   const [updateDistribution] = useUpdateDistributionMutation();
   const [replaceDistribution] = useReplaceDistributionMutation();
   const [deleteResponses] = useDeleteResponsesMutation();
   const [selectedStructure, setSelectedStructure] = useState<string>("");
-  const [responses, setResponses] = useState<IResponse[]>([]);
-
-  const { data: responsesDatas } = useGetDistributionResponsesQuery(distribution.id);
-
-  useEffect(() => {
-    if (!responsesDatas) return;
-    setResponses(responsesDatas);
-  }, [responsesDatas]);
 
   useEffect(() => {
     if (

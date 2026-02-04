@@ -36,11 +36,6 @@ export const ResponseLayout: FC = () => {
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
   const [isLastElement, setIsLastElement] = useState<boolean>(false);
 
-  //TODO get responses for this distribution (useEffect)
-  // si progress.historicFormElementIds est empty
-  // recup les questionId voire sectionId à partir des réponses
-  // rebuild progress.historicFormElementIds à partir de ces ids (avec un sort by position)
-
   useEffect(() => {
     if (formElementsList.length > 0) {
       setCurrentElement(formElementsList[0]);

@@ -10,8 +10,8 @@ import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
 export const responseApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({
-    getDistributionResponses: builder.query<IResponse[], number>({
-      query: (distributionId: number) => ({
+    getDistributionResponses: builder.query<IResponse[], number | string>({
+      query: (distributionId: number | string) => ({
         url: `distributions/${distributionId}/responses`,
         method: QueryMethod.GET,
       }),
