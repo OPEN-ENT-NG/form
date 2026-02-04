@@ -1,12 +1,14 @@
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { Box, IconButton, TextField } from "@mui/material";
 import { FC, useEffect, useState } from "react";
+
 import { CreationQuestionChoiceConditional } from "~/components/CreationQuestionChoiceConditional";
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { UpDownButtons } from "~/components/UpDownButtons";
 import { iconStyle } from "~/components/UpDownButtons/style";
 import { IQuestionChoice } from "~/core/models/question/types";
 import { ComponentSize, ComponentVariant } from "~/core/style/themeProps";
+
 import {
   choiceInputStyle,
   choiceWrapperStyle,

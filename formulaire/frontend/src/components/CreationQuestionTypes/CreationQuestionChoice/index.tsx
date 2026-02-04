@@ -7,9 +7,6 @@ import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { IMAGE_PICKER_INFO } from "~/core/constants";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { ComponentSize } from "~/core/style/themeProps";
-import { IMAGE_PICKER_INFO } from "~/core/constants";
-import { QuestionTypes } from "~/core/models/question/enum";
-import { ComponentSize } from "~/core/style/themeProps";
 
 import {
   choiceIconStyle,

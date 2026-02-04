@@ -6,6 +6,7 @@ import { IQuestion, IQuestionType } from "~/core/models/question/types";
 import { buildQuestionPayload } from "~/core/models/question/utils";
 import { handleErrorApi } from "~/core/utils";
 import { t } from "~/i18n";
+
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
 
 export const questionApi = emptySplitFormulaireApi.injectEndpoints({

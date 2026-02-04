@@ -19,6 +19,7 @@ import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
 import { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
+
 import { getTransformStyle } from "~/components/CreationSortableItem/utils";
 import { IconButtonTooltiped } from "~/components/IconButtonTooltiped/IconButtonTooltiped";
 import { FORMULAIRE } from "~/core/constants";
@@ -333,12 +334,12 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
           <Box sx={headerQuestionStyle}>
             <Box sx={questionTitleStyle}>
               <EllipsisWithTooltip
-              slotProps={{
-                text: {
-                  variant: TypographyVariant.H6,
-                color: question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR,
-                },
-              }}
+                slotProps={{
+                  text: {
+                    variant: TypographyVariant.H6,
+                    color: question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR,
+                  },
+                }}
               >
                 {question.title || t("formulaire.question.title.empty")}
               </EllipsisWithTooltip>
