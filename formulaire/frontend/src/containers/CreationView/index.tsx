@@ -6,8 +6,6 @@ import { Header } from "~/components/Header";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
-import { IForm } from "~/core/models/form/types";
-import { getHomePath } from "~/core/pathHelper";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useTheme } from "~/hook/useTheme";
