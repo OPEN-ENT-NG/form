@@ -8,4 +8,5 @@ export interface ICreationQuestionChoiceProps {
   hasImage?: boolean;
   updateChoiceImage?: (index: number | null, src: string) => void;
   image?: string;
+  displayedIndex?: number;
 }

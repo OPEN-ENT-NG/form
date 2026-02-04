@@ -7,7 +7,6 @@ import { Header } from "~/components/Header";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
-import { IForm } from "~/core/models/form/types";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
@@ -33,7 +32,7 @@ export const CreationView: FC = () => {
     saveSection,
     setFormElementsList,
     newChoiceValue,
-    setNewChoiceValue
+    setNewChoiceValue,
   } = useCreation();
   const navigate = useNavigate();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
@@ -42,7 +41,7 @@ export const CreationView: FC = () => {
   const {
     displayModals: { showFormElementCreate, showOrganization },
     toggleModal,
-    isMobile,
+    isTablet,
   } = useGlobal();
 
   const { handleClickAway } = useClickAwayEditingElement(
@@ -57,13 +56,8 @@ export const CreationView: FC = () => {
   );
   const { isTheme1D } = useTheme();
 
-  const getStringFolders = (form: IForm): string[] => {
-    const parentFolders = getRecursiveFolderParents(form.folder_id, folders);
-    return [...parentFolders.slice(1).map((folder) => folder.name), form.title];
-  };
-
   const selectView = () => {
-    return isMobile ? errorView : desktopView;
+    return isTablet ? errorView : desktopView;
   };
 
   const errorView = (
@@ -99,11 +93,12 @@ export const CreationView: FC = () => {
         <Box ref={headerRef} sx={creationHedearStyle}>
           {form && (
             <Header
-              items={getStringFolders(form)}
+              items={[form.title]}
               buttons={headerButtons}
               form={form}
               isCreationPage
               displaySeparator
+              showCollapse={getRecursiveFolderParents(form.folder_id, folders).length > 1}
             />
           )}
         </Box>

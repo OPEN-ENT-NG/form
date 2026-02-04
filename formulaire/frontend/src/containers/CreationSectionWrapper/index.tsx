@@ -24,7 +24,7 @@ export const CreationSectionWrapper: FC<ICreationSectionWrapperProps> = ({ secti
     formElementsList,
     setFormElementsList,
     newChoiceValue,
-    setNewChoiceValue
+    setNewChoiceValue,
   } = useCreation();
   const isEditing = isCurrentEditingElement(section, currentEditingElement);
   const {

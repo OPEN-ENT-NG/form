@@ -1,16 +1,17 @@
-import { FC, useEffect, useRef } from "react";
-import { ICreationQuestionFreetextProps } from "./types";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
-import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
-import { useCreation } from "~/providers/CreationProvider";
-import { StyledEditorWrapper } from "./style";
-import { EditorMode } from "./enums";
-import { EditorVariant } from "~/core/style/themeProps";
+import { FC, useEffect, useRef } from "react";
 import { EDITOR_CONTENT_HTML } from "~/core/constants";
+import { EditorVariant } from "~/core/style/themeProps";
+import { useCreation } from "~/providers/CreationProvider";
+import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
+import { EditorMode } from "./enums";
+import { StyledEditorWrapper } from "./style";
+import { ICreationQuestionFreetextProps } from "./types";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
   const { currentEditingElement, setCurrentEditingElement } = useCreation();
+  const initialQuestionStatement = useRef(question.statement);
 
   // As Editor component automatically take the focus, we wait to take it back
   useEffect(() => {
@@ -39,7 +40,7 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
     <StyledEditorWrapper isCurrentEditingElement={true}>
       {isCurrentEditingElement(question, currentEditingElement) ? (
         <Editor
-          content={question.statement}
+          content={initialQuestionStatement.current}
           ref={editorRef}
           onContentChange={updateStatement}
           mode={EditorMode.EDIT}

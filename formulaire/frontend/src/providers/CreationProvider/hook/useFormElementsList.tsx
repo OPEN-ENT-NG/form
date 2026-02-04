@@ -15,14 +15,11 @@ export const useFormElementList = (
     return (questionsDatas ?? []).map((q) => q.id).filter((id): id is number => id !== null);
   }, [questionsDatas]);
 
-  const { data: choicesDatas, isFetching: isChoicesFetching } = useGetQuestionChoicesQuery(
-    { questionIds: questionsIds },
-    { skip: questionsIds.length === 0 },
-  );
-
-  const { data: childrenDatas, isFetching: isChildrenFetching } = useGetQuestionsChildrenQuery(questionsIds, {
-    skip: questionsIds.length === 0,
+  const { data: choicesDatas, isFetching: isChoicesFetching } = useGetQuestionChoicesQuery({
+    questionIds: questionsIds,
   });
+
+  const { data: childrenDatas, isFetching: isChildrenFetching } = useGetQuestionsChildrenQuery(questionsIds);
 
   const [completeList, setCompleteList] = useState<IFormElement[]>([]);
 

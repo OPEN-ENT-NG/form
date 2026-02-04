@@ -9,7 +9,7 @@ export const mainColumnStyle = {
   gap: "3rem",
   display: "flex",
   flexDirection: "row",
-  "@media (max-width: 768px)": {
+  "@media (max-width: 920px)": {
     flexDirection: "column",
   },
 };

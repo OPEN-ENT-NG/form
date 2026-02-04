@@ -8,4 +8,5 @@ export interface IHeaderProps {
   isCreationPage?: boolean;
   displaySeparator?: boolean;
   form?: IForm | null;
+  showCollapse?: boolean;
 }

@@ -1,5 +1,6 @@
 import { SxProps, Theme } from "@mui/material";
 import { COMMON_WHITE_COLOR, SECONDARY_MAIN_COLOR } from "~/core/style/colors";
+import { CSS_DIVIDER_COLOR } from "~/core/style/cssColors";
 
 export const sectionHeaderWrapperStyle: SxProps<Theme> = {
   display: "flex",
@@ -37,6 +38,10 @@ export const sectionIconWrapperStyle: SxProps<Theme> = {
 export const sectionContentStyle: SxProps<Theme> = {
   paddingY: 2,
   paddingX: 4,
+  border: `1px solid ${CSS_DIVIDER_COLOR}`,
+  borderTop: "none",
+  borderBottomLeftRadius: "4px",
+  borderBottomRightRadius: "4px",
 };
 
 export const sectionFooterStyle: SxProps<Theme> = {

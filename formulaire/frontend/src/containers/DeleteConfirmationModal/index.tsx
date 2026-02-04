@@ -18,6 +18,7 @@ export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isO
     handleDeleteFormElement,
     setFormElementsList,
     setCurrentEditingElement,
+    setIsUpdating,
   } = useCreation();
 
   if (!form) {
@@ -28,6 +29,7 @@ export const DeleteConfirmationModal: FC<IDeleteConfirmationModalProps> = ({ isO
     String(form.id),
     currentEditingElement,
     setFormElementsList,
+    setIsUpdating,
   );
 
   const handleDelete = async () => {
