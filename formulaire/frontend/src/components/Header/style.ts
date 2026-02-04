@@ -1,9 +1,9 @@
 import { SxProps, Theme } from "@cgi-learning-hub/ui";
-import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
+import { flexEndBoxStyle } from "~/core/style/boxStyles";
 
 export const headerStyle = (isTheme1D: boolean): SxProps<Theme> => {
   return {
-    ...spaceBetweenBoxStyle,
+    ...flexEndBoxStyle,
     padding: "3rem 5rem 3rem 2rem",
     display: "flex",
     flexWrap: "wrap",
@@ -30,4 +30,5 @@ export const headerButtonsStyle: SxProps<Theme> = {
   gap: "1.5rem",
   flex: 1,
   minWidth: "fit-content",
+  maxWidth: "fit-content",
 };

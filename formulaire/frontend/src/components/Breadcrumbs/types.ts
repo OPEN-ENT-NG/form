@@ -7,6 +7,7 @@ export interface IFormBreadcrumbsProps {
   isHeader?: boolean;
   isCreationPage?: boolean;
   displaySeparator?: boolean;
+  showCollapse?: boolean;
 }
 
 export interface IBreadCrumbItemWrapperProps {

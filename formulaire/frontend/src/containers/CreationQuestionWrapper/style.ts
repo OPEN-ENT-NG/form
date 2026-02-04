@@ -89,3 +89,9 @@ export const conditionalSwitchContainerStyle: SxProps<Theme> = {
   alignItems: "center",
   marginLeft: 2,
 };
+
+export const headerQuestionStyle: SxProps = {
+  display: "flex",
+  justifyContent: "space-between",
+  alignItems: "center",
+};

@@ -1,5 +1,6 @@
 import { ReactNode } from "react";
 import { ModalType } from "src/core/enums";
+import { IQuestionType } from "~/core/models/question/types";
 
 export interface IGlobalProviderProps {
   children: ReactNode;
@@ -31,5 +32,7 @@ export type GlobalProviderContextType = {
   displayModals: IDisplayModalsState;
   toggleModal: (modalType: ModalType) => void;
   isMobile: boolean;
+  isTablet: boolean;
   selectAllTextInput: (e: React.FocusEvent<HTMLInputElement>) => void;
+  questionTypes: IQuestionType[] | undefined;
 };
