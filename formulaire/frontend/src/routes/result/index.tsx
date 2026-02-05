@@ -6,6 +6,7 @@ import { useParams } from "react-router-dom";
 import { ResultView } from "~/containers/result/ResultView";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { ResultProvider } from "~/providers/ResultProvider";
+import { useCountDistributionsQuery } from "~/services/api/services/formulaireApi/distributionApi";
 import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 
 export const Result: FC = () => {
@@ -14,16 +15,18 @@ export const Result: FC = () => {
 
   const formIdNumber = formId ? parseInt(formId, 10) : NaN;
 
-  const { data: currentForm, isLoading } = useGetFormQuery(
+  const { data: currentForm, isLoading: isFormLoading } = useGetFormQuery(
     isNaN(formIdNumber) ? skipToken : { formId: formIdNumber.toString() },
   );
+
+  const { data: countDistributions, isLoading: isCountDistributionsLoading } = useCountDistributionsQuery(formIdNumber);
 
   if (!formId || isNaN(formIdNumber)) {
     navigateToHome();
     return null;
   }
 
-  if (isLoading) {
+  if (isFormLoading || isCountDistributionsLoading || countDistributions === undefined) {
     return <Loader />;
   }
 
@@ -33,7 +36,7 @@ export const Result: FC = () => {
   }
 
   return (
-    <ResultProvider formId={formIdNumber} form={currentForm}>
+    <ResultProvider formId={formIdNumber} form={currentForm} countDistributions={countDistributions}>
       <ResultView />
     </ResultProvider>
   );
