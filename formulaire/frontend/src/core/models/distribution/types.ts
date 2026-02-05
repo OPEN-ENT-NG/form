@@ -39,3 +39,7 @@ export interface IPersonResponseData {
   responderName: string;
   responseCount: number;
 }
+
+export interface IDistributionCount {
+  count: number;
+}

@@ -12,8 +12,11 @@ export const useResult = () => {
   return context;
 };
 
-export const ResultProvider: FC<IResultProviderProps> = ({ children, formId, form }) => {
-  const value = useMemo<IResultProviderContextType>(() => ({ formId, form }), [formId, form]);
+export const ResultProvider: FC<IResultProviderProps> = ({ children, formId, form, countDistributions }) => {
+  const value = useMemo<IResultProviderContextType>(
+    () => ({ formId, form, countDistributions }),
+    [formId, form, countDistributions],
+  );
 
   return <ResultProviderContext.Provider value={value}>{children}</ResultProviderContext.Provider>;
 };
