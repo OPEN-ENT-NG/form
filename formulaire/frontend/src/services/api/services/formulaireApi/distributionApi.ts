@@ -2,7 +2,7 @@ import { toast } from "react-toastify";
 
 import { FORMULAIRE } from "~/core/constants.ts";
 import { QueryMethod, TagName } from "~/core/enums.ts";
-import { IDistribution, IDistributionDTO } from "~/core/models/distribution/types.ts";
+import { IDistribution, IDistributionCount, IDistributionDTO } from "~/core/models/distribution/types.ts";
 import { transformDistribution, transformDistributions } from "~/core/models/distribution/utils.ts";
 import { handleErrorApi } from "~/core/utils.ts";
 import { t } from "~/i18n.ts";
@@ -83,6 +83,20 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    countDistributions: builder.query<number, number>({
+      query: (formId: number) => ({
+        url: `distributions/forms/${formId}/count`,
+        method: QueryMethod.GET,
+      }),
+      transformResponse: (data: IDistributionCount) => data.count,
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.distributionService.count");
+        }
+      },
+    }),
   }),
   overrideExisting: false,
 });
@@ -93,4 +107,5 @@ export const {
   useGetFormDistributionsQuery,
   useGetMyFormDistributionsQuery,
   useAddDistributionMutation,
+  useCountDistributionsQuery,
 } = distributionApi;
