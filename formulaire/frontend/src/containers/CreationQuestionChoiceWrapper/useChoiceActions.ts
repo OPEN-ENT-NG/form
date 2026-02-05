@@ -5,12 +5,16 @@ import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { createNewQuestionChoice } from "~/core/models/question/utils";
 import { PositionActionType } from "~/providers/CreationProvider/enum";
 import { fixChoicesPositions } from "~/providers/CreationProvider/utils";
-import { useDeleteQuestionChoiceMutation } from "~/services/api/services/formulaireApi/questionChoiceApi";
+import {
+  useDeleteQuestionChoiceMutation,
+  useUpdateMultipleChoiceQuestionsMutation,
+} from "~/services/api/services/formulaireApi/questionChoiceApi";
 import { compareChoices, compareChoicesByValue, swapChoicesAndSort } from "./utils";
 
 export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: (q: IQuestion) => void) => {
   const [currentSortDirection, setCurrentSortDirection] = useState<Direction>(Direction.DOWN);
   const [deleteQuestionChoice] = useDeleteQuestionChoiceMutation();
+  const [updateMultipleChoiceQuestions] = useUpdateMultipleChoiceQuestionsMutation();
 
   const isExistingCustomChoice = question.choices?.some((choice) => choice.isCustom);
   const setQuestion = setCurrentEditingElement as Dispatch<SetStateAction<IQuestion>>;
@@ -24,19 +28,25 @@ export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: 
             ...(choice.id && { stableId: choice.id }),
           };
         }),
-    [question.choices],
+    [question],
   );
 
   const handleDeleteChoice = useCallback(
     async (choiceId: number | null, index: number, position: number) => {
-      setQuestion((prev) => {
-        const choices = prev.choices || [];
-        const updatedChoicesList = choices.filter((_, i) => i !== index);
-        return fixChoicesPositions({ ...prev, choices: updatedChoicesList }, position, PositionActionType.DELETION);
-      });
+      const filteredChoices = choices.filter((_, i) => i !== index);
+      const newQuestion = fixChoicesPositions(
+        { ...question, choices: filteredChoices },
+        position,
+        PositionActionType.DELETION,
+      );
+      setQuestion(newQuestion);
 
       if (choiceId) {
         await deleteQuestionChoice(choiceId);
+        await updateMultipleChoiceQuestions({
+          questionChoices: newQuestion.choices ?? [],
+          formId: question.formId?.toString() ?? "",
+        });
       }
     },
     [deleteQuestionChoice],

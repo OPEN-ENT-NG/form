@@ -28,7 +28,7 @@ export const EditableChildrenRow: FC<IEditableChildrenRowProps> = ({
 }) => {
   const [title, setTitle] = useState(child.title);
 
-  const getRealIndex = (stableId: string) => children.findIndex((c) => c.stableId === stableId);
+  const getRealIndex = (stableId: string) => children.findIndex((c) => c.stableId?.toString() === stableId);
 
   const updateChildrenById = (stableId: string, value: string) => {
     const realIndex = getRealIndex(stableId);
