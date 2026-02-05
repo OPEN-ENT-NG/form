@@ -15,14 +15,13 @@ import {
 import { useEdificeClient } from "@edifice.io/react";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import { FORMULAIRE } from "~/core/constants";
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { getAllQuestionsAndChildren } from "~/core/models/formElement/utils";
-import { getHomeResponsesPath } from "~/core/pathHelper";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { preventPropagation } from "~/providers/CreationProvider/utils";
 import { useResponse } from "~/providers/ResponseProvider";
 import {
@@ -36,7 +35,7 @@ import { ISendFormModalProps } from "./types";
 export const SendFormModal: FC<ISendFormModalProps> = ({ isOpen, handleClose, distribution }) => {
   const { t } = useTranslation(FORMULAIRE);
   const { user } = useEdificeClient();
-  const navigate = useNavigate();
+  const { navigateToHomeResponses } = useFormulaireNavigation();
   const { formElementsList, progress, responses } = useResponse();
   const [updateDistribution] = useUpdateDistributionMutation();
   const [replaceDistribution] = useReplaceDistributionMutation();
@@ -68,7 +67,7 @@ export const SendFormModal: FC<ISendFormModalProps> = ({ isOpen, handleClose, di
       : updateDistribution(updatedDistribution));
 
     handleClose();
-    navigate(getHomeResponsesPath());
+    navigateToHomeResponses();
   };
 
   const cleanResponses = async () => {

@@ -1,14 +1,13 @@
 import { Box, Button, Stack } from "@cgi-learning-hub/ui";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import { FORMULAIRE } from "~/core/constants";
 import { ModalType } from "~/core/enums";
 import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
-import { getHomeResponsesPath } from "~/core/pathHelper";
 import { ComponentVariant } from "~/core/style/themeProps";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResponse } from "~/providers/ResponseProvider";
 import { buildProgressObject } from "~/providers/ResponseProvider/progressBarUtils";
@@ -20,7 +19,7 @@ import { checkMandatoryQuestions, getFormElementsToDisplay } from "./utils";
 
 export const RecapLayout: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
-  const navigate = useNavigate();
+  const { navigateToHome } = useFormulaireNavigation();
   const { formElementsList, distribution, responses, setProgress } = useResponse();
   const {
     displayModals: { showSendForm },
@@ -41,7 +40,7 @@ export const RecapLayout: FC = () => {
   }, [formElementsList, responses]);
 
   const saveAndQuit = () => {
-    navigate(getHomeResponsesPath());
+    navigateToHome();
   };
 
   const handleSendForm = () => {

@@ -1,7 +1,6 @@
 import { Box, Button, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 
 import { FORMULAIRE } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
@@ -9,10 +8,10 @@ import { DistributionStatus } from "~/core/models/distribution/enums";
 import { IFormElement } from "~/core/models/formElement/types";
 import { isSection } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
-import { getRespondFormPath } from "~/core/pathHelper";
 import { flexEndBoxStyle } from "~/core/style/boxStyles";
 import { ERROR_MAIN_COLOR, PRIMARY, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { mandatoryTitleStyle, questionStackStyle } from "./style";
@@ -23,7 +22,7 @@ export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ quest
   const { form, distribution, formElementsList, pageType, setPageType, progress, updateProgress, setCurrentElement } =
     useResponse();
   const { t } = useTranslation(FORMULAIRE);
-  const navigate = useNavigate();
+  const { navigateToFormResponse } = useFormulaireNavigation();
   const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   const navigateToQuestion = () => {
@@ -39,7 +38,7 @@ export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ quest
     updateProgress(targetElement, progress.historicFormElementIds.slice(0, targetIndexInProgress + 1));
     setCurrentElement(targetElement);
     setPageType(ResponsePageType.FORM_ELEMENT);
-    navigate(getRespondFormPath(form.id, distribution.id));
+    navigateToFormResponse(form.id, distribution.id);
   };
 
   return (

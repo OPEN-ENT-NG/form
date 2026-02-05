@@ -1,15 +1,14 @@
 import { Box, Button } from "@cgi-learning-hub/ui";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import { ProgressBar } from "~/components/ProgressBar";
 import { FORMULAIRE } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
-import { getRecapFormPath } from "~/core/pathHelper";
 import { ComponentVariant } from "~/core/style/themeProps";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
@@ -32,7 +31,7 @@ export const ResponseLayout: FC = () => {
     distribution,
   } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
-  const navigate = useNavigate();
+  const { navigateToFormResponseRecap } = useFormulaireNavigation();
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
   const [isLastElement, setIsLastElement] = useState<boolean>(false);
 
@@ -78,7 +77,7 @@ export const ResponseLayout: FC = () => {
         return;
       }
       if (form?.id && distribution?.id) {
-        navigate(getRecapFormPath(form.id, distribution.id));
+        navigateToFormResponseRecap(form.id, distribution.id);
       }
       return;
     }
