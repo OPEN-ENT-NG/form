@@ -119,8 +119,6 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
     ));
   };
 
-  console.log("choices", sortedChoices);
-
   return (
     <Box>
       {isCurrentEditingElement(question, currentEditingElement) ? (
