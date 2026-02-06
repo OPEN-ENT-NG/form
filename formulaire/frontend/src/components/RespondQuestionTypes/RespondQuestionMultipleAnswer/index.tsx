@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
 import { IResponse } from "~/core/models/response/type";
+import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { ChoiceImage } from "../style";
@@ -104,10 +105,17 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
                           <Typography>:</Typography>
                           <TextField
                             variant="standard"
-                            value={customAnswer}
+                            value={isPageTypeRecap && !customAnswer ? t("formulaire.response.missing") : customAnswer}
                             placeholder={t("formulaire.response.custom.write")}
                             onChange={handleCustomResponseChange}
                             disabled={isPageTypeRecap}
+                            sx={{
+                              ...(isPageTypeRecap &&
+                                !customAnswer && {
+                                  fontStyle: "italic",
+                                  ".Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR },
+                                }),
+                            }}
                           ></TextField>
                         </>
                       )}
