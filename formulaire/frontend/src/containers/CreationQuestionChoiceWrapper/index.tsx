@@ -142,7 +142,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                 key={choice.stableId}
                 choice={choice}
                 index={index}
-                choices={choices}
+                choices={sortedChoices}
                 customChoice={customChoice}
                 type={type}
                 question={question}

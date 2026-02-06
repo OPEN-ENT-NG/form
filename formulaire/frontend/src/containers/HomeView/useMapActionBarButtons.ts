@@ -266,6 +266,8 @@ export const useMapActionBarButtons = () => {
 
   // Fonction simplifiée pour obtenir les boutons de gauche
   const leftButtons = useMemo(() => {
+    const isCurrentFolderIntoRootFolderMyForms =
+      currentFolder.id !== rootFolders[1].id && currentFolder.id !== rootFolders[2].id;
     const getButtonTypes = (): ActionBarButtonType[] => {
       // Cas spécial: Formulaires dans la corbeille
       if (hasFormsInTrash) {
@@ -280,7 +282,7 @@ export const useMapActionBarButtons = () => {
           ActionBarButtonType.DUPLICATE,
           ActionBarButtonType.DELETE,
         ];
-        if (currentFolder.id === rootFolders[0].id) {
+        if (isCurrentFolderIntoRootFolderMyForms) {
           buttons.splice(3, 0, ActionBarButtonType.MOVE);
         }
         return buttons;
@@ -288,7 +290,7 @@ export const useMapActionBarButtons = () => {
       // Cas 2: Plusieurs formulaires
       if (hasMultipleForms && !hasFolders) {
         const buttons = [ActionBarButtonType.DUPLICATE];
-        if (currentFolder.id === rootFolders[0].id) {
+        if (isCurrentFolderIntoRootFolderMyForms) {
           buttons.push(ActionBarButtonType.MOVE);
         }
         if (hasShareRightManager) {
@@ -323,11 +325,10 @@ export const useMapActionBarButtons = () => {
           ActionBarButtonType.OPEN,
           ActionBarButtonType.PROPS,
           ActionBarButtonType.DUPLICATE,
-          ActionBarButtonType.MOVE,
           ActionBarButtonType.RESULTS,
           ActionBarButtonType.REMIND,
         ];
-        if (currentFolder.id === rootFolders[0].id) {
+        if (isCurrentFolderIntoRootFolderMyForms) {
           buttons.splice(3, 0, ActionBarButtonType.MOVE);
         }
         if (hasShareRightManager) {
