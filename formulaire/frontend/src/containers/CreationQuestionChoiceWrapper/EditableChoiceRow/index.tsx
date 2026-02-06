@@ -39,7 +39,7 @@ export const EditableChoiceRow: FC<IEditableChoiceRowProps> = ({
     setChoiceValue(choice.value);
   }, [choice.value]);
 
-  const getRealIndex = (stableId: string) => choices.findIndex((c) => c.stableId === stableId);
+  const getRealIndex = (stableId: string) => choices.findIndex((c) => c.stableId?.toString() === stableId);
 
   const updateChoiceById = (stableId: string, value: string) => {
     const realIndex = getRealIndex(stableId);
