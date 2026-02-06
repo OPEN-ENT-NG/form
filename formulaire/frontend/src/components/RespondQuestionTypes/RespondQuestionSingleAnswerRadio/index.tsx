@@ -107,11 +107,10 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
                               onChange={handleCustomResponseChange}
                               disabled={isPageTypeRecap}
                               sx={{
-                                ...(isPageTypeRecap &&
-                                  !customAnswer && {
-                                    fontStyle: "italic",
-                                    ".Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR },
-                                  }),
+                                ...(isPageTypeRecap && {
+                                  "& .Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR },
+                                  ...(!customAnswer && { fontStyle: "italic" }),
+                                }),
                               }}
                             ></TextField>
                           </>

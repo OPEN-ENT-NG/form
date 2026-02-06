@@ -2,6 +2,7 @@ import { TextField, Typography } from "@cgi-learning-hub/ui";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 
 import { ResponsePageType } from "~/core/enums";
+import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResponse } from "~/providers/ResponseProvider";
@@ -39,6 +40,12 @@ export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ que
       onChange={handleResponseChange}
       onFocus={selectAllTextInput}
       error={question.mandatory && !answer}
+      disabled={isPageTypeRecap}
+      sx={{
+        ...(isPageTypeRecap && {
+          "& .Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR },
+        }),
+      }}
     />
   );
 };

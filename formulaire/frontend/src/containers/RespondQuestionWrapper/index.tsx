@@ -9,7 +9,7 @@ import { IFormElement } from "~/core/models/formElement/types";
 import { isSection } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { flexEndBoxStyle } from "~/core/style/boxStyles";
-import { ERROR_MAIN_COLOR, PRIMARY, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import { ERROR_MAIN_COLOR, PRIMARY, SECONDARY_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useResponse } from "~/providers/ResponseProvider";
@@ -56,7 +56,12 @@ export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ quest
         isPageTypeRecap &&
         question.questionType != QuestionTypes.FREETEXT && (
           <Box sx={flexEndBoxStyle}>
-            <Button variant={ComponentVariant.TEXT} color={PRIMARY} onClick={navigateToQuestion}>
+            <Button
+              variant={ComponentVariant.TEXT}
+              color={PRIMARY}
+              onClick={navigateToQuestion}
+              sx={{ ":hover": { background: "transparent", color: SECONDARY_MAIN_COLOR } }}
+            >
               {t("formulaire.edit")}
             </Button>
           </Box>

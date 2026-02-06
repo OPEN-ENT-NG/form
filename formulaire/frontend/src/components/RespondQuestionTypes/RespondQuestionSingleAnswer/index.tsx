@@ -1,4 +1,4 @@
-import { FormControl, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
+import { FormControl, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -76,7 +76,7 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
           value={selectedValue}
           onChange={handleChange}
           disabled={isPageTypeRecap}
-          sx={{ ".Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR } }}
+          sx={{ "& .Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR } }}
         >
           <MenuItem value="">{t("formulaire.options.select")}</MenuItem>
           {question.choices
@@ -88,26 +88,24 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
             ))}
         </Select>
         {question.choices?.find((choice) => choice.value === selectedValue && choice.isCustom) && (
-          <>
+          <Stack direction={isPageTypeRecap ? "row" : "column"} gap={1}>
             <Typography sx={{ py: "1rem" }}>
-              {t(isPageTypeRecap ? "formulaire.response.custom.value" : "formulaire.response.custom.explanation")} :
+              {t(isPageTypeRecap ? "formulaire.response.custom.value" : "formulaire.response.custom.explanation")}
             </Typography>
             <TextField
-              fullWidth
               variant="standard"
               value={isPageTypeRecap && !customAnswer ? t("formulaire.response.missing") : customAnswer}
               placeholder={t("formulaire.response.custom.write")}
               onChange={handleCustomResponseChange}
               disabled={isPageTypeRecap}
               sx={{
-                ...(isPageTypeRecap &&
-                  !customAnswer && {
-                    fontStyle: "italic",
-                    ".Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR },
-                  }),
+                ...(isPageTypeRecap && {
+                  "& .Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR },
+                  ...(!customAnswer && { fontStyle: "italic" }),
+                }),
               }}
             />
-          </>
+          </Stack>
         )}
       </FormControl>
     </>

@@ -36,7 +36,7 @@ export const RespondQuestionTime: FC<IRespondQuestionTypesProps> = ({ question }
 
   return isPageTypeRecap ? (
     <Typography sx={{ ...(!localTime && { fontStyle: "italic" }) }}>
-      {localTime?.toDate().toLocaleTimeString() ?? t("formulaire.response.missing")}
+      {dayjsToTimeString(localTime) ?? t("formulaire.response.missing")}
     </Typography>
   ) : (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
