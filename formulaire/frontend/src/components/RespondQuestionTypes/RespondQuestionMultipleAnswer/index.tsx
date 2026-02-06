@@ -79,7 +79,7 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
 
   return (
     <>
-      <StyledFormControl hasOneChoiceWithImage={hasOneChoiceWithImage} disabled={isPageTypeRecap}>
+      <StyledFormControl hasOneChoiceWithImage={hasOneChoiceWithImage}>
         {question.choices
           ?.sort((a, b) => a.position - b.position)
           .map((choice) => (
@@ -92,12 +92,13 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
                     onChange={() => {
                       handleToggle(choice.id);
                     }}
+                    disabled={isPageTypeRecap}
                   />
                 }
                 label={
                   <Box sx={customAnswerStyle}>
                     <Box sx={labelStyle}>
-                      <Typography>{choice.value}</Typography>
+                      <Typography color={"textPrimary"}>{choice.value}</Typography>
                       {choice.isCustom && (
                         <>
                           <Typography>:</Typography>

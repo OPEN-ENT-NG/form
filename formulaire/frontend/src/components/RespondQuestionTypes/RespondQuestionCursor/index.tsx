@@ -1,9 +1,9 @@
 import { Box, Typography } from "@cgi-learning-hub/ui";
-import { Slider, Stack } from "@mui/material";
-import { t } from "i18next";
+import { Slider } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 
 import { ResponsePageType } from "~/core/enums";
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
@@ -26,7 +26,7 @@ export const RespondQuestionCursor: FC<IRespondQuestionTypesProps> = ({ question
 
     const currentValue = associatedResponse.answer;
     if (typeof currentValue === "number") setValue(currentValue);
-  }, [question, getQuestionResponse]);
+  }, [question]);
 
   const handleChange = (_: Event, newValue: number | number[]) => {
     const associatedResponse = getQuestionResponse(question);
@@ -40,10 +40,9 @@ export const RespondQuestionCursor: FC<IRespondQuestionTypesProps> = ({ question
   };
 
   return isPageTypeRecap ? (
-    <Stack direction="row" gap={1}>
-      <Typography>{t("formulaire.selected.value")}</Typography>
-      <Typography>{}</Typography> //TODO
-    </Stack>
+    <Typography>
+      {t("formulaire.selected.value")} {value}
+    </Typography>
   ) : (
     <Box sx={respondQuestionCursorStyle}>
       {question.specificFields?.cursorMinLabel && <Typography>{question.specificFields.cursorMinLabel}</Typography>}

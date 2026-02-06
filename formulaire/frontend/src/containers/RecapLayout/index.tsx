@@ -28,6 +28,7 @@ export const RecapLayout: FC = () => {
   const [answeredFormElements, setAnsweredFormElements] = useState<IFormElement[]>([]);
 
   useEffect(() => {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const formElementsToDisplay = getFormElementsToDisplay(formElementsList, responses);
     const sortedFormElementsToDisplayIds = formElementsToDisplay
       .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))

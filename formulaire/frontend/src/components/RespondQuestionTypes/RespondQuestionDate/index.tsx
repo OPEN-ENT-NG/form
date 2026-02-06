@@ -5,6 +5,7 @@ import dayjs, { Dayjs, isDayjs } from "dayjs";
 import { FC, useEffect, useState } from "react";
 
 import { ResponsePageType } from "~/core/enums";
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
@@ -42,7 +43,9 @@ export const RespondQuestionDate: FC<IRespondQuestionTypesProps> = ({ question }
   };
 
   return isPageTypeRecap ? (
-    <Typography>{}</Typography> //TODO
+    <Typography sx={{ ...(!localDate && { fontStyle: "italic" }) }}>
+      {localDate?.toDate().toLocaleDateString() ?? t("formulaire.response.missing")}
+    </Typography>
   ) : (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <DatePicker adapterLocale="fr" value={localDate} onChange={handleDateChange} />

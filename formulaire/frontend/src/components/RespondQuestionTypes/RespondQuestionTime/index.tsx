@@ -7,6 +7,7 @@ import { FC, useEffect, useState } from "react";
 import { HH_MM } from "~/core/constants";
 import { dayjsToTimeString, timeStringToDayjs } from "~/core/dayjsUtils";
 import { ResponsePageType } from "~/core/enums";
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
@@ -34,7 +35,9 @@ export const RespondQuestionTime: FC<IRespondQuestionTypesProps> = ({ question }
   };
 
   return isPageTypeRecap ? (
-    <Typography>{}</Typography> //TODO
+    <Typography sx={{ ...(!localTime && { fontStyle: "italic" }) }}>
+      {localTime?.toDate().toLocaleTimeString() ?? t("formulaire.response.missing")}
+    </Typography>
   ) : (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
       <TimePicker ampm={false} value={localTime} onChange={handleTimeChange} format={HH_MM} />

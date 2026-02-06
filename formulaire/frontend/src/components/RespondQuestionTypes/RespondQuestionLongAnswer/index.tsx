@@ -1,9 +1,10 @@
-import { Box } from "@cgi-learning-hub/ui";
+import { Box, Typography } from "@cgi-learning-hub/ui";
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { FC, useEffect, useRef, useState } from "react";
 
 import { EDITOR_CONTENT_HTML } from "~/core/constants";
 import { EditorMode, EditorVariant, ResponsePageType } from "~/core/enums";
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
@@ -31,11 +32,13 @@ export const RespondQuestionLongAnswer: FC<IRespondQuestionTypesProps> = ({ ques
     updateQuestionResponses(question, [associatedResponse]);
   };
 
-  return (
+  return isPageTypeRecap && !answer ? (
+    <Typography fontStyle={"italic"}>{t("formulaire.response.missing")}</Typography>
+  ) : (
     <Box sx={{ ...(!isPageTypeRecap && respondQuestionLongAnswerStyle) }}>
       <Editor
         onContentChange={handleResponseChange}
-        content={answer} //TODO
+        content={answer}
         ref={editorRef}
         mode={isPageTypeRecap ? EditorMode.READ : EditorMode.EDIT}
         variant={isPageTypeRecap ? EditorVariant.GHOST : EditorVariant.OUTLINE}

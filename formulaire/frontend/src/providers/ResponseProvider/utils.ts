@@ -5,6 +5,8 @@ import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { IResponse } from "~/core/models/response/type";
 import { createNewResponse } from "~/core/models/response/utils";
 
+import { ResponseMap } from "./types";
+
 export const initResponsesMap = (formElements: IFormElement[]) => {
   const responsesMap = new Map<string, Map<number, IResponse[]>>();
 
@@ -57,7 +59,7 @@ export const initResponseAccordingToType = (question: IQuestion, choices?: IQues
     case QuestionTypes.MULTIPLEANSWER:
       return (
         questionChoices?.map((choice, index) =>
-          createNewResponse(question.id as number, undefined, choice.id as number, choice.value, index),
+          createNewResponse(question.id as number, undefined, undefined, choice.id as number, choice.value, index),
         ) ?? []
       );
     case QuestionTypes.FILE:
@@ -65,4 +67,79 @@ export const initResponseAccordingToType = (question: IQuestion, choices?: IQues
     default:
       return [];
   }
+};
+
+export const fillResponseMapWithRepsonses = (
+  responseMap: ResponseMap,
+  responses: IResponse[],
+  questions: IQuestion[],
+): ResponseMap => {
+  const filledResponseMap = new Map<string, Map<number, IResponse[]>>();
+
+  responseMap.forEach((formElementMap, feit) => {
+    const newFormelementMap = new Map<number, IResponse[]>();
+
+    formElementMap.forEach((existingResponses, questionId) => {
+      const questionType = questions.find((q) => q.id === questionId)?.questionType;
+      const matchingNewResponses = responses.filter((r) => r.questionId === questionId);
+      const updatedResponses = updateResponsesByQuestionType(existingResponses, matchingNewResponses, questionType);
+      newFormelementMap.set(questionId, updatedResponses);
+    });
+
+    filledResponseMap.set(feit, newFormelementMap);
+  });
+
+  return filledResponseMap;
+};
+
+const updateResponsesByQuestionType = (
+  existingResponses: IResponse[],
+  matchingNewResponses: IResponse[],
+  questionType: QuestionTypes | undefined,
+): IResponse[] => {
+  if (!existingResponses.length || !matchingNewResponses.length || !questionType) return existingResponses;
+
+  switch (questionType) {
+    case QuestionTypes.SHORTANSWER:
+    case QuestionTypes.LONGANSWER:
+    case QuestionTypes.DATE:
+    case QuestionTypes.TIME:
+    case QuestionTypes.FILE: {
+      if (existingResponses.length != 1 || matchingNewResponses.length != 1) break;
+      return matchingNewResponses; //TODO check if needs to convert DATE and TIME ?
+    }
+    case QuestionTypes.CURSOR: {
+      if (existingResponses.length != 1 || matchingNewResponses.length != 1) break;
+      const formattedAnswer = Number(matchingNewResponses[0].answer);
+      if (isNaN(formattedAnswer)) break;
+      return [{ ...matchingNewResponses[0], answer: formattedAnswer }];
+    }
+    case QuestionTypes.RANKING: {
+      if (matchingNewResponses.some((r) => !r.choicePosition)) break;
+      return matchingNewResponses;
+    }
+    case QuestionTypes.SINGLEANSWER:
+    case QuestionTypes.SINGLEANSWERRADIO: {
+      if (matchingNewResponses.length != 1) break;
+      const updatedResponses = [...existingResponses];
+      return updatedResponses.map((r) => {
+        if (r.choiceId === matchingNewResponses[0].choiceId) {
+          return { ...matchingNewResponses[0], selected: true };
+        }
+        return r;
+      });
+    }
+    case QuestionTypes.MULTIPLEANSWER: {
+      const updatedResponses = [...existingResponses];
+      return updatedResponses.map((r) => {
+        const matchingResponse = matchingNewResponses.find((mr) => r.choiceId === mr.choiceId);
+        if (matchingResponse) return { ...matchingResponse, selected: true };
+        return r;
+      });
+    }
+    default:
+      return existingResponses;
+  }
+
+  return existingResponses;
 };

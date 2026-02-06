@@ -7,8 +7,8 @@ import { DistributionStatus } from "~/core/models/distribution/enums";
 import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
-import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
-import { IResponse } from "~/core/models/response/type";
+import { getAllQuestionsAndChildren, getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
+import { IResponse, IResponseFile } from "~/core/models/response/type";
 import { workflowRights } from "~/core/rights";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import {
@@ -19,6 +19,7 @@ import {
 import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetDistributionResponsesQuery } from "~/services/api/services/formulaireApi/responseApi";
+import { useGetQuestionFilesQuery } from "~/services/api/services/formulaireApi/responseFileApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
 
 import { useFormElementList } from "../CreationProvider/hook/useFormElementsList";
@@ -27,7 +28,7 @@ import { useClassicResponse } from "./hook/useClassicResponse";
 import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
-import { initResponsesMap } from "./utils";
+import { fillResponseMapWithRepsonses, initResponsesMap } from "./utils";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -84,6 +85,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const { data: responsesDatas } = useGetDistributionResponsesQuery(distribution?.id ?? "", {
     skip: previewMode || !distribution?.id,
   });
+  // const { data: filesDatas } = useGetQuestionFilesQuery(form?.id ?? 0, {
+  //   skip: previewMode || !form?.id,
+  // });
   const { completeList } = useFormElementList(sectionsDatas, questionsDatas, isQuestionsFetching || isSectionsFetching);
 
   // Set form value
@@ -137,9 +141,18 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   useEffect(() => {
     if (!responsesDatas) return;
     setResponses(responsesDatas);
-    //TODO update la responseMap avec les response fetched du back
-    //TODO get les files du back en plus pour les question type FILE ?
-  }, [responsesDatas]);
+
+    // if (!responsesDatas || !filesDatas) return;
+    // const responsesWithFiles = responsesDatas.map((r) => ({
+    //   ...r,
+    //   files: filesDatas.filter((f) => f.responseId === r.id),
+    // }));
+    // setResponses(responsesWithFiles);
+
+    if (!hasInitializedRsponsesMap.current || !formElementsList.length) return;
+    const questions = getAllQuestionsAndChildren(formElementsList);
+    setResponsesMap((prev) => fillResponseMapWithRepsonses(prev, responsesDatas, questions));
+  }, [responsesDatas, hasInitializedRsponsesMap, formElementsList]);
 
   // Set page type
   useEffect(() => {

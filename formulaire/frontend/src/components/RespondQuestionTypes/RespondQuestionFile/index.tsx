@@ -1,10 +1,10 @@
-import { Box, Dropzone, FileList } from "@cgi-learning-hub/ui";
+import { Box, Dropzone, FileList, Typography } from "@cgi-learning-hub/ui";
 import { FC, useMemo } from "react";
-import { useTranslation } from "react-i18next";
 
-import { FORMULAIRE, MAX_FILES_SAVE } from "~/core/constants";
+import { MAX_FILES_SAVE } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
 import { IResponseFile } from "~/core/models/response/type";
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
@@ -13,7 +13,6 @@ import { createResponse, toCustomFile, toResponseFile } from "./utils";
 
 export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
-  const { t } = useTranslation(FORMULAIRE);
   const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   const files = useMemo<ICustomFile[]>(() => {
@@ -40,7 +39,11 @@ export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }
 
   return (
     <Box>
-      <FileList files={files} {...(!isPageTypeRecap && { onDelete: handleDeleteFile })} />
+      {isPageTypeRecap && !files.length ? (
+        <Typography fontStyle={"italic"}>{t("formulaire.response.missing")}</Typography>
+      ) : (
+        <FileList files={files} {...(!isPageTypeRecap && { onDelete: handleDeleteFile })} />
+      )}
       {!isPageTypeRecap && (
         <Dropzone
           disabled={files.length >= MAX_FILES_SAVE}

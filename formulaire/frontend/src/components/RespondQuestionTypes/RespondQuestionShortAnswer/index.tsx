@@ -29,8 +29,8 @@ export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ que
     updateQuestionResponses(question, [associatedResponse]);
   };
 
-  return isPageTypeRecap ? (
-    <Typography>{}</Typography> //TODO
+  return isPageTypeRecap && !answer ? (
+    <Typography fontStyle={"italic"}>{t("formulaire.response.missing")}</Typography>
   ) : (
     <TextField
       placeholder={question.placeholder ?? t("formulaire.question.type.SHORTANSWER")}

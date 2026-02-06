@@ -62,7 +62,9 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
     updateQuestionResponses(question, updatedReponses);
   };
 
-  return (
+  return isPageTypeRecap && !selectedValue ? (
+    <Typography fontStyle={"italic"}>{t("formulaire.response.missing")}</Typography>
+  ) : (
     <>
       <FormControl fullWidth>
         <Select value={selectedValue} onChange={handleChange} disabled={isPageTypeRecap}>

@@ -73,7 +73,9 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
     updateQuestionResponses(question, updatedReponses);
   };
 
-  return (
+  return isPageTypeRecap && !selectedValue ? (
+    <Typography fontStyle={"italic"}>{t("formulaire.response.missing")}</Typography>
+  ) : (
     <>
       <FormControl disabled={isPageTypeRecap}>
         <ChoicesRadioGroup

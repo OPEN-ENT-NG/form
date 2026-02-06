@@ -1,4 +1,4 @@
-import { Box } from "@cgi-learning-hub/ui";
+import { Box, Stack, Typography } from "@cgi-learning-hub/ui";
 import { closestCenter, DndContext, DragOverEvent, DragOverlay } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { FC, useEffect, useMemo, useState } from "react";
@@ -110,7 +110,11 @@ export const RespondQuestionRanking: FC<IRespondQuestionTypesProps> = ({ questio
   }, [activeId, question.choices]);
 
   return isPageTypeRecap ? (
-    <Box>{}</Box> //TODO
+    <Stack>
+      {sortedChoices.map((choice) => (
+        <Typography key={choice.id}>{choice.value}</Typography>
+      ))}
+    </Stack>
   ) : (
     <DndContext
       collisionDetection={closestCenter}

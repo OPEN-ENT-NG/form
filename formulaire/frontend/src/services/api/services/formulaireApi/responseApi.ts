@@ -2,7 +2,8 @@ import { toast } from "react-toastify";
 
 import { FORMULAIRE } from "~/core/constants.ts";
 import { QueryMethod } from "~/core/enums.ts";
-import { IResponse } from "~/core/models/response/type.ts";
+import { IResponse, IResponseDTO } from "~/core/models/response/type.ts";
+import { transformResponses } from "~/core/models/response/utils.ts";
 import { handleErrorApi } from "~/core/utils.ts";
 import { t } from "~/i18n.ts";
 
@@ -15,6 +16,7 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         url: `distributions/${distributionId}/responses`,
         method: QueryMethod.GET,
       }),
+      transformResponse: (rawDatas: IResponseDTO[]) => transformResponses(rawDatas),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
