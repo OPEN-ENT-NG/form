@@ -41,7 +41,7 @@
     </modules>
 
     <properties>
-        <revision>2.1-SNAPSHOT</revision>
+        <revision>2.1-develop-b2school-SNAPSHOT</revision>
         <entCoreVersion>6.13-SNAPSHOT</entCoreVersion>
         <toolsVersion>2.0.0-final</toolsVersion>
         <junitVersion>5.1.0</junitVersion>
