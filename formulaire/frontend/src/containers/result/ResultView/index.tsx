@@ -10,6 +10,8 @@ import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResult } from "~/providers/ResultProvider";
 
+import { CsvResultModal } from "../modal/CsvResultModal";
+import { PdfResultModal } from "../modal/PdfResultModal";
 import { paperStyle } from "./style";
 import { getHeaderButtonsProps } from "./utils";
 
@@ -58,6 +60,8 @@ export const ResultView: FC = () => {
           </Link>
         </Stack>
       )}
+      <PdfResultModal />
+      <CsvResultModal />
     </Stack>
   );
 };
