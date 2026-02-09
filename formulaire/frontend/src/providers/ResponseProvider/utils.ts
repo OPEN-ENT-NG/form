@@ -106,7 +106,7 @@ const updateResponsesByQuestionType = (
     case QuestionTypes.TIME:
     case QuestionTypes.FILE: {
       if (existingResponses.length != 1 || matchingNewResponses.length != 1) break;
-      return matchingNewResponses; //TODO check if needs to convert DATE and TIME ?
+      return matchingNewResponses;
     }
     case QuestionTypes.CURSOR: {
       if (existingResponses.length != 1 || matchingNewResponses.length != 1) break;

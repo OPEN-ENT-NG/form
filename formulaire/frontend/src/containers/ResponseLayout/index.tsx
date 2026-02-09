@@ -36,7 +36,7 @@ export const ResponseLayout: FC = () => {
   const [isLastElement, setIsLastElement] = useState<boolean>(false);
 
   useEffect(() => {
-    if (formElementsList.length > 0) {
+    if (formElementsList.length > 0 && !currentElement) {
       setCurrentElement(formElementsList[0]);
     }
   }, [formElementsList]);
@@ -77,6 +77,7 @@ export const ResponseLayout: FC = () => {
         return;
       }
       if (form?.id && distribution?.id) {
+        setPageType(ResponsePageType.RECAP);
         navigateToFormResponseRecap(form.id, distribution.id);
       }
       return;

@@ -9,7 +9,13 @@ import { IFormElement } from "~/core/models/formElement/types";
 import { isSection } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { flexEndBoxStyle } from "~/core/style/boxStyles";
-import { ERROR_MAIN_COLOR, PRIMARY, SECONDARY_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import {
+  ERROR_MAIN_COLOR,
+  PRIMARY,
+  SECONDARY_MAIN_COLOR,
+  TEXT_PRIMARY_COLOR,
+  TEXT_SECONDARY_COLOR,
+} from "~/core/style/colors";
 import { BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useResponse } from "~/providers/ResponseProvider";

@@ -111,7 +111,7 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
                             disabled={isPageTypeRecap}
                             sx={{
                               ...(isPageTypeRecap && {
-                                "& .Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR },
+                                "& .Mui-disabled": { WebkitTextFillColor: `${CSS_TEXT_PRIMARY_COLOR} !important` },
                                 ...(!customAnswer && { fontStyle: "italic" }),
                               }),
                             }}
