@@ -1,15 +1,14 @@
 package fr.openent.formulaire.service;
 
+import java.util.List;
+import java.util.Optional;
+
 import fr.openent.form.core.models.ResponseFile;
 import fr.wseduc.webutils.Either;
 import io.vertx.core.Future;
 import io.vertx.core.Handler;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
-
-import javax.swing.text.html.Option;
-import java.util.List;
-import java.util.Optional;
 
 public interface ResponseFileService {
     /**
@@ -29,9 +28,15 @@ public interface ResponseFileService {
     /**
      * List all files of a specific form
      * @param formId  form identifier
+     */
+    public Future<List<ResponseFile>> listByForm(String formId);
+
+    /**
+     * List all files ids of a specific form
+     * @param formId  form identifier
      * @param handler function handler returning JsonArray data
      */
-    void listByForm(String formId, Handler<Either<String, JsonArray>> handler);
+    void listIdsByForm(String formId, Handler<Either<String, JsonArray>> handler);
 
     /**
      * Get a specific file by id

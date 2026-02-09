@@ -36,11 +36,3 @@ export interface IResponseFile {
   type: string;
   size?: number;
 }
-
-export interface IResponseFileDTO {
-  id: number | string;
-  response_id: number | null;
-  filename: string;
-  type: string;
-  size?: number;
-}

@@ -45,6 +45,7 @@ export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ quest
     setCurrentElement(targetElement);
     setPageType(ResponsePageType.FORM_ELEMENT);
     navigateToFormResponse(form.id, distribution.id);
+    window.scrollTo(0, 0);
   };
 
   return (

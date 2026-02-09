@@ -9,7 +9,7 @@ import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
 import { ICustomFile } from "./types";
-import { createResponse, toCustomFile, toResponseFile } from "./utils";
+import { toCustomFile, toResponseFile } from "./utils";
 
 export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
@@ -17,7 +17,7 @@ export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }
 
   const files = useMemo<ICustomFile[]>(() => {
     const associatedResponse = getQuestionResponse(question);
-    return associatedResponse?.files.map((file) => toCustomFile(file)) ?? [];
+    return associatedResponse?.files.map((file) => toCustomFile(file, !isPageTypeRecap)) ?? [];
   }, [question, getQuestionResponse]);
 
   const handleOnDrop = (acceptedFiles: File[]) => {
@@ -26,7 +26,10 @@ export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }
     const uploadedFiles: IResponseFile[] = acceptedFiles.map((file) => toResponseFile(file));
     const newFiles: IResponseFile[] = [...prevFiles, ...uploadedFiles];
 
-    updateQuestionResponses(question, [createResponse(question, newFiles.slice(0, MAX_FILES_SAVE))]);
+    if (!associatedResponse) return;
+    updateQuestionResponses(question, [
+      { ...associatedResponse, files: newFiles, answer: t("formulaire.response.file.send") },
+    ]);
   };
 
   const handleDeleteFile = (file: ICustomFile) => {
@@ -34,7 +37,10 @@ export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }
     const prevFiles: IResponseFile[] = associatedResponse?.files ?? [];
     const newFiles: IResponseFile[] = prevFiles.filter((f) => f.id !== file.id);
 
-    updateQuestionResponses(question, [createResponse(question, newFiles.slice(0, MAX_FILES_SAVE))]);
+    if (!associatedResponse) return;
+    updateQuestionResponses(question, [
+      { ...associatedResponse, files: newFiles.slice(0, MAX_FILES_SAVE), answer: t("formulaire.response.file.send") },
+    ]);
   };
 
   return (
@@ -42,7 +48,7 @@ export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }
       {isPageTypeRecap && !files.length ? (
         <Typography fontStyle={"italic"}>{t("formulaire.response.missing")}</Typography>
       ) : (
-        <FileList files={files} {...(!isPageTypeRecap && { onDelete: handleDeleteFile })} />
+        <FileList files={files} onDelete={handleDeleteFile} />
       )}
       {!isPageTypeRecap && (
         <Dropzone

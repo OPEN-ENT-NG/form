@@ -52,6 +52,7 @@ export const initResponseAccordingToType = (question: IQuestion, choices?: IQues
     case QuestionTypes.DATE:
     case QuestionTypes.TIME:
     case QuestionTypes.CURSOR:
+    case QuestionTypes.FILE:
       return [createNewResponse(question.id)];
     case QuestionTypes.SINGLEANSWER:
     case QuestionTypes.RANKING:
@@ -62,8 +63,6 @@ export const initResponseAccordingToType = (question: IQuestion, choices?: IQues
           createNewResponse(question.id as number, undefined, undefined, choice.id as number, choice.value, index),
         ) ?? []
       );
-    case QuestionTypes.FILE:
-      return [];
     default:
       return [];
   }
@@ -97,7 +96,11 @@ const updateResponsesByQuestionType = (
   matchingNewResponses: IResponse[],
   questionType: QuestionTypes | undefined,
 ): IResponse[] => {
-  if (!existingResponses.length || !matchingNewResponses.length || !questionType) return existingResponses;
+  if (
+    questionType != QuestionTypes.FILE &&
+    (!existingResponses.length || !matchingNewResponses.length || !questionType)
+  )
+    return existingResponses;
 
   switch (questionType) {
     case QuestionTypes.SHORTANSWER:

@@ -1,5 +1,5 @@
 import { QueryMethod } from "~/core/enums.ts";
-import { IResponseFile, IResponseFileDTO } from "~/core/models/response/type.ts";
+import { IResponseFile } from "~/core/models/response/type.ts";
 import { handleErrorApi } from "~/core/utils.ts";
 
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
@@ -11,8 +11,6 @@ export const responseFileApi = emptySplitFormulaireApi.injectEndpoints({
         url: `forms/${formId}/files/all`,
         method: QueryMethod.GET,
       }),
-      transformResponse: (rawDatas: IResponseFileDTO[]) =>
-        rawDatas.map((rf) => ({ ...rf, responseId: rf.response_id })),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;

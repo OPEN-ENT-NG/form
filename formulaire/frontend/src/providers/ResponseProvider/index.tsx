@@ -8,7 +8,7 @@ import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getAllQuestionsAndChildren, getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
-import { IResponse, IResponseFile } from "~/core/models/response/type";
+import { IResponse } from "~/core/models/response/type";
 import { workflowRights } from "~/core/rights";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import {
@@ -85,9 +85,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const { data: responsesDatas } = useGetDistributionResponsesQuery(distribution?.id ?? "", {
     skip: previewMode || !distribution?.id,
   });
-  // const { data: filesDatas } = useGetQuestionFilesQuery(form?.id ?? 0, {
-  //   skip: previewMode || !form?.id,
-  // });
+  const { data: filesDatas } = useGetQuestionFilesQuery(form?.id ?? 0, {
+    skip: previewMode || !form?.id,
+  });
   const { completeList } = useFormElementList(sectionsDatas, questionsDatas, isQuestionsFetching || isSectionsFetching);
 
   // Set form value
@@ -139,19 +139,16 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
 
   // Set responses
   useEffect(() => {
-    if (!responsesDatas) return;
-    setResponses(responsesDatas);
-
-    // if (!responsesDatas || !filesDatas) return;
-    // const responsesWithFiles = responsesDatas.map((r) => ({
-    //   ...r,
-    //   files: filesDatas.filter((f) => f.responseId === r.id),
-    // }));
-    // setResponses(responsesWithFiles);
+    if (!responsesDatas || !filesDatas) return;
+    const responsesWithFiles = responsesDatas.map((r) => ({
+      ...r,
+      files: filesDatas.filter((f) => f.responseId === r.id),
+    }));
+    setResponses(responsesWithFiles);
 
     if (!hasInitializedRsponsesMap.current || !formElementsList.length) return;
     const questions = getAllQuestionsAndChildren(formElementsList);
-    setResponsesMap((prev) => fillResponseMapWithRepsonses(prev, responsesDatas, questions));
+    setResponsesMap((prev) => fillResponseMapWithRepsonses(prev, responsesWithFiles, questions));
   }, [responsesDatas, hasInitializedRsponsesMap, formElementsList]);
 
   // Set page type

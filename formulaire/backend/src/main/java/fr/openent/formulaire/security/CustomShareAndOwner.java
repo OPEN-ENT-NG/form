@@ -88,8 +88,8 @@ public class CustomShareAndOwner implements ResourcesProvider {
                 isGetMyFormRightsForm(binding) || isCountFormElements(binding) || isGetByPositionFormElement(binding) ||
                 isUpdateFormElement(binding) || isListForFormQuestion(binding) || isListForFormAndSectionQuestion(binding) ||
                 isCreateQuestion(binding) || isCreateMultipleQuestionChoice(binding) || isUpdateMultipleQuestionChoice(binding) ||
-                isListByFormResponse(binding) || isDeleteResponse(binding) || isExportResponse(binding) || isListSection(binding) ||
-                isCreateSection(binding) || isUpdateSection(binding) || isUpdateQuestion(binding)) {
+                isListByFormResponse(binding) || isDeleteResponse(binding)  || isListByFormResponseFile(binding) || isExportResponse(binding) ||
+                isListSection(binding) || isCreateSection(binding) || isUpdateSection(binding) || isUpdateQuestion(binding)) {
             return PARAM_FORM_ID;
         }
         else if (isGetDistribution(binding) || isAddDistribution(binding) || isUpdateDistribution(binding) ||
@@ -309,6 +309,10 @@ public class CustomShareAndOwner implements ResourcesProvider {
 
     private boolean isListByQuestionResponseFile(final Binding binding) {
         return bindingIsThatMethod(binding, HttpMethod.GET, "fr.openent.formulaire.controllers.ResponseFileController|listByQuestion");
+    }
+
+    private boolean isListByFormResponseFile(final Binding binding) {
+        return bindingIsThatMethod(binding, HttpMethod.GET, "fr.openent.formulaire.controllers.ResponseFileController|listByForm");
     }
 
     private boolean isGetResponseFile(final Binding binding) {
