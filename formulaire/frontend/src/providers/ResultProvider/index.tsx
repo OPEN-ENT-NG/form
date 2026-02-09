@@ -1,4 +1,7 @@
-import { createContext, FC, useContext, useMemo } from "react";
+import { createContext, FC, useContext, useEffect, useMemo, useState } from "react";
+
+import { IFormElement } from "~/core/models/formElement/types";
+import { useFormElementListBuild } from "~/hook/UseFormElementListBuild";
 
 import { IResultProviderContextType, IResultProviderProps } from "./types";
 
@@ -13,9 +16,18 @@ export const useResult = () => {
 };
 
 export const ResultProvider: FC<IResultProviderProps> = ({ children, formId, form, countDistributions }) => {
+  const [selectedFormElement, setSelectedFormElement] = useState<IFormElement | null>(null);
+  const { formElementList } = useFormElementListBuild(formId);
+
+  useEffect(() => {
+    if (formElementList.length) {
+      setSelectedFormElement(formElementList[0]);
+    }
+  }, [formElementList]);
+
   const value = useMemo<IResultProviderContextType>(
-    () => ({ formId, form, countDistributions }),
-    [formId, form, countDistributions],
+    () => ({ formId, form, countDistributions, formElementList, selectedFormElement, setSelectedFormElement }),
+    [formId, form, countDistributions, formElementList, selectedFormElement],
   );
 
   return <ResultProviderContext.Provider value={value}>{children}</ResultProviderContext.Provider>;
