@@ -53,6 +53,7 @@ export const Header: FC<IHeaderProps> = ({
               button.action();
             }}
             startIcon={button.startIcon}
+            disabled={button.disabled ?? false}
           >
             {t(button.title)}
           </Button>

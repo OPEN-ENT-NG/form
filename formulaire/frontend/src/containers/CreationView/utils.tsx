@@ -1,18 +1,17 @@
+import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { ModalType } from "~/core/enums";
+import { IFolder } from "~/core/models/folder/types";
+import { IForm } from "~/core/models/form/types";
+import { hasFormResponses } from "~/core/models/form/utils";
+import { getFormPreviewPath, getFormTreePath } from "~/core/pathHelper";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
-import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import { t } from "~/i18n";
-import { getFormPreviewPath, getFormTreePath } from "~/core/pathHelper";
-import { useNavigate } from "react-router-dom";
-import { IFolder } from "~/core/models/folder/types";
-import { ModalType } from "~/core/enums";
 import { useGlobal } from "~/providers/GlobalProvider";
-import { toast } from "react-toastify";
 
-export const useGetCreationHeaderButtons = (
-  formId: string | number | undefined,
-  hasFormElements: boolean,
-): IButtonProps[] => {
+export const useGetCreationHeaderButtons = (form: IForm | null, hasFormElements: boolean): IButtonProps[] => {
   const navigate = useNavigate();
   const { toggleModal } = useGlobal();
 
@@ -28,7 +27,7 @@ export const useGetCreationHeaderButtons = (
       title: t("formulaire.visualize.path"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        if (formId) window.location.href = getFormTreePath(formId);
+        if (form?.id) window.location.href = getFormTreePath(form.id);
       },
     },
     hasFormElements
@@ -38,13 +37,14 @@ export const useGetCreationHeaderButtons = (
           action: () => {
             toggleModal(ModalType.ORGANIZATION);
           },
+          disabled: !!form && hasFormResponses(form),
         }
       : undefined,
     {
       title: t("formulaire.preview"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        if (formId) window.location.href = getFormPreviewPath(formId);
+        if (form?.id) window.location.href = getFormPreviewPath(form.id);
       },
     },
     {

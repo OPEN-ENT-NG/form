@@ -36,7 +36,7 @@ export const CreationView: FC = () => {
   } = useCreation();
   const navigate = useNavigate();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
-  const headerButtons = useGetCreationHeaderButtons(form?.id, !!formElementsList.length);
+  const headerButtons = useGetCreationHeaderButtons(form, !!formElementsList.length);
 
   const {
     displayModals: { showFormElementCreate, showOrganization },
