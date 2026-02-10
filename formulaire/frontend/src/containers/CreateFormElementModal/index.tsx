@@ -137,31 +137,33 @@ export const CreateFormElementModal: FC<ICreateFormElementModalProps> = ({
             <Stack spacing={2} sx={questionStyle}>
               <Typography variant={TypographyVariant.BODY1}>{t("formulaire.element.questions")}</Typography>
               <Grid2 container spacing={2} justifyContent="center">
-                {questionTypes.map((questionType) => (
-                  <Grid2 key={questionType.id} size={{ md: 3 }} sx={questionGridStyle}>
-                    <Tooltip title={displayTypeDescription(questionType.name)} placement="top" disableInteractive>
-                      <Card
-                        component={ButtonBase}
-                        sx={questionButtonStyle}
-                        onClick={() => {
-                          handleFormElementCreation(questionType.code);
-                        }}
-                      >
-                        <Stack spacing={1.5} sx={questionStackStyle}>
-                          <Typography
-                            variant={TypographyVariant.BODY2}
-                            fontWeight={TypographyFontStyle.BOLD}
-                            color={SECONDARY}
-                            sx={questionTextStyle}
-                          >
-                            {displayTypeName(questionType.name)}
-                          </Typography>
-                          <Box sx={iconContainerStyle}>{questionTypeIcons[questionType.code]}</Box>
-                        </Stack>
-                      </Card>
-                    </Tooltip>
-                  </Grid2>
-                ))}
+                {questionTypes
+                  .filter((questionType) => !form.is_public || questionType.code !== QuestionTypes.FILE)
+                  .map((questionType) => (
+                    <Grid2 key={questionType.id} size={{ md: 3 }} sx={questionGridStyle}>
+                      <Tooltip title={displayTypeDescription(questionType.name)} placement="top" disableInteractive>
+                        <Card
+                          component={ButtonBase}
+                          sx={questionButtonStyle}
+                          onClick={() => {
+                            handleFormElementCreation(questionType.code);
+                          }}
+                        >
+                          <Stack spacing={1.5} sx={questionStackStyle}>
+                            <Typography
+                              variant={TypographyVariant.BODY2}
+                              fontWeight={TypographyFontStyle.BOLD}
+                              color={SECONDARY}
+                              sx={questionTextStyle}
+                            >
+                              {displayTypeName(questionType.name)}
+                            </Typography>
+                            <Box sx={iconContainerStyle}>{questionTypeIcons[questionType.code]}</Box>
+                          </Stack>
+                        </Card>
+                      </Tooltip>
+                    </Grid2>
+                  ))}
               </Grid2>
             </Stack>
           )}

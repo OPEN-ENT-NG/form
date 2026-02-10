@@ -253,7 +253,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                   <Switch
                     checked={question.mandatory}
                     onChange={handleMandatoryChange}
-                    disabled={question.conditional}
+                    disabled={question.conditional || !form || hasFormResponses(form)}
                   />
                   <Typography>{t("formulaire.mandatory")}</Typography>
                 </Box>
@@ -261,7 +261,11 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
 
               {shouldShowConditionalSwitch(question, formElementsList) && (
                 <Box sx={conditionalSwitchContainerStyle}>
-                  <Switch checked={question.conditional} onChange={handleConditionalChange} />
+                  <Switch
+                    checked={question.conditional}
+                    onChange={handleConditionalChange}
+                    disabled={!form || hasFormResponses(form)}
+                  />
                   <Typography>{t("formulaire.conditional")}</Typography>
                 </Box>
               )}
@@ -272,12 +276,14 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                   onClick={handleDuplicate}
                   tooltipI18nKey={"formulaire.duplicate"}
                   ariaLabel="duplicate"
+                  disabled={!form || hasFormResponses(form)}
                 />
                 <IconButtonTooltiped
                   icon={<DeleteRoundedIcon sx={editingQuestionIconStyle} />}
                   onClick={handleDelete}
                   tooltipI18nKey={"formulaire.delete"}
                   ariaLabel="delete"
+                  disabled={!form || hasFormResponses(form)}
                 />
                 <IconButtonTooltiped
                   icon={<UndoRoundedIcon sx={editingQuestionIconStyle} />}
@@ -315,20 +321,22 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
             setCurrentEditingElement(question);
           }}
         >
-          <StyledDragContainer
-            isPreview={!!isPreview}
-            {...attributes}
-            {...listeners}
-            onClick={(e) => {
-              e.stopPropagation();
-            }}
-            onMouseDown={(e) => {
-              e.stopPropagation();
-            }}
-          >
-            <DragIndicatorRoundedIcon sx={dragIconStyle} />
-          </StyledDragContainer>
-          <Box sx={headerQuestionStyle}>
+          {!!form && !hasFormResponses(form) && (
+            <StyledDragContainer
+              isPreview={!!isPreview}
+              {...attributes}
+              {...listeners}
+              onClick={(e) => {
+                e.stopPropagation();
+              }}
+              onMouseDown={(e) => {
+                e.stopPropagation();
+              }}
+            >
+              <DragIndicatorRoundedIcon sx={dragIconStyle} />
+            </StyledDragContainer>
+          )}
+          <Box mt={!form || hasFormResponses(form) ? 2 : 0} sx={headerQuestionStyle}>
             <Box sx={questionTitleStyle}>
               <Typography
                 color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}
