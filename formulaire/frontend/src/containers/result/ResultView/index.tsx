@@ -1,4 +1,14 @@
-import { Button, EmptyState, Link, Paper, Select, Stack, Typography } from "@cgi-learning-hub/ui";
+import {
+  Button,
+  EmptyState,
+  Link,
+  Loader,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
+  Stack,
+  Typography,
+} from "@cgi-learning-hub/ui";
 import { FC } from "react";
 
 import { Header } from "~/components/Header";
@@ -10,14 +20,36 @@ import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResult } from "~/providers/ResultProvider";
 
+import { FormElementResult } from "../FormElementResult";
 import { CsvResultModal } from "../modal/CsvResultModal";
 import { PdfResultModal } from "../modal/PdfResultModal";
-import { paperStyle } from "./style";
 import { getHeaderButtonsProps } from "./utils";
 
 export const ResultView: FC = () => {
-  const { form, countDistributions } = useResult();
+  const { form, countDistributions, formElementList, selectedFormElement, setSelectedFormElement } = useResult();
   const { toggleModal } = useGlobal();
+
+  const handleChangeSelectedFormElement = (e: SelectChangeEvent<number>) => {
+    const selectedFormElementId = e.target.value;
+    const formElement = formElementList.find((formElement) => formElement.id === selectedFormElementId);
+    if (formElement) setSelectedFormElement(formElement);
+  };
+
+  const handleNext = () => {
+    if (selectedFormElement && selectedFormElement.position) {
+      const currentSelectedPos = selectedFormElement.position;
+      const nextFormElement = formElementList.find((formElement) => formElement.position === currentSelectedPos + 1);
+      if (nextFormElement) setSelectedFormElement(nextFormElement);
+    }
+  };
+
+  const handlePrev = () => {
+    if (selectedFormElement && selectedFormElement.position) {
+      const currentSelectedPos = selectedFormElement.position;
+      const prevFormElement = formElementList.find((formElement) => formElement.position === currentSelectedPos - 1);
+      if (prevFormElement) setSelectedFormElement(prevFormElement);
+    }
+  };
 
   const buttons = countDistributions
     ? getHeaderButtonsProps(
@@ -34,15 +66,33 @@ export const ResultView: FC = () => {
     <Stack width="100%">
       <Header items={[form.title, t("formulaire.results")]} buttons={buttons} displaySeparator />
       {countDistributions ? (
-        <Stack margin={"1rem 10rem"}>
-          <Paper elevation={2} sx={paperStyle}></Paper>
+        <Stack margin={"2rem 8rem 4rem 8rem"}>
+          {selectedFormElement ? <FormElementResult formElement={selectedFormElement} /> : <Loader />}
           <Stack direction="row" justifyContent="space-between" mt={3}>
-            <Button variant={ComponentVariant.CONTAINED}>{t("formulaire.prev")}</Button>
-            <Stack direction="row" alignItems="center" gap={2}>
+            <Button
+              onClick={handlePrev}
+              variant={ComponentVariant.CONTAINED}
+              disabled={!selectedFormElement || selectedFormElement.position === 1}
+            >
+              {t("formulaire.prev")}
+            </Button>
+            <Stack direction="row" alignItems="center" gap={2} width="40%">
               <Typography>{t("formulaire.goTo")}</Typography>
-              <Select></Select>
+              <Select sx={{ flex: 1 }} value={selectedFormElement?.id || ""} onChange={handleChangeSelectedFormElement}>
+                {formElementList.map((formElement, index) => (
+                  <MenuItem key={formElement.id} value={formElement.id ?? 0}>
+                    {`${index + 1}. ${formElement.title}`}
+                  </MenuItem>
+                ))}
+              </Select>
             </Stack>
-            <Button variant={ComponentVariant.CONTAINED}>{t("formulaire.next")}</Button>
+            <Button
+              onClick={handleNext}
+              variant={ComponentVariant.CONTAINED}
+              disabled={!selectedFormElement || selectedFormElement.position === formElementList.length}
+            >
+              {t("formulaire.next")}
+            </Button>
           </Stack>
         </Stack>
       ) : (
