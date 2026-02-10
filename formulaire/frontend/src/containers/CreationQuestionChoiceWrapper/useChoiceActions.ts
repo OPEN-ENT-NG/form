@@ -49,7 +49,7 @@ export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: 
         });
       }
     },
-    [deleteQuestionChoice],
+    [deleteQuestionChoice, question, choices],
   );
 
   const handleSwapClick = useCallback(
