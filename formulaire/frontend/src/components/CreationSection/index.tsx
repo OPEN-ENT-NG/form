@@ -140,10 +140,12 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
     <Box>
       <Stack sx={sectionStackStyle}>
         <Box sx={sectionHeaderWrapperStyle}>
-          <StyledDragContainer isPreview={!!isPreview} ref={setHeaderDroppableNodeRef} {...listeners} {...attributes}>
-            <DragIndicatorRoundedIcon sx={sectionDragIconStyle} />
-          </StyledDragContainer>
-          <Box sx={sectionHeaderStyle}>
+          {!!form && !hasFormResponses(form) && (
+            <StyledDragContainer isPreview={!!isPreview} ref={setHeaderDroppableNodeRef} {...listeners} {...attributes}>
+              <DragIndicatorRoundedIcon sx={sectionDragIconStyle} />
+            </StyledDragContainer>
+          )}
+          <Box sx={sectionHeaderStyle} mt={!form || hasFormResponses(form) ? 2 : 0}>
             <Box sx={sectionTitleStyle}>
               <EllipsisWithTooltip>
                 {section.title ? section.title : t("formulaire.section.title.empty")}
@@ -208,6 +210,7 @@ export const CreationSection: FC<ICreationSectionProps> = ({ isPreview, section,
                         sx: nextElementSelectorStyle,
                       },
                     }}
+                    disabled={!form || hasFormResponses(form)}
                   >
                     {followingElement && (
                       <MenuItem value={followingElement.id != null ? String(followingElement.id) : ""}>

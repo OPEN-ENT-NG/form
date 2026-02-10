@@ -2,6 +2,7 @@ import { EllipsisWithTooltip, FormControl, MenuItem, Select } from "@cgi-learnin
 import { FC, useCallback, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
+import { hasFormResponses } from "~/core/models/form/utils";
 import { FormElementType } from "~/core/models/formElement/enum";
 import { IQuestionChoice } from "~/core/models/question/types";
 import { getParent } from "~/core/models/question/utils";
@@ -21,7 +22,7 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
   updateChoiceNextFormElement,
 }) => {
   const { t } = useTranslation(FORMULAIRE);
-  const { currentEditingElement, formElementsList, updateFormElementsList, isDragging } = useCreation();
+  const { currentEditingElement, formElementsList, updateFormElementsList, isDragging, form } = useCreation();
 
   const onSaveChoiceNextElement = useCallback(
     (_: IQuestionChoice, targetElementId: number | undefined, targetElementType: FormElementType | undefined) => {
@@ -80,6 +81,7 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
           },
         }}
         sx={nextElementSelectorWrapperStyle}
+        disabled={!form || hasFormResponses(form)}
       >
         {followingElement && (
           <MenuItem value={followingElement.id != null ? String(followingElement.id) : ""}>

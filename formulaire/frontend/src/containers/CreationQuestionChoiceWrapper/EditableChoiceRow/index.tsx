@@ -5,8 +5,10 @@ import { CreationQuestionChoiceConditional } from "~/components/CreationQuestion
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { UpDownButtons } from "~/components/UpDownButtons";
 import { iconStyle } from "~/components/UpDownButtons/style";
+import { hasFormResponses } from "~/core/models/form/utils";
 import { IQuestionChoice } from "~/core/models/question/types";
 import { ComponentSize, ComponentVariant } from "~/core/style/themeProps";
+import { useCreation } from "~/providers/CreationProvider";
 import {
   choiceInputStyle,
   choiceWrapperStyle,
@@ -34,6 +36,7 @@ export const EditableChoiceRow: FC<IEditableChoiceRowProps> = ({
   selectAllTextInput,
 }) => {
   const [choiceValue, setChoiceValue] = useState(choice.value);
+  const { form } = useCreation();
 
   useEffect(() => {
     setChoiceValue(choice.value);
@@ -104,6 +107,7 @@ export const EditableChoiceRow: FC<IEditableChoiceRowProps> = ({
             }}
             size={ComponentSize.SMALL}
             sx={deleteButtonIconStyle}
+            disabled={!form || hasFormResponses(form)}
           >
             <ClearRoundedIcon sx={iconStyle} />
           </IconButton>
