@@ -1,4 +1,5 @@
 import {
+  Alert,
   Box,
   Button,
   Checkbox,
@@ -40,7 +41,13 @@ import { FORMULAIRE, IMAGE_PICKER_INFO } from "~/core/constants";
 import { buildFormPayload } from "~/core/models/form/utils";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { GREY_DARK_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
-import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import {
+  AlertSeverityVariant,
+  BreakpointVariant,
+  ComponentVariant,
+  TypographyFontStyle,
+  TypographyVariant,
+} from "~/core/style/themeProps";
 import { preventPropagation } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useHome } from "~/providers/HomeProvider";
@@ -76,6 +83,8 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
   const [createForm] = useCreateFormMutation();
   const [updateForm] = useUpdateFormMutation();
   const [openTooltipId, setOpenTooltipId] = useState<string | null>(null);
+
+  const [showFormPublicAlert, setShowFormPublicAlert] = useState(false);
 
   //MEDIA LIBRARY
   const handleImageChange = useCallback(
@@ -115,6 +124,9 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
         return;
       }
       if (field === FormPropField.IS_PUBLIC) {
+        if (mode === FormPropModalMode.UPDATE) {
+          setShowFormPublicAlert(!formPropInputValue[field]);
+        }
         setIsEndingDateEditable(!formPropInputValue[field]);
         handleFormPropInputValueChange(FormPropField.IS_ANONYMOUS, !formPropInputValue[field]);
         handleFormPropInputValueChange(field, !formPropInputValue[field]);
@@ -326,6 +338,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                   : (formPropInputValue[item.field] as boolean);
               const showDescription = isDescriptionDisplay && item.field === FormPropField.DESCRIPTION;
               const showRgpd = item.field === FormPropField.HAS_RGPD && isRgpdPossible && hasRgpd;
+              const isPublic = item.field === FormPropField.IS_PUBLIC;
               return (
                 <Box key={item.field}>
                   <Box
@@ -362,6 +375,9 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                       </Tooltip>
                     )}
                   </Box>
+                  {isPublic && showFormPublicAlert && (
+                    <Alert severity={AlertSeverityVariant.WARNING}>{t("formulaire.prop.public.warning")}</Alert>
+                  )}
                   {showDescription && (
                     <Box>
                       <TextField
