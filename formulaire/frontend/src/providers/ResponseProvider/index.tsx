@@ -238,7 +238,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       distribution,
       responses,
       scrollToQuestionId,
-      setScrollToQuestionId
+      setScrollToQuestionId,
     }),
     [
       form,
