@@ -6,16 +6,14 @@ import { FC, useEffect, useState } from "react";
 
 import { HH_MM } from "~/core/constants";
 import { dayjsToTimeString, timeStringToDayjs } from "~/core/dayjsUtils";
-import { ResponsePageType } from "~/core/enums";
 import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionTime: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [localTime, setLocalTime] = useState<Dayjs | null>(null);
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponse = getQuestionResponse(question);

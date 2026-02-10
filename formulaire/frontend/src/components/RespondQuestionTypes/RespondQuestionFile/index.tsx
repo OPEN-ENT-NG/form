@@ -2,7 +2,6 @@ import { Box, Dropzone, FileList, Typography } from "@cgi-learning-hub/ui";
 import { FC, useMemo } from "react";
 
 import { MAX_FILES_SAVE } from "~/core/constants";
-import { ResponsePageType } from "~/core/enums";
 import { IResponseFile } from "~/core/models/response/type";
 import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
@@ -12,8 +11,7 @@ import { ICustomFile } from "./types";
 import { toCustomFile, toResponseFile } from "./utils";
 
 export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
+  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
 
   const files = useMemo<ICustomFile[]>(() => {
     const associatedResponse = getQuestionResponse(question);

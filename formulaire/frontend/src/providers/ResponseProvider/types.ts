@@ -35,6 +35,7 @@ export type ResponseProviderContextType = {
   updateQuestionResponses: (question: IQuestion, newResponses: IResponse[]) => void;
   distribution: IDistribution | null;
   responses: IResponse[];
+  isPageTypeRecap: boolean;
   scrollToQuestionId: number | null;
   setScrollToQuestionId: Dispatch<SetStateAction<number | null>>;
 };

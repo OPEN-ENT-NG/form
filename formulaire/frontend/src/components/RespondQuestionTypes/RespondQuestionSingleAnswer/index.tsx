@@ -3,7 +3,6 @@ import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
-import { ResponsePageType } from "~/core/enums";
 import { IResponse } from "~/core/models/response/type";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { useResponse } from "~/providers/ResponseProvider";
@@ -11,11 +10,10 @@ import { useResponse } from "~/providers/ResponseProvider";
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponses, updateQuestionResponses, pageType } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [selectedValue, setSelectedValue] = useState<string>("");
   const [customAnswer, setCustomAnswer] = useState<string>("");
   const { t } = useTranslation(FORMULAIRE);
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponses = getQuestionResponses(question);

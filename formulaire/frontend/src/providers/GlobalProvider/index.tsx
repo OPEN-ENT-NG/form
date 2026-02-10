@@ -1,6 +1,6 @@
 import { useMediaQuery } from "@cgi-learning-hub/ui";
 import { IUserInfo } from "@edifice.io/client";
-import { createContext, FC, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, FC, useContext, useMemo, useState } from "react";
 
 import { MOBILE_MAX_WIDTH, TABLET_MAX_WIDTH } from "~/core/constants";
 import { ModalType } from "~/core/enums";
@@ -47,30 +47,31 @@ export const GlobalProvider: FC<IGlobalProviderProps> = ({ children }) => {
     e.target.select();
   };
 
-  const initUserWorfklowRights = useCallback(
-    (user: IUserInfo | undefined, workflowRights: IWorkflowRights): IUserWorkflowRights => {
-      return {
-        [WorkflowRights.ACCESS]: hasWorkflow(user, workflowRights.access),
-        [WorkflowRights.CREATION]: hasWorkflow(user, workflowRights.creation),
-        [WorkflowRights.RESPONSE]: hasWorkflow(user, workflowRights.response),
-        [WorkflowRights.RGPD]: hasWorkflow(user, workflowRights.rgpd),
-        [WorkflowRights.CREATION_PUBLIC]: hasWorkflow(user, workflowRights.creationPublic),
-      };
-    },
-    [],
-  );
+  const initUserWorfklowRights = (
+    user: IUserInfo | undefined,
+    workflowRights: IWorkflowRights,
+  ): IUserWorkflowRights => {
+    return {
+      [WorkflowRights.ACCESS]: hasWorkflow(user, workflowRights.access),
+      [WorkflowRights.CREATION]: hasWorkflow(user, workflowRights.creation),
+      [WorkflowRights.RESPONSE]: hasWorkflow(user, workflowRights.response),
+      [WorkflowRights.RGPD]: hasWorkflow(user, workflowRights.rgpd),
+      [WorkflowRights.CREATION_PUBLIC]: hasWorkflow(user, workflowRights.creationPublic),
+    };
+  };
 
-  const initUserSharedRights = useCallback(
-    (user: IUserInfo | undefined, sharedRights: ISharedRights, form: IForm): IUserSharedRights => {
-      return {
-        [SharedRights.READ]: hasSharedRight(user, sharedRights.read, form),
-        [SharedRights.CONTRIB]: hasSharedRight(user, sharedRights.contrib, form),
-        [SharedRights.MANAGE]: hasSharedRight(user, sharedRights.manager, form),
-        [SharedRights.RESPOND]: hasSharedRight(user, sharedRights.responder, form),
-      };
-    },
-    [],
-  );
+  const initUserSharedRights = (
+    user: IUserInfo | undefined,
+    sharedRights: ISharedRights,
+    form: IForm,
+  ): IUserSharedRights => {
+    return {
+      [SharedRights.READ]: hasSharedRight(user, sharedRights.read, form),
+      [SharedRights.CONTRIB]: hasSharedRight(user, sharedRights.contrib, form),
+      [SharedRights.MANAGE]: hasSharedRight(user, sharedRights.manager, form),
+      [SharedRights.RESPOND]: hasSharedRight(user, sharedRights.responder, form),
+    };
+  };
 
   const value = useMemo<GlobalProviderContextType>(
     () => ({

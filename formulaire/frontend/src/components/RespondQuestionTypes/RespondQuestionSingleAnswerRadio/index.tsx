@@ -3,8 +3,8 @@ import { ChangeEvent, FC, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
-import { ResponsePageType } from "~/core/enums";
 import { IResponse } from "~/core/models/response/type";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { useResponse } from "~/providers/ResponseProvider";
 
@@ -13,11 +13,10 @@ import { IRespondQuestionTypesProps } from "../types";
 import { choiceBoxStyle, ChoicesRadioGroup, customAnswerStyle, formControlLabelStyle, labelStyle } from "./style";
 
 export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, getQuestionResponses, updateQuestionResponses, pageType } = useResponse();
+  const { getQuestionResponse, getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [selectedValue, setSelectedValue] = useState<string>("");
   const [customAnswer, setCustomAnswer] = useState<string>("");
   const { t } = useTranslation(FORMULAIRE);
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponses = getQuestionResponses(question);
@@ -96,7 +95,7 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
                   label={
                     <Box sx={customAnswerStyle}>
                       <Box sx={labelStyle}>
-                        <Typography color={"textPrimary"}>{choice.value}</Typography>
+                        <Typography color={TEXT_PRIMARY_COLOR}>{choice.value}</Typography>
                         {choice.isCustom && (
                           <>
                             <Typography>:</Typography>

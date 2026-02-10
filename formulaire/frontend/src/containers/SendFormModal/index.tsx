@@ -43,15 +43,8 @@ export const SendFormModal: FC<ISendFormModalProps> = ({ isOpen, handleClose, di
   const [selectedStructure, setSelectedStructure] = useState<string>("");
 
   useEffect(() => {
-    if (
-      !user?.structures ||
-      user.structures.length < 1 ||
-      user.structureNames.length < 1 ||
-      user.structures.length != user.structureNames.length
-    )
-      return;
-
-    setSelectedStructure(user.structures[0]);
+    if (user && user.structures.length && user.structures.length === user.structureNames.length)
+      setSelectedStructure(user.structures[0]);
   }, [user]);
 
   const handleChange = (event: SelectChangeEvent) => {

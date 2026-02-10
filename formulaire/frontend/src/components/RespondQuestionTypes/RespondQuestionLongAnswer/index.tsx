@@ -12,9 +12,8 @@ import { respondQuestionLongAnswerStyle } from "./style";
 
 export const RespondQuestionLongAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const editorRef = useRef<EditorRef>(null);
-  const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [answer, setAnswer] = useState<string>("");
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponse = getQuestionResponse(question);

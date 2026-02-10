@@ -2,7 +2,6 @@ import { Box, Typography } from "@cgi-learning-hub/ui";
 import { Slider } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 
-import { ResponsePageType } from "~/core/enums";
 import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
@@ -10,10 +9,9 @@ import { IRespondQuestionTypesProps } from "../types";
 import { respondQuestionCursorStyle } from "./style";
 
 export const RespondQuestionCursor: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [value, setValue] = useState<number | null>(null);
   const { cursorMinVal, cursorMaxVal } = question.specificFields ?? {};
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   const marks = [
     cursorMinVal != null && { value: cursorMinVal, label: cursorMinVal },

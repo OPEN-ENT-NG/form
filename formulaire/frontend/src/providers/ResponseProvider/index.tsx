@@ -65,6 +65,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     responsesMap,
     setResponsesMap,
   );
+  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
   const [scrollToQuestionId, setScrollToQuestionId] = useState<number | null>(null);
   const [addDistribution] = useAddDistributionMutation();
 
@@ -237,6 +238,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       updateQuestionResponses,
       distribution,
       responses,
+      isPageTypeRecap,
       scrollToQuestionId,
       setScrollToQuestionId,
     }),
@@ -245,7 +247,6 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       formElementsList,
       isInPreviewMode,
       progress,
-      setProgress,
       updateProgress,
       longestPathsMap,
       pageType,
@@ -260,6 +261,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       updateQuestionResponses,
       distribution,
       responses,
+      isPageTypeRecap,
       scrollToQuestionId,
       setScrollToQuestionId,
     ],

@@ -80,10 +80,7 @@ export const getAllQuestionsAndChildren = (formElements: IFormElement[]): IQuest
   const questions = getAllQuestions(formElements);
 
   const matrixQuestions = questions.filter((q) => q.questionType === QuestionTypes.MATRIX);
-  const childrenList = matrixQuestions
-    .map((q) => q.children)
-    .filter((children) => !!children)
-    .flat();
+  const childrenList = matrixQuestions.flatMap((q) => q.children ?? []);
 
   return [...questions, ...childrenList];
 };

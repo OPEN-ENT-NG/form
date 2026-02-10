@@ -28,16 +28,15 @@ export const RecapLayout: FC = () => {
   const [answeredFormElements, setAnsweredFormElements] = useState<IFormElement[]>([]);
 
   useEffect(() => {
-    // eslint-disable-next-line @typescript-eslint/naming-convention
     const formElementsToDisplay = getFormElementsToDisplay(formElementsList, responses);
-    const sortedFormElementsToDisplayIds = formElementsToDisplay
-      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0))
-      .map((fe) => fe.id)
-      .filter((id) => id != null);
+    const sortedFormElementsToDisplay = [...formElementsToDisplay].sort(
+      (a, b) => (a.position ?? 0) - (b.position ?? 0),
+    );
+    const sortedFormElementsToDisplayIds = sortedFormElementsToDisplay.map((fe) => fe.id).filter((id) => id != null);
 
     const newProgress = buildProgressObject(sortedFormElementsToDisplayIds, 0);
     setProgress(newProgress);
-    setAnsweredFormElements(formElementsToDisplay);
+    setAnsweredFormElements(sortedFormElementsToDisplay);
   }, [formElementsList, responses]);
 
   const saveAndQuit = () => {
@@ -54,8 +53,8 @@ export const RecapLayout: FC = () => {
     <>
       <Stack>
         <Stack gap={2} width="80%" mx="auto">
-          {answeredFormElements.map((formElement, index) => (
-            <Box key={index}>
+          {answeredFormElements.map((formElement) => (
+            <Box key={formElement.id}>
               {isQuestion(formElement) && <RespondQuestionWrapper question={formElement} />}
               {isSection(formElement) && <RespondSectionWrapper section={formElement} />}
             </Box>

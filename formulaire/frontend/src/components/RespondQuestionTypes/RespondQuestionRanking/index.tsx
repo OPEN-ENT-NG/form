@@ -3,7 +3,6 @@ import { closestCenter, DndContext, DragOverEvent, DragOverlay } from "@dnd-kit/
 import { SortableContext, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { FC, useEffect, useMemo, useState } from "react";
 
-import { ResponsePageType } from "~/core/enums";
 import { IResponse } from "~/core/models/response/type";
 import { useResponse } from "~/providers/ResponseProvider";
 
@@ -12,10 +11,9 @@ import { SortableItem } from "./SortableQuestionItem";
 import { overlayBoxStyle } from "./style";
 
 export const RespondQuestionRanking: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponses, updateQuestionResponses, pageType } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [orderedChoiceIds, setOrderedChoiceIds] = useState<number[]>([]);
   const [activeId, setActiveId] = useState<number | null>(null);
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponses = getQuestionResponses(question);

@@ -1,7 +1,6 @@
 import { TextField, Typography } from "@cgi-learning-hub/ui";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 
-import { ResponsePageType } from "~/core/enums";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
@@ -11,9 +10,8 @@ import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { selectAllTextInput } = useGlobal();
-  const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [answer, setAnswer] = useState<string>("");
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponse = getQuestionResponse(question);

@@ -29,7 +29,7 @@ export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ quest
     form,
     distribution,
     formElementsList,
-    pageType,
+    isPageTypeRecap,
     setPageType,
     progress,
     updateProgress,
@@ -38,7 +38,6 @@ export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ quest
   } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
   const { navigateToFormResponse } = useFormulaireNavigation();
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   const navigateToQuestion = () => {
     if (!form?.id || !distribution?.id) return;

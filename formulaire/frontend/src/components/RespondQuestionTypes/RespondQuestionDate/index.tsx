@@ -4,16 +4,14 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs, isDayjs } from "dayjs";
 import { FC, useEffect, useState } from "react";
 
-import { ResponsePageType } from "~/core/enums";
 import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionDate: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, updateQuestionResponses, pageType } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [localDate, setLocalDate] = useState<Dayjs | null>(null);
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
 
   useEffect(() => {
     const associatedResponse = getQuestionResponse(question);
