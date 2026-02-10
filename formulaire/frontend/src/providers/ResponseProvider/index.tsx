@@ -65,6 +65,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     responsesMap,
     setResponsesMap,
   );
+  const [scrollToQuestionId, setScrollToQuestionId] = useState<number | null>(null);
   const [addDistribution] = useAddDistributionMutation();
 
   if (formId === undefined || (!previewMode && distributionId === undefined)) {
@@ -236,6 +237,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       updateQuestionResponses,
       distribution,
       responses,
+      scrollToQuestionId,
+      setScrollToQuestionId
     }),
     [
       form,
@@ -257,6 +260,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       updateQuestionResponses,
       distribution,
       responses,
+      scrollToQuestionId,
+      setScrollToQuestionId,
     ],
   );
 

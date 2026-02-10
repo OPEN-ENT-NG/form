@@ -35,6 +35,8 @@ export type ResponseProviderContextType = {
   updateQuestionResponses: (question: IQuestion, newResponses: IResponse[]) => void;
   distribution: IDistribution | null;
   responses: IResponse[];
+  scrollToQuestionId: number | null;
+  setScrollToQuestionId: Dispatch<SetStateAction<number | null>>;
 };
 
 export interface IFormElementIdType {

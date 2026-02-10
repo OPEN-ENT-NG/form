@@ -25,8 +25,17 @@ import { IRespondQuestionWrapperProps } from "./types";
 import { getRespondQuestionContentByType } from "./utils";
 
 export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ question }) => {
-  const { form, distribution, formElementsList, pageType, setPageType, progress, updateProgress, setCurrentElement } =
-    useResponse();
+  const {
+    form,
+    distribution,
+    formElementsList,
+    pageType,
+    setPageType,
+    progress,
+    updateProgress,
+    setCurrentElement,
+    setScrollToQuestionId,
+  } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
   const { navigateToFormResponse } = useFormulaireNavigation();
   const isPageTypeRecap = pageType === ResponsePageType.RECAP;
@@ -43,13 +52,13 @@ export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ quest
     if (targetIndexInProgress < 0) return;
     updateProgress(targetElement, progress.historicFormElementIds.slice(0, targetIndexInProgress + 1));
     setCurrentElement(targetElement);
+    setScrollToQuestionId(question.id);
     setPageType(ResponsePageType.FORM_ELEMENT);
     navigateToFormResponse(form.id, distribution.id);
-    window.scrollTo(0, 0);
   };
 
   return (
-    <Stack key={question.id} component={Paper} sx={questionStackStyle}>
+    <Stack id={`question-${question.id}`} key={question.id} component={Paper} sx={questionStackStyle}>
       <Typography variant={TypographyVariant.H6} color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}>
         {question.title || t("formulaire.question.title.empty")}
         {question.mandatory && (

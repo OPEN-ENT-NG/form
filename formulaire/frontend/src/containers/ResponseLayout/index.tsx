@@ -29,6 +29,7 @@ export const ResponseLayout: FC = () => {
     setCurrentElement,
     getQuestionResponses,
     distribution,
+    scrollToQuestionId,
   } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
   const { navigateToFormResponseRecap } = useFormulaireNavigation();
@@ -45,8 +46,21 @@ export const ResponseLayout: FC = () => {
     if (currentElement?.position) {
       setIsFirstElement(currentElement.position === 1);
       setIsLastElement(currentElement.position === formElementsList.length);
+
+      // Scroll when arriving from recap page
+      if (!scrollToQuestionId) {
+        window.scrollTo({ top: 0 });
+        return;
+      }
+      requestAnimationFrame(() => {
+        const el = document.getElementById(`question-${scrollToQuestionId}`);
+        el?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
     }
-  }, [currentElement]);
+  }, [currentElement, scrollToQuestionId]);
 
   const goPreviousElement = async () => {
     const prevId = progress.historicFormElementIds[progress.historicFormElementIds.length - 2];
