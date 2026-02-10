@@ -33,13 +33,14 @@ import {
 import { ICreationQuestionChoiceWrapperProps } from "./types";
 import { useChoiceActions } from "./useChoiceActions";
 import { compareChoices, hasImageType } from "./utils";
+import { hasFormResponses } from "~/core/models/form/utils";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({
   question,
   type,
   hideCustomChoice = false,
 }) => {
-  const { currentEditingElement, setCurrentEditingElement, newChoiceValue, setNewChoiceValue } = useCreation();
+  const { currentEditingElement, setCurrentEditingElement, newChoiceValue, setNewChoiceValue, form } = useCreation();
   const { selectAllTextInput } = useGlobal();
   const { t } = useTranslation(FORMULAIRE);
   const inputRefs = useRef<Record<string | number, HTMLInputElement | null>>({});
@@ -219,6 +220,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                           }}
                           size={ComponentSize.SMALL}
                           sx={deleteButtonIconStyle}
+                          disabled={!form || hasFormResponses(form)}
                         >
                           <ClearRoundedIcon sx={iconStyle} />
                         </IconButton>

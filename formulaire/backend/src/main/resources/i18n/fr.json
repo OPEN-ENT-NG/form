@@ -274,7 +274,7 @@
   "formulaire.prop.rgpd.lifetime": "Durée de conservation : ",
   "formulaire.properties": "Propriétés",
   "formulaire.public": "Public",
-  "formulaire.question.add.choice.other.link": "champ \"Autres\"",
+  "formulaire.question.add.choice.other.link": "champ \"Autre\"",
   "formulaire.question.add.choice.other.text": "ou ajouter un ",
   "formulaire.question.creation.error.type": "Type de question non supporté : {{questionType}}",
   "formulaire.question.cursor.default.max.val": "10",
