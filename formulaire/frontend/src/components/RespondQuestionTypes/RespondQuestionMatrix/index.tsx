@@ -19,7 +19,7 @@ import { useResponse } from "~/providers/ResponseProvider";
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponses, updateQuestionResponses } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [responseMap, setResponseMap] = useState<Map<number, IResponse[]>>(new Map());
 
   useEffect(() => {
@@ -58,6 +58,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
     const updatedResponse: IResponse = {
       id: null,
       questionId: childId,
+      responderId: undefined,
       choiceId: choiceId ?? undefined,
       answer: choice.value,
       distributionId: undefined,
@@ -95,7 +96,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
                 {choice.value}
               </TableCell>
             ))}
-            <TableCell></TableCell>
+            {!isPageTypeRecap && <TableCell></TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -110,6 +111,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
                   <TableCell align="center" key={choice.id}>
                     {child.questionType === QuestionTypes.MULTIPLEANSWER ? (
                       <Checkbox
+                        disabled={isPageTypeRecap}
                         checked={isSelected(child.id, choice.id)}
                         onChange={() => {
                           toggleCheckbox(child.id, choice.id);
@@ -117,6 +119,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
                       />
                     ) : (
                       <Radio
+                        disabled={isPageTypeRecap}
                         checked={isSelected(child.id, choice.id)}
                         onChange={() => {
                           toggleRadio(child.id, choice.id);
@@ -126,15 +129,17 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
                   </TableCell>
                 ))}
 
-                <TableCell width="3rem">
-                  <IconButton
-                    onClick={() => {
-                      clearRow(child.id);
-                    }}
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </TableCell>
+                {!isPageTypeRecap && (
+                  <TableCell width="3rem">
+                    <IconButton
+                      onClick={() => {
+                        clearRow(child.id);
+                      }}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
         </TableBody>

@@ -1,12 +1,19 @@
 import { FC } from "react";
+import { Outlet, useMatches } from "react-router-dom";
 
-import { ResponseView } from "~/containers/ResponseView";
 import { ResponseProvider } from "~/providers/ResponseProvider";
 
-export const Response: FC = () => {
+import { IResponseRouteHandleProps } from "./type";
+
+export const ResponseOutlet: FC = () => {
+  const matches = useMatches();
+  const currentMatch = matches[matches.length - 1];
+  const handle = currentMatch.handle ? (currentMatch.handle as IResponseRouteHandleProps) : null;
+  const initialPageType = handle?.initialPageType;
+
   return (
-    <ResponseProvider>
-      <ResponseView />
+    <ResponseProvider {...(initialPageType && { initialPageType: initialPageType })}>
+      <Outlet />
     </ResponseProvider>
   );
 };

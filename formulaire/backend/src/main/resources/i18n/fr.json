@@ -353,6 +353,7 @@
   "formulaire.response.average": "Moyenne des réponses : ",
   "formulaire.response.custom.explanation": "Vous avez saisi le choix 'Autre', veuillez indiquez votre réponse dans le champ suivant : ",
   "formulaire.response.custom.write": "Saisissez votre réponse",
+  "formulaire.response.custom.value": "Réponse autre indiquée : ",
   "formulaire.response.empty": "Sans réponse",
   "formulaire.response.file.send": "Fichier déposé",
   "formulaire.response.file.tooMany": "Le nombre de fichiers est trop important. Veuillez les compresser en un unique fichier .zip d'abord.",

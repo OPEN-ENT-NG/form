@@ -13,12 +13,12 @@ export const toResponseFile = (file: File): IResponseFile => {
   };
 };
 
-export const toCustomFile = (responseFile: IResponseFile): ICustomFile => {
+export const toCustomFile = (responseFile: IResponseFile, isDeletable?: boolean): ICustomFile => {
   return {
     id: responseFile.id.toString(),
     name: responseFile.filename,
     size: responseFile.size ?? 0,
-    isDeletable: true,
+    isDeletable: isDeletable !== false,
   };
 };
 
@@ -26,6 +26,7 @@ export const createResponse = (question: IQuestion, responseFiles: IResponseFile
   return {
     id: null,
     questionId: question.id ?? 0,
+    responderId: undefined,
     choiceId: undefined,
     answer: undefined,
     distributionId: undefined,

@@ -6,9 +6,9 @@ import { toast } from "react-toastify";
 import { ProgressBar } from "~/components/ProgressBar";
 import { FORMULAIRE } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
-import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { ComponentVariant } from "~/core/style/themeProps";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
@@ -25,25 +25,42 @@ export const ResponseLayout: FC = () => {
     saveResponses,
     isInPreviewMode,
     setPageType,
+    currentElement,
+    setCurrentElement,
     getQuestionResponses,
+    distribution,
+    scrollToQuestionId,
   } = useResponse();
   const { t } = useTranslation(FORMULAIRE);
-  const [currentElement, setCurrentElement] = useState<IFormElement>(formElementsList[0] ?? null);
+  const { navigateToFormResponseRecap } = useFormulaireNavigation();
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
   const [isLastElement, setIsLastElement] = useState<boolean>(false);
 
   useEffect(() => {
-    if (formElementsList.length > 0) {
+    if (formElementsList.length > 0 && !currentElement) {
       setCurrentElement(formElementsList[0]);
     }
   }, [formElementsList]);
 
   useEffect(() => {
-    if (currentElement.position) {
+    if (currentElement?.position) {
       setIsFirstElement(currentElement.position === 1);
       setIsLastElement(currentElement.position === formElementsList.length);
+
+      // Scroll when arriving from recap page
+      if (!scrollToQuestionId) {
+        window.scrollTo({ top: 0 });
+        return;
+      }
+      requestAnimationFrame(() => {
+        const el = document.getElementById(`question-${scrollToQuestionId}`);
+        el?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
     }
-  }, [currentElement]);
+  }, [currentElement, scrollToQuestionId]);
 
   const goPreviousElement = async () => {
     const prevId = progress.historicFormElementIds[progress.historicFormElementIds.length - 2];
@@ -57,7 +74,7 @@ export const ResponseLayout: FC = () => {
   };
 
   const goNextElement = async () => {
-    if (!currentElement.position) return;
+    if (!currentElement?.position) return;
     const nextPosition = getNextPositionIfValid(currentElement, formElementsList, getQuestionResponses);
 
     // An error occured
@@ -69,7 +86,14 @@ export const ResponseLayout: FC = () => {
     // It's the end of the form
     if (nextPosition === null || (nextPosition && nextPosition > formElementsList.length)) {
       await saveResponses();
-      setPageType(isInPreviewMode ? ResponsePageType.END_PREVIEW : ResponsePageType.RECAP);
+      if (isInPreviewMode) {
+        setPageType(ResponsePageType.END_PREVIEW);
+        return;
+      }
+      if (form?.id && distribution?.id) {
+        setPageType(ResponsePageType.RECAP);
+        navigateToFormResponseRecap(form.id, distribution.id);
+      }
       return;
     }
 
@@ -85,6 +109,7 @@ export const ResponseLayout: FC = () => {
   };
 
   const getFormElementContent = () => {
+    if (!currentElement) return;
     if (isQuestion(currentElement)) return <RespondQuestionWrapper question={currentElement} />;
     if (isSection(currentElement)) return <RespondSectionWrapper section={currentElement} />;
   };
