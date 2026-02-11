@@ -6,12 +6,11 @@ import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { createNewQuestionChoice } from "~/core/models/question/utils";
 import { PositionActionType } from "~/providers/CreationProvider/enum";
 import { fixChoicesPositions } from "~/providers/CreationProvider/utils";
-import { useDeleteQuestionChoiceMutation } from "~/services/api/services/formulaireApi/questionChoiceApi";
-
 import {
   useDeleteQuestionChoiceMutation,
   useUpdateMultipleChoiceQuestionsMutation,
 } from "~/services/api/services/formulaireApi/questionChoiceApi";
+
 import { compareChoices, compareChoicesByValue, swapChoicesAndSort } from "./utils";
 
 export const useChoiceActions = (question: IQuestion, setCurrentEditingElement: (q: IQuestion) => void) => {

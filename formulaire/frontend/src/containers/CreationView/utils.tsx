@@ -1,17 +1,10 @@
 import SaveRoundedIcon from "@mui/icons-material/SaveRounded";
 import { toast } from "react-toastify";
+
 import { ModalType } from "~/core/enums";
 import { IFolder } from "~/core/models/folder/types";
 import { IForm } from "~/core/models/form/types";
 import { hasFormResponses } from "~/core/models/form/utils";
-import { getFormPreviewPath, getFormTreePath } from "~/core/pathHelper";
-import { ComponentVariant } from "~/core/style/themeProps";
-import { IButtonProps } from "~/core/types";
-import { t } from "~/i18n";
-import { toast } from "react-toastify";
-
-import { ModalType } from "~/core/enums";
-import { IFolder } from "~/core/models/folder/types";
 import { getHrefFormTreePath } from "~/core/pathHelper";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
@@ -19,10 +12,7 @@ import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 
-export const useGetCreationHeaderButtons = (
-  form: IForm | null,
-  hasFormElements: boolean,
-): IButtonProps[] => {
+export const useGetCreationHeaderButtons = (form: IForm | null, hasFormElements: boolean): IButtonProps[] => {
   const { navigateToHome, navigateToFormPreview } = useFormulaireNavigation();
   const { toggleModal } = useGlobal();
 
@@ -55,7 +45,7 @@ export const useGetCreationHeaderButtons = (
       title: t("formulaire.preview"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        if (form?.id) navigateToFormPreview(form?.id);
+        if (form?.id) navigateToFormPreview(form.id);
       },
     },
     {

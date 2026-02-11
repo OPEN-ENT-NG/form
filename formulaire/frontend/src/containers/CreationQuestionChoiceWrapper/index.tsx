@@ -8,6 +8,7 @@ import { CreationQuestionChoiceConditional } from "~/components/CreationQuestion
 import { CreationQuestionChoice } from "~/components/CreationQuestionTypes/CreationQuestionChoice";
 import { iconStyle } from "~/components/UpDownButtons/style";
 import { FORMULAIRE } from "~/core/constants";
+import { hasFormResponses } from "~/core/models/form/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { BoxComponentType, ComponentSize, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { isEnterPressed, isShiftEnterPressed } from "~/core/utils";
@@ -35,7 +36,6 @@ import {
 import { ICreationQuestionChoiceWrapperProps } from "./types";
 import { useChoiceActions } from "./useChoiceActions";
 import { compareChoices, hasImageType } from "./utils";
-import { hasFormResponses } from "~/core/models/form/utils";
 
 export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperProps> = ({
   question,
