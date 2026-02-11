@@ -63,12 +63,13 @@ export const ResponseLayout: FC = () => {
   }, [currentElement, scrollToQuestionId]);
 
   const goPreviousElement = async () => {
+    if (!currentElement) return;
     const prevId = progress.historicFormElementIds[progress.historicFormElementIds.length - 2];
     const prevElement = formElementsList.find((fe) => fe.id === prevId);
 
     if (!prevElement) return;
 
-    await saveResponses();
+    await saveResponses(currentElement);
     setCurrentElement(prevElement);
     updateProgress(prevElement, progress.historicFormElementIds.slice(0, -1));
   };
@@ -85,7 +86,7 @@ export const ResponseLayout: FC = () => {
 
     // It's the end of the form
     if (nextPosition === null || (nextPosition && nextPosition > formElementsList.length)) {
-      await saveResponses();
+      await saveResponses(currentElement);
       if (isInPreviewMode) {
         setPageType(ResponsePageType.END_PREVIEW);
         return;
@@ -99,7 +100,7 @@ export const ResponseLayout: FC = () => {
 
     // We got an element for the next position
     //TODO check if we need that later : unloadLastResponses();
-    await saveResponses();
+    await saveResponses(currentElement);
 
     const nextElement = formElementsList.find((fe) => fe.position === nextPosition);
     if (!nextElement || !nextElement.id) return;

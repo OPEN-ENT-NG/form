@@ -1,11 +1,7 @@
-import { toast } from "react-toastify";
-
-import { FORMULAIRE } from "~/core/constants.ts";
 import { QueryMethod } from "~/core/enums.ts";
 import { IResponse, IResponseDTO } from "~/core/models/response/type.ts";
 import { transformResponses } from "~/core/models/response/utils.ts";
 import { handleErrorApi } from "~/core/utils.ts";
-import { t } from "~/i18n.ts";
 
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
@@ -25,6 +21,34 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    createMultiple: builder.mutation<void, { distributionId: number; responses: IResponse[] }>({
+      query: ({ distributionId, responses }) => ({
+        url: `distributions/${distributionId}/responses/multiple`,
+        method: QueryMethod.POST,
+        body: { responses },
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.responseService.create");
+        }
+      },
+    }),
+    updateMultiple: builder.mutation<void, { distributionId: number; responses: IResponse[] }>({
+      query: ({ distributionId, responses }) => ({
+        url: `distributions/${distributionId}/responses`,
+        method: QueryMethod.PUT,
+        body: { responses },
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.responseService.update");
+        }
+      },
+    }),
     deleteResponses: builder.mutation<void, { formId: number; responses: IResponse[] }>({
       query: ({ formId, responses }) => ({
         url: `/responses/${formId}`,
@@ -35,8 +59,21 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error("formulaire.error.responseService.delete", err);
-          toast.error(t("formulaire.error.responseService.delete", { ns: FORMULAIRE }));
+          handleErrorApi(err, "formulaire.error.responseService.delete");
+        }
+      },
+    }),
+    deleteMultipleByQuestionAndDistribution: builder.mutation<void, { distributionId: number; questionIds: number[] }>({
+      query: ({ distributionId, questionIds }) => ({
+        url: `/formulaire/responses/${distributionId}/questions`,
+        method: QueryMethod.DELETE,
+        body: { questionIds },
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.responseService.delete");
         }
       },
     }),
@@ -73,5 +110,11 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useGetDistributionResponsesQuery, useDeleteResponsesMutation, useExportResponsesCsvMutation } =
-  responseApi;
+export const {
+  useGetDistributionResponsesQuery,
+  useCreateMultipleMutation,
+  useUpdateMultipleMutation,
+  useDeleteResponsesMutation,
+  useDeleteMultipleByQuestionAndDistributionMutation,
+  useExportResponsesCsvMutation,
+} = responseApi;

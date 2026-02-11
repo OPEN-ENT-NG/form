@@ -24,7 +24,7 @@ import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/secti
 
 import { useFormElementList } from "../CreationProvider/hook/useFormElementsList";
 import { useGlobal } from "../GlobalProvider";
-import { useClassicResponse } from "./hook/useClassicResponse";
+import { useRespondFormElement } from "./hook/useRespondFormElement";
 import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
@@ -48,7 +48,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
   const [responses, setResponses] = useState<IResponse[]>([]);
-  const { saveClassicResponses } = useClassicResponse();
+  const { save } = useRespondFormElement(responsesMap);
   const [form, setForm] = useState<IForm | null>(null);
   const [distribution, setDistribution] = useState<IDistribution | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
@@ -196,9 +196,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     }
   }, [formElementsList]);
 
-  const saveResponses = async () => {
-    if (isInPreviewMode) return;
-    await saveClassicResponses();
+  const saveResponses = async (currentElement: IFormElement) => {
+    if (isInPreviewMode || !distribution?.id) return;
+    await save(currentElement, distribution.id);
   };
 
   const updateProgress = (
