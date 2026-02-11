@@ -3,13 +3,10 @@ import KeyboardArrowDownRoundedIcon from "@mui/icons-material/KeyboardArrowDownR
 import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
 import { FC, useMemo } from "react";
 
-import { ComponentSize } from "~/core/style/themeProps";
-
-import KeyboardArrowUpRoundedIcon from "@mui/icons-material/KeyboardArrowUpRounded";
-import { FC, useMemo } from "react";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { ComponentSize } from "~/core/style/themeProps";
 import { useCreation } from "~/providers/CreationProvider";
+
 import { Direction } from "../OrganizationSortableItem/enum";
 import { upDownButtonsContainerStyle } from "../OrganizationUpDownButtons/style";
 import { arrowWrapperStyle, iconStyle } from "./style";
