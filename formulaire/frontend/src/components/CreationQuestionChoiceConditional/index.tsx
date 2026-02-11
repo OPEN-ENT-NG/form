@@ -6,7 +6,7 @@ import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { FormElementType } from "~/core/models/formElement/enum";
 import { IQuestionChoice } from "~/core/models/question/types";
-import { getParent } from "~/core/models/question/utils";
+import { getParentSection } from "~/core/models/question/utils";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { updateNextTargetElements } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useTargetNextElement } from "~/hook/targetNextElement/useTargetNextElement";
@@ -43,7 +43,7 @@ export const CreationQuestionChoiceConditional: FC<ICreationQuestionChoiceCondit
     onChange: handleNextFormElementChange,
   } = useTargetNextElement({
     entity: choice,
-    positionReferenceElement: getParent(question, formElementsList) || question,
+    positionReferenceElement: getParentSection(question, formElementsList) || question,
     onSave: onSaveChoiceNextElement,
   });
 

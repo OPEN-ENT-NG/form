@@ -13,6 +13,7 @@ import { useResponse } from "~/providers/ResponseProvider";
 
 import { DescriptionLayout } from "../DescriptionLayout";
 import { EndPreviewLayout } from "../EndPreviewLayout";
+import { RecapLayout } from "../RecapLayout";
 import { ResponseLayout } from "../ResponseLayout";
 import { useGetResponseHeaderButtons } from "../ResponseView/utils";
 import { RgpdLayout } from "../RgpdLayout";
@@ -49,8 +50,7 @@ export const ResponseView: FC = () => {
       case ResponsePageType.FORM_ELEMENT:
         return <ResponseLayout />;
       case ResponsePageType.RECAP:
-        console.log("try displaying recap page !");
-        return <></>;
+        return <RecapLayout />;
       case ResponsePageType.END_PREVIEW:
         return <EndPreviewLayout />;
       default:

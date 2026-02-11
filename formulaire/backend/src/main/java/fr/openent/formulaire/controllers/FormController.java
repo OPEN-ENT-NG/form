@@ -609,7 +609,7 @@ public class FormController extends ControllerHelper {
     @SecuredAction(value = MANAGER_RESOURCE_RIGHT, type = ActionType.RESOURCE)
     public void delete(HttpServerRequest request) {
         String formId = request.getParam(PARAM_FORM_ID);
-        responseFileService.listByForm(formId, responseFileIdsEvt -> {
+        responseFileService.listIdsByForm(formId, responseFileIdsEvt -> {
             if (responseFileIdsEvt.isLeft()) {
                 log.error("[Formulaire@deleteForm] Failed to retrieve files' ids for form : " + formId);
                 renderInternalError(request, responseFileIdsEvt);

@@ -20,6 +20,7 @@ export enum ModalType {
   ORGANIZATION = "showOrganization",
   FORM_RESULT_PDF = "showFormResultPdf",
   FORM_RESULT_CSV = "showFormResultCsv",
+  SEND_FORM = "showSendForm",
 }
 
 export enum TagName {

@@ -41,7 +41,24 @@ public class DefaultResponseFileService implements ResponseFileService {
     }
 
     @Override
-    public void listByForm(String formId, Handler<Either<String, JsonArray>> handler) {
+    public Future<List<ResponseFile>> listByForm(String formId) {
+        Promise<List<ResponseFile>> promise = Promise.promise();
+
+        String query = "SELECT rf.* FROM " + RESPONSE_FILE_TABLE + " rf " +
+                "INNER JOIN " + RESPONSE_TABLE + " r ON r.id = rf.response_id " +
+                "INNER JOIN " + QUESTION_TABLE + " q ON q.id = r.question_id " +
+                "WHERE q.form_id = ?;";
+        JsonArray params = new JsonArray().add(formId);
+
+        String errorMessage = "[Formulaire@DefaultResponseFileService::listByForm] Fail to get response files " +
+                "for responses of form with id " + formId + " : ";
+        Sql.getInstance().prepared(query, params, SqlResult.validResultHandler((IModelHelper.sqlResultToIModel(promise, ResponseFile.class, errorMessage))));
+
+        return promise.future();
+    }
+
+    @Override
+    public void listIdsByForm(String formId, Handler<Either<String, JsonArray>> handler) {
         String query = "SELECT rf.id FROM " + RESPONSE_FILE_TABLE + " rf " +
                 "INNER JOIN " + RESPONSE_TABLE + " r ON r.id = rf.response_id " +
                 "INNER JOIN " + QUESTION_TABLE + " q ON q.id = r.question_id " +

@@ -73,13 +73,42 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         method: QueryMethod.POST,
       }),
       transformResponse: (rawData: IDistributionDTO) => transformDistribution(rawData),
-      invalidatesTags: [TagName.DISTRIBUTION],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (err) {
           console.error("formulaire.error.distributionService.create", err);
           toast.error(t("formulaire.error.distributionService.create", { ns: FORMULAIRE }));
+        }
+      },
+    }),
+    updateDistribution: builder.mutation<IDistribution, IDistribution>({
+      query: (distribution: IDistribution) => ({
+        url: `/distributions/${distribution.id}`,
+        method: QueryMethod.PUT,
+        body: distribution,
+      }),
+      transformResponse: (rawData: IDistributionDTO) => transformDistribution(rawData),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.distributionService.update", err);
+          toast.error(t("formulaire.error.distributionService.update", { ns: FORMULAIRE }));
+        }
+      },
+    }),
+    replaceDistribution: builder.mutation<void, IDistribution>({
+      query: (distribution: IDistribution) => ({
+        url: `/distributions/${distribution.id}/replace/${distribution.originalId}`,
+        method: QueryMethod.DELETE,
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          console.error("formulaire.error.distributionService.update", err);
+          toast.error(t("formulaire.error.distributionService.update", { ns: FORMULAIRE }));
         }
       },
     }),
@@ -107,5 +136,7 @@ export const {
   useGetFormDistributionsQuery,
   useGetMyFormDistributionsQuery,
   useAddDistributionMutation,
+  useUpdateDistributionMutation,
+  useReplaceDistributionMutation,
   useCountDistributionsQuery,
 } = distributionApi;

@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
 import { IResponse } from "~/core/models/response/type";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { ChoiceImage } from "../style";
@@ -11,7 +13,7 @@ import { IRespondQuestionTypesProps } from "../types";
 import { choiceBoxStyle, customAnswerStyle, formControlLabelStyle, labelStyle, StyledFormControl } from "./style";
 
 export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponses, updateQuestionResponses } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [reponses, setResponses] = useState<IResponse[]>([]);
   const [customAnswer, setCustomAnswer] = useState<string>("");
   const { t } = useTranslation(FORMULAIRE);
@@ -76,7 +78,7 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
   }, [question.choices]);
 
   return (
-    <Box>
+    <>
       <StyledFormControl hasOneChoiceWithImage={hasOneChoiceWithImage}>
         {question.choices
           ?.sort((a, b) => a.position - b.position)
@@ -90,20 +92,28 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
                     onChange={() => {
                       handleToggle(choice.id);
                     }}
+                    disabled={isPageTypeRecap}
                   />
                 }
                 label={
                   <Box sx={customAnswerStyle}>
                     <Box sx={labelStyle}>
-                      <Typography>{choice.value}</Typography>
+                      <Typography color={TEXT_PRIMARY_COLOR}>{choice.value}</Typography>
                       {choice.isCustom && (
                         <>
                           <Typography>:</Typography>
                           <TextField
                             variant="standard"
-                            value={customAnswer}
+                            value={isPageTypeRecap && !customAnswer ? t("formulaire.response.missing") : customAnswer}
                             placeholder={t("formulaire.response.custom.write")}
                             onChange={handleCustomResponseChange}
+                            disabled={isPageTypeRecap}
+                            sx={{
+                              ...(isPageTypeRecap && {
+                                "& .Mui-disabled": { WebkitTextFillColor: `${CSS_TEXT_PRIMARY_COLOR} !important` },
+                                ...(!customAnswer && { fontStyle: "italic" }),
+                              }),
+                            }}
                           ></TextField>
                         </>
                       )}
@@ -115,6 +125,6 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
             </Box>
           ))}
       </StyledFormControl>
-    </Box>
+    </>
   );
 };

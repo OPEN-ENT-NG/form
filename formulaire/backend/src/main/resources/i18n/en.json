@@ -350,6 +350,7 @@
   "formulaire.responses.empty.notif": "Vous recevrez une notification dès qu'un formulaire vous aura été envoyé.",
   "formulaire.response.custom.explanation": "Vous avez saisi le choix 'Autre', veuillez indiquez votre réponse dans le champ suivant : ",
   "formulaire.response.custom.write": "Saisissez votre réponse",
+  "formulaire.response.custom.value": "Réponse autre indiquée : ",
 
   "formulaire.error": "Erreur",
   "formulaire.error.403": "Désolé, vous n'avez pas les droits pour accéder à cette page",
