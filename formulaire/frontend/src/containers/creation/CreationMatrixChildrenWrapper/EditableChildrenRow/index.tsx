@@ -11,7 +11,7 @@ import {
   deleteButtonIconStyle,
   deleteWrapperStyle,
   upDownButtonsWrapperStyle,
-} from "~/containers/CreationQuestionChoiceWrapper/style";
+} from "~/containers/creation/CreationQuestionChoiceWrapper/style";
 import { ComponentSize, ComponentVariant } from "~/core/style/themeProps";
 
 import { IEditableChildrenRowProps } from "./types";

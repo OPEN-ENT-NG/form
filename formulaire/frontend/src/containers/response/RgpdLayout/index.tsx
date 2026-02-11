@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 
 import RGPDInfoBox from "~/components/RgpdInfoBox";
 import { IRGPDData } from "~/components/RgpdInfoBox/types";
+import { buildDelegatesParam } from "~/containers/home/FormPropModal/utils";
 import { FORMULAIRE } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
 import { flexEndBoxStyle } from "~/core/style/boxStyles";
@@ -13,7 +14,6 @@ import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useResponse } from "~/providers/ResponseProvider";
 import { useGetDelegatesQuery } from "~/services/api/services/formulaireApi/delegateApi";
 
-import { buildDelegatesParam } from "../FormPropModal/utils";
 import { rgpdLayoutStyle, rgpdStackStyle } from "./style";
 
 export const RgpdLayout: FC = () => {

@@ -1,6 +1,6 @@
 import { Dispatch, MouseEvent, SetStateAction, useCallback } from "react";
 
-import { compareChoices } from "~/containers/CreationQuestionChoiceWrapper/utils";
+import { compareChoices } from "~/containers/creation/CreationQuestionChoiceWrapper/utils";
 import { ClickAwayDataType } from "~/core/enums";
 import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection, isValidFormElement } from "~/core/models/formElement/utils";
