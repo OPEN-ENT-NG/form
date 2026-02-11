@@ -1,5 +1,5 @@
-import { FormPropField } from "~/containers/FormPropModal/enums";
-import { IFormPropInputValueState } from "~/containers/FormPropModal/types";
+import { FormPropField } from "~/containers/home/FormPropModal/enums";
+import { IFormPropInputValueState } from "~/containers/home/FormPropModal/types";
 import { t } from "~/i18n";
 
 import { DistributionStatus } from "../distribution/enums";

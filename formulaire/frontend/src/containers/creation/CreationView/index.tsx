@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { Header } from "~/components/Header";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
+import { useElementHeight } from "~/containers/home/HomeView/utils";
 import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
@@ -16,7 +17,6 @@ import { useGlobal } from "~/providers/GlobalProvider";
 import { CreateFormElementModal } from "../CreateFormElementModal";
 import { CreationLayout } from "../CreationLayout";
 import { CreationOrganisationModal } from "../CreationOrganisationModal";
-import { useElementHeight } from "../HomeView/utils";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "./style";
 import { getRecursiveFolderParents, useGetCreationHeaderButtons } from "./utils";
 

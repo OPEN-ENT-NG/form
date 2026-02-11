@@ -18,8 +18,8 @@ import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import { FC, useCallback, useEffect, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CreationQuestionWrapper } from "~/containers/CreationQuestionWrapper";
-import { questionAlertStyle, StyledDragContainer } from "~/containers/CreationQuestionWrapper/style";
+import { CreationQuestionWrapper } from "~/containers/creation/CreationQuestionWrapper";
+import { questionAlertStyle, StyledDragContainer } from "~/containers/creation/CreationQuestionWrapper/style";
 import { FORMULAIRE, TARGET_RECAP } from "~/core/constants";
 import { EditorMode, EditorVariant, ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";

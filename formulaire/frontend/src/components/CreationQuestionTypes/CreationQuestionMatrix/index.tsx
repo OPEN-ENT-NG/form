@@ -2,8 +2,8 @@ import { Box, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CreationMatrixChildrenWrapper } from "~/containers/CreationMatrixChildrenWrapper";
-import { CreationQuestionChoiceWrapper } from "~/containers/CreationQuestionChoiceWrapper";
+import { CreationMatrixChildrenWrapper } from "~/containers/creation/CreationMatrixChildrenWrapper";
+import { CreationQuestionChoiceWrapper } from "~/containers/creation/CreationQuestionChoiceWrapper";
 import { FORMULAIRE } from "~/core/constants";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
