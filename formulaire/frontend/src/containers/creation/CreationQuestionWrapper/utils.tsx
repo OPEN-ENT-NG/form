@@ -14,7 +14,7 @@ import { IQuestion } from "~/core/models/question/types";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { t } from "~/i18n";
 
-import { CreationQuestionChoiceWrapper } from "../creation/CreationQuestionChoiceWrapper";
+import { CreationQuestionChoiceWrapper } from "../CreationQuestionChoiceWrapper";
 
 export const getQuestionContentByType = (
   question: IQuestion,
