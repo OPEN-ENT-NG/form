@@ -1,7 +1,7 @@
 import { Box } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 
-import { AnswerMainLayout } from "~/containers/AnswerMainLayout";
+import { AnswerMainLayout } from "~/containers/home/AnswerMainLayout";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useHome } from "~/providers/HomeProvider";
 import { HomeTabState } from "~/providers/HomeProvider/enums";

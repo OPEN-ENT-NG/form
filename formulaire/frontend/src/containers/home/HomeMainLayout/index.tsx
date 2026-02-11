@@ -23,8 +23,8 @@ import { isDraggedItemFolder, isDraggedItemForm } from "~/hook/dnd-hooks/utils";
 import { useHome } from "~/providers/HomeProvider";
 import { HomeTabState } from "~/providers/HomeProvider/enums";
 
-import { HomeMainFolders } from "../home/HomeMainFolders";
-import { HomeMainForms } from "../home/HomeMainForms";
+import { HomeMainFolders } from "../HomeMainFolders";
+import { HomeMainForms } from "../HomeMainForms";
 import { HomeMainFormsTable } from "../HomeMainFormsTable";
 import { buildFlatFolderTree } from "../HomeSidebar/utils";
 import {
