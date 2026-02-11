@@ -1,15 +1,16 @@
-import { Box, DatePicker } from "@cgi-learning-hub/ui";
+import { DatePicker, Typography } from "@cgi-learning-hub/ui";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import dayjs, { Dayjs, isDayjs } from "dayjs";
 import { FC, useEffect, useState } from "react";
 
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionDate: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, updateQuestionResponses } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [localDate, setLocalDate] = useState<Dayjs | null>(null);
 
   useEffect(() => {
@@ -39,11 +40,13 @@ export const RespondQuestionDate: FC<IRespondQuestionTypesProps> = ({ question }
     updateQuestionResponses(question, [associatedResponse]);
   };
 
-  return (
-    <Box>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <DatePicker adapterLocale="fr" value={localDate} onChange={handleDateChange} />
-      </LocalizationProvider>
-    </Box>
+  return isPageTypeRecap ? (
+    <Typography sx={{ ...(!localDate && { fontStyle: "italic" }) }}>
+      {localDate?.toDate().toLocaleDateString() ?? t("formulaire.response.missing")}
+    </Typography>
+  ) : (
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <DatePicker adapterLocale="fr" value={localDate} onChange={handleDateChange} />
+    </LocalizationProvider>
   );
 };

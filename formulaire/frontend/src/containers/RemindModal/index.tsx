@@ -175,7 +175,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
 
       <Box sx={subContentColumnWrapper}>
         <Typography>{t("formulaire.remind.link")}</Typography>
-        {formUrl ? (
+        {formUrl && (
           <Link
             href={formUrl}
             sx={{
@@ -185,9 +185,6 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           >
             {formUrl}
           </Link>
-        ) : (
-          //TODO : add empty i18n key
-          <Typography>{}</Typography>
         )}
       </Box>
     </>

@@ -1,10 +1,51 @@
 package fr.openent.formulaire.controllers;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.TimeZone;
+import java.util.UUID;
+import java.util.stream.Collectors;
+
+import org.entcore.common.controller.ControllerHelper;
+import org.entcore.common.http.filter.ResourceFilter;
+import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
+import static org.entcore.common.http.response.DefaultResponseHandler.defaultResponseHandler;
+import org.entcore.common.storage.Storage;
+import org.entcore.common.user.UserUtils;
+
+import static fr.openent.form.core.constants.Fields.CONTENT_TYPE;
+import static fr.openent.form.core.constants.Fields.DATE_RESPONSE;
+import static fr.openent.form.core.constants.Fields.FILE;
+import static fr.openent.form.core.constants.Fields.FILENAME;
+import static fr.openent.form.core.constants.Fields.FOLDER;
+import static fr.openent.form.core.constants.Fields.FOLDERS;
+import static fr.openent.form.core.constants.Fields.ID;
+import static fr.openent.form.core.constants.Fields.MESSAGE;
+import static fr.openent.form.core.constants.Fields.METADATA;
+import static fr.openent.form.core.constants.Fields.NAME;
+import static fr.openent.form.core.constants.Fields.OK;
+import static fr.openent.form.core.constants.Fields.PARAM_FILE_ID;
+import static fr.openent.form.core.constants.Fields.PARAM_FORM_ID;
+import static fr.openent.form.core.constants.Fields.PARAM_QUESTION_ID;
+import static fr.openent.form.core.constants.Fields.PARAM_RESPONSE_ID;
+import static fr.openent.form.core.constants.Fields.PARENT;
+import static fr.openent.form.core.constants.Fields.RESPONDER_NAME;
+import static fr.openent.form.core.constants.Fields.RESPONSE_ID;
+import static fr.openent.form.core.constants.Fields.STATUS;
+import static fr.openent.form.core.constants.Fields.TYPE;
+import static fr.openent.form.core.constants.Fields._ID;
+import static fr.openent.form.core.constants.ShareRights.CONTRIB_RESOURCE_RIGHT;
+import static fr.openent.form.core.constants.ShareRights.READ_RESOURCE_RIGHT;
+import static fr.openent.form.core.constants.ShareRights.RESPONDER_RESOURCE_RIGHT;
 import fr.openent.form.core.enums.I18nKeys;
 import fr.openent.form.core.models.Distribution;
 import fr.openent.form.core.models.Response;
 import fr.openent.form.core.models.ResponseFile;
 import fr.openent.form.helpers.I18nHelper;
+import static fr.openent.form.helpers.RenderHelper.renderInternalError;
 import fr.openent.form.helpers.StorageHelper;
 import fr.openent.formulaire.helpers.folder_exporter.FolderExporterZip;
 import fr.openent.formulaire.security.CustomShareAndOwner;
@@ -15,7 +56,10 @@ import fr.openent.formulaire.service.ResponseService;
 import fr.openent.formulaire.service.impl.DefaultDistributionService;
 import fr.openent.formulaire.service.impl.DefaultResponseFileService;
 import fr.openent.formulaire.service.impl.DefaultResponseService;
-import fr.wseduc.rs.*;
+import fr.wseduc.rs.ApiDoc;
+import fr.wseduc.rs.Delete;
+import fr.wseduc.rs.Get;
+import fr.wseduc.rs.Post;
 import fr.wseduc.security.ActionType;
 import fr.wseduc.security.SecuredAction;
 import fr.wseduc.webutils.Either;
@@ -27,21 +71,6 @@ import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
 import io.vertx.core.logging.Logger;
 import io.vertx.core.logging.LoggerFactory;
-import org.entcore.common.controller.ControllerHelper;
-import org.entcore.common.http.filter.ResourceFilter;
-import org.entcore.common.storage.Storage;
-import org.entcore.common.user.UserUtils;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.*;
-import java.util.stream.Collectors;
-
-import static fr.openent.form.core.constants.Fields.*;
-import static fr.openent.form.core.constants.ShareRights.*;
-import static fr.openent.form.helpers.RenderHelper.renderInternalError;
-import static org.entcore.common.http.response.DefaultResponseHandler.arrayResponseHandler;
-import static org.entcore.common.http.response.DefaultResponseHandler.defaultResponseHandler;
 
 public class ResponseFileController extends ControllerHelper {
     private static final Logger log = LoggerFactory.getLogger(ResponseFileController.class);
@@ -77,6 +106,21 @@ public class ResponseFileController extends ControllerHelper {
     public void listByQuestion(HttpServerRequest request) {
         String questionId = request.getParam(PARAM_QUESTION_ID);
         responseFileService.listByQuestion(questionId, arrayResponseHandler(request));
+    }
+
+    @Get("/forms/:formId/files/all")
+    @ApiDoc("List all files of all responses to a specific form")
+    @ResourceFilter(CustomShareAndOwner.class)
+    @SecuredAction(value = READ_RESOURCE_RIGHT, type = ActionType.RESOURCE)
+    public void listByForm(HttpServerRequest request) {
+        String formId = request.getParam(PARAM_FORM_ID);
+        responseFileService.listByForm(formId)
+            .onSuccess(responseFiles -> render(request, responseFiles))
+            .onFailure(err -> {
+                String errMessage = "[Formulaire@ResponseFileController::listByForm] Failed to get response files for formId " + formId + " : ";
+                log.error(errMessage + err.getMessage());
+                renderError(request);
+            });
     }
 
     @Get("/responses/files/:fileId")

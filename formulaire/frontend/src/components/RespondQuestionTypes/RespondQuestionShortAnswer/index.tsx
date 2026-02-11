@@ -1,6 +1,7 @@
-import { Box, TextField } from "@cgi-learning-hub/ui";
+import { TextField, Typography } from "@cgi-learning-hub/ui";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 
+import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResponse } from "~/providers/ResponseProvider";
@@ -9,7 +10,7 @@ import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { selectAllTextInput } = useGlobal();
-  const { getQuestionResponse, updateQuestionResponses } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [answer, setAnswer] = useState<string>("");
 
   useEffect(() => {
@@ -27,16 +28,22 @@ export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ que
     updateQuestionResponses(question, [associatedResponse]);
   };
 
-  return (
-    <Box>
-      <TextField
-        placeholder={question.placeholder ?? t("formulaire.question.type.SHORTANSWER")}
-        fullWidth
-        value={answer}
-        onChange={handleResponseChange}
-        onFocus={selectAllTextInput}
-        error={question.mandatory && !answer}
-      />
-    </Box>
+  return isPageTypeRecap && !answer ? (
+    <Typography fontStyle={"italic"}>{t("formulaire.response.missing")}</Typography>
+  ) : (
+    <TextField
+      placeholder={question.placeholder ?? t("formulaire.question.type.SHORTANSWER")}
+      fullWidth
+      value={answer}
+      onChange={handleResponseChange}
+      onFocus={selectAllTextInput}
+      error={question.mandatory && !answer}
+      disabled={isPageTypeRecap}
+      sx={{
+        ...(isPageTypeRecap && {
+          "& .Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR },
+        }),
+      }}
+    />
   );
 };

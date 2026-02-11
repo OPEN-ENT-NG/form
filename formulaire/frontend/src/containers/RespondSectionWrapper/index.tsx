@@ -1,4 +1,4 @@
-import { Box, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
+import { Box, Stack, Typography } from "@cgi-learning-hub/ui";
 import { Editor } from "@edifice.io/react/editor";
 import { FC } from "react";
 
@@ -12,7 +12,7 @@ import { IRespondSectionWrapperProps } from "./types";
 
 export const RespondSectionWrapper: FC<IRespondSectionWrapperProps> = ({ section }) => {
   return (
-    <Stack component={Paper} sx={sectionStackStyle}>
+    <Stack sx={sectionStackStyle}>
       <Box sx={sectionHeaderWrapperStyle}>
         <Typography color={COMMON_WHITE_COLOR}>{section.title}</Typography>
       </Box>

@@ -2,6 +2,7 @@ import { createHashRouter } from "react-router-dom";
 
 import Root from "~/app/root";
 import { ErrorPage } from "~/components/ErrorPage";
+import { ResponsePageType } from "~/core/enums";
 import { FRONT_ROUTES } from "~/core/frontRoutes";
 
 const routes = [
@@ -40,16 +41,26 @@ const routes = [
       {
         path: FRONT_ROUTES.formResponse.path,
         async lazy() {
-          const { Response } = await import("./response");
-          return { Component: Response };
+          const { ResponseOutlet } = await import("./response");
+          return { Component: ResponseOutlet };
         },
-      },
-      {
-        path: FRONT_ROUTES.formResponseRecap.path,
-        async lazy() {
-          const { Response } = await import("./response");
-          return { Component: Response };
-        },
+        children: [
+          {
+            index: true,
+            async lazy() {
+              const { Response } = await import("./response/response");
+              return { Component: Response };
+            },
+          },
+          {
+            path: "recap",
+            async lazy() {
+              const { Recap } = await import("./response/recap");
+              return { Component: Recap };
+            },
+            handle: { initialPageType: ResponsePageType.RECAP },
+          },
+        ],
       },
       {
         path: FRONT_ROUTES.error401.path,

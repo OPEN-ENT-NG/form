@@ -7,7 +7,8 @@ import { DistributionStatus } from "~/core/models/distribution/enums";
 import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
-import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
+import { getAllQuestionsAndChildren, getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
+import { IResponse } from "~/core/models/response/type";
 import { workflowRights } from "~/core/rights";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import {
@@ -17,6 +18,8 @@ import {
 } from "~/services/api/services/formulaireApi/distributionApi";
 import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
+import { useGetDistributionResponsesQuery } from "~/services/api/services/formulaireApi/responseApi";
+import { useGetQuestionFilesQuery } from "~/services/api/services/formulaireApi/responseFileApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
 
 import { useFormElementList } from "../CreationProvider/hook/useFormElementsList";
@@ -25,7 +28,7 @@ import { useClassicResponse } from "./hook/useClassicResponse";
 import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
-import { initResponsesMap } from "./utils";
+import { fillResponseMapWithRepsonses, initResponsesMap } from "./utils";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -44,6 +47,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
+  const [responses, setResponses] = useState<IResponse[]>([]);
   const { saveClassicResponses } = useClassicResponse();
   const [form, setForm] = useState<IForm | null>(null);
   const [distribution, setDistribution] = useState<IDistribution | null>(null);
@@ -55,14 +59,17 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     longuestRemainingPath: 0,
   });
   const [pageType, setPageType] = useState<ResponsePageType | undefined>(initialPageType);
+  const [currentElement, setCurrentElement] = useState<IFormElement | null>(null);
   const hasInitializedRsponsesMap = useRef(false);
   const { getQuestionResponses, getQuestionResponse, updateQuestionResponses } = useRespondQuestion(
     responsesMap,
     setResponsesMap,
   );
+  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
+  const [scrollToQuestionId, setScrollToQuestionId] = useState<number | null>(null);
   const [addDistribution] = useAddDistributionMutation();
 
-  if (formId === undefined || distributionId === undefined) {
+  if (formId === undefined || (!previewMode && distributionId === undefined)) {
     throw new Error("formId or distributionId is undefined");
   }
 
@@ -73,10 +80,16 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   );
   const { data: questionsDatas, isFetching: isQuestionsFetching } = useGetQuestionsQuery({ formId });
   const { data: sectionsDatas, isFetching: isSectionsFetching } = useGetSectionsQuery({ formId });
-  const { data: distributionData } = useGetDistributionQuery(distributionId, {
-    skip: previewMode || distributionId === "new",
+  const { data: distributionData } = useGetDistributionQuery(distributionId ?? "", {
+    skip: previewMode || !distributionId || distributionId === "new",
   });
   const { data: formUserDistributionsDatas } = useGetMyFormDistributionsQuery(formId, { skip: previewMode });
+  const { data: responsesDatas } = useGetDistributionResponsesQuery(distribution?.id ?? "", {
+    skip: previewMode || !distribution?.id,
+  });
+  const { data: filesDatas } = useGetQuestionFilesQuery(form?.id ?? 0, {
+    skip: previewMode || !form?.id,
+  });
   const { completeList } = useFormElementList(sectionsDatas, questionsDatas, isQuestionsFetching || isSectionsFetching);
 
   // Set form value
@@ -126,6 +139,20 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     }
   }, [previewMode, distributionId, distributionData, form, distributionData, formUserDistributionsDatas]);
 
+  // Set responses
+  useEffect(() => {
+    if (!responsesDatas || !filesDatas) return;
+    const responsesWithFiles = responsesDatas.map((r) => ({
+      ...r,
+      files: filesDatas.filter((f) => f.responseId === r.id),
+    }));
+    setResponses(responsesWithFiles);
+
+    if (!hasInitializedRsponsesMap.current || !formElementsList.length) return;
+    const questions = getAllQuestionsAndChildren(formElementsList);
+    setResponsesMap((prev) => fillResponseMapWithRepsonses(prev, responsesWithFiles, questions));
+  }, [responsesDatas, hasInitializedRsponsesMap, formElementsList]);
+
   // Set page type
   useEffect(() => {
     if (form && (distribution || previewMode)) {
@@ -160,7 +187,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     updateProgress(firstElement, [firstElement.id], newLongestPathsMap);
   }, [formElementsList]);
 
-  // Initialize responses map
+  // Initialize responses map and currentElement
   useEffect(() => {
     if (!hasInitializedRsponsesMap.current && formElementsList.length > 0) {
       const initializedResponsesMap = initResponsesMap(formElementsList);
@@ -196,16 +223,24 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       isInPreviewMode,
       setIsInPreviewMode,
       progress,
+      setProgress,
       updateProgress,
       longestPathsMap,
       pageType,
       setPageType,
+      currentElement,
+      setCurrentElement,
       saveResponses,
       responsesMap,
       setResponsesMap,
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
+      distribution,
+      responses,
+      isPageTypeRecap,
+      scrollToQuestionId,
+      setScrollToQuestionId,
     }),
     [
       form,
@@ -216,12 +251,19 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       longestPathsMap,
       pageType,
       setPageType,
+      currentElement,
+      setCurrentElement,
       saveResponses,
       responsesMap,
       setResponsesMap,
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
+      distribution,
+      responses,
+      isPageTypeRecap,
+      scrollToQuestionId,
+      setScrollToQuestionId,
     ],
   );
 

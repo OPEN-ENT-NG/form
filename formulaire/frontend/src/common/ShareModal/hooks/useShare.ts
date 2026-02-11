@@ -203,7 +203,7 @@ export default function useShare({
     const result = await odeServices.share().saveRights(appCode, resourceId, rights);
     notifySuccess(result);
 
-    dispatcher(formApi.util.invalidateTags([TagName.FORMS]));
+    dispatcher(formApi.util.invalidateTags([TagName.FORMS, TagName.DISTRIBUTION]));
   };
 
   const handleShare = async () => {

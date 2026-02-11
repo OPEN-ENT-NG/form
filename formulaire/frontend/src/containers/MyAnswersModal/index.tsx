@@ -9,15 +9,16 @@ import { FORMULAIRE } from "~/core/constants";
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { IDistribution } from "~/core/models/distribution/types";
 import { getFormDistributions } from "~/core/models/form/utils";
-import { getHrefRecapFormPath } from "~/core/pathHelper";
 import { SECONDARY_MAIN_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BoxComponentType, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { IModalProps } from "~/core/types";
 import { useFormatDateWithTime } from "~/hook/useFormatDateWithTime";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useHome } from "~/providers/HomeProvider";
 
 export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const { t } = useTranslation(FORMULAIRE);
+  const { navigateToFormResponseRecap } = useFormulaireNavigation();
   const { selectedSentForm, distributions } = useHome();
   const formatDateWithTime = useFormatDateWithTime();
   if (!selectedSentForm) return;
@@ -40,7 +41,7 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
                     key={distribution.id}
                     icon={<VisibilityIcon />}
                     onClick={() => {
-                      window.location.href = getHrefRecapFormPath(distribution.formId, distribution.id);
+                      navigateToFormResponseRecap(distribution.formId, distribution.id);
                     }}
                     tooltipI18nKey={"formulaire.response.open"}
                     ariaLabel="edit"

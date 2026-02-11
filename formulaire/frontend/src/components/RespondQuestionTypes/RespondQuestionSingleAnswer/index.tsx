@@ -1,16 +1,16 @@
-import { Box } from "@cgi-learning-hub/ui";
-import { FormControl, MenuItem, Select, SelectChangeEvent, TextField, Typography } from "@mui/material";
+import { FormControl, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
 import { IResponse } from "~/core/models/response/type";
+import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponses, updateQuestionResponses } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [selectedValue, setSelectedValue] = useState<string>("");
   const [customAnswer, setCustomAnswer] = useState<string>("");
   const { t } = useTranslation(FORMULAIRE);
@@ -20,14 +20,18 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
 
     const selectedResponse = associatedResponses.find((response) => response.selected);
 
+    // Si choice associé au choiceId isCutom alors on save/display dans tous les cas
+    // Si c'est un choice classique alors on fait comme avant
+
     const existingAnswer = selectedResponse?.answer ?? "";
     if (typeof existingAnswer === "string") {
       setSelectedValue(existingAnswer);
     }
-    const customChoiceId = question.choices?.find((choice) => choice.isCustom)?.id;
-    if (!customChoiceId) return;
-    const customResponse = associatedResponses.find((response) => response.choiceId === customChoiceId);
+    const customChoice = question.choices?.find((choice) => choice.isCustom);
+    if (!customChoice) return;
+    const customResponse = associatedResponses.find((response) => response.choiceId === customChoice.id);
     if (customResponse) {
+      setSelectedValue(customChoice.value);
       setCustomAnswer(customResponse.customAnswer ?? "");
     }
   }, [question, getQuestionResponses]);
@@ -61,10 +65,17 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
     updateQuestionResponses(question, updatedReponses);
   };
 
-  return (
-    <Box>
+  return isPageTypeRecap && !selectedValue ? (
+    <Typography fontStyle={"italic"}>{t("formulaire.response.missing")}</Typography>
+  ) : (
+    <>
       <FormControl fullWidth>
-        <Select value={selectedValue} onChange={handleChange}>
+        <Select
+          value={selectedValue}
+          onChange={handleChange}
+          disabled={isPageTypeRecap}
+          sx={{ "& .Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR } }}
+        >
           <MenuItem value="">{t("formulaire.options.select")}</MenuItem>
           {question.choices
             ?.sort((a, b) => a.position - b.position)
@@ -75,18 +86,26 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
             ))}
         </Select>
         {question.choices?.find((choice) => choice.value === selectedValue && choice.isCustom) && (
-          <>
-            <Typography sx={{ py: "1rem" }}>{t("formulaire.response.custom.label")} :</Typography>
+          <Stack direction={isPageTypeRecap ? "row" : "column"} gap={1}>
+            <Typography sx={{ py: "1rem" }}>
+              {t(isPageTypeRecap ? "formulaire.response.custom.value" : "formulaire.response.custom.explanation")}
+            </Typography>
             <TextField
-              fullWidth
               variant="standard"
-              value={customAnswer}
+              value={isPageTypeRecap && !customAnswer ? t("formulaire.response.missing") : customAnswer}
               placeholder={t("formulaire.response.custom.write")}
               onChange={handleCustomResponseChange}
+              disabled={isPageTypeRecap}
+              sx={{
+                ...(isPageTypeRecap && {
+                  "& .Mui-disabled": { WebkitTextFillColor: `${CSS_TEXT_PRIMARY_COLOR} !important` },
+                  ...(!customAnswer && { fontStyle: "italic" }),
+                }),
+              }}
             />
-          </>
+          </Stack>
         )}
       </FormControl>
-    </Box>
+    </>
   );
 };

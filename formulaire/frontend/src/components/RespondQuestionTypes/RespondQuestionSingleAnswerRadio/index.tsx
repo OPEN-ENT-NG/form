@@ -4,6 +4,8 @@ import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
 import { IResponse } from "~/core/models/response/type";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { ChoiceImage } from "../style";
@@ -11,7 +13,7 @@ import { IRespondQuestionTypesProps } from "../types";
 import { choiceBoxStyle, ChoicesRadioGroup, customAnswerStyle, formControlLabelStyle, labelStyle } from "./style";
 
 export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, getQuestionResponses, updateQuestionResponses } = useResponse();
+  const { getQuestionResponse, getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [selectedValue, setSelectedValue] = useState<string>("");
   const [customAnswer, setCustomAnswer] = useState<string>("");
   const { t } = useTranslation(FORMULAIRE);
@@ -25,10 +27,11 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
     if (typeof existingAnswer === "string") {
       setSelectedValue(existingAnswer);
     }
-    const customChoiceId = question.choices?.find((choice) => choice.isCustom)?.id;
-    if (!customChoiceId) return;
-    const customResponse = associatedResponses.find((response) => response.choiceId === customChoiceId);
+    const customChoice = question.choices?.find((choice) => choice.isCustom);
+    if (!customChoice) return;
+    const customResponse = associatedResponses.find((response) => response.choiceId === customChoice.id);
     if (customResponse) {
+      setSelectedValue(customChoice.value);
       setCustomAnswer(customResponse.customAnswer ?? "");
     }
   }, [question, getQuestionResponse]);
@@ -71,9 +74,11 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
     updateQuestionResponses(question, updatedReponses);
   };
 
-  return (
-    <Box>
-      <FormControl>
+  return isPageTypeRecap && !selectedValue ? (
+    <Typography fontStyle={"italic"}>{t("formulaire.response.missing")}</Typography>
+  ) : (
+    <>
+      <FormControl disabled={isPageTypeRecap}>
         <ChoicesRadioGroup
           hasOneChoiceWithImage={hasOneChoiceWithImage}
           value={selectedValue || ""}
@@ -90,15 +95,22 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
                   label={
                     <Box sx={customAnswerStyle}>
                       <Box sx={labelStyle}>
-                        <Typography>{choice.value}</Typography>
+                        <Typography color={TEXT_PRIMARY_COLOR}>{choice.value}</Typography>
                         {choice.isCustom && (
                           <>
                             <Typography>:</Typography>
                             <TextField
                               variant="standard"
-                              value={customAnswer}
+                              value={isPageTypeRecap && !customAnswer ? t("formulaire.response.missing") : customAnswer}
                               placeholder={t("formulaire.response.custom.write")}
                               onChange={handleCustomResponseChange}
+                              disabled={isPageTypeRecap}
+                              sx={{
+                                ...(isPageTypeRecap && {
+                                  "& .Mui-disabled": { WebkitTextFillColor: `${CSS_TEXT_PRIMARY_COLOR} !important` },
+                                  ...(!customAnswer && { fontStyle: "italic" }),
+                                }),
+                              }}
                             ></TextField>
                           </>
                         )}
@@ -111,6 +123,6 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
             ))}
         </ChoicesRadioGroup>
       </FormControl>
-    </Box>
+    </>
   );
 };
