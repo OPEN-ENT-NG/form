@@ -297,7 +297,7 @@ public class ResponseFileController extends ControllerHelper {
     }
 
     @Delete("/responses/files/multiple")
-    @ApiDoc("Delete all files of a specific response")
+    @ApiDoc("Delete all given files")
     @ResourceFilter(ResponseRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void deleteAllMultiple(HttpServerRequest request) {
@@ -323,7 +323,7 @@ public class ResponseFileController extends ControllerHelper {
                         responsesDistributionIds.removeAll(distributionIds);
 
                         if (responsesDistributionIds.size() > 0) {
-                            log.error("[Formulaire@ResponseFileController::deleteAllByResponse] " + user.getUsername() + " does not have right for all the responses with id " + responseIds);
+                            log.error("[Formulaire@ResponseFileController::deleteAllMultiple] " + user.getUsername() + " does not have right for all the responses with id " + responseIds);
                             unauthorized(request);
                             return;
                         }
@@ -331,7 +331,7 @@ public class ResponseFileController extends ControllerHelper {
                         deleteAllByResponse(request, responseIds);
                     })
                     .onFailure(err -> {
-                        log.error("[Formulaire@ResponseFileController::deleteAllByResponse] An error occurred while checking " +
+                        log.error("[Formulaire@ResponseFileController::deleteAllMultiple] An error occurred while checking " +
                                 "rights for user " + user.getUsername() + " : " + err.getMessage());
                         renderError(request);
                     });

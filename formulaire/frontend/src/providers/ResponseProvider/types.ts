@@ -27,7 +27,7 @@ export type ResponseProviderContextType = {
   setPageType: Dispatch<SetStateAction<ResponsePageType | undefined>>;
   currentElement: IFormElement | null;
   setCurrentElement: Dispatch<SetStateAction<IFormElement | null>>;
-  saveResponses: () => Promise<void>;
+  saveResponses: (currentElement: IFormElement) => Promise<void>;
   responsesMap: ResponseMap;
   setResponsesMap: Dispatch<SetStateAction<ResponseMap>>;
   getQuestionResponses: (question: IQuestion) => IResponse[];
