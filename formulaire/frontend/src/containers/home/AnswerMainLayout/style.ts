@@ -1,6 +1,6 @@
 import { Box, styled, SxProps, Theme } from "@cgi-learning-hub/ui";
 
-import { searchStyle } from "~/containers/HomeMainLayout/style";
+import { searchStyle } from "~/containers/home/HomeMainLayout/style";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { blockProps } from "~/core/utils";
 

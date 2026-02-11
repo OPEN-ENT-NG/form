@@ -6,9 +6,9 @@ import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { questionAlertStyle } from "~/containers/CreationQuestionWrapper/style";
-import { DeleteConfirmationModal } from "~/containers/DeleteConfirmationModal";
-import { UndoConfirmationModal } from "~/containers/UndoConfirmationModal";
+import { questionAlertStyle } from "~/containers/creation/CreationQuestionWrapper/style";
+import { UndoConfirmationModal } from "~/containers/creation/UndoConfirmationModal";
+import { DeleteConfirmationModal } from "~/containers/home/DeleteConfirmationModal";
 import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
 import { EditorMode, ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";

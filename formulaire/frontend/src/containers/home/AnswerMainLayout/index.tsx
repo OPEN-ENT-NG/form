@@ -4,28 +4,28 @@ import { useTheme } from "@mui/material";
 import { FC, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { HomeTabs } from "~/components/HomeTab";
+import { OrganizeFilter } from "~/components/OrganizeFilter";
+import { IFormChipProps, IMenuItemProps } from "~/components/OrganizeFilter/types";
+import { ResourcesEmptyState } from "~/components/SVG/RessourcesEmptyState";
+import { SwitchView } from "~/components/SwitchView";
+import { ViewMode } from "~/components/SwitchView/enums";
+import { IToggleButtonItem } from "~/components/SwitchView/types";
 import {
   emptyStateWrapperStyle,
   resourceContainerStyle,
   searchBarStyle,
   StyledMainContentInnerWrapper,
-} from "~/containers/HomeMainLayout/style";
-import { useSearchAndOrganize } from "~/containers/HomeMainLayout/useSearchAndOrganize";
-import { useToggleButtons } from "~/containers/HomeMainLayout/utils";
-import { HomeMainSentForms } from "~/containers/HomeMainSentForms";
-import { HomeMainSentFormTable } from "~/containers/HomeMainSentFormTable";
+} from "~/containers/home/HomeMainLayout/style";
+import { useSearchAndOrganize } from "~/containers/home/HomeMainLayout/useSearchAndOrganize";
+import { useToggleButtons } from "~/containers/home/HomeMainLayout/utils";
+import { HomeMainSentForms } from "~/containers/home/HomeMainSentForms";
+import { HomeMainSentFormTable } from "~/containers/home/HomeMainSentFormTable";
 import { FORMULAIRE } from "~/core/constants";
 import { centerBoxStyle } from "~/core/style/boxStyles";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useHome } from "~/providers/HomeProvider";
 
-import { HomeTabs } from "../../components/HomeTab";
-import { OrganizeFilter } from "../../components/OrganizeFilter";
-import { IFormChipProps, IMenuItemProps } from "../../components/OrganizeFilter/types";
-import { ResourcesEmptyState } from "../../components/SVG/RessourcesEmptyState";
-import { SwitchView } from "../../components/SwitchView";
-import { ViewMode } from "../../components/SwitchView/enums";
-import { IToggleButtonItem } from "../../components/SwitchView/types";
 import { myAnswerSearchStyle, StyledMyAnswerHeaderWrapper, tabStyle } from "./style";
 import { sentFormMenuItemDatas, sentFormsChipDatas } from "./utils";
 

@@ -1,7 +1,7 @@
 import { ResourceCard } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 
-import { useMapActionBarButtons } from "~/containers/HomeView/useMapActionBarButtons";
+import { useMapActionBarButtons } from "~/containers/home/HomeView/useMapActionBarButtons";
 import { LOGO_PATH } from "~/core/constants";
 import { SizeAbreviation } from "~/core/enums";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";

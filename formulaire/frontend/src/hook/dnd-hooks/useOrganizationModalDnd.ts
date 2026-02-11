@@ -1,8 +1,8 @@
 import { DragMoveEvent, DragOverEvent, DragStartEvent, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
 import { useState } from "react";
 
-import { IFlattenedItem } from "~/containers/CreationOrganisationModal/types";
-import { buildTree, getProjection } from "~/containers/CreationOrganisationModal/utils";
+import { IFlattenedItem } from "~/containers/creation/CreationOrganisationModal/types";
+import { buildTree, getProjection } from "~/containers/creation/CreationOrganisationModal/utils";
 import { CURSOR_STYLE_DEFAULT, CURSOR_STYLE_GRABBING } from "~/core/constants";
 import { MovementType } from "~/core/enums";
 import { IFormElement } from "~/core/models/formElement/types";
