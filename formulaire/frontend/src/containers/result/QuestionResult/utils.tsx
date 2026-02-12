@@ -6,7 +6,7 @@ import { QuestionTypes } from "~/core/models/question/enum";
 import { ICompleteResponse } from "~/core/models/response/type";
 import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultMap/types";
 
-import { QuestionShortAnswerResult } from "./QuestionShortAnswerResult";
+import { QuestionResultWithoutGraph } from "./QuestionResultWithoutGraph";
 
 const getReponseListForUniqueResult = (distributionMap: DistributionMap): ICompleteResponse[] => {
   return [...distributionMap.values()].flatMap((reponseList) => (reponseList.length ? reponseList[0] : []));
@@ -27,8 +27,10 @@ export const getDisplayAnswer = (completeResponse: ICompleteResponse) => {
 
 export const renderQuestionResult = (questionType: QuestionTypes, distributionMap: DistributionMap) => {
   switch (questionType) {
+    case QuestionTypes.DATE:
+    case QuestionTypes.TIME:
     case QuestionTypes.SHORTANSWER:
-      return <QuestionShortAnswerResult completeResponseList={getReponseListForUniqueResult(distributionMap)} />;
+      return <QuestionResultWithoutGraph completeResponseList={getReponseListForUniqueResult(distributionMap)} />;
     default:
       return "pas encore fait";
   }

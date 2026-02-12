@@ -5,6 +5,6 @@ export interface IQuestionResultProps {
   question: IQuestion;
 }
 
-export interface IQuestionResultContentProps {
+export interface IQuestionResultWithoutGraphProps {
   completeResponseList: ICompleteResponse[];
 }

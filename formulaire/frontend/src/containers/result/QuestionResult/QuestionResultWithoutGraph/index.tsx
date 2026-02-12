@@ -3,10 +3,10 @@ import { FC } from "react";
 
 import { ResultRow } from "~/components/result/ResultRow";
 
-import { IQuestionResultContentProps } from "../types";
+import { IQuestionResultWithoutGraphProps } from "../types";
 import { getDisplayAnswer, getDisplayDate } from "../utils";
 
-export const QuestionShortAnswerResult: FC<IQuestionResultContentProps> = ({ completeResponseList }) => {
+export const QuestionResultWithoutGraph: FC<IQuestionResultWithoutGraphProps> = ({ completeResponseList }) => {
   return (
     <Stack gap={1}>
       {completeResponseList.map((completeResponse) => (

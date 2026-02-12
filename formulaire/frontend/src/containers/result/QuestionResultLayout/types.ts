@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 
 export interface QuestionResultLayoutProps {
-  questionTitle: string;
+  questionTitle: ReactNode;
   children: ReactNode;
+  isQuestionMandatory: boolean;
 }

@@ -14,7 +14,10 @@ export const QuestionResult: FC<IQuestionResultProps> = ({ question }) => {
   const distributionMap = getDistributionMap(question.id);
 
   return (
-    <QuestionResultLayout questionTitle={`${question.title} (${getFormNbResponsesText(distributionMap.size)})`}>
+    <QuestionResultLayout
+      questionTitle={`${question.title} (${getFormNbResponsesText(distributionMap.size)})`}
+      isQuestionMandatory={question.mandatory}
+    >
       <Box mt={2}>{renderQuestionResult(question.questionType, distributionMap)}</Box>
     </QuestionResultLayout>
   );
