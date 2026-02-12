@@ -126,6 +126,19 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    getFinishedDistributions: builder.query<IDistribution[], number>({
+      query: (formId: number) => ({
+        url: `distributions/forms/${formId}/list/FINISHED`,
+        method: QueryMethod.GET,
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.distributionService.finished");
+        }
+      },
+    }),
   }),
   overrideExisting: false,
 });
@@ -139,4 +152,5 @@ export const {
   useUpdateDistributionMutation,
   useReplaceDistributionMutation,
   useCountDistributionsQuery,
+  useGetFinishedDistributionsQuery,
 } = distributionApi;

@@ -69,9 +69,15 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    getAllResponses: builder.query<IResponse[], number>({
+      query: (formId: number) => ({
+        url: `/forms/${formId}/responses`,
+        method: QueryMethod.GET,
+      }),
+    }),
   }),
   overrideExisting: false,
 });
 
-export const { useGetDistributionResponsesQuery, useDeleteResponsesMutation, useExportResponsesCsvMutation } =
+export const { useGetDistributionResponsesQuery, useDeleteResponsesMutation, useExportResponsesCsvMutation, useGetAllResponsesQuery } =
   responseApi;

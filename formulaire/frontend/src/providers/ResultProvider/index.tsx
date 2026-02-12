@@ -1,8 +1,11 @@
-import { createContext, FC, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import { IFormElement } from "~/core/models/formElement/types";
 import { useFormElementListBuild } from "~/hook/UseFormElementListBuild";
 
+import { useBuildResponseMap } from "./hook/UseBuildResultMap";
+import { QuestionId } from "./hook/UseBuildResultMap/types";
+import { getDistributionMapByQuestionId } from "./hook/UseBuildResultMap/utils";
 import { IResultProviderContextType, IResultProviderProps } from "./types";
 
 const ResultProviderContext = createContext<IResultProviderContextType | null>(null);
@@ -19,6 +22,15 @@ export const ResultProvider: FC<IResultProviderProps> = ({ children, formId, for
   const [selectedFormElement, setSelectedFormElement] = useState<IFormElement | null>(null);
   const { formElementList } = useFormElementListBuild(formId);
 
+  const { resultMap, isLoading: isResultMapLoading } = useBuildResponseMap(selectedFormElement);
+
+  const getDistributionMap = useCallback(
+    (questionId: QuestionId | null) => {
+      return getDistributionMapByQuestionId(resultMap, questionId);
+    },
+    [resultMap],
+  );
+
   useEffect(() => {
     if (formElementList.length) {
       setSelectedFormElement(formElementList[0]);
@@ -26,8 +38,17 @@ export const ResultProvider: FC<IResultProviderProps> = ({ children, formId, for
   }, [formElementList]);
 
   const value = useMemo<IResultProviderContextType>(
-    () => ({ formId, form, countDistributions, formElementList, selectedFormElement, setSelectedFormElement }),
-    [formId, form, countDistributions, formElementList, selectedFormElement],
+    () => ({
+      formId,
+      form,
+      countDistributions,
+      formElementList,
+      selectedFormElement,
+      setSelectedFormElement,
+      isResultMapLoading,
+      getDistributionMap,
+    }),
+    [formId, form, countDistributions, formElementList, selectedFormElement, isResultMapLoading, getDistributionMap],
   );
 
   return <ResultProviderContext.Provider value={value}>{children}</ResultProviderContext.Provider>;
