@@ -23,6 +23,7 @@ export const FRONT_ROUTES = {
   formEdit: defineRoute("/form/:formId/edit", ["formId"]),
   formPreview: defineRoute("/form/:formId/preview", ["formId"]),
   formResult: defineRoute("/form/:formId/result", ["formId"]),
+  formTree: defineRoute("/form/:formId/tree", ["formId"]),
 
   formResponse: defineRoute("/form/:formId/:distributionId", ["formId", "distributionId"]),
   formResponseRecap: defineRoute("/form/:formId/:distributionId/recap", ["formId", "distributionId"]),
