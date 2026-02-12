@@ -1,8 +1,22 @@
+import { Stack } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 
-import { IQuestionResultContentProps } from "../types";
+import { ResultRow } from "~/components/result/ResultRow";
 
-export const QuestionShortAnswerResult: FC<IQuestionResultContentProps> = ({ distributionMap }) => {
-  console.log(distributionMap);
-  return "toto2";
+import { IQuestionResultContentProps } from "../types";
+import { getDisplayAnswer, getDisplayDate } from "../utils";
+
+export const QuestionShortAnswerResult: FC<IQuestionResultContentProps> = ({ completeResponseList }) => {
+  return (
+    <Stack gap={1}>
+      {completeResponseList.map((completeResponse) => (
+        <ResultRow
+          key={completeResponse.id}
+          displayDate={getDisplayDate(completeResponse)}
+          responderName={completeResponse.responderName}
+          answer={getDisplayAnswer(completeResponse)}
+        />
+      ))}
+    </Stack>
+  );
 };

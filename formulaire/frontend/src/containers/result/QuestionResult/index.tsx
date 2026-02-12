@@ -1,3 +1,4 @@
+import { Box } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 
 import { getFormNbResponsesText } from "~/core/models/form/utils";
@@ -14,7 +15,7 @@ export const QuestionResult: FC<IQuestionResultProps> = ({ question }) => {
 
   return (
     <QuestionResultLayout questionTitle={`${question.title} (${getFormNbResponsesText(distributionMap.size)})`}>
-      {renderQuestionResult(question.questionType, distributionMap)}
+      <Box mt={2}>{renderQuestionResult(question.questionType, distributionMap)}</Box>
     </QuestionResultLayout>
   );
 };

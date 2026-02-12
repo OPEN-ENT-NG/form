@@ -1,10 +1,10 @@
 import { IQuestion } from "~/core/models/question/types";
-import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultMap/types";
+import { ICompleteResponse } from "~/core/models/response/type";
 
 export interface IQuestionResultProps {
   question: IQuestion;
 }
 
 export interface IQuestionResultContentProps {
-  distributionMap: DistributionMap;
+  completeResponseList: ICompleteResponse[];
 }
