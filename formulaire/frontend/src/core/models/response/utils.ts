@@ -1,4 +1,4 @@
-import { IResponse, IResponseDTO } from "./type";
+import { IResponse, IResponseDTO, IResponsePayload } from "./type";
 
 export const createNewResponse = (
   questionId: number,
@@ -38,11 +38,30 @@ export const transformResponse = (raw: IResponseDTO): IResponse => {
     files: [],
     selected: false,
     selectedIndexList: [], // For multiple answer in preview
-    choicePosition: raw.choiceposition, // For question type ranking to order
+    choicePosition: raw.choice_position, // For question type ranking to order
     image: null, // For question type multiple answer
   };
 };
 
 export const transformResponses = (rawResponses: IResponseDTO[]): IResponse[] => {
   return rawResponses.map(transformResponse);
+};
+
+export const buildResponsePayload = (response: IResponse, distributionId: number): IResponsePayload => {
+  return {
+    id: response.id,
+    question_id: response.questionId,
+    responder_id: response.responderId,
+    choice_id: response.choiceId,
+    answer: response.answer,
+    distribution_id: distributionId,
+    original_id: response.originalId,
+    custom_answer: response.customAnswer,
+    choice_position: response.choicePosition, // For question type ranking to order
+    image: response.image, // For question type multiple answer
+  };
+};
+
+export const buildResponsesPayload = (responses: IResponse[], distributionId: number): IResponsePayload[] => {
+  return responses.map((response) => buildResponsePayload(response, distributionId));
 };

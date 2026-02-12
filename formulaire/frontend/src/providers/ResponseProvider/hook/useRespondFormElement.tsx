@@ -1,8 +1,13 @@
+import { useDispatch } from "react-redux";
+
+import { TagName } from "~/core/enums";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getStringifiedFormElementIdType, isSection } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 import { IResponse } from "~/core/models/response/type";
+import { buildResponsesPayload, createNewResponse } from "~/core/models/response/utils";
+import { emptySplitFormulaireApi } from "~/services/api/services/formulaireApi/emptySplitFormulaireApi";
 import {
   useCreateMultipleMutation,
   useDeleteMultipleByQuestionAndDistributionMutation,
@@ -12,6 +17,7 @@ import {
 import { ResponseMap } from "../types";
 
 export const useRespondFormElement = (responsesMap: ResponseMap) => {
+  const dispatch = useDispatch();
   const [createResponses] = useCreateMultipleMutation();
   const [updateResponses] = useUpdateMultipleMutation();
   const [deleteMultipleByQuestionAndDistribution] = useDeleteMultipleByQuestionAndDistributionMutation();
@@ -31,6 +37,7 @@ export const useRespondFormElement = (responsesMap: ResponseMap) => {
         q.children?.forEach((child) => {
           fillListsByQuestionType(
             child,
+            distributionId,
             localResponsesMap,
             responsesToUpdate,
             responsesToCreate,
@@ -40,6 +47,7 @@ export const useRespondFormElement = (responsesMap: ResponseMap) => {
       } else {
         fillListsByQuestionType(
           q,
+          distributionId,
           localResponsesMap,
           responsesToUpdate,
           responsesToCreate,
@@ -49,16 +57,25 @@ export const useRespondFormElement = (responsesMap: ResponseMap) => {
     });
 
     // Delete some responses
-    await deleteMultipleByQuestionAndDistribution({ distributionId, questionIds: questionIdsResponseToDelete });
+    if (questionIdsResponseToDelete.length)
+      await deleteMultipleByQuestionAndDistribution({ distributionId, questionIds: questionIdsResponseToDelete });
 
-    await updateResponses({ distributionId, responses: responsesToUpdate }); // Update existing responses
-    await createResponses({ distributionId, responses: responsesToCreate }); // Create new responses
+    // Update existing responses
+    if (responsesToUpdate.length)
+      await updateResponses({ distributionId, responses: buildResponsesPayload(responsesToUpdate, distributionId) });
+
+    // Create new responses
+    if (responsesToCreate.length)
+      await createResponses({ distributionId, responses: buildResponsesPayload(responsesToCreate, distributionId) });
 
     //TODO manage files later
+
+    dispatch(emptySplitFormulaireApi.util.invalidateTags([TagName.RESPONSE]));
   };
 
   const fillListsByQuestionType = (
     question: IQuestion,
+    distributionId: number,
     localResponsesMap: Map<number, IResponse[]>,
     responsesToUpdate: IResponse[],
     responsesToCreate: IResponse[],
@@ -79,14 +96,19 @@ export const useRespondFormElement = (responsesMap: ResponseMap) => {
         break;
       case QuestionTypes.SINGLEANSWER:
       case QuestionTypes.SINGLEANSWERRADIO: {
-        const selectedResponse = questionResponses.find((r) => r.selected); // find the one selected
+        const selectedResponse =
+          questionResponses.find((r) => r.selected) ?? createNewResponse(question.id, undefined, distributionId); // find the one selected
         updateOrCreateResponse(selectedResponse, responsesToUpdate, responsesToCreate); // update or create
         break;
       }
       case QuestionTypes.MULTIPLEANSWER: {
         questionIdsResponseToDelete.push(question.id); // we want to delete existing responses..
         const selectedResponses = questionResponses.filter((r) => r.selected);
-        responsesToCreate.push(...selectedResponses); // ..and create new responses with the selected ones
+        responsesToCreate.push(
+          ...(selectedResponses.length > 0
+            ? selectedResponses
+            : [createNewResponse(question.id, undefined, distributionId)]),
+        ); // ..and create new responses with the selected ones
         break;
       }
       case QuestionTypes.RANKING: {

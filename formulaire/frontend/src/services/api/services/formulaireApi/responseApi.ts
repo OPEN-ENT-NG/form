@@ -1,5 +1,5 @@
-import { QueryMethod } from "~/core/enums.ts";
-import { IResponse, IResponseDTO } from "~/core/models/response/type.ts";
+import { QueryMethod, TagName } from "~/core/enums.ts";
+import { IResponse, IResponseDTO, IResponsePayload } from "~/core/models/response/type.ts";
 import { transformResponses } from "~/core/models/response/utils.ts";
 import { handleErrorApi } from "~/core/utils.ts";
 
@@ -13,6 +13,7 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         method: QueryMethod.GET,
       }),
       transformResponse: (rawDatas: IResponseDTO[]) => transformResponses(rawDatas),
+      providesTags: [TagName.RESPONSE],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -21,11 +22,11 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
-    createMultiple: builder.mutation<void, { distributionId: number; responses: IResponse[] }>({
+    createMultiple: builder.mutation<void, { distributionId: number; responses: IResponsePayload[] }>({
       query: ({ distributionId, responses }) => ({
         url: `distributions/${distributionId}/responses/multiple`,
         method: QueryMethod.POST,
-        body: { responses },
+        body: responses,
       }),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -35,11 +36,11 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
-    updateMultiple: builder.mutation<void, { distributionId: number; responses: IResponse[] }>({
+    updateMultiple: builder.mutation<void, { distributionId: number; responses: IResponsePayload[] }>({
       query: ({ distributionId, responses }) => ({
         url: `distributions/${distributionId}/responses`,
         method: QueryMethod.PUT,
-        body: { responses },
+        body: responses,
       }),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -49,11 +50,11 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
-    deleteResponses: builder.mutation<void, { formId: number; responses: IResponse[] }>({
+    deleteResponses: builder.mutation<void, { formId: number; responses: IResponsePayload[] }>({
       query: ({ formId, responses }) => ({
-        url: `/responses/${formId}`,
+        url: `responses/${formId}`,
         method: QueryMethod.DELETE,
-        body: { responses },
+        body: responses,
       }),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -65,9 +66,9 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
     }),
     deleteMultipleByQuestionAndDistribution: builder.mutation<void, { distributionId: number; questionIds: number[] }>({
       query: ({ distributionId, questionIds }) => ({
-        url: `/formulaire/responses/${distributionId}/questions`,
+        url: `responses/${distributionId}/questions`,
         method: QueryMethod.DELETE,
-        body: { questionIds },
+        body: questionIds,
       }),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -79,7 +80,7 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
     }),
     exportResponsesCsv: builder.mutation<void, number>({
       query: (formId: number) => ({
-        url: `/responses/export/${formId}/csv`,
+        url: `responses/export/${formId}/csv`,
         method: QueryMethod.POST,
         body: {},
         responseHandler: "text",
