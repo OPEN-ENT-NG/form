@@ -5,6 +5,7 @@ import { useResult } from "~/providers/ResultProvider";
 
 import { QuestionResultLayout } from "../QuestionResultLayout";
 import { IQuestionResultProps } from "./types";
+import { renderQuestionResult } from "./utils";
 
 export const QuestionResult: FC<IQuestionResultProps> = ({ question }) => {
   const { getDistributionMap } = useResult();
@@ -13,7 +14,7 @@ export const QuestionResult: FC<IQuestionResultProps> = ({ question }) => {
 
   return (
     <QuestionResultLayout questionTitle={`${question.title} (${getFormNbResponsesText(distributionMap.size)})`}>
-      toto
+      {renderQuestionResult(question.questionType, distributionMap)}
     </QuestionResultLayout>
   );
 };

@@ -131,6 +131,7 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         url: `distributions/forms/${formId}/list/FINISHED`,
         method: QueryMethod.GET,
       }),
+      transformResponse: (rawDatas: IDistributionDTO[]) => transformDistributions(rawDatas),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
