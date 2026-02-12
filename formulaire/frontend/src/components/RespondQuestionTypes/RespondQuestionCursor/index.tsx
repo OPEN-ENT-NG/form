@@ -24,7 +24,7 @@ export const RespondQuestionCursor: FC<IRespondQuestionTypesProps> = ({ question
 
     const currentValue = associatedResponse.answer;
     if (typeof currentValue === "number") setValue(currentValue);
-  }, [question]);
+  }, [question, getQuestionResponse]);
 
   const handleChange = (_: Event, newValue: number | number[]) => {
     const associatedResponse = getQuestionResponse(question);

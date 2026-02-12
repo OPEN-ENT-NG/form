@@ -25,8 +25,21 @@ export interface IResponseDTO {
   distribution_id: number;
   original_id: number | undefined;
   custom_answer: string | undefined;
-  choiceposition: number | undefined; // For question type ranking to order
+  choice_position: number | undefined; // For question type ranking to order
   image: string | null; // For question type multiple answer
+}
+
+export interface IResponsePayload {
+  id: number | null;
+  question_id: number;
+  responder_id: string | undefined;
+  choice_id: number | undefined;
+  answer: string | Date | number | undefined;
+  distribution_id: number;
+  original_id: number | undefined;
+  custom_answer: string | undefined;
+  choice_position: number | undefined; // For question type ranking to order
+  image: string | null | undefined; // For question type multiple answer
 }
 
 export interface IResponseFile {

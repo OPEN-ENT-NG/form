@@ -89,6 +89,7 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         body: distribution,
       }),
       transformResponse: (rawData: IDistributionDTO) => transformDistribution(rawData),
+      invalidatesTags: [TagName.DISTRIBUTION],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -103,6 +104,7 @@ export const distributionApi = emptySplitFormulaireApi.injectEndpoints({
         url: `/distributions/${distribution.id}/replace/${distribution.originalId}`,
         method: QueryMethod.DELETE,
       }),
+      invalidatesTags: [TagName.DISTRIBUTION],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;

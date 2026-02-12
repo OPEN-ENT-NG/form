@@ -20,7 +20,7 @@ export const RespondQuestionLongAnswer: FC<IRespondQuestionTypesProps> = ({ ques
     if (!associatedResponse) return;
     const existingAnswer = associatedResponse.answer;
     if (typeof existingAnswer === "string") setAnswer(existingAnswer);
-  }, []);
+  }, [question, getQuestionResponse]);
 
   const handleResponseChange = () => {
     const associatedResponse = getQuestionResponse(question);

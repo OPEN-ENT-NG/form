@@ -132,7 +132,7 @@ const updateResponsesByQuestionType = (
       return [{ ...matchingNewResponses[0], answer: formattedAnswer }];
     }
     case QuestionTypes.RANKING: {
-      if (matchingNewResponses.some((r) => !r.choicePosition)) break;
+      if (matchingNewResponses.some((r) => r.choicePosition == null)) break;
       return matchingNewResponses;
     }
     case QuestionTypes.SINGLEANSWER:
