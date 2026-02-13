@@ -1,4 +1,8 @@
-import { IResponse, IResponseDTO, IResponsePayload } from "./type";
+import { IUserInfo } from "@edifice.io/client";
+
+import { getOwnerNameWithUnderscore } from "~/core/utils";
+
+import { IFile, IFilePayload, IResponse, IResponseDTO, IResponsePayload } from "./type";
 
 export const createNewResponse = (
   questionId: number,
@@ -64,4 +68,37 @@ export const buildResponsePayload = (response: IResponse, distributionId: number
 
 export const buildResponsesPayload = (responses: IResponse[], distributionId: number): IResponsePayload[] => {
   return responses.map((response) => buildResponsePayload(response, distributionId));
+};
+
+// RepsonseFile
+export const createNewFile = (
+  file: File,
+  responseId: number | null,
+  questionId: number,
+  isFormAnonymous: boolean,
+  user: IUserInfo | undefined,
+): IFile => {
+  return {
+    formData: formatForSaving(isFormAnonymous, file, user),
+    responseId: responseId,
+    questionId: questionId,
+  };
+};
+
+const formatForSaving = (isFormAnonymous: boolean, file: File, user: IUserInfo | undefined): FormData => {
+  const filename =
+    file.type && !isFormAnonymous
+      ? file.name
+      : getOwnerNameWithUnderscore(user?.firstName ?? "Anonymous", user?.lastName ?? "Anonymous") + file.name;
+  const formData = new FormData();
+  formData.append("file", file, filename);
+  return formData;
+};
+
+export const transformFilePayload = (file: IFile, responseId: number): IFilePayload => {
+  return {
+    formData: file.formData,
+    responseId: responseId,
+    questionId: file.questionId,
+  };
 };

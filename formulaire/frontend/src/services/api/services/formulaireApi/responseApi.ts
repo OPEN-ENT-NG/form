@@ -22,7 +22,7 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
-    createMultiple: builder.mutation<void, { distributionId: number; responses: IResponsePayload[] }>({
+    createMultiple: builder.mutation<IResponse[], { distributionId: number; responses: IResponsePayload[] }>({
       query: ({ distributionId, responses }) => ({
         url: `distributions/${distributionId}/responses/multiple`,
         method: QueryMethod.POST,
@@ -36,7 +36,7 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
-    updateMultiple: builder.mutation<void, { distributionId: number; responses: IResponsePayload[] }>({
+    updateMultiple: builder.mutation<IResponse[], { distributionId: number; responses: IResponsePayload[] }>({
       query: ({ distributionId, responses }) => ({
         url: `distributions/${distributionId}/responses`,
         method: QueryMethod.PUT,

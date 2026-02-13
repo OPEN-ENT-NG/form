@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/naming-convention */
 import { DistributionStatus } from "../distribution/enums";
 
+// Response
+
 export interface IResponse {
   id: number | null;
   questionId: number;
@@ -43,12 +45,29 @@ export interface IResponsePayload {
   image: string | null | undefined; // For question type multiple answer
 }
 
+// ResponseFile
+
 export interface IResponseFile {
   id: number | string;
   responseId: number | null;
   filename: string;
   type: string;
   size?: number;
+  fileContent?: File;
+}
+
+// File
+
+export interface IFile {
+  formData: FormData;
+  responseId: number | null;
+  questionId: number;
+}
+
+export interface IFilePayload {
+  formData: FormData;
+  responseId: number;
+  questionId: number;
 }
 
 export interface ICompleteResponse extends IResponse {
