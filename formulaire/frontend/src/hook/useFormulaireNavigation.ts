@@ -22,6 +22,10 @@ export const useFormulaireNavigation = () => {
       navigate(FRONT_ROUTES.formPreview.build(formId));
     },
 
+    navigateToTreeView: (formId: string | number) => {
+      navigate(FRONT_ROUTES.formTree.build(formId));
+    },
+
     navigateToFormResult: (formId: string | number) => {
       navigate(FRONT_ROUTES.formResult.build(formId));
     },
