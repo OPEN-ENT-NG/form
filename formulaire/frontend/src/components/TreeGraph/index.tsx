@@ -111,11 +111,6 @@ export const FormTreeView = ({ form, formElements }: FormTreeViewProps) => {
         if (conditionalQuestion) {
           addChoicesLink(formElement, conditionalQuestion.choices ?? [], formElementLinks);
         } else {
-          /* export const getNextFormElement = (
-            choice: IQuestionChoice,
-            formElements: IFormElement[],
-            parentQuestion?: IQuestion,
-          ):*/
           const nextFormElementId = getNextFormElementSection(formElement, formElements)?.id;
           addFormElementLink(formElement.id ?? 0, nextFormElementId ?? 0, formElementLinks);
         }
