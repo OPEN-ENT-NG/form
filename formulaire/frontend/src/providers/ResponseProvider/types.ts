@@ -30,9 +30,9 @@ export type ResponseProviderContextType = {
   saveResponses: (currentElement: IFormElement) => Promise<void>;
   responsesMap: ResponseMap;
   setResponsesMap: Dispatch<SetStateAction<ResponseMap>>;
-  getQuestionResponses: (question: IQuestion) => IResponse[];
+  getQuestionResponses: (question: IQuestion, matrixQuestion?: IQuestion) => IResponse[];
   getQuestionResponse: (question: IQuestion) => IResponse | null;
-  updateQuestionResponses: (question: IQuestion, newResponses: IResponse[]) => void;
+  updateQuestionResponses: (question: IQuestion, newResponses: IResponse[], matrixQuestion?: IQuestion) => void;
   distribution: IDistribution | null;
   responses: IResponse[];
   isPageTypeRecap: boolean;

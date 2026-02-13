@@ -26,6 +26,7 @@ export const RecapLayout: FC = () => {
     toggleModal,
   } = useGlobal();
   const [answeredFormElements, setAnsweredFormElements] = useState<IFormElement[]>([]);
+  window.scrollTo({ top: 0 });
 
   useEffect(() => {
     const formElementsToDisplay = getFormElementsToDisplay(formElementsList, responses);
