@@ -79,5 +79,9 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useGetDistributionResponsesQuery, useDeleteResponsesMutation, useExportResponsesCsvMutation, useGetAllResponsesQuery } =
-  responseApi;
+export const {
+  useGetDistributionResponsesQuery,
+  useDeleteResponsesMutation,
+  useExportResponsesCsvMutation,
+  useGetAllResponsesQuery,
+} = responseApi;

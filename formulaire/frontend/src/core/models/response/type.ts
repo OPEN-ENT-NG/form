@@ -39,16 +39,16 @@ export interface IResponseFile {
 }
 
 export interface ICompleteResponse extends IResponse {
-    formId: number;
-    senderId: string;
-    senderName: string;
-    responderId: string;
-    responderName: string;
-    status: DistributionStatus;
-    dateSending: string | null;
-    dateResponse: string | null;
-    active: boolean;
-    structure: string | null;
-    publicKey: string | null;
-    captchaId: string | null;
+  formId: number;
+  senderId: string;
+  senderName: string;
+  responderId: string;
+  responderName: string;
+  status: DistributionStatus;
+  dateSending: string | null;
+  dateResponse: string | null;
+  active: boolean;
+  structure: string | null;
+  publicKey: string | null;
+  captchaId: string | null;
 }
