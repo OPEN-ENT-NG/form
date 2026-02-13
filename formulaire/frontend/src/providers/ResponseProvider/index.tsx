@@ -48,7 +48,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
   const [responses, setResponses] = useState<IResponse[]>([]);
-  const { save } = useRespondFormElement(responsesMap);
+  const { save } = useRespondFormElement(responsesMap, user);
   const [form, setForm] = useState<IForm | null>(null);
   const [distribution, setDistribution] = useState<IDistribution | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
@@ -197,8 +197,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   }, [formElementsList]);
 
   const saveResponses = async (currentElement: IFormElement) => {
-    if (isInPreviewMode || !distribution?.id) return;
-    await save(currentElement, distribution.id);
+    if (isInPreviewMode || !distribution?.id || !form) return;
+    await save(currentElement, form.anonymous, distribution.id);
   };
 
   useEffect(() => {

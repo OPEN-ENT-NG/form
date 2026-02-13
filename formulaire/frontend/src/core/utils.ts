@@ -91,3 +91,11 @@ export const handleErrorApi = (err: unknown, errorMessageKey: string) => {
       toast.error(t(errorMessageKey));
   }
 };
+
+export const getOwnerNameWithUnderscore = (firstName: string, lastName: string): string => {
+  return getOwnerName(firstName, lastName) + "_";
+};
+
+export const getOwnerName = (firstName: string, lastName: string): string => {
+  return firstName + lastName;
+};

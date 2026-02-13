@@ -10,6 +10,7 @@ export const toResponseFile = (file: File): IResponseFile => {
     filename: file.name,
     type: file.type,
     size: file.size,
+    fileContent: file,
   };
 };
 
