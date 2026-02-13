@@ -1,12 +1,16 @@
 import { IDistribution } from "~/core/models/distribution/types";
-import { ICompleteResponse, IResponse } from "~/core/models/response/type";
+import { ICompleteResponse, IResponse, IResponseFile } from "~/core/models/response/type";
 
 import { DistributionId, DistributionMap, ResultMap } from "./types";
 
-export const buildResultMapFromAllData = (responses: IResponse[], distributions: IDistribution[]): ResultMap => {
+export const buildResultMapFromAllData = (
+  responses: IResponse[],
+  distributions: IDistribution[],
+  files: IResponseFile[],
+): ResultMap => {
   const map: ResultMap = new Map();
 
-  const completeResponseList: ICompleteResponse[] = buildCompleteResponseList(responses, distributions);
+  const completeResponseList: ICompleteResponse[] = buildCompleteResponseList(responses, distributions, files);
 
   completeResponseList.forEach((completeResponse) => {
     const questionId = completeResponse.questionId;
@@ -22,15 +26,41 @@ export const buildResultMapFromAllData = (responses: IResponse[], distributions:
   return map;
 };
 
-const buildCompleteResponseList = (responses: IResponse[], distributions: IDistribution[]): ICompleteResponse[] => {
-  const distributionById = new Map(distributions.map((d) => [d.id, d]));
+const buildCompleteResponseList = (
+  responses: IResponse[],
+  distributions: IDistribution[],
+  files: IResponseFile[],
+): ICompleteResponse[] => {
+  const distributionById = new Map<number, IDistribution>(distributions.map((d) => [d.id, d]));
+  const filesByResponseId = new Map<number, IResponseFile[]>();
+
+  files.forEach((file) => {
+    if (file.responseId == null) return;
+
+    const fileList = filesByResponseId.get(file.responseId) ?? [];
+    fileList.push(file);
+    filesByResponseId.set(file.responseId, fileList);
+  });
 
   return responses.flatMap((response) => {
     const distribution = response.distributionId ? distributionById.get(response.distributionId) : undefined;
     if (!distribution) return [];
 
+    const responseFiles = response.id != null ? filesByResponseId.get(response.id) ?? [] : [];
+
+    const seen = new Set<string>();
+
+    const responseFilesWithUniqueFileIds = responseFiles.filter((file) => {
+      const fileId = file.id;
+      if (seen.has(fileId.toString())) return false;
+
+      seen.add(fileId.toString());
+      return true;
+    });
+
     return {
       ...response,
+      files: responseFilesWithUniqueFileIds,
       formId: distribution.formId,
       senderId: distribution.senderId,
       senderName: distribution.senderName,

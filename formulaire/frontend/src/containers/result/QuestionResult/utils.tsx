@@ -30,7 +30,13 @@ export const renderQuestionResult = (questionType: QuestionTypes, distributionMa
     case QuestionTypes.DATE:
     case QuestionTypes.TIME:
     case QuestionTypes.SHORTANSWER:
-      return <QuestionResultWithoutGraph completeResponseList={getReponseListForUniqueResult(distributionMap)} />;
+    case QuestionTypes.FILE:
+      return (
+        <QuestionResultWithoutGraph
+          completeResponseList={getReponseListForUniqueResult(distributionMap)}
+          questionType={questionType}
+        />
+      );
     default:
       return "pas encore fait";
   }

@@ -22,7 +22,7 @@ export const ResultProvider: FC<IResultProviderProps> = ({ children, formId, for
   const [selectedFormElement, setSelectedFormElement] = useState<IFormElement | null>(null);
   const { formElementList } = useFormElementListBuild(formId);
 
-  const { resultMap, isLoading: isResultMapLoading } = useBuildResponseMap(selectedFormElement);
+  const { resultMap, isLoading: isResultMapLoading } = useBuildResponseMap(formId);
 
   const getDistributionMap = useCallback(
     (questionId: QuestionId | null) => {
