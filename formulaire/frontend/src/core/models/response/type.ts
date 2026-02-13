@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/naming-convention */
+import { DistributionStatus } from "../distribution/enums";
 
 export interface IResponse {
   id: number | null;
@@ -35,4 +36,19 @@ export interface IResponseFile {
   filename: string;
   type: string;
   size?: number;
+}
+
+export interface ICompleteResponse extends IResponse {
+  formId: number;
+  senderId: string;
+  senderName: string;
+  responderId: string;
+  responderName: string;
+  status: DistributionStatus;
+  dateSending: string | null;
+  dateResponse: string | null;
+  active: boolean;
+  structure: string | null;
+  publicKey: string | null;
+  captchaId: string | null;
 }
