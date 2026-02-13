@@ -14,9 +14,10 @@ import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { useGlobal } from "~/providers/GlobalProvider";
 
-import { CreationLayout } from "../CreationLayout";
 import { getRecursiveFolderParents, useGetTreeHeaderButtons } from "./utils";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "../CreationView/style";
+import { FormTreeView } from "~/components/TreeGraph";
+import { useNavigate } from "react-router-dom";
 
 export const TreeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -36,6 +37,7 @@ export const TreeView: FC = () => {
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
   const headerButtons = useGetTreeHeaderButtons();
   const { navigateToHome } = useFormulaireNavigation();
+  const navigate = useNavigate();
 
   const { isTablet } = useGlobal();
 
@@ -97,9 +99,8 @@ export const TreeView: FC = () => {
             />
           )}
         </Box>
-        {form && <CreationLayout headerHeight={headerHeight} />}
+        {form && <FormTreeView formElements={formElementsList} form={form} redirectTo={navigate} />}
       </Box>
-      COUCOU //TODO : Tree
     </>
   );
 
