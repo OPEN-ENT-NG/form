@@ -36,7 +36,11 @@ export const FormTreeView = ({ form, formElements }: FormTreeViewProps) => {
     initD3Dagre();
 
     const handleResize = () => {
-      /* ... */
+      const svg = d3.select("#tree-svg");
+      const zoom = d3.zoom().on("zoom", (e: any) => {
+        svg.select("g").attr("transform", e.transform);
+      });
+      centerGraph(svg, zoom);
     };
     window.addEventListener("resize", handleResize);
     return () => window.removeEventListener("resize", handleResize);
