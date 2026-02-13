@@ -11,17 +11,21 @@ export const QuestionResultLayout: FC<QuestionResultLayoutProps> = ({
   questionTitle,
   children,
   isQuestionMandatory,
+  actions,
 }) => {
   return (
     <Paper elevation={2} sx={paperStyle}>
-      <Box display="flex" gap={1}>
-        <Typography variant="h6">{questionTitle}</Typography>
-        {isQuestionMandatory && (
-          <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR}>
-            *
-          </Typography>
-        )}
-      </Box>
+      <Stack width="100%" direction="row" justifyContent="space-between" alignItems="center">
+        <Box display="flex" gap={1}>
+          <Typography variant="h6">{questionTitle}</Typography>
+          {isQuestionMandatory && (
+            <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR}>
+              *
+            </Typography>
+          )}
+        </Box>
+        {actions}
+      </Stack>
       <Stack>{children}</Stack>
     </Paper>
   );

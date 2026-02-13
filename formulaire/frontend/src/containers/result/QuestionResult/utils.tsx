@@ -41,3 +41,9 @@ export const renderQuestionResult = (questionType: QuestionTypes, distributionMa
       return "pas encore fait";
   }
 };
+
+export const hasAtLeastOneFile = (distributionMap: DistributionMap): boolean => {
+  const completeResponseList = getReponseListForUniqueResult(distributionMap);
+
+  return completeResponseList.some((response) => response.files.length);
+};

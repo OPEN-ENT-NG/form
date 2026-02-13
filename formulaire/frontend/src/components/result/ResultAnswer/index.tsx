@@ -16,7 +16,12 @@ export const ResultAnswer: FC<IResultAnswerProps> = ({ completeResponse, questio
         <Stack>
           {completeResponse.files.map((file) => {
             return (
-              <Link key={file.id}>
+              <Link
+                key={`${file.id}-${file.filename}`}
+                href={`/formulaire/responses/files/${file.id}/download`}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <FileDownloadIcon />
                 {file.filename}
               </Link>
