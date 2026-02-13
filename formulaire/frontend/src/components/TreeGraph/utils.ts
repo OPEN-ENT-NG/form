@@ -1,19 +1,7 @@
-const QUESTION_TYPE_ICONS: Record<number, string> = {
-  1: "long-answer",
-  2: "short-answer",
-  3: "free-text",
-  4: "unic-answer",
-  5: "multiple-answer",
-  6: "date",
-  7: "time",
-  8: "file",
-  9: "singleanswer_radio",
-  10: "matrix",
-  11: "cursor",
-  12: "ranking",
-};
+import { QUESTION_TYPE_ICONS } from "~/core/constants";
+import { QuestionTypes } from "~/core/models/question/enum";
 
-export const displayTypeIcon = (code: number): string | undefined =>
+export const displayTypeIcon = (code: QuestionTypes): string | undefined =>
   QUESTION_TYPE_ICONS[code] ? `/formulaire/public/img/question_type/${QUESTION_TYPE_ICONS[code]}.svg` : undefined;
 
 export const shuffle = <T>(a: T[]): T[] => {

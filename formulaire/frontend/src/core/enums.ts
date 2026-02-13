@@ -96,6 +96,21 @@ export enum ResponsePageType {
   END_PREVIEW = "END_PREVIEW",
 }
 
+export enum QuestionType {
+  LONG_ANSWER = 1,
+  SHORT_ANSWER = 2,
+  FREE_TEXT = 3,
+  UNIC_ANSWER = 4,
+  MULTIPLE_ANSWER = 5,
+  DATE = 6,
+  TIME = 7,
+  FILE = 8,
+  SINGLEANSWER_RADIO = 9,
+  MATRIX = 10,
+  CURSOR = 11,
+  RANKING = 12,
+}
+
 // Edifice text Editor
 
 export enum EditorFocusPosition {
