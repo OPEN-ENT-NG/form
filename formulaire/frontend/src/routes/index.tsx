@@ -39,6 +39,13 @@ const routes = [
         },
       },
       {
+        path: FRONT_ROUTES.formTree.path,
+        async lazy() {
+          const { Tree } = await import("./tree");
+          return { Component: Tree };
+        },
+      },
+      {
         path: FRONT_ROUTES.formResponse.path,
         async lazy() {
           const { ResponseOutlet } = await import("./response");
