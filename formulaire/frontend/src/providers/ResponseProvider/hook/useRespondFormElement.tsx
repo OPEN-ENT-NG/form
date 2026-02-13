@@ -95,20 +95,15 @@ export const useRespondFormElement = (responsesMap: ResponseMap) => {
         });
         break;
       case QuestionTypes.SINGLEANSWER:
-      case QuestionTypes.SINGLEANSWERRADIO: {
-        const selectedResponse =
-          questionResponses.find((r) => r.selected) ?? createNewResponse(question.id, undefined, distributionId); // find the one selected
-        updateOrCreateResponse(selectedResponse, responsesToUpdate, responsesToCreate); // update or create
-        break;
-      }
+      case QuestionTypes.SINGLEANSWERRADIO:
       case QuestionTypes.MULTIPLEANSWER: {
-        questionIdsResponseToDelete.push(question.id); // we want to delete existing responses..
+        questionIdsResponseToDelete.push(question.id); // we want to delete existing response(s)..
         const selectedResponses = questionResponses.filter((r) => r.selected);
         responsesToCreate.push(
           ...(selectedResponses.length > 0
             ? selectedResponses
             : [createNewResponse(question.id, undefined, distributionId)]),
-        ); // ..and create new responses with the selected ones
+        ); // ..and create new response(s) with the selected one(s)
         break;
       }
       case QuestionTypes.RANKING: {
