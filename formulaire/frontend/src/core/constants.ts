@@ -91,3 +91,6 @@ export const TABLET_MAX_WIDTH = 768;
 // Variable types
 export const STRING = "string";
 export const FILE = "file";
+
+// Result View
+export const DEFAULT_DISPLAY_ANSWER_VALUE = "-";
