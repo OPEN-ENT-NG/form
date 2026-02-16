@@ -1,8 +1,6 @@
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import * as dagreD3 from "dagre-d3";
-import { IconUtils } from "@common/utils/icon";
-import { TreeUtils } from "@common/utils/tree";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
@@ -11,11 +9,12 @@ import { getFollowingFormElement } from "~/providers/CreationProvider/utils";
 import { getNextFormElement as getNextFormElementSection } from "~/core/models/section/utils";
 import { getNextFormElement as getNextFormElementQuestion } from "~/core/models/question/utils";
 import { t } from "~/i18n";
+import { displayTypeIcon, intersects, shuffle } from "./utils";
+import "./tree.scss";
 
 interface FormTreeViewProps {
   form: IForm;
   formElements: IFormElement[];
-  redirectTo: (path: string) => void;
 }
 
 interface Line {
@@ -29,12 +28,8 @@ interface Arrow {
   lines: Line[];
 }
 
-export const FormTreeView = ({ form, formElements, redirectTo }: FormTreeViewProps) => {
+export const FormTreeView = ({ form, formElements }: FormTreeViewProps) => {
   const mainGraphRef = useRef<any>(null);
-
-  const backToEditor = useCallback(() => {
-    redirectTo(`/form/${form.id}/edit`);
-  }, [form.id, redirectTo]);
 
   useEffect(() => {
     if (formElements.length === 0) return;
@@ -93,7 +88,7 @@ export const FormTreeView = ({ form, formElements, redirectTo }: FormTreeViewPro
 
   const initNodes = (): any[] => {
     const recapElement = {
-      id: null,
+      id: 0,
       form_id: form.id,
       title: t("formulaire.end.form"),
     };
@@ -162,24 +157,6 @@ export const FormTreeView = ({ form, formElements, redirectTo }: FormTreeViewPro
     return intersects(a.startX, a.startY, a.endX, a.endY, b.startX, b.startY, b.endX, b.endY);
   };
 
-  const intersects = (
-    x1: number,
-    y1: number,
-    x2: number,
-    y2: number,
-    x3: number,
-    y3: number,
-    x4: number,
-    y4: number,
-  ): boolean => {
-    const det = (x2 - x1) * (y4 - y3) - (x4 - x3) * (y2 - y1);
-    if (det === 0) return false;
-
-    const lambda = ((y4 - y3) * (x4 - x1) + (x3 - x4) * (y4 - y1)) / det;
-    const gamma = ((y1 - y2) * (x4 - x1) + (x2 - x1) * (y4 - y1)) / det;
-    return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
-  };
-
   const render_graph = (render: any, nodes: any[], edgeList: any[], inner: any, svg: any): void => {
     let nbTries = 100;
     let iter_cnt = 0;
@@ -187,7 +164,7 @@ export const FormTreeView = ({ form, formElements, redirectTo }: FormTreeViewPro
     let best_result: number | undefined;
 
     while (nbTries--) {
-      const list = TreeUtils.shuffle(edgeList);
+      const list = shuffle(edgeList);
       if (!optimalArray) optimalArray = list;
       setNodesAndEdges(nodes, edgeList, render, inner);
       const arrows = extractArrows(svg);
@@ -248,7 +225,7 @@ export const FormTreeView = ({ form, formElements, redirectTo }: FormTreeViewPro
   const getHtmlNode = (formElement: IFormElement): string => {
     if (isQuestion(formElement)) {
       return `<div class="tree-view-question">
-                <img src="${IconUtils.displayTypeIcon(formElement.questionType)}"/>
+                <img src="${displayTypeIcon(formElement.questionType)}"/>
                 <div class="title ellipsis">${formElement.title}</div>
               </div>`;
     } else if (isSection(formElement)) {
@@ -274,8 +251,7 @@ export const FormTreeView = ({ form, formElements, redirectTo }: FormTreeViewPro
 
   return (
     <div className="tree-view">
-      <button onClick={backToEditor}>{t("formulaire.back.editor")}</button>
-      <svg id="tree-svg">
+      <svg width="100%" id="tree-svg">
         <g />
       </svg>
     </div>

@@ -1,4 +1,4 @@
-import { Box, Button, EmptyState } from "@cgi-learning-hub/ui";
+import { Box, Button, EmptyState, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -17,7 +17,7 @@ import { useGlobal } from "~/providers/GlobalProvider";
 import { getRecursiveFolderParents, useGetTreeHeaderButtons } from "./utils";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "../CreationView/style";
 import { FormTreeView } from "~/components/TreeGraph";
-import { useNavigate } from "react-router-dom";
+import { treeStyle, treeTypographyStyle } from "./style";
 
 export const TreeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -34,10 +34,9 @@ export const TreeView: FC = () => {
     newChoiceValue,
     setNewChoiceValue,
   } = useCreation();
-  const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
+  const [headerRef] = useElementHeight<HTMLDivElement>();
   const headerButtons = useGetTreeHeaderButtons();
   const { navigateToHome } = useFormulaireNavigation();
-  const navigate = useNavigate();
 
   const { isTablet } = useGlobal();
 
@@ -99,7 +98,13 @@ export const TreeView: FC = () => {
             />
           )}
         </Box>
-        {form && <FormTreeView formElements={formElementsList} form={form} redirectTo={navigate} />}
+        <Box sx={treeStyle}>
+          <Box sx={treeTypographyStyle}>
+            <Typography fontStyle={"italic"}>{t("formulaire.scroll.legend")}</Typography>
+            <Typography fontStyle={"italic"}>{t("formulaire.mouse.legend")}</Typography>
+          </Box>
+          {form && <FormTreeView formElements={formElementsList} form={form} />}
+        </Box>
       </Box>
     </>
   );
