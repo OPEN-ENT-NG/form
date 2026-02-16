@@ -9,12 +9,12 @@ export const useRespondQuestion = (
   responsesMap: Map<string, Map<number, IResponse[]>>,
   setResponsesMap: Dispatch<React.SetStateAction<Map<string, Map<number, IResponse[]>>>>,
 ) => {
-  const getQuestionResponses = (question: IQuestion): IResponse[] => {
+  const getQuestionResponses = (question: IQuestion, matrixQuestion?: IQuestion): IResponse[] => {
     const questionId = question.id;
-    const sectionId = question.sectionId;
+    const sectionId = matrixQuestion ? matrixQuestion.sectionId : question.sectionId;
     const formElementIdType = sectionId
       ? createStringifiedFormElementIdType(sectionId, FormElementType.SECTION)
-      : getStringifiedFormElementIdType(question);
+      : getStringifiedFormElementIdType(matrixQuestion ?? question);
     if (!formElementIdType || !questionId) return [];
 
     const questionResponsesMap = responsesMap.get(formElementIdType);
@@ -27,12 +27,12 @@ export const useRespondQuestion = (
     return responses.length ? { ...responses[0] } : null;
   };
 
-  const updateQuestionResponses = (question: IQuestion, newResponses: IResponse[]) => {
+  const updateQuestionResponses = (question: IQuestion, newResponses: IResponse[], matrixQuestion?: IQuestion) => {
     const questionId = question.id;
-    const sectionId = question.sectionId;
+    const sectionId = matrixQuestion ? matrixQuestion.sectionId : question.sectionId;
     const formElementIdType = sectionId
       ? createStringifiedFormElementIdType(sectionId, FormElementType.SECTION)
-      : getStringifiedFormElementIdType(question);
+      : getStringifiedFormElementIdType(matrixQuestion ?? question);
     if (!formElementIdType || !questionId) return;
 
     setResponsesMap((prev) => {

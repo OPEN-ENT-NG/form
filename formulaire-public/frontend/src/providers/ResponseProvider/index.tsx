@@ -9,7 +9,6 @@ import { IResponse } from "~/core/models/response/type";
 import { createNewResponse } from "~/core/models/response/utils";
 import { useGetPublicFormQuery } from "~/services/api/formulaireApi/formApi";
 
-import { usePublicResponse } from "./hook/usePublicResponse";
 import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
@@ -28,7 +27,6 @@ export const useResponse = () => {
 export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initialPageType }) => {
   const { formKey } = useParams();
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
-  const { saveClassicResponses: savePublicResponses } = usePublicResponse();
   const [form, setForm] = useState<IForm | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
   const [longestPathsMap, setLongestPathsMap] = useState<Map<string, number>>(new Map<string, number>());
@@ -113,7 +111,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initial
   }, [formElementsList]);
 
   const saveResponses = async () => {
-    await savePublicResponses();
+    //TODO update storage here
   };
 
   const updateProgress = (element: IFormElement, newHistoricFormElementIds: number[]) => {
@@ -132,16 +130,24 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initial
       form,
       formElementsList,
       progress,
+      setProgress,
       updateProgress,
       longestPathsMap,
       pageType,
       setPageType,
+      currentElement,
+      setCurrentElement,
       saveResponses,
       responsesMap,
       setResponsesMap,
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
+      distribution,
+      responses,
+      isPageTypeRecap,
+      scrollToQuestionId,
+      setScrollToQuestionId,
       formKey,
       responseCaptcha,
       responses,
