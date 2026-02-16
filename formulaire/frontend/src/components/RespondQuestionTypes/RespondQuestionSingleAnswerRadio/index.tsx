@@ -59,7 +59,7 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
     const customChoiceId = question.choices?.find((choice) => choice.isCustom)?.id;
     if (!customChoiceId) return;
 
-    const updatedReponses = existingResponses.map((response) => {
+    const updatedResponses = existingResponses.map((response) => {
       if (response.choiceId === customChoiceId) {
         if (response.answer) setSelectedValue(response.answer.toString());
         return {
@@ -71,7 +71,7 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
       return { ...response, selected: false };
     });
 
-    updateQuestionResponses(question, updatedReponses);
+    updateQuestionResponses(question, updatedResponses);
   };
 
   return isPageTypeRecap && !selectedValue ? (

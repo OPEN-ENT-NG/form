@@ -55,14 +55,14 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
     const customChoiceId = question.choices?.find((choice) => choice.isCustom)?.id;
     if (!customChoiceId) return;
 
-    const updatedReponses = existingResponses.map((response) => {
+    const updatedResponses = existingResponses.map((response) => {
       if (response.choiceId === customChoiceId) {
         return { ...response, customAnswer: newCustomAnswer };
       }
       return response;
     });
 
-    updateQuestionResponses(question, updatedReponses);
+    updateQuestionResponses(question, updatedResponses);
   };
 
   return isPageTypeRecap && !selectedValue ? (
