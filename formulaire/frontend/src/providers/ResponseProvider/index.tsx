@@ -66,7 +66,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     responsesMap,
     setResponsesMap,
   );
-  const [isPageTypeRecap, setIsPageTypeRecap] = useState<boolean>(pageType === ResponsePageType.RECAP);
+  const isPageTypeRecap = useMemo(() => pageType === ResponsePageType.RECAP, [pageType]);
   const [scrollToQuestionId, setScrollToQuestionId] = useState<number | null>(null);
   const [addDistribution] = useAddDistributionMutation();
 
@@ -201,10 +201,6 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     if (isInPreviewMode || !distribution?.id || !form) return;
     await save(currentElement, form.anonymous, distribution.id);
   };
-
-  useEffect(() => {
-    setIsPageTypeRecap(pageType === ResponsePageType.RECAP);
-  }, [pageType]);
 
   const updateProgress = (
     element: IFormElement,
