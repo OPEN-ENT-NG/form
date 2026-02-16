@@ -36,7 +36,7 @@ export const RespondQuestionRanking: FC<IRespondQuestionTypesProps> = ({ questio
         .filter((id): id is number => id !== null) || [];
 
     setOrderedChoiceIds(defaultOrderIds);
-  }, []);
+  }, [question, getQuestionResponses]);
 
   const persistOrder = (newOrderList: number[]) => {
     const existingResponses = getQuestionResponses(question);
