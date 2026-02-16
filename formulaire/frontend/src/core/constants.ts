@@ -111,3 +111,25 @@ export const QUESTION_TYPE_ICONS: Record<QuestionTypes, string> = {
   [QuestionTypes.CURSOR]: "cursor",
   [QuestionTypes.RANKING]: "ranking",
 };
+
+const BLUE_COLORS: string[] = ["#37A4CD", "#1691C0", "#056F98", "#5AB7DA", "#89CEE9"];
+const YELLOW_COLORS: string[] = ["#FFC73C", "#F2AE00", "#FFBB13", "#FFD263", "#FFDF91"];
+const PURPLE_COLORS: string[] = ["#475DD5", "#1129A6", "#2741C9", "#687BE0", "#93A1EC"];
+const ORANGE_COLORS: string[] = ["#FFA23C", "#F27E00", "#FF8E13", "#FFB463", "#FFCA91"];
+
+const COLORS_GROUPS: Array<string[]> = [BLUE_COLORS, YELLOW_COLORS, PURPLE_COLORS, ORANGE_COLORS];
+
+const getGraphColors = (colorsGroups: Array<string[]>): string[] => {
+    const colors: string[] = [];
+    const nbColorPerGroup: number = colorsGroups[0].length || 0;
+    for (let i = 0; i < nbColorPerGroup; i++) {
+        for (const groupColor of colorsGroups) {
+            colors.push(groupColor[i]);
+        }
+    }
+    return colors;
+};
+
+export const GRAPH_COLORS: string[] = getGraphColors(COLORS_GROUPS);
+
+export const NB_COLORS_AVAILABLE: number = 25;
