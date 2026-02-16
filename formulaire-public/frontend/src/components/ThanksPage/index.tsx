@@ -4,14 +4,14 @@ import { TypographyVariant } from "~/core/style/themeProps";
 import { t } from "~/i18n";
 
 import { emptyStateWrapper } from "../ErrorPage/style";
-import { SorrySVG } from "../SVG/SorrySVG";
+import { ThanksSVG } from "../SVG/ThanksSVG";
 
-export default function SorryPage() {
+export default function ThanksPage() {
   return (
     <Box sx={emptyStateWrapper}>
       <EmptyState
-        image={<SorrySVG />}
-        title={t("formulaire.public.end.sorry")}
+        image={<ThanksSVG />}
+        title={t("formulaire.public.end.thanks")}
         color="primary.main"
         imageHeight={300}
         slotProps={{
