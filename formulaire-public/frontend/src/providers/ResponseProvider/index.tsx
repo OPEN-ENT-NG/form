@@ -5,6 +5,8 @@ import { ResponsePageType } from "~/core/enums";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
+import { IResponse } from "~/core/models/response/type";
+import { createNewResponse } from "~/core/models/response/utils";
 import { useGetPublicFormQuery } from "~/services/api/formulaireApi/formApi";
 
 import { usePublicResponse } from "./hook/usePublicResponse";
@@ -23,13 +25,12 @@ export const useResponse = () => {
   return context;
 };
 
-export const ResponseProvider: FC<IResponseProviderProps> = ({ children, previewMode = false, initialPageType }) => {
+export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initialPageType }) => {
   const { formKey } = useParams();
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
   const { saveClassicResponses: savePublicResponses } = usePublicResponse();
   const [form, setForm] = useState<IForm | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
-  const [isInPreviewMode, setIsInPreviewMode] = useState<boolean>(previewMode);
   const [longestPathsMap, setLongestPathsMap] = useState<Map<string, number>>(new Map<string, number>());
   const [progress, setProgress] = useState<IProgressProps>({
     historicFormElementIds: [],
@@ -41,6 +42,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     responsesMap,
     setResponsesMap,
   );
+  //TODO
+  const responses = [] as IResponse[];
+  const responseCaptcha = createNewResponse(0);
 
   const storageFormKey = sessionStorage.getItem("formKey");
 
@@ -109,7 +113,6 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   }, [formElementsList]);
 
   const saveResponses = async () => {
-    if (isInPreviewMode) return;
     await savePublicResponses();
   };
 
@@ -128,8 +131,6 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     () => ({
       form,
       formElementsList,
-      isInPreviewMode,
-      setIsInPreviewMode,
       progress,
       updateProgress,
       longestPathsMap,
@@ -141,11 +142,13 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
+      formKey,
+      responseCaptcha,
+      responses,
     }),
     [
       form,
       formElementsList,
-      isInPreviewMode,
       progress,
       updateProgress,
       longestPathsMap,
@@ -157,6 +160,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
+      formKey,
+      responseCaptcha,
+      responses,
     ],
   );
 
