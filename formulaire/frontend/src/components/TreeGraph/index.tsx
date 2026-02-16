@@ -2,7 +2,6 @@
 import { useEffect, useRef } from "react";
 import * as d3 from "d3";
 import * as dagreD3 from "dagre-d3";
-import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
@@ -12,24 +11,9 @@ import { getNextFormElement as getNextFormElementQuestion } from "~/core/models/
 import { t } from "~/i18n";
 import { displayTypeIcon, intersects, shuffle } from "./utils";
 import "./tree.scss";
+import { IArrow, IFormTreeViewProps, ILine } from "./types";
 
-interface FormTreeViewProps {
-  form: IForm;
-  formElements: IFormElement[];
-}
-
-interface Line {
-  startX: number;
-  startY: number;
-  endX: number;
-  endY: number;
-}
-
-interface Arrow {
-  lines: Line[];
-}
-
-export const FormTreeView = ({ form, formElements }: FormTreeViewProps) => {
+export const FormTreeView = ({ form, formElements }: IFormTreeViewProps) => {
   const mainGraphRef = useRef<any>(null);
 
   useEffect(() => {
@@ -136,7 +120,7 @@ export const FormTreeView = ({ form, formElements }: FormTreeViewProps) => {
     }
   };
 
-  const countNbCollisions = (arrows: Arrow[]): number => {
+  const countNbCollisions = (arrows: IArrow[]): number => {
     let collisionCnt = 0;
     for (const arrow of arrows) {
       collisionCnt += arrows.filter((a) => a !== arrow && arrowsIntersect(arrow, a)).length;
@@ -144,7 +128,7 @@ export const FormTreeView = ({ form, formElements }: FormTreeViewProps) => {
     return collisionCnt;
   };
 
-  const arrowsIntersect = (arrowA: Arrow, arrowB: Arrow): boolean => {
+  const arrowsIntersect = (arrowA: IArrow, arrowB: IArrow): boolean => {
     for (const lineA of arrowA.lines) {
       for (const lineB of arrowB.lines) {
         if (linesIntersect(lineA, lineB)) return true;
@@ -153,7 +137,7 @@ export const FormTreeView = ({ form, formElements }: FormTreeViewProps) => {
     return false;
   };
 
-  const linesIntersect = (a: Line, b: Line): boolean => {
+  const linesIntersect = (a: ILine, b: ILine): boolean => {
     return intersects(a.startX, a.startY, a.endX, a.endY, b.startX, b.startY, b.endX, b.endY);
   };
 
@@ -199,11 +183,11 @@ export const FormTreeView = ({ form, formElements }: FormTreeViewProps) => {
     render(inner, g);
   };
 
-  const extractArrows = (svg: any): Arrow[] => {
+  const extractArrows = (svg: any): IArrow[] => {
     const nn = svg.select(".edgePaths");
     const paths = nn.node();
     let fc = paths.firstChild;
-    const arrows: Arrow[] = [];
+    const arrows: IArrow[] = [];
 
     while (fc) {
       const path = fc.firstChild.getAttribute("d");
@@ -212,7 +196,7 @@ export const FormTreeView = ({ form, formElements }: FormTreeViewProps) => {
         return parseFloat(n);
       });
 
-      const lines: Line[] = [];
+      const lines: ILine[] = [];
       for (let i = 0; i <= coords.length - 4; i += 2) {
         lines.push({ startX: coords[i], startY: coords[i + 1], endX: coords[i + 2], endY: coords[i + 3] });
       }

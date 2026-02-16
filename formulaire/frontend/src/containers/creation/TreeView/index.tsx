@@ -11,7 +11,6 @@ import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
-import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { useGlobal } from "~/providers/GlobalProvider";
 
 import { getRecursiveFolderParents, useGetTreeHeaderButtons } from "./utils";
@@ -21,35 +20,13 @@ import { treeStyle, treeTypographyStyle } from "./style";
 
 export const TreeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
-  const {
-    form,
-    folders,
-    formElementsList,
-    handleDeleteFormElement,
-    currentEditingElement,
-    setCurrentEditingElement,
-    saveQuestion,
-    saveSection,
-    setFormElementsList,
-    newChoiceValue,
-    setNewChoiceValue,
-  } = useCreation();
+  const { form, folders, formElementsList } = useCreation();
   const [headerRef] = useElementHeight<HTMLDivElement>();
   const headerButtons = useGetTreeHeaderButtons();
   const { navigateToHome } = useFormulaireNavigation();
 
   const { isTablet } = useGlobal();
 
-  const { handleClickAway } = useClickAwayEditingElement(
-    handleDeleteFormElement,
-    setCurrentEditingElement,
-    formElementsList,
-    setFormElementsList,
-    newChoiceValue,
-    setNewChoiceValue,
-    saveQuestion,
-    saveSection,
-  );
   const { isTheme1D } = useTheme();
 
   const selectView = () => {
@@ -79,13 +56,7 @@ export const TreeView: FC = () => {
 
   const desktopView = (
     <>
-      <Box
-        sx={creationViewStyle(isTheme1D)}
-        data-type={ClickAwayDataType.ROOT}
-        onMouseDown={(e) => {
-          handleClickAway(e, currentEditingElement);
-        }}
-      >
+      <Box sx={creationViewStyle(isTheme1D)} data-type={ClickAwayDataType.ROOT}>
         <Box ref={headerRef} sx={creationHedearStyle}>
           {form && (
             <Header
