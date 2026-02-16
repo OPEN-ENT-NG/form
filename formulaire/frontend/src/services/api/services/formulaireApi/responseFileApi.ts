@@ -1,4 +1,4 @@
-import { QueryMethod } from "~/core/enums.ts";
+import { QueryMethod, TagName } from "~/core/enums.ts";
 import { IResponseFile } from "~/core/models/response/type.ts";
 import { handleErrorApi } from "~/core/utils.ts";
 
@@ -11,6 +11,7 @@ export const responseFileApi = emptySplitFormulaireApi.injectEndpoints({
         url: `forms/${formId}/files/all`,
         method: QueryMethod.GET,
       }),
+      providesTags: [TagName.RESPONSE_FILE],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -36,11 +37,11 @@ export const responseFileApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
-    deleteFilesByResponseIds: builder.mutation<void, number[]>({
-      query: (responseIds) => ({
-        url: `responses/files/multiple`,
+    deleteFilesByResponseIds: builder.mutation<void, { ids: (number | string)[]; isFileIds?: boolean }>({
+      query: ({ ids, isFileIds = false }) => ({
+        url: `responses/files/multiple?isFileIds=${isFileIds}`,
         method: QueryMethod.DELETE,
-        body: responseIds,
+        body: ids,
       }),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
@@ -54,4 +55,5 @@ export const responseFileApi = emptySplitFormulaireApi.injectEndpoints({
   overrideExisting: false,
 });
 
-export const { useGetQuestionFilesQuery, useCreateResponseFileMutation, useDeleteFilesByResponseIdsMutation } = responseFileApi;
+export const { useGetQuestionFilesQuery, useCreateResponseFileMutation, useDeleteFilesByResponseIdsMutation } =
+  responseFileApi;

@@ -38,6 +38,8 @@ export type ResponseProviderContextType = {
   isPageTypeRecap: boolean;
   scrollToQuestionId: number | null;
   setScrollToQuestionId: Dispatch<SetStateAction<number | null>>;
+  fileIdsToDelete: string[];
+  setFileIdsToDelete: Dispatch<SetStateAction<string[]>>;
 };
 
 export interface IFormElementIdType {

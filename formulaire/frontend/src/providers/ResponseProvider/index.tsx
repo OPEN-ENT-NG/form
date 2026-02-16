@@ -48,7 +48,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
   const [responses, setResponses] = useState<IResponse[]>([]);
-  const { save } = useRespondFormElement(responsesMap, user);
+  const [fileIdsToDelete, setFileIdsToDelete] = useState<string[]>([]);
+  const { save } = useRespondFormElement(responsesMap, fileIdsToDelete, setFileIdsToDelete, user);
   const [form, setForm] = useState<IForm | null>(null);
   const [distribution, setDistribution] = useState<IDistribution | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
@@ -245,6 +246,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       isPageTypeRecap,
       scrollToQuestionId,
       setScrollToQuestionId,
+      fileIdsToDelete,
+      setFileIdsToDelete,
     }),
     [
       form,
@@ -268,6 +271,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       isPageTypeRecap,
       scrollToQuestionId,
       setScrollToQuestionId,
+      fileIdsToDelete,
     ],
   );
 

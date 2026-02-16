@@ -301,6 +301,7 @@ public class ResponseFileController extends ControllerHelper {
     @ResourceFilter(ResponseRight.class)
     @SecuredAction(value = "", type = ActionType.RESOURCE)
     public void deleteAllMultiple(HttpServerRequest request) {
+        Boolean isFileIds = Boolean.valueOf(request.getParam("isFileIds"));
         UserUtils.getUserInfos(eb, request, user -> {
             RequestUtils.bodyToJsonArray(request, responseIdsJson -> {
                 if (responseIdsJson == null || responseIdsJson.isEmpty()) {
@@ -316,7 +317,7 @@ public class ResponseFileController extends ControllerHelper {
                 distributionService.listByResponder(user)
                     .compose(distributions -> {
                         distributionIds.addAll(distributions.stream().map(Distribution::getId).collect(Collectors.toList()));
-                        return responseService.listByIds(responseIds);
+                        return responseService.listByIds(responseIds, isFileIds);
                     })
                     .onSuccess(responses -> {
                         List<Long> responsesDistributionIds = responses.stream().map(Response::getDistributionId).collect(Collectors.toList());
@@ -328,7 +329,8 @@ public class ResponseFileController extends ControllerHelper {
                             return;
                         }
 
-                        deleteAllByResponse(request, responseIds);
+                        if(isFileIds) deleteAllByIds(request, responseIds);
+                        else deleteAllByResponse(request, responseIds);
                     })
                     .onFailure(err -> {
                         log.error("[Formulaire@ResponseFileController::deleteAllMultiple] An error occurred while checking " +
@@ -357,6 +359,17 @@ public class ResponseFileController extends ControllerHelper {
                         "response files with ids " + responseIds + " and their associated files : " + err.getMessage());
                 renderError(request);
             });
+    }
+
+    private void deleteAllByIds(HttpServerRequest request, List<String> fileIds) {
+        responseFileService.deleteAll(new JsonArray(fileIds), deleteResponseFilesEvt -> {
+            if (deleteResponseFilesEvt.isLeft()) {
+                log.error("[Formulaire@ResponseFileController::deleteAllByIds] Fail to delete response files in BDD by ids");
+                renderInternalError(request, deleteResponseFilesEvt);
+                return;
+            }
+            ok(request);
+        });
     }
 
     /**

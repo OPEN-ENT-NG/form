@@ -1,4 +1,5 @@
 import { IUserInfo } from "@edifice.io/client";
+import { Dispatch, SetStateAction } from "react";
 import { useDispatch } from "react-redux";
 
 import { TagName } from "~/core/enums";
@@ -26,13 +27,18 @@ import {
 
 import { ResponseMap } from "../types";
 
-export const useRespondFormElement = (responsesMap: ResponseMap, user: IUserInfo | undefined) => {
+export const useRespondFormElement = (
+  responsesMap: ResponseMap,
+  fileIdsToDelete: string[],
+  setFileIdsToDelete: Dispatch<SetStateAction<string[]>>,
+  user: IUserInfo | undefined,
+) => {
   const dispatch = useDispatch();
   const [createResponses] = useCreateMultipleMutation();
   const [updateResponses] = useUpdateMultipleMutation();
   const [deleteMultipleByQuestionAndDistribution] = useDeleteMultipleByQuestionAndDistributionMutation();
   const [createResponseFile] = useCreateResponseFileMutation();
-  const [deleteFilesByResponseIds] = useDeleteFilesByResponseIdsMutation();
+  const [deleteFilesByIds] = useDeleteFilesByResponseIdsMutation();
 
   const save = async (currentElement: IFormElement, isFormAnonymous: boolean, distributionId: number) => {
     const formElementIdType = getStringifiedFormElementIdType(currentElement) ?? "";
@@ -42,20 +48,18 @@ export const useRespondFormElement = (responsesMap: ResponseMap, user: IUserInfo
     const responsesToUpdate = [] as IResponse[];
     const responsesToCreate = [] as IResponse[];
     const questionIdsResponseToDelete = [] as number[];
-    const responseIdsFileToDelete = [] as number[];
     const responsesFiles = [] as IFile[];
 
     const questions = isSection(currentElement) ? currentElement.questions : [currentElement as IQuestion];
     questions.forEach((q) => {
       if (q.questionType === QuestionTypes.FILE) {
         if (!q.id) return;
-        const questionResponse = localResponsesMap.get(q.id)?.[0];
-        if (!questionResponse) return;
-        if (questionResponse.id) responseIdsFileToDelete.push(questionResponse.id);
-        responsesToCreate.push(questionResponse);
-        questionResponse.files.forEach((f) => {
+        const response = localResponsesMap.get(q.id)?.[0];
+        if (!response) return;
+        if (!response.id) responsesToCreate.push(response);
+        response.files.forEach((f) => {
           if (!f.fileContent) return;
-          const file = createNewFile(f.fileContent, questionResponse.id, q.id!, isFormAnonymous, user);
+          const file = createNewFile(f.fileContent, response.id, q.id!, isFormAnonymous, user);
           responsesFiles.push(file);
         });
       } else if (q.questionType === QuestionTypes.MATRIX) {
@@ -82,7 +86,10 @@ export const useRespondFormElement = (responsesMap: ResponseMap, user: IUserInfo
     });
 
     // Delete old files
-    if (responseIdsFileToDelete.length) await deleteFilesByResponseIds(responseIdsFileToDelete);
+    if (fileIdsToDelete.length) {
+      await deleteFilesByIds({ ids: fileIdsToDelete, isFileIds: true });
+      setFileIdsToDelete([]);
+    }
 
     // Delete some responses
     if (questionIdsResponseToDelete.length)
@@ -90,22 +97,24 @@ export const useRespondFormElement = (responsesMap: ResponseMap, user: IUserInfo
 
     // Update existing responses
     let updatedResponses = [] as IResponse[];
-    if (responsesToUpdate.length)
+    if (responsesToUpdate.length) {
       updatedResponses = await updateResponses({
         distributionId,
         responses: buildResponsesPayload(responsesToUpdate, distributionId),
       }).unwrap();
+    }
 
     // Create new responses
     let createdResponses = [] as IResponse[];
-    if (responsesToCreate.length)
+    if (responsesToCreate.length) {
       createdResponses = await createResponses({
         distributionId,
         responses: buildResponsesPayload(responsesToCreate, distributionId),
       }).unwrap();
+    }
 
-    const fetchedResponses = [...updatedResponses, ...createdResponses];
     // Save ResponseFile
+    const fetchedResponses = [...updatedResponses, ...createdResponses];
     if (responsesFiles.length > 0) {
       const updatedResponsesFilePayloads = responsesFiles.reduce<IFilePayload[]>((acc, f) => {
         if (f.responseId) {
@@ -119,7 +128,7 @@ export const useRespondFormElement = (responsesMap: ResponseMap, user: IUserInfo
       await saveFiles(updatedResponsesFilePayloads);
     }
 
-    dispatch(emptySplitFormulaireApi.util.invalidateTags([TagName.RESPONSE]));
+    dispatch(emptySplitFormulaireApi.util.invalidateTags([TagName.RESPONSE, TagName.RESPONSE_FILE]));
   };
 
   const fillListsByQuestionType = (

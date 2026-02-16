@@ -11,6 +11,7 @@ export const emptySplitFormulaireApi = createApi({
     TagName.FORMS,
     TagName.DISTRIBUTION,
     TagName.RESPONSE,
+    TagName.RESPONSE_FILE,
     TagName.QUESTIONS,
     TagName.SECTIONS,
     TagName.FORM_ELEMENTS,
