@@ -8,8 +8,8 @@ import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultM
 
 import { QuestionResultWithoutGraph } from "./QuestionResultWithoutGraph";
 
-const getReponseListForUniqueResult = (distributionMap: DistributionMap): ICompleteResponse[] => {
-  return [...distributionMap.values()].flatMap((reponseList) => (reponseList.length ? reponseList[0] : []));
+const getResponseListForUniqueResult = (distributionMap: DistributionMap): ICompleteResponse[] => {
+  return [...distributionMap.values()].flatMap((responseList) => (responseList.length ? responseList[0] : []));
 };
 
 export const getDisplayDate = (completeResponse: ICompleteResponse) => {
@@ -33,7 +33,7 @@ export const renderQuestionResult = (questionType: QuestionTypes, distributionMa
     case QuestionTypes.FILE:
       return (
         <QuestionResultWithoutGraph
-          completeResponseList={getReponseListForUniqueResult(distributionMap)}
+          completeResponseList={getResponseListForUniqueResult(distributionMap)}
           questionType={questionType}
         />
       );
@@ -43,7 +43,7 @@ export const renderQuestionResult = (questionType: QuestionTypes, distributionMa
 };
 
 export const hasAtLeastOneFile = (distributionMap: DistributionMap): boolean => {
-  const completeResponseList = getReponseListForUniqueResult(distributionMap);
+  const completeResponseList = getResponseListForUniqueResult(distributionMap);
 
   return completeResponseList.some((response) => response.files.length);
 };

@@ -14,7 +14,7 @@ import { choiceBoxStyle, customAnswerStyle, formControlLabelStyle, labelStyle, S
 
 export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
-  const [reponses, setResponses] = useState<IResponse[]>([]);
+  const [responses, setResponses] = useState<IResponse[]>([]);
   const [customAnswer, setCustomAnswer] = useState<string>("");
   const { t } = useTranslation(FORMULAIRE);
 
@@ -37,19 +37,19 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
 
     const existingResponses = getQuestionResponses(question);
 
-    const updatedReponses = existingResponses.map((response) => {
+    const updatedResponses = existingResponses.map((response) => {
       if (response.choiceId === choiceId) {
         return { ...response, selected: !response.selected };
       }
       return response;
     });
 
-    updateQuestionResponses(question, updatedReponses);
+    updateQuestionResponses(question, updatedResponses);
   };
 
   const isChoiceSelected = (choiceId: number | null) => {
     if (!choiceId) return false;
-    return reponses.some((response) => response.choiceId === choiceId && response.selected);
+    return responses.some((response) => response.choiceId === choiceId && response.selected);
   };
 
   const handleCustomResponseChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -59,7 +59,7 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
     const customChoiceId = question.choices?.find((choice) => choice.isCustom)?.id;
     if (!customChoiceId) return;
 
-    const updatedReponses = existingResponses.map((response) => {
+    const updatedResponses = existingResponses.map((response) => {
       if (response.choiceId === customChoiceId) {
         return {
           ...response,
@@ -70,7 +70,7 @@ export const RespondQuestionMultipleAnswer: FC<IRespondQuestionTypesProps> = ({ 
       return response;
     });
 
-    updateQuestionResponses(question, updatedReponses);
+    updateQuestionResponses(question, updatedResponses);
   };
 
   const hasOneChoiceWithImage = useMemo(() => {
