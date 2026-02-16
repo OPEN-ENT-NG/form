@@ -1,7 +1,8 @@
-import { IResponse } from "./type";
+import { IResponse, IResponseDTO, IResponsePayload } from "./type";
 
 export const createNewResponse = (
   questionId: number,
+  responderId?: string,
   distributionId?: number,
   choiceId?: number,
   answer?: string | Date | number,
@@ -10,6 +11,7 @@ export const createNewResponse = (
   return {
     id: null,
     questionId: questionId,
+    responderId: responderId ? responderId : undefined,
     choiceId: choiceId ? choiceId : undefined,
     answer: answer ? answer : "",
     distributionId: distributionId ? distributionId : undefined,
@@ -21,6 +23,47 @@ export const createNewResponse = (
     choicePosition: choicePosition !== undefined ? choicePosition : undefined, // For question type ranking to order
     image: null, // For question type multiple answer
   };
+};
+
+export const transformResponse = (raw: IResponseDTO): IResponse => {
+  return {
+    id: raw.id,
+    questionId: raw.question_id,
+    responderId: raw.responder_id,
+    choiceId: raw.choice_id,
+    answer: raw.answer,
+    distributionId: raw.distribution_id,
+    originalId: raw.original_id,
+    customAnswer: raw.custom_answer,
+    files: [],
+    selected: false,
+    selectedIndexList: [], // For multiple answer in preview
+    choicePosition: raw.choice_position, // For question type ranking to order
+    image: null, // For question type multiple answer
+  };
+};
+
+export const transformResponses = (rawResponses: IResponseDTO[]): IResponse[] => {
+  return rawResponses.map(transformResponse);
+};
+
+export const buildResponsePayload = (response: IResponse, distributionId: number): IResponsePayload => {
+  return {
+    id: response.id,
+    question_id: response.questionId,
+    responder_id: response.responderId,
+    choice_id: response.choiceId,
+    answer: response.answer,
+    distribution_id: distributionId,
+    original_id: response.originalId,
+    custom_answer: response.customAnswer,
+    choice_position: response.choicePosition, // For question type ranking to order
+    image: response.image, // For question type multiple answer
+  };
+};
+
+export const buildResponsesPayload = (responses: IResponse[], distributionId: number): IResponsePayload[] => {
+  return responses.map((response) => buildResponsePayload(response, distributionId));
 };
 
 export const buildPublicResponsePayload = (responseCaptcha: IResponse, responses: IResponse[]) => {

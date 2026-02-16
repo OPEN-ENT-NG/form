@@ -10,10 +10,13 @@ export const globalOverrideStyles = {
     width: "100%",
     maxWidth: "none",
     minHeight: "calc(100vh - 65px) !important",
-    margin: "0",
     padding: "0 ! important",
     alignItems: "center",
     backgroundColor: "transparent !important",
+  },
+
+  "main.theme-1d": {
+    backgroundColor: "white !important",
   },
 
   "#media-library": {

@@ -5,7 +5,6 @@ import { IForm } from "./models/form/types";
 import { sharingRights } from "./rights";
 
 // KeyDown
-
 export const isEnterPressed = (event: React.KeyboardEvent) => {
   return event.key === (KeyName.ENTER as string);
 };

@@ -12,7 +12,7 @@ export const TOAST_CONFIG = {
   theme: "light" as Theme,
 };
 
-export const defaultViewWidth = "1352px";
+export const defaultViewMaxWidth = "1400px";
 export const defaultViewBackgroundColor = "white";
 export const defaultPaperShadow = "1px 4px 5px 2px rgba(0, 0, 0, 0.1)";
 
@@ -78,7 +78,7 @@ export const MOUSE_EVENT_DOWN = "onMouseDown";
 export const TOUCH_EVENT_START = "onTouchStart";
 
 // RESPONSIVE
-export const MOBILE_MAX_WIDTH = 576;
+export const MOBILE_MAX_WIDTH = 920;
 export const TABLET_MAX_WIDTH = 768;
 
 // Variable types

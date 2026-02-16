@@ -12,4 +12,5 @@ export interface IButtonProps {
   variant?: ComponentVariant.TEXT | ComponentVariant.OUTLINED | ComponentVariant.CONTAINED;
   action: () => void;
   startIcon?: ReactNode;
+  disabled?: boolean;
 }

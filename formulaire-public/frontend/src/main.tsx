@@ -6,7 +6,7 @@ import { GlobalStyles } from "@cgi-learning-hub/ui";
 import { EdificeClientProvider, EdificeThemeProvider } from "@edifice.io/react";
 import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
@@ -16,11 +16,11 @@ import { t } from "~/i18n";
 
 import { DEFAULT_THEME, TOAST_CONFIG } from "./core/constants";
 import { globalOverrideStyles } from "./core/style/global";
-import { options } from "./core/style/theme";
+import { getOptions } from "./core/style/theme";
 import { useTheme } from "./hook/useTheme";
 import { GlobalProvider } from "./providers/GlobalProvider";
 import { router } from "./routes";
-import { setupStore } from "./store";
+import { store } from "./store";
 
 const rootElement = document.getElementById("root");
 if (!rootElement) {
@@ -38,8 +38,6 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-const store = setupStore();
-
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
     onError: (error: unknown) => {
@@ -55,12 +53,14 @@ const queryClient = new QueryClient({
 });
 
 const App = () => {
-  const [isTheme1D, setIsTheme1D] = useState(false);
-  const { getIsTheme1D } = useTheme(setIsTheme1D);
+  const { isTheme1D } = useTheme();
 
   useEffect(() => {
-    void getIsTheme1D();
-  }, [getIsTheme1D]);
+    const main = document.querySelector("main");
+    if (!main || (main.classList.contains("theme-1d") && isTheme1D)) return;
+    if (isTheme1D) main.classList.add("theme-1d");
+    else main.classList.remove("theme-1d");
+  }, [isTheme1D]);
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -71,7 +71,10 @@ const App = () => {
           }}
         >
           <EdificeThemeProvider>
-            <ThemeProviderCGI themeId={isTheme1D ? "ent1D" : themePlatform ?? "default"} options={options}>
+            <ThemeProviderCGI
+              themeId={isTheme1D ? "ent1D" : themePlatform ?? "default"}
+              options={getOptions(isTheme1D)}
+            >
               <GlobalProvider>
                 <GlobalStyles styles={globalOverrideStyles} />
                 <ToastContainer {...TOAST_CONFIG} />

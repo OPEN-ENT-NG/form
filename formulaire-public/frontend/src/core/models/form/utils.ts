@@ -81,7 +81,8 @@ export const isFormFilled = (form: IForm, distributions: IDistribution[]): boole
   const formDistributions = getFormDistributions(form, distributions);
 
   if (form.multiple) {
-    return getFirstDistribution(formDistributions).status === DistributionStatus.FINISHED;
+    const firstDistrib = getFirstDistribution(formDistributions);
+    return firstDistrib?.status === DistributionStatus.FINISHED;
   }
   return getNbFinishedDistrib(formDistributions) > 0;
 };
@@ -114,6 +115,7 @@ export const hasFormResponses = (form: IForm): boolean => {
   return !!form.nb_responses;
 };
 
+//TODO
 // export const setFromJson = (form: IForm, data: IFormPublicData): void => {
 //   for (const key in data) {
 //     form[key] = data[key];
