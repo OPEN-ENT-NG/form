@@ -24,7 +24,7 @@ import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/secti
 
 import { useFormElementList } from "../CreationProvider/hook/useFormElementsList";
 import { useGlobal } from "../GlobalProvider";
-import { useClassicResponse } from "./hook/useClassicResponse";
+import { useRespondFormElement } from "./hook/useRespondFormElement";
 import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
@@ -48,7 +48,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
   const [responses, setResponses] = useState<IResponse[]>([]);
-  const { saveClassicResponses } = useClassicResponse();
+  const [fileIdsToDelete, setFileIdsToDelete] = useState<string[]>([]);
+  const { save } = useRespondFormElement(responsesMap, fileIdsToDelete, setFileIdsToDelete, user);
   const [form, setForm] = useState<IForm | null>(null);
   const [distribution, setDistribution] = useState<IDistribution | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
@@ -65,7 +66,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     responsesMap,
     setResponsesMap,
   );
-  const isPageTypeRecap = pageType === ResponsePageType.RECAP;
+  const isPageTypeRecap = useMemo(() => pageType === ResponsePageType.RECAP, [pageType]);
   const [scrollToQuestionId, setScrollToQuestionId] = useState<number | null>(null);
   const [addDistribution] = useAddDistributionMutation();
 
@@ -151,7 +152,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     if (!hasInitializedRsponsesMap.current || !formElementsList.length) return;
     const questions = getAllQuestionsAndChildren(formElementsList);
     setResponsesMap((prev) => fillResponseMapWithRepsonses(prev, responsesWithFiles, questions));
-  }, [responsesDatas, hasInitializedRsponsesMap, formElementsList]);
+  }, [responsesDatas, filesDatas, hasInitializedRsponsesMap.current, formElementsList]);
 
   // Set page type
   useEffect(() => {
@@ -196,9 +197,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     }
   }, [formElementsList]);
 
-  const saveResponses = async () => {
-    if (isInPreviewMode) return;
-    await saveClassicResponses();
+  const saveResponses = async (currentElement: IFormElement) => {
+    if (isInPreviewMode || !distribution?.id || !form) return;
+    await save(currentElement, form.anonymous, distribution.id);
   };
 
   const updateProgress = (
@@ -241,6 +242,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       isPageTypeRecap,
       scrollToQuestionId,
       setScrollToQuestionId,
+      fileIdsToDelete,
+      setFileIdsToDelete,
     }),
     [
       form,
@@ -264,6 +267,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       isPageTypeRecap,
       scrollToQuestionId,
       setScrollToQuestionId,
+      fileIdsToDelete,
     ],
   );
 

@@ -107,6 +107,10 @@ public class DefaultResponseService implements ResponseService {
     }
 
     public Future<List<Response>> listByIds(List<String> responseIds) {
+        return listByIds(responseIds, false);
+    }
+
+    public Future<List<Response>> listByIds(List<String> responseIds, Boolean isFileIds) {
         Promise<List<Response>> promise = Promise.promise();
 
         if (responseIds == null || responseIds.isEmpty()) {
@@ -114,7 +118,11 @@ public class DefaultResponseService implements ResponseService {
             return promise.future();
         }
 
-        String query = "SELECT * FROM " + RESPONSE_TABLE + " WHERE id IN " + Sql.listPrepared(responseIds);
+        String query = isFileIds ?
+            "SELECT r.* FROM " + RESPONSE_TABLE + " r " +
+            "JOIN " + RESPONSE_FILE_TABLE + " rf ON rf.response_id = r.id " +
+            "WHERE rf.id IN " + Sql.listPrepared(responseIds) :
+            "SELECT * FROM " + RESPONSE_TABLE + " WHERE id IN " + Sql.listPrepared(responseIds);
         JsonArray params = new JsonArray(responseIds);
 
         String errorMessage = "[Formulaire@DefaultResponseService::listByIds] An error occurred while listing responses for ids " + responseIds;

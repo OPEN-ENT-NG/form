@@ -11,7 +11,7 @@ import { ICustomFile } from "./types";
 import { toCustomFile, toResponseFile } from "./utils";
 
 export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap, setFileIdsToDelete } = useResponse();
 
   const files = useMemo<ICustomFile[]>(() => {
     const associatedResponse = getQuestionResponse(question);
@@ -34,6 +34,7 @@ export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }
     const associatedResponse = getQuestionResponse(question);
     const prevFiles: IResponseFile[] = associatedResponse?.files ?? [];
     const newFiles: IResponseFile[] = prevFiles.filter((f) => f.id !== file.id);
+    setFileIdsToDelete((prevIds) => [...prevIds, file.id]);
 
     if (!associatedResponse) return;
     updateQuestionResponses(question, [

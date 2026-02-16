@@ -19,6 +19,7 @@ import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { getAllQuestionsAndChildren } from "~/core/models/formElement/utils";
+import { buildResponsesPayload } from "~/core/models/response/utils";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
@@ -60,17 +61,19 @@ export const SendFormModal: FC<ISendFormModalProps> = ({ isOpen, handleClose, di
       : updateDistribution(updatedDistribution));
 
     handleClose();
-    navigateToHomeResponses();
+    navigateToHomeResponses(); //TODO redirige actuellement vers Home classique au lieu pas le tab Responses
   };
 
   const cleanResponses = async () => {
     const validatedElements = formElementsList.filter(
-      (e) => e.position && progress.historicFormElementIds.indexOf(e.position) >= 0,
+      (e) => e.id && progress.historicFormElementIds.indexOf(e.id) >= 0,
     );
     const validatedQuestionIds = getAllQuestionsAndChildren(validatedElements).map((q) => q.id);
     const responsesToClean = responses.filter((r) => validatedQuestionIds.indexOf(r.questionId) < 0);
-    await deleteResponses({ formId: distribution.formId, responses: responsesToClean });
-    return;
+    await deleteResponses({
+      formId: distribution.formId,
+      responses: buildResponsesPayload(responsesToClean, distribution.id),
+    });
   };
 
   return (
@@ -102,7 +105,12 @@ export const SendFormModal: FC<ISendFormModalProps> = ({ isOpen, handleClose, di
         <Button variant={ComponentVariant.OUTLINED} onClick={handleClose}>
           {t("formulaire.cancel")}
         </Button>
-        <Button variant={ComponentVariant.CONTAINED} onClick={void send}>
+        <Button
+          variant={ComponentVariant.CONTAINED}
+          onClick={() => {
+            void send();
+          }}
+        >
           {t("formulaire.confirm")}
         </Button>
       </DialogActions>

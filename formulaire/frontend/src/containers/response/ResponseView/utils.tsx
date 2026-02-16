@@ -1,27 +1,33 @@
 import { ResponsePageType } from "~/core/enums";
-import { getHrefHomeResponsesPath } from "~/core/pathHelper";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { t } from "~/i18n";
+import { useResponse } from "~/providers/ResponseProvider";
 
 export const useGetResponseHeaderButtons = (
   formId: string | number | undefined,
   isInPreviewMode: boolean,
   pageType: ResponsePageType = ResponsePageType.FORM_ELEMENT,
 ): IButtonProps[] => {
-  const { navigateToFormEdit } = useFormulaireNavigation();
-  const buttonTitleKey = getButtonTitleKey(isInPreviewMode, pageType);
+  const { navigateToFormEdit, navigateToHomeResponses } = useFormulaireNavigation();
+  const { saveResponses, currentElement } = useResponse();
 
   const buttons: (IButtonProps | undefined)[] = [
     {
-      title: t(buttonTitleKey),
+      title: t(getButtonTitleKey(isInPreviewMode, pageType)),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        if (formId) {
-          if (!isInPreviewMode) return (window.location.href = getHrefHomeResponsesPath());
-          navigateToFormEdit(formId);
+        if (!formId) return;
+
+        if (!isInPreviewMode) {
+          if (!currentElement) return;
+          void saveResponses(currentElement);
+          navigateToHomeResponses();
+          return;
         }
+
+        navigateToFormEdit(formId);
       },
     },
   ];

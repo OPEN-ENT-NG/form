@@ -10,6 +10,8 @@ import io.vertx.core.Handler;
 import io.vertx.core.Promise;
 import io.vertx.core.json.JsonArray;
 import io.vertx.core.json.JsonObject;
+import io.vertx.core.logging.Logger;
+import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.sql.Sql;
 import org.entcore.common.sql.SqlResult;
 
@@ -21,6 +23,7 @@ import java.util.stream.Collectors;
 import static fr.openent.form.core.constants.Tables.*;
 
 public class DefaultResponseFileService implements ResponseFileService {
+    private static final Logger log = LoggerFactory.getLogger(DefaultResponseFileService.class);
 
     @Override
     public void list(String responseId, Handler<Either<String, JsonArray>> handler) {
@@ -129,9 +132,17 @@ public class DefaultResponseFileService implements ResponseFileService {
 
     @Override
     public void deleteAll(JsonArray fileIds, Handler<Either<String, JsonArray>> handler) {
+        if (fileIds == null || fileIds.size() <= 0) {
+            String errorMessage = "[Formulaire@DefaultResponseFileService::deleteAll] fileIds is null or empty";
+            log.warn(errorMessage);
+            handler.handle(new Either.Right<>(new JsonArray()));
+            return;
+        }
+
         String query = "DELETE FROM " + RESPONSE_FILE_TABLE +
                 " WHERE id IN " + Sql.listPrepared(fileIds) + " RETURNING id;";
         JsonArray params = new JsonArray().addAll(fileIds);
+
         Sql.getInstance().prepared(query, params, SqlResult.validResultHandler(handler));
     }
 }
