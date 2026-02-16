@@ -56,6 +56,13 @@ public interface ResponseService {
     Future<List<Response>> listByIds(List<String> responseIds);
 
     /**
+     * List all responses for specific ids
+     * @param responseIds response identifiers
+     * @param isFileIds TRUE if data are responseFile identifiers
+     */
+    Future<List<Response>> listByIds(List<String> responseIds, Boolean isFileIds);
+
+    /**
      * Count all the responses to a list of questions
      * @param questionIds questions identifiers
      * @param handler function handler returning JsonObject data

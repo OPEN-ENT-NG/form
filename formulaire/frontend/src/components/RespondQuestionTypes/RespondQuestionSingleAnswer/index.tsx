@@ -19,21 +19,19 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
     const associatedResponses = getQuestionResponses(question);
 
     const selectedResponse = associatedResponses.find((response) => response.selected);
-
-    // Si choice associé au choiceId isCutom alors on save/display dans tous les cas
-    // Si c'est un choice classique alors on fait comme avant
-
-    const existingAnswer = selectedResponse?.answer ?? "";
-    if (typeof existingAnswer === "string") {
-      setSelectedValue(existingAnswer);
-    }
+    if (!selectedResponse) return; // Si il n'y a pas de réponse selected
     const customChoice = question.choices?.find((choice) => choice.isCustom);
-    if (!customChoice) return;
-    const customResponse = associatedResponses.find((response) => response.choiceId === customChoice.id);
-    if (customResponse) {
+
+    // Si on trouve un custom choice et qu'il match la réponse selected, on se base dessus
+    if (customChoice && selectedResponse.choiceId === customChoice.id) {
       setSelectedValue(customChoice.value);
-      setCustomAnswer(customResponse.customAnswer ?? "");
+      setCustomAnswer(selectedResponse.customAnswer ?? "");
+      return;
     }
+
+    // Sinon c'est que c'est une réponse classique (pas custom)
+    const existingAnswer = selectedResponse.answer ?? "";
+    if (typeof existingAnswer === "string") setSelectedValue(existingAnswer);
   }, [question, getQuestionResponses]);
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -86,7 +84,11 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
             ))}
         </Select>
         {question.choices?.find((choice) => choice.value === selectedValue && choice.isCustom) && (
-          <Stack direction={isPageTypeRecap ? "row" : "column"} gap={1}>
+          <Stack
+            direction={isPageTypeRecap ? "row" : "column"}
+            gap={1}
+            {...(isPageTypeRecap && { alignItems: "center" })}
+          >
             <Typography sx={{ py: "1rem" }}>
               {t(isPageTypeRecap ? "formulaire.response.custom.value" : "formulaire.response.custom.explanation")}
             </Typography>

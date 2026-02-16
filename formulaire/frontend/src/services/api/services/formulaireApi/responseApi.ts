@@ -1,11 +1,7 @@
-import { toast } from "react-toastify";
-
-import { FORMULAIRE } from "~/core/constants.ts";
-import { QueryMethod } from "~/core/enums.ts";
-import { IResponse, IResponseDTO } from "~/core/models/response/type.ts";
+import { QueryMethod, TagName } from "~/core/enums.ts";
+import { IResponse, IResponseDTO, IResponsePayload } from "~/core/models/response/type.ts";
 import { transformResponses } from "~/core/models/response/utils.ts";
 import { handleErrorApi } from "~/core/utils.ts";
-import { t } from "~/i18n.ts";
 
 import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
 
@@ -17,6 +13,7 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         method: QueryMethod.GET,
       }),
       transformResponse: (rawDatas: IResponseDTO[]) => transformResponses(rawDatas),
+      providesTags: [TagName.RESPONSE],
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
@@ -25,24 +22,65 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
-    deleteResponses: builder.mutation<void, { formId: number; responses: IResponse[] }>({
-      query: ({ formId, responses }) => ({
-        url: `/responses/${formId}`,
-        method: QueryMethod.DELETE,
-        body: { responses },
+    createMultiple: builder.mutation<IResponse[], { distributionId: number; responses: IResponsePayload[] }>({
+      query: ({ distributionId, responses }) => ({
+        url: `distributions/${distributionId}/responses/multiple`,
+        method: QueryMethod.POST,
+        body: responses,
       }),
       async onQueryStarted(_, { queryFulfilled }) {
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error("formulaire.error.responseService.delete", err);
-          toast.error(t("formulaire.error.responseService.delete", { ns: FORMULAIRE }));
+          handleErrorApi(err, "formulaire.error.responseService.create");
+        }
+      },
+    }),
+    updateMultiple: builder.mutation<IResponse[], { distributionId: number; responses: IResponsePayload[] }>({
+      query: ({ distributionId, responses }) => ({
+        url: `distributions/${distributionId}/responses`,
+        method: QueryMethod.PUT,
+        body: responses,
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.responseService.update");
+        }
+      },
+    }),
+    deleteResponses: builder.mutation<void, { formId: number; responses: IResponsePayload[] }>({
+      query: ({ formId, responses }) => ({
+        url: `responses/${formId}`,
+        method: QueryMethod.DELETE,
+        body: responses,
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.responseService.delete");
+        }
+      },
+    }),
+    deleteMultipleByQuestionAndDistribution: builder.mutation<void, { distributionId: number; questionIds: number[] }>({
+      query: ({ distributionId, questionIds }) => ({
+        url: `responses/${distributionId}/questions`,
+        method: QueryMethod.DELETE,
+        body: questionIds,
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.responseService.delete");
         }
       },
     }),
     exportResponsesCsv: builder.mutation<void, number>({
       query: (formId: number) => ({
-        url: `/responses/export/${formId}/csv`,
+        url: `responses/export/${formId}/csv`,
         method: QueryMethod.POST,
         body: {},
         responseHandler: "text",
@@ -81,7 +119,10 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
 
 export const {
   useGetDistributionResponsesQuery,
+  useCreateMultipleMutation,
+  useUpdateMultipleMutation,
   useDeleteResponsesMutation,
+  useDeleteMultipleByQuestionAndDistributionMutation,
   useExportResponsesCsvMutation,
   useGetAllResponsesQuery,
 } = responseApi;

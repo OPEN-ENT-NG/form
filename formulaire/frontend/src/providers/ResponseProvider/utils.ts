@@ -79,10 +79,24 @@ export const fillResponseMapWithRepsonses = (
     const newFormelementMap = new Map<number, IResponse[]>();
 
     formElementMap.forEach((existingResponses, questionId) => {
-      const questionType = questions.find((q) => q.id === questionId)?.questionType;
-      const matchingNewResponses = responses.filter((r) => r.questionId === questionId);
-      const updatedResponses = updateResponsesByQuestionType(existingResponses, matchingNewResponses, questionType);
-      newFormelementMap.set(questionId, updatedResponses);
+      const question = questions.find((q) => q.id === questionId);
+      const questionType = question?.questionType;
+      if (questionType === QuestionTypes.MATRIX) {
+        question?.children?.forEach((child) => {
+          if (!child.id) return;
+          const matchingNewResponses = responses.filter((r) => r.questionId === child.id);
+          const updatedResponses = updateResponsesByQuestionType(
+            existingResponses,
+            matchingNewResponses,
+            child.questionType,
+          );
+          newFormelementMap.set(child.id, updatedResponses);
+        });
+      } else {
+        const matchingNewResponses = responses.filter((r) => r.questionId === questionId);
+        const updatedResponses = updateResponsesByQuestionType(existingResponses, matchingNewResponses, questionType);
+        newFormelementMap.set(questionId, updatedResponses);
+      }
     });
 
     filledResponseMap.set(feit, newFormelementMap);
@@ -118,7 +132,7 @@ const updateResponsesByQuestionType = (
       return [{ ...matchingNewResponses[0], answer: formattedAnswer }];
     }
     case QuestionTypes.RANKING: {
-      if (matchingNewResponses.some((r) => !r.choicePosition)) break;
+      if (matchingNewResponses.some((r) => r.choicePosition == null)) break;
       return matchingNewResponses;
     }
     case QuestionTypes.SINGLEANSWER:

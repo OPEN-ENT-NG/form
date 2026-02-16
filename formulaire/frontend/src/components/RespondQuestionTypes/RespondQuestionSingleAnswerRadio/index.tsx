@@ -13,7 +13,7 @@ import { IRespondQuestionTypesProps } from "../types";
 import { choiceBoxStyle, ChoicesRadioGroup, customAnswerStyle, formControlLabelStyle, labelStyle } from "./style";
 
 export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [selectedValue, setSelectedValue] = useState<string>("");
   const [customAnswer, setCustomAnswer] = useState<string>("");
   const { t } = useTranslation(FORMULAIRE);
@@ -22,19 +22,20 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
     const associatedResponses = getQuestionResponses(question);
 
     const selectedResponse = associatedResponses.find((response) => response.selected);
-
-    const existingAnswer = selectedResponse?.answer ?? "";
-    if (typeof existingAnswer === "string") {
-      setSelectedValue(existingAnswer);
-    }
+    if (!selectedResponse) return; // Si il n'y a pas de réponse selected
     const customChoice = question.choices?.find((choice) => choice.isCustom);
-    if (!customChoice) return;
-    const customResponse = associatedResponses.find((response) => response.choiceId === customChoice.id);
-    if (customResponse) {
+
+    // Si on trouve un custom choice et qu'il match la réponse selected, on se base dessus
+    if (customChoice && selectedResponse.choiceId === customChoice.id) {
       setSelectedValue(customChoice.value);
-      setCustomAnswer(customResponse.customAnswer ?? "");
+      setCustomAnswer(selectedResponse.customAnswer ?? "");
+      return;
     }
-  }, [question, getQuestionResponse]);
+
+    // Sinon c'est que c'est une réponse classique (pas custom)
+    const existingAnswer = selectedResponse.answer ?? "";
+    if (typeof existingAnswer === "string") setSelectedValue(existingAnswer);
+  }, [question, getQuestionResponses]);
 
   const hasOneChoiceWithImage = useMemo(() => {
     return question.choices?.some((choice) => choice.image) ?? false;

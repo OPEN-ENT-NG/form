@@ -27,17 +27,19 @@ export type ResponseProviderContextType = {
   setPageType: Dispatch<SetStateAction<ResponsePageType | undefined>>;
   currentElement: IFormElement | null;
   setCurrentElement: Dispatch<SetStateAction<IFormElement | null>>;
-  saveResponses: () => Promise<void>;
+  saveResponses: (currentElement: IFormElement) => Promise<void>;
   responsesMap: ResponseMap;
   setResponsesMap: Dispatch<SetStateAction<ResponseMap>>;
-  getQuestionResponses: (question: IQuestion) => IResponse[];
+  getQuestionResponses: (question: IQuestion, matrixQuestion?: IQuestion) => IResponse[];
   getQuestionResponse: (question: IQuestion) => IResponse | null;
-  updateQuestionResponses: (question: IQuestion, newResponses: IResponse[]) => void;
+  updateQuestionResponses: (question: IQuestion, newResponses: IResponse[], matrixQuestion?: IQuestion) => void;
   distribution: IDistribution | null;
   responses: IResponse[];
   isPageTypeRecap: boolean;
   scrollToQuestionId: number | null;
   setScrollToQuestionId: Dispatch<SetStateAction<number | null>>;
+  fileIdsToDelete: string[];
+  setFileIdsToDelete: Dispatch<SetStateAction<string[]>>;
 };
 
 export interface IFormElementIdType {
