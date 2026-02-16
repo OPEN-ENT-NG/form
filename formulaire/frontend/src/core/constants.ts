@@ -1,6 +1,7 @@
 import { Theme, ToastPosition } from "react-toastify";
 
 import { RightStringified } from "~/providers/ShareModalProvider/types";
+import { QuestionTypes } from "./models/question/enum";
 
 export const FORMULAIRE = "formulaire";
 export const ARCHIVE = "archive";
@@ -94,3 +95,19 @@ export const FILE = "file";
 
 // Result View
 export const DEFAULT_DISPLAY_ANSWER_VALUE = "-";
+
+//Icones des types de question
+export const QUESTION_TYPE_ICONS: Record<QuestionTypes, string> = {
+  [QuestionTypes.FREETEXT]: "free-text",
+  [QuestionTypes.SHORTANSWER]: "short-answer",
+  [QuestionTypes.LONGANSWER]: "long-answer",
+  [QuestionTypes.SINGLEANSWER]: "unic-answer",
+  [QuestionTypes.MULTIPLEANSWER]: "multiple-answer",
+  [QuestionTypes.DATE]: "date",
+  [QuestionTypes.TIME]: "time",
+  [QuestionTypes.FILE]: "file",
+  [QuestionTypes.SINGLEANSWERRADIO]: "singleanswer_radio",
+  [QuestionTypes.MATRIX]: "matrix",
+  [QuestionTypes.CURSOR]: "cursor",
+  [QuestionTypes.RANKING]: "ranking",
+};
