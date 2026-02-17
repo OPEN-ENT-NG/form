@@ -18,8 +18,8 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error("formulaire.error.formService.get", err);
-          toast.error(t("formulaire.error.formService.get"));
+          console.error("formulaire.public.error.formService.get", err);
+          toast.error(t("formulaire.public.error.formService.get"));
         }
       },
     }),

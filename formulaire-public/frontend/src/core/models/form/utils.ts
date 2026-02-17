@@ -88,7 +88,7 @@ export const isFormFilled = (form: IForm, distributions: IDistribution[]): boole
 };
 
 export const getFormNbResponsesText = (nbResponses: number) => {
-  const text = t(nbResponses > 1 ? "formulaire.responses" : "formulaire.response");
+  const text = t(nbResponses > 1 ? "formulaire.public.responses" : "formulaire.public.response");
   return `${nbResponses.toString()} ${text}`;
 };
 
@@ -99,15 +99,15 @@ export const getFormStatusText = (
 ): string => {
   const formDistributions = getFormDistributions(form, distributions);
   if (form.multiple) {
-    return `${t("formulaire.responses.count")} : ${getNbFinishedDistrib(formDistributions).toString()}`;
+    return `${t("formulaire.public.responses.count")} : ${getNbFinishedDistrib(formDistributions).toString()}`;
   } else {
     if (getNbFinishedDistrib(formDistributions) > 0) {
       const latestDistrib = getLatestDistribution(formDistributions);
       if (latestDistrib.dateResponse) {
-        return formatDateWithTime(latestDistrib.dateResponse, "formulaire.responded.date");
+        return formatDateWithTime(latestDistrib.dateResponse, "formulaire.public.responded.date");
       }
     }
-    return t("formulaire.responded.waiting");
+    return t("formulaire.public.responded.waiting");
   }
 };
 

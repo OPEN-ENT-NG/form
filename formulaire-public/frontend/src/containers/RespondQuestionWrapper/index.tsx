@@ -13,7 +13,7 @@ export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ quest
   return (
     <Stack id={`question-${question.id}`} key={question.id} component={Paper} sx={questionStackStyle}>
       <Typography variant={TypographyVariant.H6} color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}>
-        {question.title || t("formulaire.question.title.empty")}
+        {question.title || t("formulaire.public.question.title.empty")}
         {question.mandatory && (
           <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR} sx={mandatoryTitleStyle}>
             *

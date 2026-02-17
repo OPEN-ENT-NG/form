@@ -10,7 +10,7 @@ import { createNewResponse } from "~/core/models/response/utils";
 import { ISection, ISectionDTO } from "~/core/models/section/types";
 import { transformSection } from "~/core/models/section/utils";
 
-import { ResponseMap } from "./types";
+import { IProgressProps, ResponseMap } from "./types";
 
 export const initResponsesMap = (formElements: IFormElement[]) => {
   const responsesMap = new Map<string, Map<number, IResponse[]>>();
@@ -166,14 +166,19 @@ const updateResponsesByQuestionType = (
   return existingResponses;
 };
 
-export const updateStorage = (formKey: string, form: IForm, formElements: IFormElement[]): void => {
+export const updateStorage = (
+  formKey: string,
+  form: IForm,
+  formElements: IFormElement[],
+  progress: IProgressProps,
+): void => {
   sessionStorage.setItem("formKey", JSON.stringify(formKey));
   sessionStorage.setItem("distributionKey", JSON.stringify(form.distribution_key));
   sessionStorage.setItem("distributionCaptcha", JSON.stringify(form.distribution_captcha));
   sessionStorage.setItem("form", JSON.stringify(form));
   sessionStorage.setItem("formElements", JSON.stringify(formElements));
   sessionStorage.setItem("nbFormElements", JSON.stringify(formElements.length));
-  sessionStorage.setItem("historicPosition", JSON.stringify([1]));
+  sessionStorage.setItem("progress", JSON.stringify(progress));
   sessionStorage.setItem("allResponsesInfos", JSON.stringify(new Map()));
 };
 

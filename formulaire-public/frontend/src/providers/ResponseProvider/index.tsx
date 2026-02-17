@@ -2,6 +2,7 @@ import { createContext, FC, useContext, useEffect, useMemo, useRef, useState } f
 import { useParams } from "react-router-dom";
 
 import { ResponsePageType } from "~/core/enums";
+import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
@@ -24,33 +25,45 @@ export const useResponse = () => {
   return context;
 };
 
-export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initialPageType }) => {
+export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
   const { formKey } = useParams();
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
+  const [responses, setResponses] = useState<IResponse[]>([]);
   const [form, setForm] = useState<IForm | null>(null);
+  const [distribution, setDistribution] = useState<IDistribution | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
   const [longestPathsMap, setLongestPathsMap] = useState<Map<string, number>>(new Map<string, number>());
   const [progress, setProgress] = useState<IProgressProps>({
     historicFormElementIds: [],
     longuestRemainingPath: 0,
   });
-  const [pageType, setPageType] = useState<ResponsePageType | undefined>(initialPageType);
+  const [pageType, setPageType] = useState<ResponsePageType | undefined>(undefined);
+  const [currentElement, setCurrentElement] = useState<IFormElement | null>(null);
   const hasInitializedRsponsesMap = useRef(false);
   const { getQuestionResponses, getQuestionResponse, updateQuestionResponses } = useRespondQuestion(
     responsesMap,
     setResponsesMap,
   );
-  //TODO
-  const responses = [] as IResponse[];
-  const responseCaptcha = createNewResponse(0);
-
-  const storageFormKey = sessionStorage.getItem("formKey");
+  const isPageTypeRecap = useMemo(() => pageType === ResponsePageType.RECAP, [pageType]);
+  const [scrollToQuestionId, setScrollToQuestionId] = useState<number | null>(null);
+  const storageFormKey = useMemo(() => sessionStorage.getItem("formKey"), []);
+  const responseCaptcha = createNewResponse(0); //TODO
 
   if (formKey === undefined) throw new Error("formKey is undefined");
 
   // Fetching data
   const { data: formDatas } = useGetPublicFormQuery({ formKey }, { skip: !!storageFormKey });
 
+  // Fill sessionStorage with fetched datas
+  useEffect(() => {
+    if (formDatas) {
+      const parsedFormDatas = parseFormDatas(formDatas);
+      updateStorage(formKey, parsedFormDatas, parsedFormDatas.formElements, progress);
+      console.log(sessionStorage);
+    }
+  }, [formDatas]);
+
+  // Build form and formElementList from storageFormKey
   useEffect(() => {
     if (storageFormKey) {
       const formInStorage = sessionStorage.getItem("form");
@@ -60,48 +73,21 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initial
       const formDatas = formInStorageJson as IForm;
       setForm(formDatas);
       setFormElementsList(formDatas.formElements);
-      if (!initialPageType) {
-        if (formDatas.rgpd) {
-          setPageType(ResponsePageType.RGPD);
-          return;
-        }
-        if (formDatas.description) {
-          setPageType(ResponsePageType.DESCRIPTION);
-          return;
-        }
-        setPageType(ResponsePageType.FORM_ELEMENT);
-      }
+      setPageType(ResponsePageType.RGPD);
     }
   }, [storageFormKey]);
 
-  useEffect(() => {
-    if (formDatas) {
-      const parsedFormDatas = parseFormDatas(formDatas);
-      setForm(parsedFormDatas);
-      setFormElementsList(parsedFormDatas.formElements);
-      updateStorage(formKey, parsedFormDatas, parsedFormDatas.formElements);
-      if (!initialPageType) {
-        if (formDatas.rgpd) {
-          setPageType(ResponsePageType.RGPD);
-          return;
-        }
-        if (formDatas.description) {
-          setPageType(ResponsePageType.DESCRIPTION);
-          return;
-        }
-        setPageType(ResponsePageType.FORM_ELEMENT);
-      }
-    }
-  }, [formDatas]);
-
+  // Update progress-bar data
   useEffect(() => {
     if (formElementsList.length <= 0) return;
     const firstElement = formElementsList[0];
     if (!firstElement.id) return;
-    setLongestPathsMap(getLongestPathsMap(formElementsList));
-    updateProgress(firstElement, [firstElement.id]);
+    const newLongestPathsMap = getLongestPathsMap(formElementsList);
+    setLongestPathsMap(newLongestPathsMap);
+    updateProgress(firstElement, [firstElement.id], newLongestPathsMap);
   }, [formElementsList]);
 
+  // Initialize responses map and currentElement
   useEffect(() => {
     if (!hasInitializedRsponsesMap.current && formElementsList.length > 0) {
       const initializedResponsesMap = initResponsesMap(formElementsList);
@@ -114,10 +100,14 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initial
     //TODO update storage here
   };
 
-  const updateProgress = (element: IFormElement, newHistoricFormElementIds: number[]) => {
+  const updateProgress = (
+    element: IFormElement,
+    newHistoricFormElementIds: number[],
+    newLongestPathsMap?: Map<string, number>,
+  ) => {
     const feit = getStringifiedFormElementIdType(element);
     if (feit) {
-      const longestRemainingPath = longestPathsMap.get(feit);
+      const longestRemainingPath = newLongestPathsMap ? newLongestPathsMap.get(feit) : longestPathsMap.get(feit);
       if (longestRemainingPath !== undefined) {
         const newProgress = buildProgressObject(newHistoricFormElementIds, longestRemainingPath);
         setProgress(newProgress);
@@ -150,7 +140,6 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initial
       setScrollToQuestionId,
       formKey,
       responseCaptcha,
-      responses,
     }),
     [
       form,
@@ -160,12 +149,19 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initial
       longestPathsMap,
       pageType,
       setPageType,
+      currentElement,
+      setCurrentElement,
       saveResponses,
       responsesMap,
       setResponsesMap,
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
+      distribution,
+      responses,
+      isPageTypeRecap,
+      scrollToQuestionId,
+      setScrollToQuestionId,
       formKey,
       responseCaptcha,
       responses,
