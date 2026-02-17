@@ -44,6 +44,8 @@ export const getMultipleAnswerChartProps = (
       bar: {
         horizontal: true,
         distributed: true,
+        borderRadius: 4,
+        borderRadiusApplication: "end",
       },
     },
   };

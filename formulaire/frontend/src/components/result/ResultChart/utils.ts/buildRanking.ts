@@ -30,6 +30,8 @@ export const getRankingChartProps = (
     plotOptions: {
       bar: {
         horizontal: true,
+        borderRadius: 4,
+        borderRadiusApplication: "end",
       },
     },
     xaxis: {

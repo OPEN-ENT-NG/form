@@ -29,6 +29,12 @@ export const getMatrixChartProps = (
   }));
 
   const options: ApexOptions = {
+    plotOptions: {
+      bar: {
+        borderRadius: 4,
+        borderRadiusApplication: "end",
+      },
+    },
     chart: {
       type: "bar",
     },
