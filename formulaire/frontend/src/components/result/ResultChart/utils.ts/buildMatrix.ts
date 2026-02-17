@@ -10,7 +10,7 @@ import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultM
 export const getMatrixChartProps = (
   question: IQuestion,
   distributionMap: DistributionMap,
-): { options: ApexOptions; series: ApexAxisChartSeries } => {
+): { options: ApexOptions; series: ApexAxisChartSeries; type: "bar" } => {
   const allResponses: ICompleteResponse[] = Array.from(distributionMap.values()).flat();
 
   const sortedChildren: IQuestion[] = [...(question.children ?? [])].sort(compareChildren);
@@ -37,5 +37,7 @@ export const getMatrixChartProps = (
     colors: GRAPH_COLORS,
   };
 
-  return { options, series };
+  const type = "bar";
+
+  return { options, series, type };
 };

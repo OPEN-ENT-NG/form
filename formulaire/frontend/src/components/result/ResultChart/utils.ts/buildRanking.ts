@@ -9,7 +9,7 @@ import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultM
 export const getRankingChartProps = (
   question: IQuestion,
   distributionMap: DistributionMap,
-): { options: ApexOptions; series: ApexAxisChartSeries } => {
+): { options: ApexOptions; series: ApexAxisChartSeries; type: "bar" } => {
   const allResponses: ICompleteResponse[] = Array.from(distributionMap.values()).flat();
 
   const sortedChoices = [...(question.choices ?? [])].sort(compareChoices);
@@ -37,5 +37,7 @@ export const getRankingChartProps = (
     colors: GRAPH_COLORS,
   };
 
-  return { options, series };
+  const type = "bar";
+
+  return { options, series, type };
 };

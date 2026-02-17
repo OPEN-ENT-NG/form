@@ -5,6 +5,7 @@ import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultM
 import { getCursorChartProps } from "./buildCursor";
 import { getMatrixChartProps } from "./buildMatrix";
 import { getMultipleAnswerChartProps } from "./buildMultipleAnswer";
+import { getRankingChartProps } from "./buildRanking";
 import { getSingleAnswerChartProps } from "./buildSingleAnswer";
 
 export const getChartProps = (question: IQuestion, distributionMap: DistributionMap) => {
@@ -18,7 +19,8 @@ export const getChartProps = (question: IQuestion, distributionMap: Distribution
       return getMatrixChartProps(question, distributionMap);
     case QuestionTypes.MULTIPLEANSWER:
       return getMultipleAnswerChartProps(question, distributionMap);
-
+    case QuestionTypes.RANKING:
+      return getRankingChartProps(question, distributionMap);
     default:
       throw new Error(`Unsupported question type: ${question.questionType}`);
   }

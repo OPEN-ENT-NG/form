@@ -9,7 +9,7 @@ import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultM
 export const getCursorChartProps = (
   question: IQuestion,
   distributionMap: DistributionMap,
-): { options: ApexOptions; series: ApexAxisChartSeries } => {
+): { options: ApexOptions; series: ApexAxisChartSeries; type: "area" } => {
   const allResponses: ICompleteResponse[] = Array.from(distributionMap.values()).flat();
 
   const minValue = question.specificFields?.cursorMinVal ?? 0;
@@ -52,5 +52,7 @@ export const getCursorChartProps = (
     },
   ];
 
-  return { options, series };
+  const type = "area";
+
+  return { options, series, type };
 };

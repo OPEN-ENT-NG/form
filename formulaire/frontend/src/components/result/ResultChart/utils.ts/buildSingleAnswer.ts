@@ -10,7 +10,7 @@ import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultM
 export const getSingleAnswerChartProps = (
   question: IQuestion,
   distributionMap: DistributionMap,
-): { options: ApexOptions; series: number[] } => {
+): { options: ApexOptions; series: number[]; type: "pie" } => {
   const allResponses: ICompleteResponse[] = Array.from(distributionMap.values()).flat();
 
   const distributions = Array.from(distributionMap.values());
@@ -40,5 +40,7 @@ export const getSingleAnswerChartProps = (
     colors: GRAPH_COLORS,
   };
 
-  return { options, series };
+  const type = "pie";
+
+  return { options, series, type };
 };

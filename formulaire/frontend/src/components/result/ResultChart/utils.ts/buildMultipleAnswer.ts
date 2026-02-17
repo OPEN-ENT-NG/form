@@ -10,7 +10,7 @@ import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultM
 export const getMultipleAnswerChartProps = (
   question: IQuestion,
   distributionMap: DistributionMap,
-): { options: ApexOptions; series: ApexAxisChartSeries } => {
+): { options: ApexOptions; series: ApexAxisChartSeries; type: "bar" } => {
   const sortedChoices = [...(question.choices ?? [])].sort(compareChoices);
 
   const allResponses: ICompleteResponse[] = Array.from(distributionMap.values()).flat();
@@ -52,5 +52,7 @@ export const getMultipleAnswerChartProps = (
     },
   ];
 
-  return { options, series };
+  const type = "bar";
+
+  return { options, series, type };
 };
