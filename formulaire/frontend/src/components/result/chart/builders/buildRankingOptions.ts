@@ -1,15 +1,15 @@
 import { ApexOptions } from "apexcharts";
 
-import { IBuildRankingOptionsParams } from "./types";
+import { t } from "~/i18n";
+
+import { IBaseOptionsParams } from "./types";
 
 export const buildRankingOptions = ({
   labels,
   colors,
-  xAxisTitle,
-  yAxisTitle,
   height = 400,
   width = 600,
-}: IBuildRankingOptionsParams): ApexOptions => ({
+}: IBaseOptionsParams): ApexOptions => ({
   chart: {
     type: "bar",
     height,
@@ -50,7 +50,12 @@ export const buildRankingOptions = ({
   xaxis: {
     categories: labels,
     title: {
-      text: xAxisTitle,
+      text: t("formulaire.number.responses"),
+      style: {
+        fontSize: "14px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 500,
+      },
     },
     labels: {
       formatter: (val: string): string => {
@@ -61,7 +66,12 @@ export const buildRankingOptions = ({
   },
   yaxis: {
     title: {
-      text: yAxisTitle,
+      text: t("formulaire.position.selected"),
+      style: {
+        fontSize: "14px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 500,
+      },
     },
   },
 });

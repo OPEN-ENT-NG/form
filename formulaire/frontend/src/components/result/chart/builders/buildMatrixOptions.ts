@@ -1,14 +1,10 @@
 import { ApexOptions } from "apexcharts";
 
-import { IBuildMatrixOptionsParams } from "./types";
+import { t } from "~/i18n";
 
-export const buildMatrixOptions = ({
-  labels,
-  colors,
-  yAxisTitle,
-  height = 400,
-  width = 600,
-}: IBuildMatrixOptionsParams): ApexOptions => ({
+import { IBaseOptionsParams } from "./types";
+
+export const buildMatrixOptions = ({ labels, colors, height = 400, width = 600 }: IBaseOptionsParams): ApexOptions => ({
   chart: {
     type: "bar",
     height,
@@ -36,7 +32,12 @@ export const buildMatrixOptions = ({
       formatter: (value: number): string => Math.round(value).toString(),
     },
     title: {
-      text: yAxisTitle,
+      text: t("formulaire.number.responses"),
+      style: {
+        fontSize: "14px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 500,
+      },
     },
   },
   fill: {

@@ -1,13 +1,13 @@
 import { ApexOptions } from "apexcharts";
 
-import { IBuildSingleAnswerOptionsParams } from "./types";
+import { IBaseOptionsParams } from "./types";
 
 export const buildSingleAnswerOptions = ({
   labels,
   colors,
   height = 400,
   width = 600,
-}: IBuildSingleAnswerOptionsParams): ApexOptions => ({
+}: IBaseOptionsParams): ApexOptions => ({
   chart: {
     type: "pie",
     height,
@@ -18,10 +18,4 @@ export const buildSingleAnswerOptions = ({
   },
   labels,
   colors,
-  dataLabels: {
-    enabled: true,
-  },
-  legend: {
-    position: "bottom",
-  },
 });

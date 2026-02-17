@@ -1,10 +1,10 @@
 import { createContext, FC, useCallback, useContext, useEffect, useMemo, useState } from "react";
 
 import { IFormElement } from "~/core/models/formElement/types";
+import { IQuestion } from "~/core/models/question/types";
 import { useFormElementListBuild } from "~/hook/UseFormElementListBuild";
 
 import { useBuildResponseMap } from "./hook/UseBuildResultMap";
-import { QuestionId } from "./hook/UseBuildResultMap/types";
 import { getDistributionMapByQuestionId } from "./hook/UseBuildResultMap/utils";
 import { IResultProviderContextType, IResultProviderProps } from "./types";
 
@@ -25,8 +25,8 @@ export const ResultProvider: FC<IResultProviderProps> = ({ children, formId, for
   const { resultMap, isLoading: isResultMapLoading } = useBuildResponseMap(formId);
 
   const getDistributionMap = useCallback(
-    (questionId: QuestionId | null) => {
-      return getDistributionMapByQuestionId(resultMap, questionId);
+    (question: IQuestion) => {
+      return getDistributionMapByQuestionId(resultMap, question);
     },
     [resultMap],
   );

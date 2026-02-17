@@ -1,10 +1,10 @@
 import { IQuestion } from "~/core/models/question/types";
-import { IResponse } from "~/core/models/response/type";
+import { ICompleteResponse } from "~/core/models/response/type";
 
 import { IChartData, IXYSeries } from "./types";
 
-export const mapRankingToChartData = (question: IQuestion, responses: IResponse[]): IChartData => {
-  const choices = question.choices?.filter((c) => c.nbResponses > 0);
+export const mapRankingToChartData = (question: IQuestion, responses: ICompleteResponse[]): IChartData => {
+  const choices = question.choices?.filter((c) => responses.some((r) => r.choiceId === c.id));
 
   const labels = choices?.map((_, index) => (index + 1).toString()) ?? [];
 

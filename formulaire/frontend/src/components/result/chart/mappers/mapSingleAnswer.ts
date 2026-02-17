@@ -1,9 +1,10 @@
 import { IQuestion } from "~/core/models/question/types";
+import { ICompleteResponse } from "~/core/models/response/type";
 
 import { IChartData } from "./types";
 
-export const mapSingleAnswerToChartData = (question: IQuestion): IChartData => {
-  const choices = question.choices?.filter((c) => c.nbResponses > 0) ?? [];
+export const mapSingleAnswerToChartData = (question: IQuestion, responses: ICompleteResponse[]): IChartData => {
+  const choices = question.choices?.filter((c) => responses.some((r) => r.choiceId === c.id)) ?? [];
 
   const labels: string[] = [];
   const series: number[] = [];

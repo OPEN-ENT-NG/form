@@ -1,15 +1,10 @@
 import { ApexOptions } from "apexcharts";
 
-import { IBuildCursorOptionsParams } from "./types";
+import { t } from "~/i18n";
 
-export const buildCursorOptions = ({
-  labels,
-  colors,
-  xAxisTitle,
-  yAxisTitle,
-  height = 400,
-  width = 600,
-}: IBuildCursorOptionsParams): ApexOptions => ({
+import { IBaseOptionsParams } from "./types";
+
+export const buildCursorOptions = ({ labels, colors, height = 400, width = 600 }: IBaseOptionsParams): ApexOptions => ({
   chart: {
     type: "area",
     height,
@@ -30,6 +25,11 @@ export const buildCursorOptions = ({
   },
   tooltip: {
     y: {
+      title: {
+        formatter: function () {
+          return "";
+        },
+      },
       formatter: (value: number, context): string => {
         // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
         const seriesName = context.w.globals.seriesNames[context.seriesIndex];
@@ -40,7 +40,12 @@ export const buildCursorOptions = ({
   xaxis: {
     categories: labels,
     title: {
-      text: xAxisTitle,
+      text: t("formulaire.selected.values"),
+      style: {
+        fontSize: "14px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 500,
+      },
     },
   },
   yaxis: {
@@ -49,7 +54,12 @@ export const buildCursorOptions = ({
       formatter: (value: number): string => Math.floor(value).toString(),
     },
     title: {
-      text: yAxisTitle,
+      text: t("formulaire.nb.responses"),
+      style: {
+        fontSize: "14px",
+        fontFamily: "Helvetica, Arial, sans-serif",
+        fontWeight: 500,
+      },
     },
   },
   fill: {

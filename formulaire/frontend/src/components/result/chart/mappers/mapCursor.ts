@@ -1,8 +1,9 @@
-import { IResponse } from "~/core/models/response/type";
+import { ICompleteResponse } from "~/core/models/response/type";
+import { t } from "~/i18n";
 
 import { IChartData } from "./types";
 
-export const mapCursorToChartData = (responses: IResponse[]): IChartData => {
+export const mapCursorToChartData = (responses: ICompleteResponse[]): IChartData => {
   const sortedValues = responses.map((r) => Number(r.answer)).sort((a, b) => a - b);
 
   const countMap = new Map<number, number>();
@@ -12,14 +13,12 @@ export const mapCursorToChartData = (responses: IResponse[]): IChartData => {
   });
 
   return {
-    labels: Array.from(countMap.keys()),
+    labels: Array.from(countMap.keys()).map((key) => key.toString()),
     series: [
       {
-        name: "Nombre de réponses",
+        name: t("formulaire.number.responses"),
         data: Array.from(countMap.values()),
       },
     ],
-    xAxisTitle: "Valeurs sélectionnées",
-    yAxisTitle: "Nombre de réponses",
   };
 };

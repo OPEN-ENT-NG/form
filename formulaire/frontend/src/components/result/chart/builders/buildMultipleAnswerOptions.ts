@@ -1,13 +1,13 @@
 import { ApexOptions } from "apexcharts";
 
-import { IBuildMultipleAnswerOptionsParams } from "./types";
+import { IBaseOptionsParams } from "./types";
 
 export const buildMultipleAnswerOptions = ({
   labels,
   colors,
   height = 400,
   width = 600,
-}: IBuildMultipleAnswerOptionsParams): ApexOptions => ({
+}: IBaseOptionsParams): ApexOptions => ({
   chart: {
     type: "bar",
     height,

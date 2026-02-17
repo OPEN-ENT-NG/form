@@ -8,8 +8,6 @@ export interface IXYSeries {
 export type ChartSeries = PieSeries | IXYSeries[];
 
 export interface IChartData {
-  labels: (string | number)[];
+  labels: string[];
   series: ChartSeries;
-  xAxisTitle?: string;
-  yAxisTitle?: string;
 }
