@@ -28,6 +28,7 @@ export enum TagName {
   FORM_ELEMENTS = "FORM_ELEMENTS",
   CHOICE = "CHOICE",
   CHILDREN = "CHILDREN",
+  CAPTCHA = "CAPTCHA",
 }
 
 export enum QueryMethod {
@@ -89,7 +90,7 @@ export enum ResponsePageType {
   DESCRIPTION = "DESCRIPTION",
   FORM_ELEMENT = "FORM_ELEMENT",
   RECAP = "RECAP",
-  END_PREVIEW = "END_PREVIEW",
+  CAPTCHA = "CAPTCHA",
 }
 
 // Edifice text Editor

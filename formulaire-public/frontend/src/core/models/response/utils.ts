@@ -22,3 +22,10 @@ export const createNewResponse = (
     image: null, // For question type multiple answer
   };
 };
+
+export const buildPublicResponsePayload = (responseCaptcha: IResponse, responses: IResponse[]) => {
+  return {
+    captcha: responseCaptcha,
+    responses: responses,
+  };
+};

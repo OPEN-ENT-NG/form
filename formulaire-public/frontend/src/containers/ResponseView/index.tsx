@@ -11,6 +11,7 @@ import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { useResponse } from "~/providers/ResponseProvider";
 
+import { CaptchaLayout } from "../CaptchaLayout";
 import { DescriptionLayout } from "../DescriptionLayout";
 import { RecapLayout } from "../RecapLayout";
 import { ResponseLayout } from "../ResponseLayout";
@@ -43,10 +44,9 @@ export const ResponseView: FC = () => {
       case ResponsePageType.FORM_ELEMENT:
         return <ResponseLayout />;
       case ResponsePageType.RECAP:
-        console.log("try displaying recap page !");
-        return <></>;
-      case ResponsePageType.END_PREVIEW:
         return <RecapLayout />;
+      case ResponsePageType.CAPTCHA:
+        return <CaptchaLayout />;
       default:
         return errorPage;
     }
