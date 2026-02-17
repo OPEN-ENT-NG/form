@@ -15,6 +15,7 @@ export const emptySplitFormulaireApi = createApi({
     TagName.FORM_ELEMENTS,
     TagName.CHOICE,
     TagName.CHILDREN,
+    TagName.CAPTCHA,
   ],
   endpoints: () => ({}),
 });
