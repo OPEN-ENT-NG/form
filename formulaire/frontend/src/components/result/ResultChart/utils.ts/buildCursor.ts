@@ -38,9 +38,17 @@ export const getCursorChartProps = (
       type: "numeric",
       min: minValue,
       max: maxValue,
+      labels: {
+        formatter: (val: string) => Math.round(Number(val)).toString(),
+      },
+      title: { text: t("formulaire.selected.values"), offsetY: 70 },
     },
     yaxis: {
       min: 0,
+      title: { text: t("formulaire.nb.responses") },
+      labels: {
+        formatter: (val: number) => Math.round(val).toString(),
+      },
     },
     colors: GRAPH_COLORS,
   };

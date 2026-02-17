@@ -5,6 +5,7 @@ import { compareChoices } from "~/containers/creation/CreationQuestionChoiceWrap
 import { GRAPH_COLORS } from "~/core/constants";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { ICompleteResponse } from "~/core/models/response/type";
+import { t } from "~/i18n";
 import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultMap/types";
 
 export const getMatrixChartProps = (
@@ -33,6 +34,13 @@ export const getMatrixChartProps = (
     },
     xaxis: {
       categories,
+    },
+    yaxis: {
+      min: 0,
+      title: { text: t("formulaire.number.responses") },
+      labels: {
+        formatter: (val: number) => Math.round(val).toString(),
+      },
     },
     colors: GRAPH_COLORS,
   };

@@ -35,6 +35,9 @@ export const getMultipleAnswerChartProps = (
     },
     xaxis: {
       categories,
+      labels: {
+        formatter: (val: string) => Math.round(Number(val)).toString(),
+      },
     },
     colors: GRAPH_COLORS,
     plotOptions: {
