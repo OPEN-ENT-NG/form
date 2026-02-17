@@ -17,16 +17,7 @@ import { responseLayoutStyle, StyledButtonsWrapper } from "./style";
 import { getNextPositionIfValid } from "./utils";
 
 export const ResponseLayout: FC = () => {
-  const {
-    form,
-    formElementsList,
-    progress,
-    updateProgress,
-    saveResponses,
-    responsesMap,
-    isInPreviewMode,
-    setPageType,
-  } = useResponse();
+  const { form, formElementsList, progress, updateProgress, saveResponses, responsesMap, setPageType } = useResponse();
   const { t } = useTranslation(FORMULAIRE_PUBLIC);
   const [currentElement, setCurrentElement] = useState<IFormElement>(formElementsList[0] ?? null);
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
@@ -69,7 +60,7 @@ export const ResponseLayout: FC = () => {
     // It's the end of the form
     if (nextPosition && nextPosition > formElementsList.length) {
       await saveResponses();
-      setPageType(isInPreviewMode ? ResponsePageType.END_PREVIEW : ResponsePageType.RECAP);
+      setPageType(ResponsePageType.RECAP);
       return;
     }
 
