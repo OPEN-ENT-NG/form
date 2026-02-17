@@ -1,9 +1,10 @@
 import { FC } from "react";
 import Chart from "react-apexcharts";
 
+import { getMultipleAnswerChartProps } from "../builders/buildMultipleAnswer";
 import { IResultChartProps } from "../types";
-import { getOptions, getSeries } from "./utils";
 
 export const MultipleAnswerResultChart: FC<IResultChartProps> = ({ question, distributionMap }) => {
-  return <Chart options={getOptions(question)} series={getSeries(question, distributionMap)} type="bar" />;
+  const { options, series } = getMultipleAnswerChartProps(question, distributionMap);
+  return <Chart options={options} series={series} type="bar" />;
 };

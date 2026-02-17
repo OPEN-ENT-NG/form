@@ -1,7 +1,9 @@
 import dayjs from "dayjs";
 
+import { CursorResultChart } from "~/components/result/chart/CursorResultChart";
 import { MatrixResultChart } from "~/components/result/chart/MatrixResultChart";
 import { MultipleAnswerResultChart } from "~/components/result/chart/MultipleAnswerResultChart";
+import { RankingResultChart } from "~/components/result/chart/Ranking";
 import { SingleAnswerResultChart } from "~/components/result/chart/SingleAnswerResultChart";
 import { DEFAULT_DISPLAY_ANSWER_VALUE } from "~/core/constants";
 import { DateFormat } from "~/core/enums";
@@ -51,6 +53,10 @@ export const renderQuestionResult = (question: IQuestion, distributionMap: Distr
       return <MultipleAnswerResultChart question={question} distributionMap={distributionMap} />;
     case QuestionTypes.MATRIX:
       return <MatrixResultChart question={question} distributionMap={distributionMap} />;
+    case QuestionTypes.CURSOR:
+      return <CursorResultChart question={question} distributionMap={distributionMap} />;
+    case QuestionTypes.RANKING:
+      return <RankingResultChart question={question} distributionMap={distributionMap} />;
     default:
       return null;
   }
