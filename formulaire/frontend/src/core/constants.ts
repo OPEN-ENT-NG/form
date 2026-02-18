@@ -125,3 +125,4 @@ export const GRAPH_COLORS = Array.from({ length: Math.max(...COLOR_GROUPS.map((g
 ).flat();
 
 export const NB_COLORS_AVAILABLE: number = 25;
+export const INITIAL_TREE_SCALE = 75;

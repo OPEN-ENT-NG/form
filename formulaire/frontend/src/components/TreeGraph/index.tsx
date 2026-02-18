@@ -12,6 +12,7 @@ import { t } from "~/i18n";
 import { displayTypeIcon, intersects, shuffle } from "./utils";
 import "./tree.scss";
 import { IArrow, IFormTreeViewHandle, IFormTreeViewProps, ILine } from "./types";
+import { INITIAL_TREE_SCALE } from "~/core/constants";
 
 export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
   ({ form, formElements, onZoomChange }, ref) => {
@@ -22,7 +23,7 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
 
     const getActualScale = useCallback(() => {
       const svg = svgRef.current;
-      if (!svg) return 75; //TODO : propify
+      if (!svg) return INITIAL_TREE_SCALE; //TODO : propify
       return Math.round(d3.zoomTransform(svg.node()).k * 100);
     }, []);
 
@@ -75,7 +76,7 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
       const treeView = d3.select(".tree-view");
       const treeViewWidth = treeView.node()?.offsetWidth ?? 0;
       const vh = window.innerHeight - (window.innerHeight * 25) / 100;
-      const initialScale = 0.75;
+      const initialScale = INITIAL_TREE_SCALE / 100;
       svg.attr("width", treeViewWidth).attr("height", vh);
       if (mainGraphRef.current != null) {
         svg.call(
