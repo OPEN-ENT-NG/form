@@ -1,9 +1,11 @@
 import { Box, Button, EmptyState, Typography } from "@cgi-learning-hub/ui";
-import { FC } from "react";
+import { FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Header } from "~/components/Header";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
+import { FormTreeView, FormTreeViewHandle } from "~/components/TreeGraph";
+import { ZoomComponent } from "~/components/ZoomComponent"; //TODO : changer l'import pour la lib (dès que la release develop sera effective)
 import { useElementHeight } from "~/containers/home/HomeView/utils";
 import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType } from "~/core/enums";
@@ -13,10 +15,9 @@ import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
 import { useGlobal } from "~/providers/GlobalProvider";
 
-import { getRecursiveFolderParents, useGetTreeHeaderButtons } from "./utils";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "../CreationView/style";
-import { FormTreeView } from "~/components/TreeGraph";
 import { treeStyle, treeTypographyStyle } from "./style";
+import { getRecursiveFolderParents, useGetTreeHeaderButtons } from "./utils";
 
 export const TreeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -28,6 +29,14 @@ export const TreeView: FC = () => {
   const { isTablet } = useGlobal();
 
   const { isTheme1D } = useTheme();
+
+  const treeRef = useRef<FormTreeViewHandle>(null);
+  const [zoomLevel, setZoomLevel] = useState(75);
+
+  const applyZoom = (level: number) => {
+    setZoomLevel(level);
+    treeRef.current?.zoomTo(level);
+  };
 
   const selectView = () => {
     return isTablet ? errorView : desktopView;
@@ -56,6 +65,19 @@ export const TreeView: FC = () => {
 
   const desktopView = (
     <>
+      <ZoomComponent
+        zoomLevel={zoomLevel}
+        zoomMaxLevel={300}
+        zoomIn={() => {
+          applyZoom(Math.min(zoomLevel + 15, 300)); //TODO : constantifier les valeurs de zoom
+        }}
+        zoomOut={() => {
+          applyZoom(Math.max(zoomLevel - 15, 15));
+        }}
+        resetZoom={() => {
+          applyZoom(75);
+        }}
+      />
       <Box sx={creationViewStyle(isTheme1D)} data-type={ClickAwayDataType.ROOT}>
         <Box ref={headerRef} sx={creationHedearStyle}>
           {form && (
@@ -74,7 +96,7 @@ export const TreeView: FC = () => {
             <Typography fontStyle={"italic"}>{t("formulaire.scroll.legend")}</Typography>
             <Typography fontStyle={"italic"}>{t("formulaire.mouse.legend")}</Typography>
           </Box>
-          {form && <FormTreeView formElements={formElementsList} form={form} />}
+          {form && <FormTreeView ref={treeRef} formElements={formElementsList} form={form} />}
         </Box>
       </Box>
     </>

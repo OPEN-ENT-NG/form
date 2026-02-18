@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, forwardRef, useImperativeHandle, useCallback } from "react";
 import * as d3 from "d3";
 import * as dagreD3 from "dagre-d3";
 import { IFormElement } from "~/core/models/formElement/types";
@@ -13,8 +13,28 @@ import { displayTypeIcon, intersects, shuffle } from "./utils";
 import "./tree.scss";
 import { IArrow, IFormTreeViewProps, ILine } from "./types";
 
-export const FormTreeView = ({ form, formElements }: IFormTreeViewProps) => {
+export interface FormTreeViewHandle {
+  zoomTo: (scale: number) => void;
+}
+
+export const FormTreeView = forwardRef<FormTreeViewHandle, IFormTreeViewProps>(({ form, formElements }, ref) => {
   const mainGraphRef = useRef<any>(null);
+  const zoomRef = useRef<d3.ZoomBehavior<Element, unknown> | null>(null);
+  const svgRef = useRef<any>(null);
+
+  const zoomTo = useCallback((scale: number) => {
+    const svg = svgRef.current;
+    const zoom = zoomRef.current;
+    if (!svg || !zoom || !mainGraphRef.current) return;
+
+    const currentTransform = d3.zoomTransform(svg.node());
+    svg
+      .transition()
+      .duration(300)
+      .call(zoom.transform, d3.zoomIdentity.translate(currentTransform.x, currentTransform.y).scale(scale / 100));
+  }, []);
+
+  useImperativeHandle(ref, () => ({ zoomTo }), [zoomTo]);
 
   useEffect(() => {
     if (formElements.length === 0) return;
@@ -58,6 +78,9 @@ export const FormTreeView = ({ form, formElements }: IFormTreeViewProps) => {
       inner.attr("transform", e.transform);
     });
     svg.call(zoom);
+
+    zoomRef.current = zoom;
+    svgRef.current = svg;
 
     render_graph(render, nodes, edgeList, inner, svg);
     centerGraph(svg, zoom);
@@ -240,4 +263,4 @@ export const FormTreeView = ({ form, formElements }: IFormTreeViewProps) => {
       </svg>
     </div>
   );
-};
+});
