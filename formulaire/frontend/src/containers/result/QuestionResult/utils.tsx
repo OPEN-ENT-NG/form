@@ -1,8 +1,10 @@
 import dayjs from "dayjs";
 
+import { ResultChart } from "~/components/result/ResultChart";
 import { DEFAULT_DISPLAY_ANSWER_VALUE } from "~/core/constants";
 import { DateFormat } from "~/core/enums";
 import { QuestionTypes } from "~/core/models/question/enum";
+import { IQuestion } from "~/core/models/question/types";
 import { ICompleteResponse } from "~/core/models/response/type";
 import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultMap/types";
 
@@ -25,8 +27,8 @@ export const getDisplayAnswer = (completeResponse: ICompleteResponse) => {
   return answer ? answer.toString() : DEFAULT_DISPLAY_ANSWER_VALUE;
 };
 
-export const renderQuestionResult = (questionType: QuestionTypes, distributionMap: DistributionMap) => {
-  switch (questionType) {
+export const renderQuestionResult = (question: IQuestion, distributionMap: DistributionMap) => {
+  switch (question.questionType) {
     case QuestionTypes.DATE:
     case QuestionTypes.TIME:
     case QuestionTypes.SHORTANSWER:
@@ -34,11 +36,21 @@ export const renderQuestionResult = (questionType: QuestionTypes, distributionMa
       return (
         <QuestionResultWithoutGraph
           completeResponseList={getResponseListForUniqueResult(distributionMap)}
-          questionType={questionType}
+          questionType={question.questionType}
         />
       );
+    case QuestionTypes.LONGANSWER:
+    case QuestionTypes.FREETEXT:
+      return null;
+    case QuestionTypes.SINGLEANSWER:
+    case QuestionTypes.SINGLEANSWERRADIO:
+    case QuestionTypes.MULTIPLEANSWER:
+    case QuestionTypes.MATRIX:
+    case QuestionTypes.CURSOR:
+    case QuestionTypes.RANKING:
+      return <ResultChart question={question} distributionMap={distributionMap} />;
     default:
-      return "pas encore fait";
+      return null;
   }
 };
 

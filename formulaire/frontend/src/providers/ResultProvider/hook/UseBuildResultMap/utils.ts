@@ -1,4 +1,6 @@
 import { IDistribution } from "~/core/models/distribution/types";
+import { QuestionTypes } from "~/core/models/question/enum";
+import { IQuestion } from "~/core/models/question/types";
 import { ICompleteResponse, IResponse, IResponseFile } from "~/core/models/response/type";
 
 import { DistributionId, DistributionMap, ResultMap } from "./types";
@@ -77,6 +79,18 @@ const buildCompleteResponseList = (
   });
 };
 
-export const getDistributionMapByQuestionId = (resultMap: ResultMap, questionId: number | null): DistributionMap => {
-  return resultMap.get(questionId ?? -1) ?? new Map<DistributionId, ICompleteResponse[]>();
+export const getDistributionMapByQuestionId = (resultMap: ResultMap, question: IQuestion): DistributionMap => {
+  if (question.questionType === QuestionTypes.MATRIX) {
+    const childrenDistributionMapList: DistributionMap[] =
+      question.children?.map((child) => getDistributionMapByQuestionId(resultMap, child)) ?? [];
+    return childrenDistributionMapList.reduce((acc, map) => {
+      map.forEach((responses, distributionId) => {
+        const existingResponses = acc.get(distributionId) ?? [];
+
+        acc.set(distributionId, [...existingResponses, ...responses]);
+      });
+      return acc;
+    }, new Map<DistributionId, ICompleteResponse[]>());
+  }
+  return resultMap.get(question.id ?? -1) ?? new Map<DistributionId, ICompleteResponse[]>();
 };
