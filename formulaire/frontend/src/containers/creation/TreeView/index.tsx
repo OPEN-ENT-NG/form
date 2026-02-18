@@ -4,8 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import { Header } from "~/components/Header";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
-import { FormTreeView, FormTreeViewHandle } from "~/components/TreeGraph";
-import { ZoomComponent } from "~/components/ZoomComponent"; //TODO : changer l'import pour la lib (dès que la release develop sera effective)
+import { FormTreeView } from "~/components/TreeGraph";
+import { IFormTreeViewHandle } from "~/components/TreeGraph/types";
+import { ZoomComponent } from "~/components/ZoomComponent";
 import { useElementHeight } from "~/containers/home/HomeView/utils";
 import { FORMULAIRE } from "~/core/constants";
 import { ClickAwayDataType } from "~/core/enums";
@@ -27,16 +28,10 @@ export const TreeView: FC = () => {
   const { navigateToHome } = useFormulaireNavigation();
 
   const { isTablet } = useGlobal();
-
   const { isTheme1D } = useTheme();
 
-  const treeRef = useRef<FormTreeViewHandle>(null);
+  const treeRef = useRef<IFormTreeViewHandle>(null);
   const [zoomLevel, setZoomLevel] = useState(75);
-
-  const applyZoom = (level: number) => {
-    setZoomLevel(level);
-    treeRef.current?.zoomTo(level);
-  };
 
   const selectView = () => {
     return isTablet ? errorView : desktopView;
@@ -68,15 +63,9 @@ export const TreeView: FC = () => {
       <ZoomComponent
         zoomLevel={zoomLevel}
         zoomMaxLevel={300}
-        zoomIn={() => {
-          applyZoom(Math.min(zoomLevel + 15, 300)); //TODO : constantifier les valeurs de zoom
-        }}
-        zoomOut={() => {
-          applyZoom(Math.max(zoomLevel - 15, 15));
-        }}
-        resetZoom={() => {
-          applyZoom(75);
-        }}
+        zoomIn={() => treeRef.current?.zoomIn()}
+        zoomOut={() => treeRef.current?.zoomOut()}
+        resetZoom={() => treeRef.current?.resetZoom()}
       />
       <Box sx={creationViewStyle(isTheme1D)} data-type={ClickAwayDataType.ROOT}>
         <Box ref={headerRef} sx={creationHedearStyle}>
@@ -96,7 +85,9 @@ export const TreeView: FC = () => {
             <Typography fontStyle={"italic"}>{t("formulaire.scroll.legend")}</Typography>
             <Typography fontStyle={"italic"}>{t("formulaire.mouse.legend")}</Typography>
           </Box>
-          {form && <FormTreeView ref={treeRef} formElements={formElementsList} form={form} />}
+          {form && (
+            <FormTreeView ref={treeRef} formElements={formElementsList} form={form} onZoomChange={setZoomLevel} />
+          )}
         </Box>
       </Box>
     </>
