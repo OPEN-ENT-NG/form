@@ -12,7 +12,7 @@ import { t } from "~/i18n";
 import { displayTypeIcon, intersects, shuffle } from "./utils";
 import "./tree.scss";
 import { IArrow, IFormTreeViewHandle, IFormTreeViewProps, ILine } from "./types";
-import { INITIAL_TREE_SCALE } from "~/core/constants";
+import { INITIAL_TREE_SCALE, MAX_TREE_ZOOM, MIN_TREE_ZOOM, STEPS_TREE_ZOOM } from "~/core/constants";
 
 export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
   ({ form, formElements, onZoomChange }, ref) => {
@@ -49,8 +49,8 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
     useImperativeHandle(
       ref,
       () => ({
-        zoomIn: () => zoomTo(Math.min(getActualScale() + 20, 295)),
-        zoomOut: () => zoomTo(Math.max(getActualScale() - 20, 15)),
+        zoomIn: () => zoomTo(Math.min(getActualScale() + STEPS_TREE_ZOOM, MAX_TREE_ZOOM)),
+        zoomOut: () => zoomTo(Math.max(getActualScale() - STEPS_TREE_ZOOM, MIN_TREE_ZOOM)),
         resetZoom: () => zoomTo(100),
       }),
       [zoomTo, getActualScale],

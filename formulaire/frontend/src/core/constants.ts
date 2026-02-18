@@ -125,4 +125,8 @@ export const GRAPH_COLORS = Array.from({ length: Math.max(...COLOR_GROUPS.map((g
 ).flat();
 
 export const NB_COLORS_AVAILABLE: number = 25;
+//Treeview constants
 export const INITIAL_TREE_SCALE = 75;
+export const MIN_TREE_ZOOM = 15;
+export const MAX_TREE_ZOOM = 295;
+export const STEPS_TREE_ZOOM = 20;
