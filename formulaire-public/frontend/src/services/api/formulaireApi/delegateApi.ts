@@ -1,6 +1,6 @@
 import { IDelegate } from "~/core/models/delegate/types.ts";
 
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
+import { emptySplitFormulaireApi } from "../formulaireApi/emptySplitFormulaireApi.ts";
 
 export const delegateApi = emptySplitFormulaireApi.injectEndpoints({
   endpoints: (builder) => ({

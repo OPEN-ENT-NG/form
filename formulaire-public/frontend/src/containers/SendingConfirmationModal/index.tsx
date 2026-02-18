@@ -4,19 +4,29 @@ import { useNavigate } from "react-router-dom";
 
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { IModalProps } from "~/core/types";
 import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
-import { useSendResponsesMutation } from "~/services/api/formulaireApi/responseApi";
+import { useSendResponsesMutation } from "~/services/api/formulairePublicApi/responseApi";
 
-export const SendingConfirmationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
+import { ISendingConfirmationModalProps } from "./types";
+
+export const SendingConfirmationModal: FC<ISendingConfirmationModalProps> = ({
+  isOpen,
+  handleClose,
+  captchaResponse,
+}) => {
   const navigate = useNavigate();
-  const { formKey, form, responseCaptcha, responses } = useResponse();
+  const { formKey, form, flattenResponses } = useResponse();
   const [sendResponses] = useSendResponsesMutation();
 
   const send = async () => {
-    if (!form?.distribution_key) return;
-    await sendResponses({ formKey, distributionKey: form.distribution_key, responseCaptcha, responses });
+    if (!form?.distribution_key || !flattenResponses.length) return;
+    await sendResponses({
+      formKey,
+      distributionKey: form.distribution_key,
+      captchaResponse,
+      responses: flattenResponses,
+    });
     navigate("/thanks");
   };
 

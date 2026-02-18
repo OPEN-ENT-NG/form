@@ -1,9 +1,11 @@
 import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 import { getNextFormElement } from "~/core/models/question/utils";
 import { IResponse } from "~/core/models/response/type";
 import { getNextFormElementPosition } from "~/core/models/section/utils";
+import { IFormElementIdType, IProgressProps, ResponseMap } from "~/providers/ResponseProvider/types";
 
 export const getNextPositionIfValid = (
   currentElement: IFormElement,
@@ -50,4 +52,23 @@ const calculateResponseValue = (
 ): IResponse | null => {
   const responses = getQuestionResponses(conditionalQuestion);
   return responses.find((response) => response.selected) ?? null;
+};
+
+export const saveResponses = (progress: IProgressProps, responsesMap: ResponseMap): void => {
+  sessionStorage.setItem("progress", JSON.stringify(progress));
+  sessionStorage.setItem("responsesMap", serializeMap(responsesMap));
+};
+
+const serializeMap = (responsesMap: ResponseMap): string => {
+  return JSON.stringify([...responsesMap].map(([k, v]) => [k, [...v]]));
+};
+
+const deserializeMap = (storedResponsesMap: string): ResponseMap => {
+  if (!storedResponsesMap) return new Map();
+
+  const parsed = JSON.parse(storedResponsesMap) as [string, [number, IResponse[]][]][];
+
+  return new Map<string, Map<number, IResponse[]>>(
+    parsed.map(([key, values]) => [key, new Map<number, IResponse[]>(values)]),
+  );
 };

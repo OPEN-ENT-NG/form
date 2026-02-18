@@ -4,12 +4,12 @@ import { QueryMethod, TagName } from "~/core/enums.ts";
 import { IPublicFormDTO } from "~/core/models/form/types.ts";
 import { t } from "~/i18n";
 
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi.ts";
+import { emptySplitFormulairePublicApi } from "./emptySplitFormulairePublicApi.ts";
 
-export const formApi = emptySplitFormulaireApi.injectEndpoints({
+export const formApi = emptySplitFormulairePublicApi.injectEndpoints({
   endpoints: (builder) => ({
-    getPublicForm: builder.query<IPublicFormDTO, { formKey: string }>({
-      query: ({ formKey }) => ({
+    getPublicForm: builder.query<IPublicFormDTO, string>({
+      query: (formKey) => ({
         url: `forms/key/${formKey}`,
         method: QueryMethod.GET,
       }),

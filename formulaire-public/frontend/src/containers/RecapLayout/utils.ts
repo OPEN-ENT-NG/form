@@ -1,28 +1,8 @@
 import { IFormElement } from "~/core/models/formElement/types";
-import { getAllQuestions, isQuestion, isSection } from "~/core/models/formElement/utils";
+import { getAllQuestions, getAllQuestionsAndChildren, isQuestion, isSection } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IResponse } from "~/core/models/response/type";
-
-export const checkMandatoryQuestions = (formElements: IFormElement[], responses: IResponse[]): boolean => {
-  const mandatoryQuestions = getAllQuestions(formElements);
-  mandatoryQuestions.forEach((question) => {
-    if (question.questionType === QuestionTypes.MATRIX) {
-      question.children?.forEach((child) => {
-        if (!responses.some((r) => r.questionId === child.id && r.answer)) return false;
-      });
-    } else if (responses.filter((r) => r.questionId === question.id && isResponseStringValid(r)).length <= 0) {
-      return false;
-    }
-  });
-
-  return true;
-};
-
-const isResponseStringValid = (response: IResponse): boolean => {
-  if (response.answer) return response.answer.toString().trim().length > 0;
-  if (response.customAnswer) return response.customAnswer.trim().length > 0;
-  return false;
-};
+import { ResponseMap } from "~/providers/ResponseProvider/types";
 
 export const getFormElementsToDisplay = (formElementsList: IFormElement[], responses: IResponse[]): IFormElement[] => {
   const questionIds = responses.map((r) => r.questionId);
@@ -44,5 +24,50 @@ const shouldDisplayElement = (formElement: IFormElement, responseQuestionIds: nu
     return formElement.questions.filter((q) => shouldDisplayElement(q, responseQuestionIds)).length > 0;
   }
 
+  return false;
+};
+
+export const getResponses = (formElementsList: IFormElement[], responsesMap: ResponseMap): IResponse[] => {
+  const allResponses = Array.from(responsesMap.values())
+    .flatMap((innerMap) => Array.from(innerMap.values()))
+    .flat();
+
+  const allQuestionsAndChildren = getAllQuestionsAndChildren(formElementsList);
+  allResponses.filter((r) => {
+    if (!r.questionId) return false;
+    const question = allQuestionsAndChildren.find((q) => q.id === r.questionId);
+    if (!question || (isQuestionUsingSelectedProp(question.questionType) && !r.selected)) return false;
+    return true;
+  });
+
+  console.log(allResponses);
+  return allResponses;
+};
+
+const isQuestionUsingSelectedProp = (questionType: QuestionTypes) => {
+  return (
+    questionType === QuestionTypes.SINGLEANSWER ||
+    questionType === QuestionTypes.SINGLEANSWERRADIO ||
+    questionType === QuestionTypes.MULTIPLEANSWER
+  );
+};
+export const checkMandatoryQuestions = (formElements: IFormElement[], responses: IResponse[]): boolean => {
+  const mandatoryQuestions = getAllQuestions(formElements).filter((q) => q.mandatory);
+  mandatoryQuestions.forEach((question) => {
+    if (question.questionType === QuestionTypes.MATRIX) {
+      question.children?.forEach((child) => {
+        if (!responses.some((r) => r.questionId === child.id && r.answer)) return false;
+      });
+    } else if (responses.filter((r) => r.questionId === question.id && isResponseStringValid(r)).length <= 0) {
+      return false;
+    }
+  });
+
+  return true;
+};
+
+const isResponseStringValid = (response: IResponse): boolean => {
+  if (response.answer) return response.answer.toString().trim().length > 0;
+  if (response.customAnswer) return response.customAnswer.trim().length > 0;
   return false;
 };

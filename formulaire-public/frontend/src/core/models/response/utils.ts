@@ -66,9 +66,9 @@ export const buildResponsesPayload = (responses: IResponse[], distributionId: nu
   return responses.map((response) => buildResponsePayload(response, distributionId));
 };
 
-export const buildPublicResponsePayload = (responseCaptcha: IResponse, responses: IResponse[]) => {
+export const buildPublicResponsePayload = (captchaResponse: string, responses: IResponse[]) => {
   return {
-    captcha: responseCaptcha,
+    captcha: captchaResponse,
     responses: responses,
   };
 };

@@ -1,5 +1,6 @@
 import { Theme, ToastPosition } from "react-toastify";
 
+export const FORMULAIRE = "formulaire-public";
 export const FORMULAIRE_PUBLIC = "formulaire-public";
 export const ARCHIVE = "archive";
 export const COMMON = "common";

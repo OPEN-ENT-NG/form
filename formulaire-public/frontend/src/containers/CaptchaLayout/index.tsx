@@ -1,6 +1,6 @@
 import { Box, Button, Paper, Stack, TextField, Typography } from "@cgi-learning-hub/ui";
 import ReplayRoundedIcon from "@mui/icons-material/ReplayRounded";
-import { FC, useEffect, useState } from "react";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import { IconButtonTooltiped } from "~/components/IconButtonTooltiped/IconButtonTooltiped";
@@ -12,8 +12,8 @@ import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResponse } from "~/providers/ResponseProvider";
-import { useGetCaptchaQuery } from "~/services/api/formulaireApi/captchaApi";
-import { emptySplitFormulaireApi } from "~/services/api/formulaireApi/emptySplitFormulaireApi";
+import { useGetCaptchaQuery } from "~/services/api/formulairePublicApi/captchaApi";
+import { emptySplitFormulairePublicApi } from "~/services/api/formulairePublicApi/emptySplitFormulairePublicApi";
 
 import { questionStackStyle } from "../RespondQuestionWrapper/style";
 import {
@@ -32,6 +32,7 @@ export const CaptchaLayout: FC = () => {
   } = useGlobal();
   const dispatch = useDispatch();
   const [captcha, setCaptcha] = useState<ICaptcha>();
+  const [captchaResponse, setCaptchaResponse] = useState<string>("");
   const [distributionCaptchaId, setDistributionCaptchaId] = useState<number | undefined>(form?.distribution_captcha);
 
   // Fetch datas
@@ -49,13 +50,17 @@ export const CaptchaLayout: FC = () => {
     sessionStorage.setItem("distributionCaptcha", JSON.stringify(captchaData.captchaId));
   }, [captchaData]);
 
+  const handleChangeCaptchaResponse = (event: ChangeEvent<HTMLInputElement>) => {
+    setCaptchaResponse(event.target.value);
+  };
+
   const goBackToRecap = () => {
     setPageType(ResponsePageType.RECAP);
   };
 
   const reloadCaptcha = () => {
     setDistributionCaptchaId(undefined);
-    dispatch(emptySplitFormulaireApi.util.invalidateTags([TagName.CAPTCHA]));
+    dispatch(emptySplitFormulairePublicApi.util.invalidateTags([TagName.CAPTCHA]));
   };
 
   const sendForm = () => {
@@ -84,6 +89,8 @@ export const CaptchaLayout: FC = () => {
                 />
               </Box>
               <TextField
+                value={captchaResponse}
+                onChange={handleChangeCaptchaResponse}
                 variant={ComponentVariant.OUTLINED}
                 fullWidth
                 placeholder={t("formulaire.public.captcha.placeholder")}
@@ -111,6 +118,7 @@ export const CaptchaLayout: FC = () => {
           handleClose={() => {
             toggleModal(ModalType.SENDING_CONFIRMATION);
           }}
+          captchaResponse={captchaResponse}
         />
       )}
     </>

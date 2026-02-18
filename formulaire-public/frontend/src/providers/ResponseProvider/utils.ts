@@ -166,44 +166,16 @@ const updateResponsesByQuestionType = (
   return existingResponses;
 };
 
-export const updateStorage = (
-  formKey: string,
-  form: IForm,
-  formElements: IFormElement[],
-  progress: IProgressProps,
-): void => {
-  sessionStorage.setItem("formKey", JSON.stringify(formKey));
-  sessionStorage.setItem("distributionKey", JSON.stringify(form.distribution_key));
-  sessionStorage.setItem("distributionCaptcha", JSON.stringify(form.distribution_captcha));
-  sessionStorage.setItem("form", JSON.stringify(form));
-  sessionStorage.setItem("formElements", JSON.stringify(formElements));
-  sessionStorage.setItem("nbFormElements", JSON.stringify(formElements.length));
+export const updateStorage = (progress: IProgressProps): void => {
   sessionStorage.setItem("progress", JSON.stringify(progress));
-  sessionStorage.setItem("allResponsesInfos", JSON.stringify(new Map()));
+  sessionStorage.setItem("responsesMap", JSON.stringify(new Map()));
 };
-
-function parseQuestion(formElementDTO: IQuestionDTO): IQuestion {
-  const question = transformQuestion(formElementDTO);
-  return {
-    ...question,
-    choices: formElementDTO.choices as IQuestionChoice[],
-    children: (formElementDTO.children ?? []).map((question) => parseQuestion(question)),
-  };
-}
-
-function parseSection(formElementDTO: ISectionDTO): ISection {
-  const section = transformSection(formElementDTO);
-  return {
-    ...section,
-    questions: formElementDTO.questions.map(parseQuestion),
-  };
-}
 
 function parseFormElement(formElementDTO: IFormElementDTO): ISection | IQuestion {
   if (formElementDTO.form_element_type === FormElementType.SECTION) {
-    return parseSection(formElementDTO as ISectionDTO);
+    return transformSection(formElementDTO as ISectionDTO);
   }
-  return parseQuestion(formElementDTO as IQuestionDTO);
+  return transformQuestion(formElementDTO as IQuestionDTO);
 }
 
 export const parseFormDatas = (formDatas: IPublicFormDTO): IForm => {

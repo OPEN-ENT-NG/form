@@ -55,7 +55,7 @@ export const transformQuestion = (raw: IQuestionDTO): IQuestion => {
     conditional: raw.conditional,
     matrixId: raw.matrix_id,
     matrixPosition: raw.matrix_position,
-    choices: raw.choices,
+    choices: raw.choices?.map(transformQuestionChoice) ?? [],
     placeholder: raw.placeholder,
     children: raw.children?.map(transformQuestion) ?? [],
     specificFields: raw.specific_fields,

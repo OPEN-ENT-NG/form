@@ -12,7 +12,7 @@ import { useResponse } from "~/providers/ResponseProvider";
 import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
 import { RespondSectionWrapper } from "../RespondSectionWrapper";
 import { responseLayoutStyle, StyledButtonsWrapper } from "./style";
-import { getNextPositionIfValid } from "./utils";
+import { getNextPositionIfValid, saveResponses } from "./utils";
 
 export const ResponseLayout: FC = () => {
   const {
@@ -20,12 +20,11 @@ export const ResponseLayout: FC = () => {
     formElementsList,
     progress,
     updateProgress,
-    saveResponses,
     setPageType,
     currentElement,
     setCurrentElement,
     getQuestionResponses,
-    distribution,
+    responsesMap,
     scrollToQuestionId,
   } = useResponse();
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
@@ -57,19 +56,19 @@ export const ResponseLayout: FC = () => {
     }
   }, [currentElement, scrollToQuestionId]);
 
-  const goPreviousElement = async () => {
+  const goPreviousElement = () => {
     if (!currentElement) return;
     const prevId = progress.historicFormElementIds[progress.historicFormElementIds.length - 2];
     const prevElement = formElementsList.find((fe) => fe.id === prevId);
 
     if (!prevElement) return;
 
-    await saveResponses();
+    saveResponses(progress, responsesMap);
     setCurrentElement(prevElement);
     updateProgress(prevElement, progress.historicFormElementIds.slice(0, -1));
   };
 
-  const goNextElement = async () => {
+  const goNextElement = () => {
     if (!currentElement?.position) return;
     const nextPosition = getNextPositionIfValid(currentElement, formElementsList, getQuestionResponses);
 
@@ -81,21 +80,19 @@ export const ResponseLayout: FC = () => {
 
     // It's the end of the form
     if (nextPosition === null || (nextPosition && nextPosition > formElementsList.length)) {
-      await saveResponses();
-      if (form?.id && distribution?.id) {
-        setPageType(ResponsePageType.RECAP);
-      }
+      saveResponses(progress, responsesMap);
+      if (form?.id) setPageType(ResponsePageType.RECAP);
       return;
     }
 
     // We got an element for the next position
-    await saveResponses();
+    saveResponses(progress, responsesMap);
 
     const nextElement = formElementsList.find((fe) => fe.position === nextPosition);
     if (!nextElement || !nextElement.id) return;
 
-    updateProgress(nextElement, progress.historicFormElementIds.concat([nextElement.id]));
     setCurrentElement(nextElement);
+    updateProgress(nextElement, progress.historicFormElementIds.concat([nextElement.id]));
   };
 
   const getFormElementContent = () => {
@@ -117,21 +114,11 @@ export const ResponseLayout: FC = () => {
       {getFormElementContent()}
       <StyledButtonsWrapper isFirstElement={isFirstElement} isLastElement={isLastElement}>
         {!isFirstElement && (
-          <Button
-            variant={ComponentVariant.OUTLINED}
-            onClick={() => {
-              void goPreviousElement();
-            }}
-          >
+          <Button variant={ComponentVariant.OUTLINED} onClick={goPreviousElement}>
             {t("formulaire.public.prev")}
           </Button>
         )}
-        <Button
-          variant={ComponentVariant.CONTAINED}
-          onClick={() => {
-            void goNextElement();
-          }}
-        >
+        <Button variant={ComponentVariant.CONTAINED} onClick={goNextElement}>
           {t("formulaire.public.next")}
         </Button>
       </StyledButtonsWrapper>
