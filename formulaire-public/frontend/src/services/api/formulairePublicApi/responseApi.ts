@@ -1,6 +1,7 @@
 import { toast } from "react-toastify";
 
 import { QueryMethod } from "~/core/enums.ts";
+import { IDistributionDTO } from "~/core/models/distribution/types.ts";
 import { IResponse } from "~/core/models/response/type.ts";
 import { buildPublicResponsePayload } from "~/core/models/response/utils.ts";
 import { t } from "~/i18n.ts";
@@ -10,7 +11,7 @@ import { emptySplitFormulairePublicApi } from "./emptySplitFormulairePublicApi.t
 export const responseApi = emptySplitFormulairePublicApi.injectEndpoints({
   endpoints: (builder) => ({
     sendResponses: builder.mutation<
-      void,
+      IDistributionDTO,
       { formKey: string; distributionKey: string; captchaResponse: string; responses: IResponse[] }
     >({
       query: ({ formKey, distributionKey, captchaResponse, responses }) => ({

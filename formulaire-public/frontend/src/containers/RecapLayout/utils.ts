@@ -40,7 +40,6 @@ export const getResponses = (formElementsList: IFormElement[], responsesMap: Res
     return true;
   });
 
-  console.log(allResponses);
   return allResponses;
 };
 

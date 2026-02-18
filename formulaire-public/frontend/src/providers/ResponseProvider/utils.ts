@@ -10,7 +10,7 @@ import { createNewResponse } from "~/core/models/response/utils";
 import { ISection, ISectionDTO } from "~/core/models/section/types";
 import { transformSection } from "~/core/models/section/utils";
 
-import { IProgressProps, ResponseMap } from "./types";
+import { ResponseMap } from "./types";
 
 export const initResponsesMap = (formElements: IFormElement[]) => {
   const responsesMap = new Map<string, Map<number, IResponse[]>>();
@@ -164,11 +164,6 @@ const updateResponsesByQuestionType = (
   }
 
   return existingResponses;
-};
-
-export const updateStorage = (progress: IProgressProps): void => {
-  sessionStorage.setItem("progress", JSON.stringify(progress));
-  sessionStorage.setItem("responsesMap", JSON.stringify(new Map()));
 };
 
 function parseFormElement(formElementDTO: IFormElementDTO): ISection | IQuestion {

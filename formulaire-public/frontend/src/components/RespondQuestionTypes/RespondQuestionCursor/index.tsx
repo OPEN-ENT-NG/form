@@ -10,8 +10,8 @@ import { respondQuestionCursorStyle } from "./style";
 
 export const RespondQuestionCursor: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
-  const [value, setValue] = useState<number | null>(null);
   const { cursorMinVal, cursorMaxVal } = question.specificFields ?? {};
+  const [value, setValue] = useState<number | null>(cursorMinVal ?? 0);
 
   const marks = [
     cursorMinVal != null && { value: cursorMinVal, label: cursorMinVal },

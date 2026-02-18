@@ -1,6 +1,7 @@
 import { createContext, FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { deserializeMap } from "~/containers/ResponseLayout/utils";
 import { ResponsePageType } from "~/core/enums";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
@@ -11,7 +12,7 @@ import { useGetPublicFormQuery } from "~/services/api/formulairePublicApi/formAp
 import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
-import { initResponsesMap, parseFormDatas, updateStorage } from "./utils";
+import { initResponsesMap, parseFormDatas } from "./utils";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -53,11 +54,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
   useEffect(() => {
     if (formDatas) {
       const parsedFormDatas = parseFormDatas(formDatas);
-      updateStorage(progress);
       setForm(parsedFormDatas);
       setFormElementsList(parsedFormDatas.formElements);
       setPageType(ResponsePageType.RGPD);
-      console.log(sessionStorage);
     }
   }, [formDatas]);
 
@@ -74,18 +73,20 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
   // Initialize responses map and currentElement
   useEffect(() => {
     if (!hasInitializedRsponsesMap.current && formElementsList.length > 0) {
+      // If a responsesMap exists in sessionStorage we take this one
+      const storedResponsesMap = sessionStorage.getItem("responsesMap");
+      if (storedResponsesMap) {
+        const existingResponseMap = deserializeMap(storedResponsesMap);
+        setResponsesMap(existingResponseMap);
+        return;
+      }
+
+      // Else we init a new one
       const initializedResponsesMap = initResponsesMap(formElementsList);
       setResponsesMap(initializedResponsesMap);
       hasInitializedRsponsesMap.current = true;
     }
   }, [formElementsList]);
-
-  useEffect(() => {
-    const storedResponsesMap = sessionStorage.getItem("responsesMap");
-    if (hasInitializedRsponsesMap.current && storedResponsesMap) {
-      //TODO fill responsesMap with storedResponsesMap
-    }
-  }, [responsesMap, hasInitializedRsponsesMap.current]);
 
   const updateProgress = (
     element: IFormElement,

@@ -181,7 +181,7 @@ export const areEquals = (feitA: IFormElementIdType | undefined, feitB: IFormEle
 export const getElementById = (
   id: number | null,
   formElementsList: IFormElement[],
-  formElementTypePredicate: (element: IFormElement) => boolean, //TODO useless non ??
+  formElementTypePredicate: (element: IFormElement) => boolean,
 ): IFormElement | undefined => {
   return formElementsList.find((el) => el.id === id && formElementTypePredicate(el));
 };

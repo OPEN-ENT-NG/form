@@ -1,11 +1,10 @@
 import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
-import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion } from "~/core/models/question/types";
 import { getNextFormElement } from "~/core/models/question/utils";
 import { IResponse } from "~/core/models/response/type";
 import { getNextFormElementPosition } from "~/core/models/section/utils";
-import { IFormElementIdType, IProgressProps, ResponseMap } from "~/providers/ResponseProvider/types";
+import { IProgressProps, ResponseMap } from "~/providers/ResponseProvider/types";
 
 export const getNextPositionIfValid = (
   currentElement: IFormElement,
@@ -63,7 +62,7 @@ const serializeMap = (responsesMap: ResponseMap): string => {
   return JSON.stringify([...responsesMap].map(([k, v]) => [k, [...v]]));
 };
 
-const deserializeMap = (storedResponsesMap: string): ResponseMap => {
+export const deserializeMap = (storedResponsesMap: string): ResponseMap => {
   if (!storedResponsesMap) return new Map();
 
   const parsed = JSON.parse(storedResponsesMap) as [string, [number, IResponse[]][]][];

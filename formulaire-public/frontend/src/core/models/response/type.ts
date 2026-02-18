@@ -8,7 +8,6 @@ export interface IResponse {
   responderId: string | undefined;
   choiceId: number | undefined;
   answer: string | Date | number | undefined;
-  distributionId: number | undefined;
   originalId: number | undefined;
   customAnswer: string | undefined;
   files: [];
@@ -24,7 +23,6 @@ export interface IResponseDTO {
   responder_id: string;
   choice_id: number | undefined;
   answer: string | Date | number | undefined;
-  distribution_id: number;
   original_id: number | undefined;
   custom_answer: string | undefined;
   choice_position: number | undefined; // For question type ranking to order
@@ -37,7 +35,6 @@ export interface IResponsePayload {
   responder_id: string | undefined;
   choice_id: number | undefined;
   answer: string | Date | number | undefined;
-  distribution_id: number;
   original_id: number | undefined;
   custom_answer: string | undefined;
   choice_position: number | undefined; // For question type ranking to order

@@ -3,7 +3,6 @@ import { IResponse, IResponseDTO, IResponsePayload } from "./type";
 export const createNewResponse = (
   questionId: number,
   responderId?: string,
-  distributionId?: number,
   choiceId?: number,
   answer?: string | Date | number,
   choicePosition?: number,
@@ -14,7 +13,6 @@ export const createNewResponse = (
     responderId: responderId ? responderId : undefined,
     choiceId: choiceId ? choiceId : undefined,
     answer: answer ? answer : "",
-    distributionId: distributionId ? distributionId : undefined,
     originalId: undefined,
     customAnswer: undefined,
     files: [],
@@ -32,7 +30,6 @@ export const transformResponse = (raw: IResponseDTO): IResponse => {
     responderId: raw.responder_id,
     choiceId: raw.choice_id,
     answer: raw.answer,
-    distributionId: raw.distribution_id,
     originalId: raw.original_id,
     customAnswer: raw.custom_answer,
     files: [],
@@ -47,14 +44,13 @@ export const transformResponses = (rawResponses: IResponseDTO[]): IResponse[] =>
   return rawResponses.map(transformResponse);
 };
 
-export const buildResponsePayload = (response: IResponse, distributionId: number): IResponsePayload => {
+export const buildResponsePayload = (response: IResponse): IResponsePayload => {
   return {
     id: response.id,
     question_id: response.questionId,
     responder_id: response.responderId,
     choice_id: response.choiceId,
     answer: response.answer,
-    distribution_id: distributionId,
     original_id: response.originalId,
     custom_answer: response.customAnswer,
     choice_position: response.choicePosition, // For question type ranking to order
@@ -62,13 +58,13 @@ export const buildResponsePayload = (response: IResponse, distributionId: number
   };
 };
 
-export const buildResponsesPayload = (responses: IResponse[], distributionId: number): IResponsePayload[] => {
-  return responses.map((response) => buildResponsePayload(response, distributionId));
+export const buildResponsesPayload = (responses: IResponse[]): IResponsePayload[] => {
+  return responses.map((response) => buildResponsePayload(response));
 };
 
 export const buildPublicResponsePayload = (captchaResponse: string, responses: IResponse[]) => {
   return {
     captcha: captchaResponse,
-    responses: responses,
+    responses: buildResponsesPayload(responses),
   };
 };
