@@ -3,44 +3,18 @@ import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { ICompleteResponse } from "~/core/models/response/type";
 import { t } from "~/i18n";
 import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultMap/types";
+
 import { ChoiceId, IResponseStats, ResponseStatsMap } from "./types";
 
-// export const getResponseStatsMap  = (choices: IQuestionChoice[], distributionMap: DistributionMap): ResponseStatsMap => {
-//     const allResponses: ICompleteResponse[] = Array.from(distributionMap.values()).flat();
-//     const map= new Map<ChoiceId, IResponseStats>();
-
-//     choices.forEach((choice)=>  {
-//         if (!choice.id) return;
-//         const nbResponses = allResponses.filter((response)=> {
-//             const sameChoiceId = response.choiceId === choice.id;
-//             if (!sameChoiceId) return false;
-//             if (choice.isCustom) return !!response.customAnswer;
-//             return !!response.answer;
-//         }).length;
-//         const percentage = nbResponses / allResponses.length;
-        
-//         map.set(choice.id, {nbResponses, percentage})
-//     })
-
-//     return map;
-// }
-
-export const getResponseStatsMap = (
-  choices: IQuestionChoice[],
-  distributionMap: DistributionMap
-): ResponseStatsMap => {
-  const allResponses: ICompleteResponse[] = Array.from(
-    distributionMap.values()
-  ).flat();
+export const getResponseStatsMap = (choices: IQuestionChoice[], distributionMap: DistributionMap): ResponseStatsMap => {
+  const allResponses: ICompleteResponse[] = Array.from(distributionMap.values()).flat();
 
   const total = distributionMap.size;
 
   const countMap = allResponses.reduce<Map<ChoiceId, number>>((acc, response) => {
     const choiceId = response.choiceId;
 
-    const isEmpty = 
-      !choiceId ||
-      (!response.answer && !response.customAnswer)
+    const isEmpty = !choiceId || (!response.answer && !response.customAnswer);
 
     if (isEmpty) {
       acc.set("empty", (acc.get("empty") ?? 0) + 1);
@@ -58,7 +32,7 @@ export const getResponseStatsMap = (
 
     acc.set(choice.id, {
       nbResponses,
-      percentage:  nbResponses / total *100,
+      percentage: (nbResponses / total) * 100,
     });
 
     return acc;
@@ -68,19 +42,20 @@ export const getResponseStatsMap = (
 
   result.set("empty", {
     nbResponses: emptyCount,
-    percentage: emptyCount / total *100,
+    percentage: (emptyCount / total) * 100,
   });
 
   return result;
 };
 
+export const getDisplayedResponseStat = (
+  choiceId: ChoiceId | null,
+  responseStatsMap: ResponseStatsMap,
+  question: IQuestion,
+) => {
+  const { nbResponses, percentage } = responseStatsMap.get(choiceId ?? -1) ?? { nbResponses: 0, percentage: 0 };
 
+  const i18nKey = question.questionType === QuestionTypes.MULTIPLEANSWER ? "formulaire.vote" : "formulaire.response";
 
-export const getDisplayedResponseStat = (choiceId: ChoiceId | null, responseStatsMap: ResponseStatsMap, question: IQuestion) => {
-    const {nbResponses, percentage} = responseStatsMap.get(choiceId ?? -1) ?? {nbResponses:0,percentage:0};
-
-    const i18nKey = question.questionType === QuestionTypes.MULTIPLEANSWER ? "formulaire.vote" :"formulaire.response";
-
-    return `${nbResponses} ${t(i18nKey, {count: nbResponses})} (${percentage.toFixed(2)}%)`
-
-}
+  return `${nbResponses} ${t(i18nKey, { count: nbResponses })} (${percentage.toFixed(2)}%)`;
+};

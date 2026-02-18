@@ -360,7 +360,7 @@
   "formulaire.response.missing": "Non répondu",
   "formulaire.response.next.invalid": "Veuillez répondre à la question obligatoire pour décider de la suite de votre parcours.",
   "formulaire.response.open": "Ouvrir ma réponse",
-  "formulaire.responses_other": "réponses",
+  "formulaire.response_other": "réponses",
   "formulaire.responses.count": "Réponses",
   "formulaire.responses.empty": "Vous n'avez aucun formulaire en attente de réponse.",
   "formulaire.responses.empty.notif": "Vous recevrez une notification dès qu'un formulaire vous aura été envoyé.",

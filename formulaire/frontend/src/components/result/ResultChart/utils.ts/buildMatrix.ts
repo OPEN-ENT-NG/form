@@ -37,6 +37,9 @@ export const getMatrixChartProps = (
     },
     chart: {
       type: "bar",
+      toolbar: {
+        show: false,
+      },
     },
     xaxis: {
       categories,

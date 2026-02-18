@@ -39,7 +39,7 @@ export const ResultAnswer: FC<IResultAnswerProps> = ({ completeResponse, questio
     return dayjs(answer).format(DateFormat.DAY_MONTH_YEAR);
   }
   if (questionType === QuestionTypes.LONGANSWER) {
-    return <span dangerouslySetInnerHTML={{__html: answer}}/>;
+    return <span dangerouslySetInnerHTML={{ __html: answer }} />;
   }
   return answer;
 };

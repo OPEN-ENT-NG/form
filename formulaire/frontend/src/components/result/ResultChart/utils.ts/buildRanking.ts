@@ -42,6 +42,11 @@ export const getRankingChartProps = (
       title: { text: t("formulaire.position.selected") },
     },
     colors: GRAPH_COLORS,
+    chart: {
+      toolbar: {
+        show: false,
+      },
+    },
   };
 
   const type = "bar";
