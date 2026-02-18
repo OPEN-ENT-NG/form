@@ -1,11 +1,13 @@
-import { Box, Button, EmptyState, Typography } from "@cgi-learning-hub/ui";
-import { FC } from "react";
+import { Box, Button, EmptyState, Typography, ZoomControl } from "@cgi-learning-hub/ui";
+import { FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Header } from "~/components/Header";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
+import { FormTreeView } from "~/components/TreeGraph";
+import { IFormTreeViewHandle } from "~/components/TreeGraph/types";
 import { useElementHeight } from "~/containers/home/HomeView/utils";
-import { FORMULAIRE } from "~/core/constants";
+import { FORMULAIRE, MAX_TREE_ZOOM, MIN_TREE_ZOOM, STEPS_TREE_ZOOM } from "~/core/constants";
 import { ClickAwayDataType } from "~/core/enums";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
@@ -13,10 +15,9 @@ import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
 import { useGlobal } from "~/providers/GlobalProvider";
 
-import { getRecursiveFolderParents, useGetTreeHeaderButtons } from "./utils";
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "../CreationView/style";
-import { FormTreeView } from "~/components/TreeGraph";
 import { treeStyle, treeTypographyStyle } from "./style";
+import { getRecursiveFolderParents, useGetTreeHeaderButtons } from "./utils";
 
 export const TreeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -26,11 +27,17 @@ export const TreeView: FC = () => {
   const { navigateToHome } = useFormulaireNavigation();
 
   const { isTablet } = useGlobal();
-
   const { isTheme1D } = useTheme();
+
+  const treeRef = useRef<IFormTreeViewHandle>(null);
+  const [zoomLevel, setZoomLevel] = useState(75);
 
   const selectView = () => {
     return isTablet ? errorView : desktopView;
+  };
+
+  const applyZoom = (value: number) => {
+    treeRef.current?.zoomTo(value);
   };
 
   const errorView = (
@@ -56,6 +63,13 @@ export const TreeView: FC = () => {
 
   const desktopView = (
     <>
+      <ZoomControl
+        onChange={applyZoom}
+        value={zoomLevel}
+        min={MIN_TREE_ZOOM}
+        max={MAX_TREE_ZOOM}
+        step={STEPS_TREE_ZOOM}
+      />
       <Box sx={creationViewStyle(isTheme1D)} data-type={ClickAwayDataType.ROOT}>
         <Box ref={headerRef} sx={creationHedearStyle}>
           {form && (
@@ -74,7 +88,9 @@ export const TreeView: FC = () => {
             <Typography fontStyle={"italic"}>{t("formulaire.scroll.legend")}</Typography>
             <Typography fontStyle={"italic"}>{t("formulaire.mouse.legend")}</Typography>
           </Box>
-          {form && <FormTreeView formElements={formElementsList} form={form} />}
+          {form && (
+            <FormTreeView ref={treeRef} formElements={formElementsList} form={form} onZoomChange={setZoomLevel} />
+          )}
         </Box>
       </Box>
     </>
