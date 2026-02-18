@@ -12,7 +12,7 @@ import { t } from "~/i18n";
 import { displayTypeIcon, intersects, shuffle } from "./utils";
 import "./tree.scss";
 import { IArrow, IFormTreeViewHandle, IFormTreeViewProps, ILine } from "./types";
-import { INITIAL_TREE_SCALE, MAX_TREE_ZOOM, MIN_TREE_ZOOM, STEPS_TREE_ZOOM } from "~/core/constants";
+import { INITIAL_TREE_SCALE } from "~/core/constants";
 
 export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
   ({ form, formElements, onZoomChange }, ref) => {
@@ -20,12 +20,6 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
     const zoomRef = useRef<d3.ZoomBehavior<Element, unknown> | null>(null);
     const svgRef = useRef<any>(null);
     const innerRef = useRef<any>(null);
-
-    const getActualScale = useCallback(() => {
-      const svg = svgRef.current;
-      if (!svg) return INITIAL_TREE_SCALE; //TODO : propify
-      return Math.round(d3.zoomTransform(svg.node()).k * 100);
-    }, []);
 
     const zoomTo = useCallback((scale: number) => {
       const svg = svgRef.current;
@@ -46,15 +40,7 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
       svg.transition().duration(300).call(zoom.transform, d3.zoomIdentity.translate(newTx, newTy).scale(newScale));
     }, []);
 
-    useImperativeHandle(
-      ref,
-      () => ({
-        zoomIn: () => zoomTo(Math.min(getActualScale() + STEPS_TREE_ZOOM, MAX_TREE_ZOOM)),
-        zoomOut: () => zoomTo(Math.max(getActualScale() - STEPS_TREE_ZOOM, MIN_TREE_ZOOM)),
-        resetZoom: () => zoomTo(100),
-      }),
-      [zoomTo, getActualScale],
-    );
+    useImperativeHandle(ref, () => ({ zoomTo }), [zoomTo]);
 
     useEffect(() => {
       if (formElements.length === 0) return;

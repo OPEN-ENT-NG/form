@@ -19,7 +19,5 @@ export interface IArrow {
 }
 
 export interface IFormTreeViewHandle {
-  zoomIn: () => void;
-  zoomOut: () => void;
-  resetZoom: () => void;
+  zoomTo: (scale: number) => void;
 }
