@@ -1,6 +1,7 @@
 import { Theme, ToastPosition } from "react-toastify";
 
 import { RightStringified } from "~/providers/ShareModalProvider/types";
+
 import { QuestionTypes } from "./models/question/enum";
 
 export const FORMULAIRE = "formulaire";
@@ -111,3 +112,16 @@ export const QUESTION_TYPE_ICONS: Record<QuestionTypes, string> = {
   [QuestionTypes.CURSOR]: "cursor",
   [QuestionTypes.RANKING]: "ranking",
 };
+
+const BLUE_COLORS = ["#37A4CD", "#1691C0", "#056F98", "#5AB7DA", "#89CEE9"];
+const YELLOW_COLORS = ["#FFC73C", "#F2AE00", "#FFBB13", "#FFD263", "#FFDF91"];
+const PURPLE_COLORS = ["#475DD5", "#1129A6", "#2741C9", "#687BE0", "#93A1EC"];
+const ORANGE_COLORS = ["#FFA23C", "#F27E00", "#FF8E13", "#FFB463", "#FFCA91"];
+
+const COLOR_GROUPS = [BLUE_COLORS, YELLOW_COLORS, PURPLE_COLORS, ORANGE_COLORS] as const;
+
+export const GRAPH_COLORS = Array.from({ length: Math.max(...COLOR_GROUPS.map((g) => g.length)) }, (_, i) =>
+  COLOR_GROUPS.map((group) => group[i]).filter(Boolean),
+).flat();
+
+export const NB_COLORS_AVAILABLE: number = 25;

@@ -13,7 +13,7 @@ import { hasAtLeastOneFile, renderQuestionResult } from "./utils";
 export const QuestionResult: FC<IQuestionResultProps> = ({ question }) => {
   const { getDistributionMap } = useResult();
 
-  const distributionMap = getDistributionMap(question.id);
+  const distributionMap = getDistributionMap(question);
 
   const showFileDownloadZip = question.questionType === QuestionTypes.FILE && hasAtLeastOneFile(distributionMap);
 
@@ -23,7 +23,7 @@ export const QuestionResult: FC<IQuestionResultProps> = ({ question }) => {
       isQuestionMandatory={question.mandatory}
       actions={showFileDownloadZip && question.id ? <DownloadFilesZip questionId={question.id} /> : undefined}
     >
-      <Box mt={2}>{renderQuestionResult(question.questionType, distributionMap)}</Box>
+      <Box mt={2}>{renderQuestionResult(question, distributionMap)}</Box>
     </QuestionResultLayout>
   );
 };
