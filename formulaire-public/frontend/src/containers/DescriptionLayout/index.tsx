@@ -1,18 +1,21 @@
 import { Box, Button, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
-import { useTranslation } from "react-i18next";
 
-import { FORMULAIRE_PUBLIC } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { descriptionLayoutStyle, descriptionStackStyle } from "./style";
 
 export const DescriptionLayout: FC = () => {
   const { form, setPageType } = useResponse();
-  const { t } = useTranslation(FORMULAIRE_PUBLIC);
+
+  const goRgpd = () => {
+    setPageType(ResponsePageType.RGPD);
+    return;
+  };
 
   const goFirstFormElement = () => {
     setPageType(ResponsePageType.FORM_ELEMENT);
@@ -26,11 +29,11 @@ export const DescriptionLayout: FC = () => {
         <Typography>{form?.description}</Typography>
       </Stack>
       <Box sx={spaceBetweenBoxStyle}>
-        <Button variant={ComponentVariant.CONTAINED} disabled>
-          {t("formulaire.prev")}
+        <Button variant={ComponentVariant.OUTLINED} onClick={goRgpd}>
+          {t("formulaire.public.prev")}
         </Button>
         <Button variant={ComponentVariant.CONTAINED} onClick={goFirstFormElement}>
-          {t("formulaire.next")}
+          {t("formulaire.public.next")}
         </Button>
       </Box>
     </Box>

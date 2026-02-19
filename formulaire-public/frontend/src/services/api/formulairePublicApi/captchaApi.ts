@@ -4,9 +4,9 @@ import { QueryMethod, TagName } from "~/core/enums";
 import { ICaptcha } from "~/core/models/captcha/types";
 import { t } from "~/i18n";
 
-import { emptySplitFormulaireApi } from "./emptySplitFormulaireApi";
+import { emptySplitFormulairePublicApi } from "../formulairePublicApi/emptySplitFormulairePublicApi";
 
-export const captchaApi = emptySplitFormulaireApi.injectEndpoints({
+export const captchaApi = emptySplitFormulairePublicApi.injectEndpoints({
   endpoints: (builder) => ({
     getCaptcha: builder.query<ICaptcha, { distributionKey: string; distributionCaptcha?: number }>({
       query: ({ distributionKey, distributionCaptcha }) => ({

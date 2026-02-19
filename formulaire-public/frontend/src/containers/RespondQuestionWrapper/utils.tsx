@@ -43,7 +43,7 @@ export const getRespondQuestionContentByType = (question: IQuestion) => {
     default:
       return (
         <Typography variant={TypographyVariant.BODY1}>
-          {t("formulaire.question.creation.error.type", { questionType: question.questionType })}
+          {t("formulaire.public.question.creation.error.type", { questionType: question.questionType })}
         </Typography>
       );
   }

@@ -147,12 +147,15 @@ export default tseslint.config(
           },
           format: ["camelCase"],
         },
-        // Arrays avec suffixe List/Array/s
+        // Arrays avec suffixe List/Array/s/Children
         {
           selector: ["variable", "parameter", "property"],
           types: ["array"],
           format: ["camelCase"],
-          suffix: ["List", "s"],
+          custom: {
+            regex: "(s$|List|Array|Children)",
+            match: true,
+          },
           filter: {
             regex: "^(?!(acc|response|data|body|_|children)$).*",
             match: true,

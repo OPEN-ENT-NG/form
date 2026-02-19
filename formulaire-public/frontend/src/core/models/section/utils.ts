@@ -1,7 +1,7 @@
 import { FormElementType } from "../formElement/enum";
 import { IFormElement } from "../formElement/types";
 import { createNewFormElement, getFollowingFormElement, isSection, transformFormElement } from "../formElement/utils";
-import { buildQuestionPayload } from "../question/utils";
+import { buildQuestionPayload, transformQuestion } from "../question/utils";
 import { ISection, ISectionDTO, ISectionPayload } from "./types";
 
 export const transformSection = (raw: ISectionDTO): ISection => {
@@ -12,7 +12,7 @@ export const transformSection = (raw: ISectionDTO): ISection => {
     nextFormElementId: raw.next_form_element_id,
     nextFormElementType: raw.next_form_element_type,
     isNextFormElementDefault: raw.is_next_form_element_default,
-    questions: [],
+    questions: raw.questions.map(transformQuestion),
     formElementType: FormElementType.SECTION,
   };
 };

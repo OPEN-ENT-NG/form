@@ -1,19 +1,18 @@
 import { createContext, FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
+import { deserializeMap } from "~/containers/ResponseLayout/utils";
 import { ResponsePageType } from "~/core/enums";
 import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
 import { IResponse } from "~/core/models/response/type";
-import { createNewResponse } from "~/core/models/response/utils";
-import { useGetPublicFormQuery } from "~/services/api/formulaireApi/formApi";
+import { useGetPublicFormQuery } from "~/services/api/formulairePublicApi/formApi";
 
-import { usePublicResponse } from "./hook/usePublicResponse";
 import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
-import { initResponsesMap, parseFormDatas, updateStorage } from "./utils";
+import { initResponsesMap, parseFormDatas } from "./utils";
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -25,10 +24,9 @@ export const useResponse = () => {
   return context;
 };
 
-export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initialPageType }) => {
+export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
   const { formKey } = useParams();
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
-  const { saveClassicResponses: savePublicResponses } = usePublicResponse();
   const [form, setForm] = useState<IForm | null>(null);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
   const [longestPathsMap, setLongestPathsMap] = useState<Map<string, number>>(new Map<string, number>());
@@ -36,90 +34,68 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initial
     historicFormElementIds: [],
     longuestRemainingPath: 0,
   });
-  const [pageType, setPageType] = useState<ResponsePageType | undefined>(initialPageType);
+  const [pageType, setPageType] = useState<ResponsePageType | undefined>(undefined);
+  const [currentElement, setCurrentElement] = useState<IFormElement | null>(null);
   const hasInitializedRsponsesMap = useRef(false);
   const { getQuestionResponses, getQuestionResponse, updateQuestionResponses } = useRespondQuestion(
     responsesMap,
     setResponsesMap,
   );
-  //TODO
-  const responses = [] as IResponse[];
-  const responseCaptcha = createNewResponse(0);
-
-  const storageFormKey = sessionStorage.getItem("formKey");
+  const isPageTypeRecap = useMemo(() => pageType === ResponsePageType.RECAP, [pageType]);
+  const [scrollToQuestionId, setScrollToQuestionId] = useState<number | null>(null);
+  const [flattenResponses, setFlattenResponses] = useState<IResponse[]>([]);
 
   if (formKey === undefined) throw new Error("formKey is undefined");
 
   // Fetching data
-  const { data: formDatas } = useGetPublicFormQuery({ formKey }, { skip: !!storageFormKey });
+  const { data: formDatas } = useGetPublicFormQuery(formKey);
 
-  useEffect(() => {
-    if (storageFormKey) {
-      const formInStorage = sessionStorage.getItem("form");
-      // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-      const formInStorageJson = formInStorage != null ? JSON.parse(formInStorage) : null;
-      if (!formInStorageJson) return;
-      const formDatas = formInStorageJson as IForm;
-      setForm(formDatas);
-      setFormElementsList(formDatas.formElements);
-      if (!initialPageType) {
-        if (formDatas.rgpd) {
-          setPageType(ResponsePageType.RGPD);
-          return;
-        }
-        if (formDatas.description) {
-          setPageType(ResponsePageType.DESCRIPTION);
-          return;
-        }
-        setPageType(ResponsePageType.FORM_ELEMENT);
-      }
-    }
-  }, [storageFormKey]);
-
+  // Fill sessionStorage with fetched datas
   useEffect(() => {
     if (formDatas) {
       const parsedFormDatas = parseFormDatas(formDatas);
       setForm(parsedFormDatas);
       setFormElementsList(parsedFormDatas.formElements);
-      updateStorage(formKey, parsedFormDatas, parsedFormDatas.formElements);
-      if (!initialPageType) {
-        if (formDatas.rgpd) {
-          setPageType(ResponsePageType.RGPD);
-          return;
-        }
-        if (formDatas.description) {
-          setPageType(ResponsePageType.DESCRIPTION);
-          return;
-        }
-        setPageType(ResponsePageType.FORM_ELEMENT);
-      }
+      setPageType(ResponsePageType.RGPD);
     }
   }, [formDatas]);
 
+  // Update progress-bar data
   useEffect(() => {
     if (formElementsList.length <= 0) return;
     const firstElement = formElementsList[0];
     if (!firstElement.id) return;
-    setLongestPathsMap(getLongestPathsMap(formElementsList));
-    updateProgress(firstElement, [firstElement.id]);
+    const newLongestPathsMap = getLongestPathsMap(formElementsList);
+    setLongestPathsMap(newLongestPathsMap);
+    updateProgress(firstElement, [firstElement.id], newLongestPathsMap);
   }, [formElementsList]);
 
+  // Initialize responses map and currentElement
   useEffect(() => {
     if (!hasInitializedRsponsesMap.current && formElementsList.length > 0) {
+      // If a responsesMap exists in sessionStorage we take this one
+      const storedResponsesMap = sessionStorage.getItem("responsesMap");
+      if (storedResponsesMap) {
+        const existingResponseMap = deserializeMap(storedResponsesMap);
+        setResponsesMap(existingResponseMap);
+        return;
+      }
+
+      // Else we init a new one
       const initializedResponsesMap = initResponsesMap(formElementsList);
       setResponsesMap(initializedResponsesMap);
       hasInitializedRsponsesMap.current = true;
     }
   }, [formElementsList]);
 
-  const saveResponses = async () => {
-    await savePublicResponses();
-  };
-
-  const updateProgress = (element: IFormElement, newHistoricFormElementIds: number[]) => {
+  const updateProgress = (
+    element: IFormElement,
+    newHistoricFormElementIds: number[],
+    newLongestPathsMap?: Map<string, number>,
+  ) => {
     const feit = getStringifiedFormElementIdType(element);
     if (feit) {
-      const longestRemainingPath = longestPathsMap.get(feit);
+      const longestRemainingPath = newLongestPathsMap ? newLongestPathsMap.get(feit) : longestPathsMap.get(feit);
       if (longestRemainingPath !== undefined) {
         const newProgress = buildProgressObject(newHistoricFormElementIds, longestRemainingPath);
         setProgress(newProgress);
@@ -132,19 +108,24 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initial
       form,
       formElementsList,
       progress,
+      setProgress,
       updateProgress,
       longestPathsMap,
       pageType,
       setPageType,
-      saveResponses,
+      currentElement,
+      setCurrentElement,
       responsesMap,
       setResponsesMap,
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
+      isPageTypeRecap,
+      scrollToQuestionId,
+      setScrollToQuestionId,
       formKey,
-      responseCaptcha,
-      responses,
+      flattenResponses,
+      setFlattenResponses,
     }),
     [
       form,
@@ -153,16 +134,15 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, initial
       updateProgress,
       longestPathsMap,
       pageType,
-      setPageType,
-      saveResponses,
+      currentElement,
       responsesMap,
-      setResponsesMap,
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
+      isPageTypeRecap,
+      scrollToQuestionId,
       formKey,
-      responseCaptcha,
-      responses,
+      flattenResponses,
     ],
   );
 

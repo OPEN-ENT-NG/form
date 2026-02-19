@@ -1,44 +1,78 @@
-import { Box } from "@cgi-learning-hub/ui";
-import { FormControl, MenuItem, Select, SelectChangeEvent } from "@mui/material";
-import { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
+import { FormControl, MenuItem, Select, SelectChangeEvent, Stack, TextField, Typography } from "@mui/material";
+import { ChangeEvent, FC, useEffect, useState } from "react";
 
-import { FORMULAIRE_PUBLIC } from "~/core/constants";
+import { IResponse } from "~/core/models/response/type";
+import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponse, updateQuestionResponses } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [selectedValue, setSelectedValue] = useState<string>("");
-  const { t } = useTranslation(FORMULAIRE_PUBLIC);
+  const [customAnswer, setCustomAnswer] = useState<string>("");
 
   useEffect(() => {
-    const associatedResponse = getQuestionResponse(question);
-    if (!associatedResponse) return;
+    const associatedResponses = getQuestionResponses(question);
 
-    const existingAnswer = associatedResponse.answer;
-    if (typeof existingAnswer === "string") {
-      setSelectedValue(existingAnswer);
+    const selectedResponse = associatedResponses.find((response) => response.selected);
+    if (!selectedResponse) return; // Si il n'y a pas de réponse selected
+    const customChoice = question.choices?.find((choice) => choice.isCustom);
+
+    // Si on trouve un custom choice et qu'il match la réponse selected, on se base dessus
+    if (customChoice && selectedResponse.choiceId === customChoice.id) {
+      setSelectedValue(customChoice.value);
+      setCustomAnswer(selectedResponse.customAnswer ?? "");
+      return;
     }
-  }, [question, getQuestionResponse]);
+
+    // Sinon c'est que c'est une réponse classique (pas custom)
+    const existingAnswer = selectedResponse.answer ?? "";
+    if (typeof existingAnswer === "string") setSelectedValue(existingAnswer);
+  }, [question, getQuestionResponses]);
 
   const handleChange = (event: SelectChangeEvent) => {
     const value = event.target.value;
     setSelectedValue(value);
 
-    const associatedResponse = getQuestionResponse(question);
-    if (!question.id || !associatedResponse) return;
+    const associatedResponses = getQuestionResponses(question);
+    const newResponses: IResponse[] = associatedResponses.map((response) => {
+      return { ...response, selected: response.answer === value };
+    });
 
-    associatedResponse.answer = value;
-    updateQuestionResponses(question, [associatedResponse]);
+    updateQuestionResponses(question, newResponses);
   };
 
-  return (
-    <Box>
+  const handleCustomResponseChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const newCustomAnswer = e.target.value;
+    const existingResponses = getQuestionResponses(question);
+
+    const customChoiceId = question.choices?.find((choice) => choice.isCustom)?.id;
+    if (!customChoiceId) return;
+
+    const updatedResponses = existingResponses.map((response) => {
+      if (response.choiceId === customChoiceId) {
+        return { ...response, customAnswer: newCustomAnswer };
+      }
+      return response;
+    });
+
+    updateQuestionResponses(question, updatedResponses);
+  };
+
+  return isPageTypeRecap && !selectedValue ? (
+    <Typography fontStyle={"italic"}>{t("formulaire.public.response.missing")}</Typography>
+  ) : (
+    <>
       <FormControl fullWidth>
-        <Select value={selectedValue} onChange={handleChange}>
-          <MenuItem value="">{t("formulaire.options.select")}</MenuItem>
+        <Select
+          value={selectedValue}
+          onChange={handleChange}
+          disabled={isPageTypeRecap}
+          sx={{ "& .Mui-disabled": { WebkitTextFillColor: CSS_TEXT_PRIMARY_COLOR } }}
+        >
+          <MenuItem value="">{t("formulaire.public.options.select")}</MenuItem>
           {question.choices
             ?.sort((a, b) => a.position - b.position)
             .map((choice) => (
@@ -47,7 +81,35 @@ export const RespondQuestionSingleAnswer: FC<IRespondQuestionTypesProps> = ({ qu
               </MenuItem>
             ))}
         </Select>
+        {question.choices?.find((choice) => choice.value === selectedValue && choice.isCustom) && (
+          <Stack
+            direction={isPageTypeRecap ? "row" : "column"}
+            gap={1}
+            {...(isPageTypeRecap && { alignItems: "center" })}
+          >
+            <Typography sx={{ py: "1rem" }}>
+              {t(
+                isPageTypeRecap
+                  ? "formulaire.public.response.custom.value"
+                  : "formulaire.public.response.custom.explanation",
+              )}
+            </Typography>
+            <TextField
+              variant="standard"
+              value={isPageTypeRecap && !customAnswer ? t("formulaire.public.response.missing") : customAnswer}
+              placeholder={t("formulaire.public.response.custom.write")}
+              onChange={handleCustomResponseChange}
+              disabled={isPageTypeRecap}
+              sx={{
+                ...(isPageTypeRecap && {
+                  "& .Mui-disabled": { WebkitTextFillColor: `${CSS_TEXT_PRIMARY_COLOR} !important` },
+                  ...(!customAnswer && { fontStyle: "italic" }),
+                }),
+              }}
+            />
+          </Stack>
+        )}
       </FormControl>
-    </Box>
+    </>
   );
 };

@@ -24,7 +24,7 @@ export const ErrorPage: FC<IErrorCodeProps> = ({ errorCode }) => {
     <Box sx={emptyStateWrapper}>
       <EmptyState
         image={<EmptyForm />}
-        title={t("formulaire.error")}
+        title={t("formulaire.public.error")}
         description={t(getDescriptionKey())}
         color="primary.main"
         imageHeight={300}

@@ -19,14 +19,14 @@ import { useResponse } from "~/providers/ResponseProvider";
 import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question }) => {
-  const { getQuestionResponses, updateQuestionResponses } = useResponse();
+  const { getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [responseMap, setResponseMap] = useState<Map<number, IResponse[]>>(new Map());
 
   useEffect(() => {
     const map = new Map<number, IResponse[]>();
     question.children?.forEach((child) => {
       if (!child.id) return;
-      map.set(child.id, getQuestionResponses(child));
+      map.set(child.id, getQuestionResponses({ ...child, sectionId: question.sectionId }, question));
     });
     setResponseMap(map);
   }, [question, getQuestionResponses]);
@@ -45,7 +45,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
 
     const updatedResponses = responses.map((r) => (r.choiceId === choiceId ? { ...r, selected: !r.selected } : r));
 
-    updateQuestionResponses(child, updatedResponses);
+    updateQuestionResponses({ ...child, sectionId: question.sectionId }, updatedResponses, question);
   };
 
   const toggleRadio = (childId: number | null, choiceId: number | null) => {
@@ -58,6 +58,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
     const updatedResponse: IResponse = {
       id: null,
       questionId: childId,
+      responderId: undefined,
       choiceId: choiceId ?? undefined,
       answer: choice.value,
       distributionId: undefined,
@@ -70,7 +71,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
       image: null,
     };
 
-    updateQuestionResponses(child, [updatedResponse]);
+    updateQuestionResponses({ ...child, sectionId: question.sectionId }, [updatedResponse], question);
   };
 
   const clearRow = (childId: number | null) => {
@@ -81,7 +82,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
 
     const updatedResponses = responses.map((r) => ({ ...r, selected: false }));
 
-    updateQuestionResponses(child, updatedResponses);
+    updateQuestionResponses(child, updatedResponses, question);
   };
 
   return (
@@ -95,7 +96,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
                 {choice.value}
               </TableCell>
             ))}
-            <TableCell></TableCell>
+            {!isPageTypeRecap && <TableCell></TableCell>}
           </TableRow>
         </TableHead>
         <TableBody>
@@ -110,6 +111,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
                   <TableCell align="center" key={choice.id}>
                     {child.questionType === QuestionTypes.MULTIPLEANSWER ? (
                       <Checkbox
+                        disabled={isPageTypeRecap}
                         checked={isSelected(child.id, choice.id)}
                         onChange={() => {
                           toggleCheckbox(child.id, choice.id);
@@ -117,6 +119,7 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
                       />
                     ) : (
                       <Radio
+                        disabled={isPageTypeRecap}
                         checked={isSelected(child.id, choice.id)}
                         onChange={() => {
                           toggleRadio(child.id, choice.id);
@@ -126,15 +129,17 @@ export const RespondQuestionMatrix: FC<IRespondQuestionTypesProps> = ({ question
                   </TableCell>
                 ))}
 
-                <TableCell width="3rem">
-                  <IconButton
-                    onClick={() => {
-                      clearRow(child.id);
-                    }}
-                  >
-                    <ClearIcon />
-                  </IconButton>
-                </TableCell>
+                {!isPageTypeRecap && (
+                  <TableCell width="3rem">
+                    <IconButton
+                      onClick={() => {
+                        clearRow(child.id);
+                      }}
+                    >
+                      <ClearIcon />
+                    </IconButton>
+                  </TableCell>
+                )}
               </TableRow>
             ))}
         </TableBody>

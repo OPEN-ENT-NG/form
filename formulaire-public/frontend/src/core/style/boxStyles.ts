@@ -46,10 +46,11 @@ export const columnBoxStyle = {
 } as const;
 
 export const cardWrapperStyle = {
-  display: "flex",
-  flexWrap: "wrap",
-  rowGap: "1.6rem",
-  columnGap: "calc((100% - 3 * 30rem) / 2)",
+  display: "grid",
+  gridTemplateColumns: "repeat(auto-fill, minmax(min(30rem, 100%), 1fr))",
+  gap: "1.6rem",
+  width: "100%",
+  maxWidth: "95rem",
 } as const;
 
 export const emptyStateWrapper = {
@@ -58,5 +59,6 @@ export const emptyStateWrapper = {
   alignItems: "center",
   justifyContent: "center",
   width: "100%",
+  minHeight: "calc(100vh - 71px)",
   gap: 3,
 } as const;

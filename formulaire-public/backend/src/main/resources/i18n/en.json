@@ -13,6 +13,7 @@
   "formulaire.public.respond.form": "Répondre au formulaire",
   "formulaire.public.options.select": "-- Sélectionnez une option --",
   "formulaire.public.response.custom.explanation": "Vous avez saisi le choix 'Autre', veuillez indiquez votre réponse dans le champ suivant : ",
+  "formulaire.public.response.custom.value": "Réponse autre indiquée : ",
   "formulaire.public.response.custom.write": "Saisissez votre réponse",
   "formulaire.public.response.missing": "Non répondu",
   "formulaire.public.responses.send.title": "Valider l'envoi",
@@ -26,9 +27,12 @@
   "formulaire.public.error.formService.get": "Une erreur est survenue lors de la récupération du formulaire",
   "formulaire.public.error.responseService.create": "Une erreur est survenue lors de la création de la nouvelle réponse",
   "formulaire.public.response.next.invalid": "Veuillez répondre à la question obligatoire pour décider de la suite de votre parcours.",
-  "formulaire.prop.rgpd.description.intro": "Vos informations à caractère personnel sont recueillies pour : <b>{{0}}</b>. Elles seront conservées dans nos fichiers jusqu'au <b>{{1}}</b>. Elles seront détruites à cette date. En application du Règlement Général de Protection des données (RGPD), vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation au traitement de vos données. Pour exercer ce droit ou pour toute question concernant le traitement de vos données personnelles, vous pouvez contacter :",
-  "formulaire.prop.rgpd.description.delegates": "<div><b>Le délégué à la protection des données {{0}}</b> ({{1}})</div><div class='left-spacing'>{{2}}</br>{{3}} {{4}}</div>",
-  "formulaire.prop.rgpd.goal": "Finalité",
+  "formulaire.public.prop.rgpd.description.intro": "Vos informations à caractère personnel sont recueillies pour : <b>{{0}}</b>. Elles seront conservées dans nos fichiers jusqu'au <b>{{1}}</b>. Elles seront détruites à cette date. En application du Règlement Général de Protection des données (RGPD), vous disposez d'un droit d'accès, de rectification, d'effacement, de limitation au traitement de vos données. Pour exercer ce droit ou pour toute question concernant le traitement de vos données personnelles, vous pouvez contacter :",
+  "formulaire.public.prop.rgpd.description.delegates": "<div><b>Le délégué à la protection des données {{0}}</b> ({{1}})</div><div class='left-spacing'>{{2}}</br>{{3}} {{4}}</div>",
+  "formulaire.public.prop.rgpd.goal": "Finalité",
+  "formulaire.public.error": "Erreur",
+  "formulaire.public.date.format.locale": "fr-FR",
+  "formulaire.public.at": " à ",
 
   "formulaire.public.end.thanks": "Merci pour vos réponses",
   "formulaire.public.end.sorry": "Désolé, vous ne pouvez pas répondre à ce formulaire",
@@ -41,8 +45,5 @@
   "formulaire.public.captcha.reload.description": "Charger un nouveau calcul",
   "formulaire.public.captcha.placeholder": "Réponse",
   "formulaire.public.error.captchaService.get": "Une erreur est survenue lors de la récupération du captcha",
-  "formulaire.public.error.captcha": "La réponse au CAPTCHA est erronée. Veuillez réessayer.",
-
-  "formulaire.selected.value": "Selected value : ",
-  "formulaire.public.error.question.reorganization": "Direction de réorganisation inconnue."
+  "formulaire.public.error.captcha": "La réponse au CAPTCHA est erronée. Veuillez réessayer."
 }
