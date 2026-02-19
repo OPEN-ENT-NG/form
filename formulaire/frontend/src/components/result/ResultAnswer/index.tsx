@@ -33,10 +33,13 @@ export const ResultAnswer: FC<IResultAnswerProps> = ({ completeResponse, questio
       return DEFAULT_DISPLAY_ANSWER_VALUE;
     }
   }
-  const answer = completeResponse.answer;
+  const answer = completeResponse.customAnswer ? completeResponse.customAnswer : completeResponse.answer;
   if (!answer) return DEFAULT_DISPLAY_ANSWER_VALUE;
   if (answer instanceof Date) {
     return dayjs(answer).format(DateFormat.DAY_MONTH_YEAR);
   }
-  return answer ? answer.toString() : DEFAULT_DISPLAY_ANSWER_VALUE;
+  if (questionType === QuestionTypes.LONGANSWER) {
+    return <span dangerouslySetInnerHTML={{ __html: answer }} />;
+  }
+  return answer;
 };

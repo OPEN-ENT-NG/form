@@ -131,3 +131,5 @@ export const INITIAL_TREE_SCALE = 75;
 export const MIN_TREE_ZOOM = 15;
 export const MAX_TREE_ZOOM = 295;
 export const STEPS_TREE_ZOOM = 20;
+
+export const CHOICE_ID_FOR_NO_RESPONSE = "choiceIdForNoResponse";
