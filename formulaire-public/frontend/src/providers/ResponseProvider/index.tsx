@@ -77,7 +77,6 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
       const storedResponsesMap = sessionStorage.getItem("responsesMap");
       if (storedResponsesMap) {
         const existingResponseMap = deserializeMap(storedResponsesMap);
-        console.log(existingResponseMap);
         setResponsesMap(existingResponseMap);
         return;
       }
@@ -135,17 +134,13 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
       updateProgress,
       longestPathsMap,
       pageType,
-      setPageType,
       currentElement,
-      setCurrentElement,
       responsesMap,
-      setResponsesMap,
       getQuestionResponses,
       getQuestionResponse,
       updateQuestionResponses,
       isPageTypeRecap,
       scrollToQuestionId,
-      setScrollToQuestionId,
       formKey,
       flattenResponses,
     ],
