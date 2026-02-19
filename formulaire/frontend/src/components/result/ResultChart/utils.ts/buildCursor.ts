@@ -33,6 +33,9 @@ export const getCursorChartProps = (
   const options: ApexOptions = {
     chart: {
       zoom: { enabled: false },
+      toolbar: {
+        show: false,
+      },
     },
     xaxis: {
       type: "numeric",

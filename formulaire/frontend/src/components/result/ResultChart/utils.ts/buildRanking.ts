@@ -30,6 +30,8 @@ export const getRankingChartProps = (
     plotOptions: {
       bar: {
         horizontal: true,
+        borderRadius: 4,
+        borderRadiusApplication: "end",
       },
     },
     xaxis: {
@@ -40,6 +42,11 @@ export const getRankingChartProps = (
       title: { text: t("formulaire.position.selected") },
     },
     colors: GRAPH_COLORS,
+    chart: {
+      toolbar: {
+        show: false,
+      },
+    },
   };
 
   const type = "bar";

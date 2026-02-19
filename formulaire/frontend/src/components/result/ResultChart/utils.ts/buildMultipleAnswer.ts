@@ -32,6 +32,9 @@ export const getMultipleAnswerChartProps = (
   const options: ApexOptions = {
     chart: {
       id: "basic-bar",
+      toolbar: {
+        show: false,
+      },
     },
     xaxis: {
       categories,
@@ -44,6 +47,8 @@ export const getMultipleAnswerChartProps = (
       bar: {
         horizontal: true,
         distributed: true,
+        borderRadius: 4,
+        borderRadiusApplication: "end",
       },
     },
   };
