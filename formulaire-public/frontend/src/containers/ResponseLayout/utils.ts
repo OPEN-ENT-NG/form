@@ -1,14 +1,15 @@
 import { IFormElement } from "~/core/models/formElement/types";
-import { getStringifiedFormElementIdType, isQuestion, isSection } from "~/core/models/formElement/utils";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
 import { getNextFormElement } from "~/core/models/question/utils";
 import { IResponse } from "~/core/models/response/type";
 import { getNextFormElementPosition } from "~/core/models/section/utils";
+import { IProgressProps, ResponseMap } from "~/providers/ResponseProvider/types";
 
 export const getNextPositionIfValid = (
   currentElement: IFormElement,
-  responsesMap: Map<string, Map<number, IResponse[]>>,
   formElements: IFormElement[],
+  getQuestionResponses: (question: IQuestion) => IResponse[],
 ): number | null | undefined => {
   if (!currentElement.position) return NaN;
 
@@ -18,12 +19,12 @@ export const getNextPositionIfValid = (
 
   if (isQuestion(currentElement) && currentElement.conditional) {
     conditionalQuestion = currentElement;
-    response = calculateResponseValue(conditionalQuestion, responsesMap);
+    response = calculateResponseValue(conditionalQuestion, getQuestionResponses);
   } else if (isSection(currentElement)) {
     const conditionalQuestions = currentElement.questions.filter((q) => q.conditional);
     if (conditionalQuestions.length === 1) {
       conditionalQuestion = conditionalQuestions[0];
-      response = calculateResponseValue(conditionalQuestion, responsesMap);
+      response = calculateResponseValue(conditionalQuestion, getQuestionResponses);
     }
   }
 
@@ -46,14 +47,27 @@ export const getNextPositionIfValid = (
 
 const calculateResponseValue = (
   conditionalQuestion: IQuestion,
-  responsesMap: Map<string, Map<number, IResponse[]>>,
-) => {
-  const questionIdType = getStringifiedFormElementIdType(conditionalQuestion);
-  if (questionIdType) {
-    const currentResponsesMap = responsesMap.get(questionIdType);
-    const currentResponses =
-      currentResponsesMap && conditionalQuestion.id ? currentResponsesMap.get(conditionalQuestion.id) : null;
-    return currentResponses && currentResponses.length > 0 ? currentResponses[0] : null;
-  }
-  return null;
+  getQuestionResponses: (question: IQuestion) => IResponse[],
+): IResponse | null => {
+  const responses = getQuestionResponses(conditionalQuestion);
+  return responses.find((response) => response.selected) ?? null;
+};
+
+export const saveResponses = (progress: IProgressProps, responsesMap: ResponseMap): void => {
+  sessionStorage.setItem("progress", JSON.stringify(progress));
+  sessionStorage.setItem("responsesMap", serializeMap(responsesMap));
+};
+
+const serializeMap = (responsesMap: ResponseMap): string => {
+  return JSON.stringify([...responsesMap].map(([k, v]) => [k, [...v]]));
+};
+
+export const deserializeMap = (storedResponsesMap: string): ResponseMap => {
+  if (!storedResponsesMap) return new Map();
+
+  const parsed = JSON.parse(storedResponsesMap) as [string, [number, IResponse[]][]][];
+
+  return new Map<string, Map<number, IResponse[]>>(
+    parsed.map(([key, values]) => [key, new Map<number, IResponse[]>(values)]),
+  );
 };

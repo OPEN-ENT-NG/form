@@ -9,26 +9,30 @@ import { IResponse } from "~/core/models/response/type";
 
 export interface IResponseProviderProps {
   children: ReactNode;
-  initialPageType?: ResponsePageType;
 }
 
 export type ResponseProviderContextType = {
   form: IForm | null;
   formElementsList: IFormElement[];
   progress: IProgressProps;
+  setProgress: Dispatch<SetStateAction<IProgressProps>>;
   updateProgress: (element: IFormElement, newHistoricFormElementIds: number[]) => void;
   longestPathsMap: Map<string, number>;
   pageType: ResponsePageType | undefined;
   setPageType: Dispatch<SetStateAction<ResponsePageType | undefined>>;
-  saveResponses: () => Promise<void>;
+  currentElement: IFormElement | null;
+  setCurrentElement: Dispatch<SetStateAction<IFormElement | null>>;
   responsesMap: ResponseMap;
   setResponsesMap: Dispatch<SetStateAction<ResponseMap>>;
-  getQuestionResponses: (question: IQuestion) => IResponse[];
+  getQuestionResponses: (question: IQuestion, matrixQuestion?: IQuestion) => IResponse[];
   getQuestionResponse: (question: IQuestion) => IResponse | null;
-  updateQuestionResponses: (question: IQuestion, newResponses: IResponse[]) => void;
+  updateQuestionResponses: (question: IQuestion, newResponses: IResponse[], matrixQuestion?: IQuestion) => void;
+  isPageTypeRecap: boolean;
+  scrollToQuestionId: number | null;
+  setScrollToQuestionId: Dispatch<SetStateAction<number | null>>;
   formKey: string;
-  responseCaptcha: IResponse;
-  responses: IResponse[];
+  flattenResponses: IResponse[];
+  setFlattenResponses: Dispatch<SetStateAction<IResponse[]>>;
 };
 
 export interface IFormElementIdType {

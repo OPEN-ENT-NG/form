@@ -10,33 +10,40 @@ import { createNewResponse } from "~/core/models/response/utils";
 import { ISection, ISectionDTO } from "~/core/models/section/types";
 import { transformSection } from "~/core/models/section/utils";
 
+import { ResponseMap } from "./types";
+
 export const initResponsesMap = (formElements: IFormElement[]) => {
   const responsesMap = new Map<string, Map<number, IResponse[]>>();
 
   formElements.forEach((formElement) => {
-    const formElementResponsesMap = new Map<IQuestion, IResponse[]>();
+    const formElementIdType = getStringifiedFormElementIdType(formElement);
+    if (!formElementIdType) return;
+    const formElementResponsesMap = new Map<number, IResponse[]>();
 
     if (isQuestion(formElement) && formElement.id) {
       if (formElement.questionType === QuestionTypes.MATRIX) {
         formElement.children?.forEach((child) => {
           if (!child.id) return;
-          formElementResponsesMap.set(child, initResponseAccordingToType(child, formElement.choices));
+          formElementResponsesMap.set(child.id, initResponseAccordingToType(child, formElement.choices));
         });
       } else {
-        formElementResponsesMap.set(formElement, initResponseAccordingToType(formElement));
+        formElementResponsesMap.set(formElement.id, initResponseAccordingToType(formElement));
       }
     } else if (isSection(formElement)) {
       formElement.questions.forEach((question) => {
         if (!question.id) return;
-        formElementResponsesMap.set(question, initResponseAccordingToType(question));
+        if (question.questionType === QuestionTypes.MATRIX) {
+          question.children?.forEach((child) => {
+            if (!child.id) return;
+            formElementResponsesMap.set(child.id, initResponseAccordingToType(child, question.choices));
+          });
+        } else {
+          formElementResponsesMap.set(question.id, initResponseAccordingToType(question));
+        }
       });
     }
 
-    formElementResponsesMap.forEach((responses, question) => {
-      const formElementIdType = getStringifiedFormElementIdType(question);
-      if (formElementIdType)
-        responsesMap.set(formElementIdType, new Map<number, IResponse[]>().set(question.id ?? 0, responses));
-    });
+    responsesMap.set(formElementIdType, formElementResponsesMap);
   });
   return responsesMap;
 };
@@ -50,8 +57,9 @@ export const initResponseAccordingToType = (question: IQuestion, choices?: IQues
     case QuestionTypes.DATE:
     case QuestionTypes.TIME:
     case QuestionTypes.CURSOR:
-    case QuestionTypes.SINGLEANSWER:
+    case QuestionTypes.FILE:
       return [createNewResponse(question.id)];
+    case QuestionTypes.SINGLEANSWER:
     case QuestionTypes.RANKING:
     case QuestionTypes.SINGLEANSWERRADIO:
     case QuestionTypes.MULTIPLEANSWER:
@@ -65,39 +73,104 @@ export const initResponseAccordingToType = (question: IQuestion, choices?: IQues
   }
 };
 
-export const updateStorage = (formKey: string, form: IForm, formElements: IFormElement[]): void => {
-  sessionStorage.setItem("formKey", JSON.stringify(formKey));
-  sessionStorage.setItem("distributionKey", JSON.stringify(form.distribution_key));
-  sessionStorage.setItem("distributionCaptcha", JSON.stringify(form.distribution_captcha));
-  sessionStorage.setItem("form", JSON.stringify(form));
-  sessionStorage.setItem("formElements", JSON.stringify(formElements));
-  sessionStorage.setItem("nbFormElements", JSON.stringify(formElements.length));
-  sessionStorage.setItem("historicPosition", JSON.stringify([1]));
-  sessionStorage.setItem("allResponsesInfos", JSON.stringify(new Map()));
+export const fillResponseMapWithRepsonses = (
+  responseMap: ResponseMap,
+  responses: IResponse[],
+  questions: IQuestion[],
+): ResponseMap => {
+  const filledResponseMap = new Map<string, Map<number, IResponse[]>>();
+
+  responseMap.forEach((formElementMap, feit) => {
+    const newFormelementMap = new Map<number, IResponse[]>();
+
+    formElementMap.forEach((existingResponses, questionId) => {
+      const question = questions.find((q) => q.id === questionId);
+      const questionType = question?.questionType;
+      if (questionType === QuestionTypes.MATRIX) {
+        question?.children?.forEach((child) => {
+          if (!child.id) return;
+          const matchingNewResponses = responses.filter((r) => r.questionId === child.id);
+          const updatedResponses = updateResponsesByQuestionType(
+            existingResponses,
+            matchingNewResponses,
+            child.questionType,
+          );
+          newFormelementMap.set(child.id, updatedResponses);
+        });
+      } else {
+        const matchingNewResponses = responses.filter((r) => r.questionId === questionId);
+        const updatedResponses = updateResponsesByQuestionType(existingResponses, matchingNewResponses, questionType);
+        newFormelementMap.set(questionId, updatedResponses);
+      }
+    });
+
+    filledResponseMap.set(feit, newFormelementMap);
+  });
+
+  return filledResponseMap;
 };
 
-function parseQuestion(formElementDTO: IQuestionDTO): IQuestion {
-  const question = transformQuestion(formElementDTO);
-  return {
-    ...question,
-    choices: formElementDTO.choices as IQuestionChoice[],
-    children: (formElementDTO.children ?? []).map((question) => parseQuestion(question)),
-  };
-}
+const updateResponsesByQuestionType = (
+  existingResponses: IResponse[],
+  matchingNewResponses: IResponse[],
+  questionType: QuestionTypes | undefined,
+): IResponse[] => {
+  if (
+    questionType != QuestionTypes.FILE &&
+    (!existingResponses.length || !matchingNewResponses.length || !questionType)
+  )
+    return existingResponses;
 
-function parseSection(formElementDTO: ISectionDTO): ISection {
-  const section = transformSection(formElementDTO);
-  return {
-    ...section,
-    questions: formElementDTO.questions.map(parseQuestion),
-  };
-}
+  switch (questionType) {
+    case QuestionTypes.SHORTANSWER:
+    case QuestionTypes.LONGANSWER:
+    case QuestionTypes.DATE:
+    case QuestionTypes.TIME:
+    case QuestionTypes.FILE: {
+      if (existingResponses.length != 1 || matchingNewResponses.length != 1) break;
+      return matchingNewResponses;
+    }
+    case QuestionTypes.CURSOR: {
+      if (existingResponses.length != 1 || matchingNewResponses.length != 1) break;
+      const formattedAnswer = Number(matchingNewResponses[0].answer);
+      if (isNaN(formattedAnswer)) break;
+      return [{ ...matchingNewResponses[0], answer: formattedAnswer }];
+    }
+    case QuestionTypes.RANKING: {
+      if (matchingNewResponses.some((r) => r.choicePosition == null)) break;
+      return matchingNewResponses;
+    }
+    case QuestionTypes.SINGLEANSWER:
+    case QuestionTypes.SINGLEANSWERRADIO: {
+      if (matchingNewResponses.length != 1) break;
+      const updatedResponses = [...existingResponses];
+      return updatedResponses.map((r) => {
+        if (r.choiceId === matchingNewResponses[0].choiceId) {
+          return { ...matchingNewResponses[0], selected: true };
+        }
+        return r;
+      });
+    }
+    case QuestionTypes.MULTIPLEANSWER: {
+      const updatedResponses = [...existingResponses];
+      return updatedResponses.map((r) => {
+        const matchingResponse = matchingNewResponses.find((mr) => r.choiceId === mr.choiceId);
+        if (matchingResponse) return { ...matchingResponse, selected: true };
+        return r;
+      });
+    }
+    default:
+      return existingResponses;
+  }
+
+  return existingResponses;
+};
 
 function parseFormElement(formElementDTO: IFormElementDTO): ISection | IQuestion {
   if (formElementDTO.form_element_type === FormElementType.SECTION) {
-    return parseSection(formElementDTO as ISectionDTO);
+    return transformSection(formElementDTO as ISectionDTO);
   }
-  return parseQuestion(formElementDTO as IQuestionDTO);
+  return transformQuestion(formElementDTO as IQuestionDTO);
 }
 
 export const parseFormDatas = (formDatas: IPublicFormDTO): IForm => {

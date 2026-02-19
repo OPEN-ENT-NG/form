@@ -2,17 +2,14 @@
 import { Box } from "@mui/material";
 import dayjs from "dayjs";
 import { FC } from "react";
-import { useTranslation } from "react-i18next";
 
-import { FORMULAIRE_PUBLIC } from "~/core/constants";
 import { DateFormat } from "~/core/enums";
 import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
+import { t } from "~/i18n";
 
 import { IRGPDInfoBoxProps } from "./types";
 
 const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, hideBorder, sx = { color: TEXT_SECONDARY_COLOR } }) => {
-  const { t } = useTranslation(FORMULAIRE_PUBLIC);
-
   const formattedDate = dayjs(params.expirationDate).format(DateFormat.DAY_MONTH_YEAR);
 
   const formatI18n = (key: string, params: string[]): string => {
@@ -22,10 +19,10 @@ const RGPDInfoBox: FC<IRGPDInfoBoxProps> = ({ params, hideBorder, sx = { color: 
     }, t(key));
   };
 
-  const introHTML = formatI18n("formulaire.prop.rgpd.description.intro", [params.finalite, formattedDate]);
+  const introHTML = formatI18n("formulaire.public.prop.rgpd.description.intro", [params.finalite, formattedDate]);
 
   const delegatesHTML = params.delegates.map((delegate) =>
-    formatI18n("formulaire.prop.rgpd.description.delegates", [
+    formatI18n("formulaire.public.prop.rgpd.description.delegates", [
       delegate.rectoratName,
       delegate.rectoratEmail,
       delegate.rectoratAddress,

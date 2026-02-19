@@ -1,16 +1,12 @@
-import { useNavigate } from "react-router-dom";
-
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { IDistribution } from "~/core/models/distribution/types";
 import { IForm } from "~/core/models/form/types";
-import { getHrefRecapFormPath } from "~/core/pathHelper";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useAddDistributionMutation } from "~/services/api/services/formulaireApi/distributionApi";
 
 export const useHandleOpenFormResponse = () => {
   const [addDistribution] = useAddDistributionMutation();
-  const { navigateToFormResponse } = useFormulaireNavigation();
-  const navigate = useNavigate();
+  const { navigateToFormResponse, navigateToFormResponseRecap } = useFormulaireNavigation();
 
   const handleSingleResponse = (form: IForm, distrib?: IDistribution): void => {
     if (!distrib) return;
@@ -18,7 +14,7 @@ export const useHandleOpenFormResponse = () => {
     if (distrib.status === DistributionStatus.TO_DO) {
       navigateToFormResponse(form.id, distrib.id);
     } else {
-      navigate(getHrefRecapFormPath(form.id, distrib.id));
+      navigateToFormResponseRecap(form.id, distrib.id);
     }
   };
 

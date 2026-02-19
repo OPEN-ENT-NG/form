@@ -45,7 +45,7 @@ export const RecapLayout: FC = () => {
   };
 
   const handleSendForm = () => {
-    if (checkMandatoryQuestions(answeredFormElements, [])) {
+    if (checkMandatoryQuestions(answeredFormElements, responses)) {
       toggleModal(ModalType.SEND_FORM);
     }
   };

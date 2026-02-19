@@ -6,6 +6,7 @@ export interface IWorkflowRights {
   rgpd: string;
   creationPublic: string;
 }
+
 export interface ISharedRights {
   read: string;
   contrib: string;

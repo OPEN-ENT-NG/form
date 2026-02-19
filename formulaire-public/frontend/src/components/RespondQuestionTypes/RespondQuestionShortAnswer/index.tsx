@@ -1,4 +1,4 @@
-import { Box, TextField } from "@cgi-learning-hub/ui";
+import { TextField, Typography } from "@cgi-learning-hub/ui";
 import { ChangeEvent, FC, useEffect, useState } from "react";
 
 import { t } from "~/i18n";
@@ -9,7 +9,7 @@ import { IRespondQuestionTypesProps } from "../types";
 
 export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { selectAllTextInput } = useGlobal();
-  const { getQuestionResponse, updateQuestionResponses } = useResponse();
+  const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [answer, setAnswer] = useState<string>("");
 
   useEffect(() => {
@@ -17,7 +17,7 @@ export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ que
     if (!associatedResponse) return;
     const existingAnswer = associatedResponse.answer;
     if (typeof existingAnswer === "string") setAnswer(existingAnswer);
-  }, []);
+  }, [getQuestionResponse]);
 
   const handleResponseChange = (event: ChangeEvent<HTMLInputElement>) => {
     const associatedResponse = getQuestionResponse(question);
@@ -27,16 +27,20 @@ export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ que
     updateQuestionResponses(question, [associatedResponse]);
   };
 
-  return (
-    <Box>
-      <TextField
-        placeholder={question.placeholder ?? t("formulaire.question.type.SHORTANSWER")}
-        fullWidth
-        value={answer}
-        onChange={handleResponseChange}
-        onFocus={selectAllTextInput}
-        error={question.mandatory && !answer}
-      />
-    </Box>
+  return isPageTypeRecap ? (
+    !answer ? (
+      <Typography fontStyle={"italic"}>{t("formulaire.public.response.missing")}</Typography>
+    ) : (
+      <Typography>{answer}</Typography>
+    )
+  ) : (
+    <TextField
+      placeholder={question.placeholder ?? t("formulaire.public.question.type.SHORTANSWER")}
+      fullWidth
+      value={answer}
+      onChange={handleResponseChange}
+      onFocus={selectAllTextInput}
+      error={question.mandatory && !answer}
+    />
   );
 };

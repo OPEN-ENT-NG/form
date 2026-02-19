@@ -11,7 +11,7 @@ export interface IQuestionDTO extends IFormElementDTO {
   conditional: boolean;
   matrix_id: number | null;
   matrix_position: number | null;
-  choices: IQuestionChoice[] | null;
+  choices: IQuestionChoiceDTO[] | null;
   placeholder: string | null;
   children: IQuestionDTO[] | null;
   specific_fields: IQuestionSpecificFields | null;
@@ -48,6 +48,7 @@ export interface IQuestionChoiceDTO {
   nbResponses: number;
   image: string | null;
 }
+
 export interface IQuestionChoice {
   id: number | null;
   questionId: number | null;

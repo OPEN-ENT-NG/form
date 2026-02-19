@@ -1,6 +1,7 @@
 import { IFormElementIdType } from "~/providers/ResponseProvider/types";
 
-import { IQuestion } from "../question/types";
+import { QuestionTypes } from "../question/enum";
+import { IQuestion, IQuestionChoice } from "../question/types";
 import { getParentSection } from "../question/utils";
 import { ISection } from "../section/types";
 import { FormElementType } from "./enum";
@@ -71,6 +72,19 @@ export const flattenFormElements = (formElements: IFormElement[]): IFormElement[
   }, []);
 };
 
+export const getAllQuestions = (formElements: IFormElement[]): IQuestion[] => {
+  return flattenFormElements(formElements).filter((el) => isQuestion(el));
+};
+
+export const getAllQuestionsAndChildren = (formElements: IFormElement[]): IQuestion[] => {
+  const questions = getAllQuestions(formElements);
+
+  const matrixQuestions = questions.filter((q) => q.questionType === QuestionTypes.MATRIX);
+  const childrenList = matrixQuestions.flatMap((q) => q.children ?? []);
+
+  return [...questions, ...childrenList];
+};
+
 export const compareFormElements = (elementA: IFormElement, elementB: IFormElement): number => {
   //If both are questions in the same section, sort by sectionPosition
 
@@ -105,10 +119,15 @@ export const isSection = (formElement: IFormElement): formElement is ISection =>
   return formElement.formElementType === FormElementType.SECTION;
 };
 
-export const parseIntoQuestionOrSection = (formElement: IFormElement): ISection | IQuestion => {
-  if (isSection(formElement)) return formElement;
-  if (isQuestion(formElement)) return formElement;
-  throw new Error("Unknown form element type");
+export const getExistingChoices = (formElements: IFormElement[]): IQuestionChoice[] => {
+  return formElements
+    .filter((el) => !el.isNew)
+    .flatMap((el) => {
+      if (isQuestion(el)) {
+        return el.choices?.filter((choice) => choice.id !== null) || [];
+      }
+      return [];
+    });
 };
 
 export const getFollowingFormElement = (
@@ -162,7 +181,13 @@ export const areEquals = (feitA: IFormElementIdType | undefined, feitB: IFormEle
 export const getElementById = (
   id: number | null,
   formElementsList: IFormElement[],
-  formElementTypePredicate: (element: IFormElement) => boolean, //TODO useless non ??
+  formElementTypePredicate: (element: IFormElement) => boolean,
 ): IFormElement | undefined => {
   return formElementsList.find((el) => el.id === id && formElementTypePredicate(el));
+};
+
+export const parseIntoQuestionOrSection = (formElement: IFormElement): ISection | IQuestion => {
+  if (isSection(formElement)) return formElement;
+  if (isQuestion(formElement)) return formElement;
+  throw new Error("Unknown form element type");
 };

@@ -1,81 +1,102 @@
 import { Box, Button } from "@cgi-learning-hub/ui";
 import { FC, useEffect, useState } from "react";
-import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { ProgressBar } from "~/components/ProgressBar";
-import { FORMULAIRE_PUBLIC } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
-import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { ComponentVariant } from "~/core/style/themeProps";
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
 import { RespondSectionWrapper } from "../RespondSectionWrapper";
 import { responseLayoutStyle, StyledButtonsWrapper } from "./style";
-import { getNextPositionIfValid } from "./utils";
+import { getNextPositionIfValid, saveResponses } from "./utils";
 
 export const ResponseLayout: FC = () => {
-  const { form, formElementsList, progress, updateProgress, saveResponses, responsesMap, setPageType } = useResponse();
-  const { t } = useTranslation(FORMULAIRE_PUBLIC);
-  const [currentElement, setCurrentElement] = useState<IFormElement>(formElementsList[0] ?? null);
+  const {
+    form,
+    formElementsList,
+    progress,
+    updateProgress,
+    setPageType,
+    currentElement,
+    setCurrentElement,
+    getQuestionResponses,
+    responsesMap,
+    scrollToQuestionId,
+  } = useResponse();
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
   const [isLastElement, setIsLastElement] = useState<boolean>(false);
 
   useEffect(() => {
-    if (formElementsList.length > 0) {
+    if (formElementsList.length > 0 && !currentElement) {
       setCurrentElement(formElementsList[0]);
     }
   }, [formElementsList]);
 
   useEffect(() => {
-    if (currentElement.position) {
+    if (currentElement?.position) {
       setIsFirstElement(currentElement.position === 1);
       setIsLastElement(currentElement.position === formElementsList.length);
-    }
-  }, [currentElement]);
 
-  const goPreviousElement = async () => {
+      // Scroll when arriving from recap page
+      if (!scrollToQuestionId) {
+        window.scrollTo({ top: 0 });
+        return;
+      }
+      requestAnimationFrame(() => {
+        const el = document.getElementById(`question-${scrollToQuestionId}`);
+        el?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
+    }
+  }, [currentElement, scrollToQuestionId]);
+
+  const goPreviousElement = () => {
+    if (!currentElement) return;
     const prevId = progress.historicFormElementIds[progress.historicFormElementIds.length - 2];
     const prevElement = formElementsList.find((fe) => fe.id === prevId);
 
     if (!prevElement) return;
 
-    await saveResponses();
+    saveResponses(progress, responsesMap);
     setCurrentElement(prevElement);
     updateProgress(prevElement, progress.historicFormElementIds.slice(0, -1));
   };
 
-  const goNextElement = async () => {
-    if (!currentElement.position) return;
-    const nextPosition = getNextPositionIfValid(currentElement, responsesMap, formElementsList);
+  const goNextElement = () => {
+    if (!currentElement?.position) return;
+    const nextPosition = getNextPositionIfValid(currentElement, formElementsList, getQuestionResponses);
 
     // An error occured
     if (nextPosition === undefined) {
-      toast.error(t("formulaire.response.next.invalid"));
+      toast.error(t("formulaire.public.response.next.invalid"));
       return;
     }
 
     // It's the end of the form
-    if (nextPosition && nextPosition > formElementsList.length) {
-      await saveResponses();
-      setPageType(ResponsePageType.RECAP);
+    if (nextPosition === null || (nextPosition && nextPosition > formElementsList.length)) {
+      saveResponses(progress, responsesMap);
+      if (form?.id) setPageType(ResponsePageType.RECAP);
       return;
     }
 
     // We got an element for the next position
-    //TODO check if we need that later : unloadLastResponses();
-    await saveResponses();
+    saveResponses(progress, responsesMap);
 
     const nextElement = formElementsList.find((fe) => fe.position === nextPosition);
     if (!nextElement || !nextElement.id) return;
 
-    updateProgress(nextElement, progress.historicFormElementIds.concat([nextElement.id]));
     setCurrentElement(nextElement);
+    updateProgress(nextElement, progress.historicFormElementIds.concat([nextElement.id]));
   };
 
   const getFormElementContent = () => {
+    if (!currentElement) return;
     if (isQuestion(currentElement)) return <RespondQuestionWrapper question={currentElement} />;
     if (isSection(currentElement)) return <RespondSectionWrapper section={currentElement} />;
   };
@@ -93,21 +114,11 @@ export const ResponseLayout: FC = () => {
       {getFormElementContent()}
       <StyledButtonsWrapper isFirstElement={isFirstElement} isLastElement={isLastElement}>
         {!isFirstElement && (
-          <Button
-            variant={ComponentVariant.OUTLINED}
-            onClick={() => {
-              void goPreviousElement();
-            }}
-          >
+          <Button variant={ComponentVariant.OUTLINED} onClick={goPreviousElement}>
             {t("formulaire.public.prev")}
           </Button>
         )}
-        <Button
-          variant={ComponentVariant.CONTAINED}
-          onClick={() => {
-            void goNextElement();
-          }}
-        >
+        <Button variant={ComponentVariant.CONTAINED} onClick={goNextElement}>
           {t("formulaire.public.next")}
         </Button>
       </StyledButtonsWrapper>

@@ -20,14 +20,7 @@ export enum FormPropField {
 }
 
 export enum TagName {
-  FOLDERS = "FOLDERS",
   FORMS = "FORMS",
-  DISTRIBUTION = "DISTRIBUTION",
-  QUESTIONS = "QUESTIONS",
-  SECTIONS = "SECTIONS",
-  FORM_ELEMENTS = "FORM_ELEMENTS",
-  CHOICE = "CHOICE",
-  CHILDREN = "CHILDREN",
   CAPTCHA = "CAPTCHA",
 }
 

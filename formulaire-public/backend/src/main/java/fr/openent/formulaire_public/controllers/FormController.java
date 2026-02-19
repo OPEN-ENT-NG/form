@@ -324,7 +324,7 @@ public class FormController extends ControllerHelper {
                 RequestUtils.bodyToJson(request, data -> {
 
                     // Check CAPTCHA response
-                    String captchaResponse = data.getJsonObject(CAPTCHA).getString(ANSWER);
+                    String captchaResponse = data.getString(CAPTCHA);
                     String captchaAnswer = CaptchaHelper.formatCaptchaAnswer(captchaResponse);
                     String captchaId = distribution.getInteger(CAPTCHA_ID).toString();
                     publicCaptchaService.get(captchaId, captchaEvt -> {
