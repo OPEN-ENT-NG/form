@@ -1,3 +1,4 @@
+import { CHOICE_ID_FOR_NO_RESPONSE } from "~/core/constants";
 import { IQuestion } from "~/core/models/question/types";
 import { DistributionMap } from "~/providers/ResultProvider/hook/UseBuildResultMap/types";
 
@@ -11,5 +12,5 @@ export interface IResponseStats {
   percentage: number;
 }
 
-export type ChoiceId = number | "empty";
+export type ChoiceId = number | typeof CHOICE_ID_FOR_NO_RESPONSE;
 export type ResponseStatsMap = Map<ChoiceId, IResponseStats>;

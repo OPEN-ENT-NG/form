@@ -1,3 +1,4 @@
+import { CHOICE_ID_FOR_NO_RESPONSE } from "~/core/constants";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { ICompleteResponse } from "~/core/models/response/type";
@@ -17,7 +18,7 @@ export const getResponseStatsMap = (choices: IQuestionChoice[], distributionMap:
     const isEmpty = !choiceId || (!response.answer && !response.customAnswer);
 
     if (isEmpty) {
-      acc.set("empty", (acc.get("empty") ?? 0) + 1);
+      acc.set(CHOICE_ID_FOR_NO_RESPONSE, (acc.get(CHOICE_ID_FOR_NO_RESPONSE) ?? 0) + 1);
       return acc;
     }
 
@@ -38,9 +39,9 @@ export const getResponseStatsMap = (choices: IQuestionChoice[], distributionMap:
     return acc;
   }, new Map<ChoiceId, IResponseStats>());
 
-  const emptyCount = countMap.get("empty") ?? 0;
+  const emptyCount = countMap.get(CHOICE_ID_FOR_NO_RESPONSE) ?? 0;
 
-  result.set("empty", {
+  result.set(CHOICE_ID_FOR_NO_RESPONSE, {
     nbResponses: emptyCount,
     percentage: (emptyCount / total) * 100,
   });

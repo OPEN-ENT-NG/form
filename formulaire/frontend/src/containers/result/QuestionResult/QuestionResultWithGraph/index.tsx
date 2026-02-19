@@ -5,6 +5,7 @@ import { FC, useMemo } from "react";
 import { ResultChart } from "~/components/result/ResultChart";
 import { ResultRow } from "~/components/result/ResultRow";
 import { compareChoices } from "~/containers/creation/CreationQuestionChoiceWrapper/utils";
+import { CHOICE_ID_FOR_NO_RESPONSE } from "~/core/constants";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { ICompleteResponse } from "~/core/models/response/type";
 import { t } from "~/i18n";
@@ -56,7 +57,7 @@ export const QuestionResultWithGraph: FC<IQuestionResultWithGraphProps> = ({ que
                   <Typography>{t("formulaire.response.empty")}</Typography>
                 </Box>
                 <Box width="15rem" minWidth="15rem">
-                  {getDisplayedResponseStat("empty", responseStatsMap, question)}
+                  {getDisplayedResponseStat(CHOICE_ID_FOR_NO_RESPONSE, responseStatsMap, question)}
                 </Box>
               </Stack>
             )}
