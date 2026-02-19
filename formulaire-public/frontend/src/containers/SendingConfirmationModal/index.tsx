@@ -1,25 +1,17 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
-import { useNavigate } from "react-router-dom";
 
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { IModalProps } from "~/core/types";
 import { t } from "~/i18n";
-import { useResponse } from "~/providers/ResponseProvider";
-import { useSendResponsesMutation } from "~/services/api/formulaireApi/responseApi";
 
-export const SendingConfirmationModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
-  const navigate = useNavigate();
-  const { formKey, form, responseCaptcha, responses } = useResponse();
-  const [sendResponses] = useSendResponsesMutation();
+import { ISendingConfirmationModalProps } from "./types";
 
-  const send = async () => {
-    if (!form?.distribution_key) return;
-    await sendResponses({ formKey, distributionKey: form.distribution_key, responseCaptcha, responses });
-    navigate("/thanks");
-  };
-
+export const SendingConfirmationModal: FC<ISendingConfirmationModalProps> = ({
+  isOpen,
+  handleClose,
+  onSendingConfirmation,
+}) => {
   return (
     <Dialog open={isOpen} onClose={handleClose} maxWidth={BreakpointVariant.MD}>
       <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
@@ -33,12 +25,7 @@ export const SendingConfirmationModal: FC<IModalProps> = ({ isOpen, handleClose 
         <Button variant={ComponentVariant.OUTLINED} onClick={handleClose}>
           {t("formulaire.public.cancel")}
         </Button>
-        <Button
-          variant={ComponentVariant.CONTAINED}
-          onClick={() => {
-            void send();
-          }}
-        >
+        <Button variant={ComponentVariant.CONTAINED} onClick={onSendingConfirmation}>
           {t("formulaire.public.confirm")}
         </Button>
       </DialogActions>

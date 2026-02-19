@@ -81,13 +81,14 @@ export const isFormFilled = (form: IForm, distributions: IDistribution[]): boole
   const formDistributions = getFormDistributions(form, distributions);
 
   if (form.multiple) {
-    return getFirstDistribution(formDistributions).status === DistributionStatus.FINISHED;
+    const firstDistrib = getFirstDistribution(formDistributions);
+    return firstDistrib?.status === DistributionStatus.FINISHED;
   }
   return getNbFinishedDistrib(formDistributions) > 0;
 };
 
 export const getFormNbResponsesText = (nbResponses: number) => {
-  const text = t(nbResponses > 1 ? "formulaire.responses" : "formulaire.response");
+  const text = t(nbResponses > 1 ? "formulaire.public.responses" : "formulaire.public.response");
   return `${nbResponses.toString()} ${text}`;
 };
 
@@ -98,100 +99,18 @@ export const getFormStatusText = (
 ): string => {
   const formDistributions = getFormDistributions(form, distributions);
   if (form.multiple) {
-    return `${t("formulaire.responses.count")} : ${getNbFinishedDistrib(formDistributions).toString()}`;
+    return `${t("formulaire.public.responses.count")} : ${getNbFinishedDistrib(formDistributions).toString()}`;
   } else {
     if (getNbFinishedDistrib(formDistributions) > 0) {
       const latestDistrib = getLatestDistribution(formDistributions);
       if (latestDistrib.dateResponse) {
-        return formatDateWithTime(latestDistrib.dateResponse, "formulaire.responded.date");
+        return formatDateWithTime(latestDistrib.dateResponse, "formulaire.public.responded.date");
       }
     }
-    return t("formulaire.responded.waiting");
+    return t("formulaire.public.responded.waiting");
   }
 };
 
 export const hasFormResponses = (form: IForm): boolean => {
   return !!form.nb_responses;
 };
-
-// export const setFromJson = (form: IForm, data: IFormPublicData): void => {
-//   for (const key in data) {
-//     form[key] = data[key];
-//     if (key === "nb_responses" && !data[key]) {
-//       form[key] = 0;
-//     }
-//     if (
-//       (key === "date_creation" || key === "date_modification" || key === "date_opening" || key === "date_ending") &&
-//       data[key]
-//     ) {
-//       form[key] = new Date(form[key]);
-//     }
-//   }
-// };
-
-// export const formatFormElements = (form: IForm, formElements: IFormElement[]): void => {
-//   for (const e of form["form_elements"]) {
-//     if (!e["questions"]) {
-//       formElements.push(formatIntoQuestion(e));
-//     } else {
-//       formElements.push(formatIntoSection(e));
-//     }
-//   }
-//   formElements.sort((a, b) => a.position - b.position);
-//   delete form["form_elements"];
-// };
-
-// const formatIntoSection = (e: IFormElement): ISection => {
-//   const questions = new Questions();
-//   if (e["questions"]) {
-//     for (const q of e["questions"]) {
-//       questions.push(formatIntoQuestion(q));
-//     }
-//   }
-//   questions.sort((a, b) => a.section_position - b.section_position);
-
-//   const section = Mix.castAs(Section, e);
-//   section.questions = questions;
-//   return section;
-// };
-
-// const formatIntoQuestion = (e: IFormElement): IQuestion => {
-//   const choices = new QuestionChoices();
-//   const children = new Questions();
-//   if (e[Fields.CHOICES]) {
-//     choices = Mix.castArrayAs(QuestionChoice, e[Fields.CHOICES]);
-//     choices.sort((a, b) => a.position - b.position);
-//   }
-//   if (e[Fields.CHILDREN]) {
-//     children = Mix.castArrayAs(Question, e[Fields.CHILDREN]); // Ok because matrix children cannot not have choices or children themselves
-//     children.sort((a, b) => a.matrix_position - b.matrix_position);
-//   }
-
-//   const question = Mix.castAs(Question, e);
-//   if (question.question_type === Types.CURSOR) formatIntoQuestionCursor(question, e);
-
-//   question.choices = choices;
-//   question.children = children;
-//   return question;
-// };
-
-// const formatIntoQuestionCursor = (q: IQuestion, e: IFormElement): void => {
-//   q.specific_fields = new QuestionSpecificFields(q.id);
-//   q.specific_fields.cursor_min_val = e[Fields.SPECIFIC_FIELDS][Fields.CURSOR_MIN_VAL];
-//   q.specific_fields.cursor_max_val = e[Fields.SPECIFIC_FIELDS][Fields.CURSOR_MAX_VAL];
-//   q.specific_fields.cursor_step = e[Fields.SPECIFIC_FIELDS][Fields.CURSOR_STEP];
-//   q.specific_fields.cursor_min_label = e[Fields.SPECIFIC_FIELDS][Fields.CURSOR_MIN_LABEL];
-//   q.specific_fields.cursor_max_label = e[Fields.SPECIFIC_FIELDS][Fields.CURSOR_MAX_LABEL];
-// };
-
-// export const getDistributionKey = (form: IForm): string => {
-//   const distributionKey = form[Fields.DISTRIBUTION_KEY].toString();
-//   delete form[Fields.DISTRIBUTION_KEY];
-//   return distributionKey;
-// };
-
-// export const getDistributionCaptcha = (): string => {
-//   const distributionCaptcha = this[Fields.DISTRIBUTION_CAPTCHA].toString();
-//   delete this[Fields.DISTRIBUTION_CAPTCHA];
-//   return distributionCaptcha;
-// };

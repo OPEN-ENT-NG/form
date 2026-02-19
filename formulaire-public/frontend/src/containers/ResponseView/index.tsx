@@ -1,14 +1,13 @@
-import { Box, EmptyState } from "@cgi-learning-hub/ui";
-import { FC } from "react";
-import { useTranslation } from "react-i18next";
+import { Box, EmptyState, Loader } from "@cgi-learning-hub/ui";
+import { FC, useMemo } from "react";
 
 import { Header } from "~/components/Header";
 import { ErrorPreview } from "~/components/SVG/ErrorPreview";
-import { FORMULAIRE_PUBLIC } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
 import { emptyStateWrapper } from "~/core/style/boxStyles";
 import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 import { TypographyVariant } from "~/core/style/themeProps";
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { CaptchaLayout } from "../CaptchaLayout";
@@ -18,8 +17,10 @@ import { ResponseLayout } from "../ResponseLayout";
 import { RgpdLayout } from "../RgpdLayout";
 
 export const ResponseView: FC = () => {
-  const { t } = useTranslation(FORMULAIRE_PUBLIC);
   const { form, formElementsList, pageType } = useResponse();
+  const isNotReady = useMemo(() => {
+    return !form || formElementsList.length <= 0;
+  }, [form, formElementsList]);
 
   const errorPage = (
     <Box sx={emptyStateWrapper}>
@@ -35,7 +36,7 @@ export const ResponseView: FC = () => {
   );
 
   const displayRightPage = () => {
-    if (!form || formElementsList.length <= 0) return errorPage;
+    if (isNotReady) return <Loader />;
     switch (pageType) {
       case ResponsePageType.RGPD:
         return <RgpdLayout />;
@@ -53,8 +54,8 @@ export const ResponseView: FC = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", height: "100%", paddingX: "10%" }}>
-      {form && <Header stringItems={[form.title]} buttons={[]} displaySeparator />}
+    <Box sx={{ width: "100%", height: "100%", paddingX: "10%", ...(isNotReady && { margin: "auto" }) }}>
+      {form && !isNotReady && <Header items={[form.title]} form={form} displaySeparator />}
       {displayRightPage()}
     </Box>
   );

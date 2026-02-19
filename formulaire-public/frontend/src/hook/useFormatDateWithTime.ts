@@ -15,11 +15,11 @@ export const useFormatDateWithTime = () => {
   return (date: string | Date | undefined | null, i18nTextKey: string): string => {
     if (!date) return "";
 
-    const locale = t("formulaire.date.format.locale");
+    const locale = t("formulaire.public.date.format.locale");
     dayjs.locale(locale);
 
     const text = t(i18nTextKey);
-    const atText = t("formulaire.at");
+    const atText = t("formulaire.public.at");
 
     const userTimeZone = Intl.DateTimeFormat().resolvedOptions().timeZone;
 

@@ -5,7 +5,6 @@ import { t } from "~/i18n";
 
 import { KeyName } from "./enums";
 import { IForm } from "./models/form/types";
-import { getHrefErrorPath } from "./pathHelper";
 import { sharingRights } from "./rights";
 
 // KeyDown
@@ -84,7 +83,7 @@ export const handleErrorApi = (err: unknown, errorMessageKey: string) => {
     case 401:
     case 403:
     case 404:
-      window.location.href = getHrefErrorPath(errorCode);
+      window.location.href = `#/${errorCode}`;
       break;
     default:
       console.error(errorMessageKey, err);

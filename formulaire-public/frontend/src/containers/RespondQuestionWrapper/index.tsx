@@ -1,19 +1,56 @@
-import { Box, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
-import { t } from "i18next";
+import { Box, Button, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
 import { FC } from "react";
 
-import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
-import { BoxComponentType, TypographyVariant } from "~/core/style/themeProps";
+import { ResponsePageType } from "~/core/enums";
+import { IFormElement } from "~/core/models/formElement/types";
+import { isSection } from "~/core/models/formElement/utils";
+import { QuestionTypes } from "~/core/models/question/enum";
+import { flexEndBoxStyle } from "~/core/style/boxStyles";
+import {
+  ERROR_MAIN_COLOR,
+  PRIMARY,
+  SECONDARY_MAIN_COLOR,
+  TEXT_PRIMARY_COLOR,
+  TEXT_SECONDARY_COLOR,
+} from "~/core/style/colors";
+import { BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { t } from "~/i18n";
+import { useResponse } from "~/providers/ResponseProvider";
 
 import { mandatoryTitleStyle, questionStackStyle } from "./style";
 import { IRespondQuestionWrapperProps } from "./types";
 import { getRespondQuestionContentByType } from "./utils";
 
 export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ question }) => {
+  const {
+    form,
+    formElementsList,
+    isPageTypeRecap,
+    setPageType,
+    progress,
+    updateProgress,
+    setCurrentElement,
+    setScrollToQuestionId,
+  } = useResponse();
+
+  const navigateToQuestion = () => {
+    if (!form?.id) return;
+    let targetElement: IFormElement | undefined = question;
+    if (question.sectionId)
+      targetElement = formElementsList.find((fe) => isSection(fe) && fe.id === question.sectionId);
+    if (!targetElement?.id) return;
+    const targetIndexInProgress = progress.historicFormElementIds.indexOf(targetElement.id);
+    if (targetIndexInProgress < 0) return;
+    updateProgress(targetElement, progress.historicFormElementIds.slice(0, targetIndexInProgress + 1));
+    setCurrentElement(targetElement);
+    setScrollToQuestionId(question.id);
+    setPageType(ResponsePageType.FORM_ELEMENT);
+  };
+
   return (
     <Stack id={`question-${question.id}`} key={question.id} component={Paper} sx={questionStackStyle}>
       <Typography variant={TypographyVariant.H6} color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}>
-        {question.title || t("formulaire.question.title.empty")}
+        {question.title || t("formulaire.public.question.title.empty")}
         {question.mandatory && (
           <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR} sx={mandatoryTitleStyle}>
             *
@@ -21,6 +58,18 @@ export const RespondQuestionWrapper: FC<IRespondQuestionWrapperProps> = ({ quest
         )}
       </Typography>
       <Box>{getRespondQuestionContentByType(question)}</Box>
+      {isPageTypeRecap && question.questionType != QuestionTypes.FREETEXT && (
+        <Box sx={flexEndBoxStyle}>
+          <Button
+            variant={ComponentVariant.TEXT}
+            color={PRIMARY}
+            onClick={navigateToQuestion}
+            sx={{ ":hover": { background: "transparent", color: SECONDARY_MAIN_COLOR } }}
+          >
+            {t("formulaire.public.edit")}
+          </Button>
+        </Box>
+      )}
     </Stack>
   );
 };

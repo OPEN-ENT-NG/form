@@ -33,6 +33,7 @@ export interface IQuestionChoiceDTO {
   nbResponses: number;
   image: string | null;
 }
+
 export interface IQuestionChoice {
   id: number | null;
   questionId: number | null;

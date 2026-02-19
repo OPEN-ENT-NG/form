@@ -55,7 +55,7 @@ export const transformQuestion = (raw: IQuestionDTO): IQuestion => {
     conditional: raw.conditional,
     matrixId: raw.matrix_id,
     matrixPosition: raw.matrix_position,
-    choices: raw.choices,
+    choices: raw.choices?.map(transformQuestionChoice) ?? [],
     placeholder: raw.placeholder,
     children: raw.children?.map(transformQuestion) ?? [],
     specificFields: raw.specific_fields,
@@ -266,7 +266,6 @@ export const getNextFormElements = (question: IQuestion, formElements: IFormElem
   return question.choices.map((c) => getNextFormElement(c, formElements)).filter((e): e is IFormElement => e != null);
 };
 
-//TODO move dans un questionChoice/utils.ts all from here...
 export const getNextFormElement = (
   choice: IQuestionChoice,
   formElements: IFormElement[],
@@ -283,7 +282,6 @@ export const getNextFormElementPosition = (choice: IQuestionChoice, formElements
   const nextFormElement = getNextFormElement(choice, formElements);
   return nextFormElement ? nextFormElement.position : null;
 };
-//TODO ...to here
 
 export const getQuestionTypeFromValue = (value: string | number | null | undefined): QuestionTypes | undefined => {
   if (value === null || value === undefined) return;

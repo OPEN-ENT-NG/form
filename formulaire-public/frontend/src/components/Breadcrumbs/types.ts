@@ -2,17 +2,16 @@ import { ReactNode } from "react";
 
 export interface IFormBreadcrumbsProps {
   icon: React.ElementType;
-  stringItems: string[];
+  items: ReactNode[];
   separator?: ReactNode;
-  isHeader?: boolean;
-  isCreationPage?: boolean;
+  shouldNavigate?: boolean;
   displaySeparator?: boolean;
+  showCollapse?: boolean;
 }
 
 export interface IBreadCrumbItemWrapperProps {
   textColor: string;
-  isHeader: boolean;
-  isCreationPage: boolean;
+  shouldNavigate: boolean;
   hasSeparator: boolean;
   isLast: boolean;
 }
