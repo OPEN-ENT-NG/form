@@ -54,7 +54,6 @@ export const CaptchaLayout: FC = () => {
   useEffect(() => {
     if (!captchaData) return;
     setCaptcha(captchaData);
-    sessionStorage.setItem("distributionCaptcha", JSON.stringify(captchaData.captchaId));
   }, [captchaData]);
 
   const handleChangeCaptchaResponse = (event: ChangeEvent<HTMLInputElement>) => {
@@ -83,6 +82,7 @@ export const CaptchaLayout: FC = () => {
       responses: flattenResponses,
     });
 
+    toggleModal(ModalType.SENDING_CONFIRMATION);
     if (distributionData) {
       const distribution = transformDistribution(distributionData);
       if (distribution.status === DistributionStatus.FINISHED) {
@@ -95,7 +95,6 @@ export const CaptchaLayout: FC = () => {
 
     toast.error(t("formulaire.public.error.captcha"));
     reloadCaptcha();
-    toggleModal(ModalType.SENDING_CONFIRMATION);
   };
 
   return (

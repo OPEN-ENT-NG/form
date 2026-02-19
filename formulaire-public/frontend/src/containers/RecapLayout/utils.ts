@@ -1,3 +1,5 @@
+import dayjs, { isDayjs } from "dayjs";
+
 import { IFormElement } from "~/core/models/formElement/types";
 import { getAllQuestions, getAllQuestionsAndChildren, isQuestion, isSection } from "~/core/models/formElement/utils";
 import { QuestionTypes } from "~/core/models/question/enum";
@@ -33,14 +35,22 @@ export const getResponses = (formElementsList: IFormElement[], responsesMap: Res
     .flat();
 
   const allQuestionsAndChildren = getAllQuestionsAndChildren(formElementsList);
-  allResponses.filter((r) => {
-    if (!r.questionId) return false;
+  return allResponses.reduce<IResponse[]>((acc, r) => {
+    if (!r.questionId) return acc;
     const question = allQuestionsAndChildren.find((q) => q.id === r.questionId);
-    if (!question || (isQuestionUsingSelectedProp(question.questionType) && !r.selected)) return false;
-    return true;
-  });
-
-  return allResponses;
+    if (!question || (isQuestionUsingSelectedProp(question.questionType) && !r.selected)) return acc;
+    if (question.questionType === QuestionTypes.DATE) {
+      let formattedDate = null;
+      if (r.answer instanceof Date) formattedDate = dayjs(r.answer);
+      else if (isDayjs(r.answer)) formattedDate = r.answer;
+      else if (typeof r.answer === "string") {
+        const d = new Date(r.answer);
+        if (!isNaN(d.getTime())) formattedDate = dayjs(d);
+      }
+      return [...acc, { ...r, answer: formattedDate?.toDate().toLocaleDateString() }];
+    }
+    return [...acc, r];
+  }, []);
 };
 
 const isQuestionUsingSelectedProp = (questionType: QuestionTypes) => {

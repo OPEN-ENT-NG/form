@@ -77,6 +77,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
       const storedResponsesMap = sessionStorage.getItem("responsesMap");
       if (storedResponsesMap) {
         const existingResponseMap = deserializeMap(storedResponsesMap);
+        console.log(existingResponseMap);
         setResponsesMap(existingResponseMap);
         return;
       }

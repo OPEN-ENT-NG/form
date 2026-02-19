@@ -65,7 +65,7 @@ export const initResponseAccordingToType = (question: IQuestion, choices?: IQues
     case QuestionTypes.MULTIPLEANSWER:
       return (
         questionChoices?.map((choice, index) =>
-          createNewResponse(question.id as number, undefined, undefined, choice.id as number, choice.value, index),
+          createNewResponse(question.id as number, undefined, choice.id as number, choice.value, index),
         ) ?? []
       );
     default:

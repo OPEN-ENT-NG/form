@@ -1,5 +1,4 @@
 import { Box, Button, Paper, Stack, Typography } from "@cgi-learning-hub/ui";
-import { t } from "i18next";
 import { FC } from "react";
 
 import { ResponsePageType } from "~/core/enums";
@@ -15,6 +14,7 @@ import {
   TEXT_SECONDARY_COLOR,
 } from "~/core/style/colors";
 import { BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { t } from "~/i18n";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { mandatoryTitleStyle, questionStackStyle } from "./style";

@@ -1,8 +1,6 @@
-import { toast } from "react-toastify";
-
 import { QueryMethod, TagName } from "~/core/enums.ts";
 import { IPublicFormDTO } from "~/core/models/form/types.ts";
-import { t } from "~/i18n";
+import { handleGetFormError } from "~/core/utils.ts";
 
 import { emptySplitFormulairePublicApi } from "./emptySplitFormulairePublicApi.ts";
 
@@ -18,8 +16,7 @@ export const formApi = emptySplitFormulairePublicApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (err) {
-          console.error("formulaire.public.error.formService.get", err);
-          toast.error(t("formulaire.public.error.formService.get"));
+          handleGetFormError(err, "formulaire.public.error.formService.get");
         }
       },
     }),
