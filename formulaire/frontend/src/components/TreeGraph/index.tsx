@@ -126,13 +126,13 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
         if (isSection(formElement)) {
           const conditionalQuestion = formElement.questions.find((question: IQuestion) => question.conditional);
           if (conditionalQuestion) {
-            addChoicesLink(formElement, conditionalQuestion.choices ?? [], formElementLinks);
+            addChoicesLink(formElement, conditionalQuestion.choices ?? [], formElementLinks, conditionalQuestion);
           } else {
             const nextFormElementId = getNextFormElementSection(formElement, formElements)?.id;
             addFormElementLink(formElement.id ?? 0, nextFormElementId ?? 0, formElementLinks);
           }
         } else if (isQuestion(formElement) && formElement.conditional) {
-          addChoicesLink(formElement, formElement.choices ?? [], formElementLinks);
+          addChoicesLink(formElement, formElement.choices ?? [], formElementLinks, formElement);
         } else {
           const nextFormElementId = getFollowingFormElement(formElement, formElements)?.id;
           addFormElementLink(formElement.id ?? 0, nextFormElementId ?? 0, formElementLinks);
@@ -145,9 +145,14 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
       formElementLinks.push([`${formElementId}`, `${nextFormElementId}`, { label: "" }]);
     };
 
-    const addChoicesLink = (formElement: IFormElement, choices: IQuestionChoice[], formElementLinks: any[]): void => {
+    const addChoicesLink = (
+      formElement: IFormElement,
+      choices: IQuestionChoice[],
+      formElementLinks: any[],
+      parentQuestion?: IQuestion,
+    ): void => {
       for (const choice of choices) {
-        const nextFormElementId = getNextFormElementQuestion(choice, formElements)?.id;
+        const nextFormElementId = getNextFormElementQuestion(choice, formElements, parentQuestion)?.id;
         addFormElementLink(formElement.id ?? 0, nextFormElementId || 0, formElementLinks);
       }
     };
