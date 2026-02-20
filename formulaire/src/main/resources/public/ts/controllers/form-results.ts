@@ -81,8 +81,9 @@ export const formResultsController = ng.controller('FormResultsController', ['$s
 
         vm.export = async (typeExport: Exports) : Promise<void> => {
             let allQuestions: Question[] = vm.formElements.getAllQuestions().all;
-            let nbResponsesForFirstElement: number = allQuestions.length > 0 ? await responseService.countByQuestions(allQuestions.map(q => q.id)) : 0;
-            if (nbResponsesForFirstElement <= 0) {
+            //export only if we have at least one response on the form
+            let nbResponses: number = allQuestions.length > 0 ? await responseService.countByQuestions(allQuestions.map(q => q.id)) : 0;
+            if (nbResponses <= 0) {
                 notify.error(idiom.translate('formulaire.export.no.responses'));
                 return;
             }
