@@ -1,5 +1,6 @@
 import ApexCharts, { ApexOptions } from "apexcharts";
 
+import { RESULT_CHART_PDF } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
@@ -34,12 +35,14 @@ export const generateChartImage = async (
       type,
       animations: { enabled: false },
       toolbar: { show: false },
+      width: RESULT_CHART_PDF.width,
+      height: RESULT_CHART_PDF.height,
     },
   });
 
   await chart.render();
 
-  const image = (await chart.dataURI({ scale: 2 })) as {
+  const image = (await chart.dataURI()) as {
     imgURI: string;
   };
 
