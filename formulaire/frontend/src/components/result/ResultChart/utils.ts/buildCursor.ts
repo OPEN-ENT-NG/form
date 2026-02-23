@@ -33,6 +33,9 @@ export const getCursorChartProps = (
   const options: ApexOptions = {
     chart: {
       zoom: { enabled: false },
+      animations: {
+        enabled: false,
+      },
       toolbar: {
         show: false,
       },
@@ -44,11 +47,26 @@ export const getCursorChartProps = (
       labels: {
         formatter: (val: string) => Math.round(Number(val)).toString(),
       },
-      title: { text: t("formulaire.selected.values"), offsetY: 70 },
+      title: {
+        text: t("formulaire.selected.values"),
+        offsetY: 70,
+        style: {
+          fontSize: "14px",
+          fontFamily: "Helvetica, Arial, sans-serif",
+          fontWeight: 500,
+        },
+      },
     },
     yaxis: {
       min: 0,
-      title: { text: t("formulaire.nb.responses") },
+      title: {
+        text: t("formulaire.nb.responses"),
+        style: {
+          fontSize: "14px",
+          fontFamily: "Helvetica, Arial, sans-serif",
+          fontWeight: 500,
+        },
+      },
       labels: {
         formatter: (val: number) => Math.round(val).toString(),
       },
