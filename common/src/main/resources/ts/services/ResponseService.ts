@@ -18,6 +18,7 @@ export interface ResponseService {
     listMineByDistributionAndQuestions(questionIds: number[], distributionId: number) : Promise<Response[]>;
     listByDistribution(distributionId: number) : Promise<any>;
     countByFormElement(formElement: FormElement) : Promise<number>;
+    countByQuestions(questionIds: number[]) : Promise<number>;
     save(response: Response, questionType: number) : Promise<any>;
     saveMultiple(mapQuestionResponsesToSave: Map<Question, Response[]>, distributionId: number) : Promise<Response[]>;
     create(response: Response) : Promise<any>;
@@ -97,6 +98,15 @@ export const responseService: ResponseService = {
                     questionIds = questionIds.concat(formElement.children.all.map((q: Question) => q.id));
                 }
             }
+            return DataUtils.getData(await http.get(`/formulaire/responses/count`, { params: questionIds })).count;
+        } catch(err) {
+            notify.error(idiom.translate('formulaire.error.responseService.get'));
+            throw err;
+        }
+    },
+
+    async countByQuestions (questionIds: number[]) : Promise<number> {
+        try {
             return DataUtils.getData(await http.get(`/formulaire/responses/count`, { params: questionIds })).count;
         } catch(err) {
             notify.error(idiom.translate('formulaire.error.responseService.get'));
