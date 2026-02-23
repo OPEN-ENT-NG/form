@@ -133,3 +133,13 @@ export const MAX_TREE_ZOOM = 295;
 export const STEPS_TREE_ZOOM = 20;
 
 export const CHOICE_ID_FOR_NO_RESPONSE = "choiceIdForNoResponse";
+
+export const RESULT_CHART_HEIGHTS = {
+  pie: 300,
+  default: 400,
+};
+
+export const RESULT_CHART_PDF = {
+  height: 400,
+  width: 600,
+};

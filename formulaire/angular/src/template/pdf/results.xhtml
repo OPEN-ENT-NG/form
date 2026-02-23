@@ -59,6 +59,9 @@
         .section {
             border: thin solid #e9ebef;
         }
+        .section .question {
+            padding: 10px;
+        }
         .section h4.top {
             background-color: #2a9bc7;
             color: white;
@@ -164,71 +167,71 @@
                     {{#description}}{{{description}}}{{/description}}
                     <em>{{^description}}Pas de description{{/description}}</em>
                 </div>
-            </div>
 
-            {{#questions}}
-            <div class="question nobreakpage">
-                <h4>
-                    {{title}}{{#mandatory}}<span style="color:red;margin-left:10px">*</span>{{/mandatory}}
-                </h4>
+                {{#questions}}
+                <div class="question nobreakpage">
+                    <h4>
+                        {{title}}{{#mandatory}}<span style="color:red;margin-left:10px">*</span>{{/mandatory}}
+                    </h4>
 
-                {{#question_type}}
-                <div class="main">
-                    {{#type_freetext}}
-                    <div class="response">{{{statement}}}</div>
-                    {{/type_freetext}}
+                    {{#question_type}}
+                    <div class="main">
+                        {{#type_freetext}}
+                        <div class="response">{{{statement}}}</div>
+                        {{/type_freetext}}
 
-                    {{#type_text}}
-                    {{#responses}}
-                    <div class="response">
-                        {{^anonymous}}
-                        <span class="eight inline">
-                            <span class="four inline">{{date_response}}</span>
-                            <span class="inline">{{responder_name}}</span>
-                        </span>
-                        {{/anonymous}}
-                        {{#anonymous}}
-                        <span class="four inline">{{date_response}}</span>
-                        {{/anonymous}}
-                        <span>
-                            {{#filename}}{{filename}}{{/filename}}
-                            {{^filename}}{{{answer}}}{{/filename}}
-                        </span>
-                    </div>
-                    {{/responses}}
-                    {{/type_text}}
-
-                    {{#type_graph}}
-                        <div class="response">
-                            <span><img src="{{graphData}}" alt="Graph"/></span>
-                        </div>
-                        {{#is_cursor}}
-                        <h5 class="graph-subtitle">Moyenne des réponses : {{cursor_average}}</h5>
-                        {{/is_cursor}}
-                        {{#has_custom_answers}}
-                        <h5 class="graph-subtitle">Détails des réponses 'Autres' : </h5>
+                        {{#type_text}}
                         {{#responses}}
-                            {{#custom_answer}}
-                            <div class="response">
-                                {{^anonymous}}
-                                <span class="eight inline">
-                                    <span class="four inline">{{date_response}}</span>
-                                    <span class="inline">{{responder_name}}</span>
-                                </span>
-                                {{/anonymous}}
-                                {{#anonymous}}
+                        <div class="response">
+                            {{^anonymous}}
+                            <span class="eight inline">
                                 <span class="four inline">{{date_response}}</span>
-                                {{/anonymous}}
-                                <span>{{{custom_answer}}}</span>
-                            </div>
-                            {{/custom_answer}}
+                                <span class="inline">{{responder_name}}</span>
+                            </span>
+                            {{/anonymous}}
+                            {{#anonymous}}
+                            <span class="four inline">{{date_response}}</span>
+                            {{/anonymous}}
+                            <span>
+                                {{#filename}}{{filename}}{{/filename}}
+                                {{^filename}}{{{answer}}}{{/filename}}
+                            </span>
+                        </div>
                         {{/responses}}
-                        {{/has_custom_answers}}
-                    {{/type_graph}}
+                        {{/type_text}}
+
+                        {{#type_graph}}
+                            <div class="response">
+                                <span><img src="{{graphData}}" alt="Graph"/></span>
+                            </div>
+                            {{#is_cursor}}
+                            <h5 class="graph-subtitle">Moyenne des réponses : {{cursor_average}}</h5>
+                            {{/is_cursor}}
+                            {{#has_custom_answers}}
+                            <h5 class="graph-subtitle">Détails des réponses 'Autres' : </h5>
+                            {{#responses}}
+                                {{#custom_answer}}
+                                <div class="response">
+                                    {{^anonymous}}
+                                    <span class="eight inline">
+                                        <span class="four inline">{{date_response}}</span>
+                                        <span class="inline">{{responder_name}}</span>
+                                    </span>
+                                    {{/anonymous}}
+                                    {{#anonymous}}
+                                    <span class="four inline">{{date_response}}</span>
+                                    {{/anonymous}}
+                                    <span>{{{custom_answer}}}</span>
+                                </div>
+                                {{/custom_answer}}
+                            {{/responses}}
+                            {{/has_custom_answers}}
+                        {{/type_graph}}
+                    </div>
+                    {{/question_type}}
                 </div>
-                {{/question_type}}
+                {{/questions}}
             </div>
-            {{/questions}}
         {{/is_question}}
     {{/form_elements}}
 </body>

@@ -81,7 +81,7 @@ export const isFormFilled = (form: IForm, distributions: IDistribution[]): boole
 };
 
 export const getFormNbResponsesText = (nbResponses: number) => {
-  const text = t(nbResponses > 1 ? "formulaire.responses" : "formulaire.response");
+  const text = t("formulaire.response", { count: nbResponses });
   return `${nbResponses.toString()} ${text}`;
 };
 
