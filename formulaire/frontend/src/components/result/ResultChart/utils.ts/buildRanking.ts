@@ -35,11 +35,25 @@ export const getRankingChartProps = (
       },
     },
     xaxis: {
-      title: { text: t("formulaire.number.responses") },
+      title: {
+        text: t("formulaire.number.responses"),
+        style: {
+          fontSize: "14px",
+          fontFamily: "Helvetica, Arial, sans-serif",
+          fontWeight: 500,
+        },
+      },
       categories,
     },
     yaxis: {
-      title: { text: t("formulaire.position.selected") },
+      title: {
+        text: t("formulaire.position.selected"),
+        style: {
+          fontSize: "14px",
+          fontFamily: "Helvetica, Arial, sans-serif",
+          fontWeight: 500,
+        },
+      },
     },
     colors: GRAPH_COLORS,
     chart: {

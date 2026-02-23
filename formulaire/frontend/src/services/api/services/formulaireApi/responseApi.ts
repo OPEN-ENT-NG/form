@@ -1,5 +1,11 @@
 import { QueryMethod, TagName } from "~/core/enums.ts";
-import { IResponse, IResponseDTO, IResponsePayload } from "~/core/models/response/type.ts";
+import {
+  IPdfImagesPayload,
+  IResponse,
+  IResponseDTO,
+  IResponsePayload,
+  IUploadedFileResponse,
+} from "~/core/models/response/type.ts";
 import { transformResponses } from "~/core/models/response/utils.ts";
 import { handleErrorApi } from "~/core/utils.ts";
 
@@ -107,6 +113,58 @@ export const responseApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+    exportResponsesPdf: builder.mutation<ArrayBuffer, { formId: number; images: IPdfImagesPayload }>({
+      query: ({ formId, images }) => ({
+        url: `responses/export/${formId}/pdf`,
+        method: QueryMethod.POST,
+        body: images,
+        responseHandler: (response) => response.arrayBuffer(),
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          const { data, meta } = await queryFulfilled;
+
+          const blob = new Blob([data], {
+            type: "application/pdf",
+          });
+
+          const contentDisposition = meta?.response?.headers.get("Content-Disposition");
+
+          const fileName = contentDisposition?.split("filename=")[1] ?? "export.pdf";
+
+          const link = document.createElement("a");
+          link.href = window.URL.createObjectURL(blob);
+          link.download = fileName.replace(/['"]/g, "");
+
+          document.body.appendChild(link);
+          link.click();
+
+          setTimeout(() => {
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(link.href);
+          }, 100);
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.responseService.export");
+        }
+      },
+    }),
+    createFilesForPdfExport: builder.mutation<IUploadedFileResponse[], { filesFormData: FormData; nbFiles: number }>({
+      query: ({ filesFormData, nbFiles }) => ({
+        url: "/files",
+        method: QueryMethod.POST,
+        body: filesFormData,
+        headers: {
+          "Number-Files": String(nbFiles),
+        },
+      }),
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.utilsService.postMultipleFiles");
+        }
+      },
+    }),
     getAllResponses: builder.query<IResponse[], number>({
       query: (formId: number) => ({
         url: `/forms/${formId}/responses`,
@@ -124,5 +182,7 @@ export const {
   useDeleteResponsesMutation,
   useDeleteMultipleByQuestionAndDistributionMutation,
   useExportResponsesCsvMutation,
+  useExportResponsesPdfMutation,
+  useCreateFilesForPdfExportMutation,
   useGetAllResponsesQuery,
 } = responseApi;

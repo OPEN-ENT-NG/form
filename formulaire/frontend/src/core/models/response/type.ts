@@ -84,3 +84,22 @@ export interface ICompleteResponse extends IResponse {
   publicKey: string | null;
   captchaId: string | null;
 }
+
+export interface IPdfImagesPayload {
+  idImagesPerQuestion: Record<string, string>;
+  idImagesForRemove: string[];
+}
+
+export interface IUploadedFileMetadata {
+  name: string;
+  "content-type": string;
+  content_transfer_encoding: string | null;
+  filename: string;
+  size: number;
+  charset: string;
+}
+
+export interface IUploadedFileResponse {
+  id: string;
+  metadata: IUploadedFileMetadata;
+}

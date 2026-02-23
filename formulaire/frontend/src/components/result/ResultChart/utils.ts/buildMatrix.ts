@@ -46,7 +46,14 @@ export const getMatrixChartProps = (
     },
     yaxis: {
       min: 0,
-      title: { text: t("formulaire.number.responses") },
+      title: {
+        text: t("formulaire.number.responses"),
+        style: {
+          fontSize: "14px",
+          fontFamily: "Helvetica, Arial, sans-serif",
+          fontWeight: 500,
+        },
+      },
       labels: {
         formatter: (val: number) => Math.round(val).toString(),
       },

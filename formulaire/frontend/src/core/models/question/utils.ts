@@ -266,3 +266,14 @@ export const getQuestionTypeFromValue = (value: string | number | null | undefin
 
   return numericValue as QuestionTypes;
 };
+
+export const isQuestionTypeWithGraph = (question: IQuestion) => {
+  return (
+    question.questionType === QuestionTypes.SINGLEANSWER ||
+    question.questionType === QuestionTypes.MULTIPLEANSWER ||
+    question.questionType === QuestionTypes.SINGLEANSWERRADIO ||
+    question.questionType === QuestionTypes.MATRIX ||
+    question.questionType === QuestionTypes.CURSOR ||
+    question.questionType === QuestionTypes.RANKING
+  );
+};
