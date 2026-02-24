@@ -1,5 +1,5 @@
 import { Box, Button, DialogContent, EmptyState, Typography, ZoomControl } from "@cgi-learning-hub/ui";
-import { FC, useCallback, useMemo, useRef, useState } from "react";
+import { FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { sectionFooterStyle } from "~/components/CreationSection/style";
@@ -12,11 +12,12 @@ import { IFormTreeViewHandle } from "~/components/TreeGraph/types";
 import { useElementHeight } from "~/containers/home/HomeView/utils";
 import { FORMULAIRE, MAX_TREE_ZOOM, MIN_TREE_ZOOM, STEPS_TREE_ZOOM } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
-import { IFormElement } from "~/core/models/formElement/types";
 import { BreakpointVariant, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
+import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
+import { updateElementInList } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "../CreationView/style";
@@ -25,16 +26,26 @@ import { getRecursiveFolderParents, useGetTreeHeaderButtons } from "./utils";
 
 export const TreeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
-  const { form, folders, formElementsList, currentEditingElement, setCurrentEditingElement, setScrollToQuestionId } =
-    useCreation();
+  const {
+    form,
+    folders,
+    formElementsList,
+    currentEditingElement,
+    setCurrentEditingElement,
+    setScrollToQuestionId,
+    handleDeleteFormElement,
+    saveQuestion,
+    saveSection,
+    setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue,
+  } = useCreation();
   const [headerRef] = useElementHeight<HTMLDivElement>();
   const headerButtons = useGetTreeHeaderButtons();
   const { navigateToHome, navigateToFormEdit } = useFormulaireNavigation();
 
   const { isTablet } = useGlobal();
   const { isTheme1D } = useTheme();
-
-  const memoizedFormElements = useMemo(() => formElementsList, [formElementsList]);
 
   const [treeKey, setTreeKey] = useState(0);
 
@@ -50,21 +61,33 @@ export const TreeView: FC = () => {
     return isTablet ? errorView : desktopView;
   };
 
-  const handleEditElement = useCallback(
-    (formElement: IFormElement) => {
-      toggleModal(ModalType.TREE_FORM_UPDATE);
-      setCurrentEditingElement(formElement);
-    },
-    [setCurrentEditingElement, toggleModal],
-  );
-
   const navigateToQuestion = () => {
     if (!form?.id) return;
     setScrollToQuestionId(currentEditingElement?.id ?? 0);
     navigateToFormEdit(form.id);
   };
 
-  const handleCloseModal = () => {
+  const { saveFormElement } = useClickAwayEditingElement(
+    handleDeleteFormElement,
+    setCurrentEditingElement,
+    formElementsList,
+    setFormElementsList,
+    newChoiceValue,
+    setNewChoiceValue,
+    saveQuestion,
+    saveSection,
+  );
+
+  const [frozenFormElements, setFrozenFormElements] = useState(formElementsList);
+
+  const handleCloseModal = async () => {
+    if (currentEditingElement) {
+      const updatedList = updateElementInList(formElementsList, currentEditingElement);
+      await saveFormElement(currentEditingElement, updatedList);
+      setFrozenFormElements(updatedList);
+    } else {
+      setFrozenFormElements(formElementsList);
+    }
     setCurrentEditingElement(null);
     toggleModal(ModalType.TREE_FORM_UPDATE);
     setTreeKey((prev) => prev + 1);
@@ -127,22 +150,31 @@ export const TreeView: FC = () => {
               <FormTreeView
                 key={treeKey}
                 ref={treeRef}
-                formElements={memoizedFormElements}
+                formElements={frozenFormElements}
                 form={form}
                 onZoomChange={setZoomLevel}
-                onEditElement={handleEditElement}
+                onEditElement={(formElement) => {
+                  toggleModal(ModalType.TREE_FORM_UPDATE);
+                  setCurrentEditingElement(formElement);
+                }}
               />
 
               <ResponsiveDialog
                 open={currentEditingElement !== null && showTreeFormUpdate}
-                onClose={handleCloseModal}
+                onClose={() => {
+                  void handleCloseModal();
+                }}
                 maxWidth={BreakpointVariant.MD}
                 fullWidth
               >
                 <DialogContent>
                   {currentEditingElement && showTreeFormUpdate && (
                     <>
-                      <CreationSortableItem formElement={currentEditingElement} isPreview={false} />
+                      <CreationSortableItem
+                        key={currentEditingElement.id}
+                        formElement={currentEditingElement}
+                        isPreview={false}
+                      />
                       <Box sx={sectionFooterStyle}>
                         <Button onClick={navigateToQuestion} variant="text">
                           <Typography color="secondary">{t("formulaire.section.new.question")}</Typography>
