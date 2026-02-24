@@ -60,3 +60,9 @@ export const getDisplayedResponseStat = (
 
   return `${nbResponses} ${t(i18nKey, { count: nbResponses })} (${percentage.toFixed(2)}%)`;
 };
+
+export const getAverage = (allResponses: ICompleteResponse[]) => {
+  if (allResponses.length === 0) return 0;
+  const sum = allResponses.reduce((acc, response) => acc + Number(response.answer), 0);
+  return sum / allResponses.length;
+};
