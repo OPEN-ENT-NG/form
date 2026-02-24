@@ -14,32 +14,35 @@ export const ResultAnswer: FC<IResultAnswerProps> = ({ completeResponse, questio
     if (completeResponse.files.length) {
       return (
         <Stack>
-          {completeResponse.files.map((file) => {
-            return (
-              <Link
-                key={`${file.id}-${file.filename}`}
-                href={`/formulaire/responses/files/${file.id}/download`}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <FileDownloadIcon />
-                {file.filename}
-              </Link>
-            );
-          })}
+          {completeResponse.files.map((file) => (
+            <Link
+              key={`${file.id}-${file.filename}`}
+              href={`/formulaire/responses/files/${file.id}/download`}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <FileDownloadIcon />
+              {file.filename}
+            </Link>
+          ))}
         </Stack>
       );
     } else {
       return DEFAULT_DISPLAY_ANSWER_VALUE;
     }
   }
-  const answer = completeResponse.customAnswer ? completeResponse.customAnswer : completeResponse.answer;
+
+  const answer = completeResponse.customAnswer ?? completeResponse.answer;
   if (!answer) return DEFAULT_DISPLAY_ANSWER_VALUE;
-  if (answer instanceof Date) {
-    return dayjs(answer).format(DateFormat.DAY_MONTH_YEAR);
+
+  const parsedDate = dayjs(answer);
+  if (parsedDate.isValid()) {
+    return parsedDate.format(DateFormat.DAY_MONTH_YEAR);
   }
+
   if (questionType === QuestionTypes.LONGANSWER) {
     return <span dangerouslySetInnerHTML={{ __html: answer }} />;
   }
-  return answer;
+
+  return answer.toString();
 };
