@@ -204,13 +204,11 @@ export const TreeView: FC = () => {
                 </DialogTitle>
                 <DialogContent>
                   {currentEditingElement && showTreeFormUpdate && (
-                    <>
-                      <CreationSortableItem
-                        key={currentEditingElement.id}
-                        formElement={currentEditingElement}
-                        isPreview={false}
-                      />
-                    </>
+                    <CreationSortableItem
+                      key={currentEditingElement.id}
+                      formElement={currentEditingElement}
+                      isPreview={false}
+                    />
                   )}
                 </DialogContent>
                 <DialogActions sx={{ justifyContent: "space-between" }}>
