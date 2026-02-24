@@ -5,6 +5,7 @@ export interface IFormTreeViewProps {
   form: IForm;
   formElements: IFormElement[];
   onZoomChange?: (scale: number) => void;
+  onEditElement?: (element: IFormElement) => void;
 }
 
 export interface ILine {

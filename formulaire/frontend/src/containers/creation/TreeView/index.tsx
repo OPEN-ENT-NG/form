@@ -89,7 +89,15 @@ export const TreeView: FC = () => {
             <Typography fontStyle={"italic"}>{t("formulaire.mouse.legend")}</Typography>
           </Box>
           {form && (
-            <FormTreeView ref={treeRef} formElements={formElementsList} form={form} onZoomChange={setZoomLevel} />
+            <FormTreeView
+              ref={treeRef}
+              formElements={formElementsList}
+              form={form}
+              onZoomChange={setZoomLevel}
+              onEditElement={(formElement) => {
+                console.log(formElement);
+              }}
+            />
           )}
         </Box>
       </Box>

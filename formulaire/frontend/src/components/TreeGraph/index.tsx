@@ -14,8 +14,12 @@ import "./tree.scss";
 import { IArrow, IFormTreeViewHandle, IFormTreeViewProps, ILine } from "./types";
 import { INITIAL_TREE_SCALE } from "~/core/constants";
 
+const editIcon = `<svg class="tree-edit-icon" focusable="false" viewBox="0 0 24 24" style="width:20.5px;height:19.5px;fill:currentColor;opacity:0.5;cursor:pointer;flex-shrink:0;margin-left:auto;margin-right:8px;outline:none;border:none;">
+  <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+</svg>`;
+
 export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
-  ({ form, formElements, onZoomChange }, ref) => {
+  ({ form, formElements, onZoomChange, onEditElement }, ref) => {
     const mainGraphRef = useRef<any>(null);
     const zoomRef = useRef<d3.ZoomBehavior<Element, unknown> | null>(null);
     const svgRef = useRef<any>(null);
@@ -93,6 +97,22 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
 
       render_graph(render, nodes, edgeList, inner, svg);
       centerGraph(svg, zoom);
+
+      svg.on("click", (event: MouseEvent) => {
+        const target = event.target as Element;
+        if (!target.closest(".tree-edit-icon")) return;
+
+        event.stopPropagation();
+
+        const nodeEl = target.closest(".node") as Element | null;
+        if (!nodeEl) return;
+
+        const nodeId = d3.select(nodeEl).datum() as string;
+        const formElement = formElements.find((el) => String(el.id) === nodeId);
+        if (formElement) {
+          onEditElement?.(formElement);
+        }
+      });
     };
 
     const setTreeNodeLabel = (element: IFormElement): string => {
@@ -245,14 +265,16 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
 
     const getHtmlNode = (formElement: IFormElement): string => {
       if (isQuestion(formElement)) {
-        return `<div class="tree-view-question">
+        return `<div class="tree-view-question" style="display:flex;align-items:center;">
                 <img src="${displayTypeIcon(formElement.questionType)}"/>
-                <div class="title ellipsis">${formElement.title}</div>
+                <div class="title ellipsis" style="flex:1;min-width:0;">${formElement.title}</div>
+                ${editIcon}
               </div>`;
       } else if (isSection(formElement)) {
         return `<div class="tree-view-section">
-                <div class="top twelve">
-                  <span class="title ellipsis">${formElement.title}</span>
+                <div class="top twelve" style="display:flex;align-items:center;">
+                  <span class="title ellipsis" style="flex:1;min-width:0;margin-left:8px;">${formElement.title}</span>
+                  ${editIcon}
                 </div>
                 <div class="main twelve">
                   ${formElement.questions.map((q: IQuestion) => getHtmlNode(q)).join("")}
@@ -260,8 +282,9 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
               </div>`;
       } else {
         return `<div class="tree-view-section">
-                <div class="top no-main twelve">
-                  <span class="title ellipsis">${formElement.title}</span>
+                <div class="top no-main twelve" style="display:flex;align-items:center;">
+                  <span class="title ellipsis" style="flex:1;min-width:0;">${formElement.title}</span>
+                  ${editIcon}
                 </div>
               </div>`;
       }
