@@ -1,8 +1,16 @@
-import { Box, Button, DialogContent, EmptyState, Typography, ZoomControl } from "@cgi-learning-hub/ui";
+import {
+  Box,
+  Button,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  EmptyState,
+  Typography,
+  ZoomControl,
+} from "@cgi-learning-hub/ui";
 import { FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { sectionFooterStyle } from "~/components/CreationSection/style";
 import { CreationSortableItem } from "~/components/CreationSortableItem";
 import { Header } from "~/components/Header";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
@@ -12,7 +20,8 @@ import { IFormTreeViewHandle } from "~/components/TreeGraph/types";
 import { useElementHeight } from "~/containers/home/HomeView/utils";
 import { FORMULAIRE, MAX_TREE_ZOOM, MIN_TREE_ZOOM, STEPS_TREE_ZOOM } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
-import { BreakpointVariant, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
+import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
@@ -82,7 +91,7 @@ export const TreeView: FC = () => {
 
   const [frozenFormElements, setFrozenFormElements] = useState(formElementsList);
 
-  const handleCloseModal = async () => {
+  const handleRegisterAndCloseModal = async () => {
     if (currentEditingElement) {
       const hasChanged = JSON.stringify(currentEditingElement) !== JSON.stringify(originalEditingElementRef.current);
       const updatedList = updateElementInList(formElementsList, currentEditingElement);
@@ -93,10 +102,14 @@ export const TreeView: FC = () => {
     } else {
       setFrozenFormElements(formElementsList);
     }
+    handleCloseModal();
+    setTreeKey((prev) => prev + 1);
+  };
+
+  const handleCloseModal = () => {
     originalEditingElementRef.current = null;
     setCurrentEditingElement(null);
     toggleModal(ModalType.TREE_FORM_UPDATE);
-    setTreeKey((prev) => prev + 1);
   };
 
   const applyZoom = (value: number) => {
@@ -169,11 +182,18 @@ export const TreeView: FC = () => {
               <ResponsiveDialog
                 open={currentEditingElement !== null && showTreeFormUpdate}
                 onClose={() => {
-                  void handleCloseModal();
+                  void handleRegisterAndCloseModal();
                 }}
                 maxWidth={BreakpointVariant.MD}
                 fullWidth
               >
+                <DialogTitle
+                  color={TEXT_PRIMARY_COLOR}
+                  variant={TypographyVariant.H2}
+                  fontWeight={TypographyFontStyle.BOLD}
+                >
+                  {t("formulaire.form.edit.question")}
+                </DialogTitle>
                 <DialogContent>
                   {currentEditingElement && showTreeFormUpdate && (
                     <>
@@ -182,14 +202,20 @@ export const TreeView: FC = () => {
                         formElement={currentEditingElement}
                         isPreview={false}
                       />
-                      <Box sx={sectionFooterStyle}>
-                        <Button onClick={navigateToQuestion} variant="text">
-                          <Typography color="secondary">{t("formulaire.section.new.question")}</Typography>
-                        </Button>
-                      </Box>
                     </>
                   )}
                 </DialogContent>
+                <DialogActions sx={{ justifyContent: "space-between" }}>
+                  <Button onClick={navigateToQuestion} variant="text">
+                    <Typography color="secondary">{t("formulaire.form.edit.redirection")}</Typography>
+                  </Button>
+                  <Box sx={{ display: "flex", gap: 2 }}>
+                    <Button onClick={handleCloseModal}>{t("formulaire.cancel")}</Button>
+                    <Button variant="contained" onClick={() => void handleRegisterAndCloseModal()}>
+                      {t("formulaire.save")}
+                    </Button>
+                  </Box>
+                </DialogActions>
               </ResponsiveDialog>
             </>
           )}
