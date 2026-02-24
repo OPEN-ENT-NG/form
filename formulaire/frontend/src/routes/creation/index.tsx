@@ -1,12 +1,12 @@
 import { FC } from "react";
+import { Outlet } from "react-router-dom";
 
-import { CreationView } from "~/containers/creation/CreationView";
 import { CreationProvider } from "~/providers/CreationProvider";
 
-export const Creation: FC = () => {
+export const CreationOutlet: FC = () => {
   return (
     <CreationProvider>
-      <CreationView />
+      <Outlet />
     </CreationProvider>
   );
 };

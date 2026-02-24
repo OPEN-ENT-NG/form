@@ -18,11 +18,27 @@ const routes = [
         },
       },
       {
-        path: FRONT_ROUTES.formEdit.path,
+        path: FRONT_ROUTES.form.path,
         async lazy() {
-          const { Creation } = await import("./creation");
-          return { Component: Creation };
+          const { CreationOutlet } = await import("./creation");
+          return { Component: CreationOutlet };
         },
+        children: [
+          {
+            path: "edit",
+            async lazy() {
+              const { Creation } = await import("./creation/creation");
+              return { Component: Creation };
+            },
+          },
+          {
+            path: "tree",
+            async lazy() {
+              const { Tree } = await import("./creation/tree");
+              return { Component: Tree };
+            },
+          },
+        ],
       },
       {
         path: FRONT_ROUTES.formPreview.path,
@@ -41,7 +57,7 @@ const routes = [
       {
         path: FRONT_ROUTES.formTree.path,
         async lazy() {
-          const { Tree } = await import("./tree");
+          const { Tree } = await import("./creation/tree");
           return { Component: Tree };
         },
       },

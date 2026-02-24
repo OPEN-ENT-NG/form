@@ -20,6 +20,7 @@ export const defineRoute = <const Params extends readonly string[] | undefined =
 export const FRONT_ROUTES = {
   home: defineRoute("/"),
 
+  form: defineRoute("/form/:formId", ["formId"]),
   formEdit: defineRoute("/form/:formId/edit", ["formId"]),
   formPreview: defineRoute("/form/:formId/preview", ["formId"]),
   formResult: defineRoute("/form/:formId/result", ["formId"]),

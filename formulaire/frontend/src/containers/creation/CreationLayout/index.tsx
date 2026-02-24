@@ -1,5 +1,5 @@
 import { Box, Button, EmptyState } from "@cgi-learning-hub/ui";
-import { FC } from "react";
+import { FC, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 
 import { EmptyForm } from "~/components/SVG/EmptyForm";
@@ -16,9 +16,26 @@ import { CreationLayoutWrapper } from "./style";
 import { ICreationLayoutProps } from "./types";
 
 export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
-  const { form, formElementsList } = useCreation();
+  const { form, formElementsList, scrollToQuestionId, currentEditingElement } = useCreation();
   const { t } = useTranslation(FORMULAIRE);
   const { toggleModal } = useGlobal();
+
+  useEffect(() => {
+    if (currentEditingElement?.position) {
+      // Scroll when arriving from recap page
+      if (!scrollToQuestionId) {
+        window.scrollTo({ top: 0 });
+        return;
+      }
+      requestAnimationFrame(() => {
+        const el = document.getElementById(`question-${scrollToQuestionId}`);
+        el?.scrollIntoView({
+          behavior: "smooth",
+          block: "start",
+        });
+      });
+    }
+  }, [currentEditingElement, scrollToQuestionId]);
 
   if (!form) {
     return;
