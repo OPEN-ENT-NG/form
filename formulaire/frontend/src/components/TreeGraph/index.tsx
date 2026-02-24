@@ -46,9 +46,15 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
 
     useImperativeHandle(ref, () => ({ zoomTo }), [zoomTo]);
 
+    const isInitializedRef = useRef(false);
+
     useEffect(() => {
       if (formElements.length === 0) return;
-      initD3Dagre();
+
+      const isFirstInit = !isInitializedRef.current;
+      isInitializedRef.current = true;
+
+      initD3Dagre(isFirstInit);
 
       const handleResize = () => {
         const svg = d3.select("#tree-svg");
@@ -78,7 +84,7 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
       }
     };
 
-    const initD3Dagre = (): void => {
+    const initD3Dagre = (shouldCenter: boolean): void => {
       const nodes = initNodes();
       const edgeList = initEdgeList();
       const render = new dagreD3.render();
@@ -96,7 +102,10 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
       innerRef.current = inner;
 
       render_graph(render, nodes, edgeList, inner, svg);
-      centerGraph(svg, zoom);
+
+      if (shouldCenter) {
+        centerGraph(svg, zoom);
+      }
 
       svg.on("click", (event: MouseEvent) => {
         const target = event.target as Element;

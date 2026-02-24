@@ -1,5 +1,5 @@
 import { Box, Button, DialogContent, EmptyState, Typography, ZoomControl } from "@cgi-learning-hub/ui";
-import { FC, useRef, useState } from "react";
+import { FC, useCallback, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { sectionFooterStyle } from "~/components/CreationSection/style";
@@ -11,7 +11,8 @@ import { FormTreeView } from "~/components/TreeGraph";
 import { IFormTreeViewHandle } from "~/components/TreeGraph/types";
 import { useElementHeight } from "~/containers/home/HomeView/utils";
 import { FORMULAIRE, MAX_TREE_ZOOM, MIN_TREE_ZOOM, STEPS_TREE_ZOOM } from "~/core/constants";
-import { ClickAwayDataType } from "~/core/enums";
+import { ClickAwayDataType, ModalType } from "~/core/enums";
+import { IFormElement } from "~/core/models/formElement/types";
 import { BreakpointVariant, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useTheme } from "~/hook/useTheme";
@@ -33,14 +34,29 @@ export const TreeView: FC = () => {
   const { isTablet } = useGlobal();
   const { isTheme1D } = useTheme();
 
+  const memoizedFormElements = useMemo(() => formElementsList, [formElementsList]);
+
   const [treeKey, setTreeKey] = useState(0);
 
   const treeRef = useRef<IFormTreeViewHandle>(null);
   const [zoomLevel, setZoomLevel] = useState(75);
 
+  const {
+    displayModals: { showTreeFormUpdate },
+    toggleModal,
+  } = useGlobal();
+
   const selectView = () => {
     return isTablet ? errorView : desktopView;
   };
+
+  const handleEditElement = useCallback(
+    (formElement: IFormElement) => {
+      toggleModal(ModalType.TREE_FORM_UPDATE);
+      setCurrentEditingElement(formElement);
+    },
+    [setCurrentEditingElement, toggleModal],
+  );
 
   const navigateToQuestion = () => {
     if (!form?.id) return;
@@ -50,6 +66,7 @@ export const TreeView: FC = () => {
 
   const handleCloseModal = () => {
     setCurrentEditingElement(null);
+    toggleModal(ModalType.TREE_FORM_UPDATE);
     setTreeKey((prev) => prev + 1);
   };
 
@@ -110,22 +127,20 @@ export const TreeView: FC = () => {
               <FormTreeView
                 key={treeKey}
                 ref={treeRef}
-                formElements={formElementsList}
+                formElements={memoizedFormElements}
                 form={form}
                 onZoomChange={setZoomLevel}
-                onEditElement={(formElement) => {
-                  setCurrentEditingElement(formElement);
-                }}
+                onEditElement={handleEditElement}
               />
 
               <ResponsiveDialog
-                open={currentEditingElement !== null}
+                open={currentEditingElement !== null && showTreeFormUpdate}
                 onClose={handleCloseModal}
                 maxWidth={BreakpointVariant.MD}
                 fullWidth
               >
                 <DialogContent>
-                  {currentEditingElement && (
+                  {currentEditingElement && showTreeFormUpdate && (
                     <>
                       <CreationSortableItem formElement={currentEditingElement} isPreview={false} />
                       <Box sx={sectionFooterStyle}>
