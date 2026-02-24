@@ -1,15 +1,18 @@
-import { Box, Button, EmptyState, Typography, ZoomControl } from "@cgi-learning-hub/ui";
+import { Box, Button, DialogContent, EmptyState, Typography, ZoomControl } from "@cgi-learning-hub/ui";
 import { FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { CreationSortableItem } from "~/components/CreationSortableItem";
 import { Header } from "~/components/Header";
+import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
 import { FormTreeView } from "~/components/TreeGraph";
 import { IFormTreeViewHandle } from "~/components/TreeGraph/types";
 import { useElementHeight } from "~/containers/home/HomeView/utils";
 import { FORMULAIRE, MAX_TREE_ZOOM, MIN_TREE_ZOOM, STEPS_TREE_ZOOM } from "~/core/constants";
 import { ClickAwayDataType } from "~/core/enums";
-import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { IFormElement } from "~/core/models/formElement/types";
+import { BreakpointVariant, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
@@ -29,11 +32,19 @@ export const TreeView: FC = () => {
   const { isTablet } = useGlobal();
   const { isTheme1D } = useTheme();
 
+  const [editingElement, setEditingElement] = useState<IFormElement | null>(null);
+  const [treeKey, setTreeKey] = useState(0);
+
   const treeRef = useRef<IFormTreeViewHandle>(null);
   const [zoomLevel, setZoomLevel] = useState(75);
 
   const selectView = () => {
     return isTablet ? errorView : desktopView;
+  };
+
+  const handleCloseModal = () => {
+    setEditingElement(null);
+    setTreeKey((prev) => prev + 1);
   };
 
   const applyZoom = (value: number) => {
@@ -89,15 +100,29 @@ export const TreeView: FC = () => {
             <Typography fontStyle={"italic"}>{t("formulaire.mouse.legend")}</Typography>
           </Box>
           {form && (
-            <FormTreeView
-              ref={treeRef}
-              formElements={formElementsList}
-              form={form}
-              onZoomChange={setZoomLevel}
-              onEditElement={(formElement) => {
-                console.log(formElement);
-              }}
-            />
+            <>
+              <FormTreeView
+                key={treeKey}
+                ref={treeRef}
+                formElements={formElementsList}
+                form={form}
+                onZoomChange={setZoomLevel}
+                onEditElement={(formElement) => {
+                  setEditingElement(formElement);
+                }}
+              />
+
+              <ResponsiveDialog
+                open={editingElement !== null}
+                onClose={handleCloseModal}
+                maxWidth={BreakpointVariant.MD}
+                fullWidth
+              >
+                <DialogContent>
+                  {editingElement && <CreationSortableItem formElement={editingElement} isPreview={false} />}
+                </DialogContent>
+              </ResponsiveDialog>
+            </>
           )}
         </Box>
       </Box>
