@@ -26,46 +26,34 @@ import { isEnterPressed } from "~/core/utils";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
-import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
 import { updateElementInList } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 
 import { creationHedearStyle, creationViewStyle, emptyStateWrapper } from "../CreationView/style";
 import { treeStyle, treeTypographyStyle } from "./style";
+import { useSaveFormElement } from "./useSaveFormElement";
 import { getRecursiveFolderParents, useGetTreeHeaderButtons } from "./utils";
 
 export const TreeView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
-  const {
-    form,
-    folders,
-    formElementsList,
-    currentEditingElement,
-    setCurrentEditingElement,
-    setScrollToQuestionId,
-    handleDeleteFormElement,
-    saveQuestion,
-    saveSection,
-    setFormElementsList,
-    newChoiceValue,
-    setNewChoiceValue,
-  } = useCreation();
+  const { form, folders, formElementsList, currentEditingElement, setCurrentEditingElement, setScrollToQuestionId } =
+    useCreation();
   const [headerRef] = useElementHeight<HTMLDivElement>();
-  const headerButtons = useGetTreeHeaderButtons();
-  const { navigateToHome, navigateToFormEdit } = useFormulaireNavigation();
-
   const { isTablet } = useGlobal();
   const { isTheme1D } = useTheme();
-
-  const [treeKey, setTreeKey] = useState(0);
-
-  const treeRef = useRef<IFormTreeViewHandle>(null);
-  const [zoomLevel, setZoomLevel] = useState(75);
-
+  const headerButtons = useGetTreeHeaderButtons();
+  const { navigateToHome, navigateToFormEdit } = useFormulaireNavigation();
   const {
     displayModals: { showTreeFormUpdate },
     toggleModal,
   } = useGlobal();
+  const saveFormElement = useSaveFormElement();
+
+  const treeRef = useRef<IFormTreeViewHandle>(null);
+  const originalEditingElementRef = useRef<typeof currentEditingElement>(null);
+  const [frozenFormElements, setFrozenFormElements] = useState(formElementsList);
+  const [treeKey, setTreeKey] = useState(0);
+  const [zoomLevel, setZoomLevel] = useState(75);
 
   const selectView = () => {
     return isTablet ? errorView : desktopView;
@@ -77,27 +65,12 @@ export const TreeView: FC = () => {
     navigateToFormEdit(form.id);
   };
 
-  const { saveFormElement } = useClickAwayEditingElement(
-    handleDeleteFormElement,
-    setCurrentEditingElement,
-    formElementsList,
-    setFormElementsList,
-    newChoiceValue,
-    setNewChoiceValue,
-    saveQuestion,
-    saveSection,
-  );
-
-  const originalEditingElementRef = useRef<typeof currentEditingElement>(null);
-
-  const [frozenFormElements, setFrozenFormElements] = useState(formElementsList);
-
   const handleRegisterAndCloseModal = async () => {
     if (currentEditingElement) {
       const hasChanged = JSON.stringify(currentEditingElement) !== JSON.stringify(originalEditingElementRef.current);
       const updatedList = updateElementInList(formElementsList, currentEditingElement);
       if (hasChanged) {
-        await saveFormElement(currentEditingElement, updatedList);
+        await saveFormElement(currentEditingElement);
       }
       setFrozenFormElements(updatedList);
     } else {

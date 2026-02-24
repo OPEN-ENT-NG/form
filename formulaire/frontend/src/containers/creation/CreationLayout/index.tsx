@@ -24,7 +24,6 @@ export const CreationLayout: FC<ICreationLayoutProps> = ({ headerHeight }) => {
     if (currentEditingElement?.position) {
       // Scroll when arriving from recap page
       if (!scrollToQuestionId) {
-        window.scrollTo({ top: 0 });
         return;
       }
       requestAnimationFrame(() => {

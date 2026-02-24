@@ -5,6 +5,11 @@ import { ErrorPage } from "~/components/ErrorPage";
 import { ResponsePageType } from "~/core/enums";
 import { FRONT_ROUTES } from "~/core/frontRoutes";
 
+const lazyTree = async () => {
+  const { Tree } = await import("./creation/tree");
+  return { Component: Tree };
+};
+
 const routes = [
   {
     path: FRONT_ROUTES.home.path,
@@ -31,13 +36,7 @@ const routes = [
               return { Component: Creation };
             },
           },
-          {
-            path: "tree",
-            async lazy() {
-              const { Tree } = await import("./creation/tree");
-              return { Component: Tree };
-            },
-          },
+          { path: "tree", lazy: lazyTree },
         ],
       },
       {
@@ -54,13 +53,7 @@ const routes = [
           return { Component: Result };
         },
       },
-      {
-        path: FRONT_ROUTES.formTree.path,
-        async lazy() {
-          const { Tree } = await import("./creation/tree");
-          return { Component: Tree };
-        },
-      },
+      { path: FRONT_ROUTES.formTree.path, lazy: lazyTree },
       {
         path: FRONT_ROUTES.formResponse.path,
         async lazy() {
