@@ -78,16 +78,22 @@ export const TreeView: FC = () => {
     saveSection,
   );
 
+  const originalEditingElementRef = useRef<typeof currentEditingElement>(null);
+
   const [frozenFormElements, setFrozenFormElements] = useState(formElementsList);
 
   const handleCloseModal = async () => {
     if (currentEditingElement) {
+      const hasChanged = JSON.stringify(currentEditingElement) !== JSON.stringify(originalEditingElementRef.current);
       const updatedList = updateElementInList(formElementsList, currentEditingElement);
-      await saveFormElement(currentEditingElement, updatedList);
+      if (hasChanged) {
+        await saveFormElement(currentEditingElement, updatedList);
+      }
       setFrozenFormElements(updatedList);
     } else {
       setFrozenFormElements(formElementsList);
     }
+    originalEditingElementRef.current = null;
     setCurrentEditingElement(null);
     toggleModal(ModalType.TREE_FORM_UPDATE);
     setTreeKey((prev) => prev + 1);
@@ -154,6 +160,7 @@ export const TreeView: FC = () => {
                 form={form}
                 onZoomChange={setZoomLevel}
                 onEditElement={(formElement) => {
+                  originalEditingElementRef.current = formElement;
                   toggleModal(ModalType.TREE_FORM_UPDATE);
                   setCurrentEditingElement(formElement);
                 }}
