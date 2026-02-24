@@ -193,6 +193,8 @@
   "formulaire.form.edit.forbidden.button.mobile": "Retour",
   "formulaire.form.edit.forbidden.caption.mobile": "L'édition du formulaire n'est pas optimisée en mode mobile",
   "formulaire.form.edit.modified": "Formulaire enregistré le ",
+  "formulaire.form.edit.redirection": "Aller sur la page d'édition",
+  "formulaire.form.edit.question": "Modifier la question",
   "formulaire.form.import.button": "Importer un formulaire",
   "formulaire.format.pdf": "Format PDF",
   "formulaire.format.zip": "Format ZIP",
