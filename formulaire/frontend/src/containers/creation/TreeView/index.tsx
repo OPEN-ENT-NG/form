@@ -1,28 +1,16 @@
-import {
-  Box,
-  Button,
-  DialogActions,
-  DialogContent,
-  DialogTitle,
-  EmptyState,
-  Typography,
-  ZoomControl,
-} from "@cgi-learning-hub/ui";
+import { Box, Button, EmptyState, Typography, ZoomControl } from "@cgi-learning-hub/ui";
 import { FC, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
-import { CreationSortableItem } from "~/components/CreationSortableItem";
 import { Header } from "~/components/Header";
-import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
+import { TreeEditDialog } from "~/components/TreeEditDialog";
 import { FormTreeView } from "~/components/TreeGraph";
 import { IFormTreeViewHandle } from "~/components/TreeGraph/types";
 import { useElementHeight } from "~/containers/home/HomeView/utils";
 import { FORMULAIRE, MAX_TREE_ZOOM, MIN_TREE_ZOOM, STEPS_TREE_ZOOM } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
-import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
-import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { isEnterPressed } from "~/core/utils";
+import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
@@ -43,10 +31,7 @@ export const TreeView: FC = () => {
   const { isTheme1D } = useTheme();
   const headerButtons = useGetTreeHeaderButtons();
   const { navigateToHome, navigateToFormEdit } = useFormulaireNavigation();
-  const {
-    displayModals: { showTreeFormUpdate },
-    toggleModal,
-  } = useGlobal();
+  const { toggleModal } = useGlobal();
   const saveFormElement = useSaveFormElement();
 
   const treeRef = useRef<IFormTreeViewHandle>(null);
@@ -152,50 +137,11 @@ export const TreeView: FC = () => {
                   setCurrentEditingElement(formElement);
                 }}
               />
-
-              <ResponsiveDialog
-                open={currentEditingElement !== null && showTreeFormUpdate}
-                onClose={() => {
-                  void handleRegisterAndCloseModal();
-                }}
-                maxWidth={BreakpointVariant.MD}
-                fullWidth
-                onKeyDown={(e) => {
-                  //Pour pouvoir sauter des lignes dans les TextArea => Shift + Entrée
-                  if (isEnterPressed(e) && !e.shiftKey) {
-                    e.preventDefault();
-                    void handleRegisterAndCloseModal();
-                  }
-                }}
-              >
-                <DialogTitle
-                  color={TEXT_PRIMARY_COLOR}
-                  variant={TypographyVariant.H2}
-                  fontWeight={TypographyFontStyle.BOLD}
-                >
-                  {t("formulaire.form.edit.question")}
-                </DialogTitle>
-                <DialogContent>
-                  {currentEditingElement && showTreeFormUpdate && (
-                    <CreationSortableItem
-                      key={currentEditingElement.id}
-                      formElement={currentEditingElement}
-                      isPreview={false}
-                    />
-                  )}
-                </DialogContent>
-                <DialogActions sx={{ justifyContent: "space-between" }}>
-                  <Button onClick={navigateToQuestion} variant="text">
-                    <Typography color="secondary">{t("formulaire.form.edit.redirection")}</Typography>
-                  </Button>
-                  <Box sx={{ display: "flex", gap: 2 }}>
-                    <Button onClick={handleCloseModal}>{t("formulaire.cancel")}</Button>
-                    <Button variant="contained" onClick={() => void handleRegisterAndCloseModal()}>
-                      {t("formulaire.save")}
-                    </Button>
-                  </Box>
-                </DialogActions>
-              </ResponsiveDialog>
+              <TreeEditDialog
+                onClose={handleCloseModal}
+                onSave={() => void handleRegisterAndCloseModal()}
+                onNavigateToQuestion={navigateToQuestion}
+              />
             </>
           )}
         </Box>
