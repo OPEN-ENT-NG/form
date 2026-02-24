@@ -22,6 +22,7 @@ import { FORMULAIRE, MAX_TREE_ZOOM, MIN_TREE_ZOOM, STEPS_TREE_ZOOM } from "~/cor
 import { ClickAwayDataType, ModalType } from "~/core/enums";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import { isEnterPressed } from "~/core/utils";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useTheme } from "~/hook/useTheme";
 import { useCreation } from "~/providers/CreationProvider";
@@ -186,6 +187,13 @@ export const TreeView: FC = () => {
                 }}
                 maxWidth={BreakpointVariant.MD}
                 fullWidth
+                onKeyDown={(e) => {
+                  //Pour pouvoir sauter des lignes dans les TextArea => Shift + Entrée
+                  if (isEnterPressed(e) && !e.shiftKey) {
+                    e.preventDefault();
+                    void handleRegisterAndCloseModal();
+                  }
+                }}
               >
                 <DialogTitle
                   color={TEXT_PRIMARY_COLOR}
