@@ -29,7 +29,7 @@ export const TreeView: FC = () => {
   const [headerRef] = useElementHeight<HTMLDivElement>();
   const { isTablet } = useGlobal();
   const { isTheme1D } = useTheme();
-  const headerButtons = useGetTreeHeaderButtons();
+  const headerButtons = useGetTreeHeaderButtons(form);
   const { navigateToHome, navigateToFormEdit } = useFormulaireNavigation();
   const { toggleModal } = useGlobal();
   const saveFormElement = useSaveFormElement();
