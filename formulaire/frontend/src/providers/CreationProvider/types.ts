@@ -33,5 +33,7 @@ export type CreationProviderContextType = {
   setIsDragging: Dispatch<SetStateAction<boolean>>;
   newChoiceValue: string;
   setNewChoiceValue: Dispatch<SetStateAction<string>>;
+  scrollToQuestionId: number | null;
+  setScrollToQuestionId: Dispatch<SetStateAction<number | null>>;
   setIsUpdating: Dispatch<SetStateAction<boolean>>;
 };

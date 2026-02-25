@@ -24,6 +24,11 @@
     img {
       margin: 0 16px;
     }
+
+    .title {
+      flex: 1;
+      min-width: 0;
+    }
   }
 
   &-section {
@@ -53,6 +58,8 @@
 
       .title {
         margin-left: 8px;
+        flex: 1;
+        min-width: 0;
       }
     }
 
@@ -91,5 +98,19 @@
   text-overflow: ellipsis;
   @media screen and (max-width: 920) {
     margin-right: 40px;
+  }
+}
+
+.tree-edit-icon {
+  width: 20.5px;
+  height: 19.5px;
+  fill: currentColor;
+  opacity: 0.5;
+  cursor: pointer;
+  flex-shrink: 0;
+  margin-right: 8px;
+
+  &:hover {
+    opacity: 1;
   }
 }
