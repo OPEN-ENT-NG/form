@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   EmptyState,
   Link,
@@ -68,14 +69,16 @@ export const ResultView: FC = () => {
       {countDistributions ? (
         <Stack margin={"2rem 8rem 4rem 8rem"}>
           {selectedFormElement ? <FormElementResult formElement={selectedFormElement} /> : <Loader />}
-          <Stack direction="row" justifyContent="space-between" mt={3}>
-            <Button
-              onClick={handlePrev}
-              variant={ComponentVariant.CONTAINED}
-              disabled={!selectedFormElement || selectedFormElement.position === 1}
-            >
-              {t("formulaire.prev")}
-            </Button>
+          <Stack direction="row" justifyContent="space-between" mt={3} alignItems="center">
+            <Box>
+              <Button
+                onClick={handlePrev}
+                variant={ComponentVariant.CONTAINED}
+                disabled={!selectedFormElement || selectedFormElement.position === 1}
+              >
+                {t("formulaire.prev")}
+              </Button>
+            </Box>
             <Stack direction="row" alignItems="center" gap={2} width="40%">
               <Typography>{t("formulaire.goTo")}</Typography>
               <Select sx={{ flex: 1 }} value={selectedFormElement?.id || ""} onChange={handleChangeSelectedFormElement}>
@@ -86,13 +89,15 @@ export const ResultView: FC = () => {
                 ))}
               </Select>
             </Stack>
-            <Button
-              onClick={handleNext}
-              variant={ComponentVariant.CONTAINED}
-              disabled={!selectedFormElement || selectedFormElement.position === formElementList.length}
-            >
-              {t("formulaire.next")}
-            </Button>
+            <Box>
+              <Button
+                onClick={handleNext}
+                variant={ComponentVariant.CONTAINED}
+                disabled={!selectedFormElement || selectedFormElement.position === formElementList.length}
+              >
+                {t("formulaire.next")}
+              </Button>
+            </Box>
           </Stack>
         </Stack>
       ) : (

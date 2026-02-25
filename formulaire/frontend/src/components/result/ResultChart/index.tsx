@@ -17,6 +17,7 @@ export const ResultChart: FC<IResultChartProps> = ({ question, distributionMap }
 
   return (
     <Chart
+      key={question.id}
       options={options}
       series={series}
       type={type}
