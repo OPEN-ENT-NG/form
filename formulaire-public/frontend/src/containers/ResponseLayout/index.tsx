@@ -28,7 +28,6 @@ export const ResponseLayout: FC = () => {
     scrollToQuestionId,
   } = useResponse();
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
-  const [isLastElement, setIsLastElement] = useState<boolean>(false);
 
   useEffect(() => {
     if (formElementsList.length > 0 && !currentElement) {
@@ -39,7 +38,6 @@ export const ResponseLayout: FC = () => {
   useEffect(() => {
     if (currentElement?.position) {
       setIsFirstElement(currentElement.position === 1);
-      setIsLastElement(currentElement.position === formElementsList.length);
 
       // Scroll when arriving from recap page
       if (!scrollToQuestionId) {
@@ -112,7 +110,7 @@ export const ResponseLayout: FC = () => {
         </Box>
       )}
       {getFormElementContent()}
-      <StyledButtonsWrapper isFirstElement={isFirstElement} isLastElement={isLastElement}>
+      <StyledButtonsWrapper isFirstElement={isFirstElement}>
         {!isFirstElement && (
           <Button variant={ComponentVariant.OUTLINED} onClick={goPreviousElement}>
             {t("formulaire.public.prev")}

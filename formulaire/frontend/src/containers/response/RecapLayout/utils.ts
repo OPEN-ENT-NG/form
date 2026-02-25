@@ -4,18 +4,18 @@ import { QuestionTypes } from "~/core/models/question/enum";
 import { IResponse } from "~/core/models/response/type";
 
 export const checkMandatoryQuestions = (formElements: IFormElement[], responses: IResponse[]): boolean => {
-  const mandatoryQuestions = getAllQuestions(formElements);
-  mandatoryQuestions.forEach((question) => {
+  const mandatoryQuestions = getAllQuestions(formElements).filter((q) => q.mandatory);
+  const hasInvalidQuestion = mandatoryQuestions.some((question) => {
     if (question.questionType === QuestionTypes.MATRIX) {
       question.children?.forEach((child) => {
         if (!responses.some((r) => r.questionId === child.id && r.answer)) return false;
       });
-    } else if (responses.filter((r) => r.questionId === question.id && isResponseStringValid(r)).length <= 0) {
-      return false;
     }
+
+    return !responses.some((r) => r.questionId === question.id && isResponseStringValid(r));
   });
 
-  return true;
+  return !hasInvalidQuestion;
 };
 
 const isResponseStringValid = (response: IResponse): boolean => {
@@ -30,6 +30,9 @@ export const getFormElementsToDisplay = (formElementsList: IFormElement[], respo
 };
 
 const shouldDisplayElement = (formElement: IFormElement, responseQuestionIds: number[]): boolean => {
+  // If it's a FREETEXT we keep it
+  if (isQuestion(formElement) && formElement.questionType === QuestionTypes.FREETEXT) return true;
+
   // If id is in responses we keep it
   if (responseQuestionIds.includes(formElement.id ?? -1)) return true;
 
