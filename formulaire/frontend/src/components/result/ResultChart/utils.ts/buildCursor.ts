@@ -26,26 +26,29 @@ export const getCursorChartProps = (
   if (!countMap.has(minValue)) countMap.set(minValue, 0);
   if (!countMap.has(maxValue)) countMap.set(maxValue, 0);
 
-  const data = Array.from(countMap.entries())
-    .sort((a, b) => a[0] - b[0])
-    .map(([x, y]) => ({ x, y }));
+  const allowedValues = Array.from(countMap.keys()).sort((a, b) => a - b);
+
+  const data = allowedValues.map((x) => ({
+    x,
+    y: countMap.get(x) ?? 0,
+  }));
 
   const options: ApexOptions = {
     chart: {
       zoom: { enabled: false },
-      animations: {
-        enabled: false,
-      },
-      toolbar: {
-        show: false,
-      },
+      animations: { enabled: false },
+      toolbar: { show: false },
     },
     xaxis: {
       type: "numeric",
       min: minValue,
       max: maxValue,
+      tickAmount: maxValue - minValue + 1,
       labels: {
-        formatter: (val: string) => Math.round(Number(val)).toString(),
+        formatter: (val: string) => {
+          const num = Math.round(Number(val));
+          return allowedValues.includes(num) ? num.toString() : "";
+        },
       },
       title: {
         text: t("formulaire.selected.values"),
@@ -81,7 +84,5 @@ export const getCursorChartProps = (
     },
   ];
 
-  const type = "area";
-
-  return { options, series, type };
+  return { options, series, type: "area" };
 };
