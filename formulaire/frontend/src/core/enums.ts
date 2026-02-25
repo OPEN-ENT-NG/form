@@ -21,6 +21,7 @@ export enum ModalType {
   FORM_RESULT_PDF = "showFormResultPdf",
   FORM_RESULT_CSV = "showFormResultCsv",
   SEND_FORM = "showSendForm",
+  TREE_FORM_UPDATE = "showTreeFormUpdate",
 }
 
 export enum TagName {

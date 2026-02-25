@@ -4,18 +4,18 @@ import * as d3 from "d3";
 import * as dagreD3 from "dagre-d3";
 import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
-import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { flattenFormElements, isQuestion, isSection } from "~/core/models/formElement/utils";
 import { getFollowingFormElement } from "~/providers/CreationProvider/utils";
 import { getNextFormElement as getNextFormElementSection } from "~/core/models/section/utils";
 import { getNextFormElement as getNextFormElementQuestion } from "~/core/models/question/utils";
 import { t } from "~/i18n";
-import { displayTypeIcon, intersects, shuffle } from "./utils";
+import { displayTypeIcon, getEditIcon, intersects, shuffle } from "./utils";
 import "./tree.scss";
 import { IArrow, IFormTreeViewHandle, IFormTreeViewProps, ILine } from "./types";
 import { INITIAL_TREE_SCALE } from "~/core/constants";
 
 export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
-  ({ form, formElements, onZoomChange }, ref) => {
+  ({ form, formElements, onZoomChange, onEditElement }, ref) => {
     const mainGraphRef = useRef<any>(null);
     const zoomRef = useRef<d3.ZoomBehavior<Element, unknown> | null>(null);
     const svgRef = useRef<any>(null);
@@ -42,9 +42,15 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
 
     useImperativeHandle(ref, () => ({ zoomTo }), [zoomTo]);
 
+    const isInitializedRef = useRef(false);
+
     useEffect(() => {
       if (formElements.length === 0) return;
-      initD3Dagre();
+
+      const isFirstInit = !isInitializedRef.current;
+      isInitializedRef.current = true;
+
+      initD3Dagre(isFirstInit);
 
       const handleResize = () => {
         const svg = d3.select("#tree-svg");
@@ -74,7 +80,7 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
       }
     };
 
-    const initD3Dagre = (): void => {
+    const initD3Dagre = (shouldCenter: boolean): void => {
       const nodes = initNodes();
       const edgeList = initEdgeList();
       const render = new dagreD3.render();
@@ -92,7 +98,26 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
       innerRef.current = inner;
 
       render_graph(render, nodes, edgeList, inner, svg);
-      centerGraph(svg, zoom);
+
+      if (shouldCenter) {
+        centerGraph(svg, zoom);
+      }
+
+      svg.on("click", (event: MouseEvent) => {
+        const target = event.target as Element;
+        const iconEl = target.closest(".tree-edit-icon");
+        if (!iconEl) return;
+
+        event.stopPropagation();
+
+        const elementId = iconEl.getAttribute("data-element-id");
+        // Cherche dans formElements ET dans les questions des sections
+        const allElements: IFormElement[] = flattenFormElements(formElements);
+        const formElement = allElements.find((el) => String(el.id) === elementId);
+        if (formElement) {
+          onEditElement?.(formElement);
+        }
+      });
     };
 
     const setTreeNodeLabel = (element: IFormElement): string => {
@@ -245,14 +270,16 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
 
     const getHtmlNode = (formElement: IFormElement): string => {
       if (isQuestion(formElement)) {
-        return `<div class="tree-view-question">
+        return `<div class="tree-view-question" style="display:flex;align-items:center;">
                 <img src="${displayTypeIcon(formElement.questionType)}"/>
-                <div class="title ellipsis">${formElement.title}</div>
+                <div class="title ellipsis" style="flex:1;min-width:0;">${formElement.title}</div>
+                ${getEditIcon(formElement.id ?? 0)}
               </div>`;
       } else if (isSection(formElement)) {
         return `<div class="tree-view-section">
-                <div class="top twelve">
-                  <span class="title ellipsis">${formElement.title}</span>
+                <div class="top twelve" style="display:flex;align-items:center;">
+                  <span class="title ellipsis" style="flex:1;min-width:0;margin-left:8px;">${formElement.title}</span>
+                  ${getEditIcon(formElement.id ?? 0)}
                 </div>
                 <div class="main twelve">
                   ${formElement.questions.map((q: IQuestion) => getHtmlNode(q)).join("")}
@@ -260,8 +287,9 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
               </div>`;
       } else {
         return `<div class="tree-view-section">
-                <div class="top no-main twelve">
-                  <span class="title ellipsis">${formElement.title}</span>
+                <div class="top no-main twelve" style="display:flex;align-items:center;">
+                  <span class="title ellipsis" style="flex:1;min-width:0;">${formElement.title}</span>
+                  ${getEditIcon(formElement.id ?? 0)}
                 </div>
               </div>`;
       }
