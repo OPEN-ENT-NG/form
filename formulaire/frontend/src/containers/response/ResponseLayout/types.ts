@@ -1,4 +1,3 @@
 export interface IButtonsWrapperProps {
-  isFirstElement?: boolean;
-  isLastElement?: boolean;
+  displayPrev?: boolean;
 }

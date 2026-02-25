@@ -4,7 +4,7 @@ import { useTranslation } from "react-i18next";
 
 import { FORMULAIRE } from "~/core/constants";
 import { ResponsePageType } from "~/core/enums";
-import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
+import { flexEndBoxStyle, spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
 import { useResponse } from "~/providers/ResponseProvider";
 
@@ -30,10 +30,12 @@ export const DescriptionLayout: FC = () => {
         <Typography variant={TypographyVariant.H6}>{form?.title}</Typography>
         <Typography>{form?.description}</Typography>
       </Stack>
-      <Box sx={spaceBetweenBoxStyle}>
-        <Button variant={ComponentVariant.OUTLINED} onClick={goRgpd}>
-          {t("formulaire.prev")}
-        </Button>
+      <Box sx={{ ...(form?.rgpd ? spaceBetweenBoxStyle : flexEndBoxStyle) }}>
+        {form?.rgpd && (
+          <Button variant={ComponentVariant.OUTLINED} onClick={goRgpd}>
+            {t("formulaire.prev")}
+          </Button>
+        )}
         <Button variant={ComponentVariant.CONTAINED} onClick={goFirstFormElement}>
           {t("formulaire.next")}
         </Button>

@@ -22,7 +22,7 @@ import { checkMandatoryQuestions, getFormElementsToDisplay } from "./utils";
 export const RecapLayout: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const { navigateToHome } = useFormulaireNavigation();
-  const { form, formElementsList, distribution, responses, setProgress } = useResponse();
+  const { form, formElementsList, distribution, responses, progress, setProgress } = useResponse();
   const {
     displayModals: { showSendForm },
     toggleModal,
@@ -32,9 +32,11 @@ export const RecapLayout: FC = () => {
 
   useEffect(() => {
     const formElementsToDisplay = getFormElementsToDisplay(formElementsList, responses);
-    const sortedFormElementsToDisplay = [...formElementsToDisplay].sort(
-      (a, b) => (a.position ?? 0) - (b.position ?? 0),
-    );
+    const sortedFormElementsToDisplay = [...formElementsToDisplay]
+      .filter((fe) =>
+        fe.id && progress.historicFormElementIds.length ? progress.historicFormElementIds.includes(fe.id) : true,
+      )
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
     const sortedFormElementsToDisplayIds = sortedFormElementsToDisplay.map((fe) => fe.id).filter((id) => id != null);
 
     const newProgress = buildProgressObject(sortedFormElementsToDisplayIds, 0);
@@ -56,7 +58,6 @@ export const RecapLayout: FC = () => {
 
   return (
     <>
-      <Stack>
         <Stack gap={2} width="80%" mx="auto">
           {answeredFormElements.map((formElement) => (
             <Box key={formElement.id}>
@@ -81,7 +82,6 @@ export const RecapLayout: FC = () => {
             </Button>
           </Stack>
         )}
-      </Stack>
       {showSendForm && distribution && (
         <SendFormModal
           isOpen={showSendForm}
