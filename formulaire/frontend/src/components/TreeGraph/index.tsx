@@ -4,7 +4,7 @@ import * as d3 from "d3";
 import * as dagreD3 from "dagre-d3";
 import { IFormElement } from "~/core/models/formElement/types";
 import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
-import { isQuestion, isSection } from "~/core/models/formElement/utils";
+import { flattenFormElements, isQuestion, isSection } from "~/core/models/formElement/utils";
 import { getFollowingFormElement } from "~/providers/CreationProvider/utils";
 import { getNextFormElement as getNextFormElementSection } from "~/core/models/section/utils";
 import { getNextFormElement as getNextFormElementQuestion } from "~/core/models/question/utils";
@@ -112,9 +112,7 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
 
         const elementId = iconEl.getAttribute("data-element-id");
         // Cherche dans formElements ET dans les questions des sections
-        const allElements: IFormElement[] = formElements.flatMap((el) =>
-          isSection(el) ? [el, ...(el.questions as unknown as IFormElement[])] : [el],
-        );
+        const allElements: IFormElement[] = flattenFormElements(formElements);
         const formElement = allElements.find((el) => String(el.id) === elementId);
         if (formElement) {
           onEditElement?.(formElement);
