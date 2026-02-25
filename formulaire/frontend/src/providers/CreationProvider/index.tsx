@@ -48,6 +48,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const [isUpdating, setIsUpdating] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const [newChoiceValue, setNewChoiceValue] = useState<string>("");
+  const [scrollToQuestionId, setScrollToQuestionId] = useState<number | null>(null);
   const [isQuestionSaving, setIsQuestionSaving] = useState(false);
   if (formId === undefined) {
     throw new Error("formId is undefined");
@@ -199,6 +200,8 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       setIsDragging,
       newChoiceValue,
       setNewChoiceValue,
+      scrollToQuestionId,
+      setScrollToQuestionId,
       setIsUpdating,
     }),
     [
@@ -210,6 +213,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
       questionModalSection,
       isDragging,
       newChoiceValue,
+      scrollToQuestionId,
     ],
   );
 
