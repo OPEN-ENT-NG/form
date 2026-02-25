@@ -12,7 +12,7 @@ import { t } from "~/i18n";
 
 import { getDisplayDate } from "../utils";
 import { ChoiceId, IQuestionResultWithGraphProps, IResponseStats } from "./types";
-import { getDisplayedResponseStat, getResponseStatsMap } from "./utils";
+import { getAverage, getDisplayedResponseStat, getResponseStatsMap } from "./utils";
 
 export const QuestionResultWithGraph: FC<IQuestionResultWithGraphProps> = ({ question, distributionMap }) => {
   const allResponses: ICompleteResponse[] = Array.from(distributionMap.values()).flat();
@@ -66,6 +66,9 @@ export const QuestionResultWithGraph: FC<IQuestionResultWithGraphProps> = ({ que
 
         <Box flex={1} minWidth={0}>
           <ResultChart question={question} distributionMap={distributionMap} />
+          {question.questionType === QuestionTypes.CURSOR && (
+            <Typography>{t("formulaire.response.average") + " " + getAverage(allResponses).toString()}</Typography>
+          )}
         </Box>
       </Stack>
       {!!customReponses.length && (

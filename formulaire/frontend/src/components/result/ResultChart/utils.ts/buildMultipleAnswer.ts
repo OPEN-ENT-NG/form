@@ -29,6 +29,8 @@ export const getMultipleAnswerChartProps = (
     ...(question.mandatory ? [] : [nbEmptyDistribution]),
   ];
 
+  const maxValue = Math.max(...data, 0);
+
   const options: ApexOptions = {
     chart: {
       id: "basic-bar",
@@ -38,6 +40,7 @@ export const getMultipleAnswerChartProps = (
     },
     xaxis: {
       categories,
+      tickAmount: maxValue,
       labels: {
         formatter: (val: string) => Math.round(Number(val)).toString(),
       },
