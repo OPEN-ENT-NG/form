@@ -13,8 +13,7 @@ export const responseLayoutStyle: SxProps<Theme> = {
 };
 
 export const StyledButtonsWrapper = styled(Box, {
-  shouldForwardProp: blockProps("isFirstElement", "isLastElement"),
-})<IButtonsWrapperProps>(({ isFirstElement = false, isLastElement = false }) => {
-  if (isLastElement || isFirstElement === isLastElement) return { ...spaceBetweenBoxStyle };
-  return { ...flexEndBoxStyle };
+  shouldForwardProp: blockProps("isFirstElement"),
+})<IButtonsWrapperProps>(({ isFirstElement = false }) => {
+  return isFirstElement ? { ...flexEndBoxStyle } : { ...spaceBetweenBoxStyle };
 });

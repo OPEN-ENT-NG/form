@@ -40,13 +40,15 @@ export const useGetCreationHeaderButtons = (form: IForm | null, hasFormElements:
           disabled: !!form && hasFormResponses(form),
         }
       : undefined,
-    {
-      title: t("formulaire.preview"),
-      variant: ComponentVariant.OUTLINED,
-      action: () => {
-        if (form?.id) navigateToFormPreview(form.id);
-      },
-    },
+    hasFormElements
+      ? {
+          title: t("formulaire.preview"),
+          variant: ComponentVariant.OUTLINED,
+          action: () => {
+            if (form?.id) navigateToFormPreview(form.id);
+          },
+        }
+      : undefined,
     {
       title: t("formulaire.save"),
       variant: ComponentVariant.CONTAINED,
