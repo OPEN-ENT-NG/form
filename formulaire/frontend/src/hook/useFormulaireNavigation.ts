@@ -10,10 +10,6 @@ export const useFormulaireNavigation = () => {
       navigate(FRONT_ROUTES.home.build());
     },
 
-    navigateToHomeResponses: () => {
-      navigate({ pathname: FRONT_ROUTES.home.build(), search: "?tab=RESPONSES" });
-    },
-
     navigateToFormEdit: (formId: string | number) => {
       navigate(FRONT_ROUTES.formEdit.build(formId));
     },

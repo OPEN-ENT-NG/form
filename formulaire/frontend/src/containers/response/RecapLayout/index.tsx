@@ -1,6 +1,7 @@
 import { Box, Button, Stack } from "@cgi-learning-hub/ui";
 import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
 
 import { FORMULAIRE } from "~/core/constants";
 import { ModalType } from "~/core/enums";
@@ -45,9 +46,11 @@ export const RecapLayout: FC = () => {
   };
 
   const handleSendForm = () => {
-    if (checkMandatoryQuestions(answeredFormElements, responses)) {
-      toggleModal(ModalType.SEND_FORM);
+    if (!checkMandatoryQuestions(answeredFormElements, responses)) {
+      toast.error(t("formulaire.warning.send.missing.responses.missing"));
+      return;
     }
+    toggleModal(ModalType.SEND_FORM);
   };
 
   return (

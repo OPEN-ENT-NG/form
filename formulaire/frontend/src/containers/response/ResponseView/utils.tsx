@@ -1,4 +1,5 @@
 import { ResponsePageType } from "~/core/enums";
+import { FRONT_ROUTES } from "~/core/frontRoutes";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
@@ -10,7 +11,7 @@ export const useGetResponseHeaderButtons = (
   isInPreviewMode: boolean,
   pageType: ResponsePageType = ResponsePageType.FORM_ELEMENT,
 ): IButtonProps[] => {
-  const { navigateToFormEdit, navigateToHomeResponses } = useFormulaireNavigation();
+  const { navigateToFormEdit } = useFormulaireNavigation();
   const { saveResponses, currentElement } = useResponse();
 
   const buttons: (IButtonProps | undefined)[] = [
@@ -20,14 +21,13 @@ export const useGetResponseHeaderButtons = (
       action: () => {
         if (!formId) return;
 
-        if (!isInPreviewMode) {
-          if (!currentElement) return;
-          void saveResponses(currentElement);
-          navigateToHomeResponses();
+        if (isInPreviewMode) {
+          navigateToFormEdit(formId);
           return;
         }
 
-        navigateToFormEdit(formId);
+        if (currentElement) void saveResponses(currentElement);
+        window.location.href = FRONT_ROUTES.homeResponses.build();
       },
     },
   ];
