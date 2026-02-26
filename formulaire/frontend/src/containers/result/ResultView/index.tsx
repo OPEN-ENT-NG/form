@@ -79,9 +79,21 @@ export const ResultView: FC = () => {
                 {t("formulaire.prev")}
               </Button>
             </Box>
-            <Stack direction="row" alignItems="center" gap={2} width="40%">
+            <Stack direction="row" alignItems="center" gap={2} width="40%" minWidth={0}>
               <Typography>{t("formulaire.goTo")}</Typography>
-              <Select sx={{ flex: 1 }} value={selectedFormElement?.id || ""} onChange={handleChangeSelectedFormElement}>
+              <Select
+                sx={{
+                  flex: 1,
+                  minWidth: 0,
+                  "& .MuiSelect-select": {
+                    overflow: "hidden",
+                    textOverflow: "ellipsis",
+                    whiteSpace: "nowrap",
+                  },
+                }}
+                value={selectedFormElement?.id || ""}
+                onChange={handleChangeSelectedFormElement}
+              >
                 {formElementList.map((formElement, index) => (
                   <MenuItem key={formElement.id} value={formElement.id ?? 0}>
                     {`${index + 1}. ${formElement.title}`}
