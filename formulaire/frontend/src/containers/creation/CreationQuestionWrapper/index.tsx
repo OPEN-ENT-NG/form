@@ -1,7 +1,6 @@
 import {
   Alert,
   Box,
-  EllipsisWithTooltip,
   MenuItem,
   Paper,
   Select,
@@ -341,16 +340,12 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
           )}
           <Box mt={!form || hasFormResponses(form) ? 2 : 0} sx={headerQuestionStyle}>
             <Box sx={questionTitleStyle}>
-              <EllipsisWithTooltip
-                slotProps={{
-                  text: {
-                    variant: TypographyVariant.H6,
-                    color: question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR,
-                  },
-                }}
+              <Typography
+                variant={TypographyVariant.H6}
+                color={question.title ? TEXT_PRIMARY_COLOR : TEXT_SECONDARY_COLOR}
               >
                 {question.title || t("formulaire.question.title.empty")}
-              </EllipsisWithTooltip>
+              </Typography>
               {question.mandatory && (
                 <Typography component={BoxComponentType.SPAN} color={ERROR_MAIN_COLOR} sx={mandatoryTitleStyle}>
                   *
