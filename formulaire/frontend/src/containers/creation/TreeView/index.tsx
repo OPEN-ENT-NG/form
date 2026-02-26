@@ -1,5 +1,5 @@
 import { Box, Button, EmptyState, Typography, ZoomControl } from "@cgi-learning-hub/ui";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Header } from "~/components/Header";
@@ -39,6 +39,12 @@ export const TreeView: FC = () => {
   const [frozenFormElements, setFrozenFormElements] = useState(formElementsList);
   const [treeKey, setTreeKey] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(75);
+
+  useEffect(() => {
+    if (frozenFormElements.length === 0 && formElementsList.length > 0) {
+      setFrozenFormElements(formElementsList);
+    }
+  }, [formElementsList]);
 
   const selectView = () => {
     return isTablet ? errorView : desktopView;
