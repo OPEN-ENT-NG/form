@@ -71,7 +71,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     saveSection,
   );
   const {
-    displayModals: { showSectionDelete, showSectionUndo },
+    displayModals: { showSectionDelete, showSectionUndo, showTreeFormUpdate },
     toggleModal,
     selectAllTextInput,
   } = useGlobal();
@@ -204,7 +204,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                 focus={false}
               />
             </Box>
-            {!!form && !hasFormResponses(form) && (
+            {!!form && !hasFormResponses(form) && !showTreeFormUpdate && (
               <Box sx={sectionFooterStyle}>
                 <Button
                   onClick={(e) => {
