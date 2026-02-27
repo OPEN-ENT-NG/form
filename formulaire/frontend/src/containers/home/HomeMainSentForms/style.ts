@@ -5,7 +5,7 @@ export const sentFormWrapperStyle: SxProps = {
   gridTemplateColumns: "repeat(auto-fill, minmax(min(30rem, 100%), 1fr))",
   gap: "1.6rem",
   width: "100%",
-  maxWidth: "100rem",
+  maxWidth: "133rem",
 };
 
 export const sentFormWrapperMobileStyle: SxProps = {
