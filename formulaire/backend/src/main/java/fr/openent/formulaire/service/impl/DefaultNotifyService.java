@@ -57,7 +57,7 @@ public class DefaultNotifyService implements NotifyService {
 
     private void notifyNewFormMain(HttpServerRequest request, JsonObject form, JsonArray responders, UserInfos user) {
         String endPath = form.getBoolean(RGPD) ? RGPD : NEW;
-        String formUri = "/formulaire?view=angular#/form/" + form.getInteger(ID) + "/" + endPath;
+        String formUri = "/formulaire#/form/" + form.getInteger(ID) + "/" + endPath;
 
         JsonObject params = new JsonObject()
                 .put(PARAM_USER_URI, "/userbook/annuaire#" + user.getUserId())
@@ -80,7 +80,7 @@ public class DefaultNotifyService implements NotifyService {
                 return;
             }
 
-            String formResultsUri = "/formulaire?view=angular#/form/" + form.getInteger(ID) + "/results/1";
+            String formResultsUri = "/formulaire#/form/" + form.getInteger(ID) + "/results/1";
 
             JsonObject params = new JsonObject()
                     .put(ANONYMOUS, form.getBoolean(ANONYMOUS))
@@ -103,7 +103,7 @@ public class DefaultNotifyService implements NotifyService {
         UserInfos user = new UserInfos();
 
         String endPath = form.getRgpd() ? RGPD : NEW;
-        String formUri = "/formulaire?view=angular#/form/" + form.getId() + "/" + endPath;
+        String formUri = "/formulaire#/form/" + form.getId() + "/" + endPath;
 
         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, I18n.getLocale(I18n.acceptLanguage(request)));
         String formatedDateEnding = df.format(form.getDateEnding());

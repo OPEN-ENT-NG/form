@@ -48,15 +48,13 @@ export const RecapLayout: FC = () => {
   };
 
   return (
-    <Stack>
-      <Stack gap={2} width="80%" mx="auto">
-        {answeredFormElements.map((formElement) => (
-          <Box key={formElement.id}>
-            {isQuestion(formElement) && <RespondQuestionWrapper question={formElement} />}
-            {isSection(formElement) && <RespondSectionWrapper section={formElement} />}
-          </Box>
-        ))}
-      </Stack>
+    <Stack gap={2} width="80%" mx="auto">
+      {answeredFormElements.map((formElement) => (
+        <Box key={formElement.id}>
+          {isQuestion(formElement) && <RespondQuestionWrapper question={formElement} />}
+          {isSection(formElement) && <RespondSectionWrapper section={formElement} />}
+        </Box>
+      ))}
       <Box sx={flexEndBoxStyle}>
         <Button variant={ComponentVariant.CONTAINED} onClick={handleFinishForm}>
           {t("formulaire.public.end")}
