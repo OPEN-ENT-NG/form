@@ -240,7 +240,7 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
                 );
               })()}
           </Box>
-          {!hideCustomChoice && !customChoice && (
+          {!hideCustomChoice && !customChoice && !!form && !hasFormResponses(form) && (
             <Box>
               <Typography variant={TypographyVariant.BODY2}>
                 {t("formulaire.question.add.choice.other.text")}
