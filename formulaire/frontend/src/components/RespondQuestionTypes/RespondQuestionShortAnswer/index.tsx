@@ -40,7 +40,6 @@ export const RespondQuestionShortAnswer: FC<IRespondQuestionTypesProps> = ({ que
       value={answer}
       onChange={handleResponseChange}
       onFocus={selectAllTextInput}
-      error={question.mandatory && !answer}
     />
   );
 };
