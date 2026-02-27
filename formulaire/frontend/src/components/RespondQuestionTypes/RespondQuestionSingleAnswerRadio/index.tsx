@@ -53,6 +53,19 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
     updateQuestionResponses(question, newResponses);
   };
 
+  const handleClick = (value: string) => {
+    if (value === selectedValue) {
+      setSelectedValue("");
+
+      const associatedResponses = getQuestionResponses(question);
+      const newResponses: IResponse[] = associatedResponses.map((response) => ({
+        ...response,
+        selected: false,
+      }));
+      updateQuestionResponses(question, newResponses);
+    }
+  };
+
   const handleCustomResponseChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newCustomAnswer = e.target.value;
     const existingResponses = getQuestionResponses(question);
@@ -93,7 +106,13 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
                 <FormControlLabel
                   value={choice.value}
                   sx={formControlLabelStyle}
-                  control={<Radio />}
+                  control={
+                    <Radio
+                      onClick={() => {
+                        handleClick(choice.value);
+                      }}
+                    />
+                  }
                   label={
                     <Box sx={customAnswerStyle}>
                       <Box sx={labelStyle}>

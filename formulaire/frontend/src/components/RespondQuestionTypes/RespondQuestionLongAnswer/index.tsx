@@ -14,7 +14,9 @@ export const RespondQuestionLongAnswer: FC<IRespondQuestionTypesProps> = ({ ques
   const editorRef = useRef<EditorRef>(null);
   const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
   const [answer, setAnswer] = useState<string>("");
-  const currentAnswer = useRef(answer);
+
+  const associatedResponse = getQuestionResponse(question);
+  const currentAnswer = useRef<string>(typeof associatedResponse?.answer === "string" ? associatedResponse.answer : "");
 
   useEffect(() => {
     const associatedResponse = getQuestionResponse(question);
@@ -38,7 +40,7 @@ export const RespondQuestionLongAnswer: FC<IRespondQuestionTypesProps> = ({ ques
     <Box sx={{ ...(!isPageTypeRecap && respondQuestionLongAnswerStyle) }}>
       <Editor
         onContentChange={handleResponseChange}
-        content={currentAnswer.current}
+        content={isPageTypeRecap ? answer : currentAnswer.current}
         ref={editorRef}
         mode={isPageTypeRecap ? EditorMode.READ : EditorMode.EDIT}
         variant={isPageTypeRecap ? EditorVariant.GHOST : EditorVariant.OUTLINE}
