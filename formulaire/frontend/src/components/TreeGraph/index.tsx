@@ -289,7 +289,6 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
         return `<div class="tree-view-section">
                 <div class="top no-main twelve" style="display:flex;align-items:center;">
                   <span class="title ellipsis" style="flex:1;min-width:0;">${formElement.title}</span>
-                  ${getEditIcon(formElement.id ?? 0)}
                 </div>
               </div>`;
       }
