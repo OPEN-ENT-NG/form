@@ -273,13 +273,13 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
         return `<div class="tree-view-question" style="display:flex;align-items:center;">
                 <img style="width:24px;height:24px" src="${displayTypeIcon(formElement.questionType)}"/>
                 <div class="title ellipsis" style="flex:1;min-width:0;">${formElement.title}</div>
-                ${getEditIcon(formElement.id ?? 0)}
+                ${getEditIcon(formElement.id ?? 0, isQuestion(formElement))}
               </div>`;
       } else if (isSection(formElement)) {
         return `<div class="tree-view-section">
                 <div class="top twelve" style="display:flex;align-items:center;">
                   <span class="title ellipsis" style="flex:1;min-width:0;margin-left:8px;">${formElement.title}</span>
-                  ${getEditIcon(formElement.id ?? 0)}
+                  ${getEditIcon(formElement.id ?? 0, isQuestion(formElement))}
                 </div>
                 <div class="main twelve">
                   ${formElement.questions.map((q: IQuestion) => getHtmlNode(q)).join("")}
