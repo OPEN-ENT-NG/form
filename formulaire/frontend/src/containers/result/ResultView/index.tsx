@@ -16,9 +16,9 @@ import { FC } from "react";
 import { Header } from "~/components/Header";
 import { EmptyResult } from "~/components/SVG/EmptyResult";
 import { ModalType } from "~/core/enums";
-import { FRONT_ROUTES } from "~/core/frontRoutes";
 import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { ComponentVariant } from "~/core/style/themeProps";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResult } from "~/providers/ResultProvider";
@@ -32,6 +32,7 @@ import { getHeaderButtonsProps } from "./utils";
 export const ResultView: FC = () => {
   const { form, countDistributions, formElementList, selectedFormElement, setSelectedFormElement } = useResult();
   const { toggleModal, isTablet } = useGlobal();
+  const { navigateToHome } = useFormulaireNavigation();
 
   const handleChangeSelectedFormElement = (e: SelectChangeEvent<number>) => {
     const selectedFormElementId = e.target.value;
@@ -128,7 +129,12 @@ export const ResultView: FC = () => {
             color="primary.main"
             imageHeight={250}
           />
-          <Link href={FRONT_ROUTES.home.path} color="primary">
+          <Link
+            onClick={() => {
+              navigateToHome();
+            }}
+            color="primary"
+          >
             {t("formulaire.error.backToMenu")}
           </Link>
         </Stack>
