@@ -24,6 +24,7 @@ import { useResult } from "~/providers/ResultProvider";
 import { FormElementResult } from "../FormElementResult";
 import { CsvResultModal } from "../modal/CsvResultModal";
 import { PdfResultModal } from "../modal/PdfResultModal";
+import { selectStyle } from "./style";
 import { getHeaderButtonsProps } from "./utils";
 
 export const ResultView: FC = () => {
@@ -81,19 +82,7 @@ export const ResultView: FC = () => {
             </Box>
             <Stack direction="row" alignItems="center" gap={2} width="40%" minWidth={0}>
               <Typography>{t("formulaire.goTo")}</Typography>
-              <Select
-                sx={{
-                  flex: 1,
-                  minWidth: 0,
-                  "& .MuiSelect-select": {
-                    overflow: "hidden",
-                    textOverflow: "ellipsis",
-                    whiteSpace: "nowrap",
-                  },
-                }}
-                value={selectedFormElement?.id || ""}
-                onChange={handleChangeSelectedFormElement}
-              >
+              <Select sx={selectStyle} value={selectedFormElement?.id || ""} onChange={handleChangeSelectedFormElement}>
                 {formElementList.map((formElement, index) => (
                   <MenuItem key={formElement.id} value={formElement.id ?? 0}>
                     {`${index + 1}. ${formElement.title}`}
