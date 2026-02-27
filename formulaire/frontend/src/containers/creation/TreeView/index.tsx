@@ -1,5 +1,5 @@
 import { Box, Button, EmptyState, Typography, ZoomControl } from "@cgi-learning-hub/ui";
-import { FC, useRef, useState } from "react";
+import { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { Header } from "~/components/Header";
@@ -27,11 +27,14 @@ export const TreeView: FC = () => {
   const { form, folders, formElementsList, currentEditingElement, setCurrentEditingElement, setScrollToQuestionId } =
     useCreation();
   const [headerRef] = useElementHeight<HTMLDivElement>();
-  const { isTablet } = useGlobal();
+  const {
+    isTablet,
+    toggleModal,
+    displayModals: { showTreeFormUpdate },
+  } = useGlobal();
   const { isTheme1D } = useTheme();
-  const headerButtons = useGetTreeHeaderButtons();
+  const headerButtons = useGetTreeHeaderButtons(form);
   const { navigateToHome, navigateToFormEdit } = useFormulaireNavigation();
-  const { toggleModal } = useGlobal();
   const saveFormElement = useSaveFormElement();
 
   const treeRef = useRef<IFormTreeViewHandle>(null);
@@ -39,6 +42,32 @@ export const TreeView: FC = () => {
   const [frozenFormElements, setFrozenFormElements] = useState(formElementsList);
   const [treeKey, setTreeKey] = useState(0);
   const [zoomLevel, setZoomLevel] = useState(75);
+  const prevShowTreeFormUpdateRef = useRef(false);
+
+  useEffect(() => {
+    if (showTreeFormUpdate && currentEditingElement !== null) return;
+
+    const hasChanged = JSON.stringify(formElementsList) !== JSON.stringify(frozenFormElements);
+    if (hasChanged) {
+      setFrozenFormElements(formElementsList);
+      if (frozenFormElements.length > 0) {
+        setTreeKey((prev) => prev + 1);
+      }
+    }
+  }, [formElementsList]);
+
+  useEffect(() => {
+    const wasOpen = prevShowTreeFormUpdateRef.current;
+    prevShowTreeFormUpdateRef.current = showTreeFormUpdate && currentEditingElement !== null;
+
+    if (wasOpen && (!showTreeFormUpdate || currentEditingElement === null)) {
+      const hasChanged = JSON.stringify(formElementsList) !== JSON.stringify(frozenFormElements);
+      if (hasChanged) {
+        setFrozenFormElements(formElementsList);
+        setTreeKey((prev) => prev + 1);
+      }
+    }
+  }, [showTreeFormUpdate, currentEditingElement]);
 
   const selectView = () => {
     return isTablet ? errorView : desktopView;

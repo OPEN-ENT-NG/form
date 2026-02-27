@@ -1,18 +1,19 @@
 import { IFolder } from "~/core/models/folder/types";
+import { IForm } from "~/core/models/form/types";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { IButtonProps } from "~/core/types";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { t } from "~/i18n";
 
-export const useGetTreeHeaderButtons = (): IButtonProps[] => {
-  const { navigateToHome } = useFormulaireNavigation();
+export const useGetTreeHeaderButtons = (form: IForm | null): IButtonProps[] => {
+  const { navigateToFormEdit } = useFormulaireNavigation();
 
   const buttons: (IButtonProps | undefined)[] = [
     {
       title: t("formulaire.return"),
       variant: ComponentVariant.OUTLINED,
       action: () => {
-        navigateToHome();
+        if (form?.id) navigateToFormEdit(form.id);
       },
     },
   ];
