@@ -1,9 +1,7 @@
-import { Layout, LoadingScreen, useEdificeClient } from "@edifice.io/react";
+import { Layout, useEdificeClient } from "@edifice.io/react";
 import { Outlet } from "react-router-dom";
 function Root() {
-  const { init } = useEdificeClient();
-
-  if (!init) return <LoadingScreen position={false} />;
+  useEdificeClient();
 
   return (
     <Layout>

@@ -1,4 +1,4 @@
-export interface ITreeEditDialogProps {
+export interface ITreeEditModalProps {
   onClose: () => void;
   onSave: () => void;
   onNavigateToQuestion: () => void;
