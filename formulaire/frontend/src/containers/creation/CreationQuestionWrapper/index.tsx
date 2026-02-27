@@ -328,10 +328,12 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
               isPreview={!!isPreview}
               {...attributes}
               {...listeners}
+              data-type={ClickAwayDataType.QUESTION}
               onClick={(e) => {
                 e.stopPropagation();
               }}
               onMouseDown={(e) => {
+                handleClickAway(e, currentEditingElement, question, true);
                 e.stopPropagation();
               }}
             >
