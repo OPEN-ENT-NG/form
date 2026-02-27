@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { CreationSortableItem } from "~/components/CreationSortableItem";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import { FORMULAIRE } from "~/core/constants";
+import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { isEnterPressed } from "~/core/utils";
@@ -34,7 +35,9 @@ export const TreeEditDialog: FC<ITreeEditDialogProps> = ({ onClose, onSave, onNa
       }}
     >
       <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
-        {t("formulaire.form.edit.question")}
+        {currentEditingElement !== null &&
+          ((isQuestion(currentEditingElement) && t("formulaire.form.edit.question")) ||
+            (isSection(currentEditingElement) && t("formulaire.form.edit.section")))}
       </DialogTitle>
       <DialogContent>
         {currentEditingElement && showTreeFormUpdate && (
