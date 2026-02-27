@@ -22,7 +22,7 @@ import { checkMandatoryQuestions, getFormElementsToDisplay } from "./utils";
 export const RecapLayout: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const { navigateToHome } = useFormulaireNavigation();
-  const { form, formElementsList, distribution, responses, setProgress } = useResponse();
+  const { form, formElementsList, distribution, responses, progress, setProgress } = useResponse();
   const {
     displayModals: { showSendForm },
     toggleModal,
@@ -32,9 +32,11 @@ export const RecapLayout: FC = () => {
 
   useEffect(() => {
     const formElementsToDisplay = getFormElementsToDisplay(formElementsList, responses);
-    const sortedFormElementsToDisplay = [...formElementsToDisplay].sort(
-      (a, b) => (a.position ?? 0) - (b.position ?? 0),
-    );
+    const sortedFormElementsToDisplay = [...formElementsToDisplay]
+      .filter((fe) =>
+        fe.id && progress.historicFormElementIds.length ? progress.historicFormElementIds.includes(fe.id) : true,
+      )
+      .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
     const sortedFormElementsToDisplayIds = sortedFormElementsToDisplay.map((fe) => fe.id).filter((id) => id != null);
 
     const newProgress = buildProgressObject(sortedFormElementsToDisplayIds, 0);
@@ -56,32 +58,30 @@ export const RecapLayout: FC = () => {
 
   return (
     <>
-      <Stack>
-        <Stack gap={2} width="80%" mx="auto">
-          {answeredFormElements.map((formElement) => (
-            <Box key={formElement.id}>
-              {isQuestion(formElement) && <RespondQuestionWrapper question={formElement} />}
-              {isSection(formElement) && <RespondSectionWrapper section={formElement} />}
-            </Box>
-          ))}
-        </Stack>
-        {!form?.editable && distribution?.status === DistributionStatus.FINISHED ? (
-          <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
-            <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
-              {t("formulaire.quit")}
-            </Button>
-          </Stack>
-        ) : (
-          <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
-            <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
-              {t("formulaire.saveAndQuit")}
-            </Button>
-            <Button variant={ComponentVariant.CONTAINED} onClick={handleSendForm}>
-              {t("formulaire.end")}
-            </Button>
-          </Stack>
-        )}
+      <Stack gap={2} width="80%" mx="auto">
+        {answeredFormElements.map((formElement) => (
+          <Box key={formElement.id}>
+            {isQuestion(formElement) && <RespondQuestionWrapper question={formElement} />}
+            {isSection(formElement) && <RespondSectionWrapper section={formElement} />}
+          </Box>
+        ))}
       </Stack>
+      {!form?.editable && distribution?.status === DistributionStatus.FINISHED ? (
+        <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
+          <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
+            {t("formulaire.quit")}
+          </Button>
+        </Stack>
+      ) : (
+        <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
+          <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
+            {t("formulaire.saveAndQuit")}
+          </Button>
+          <Button variant={ComponentVariant.CONTAINED} onClick={handleSendForm}>
+            {t("formulaire.end")}
+          </Button>
+        </Stack>
+      )}
       {showSendForm && distribution && (
         <SendFormModal
           isOpen={showSendForm}

@@ -110,8 +110,8 @@ export const ResponseLayout: FC = () => {
         </Box>
       )}
       {getFormElementContent()}
-      <StyledButtonsWrapper isFirstElement={isFirstElement}>
-        {!isFirstElement && (
+      <StyledButtonsWrapper displayPrev={!isFirstElement || !!form?.description || form?.rgpd}>
+        {(form?.description || form?.rgpd) && (
           <Button variant={ComponentVariant.OUTLINED} onClick={goPreviousElement}>
             {t("formulaire.public.prev")}
           </Button>
