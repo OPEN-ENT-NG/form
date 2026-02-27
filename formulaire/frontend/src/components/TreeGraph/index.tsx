@@ -1,18 +1,18 @@
 /* eslint-disable */
-import { useEffect, useRef, forwardRef, useImperativeHandle, useCallback } from "react";
 import * as d3 from "d3";
 import * as dagreD3 from "dagre-d3";
+import { forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from "react";
+import { INITIAL_TREE_SCALE } from "~/core/constants";
 import { IFormElement } from "~/core/models/formElement/types";
-import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { flattenFormElements, isQuestion, isSection } from "~/core/models/formElement/utils";
-import { getFollowingFormElement } from "~/providers/CreationProvider/utils";
-import { getNextFormElement as getNextFormElementSection } from "~/core/models/section/utils";
+import { IQuestion, IQuestionChoice } from "~/core/models/question/types";
 import { getNextFormElement as getNextFormElementQuestion } from "~/core/models/question/utils";
+import { getNextFormElement as getNextFormElementSection } from "~/core/models/section/utils";
 import { t } from "~/i18n";
-import { displayTypeIcon, getEditIcon, intersects, shuffle } from "./utils";
+import { getFollowingFormElement } from "~/providers/CreationProvider/utils";
 import "./tree.scss";
 import { IArrow, IFormTreeViewHandle, IFormTreeViewProps, ILine } from "./types";
-import { INITIAL_TREE_SCALE } from "~/core/constants";
+import { displayTypeIcon, getEditIcon, intersects, shuffle } from "./utils";
 
 export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
   ({ form, formElements, onZoomChange, onEditElement }, ref) => {
@@ -271,7 +271,7 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
     const getHtmlNode = (formElement: IFormElement): string => {
       if (isQuestion(formElement)) {
         return `<div class="tree-view-question" style="display:flex;align-items:center;">
-                <img src="${displayTypeIcon(formElement.questionType)}"/>
+                <img style="width:24px;height:24px" src="${displayTypeIcon(formElement.questionType)}"/>
                 <div class="title ellipsis" style="flex:1;min-width:0;">${formElement.title}</div>
                 ${getEditIcon(formElement.id ?? 0)}
               </div>`;

@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 
 import { FORMULAIRE } from "~/core/constants";
 import { ModalType } from "~/core/enums";
+import { DistributionStatus } from "~/core/models/distribution/enums";
 import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { ComponentVariant } from "~/core/style/themeProps";
@@ -21,7 +22,7 @@ import { checkMandatoryQuestions, getFormElementsToDisplay } from "./utils";
 export const RecapLayout: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const { navigateToHome } = useFormulaireNavigation();
-  const { formElementsList, distribution, responses, setProgress } = useResponse();
+  const { form, formElementsList, distribution, responses, setProgress } = useResponse();
   const {
     displayModals: { showSendForm },
     toggleModal,
@@ -64,14 +65,22 @@ export const RecapLayout: FC = () => {
             </Box>
           ))}
         </Stack>
-        <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
-          <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
-            {t("formulaire.saveAndQuit")}
-          </Button>
-          <Button variant={ComponentVariant.CONTAINED} onClick={handleSendForm}>
-            {t("formulaire.end")}
-          </Button>
-        </Stack>
+        {!form?.editable && distribution?.status === DistributionStatus.FINISHED ? (
+          <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
+            <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
+              {t("formulaire.quit")}
+            </Button>
+          </Stack>
+        ) : (
+          <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
+            <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
+              {t("formulaire.saveAndQuit")}
+            </Button>
+            <Button variant={ComponentVariant.CONTAINED} onClick={handleSendForm}>
+              {t("formulaire.end")}
+            </Button>
+          </Stack>
+        )}
       </Stack>
       {showSendForm && distribution && (
         <SendFormModal

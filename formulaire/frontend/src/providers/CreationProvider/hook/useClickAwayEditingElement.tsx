@@ -118,6 +118,7 @@ export const useClickAwayEditingElement = (
     e: MouseEvent<HTMLDivElement>,
     currentEditingElement: IFormElement | null,
     targetedElement: IFormElement | null = null,
+    dontSetActive?: boolean,
   ) => {
     e.stopPropagation();
     if (!currentEditingElement && targetedElement && isQuestion(targetedElement)) {
@@ -140,7 +141,7 @@ export const useClickAwayEditingElement = (
     const updatedFormElementsList = updateElementInList(formElementsList, updatedFormElement);
     setFormElementsList(updatedFormElementsList as IQuestion[]);
 
-    const dataType = e.currentTarget.dataset.type;
+    const dataType = dontSetActive ? ClickAwayDataType.QUESTION : e.currentTarget.dataset.type;
 
     switch (dataType) {
       case ClickAwayDataType.ROOT:
@@ -167,7 +168,8 @@ export const useClickAwayEditingElement = (
           return;
 
         void saveFormElement(updatedFormElement, updatedFormElementsList);
-        setCurrentEditingElement(targetedElement);
+        if (!dontSetActive) setCurrentEditingElement(targetedElement);
+        else setCurrentEditingElement(null);
         return;
       default:
         return;
