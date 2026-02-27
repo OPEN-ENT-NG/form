@@ -58,30 +58,30 @@ export const RecapLayout: FC = () => {
 
   return (
     <>
-        <Stack gap={2} width="80%" mx="auto">
-          {answeredFormElements.map((formElement) => (
-            <Box key={formElement.id}>
-              {isQuestion(formElement) && <RespondQuestionWrapper question={formElement} />}
-              {isSection(formElement) && <RespondSectionWrapper section={formElement} />}
-            </Box>
-          ))}
+      <Stack gap={2} width="80%" mx="auto">
+        {answeredFormElements.map((formElement) => (
+          <Box key={formElement.id}>
+            {isQuestion(formElement) && <RespondQuestionWrapper question={formElement} />}
+            {isSection(formElement) && <RespondSectionWrapper section={formElement} />}
+          </Box>
+        ))}
+      </Stack>
+      {!form?.editable && distribution?.status === DistributionStatus.FINISHED ? (
+        <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
+          <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
+            {t("formulaire.quit")}
+          </Button>
         </Stack>
-        {!form?.editable && distribution?.status === DistributionStatus.FINISHED ? (
-          <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
-            <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
-              {t("formulaire.quit")}
-            </Button>
-          </Stack>
-        ) : (
-          <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
-            <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
-              {t("formulaire.saveAndQuit")}
-            </Button>
-            <Button variant={ComponentVariant.CONTAINED} onClick={handleSendForm}>
-              {t("formulaire.end")}
-            </Button>
-          </Stack>
-        )}
+      ) : (
+        <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
+          <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
+            {t("formulaire.saveAndQuit")}
+          </Button>
+          <Button variant={ComponentVariant.CONTAINED} onClick={handleSendForm}>
+            {t("formulaire.end")}
+          </Button>
+        </Stack>
+      )}
       {showSendForm && distribution && (
         <SendFormModal
           isOpen={showSendForm}
