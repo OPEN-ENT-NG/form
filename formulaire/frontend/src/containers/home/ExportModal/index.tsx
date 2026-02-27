@@ -4,7 +4,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  Loader,
   Radio,
   RadioGroup,
   Typography,
@@ -38,24 +37,24 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   };
 
   const handleExport = async () => {
+    setIsLoading(true);
     try {
       if (selectedFormat === ExportFormat.ZIP) {
-        setIsLoading(true);
         const formIds = selectedForms.map((form) => form.id);
         const exportId = await exportZip(formIds).unwrap();
         if (exportId) {
           await verifyExportAndDownloadZip(exportId).unwrap();
         }
-        setIsLoading(false);
       }
       if (selectedFormat === ExportFormat.PDF) {
         const notEmptySelectedForms = selectedForms.filter((form) => form.nb_elements > 0);
         await exportPdf(notEmptySelectedForms);
       }
     } catch (error) {
-      setIsLoading(false);
       console.error("Error exporting form:", error);
     }
+    setIsLoading(false);
+
     handleClose();
   };
 
@@ -96,10 +95,9 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
             </Box>
           </Box>
         </RadioGroup>
-        {isLoading && <Loader />}
       </DialogContent>
       <DialogActions>
-        <Button variant={ComponentVariant.OUTLINED} onClick={handleClose}>
+        <Button variant={ComponentVariant.OUTLINED} onClick={handleClose} disabled={isLoading}>
           {t("formulaire.cancel")}
         </Button>
         <Button
@@ -107,6 +105,7 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           onClick={() => {
             void handleExport();
           }}
+          loading={isLoading}
         >
           {t("formulaire.export")}
         </Button>

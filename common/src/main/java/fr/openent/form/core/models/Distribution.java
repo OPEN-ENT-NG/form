@@ -169,8 +169,14 @@ public class Distribution implements IModel<Distribution> {
                 .put(RESPONDER_ID, this.responderId)
                 .put(RESPONDER_NAME, this.responderName)
                 .put(STATUS, this.status)
-                .put(DATE_SENDING, this.dateSending != null ? this.dateSending.toString() : null)
-                .put(DATE_RESPONSE, this.dateResponse != null ? this.dateResponse.toString() : null)
+                .put(DATE_SENDING,
+                        this.dateSending != null
+                                ? dateFormatter.format(this.dateSending)
+                                : null)
+                .put(DATE_RESPONSE,
+                        this.dateResponse != null
+                                ? dateFormatter.format(this.dateResponse)
+                                : null)
                 .put(ACTIVE, this.active)
                 .put(STRUCTURE, this.structure)
                 .put(ORIGINAL_ID, this.originalId)

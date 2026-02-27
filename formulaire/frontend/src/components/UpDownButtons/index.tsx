@@ -21,12 +21,9 @@ export const UpDownButtons: FC<IUpDownButtonsProps> = ({
 }) => {
   const { form } = useCreation();
   // Determine visibility of arrows
-  const showUp = useMemo(() => index > 0 && (!hasCustomAtTheEnd || index < elementList.length - 1), [element]);
+  const showUp = useMemo(() => index > 0 && (!hasCustomAtTheEnd || index < elementList.length), [element]);
 
-  const showDown = useMemo(
-    () => index + (hasCustomAtTheEnd ? 2 : 1) < elementList.length,
-    [element, elementList, index],
-  );
+  const showDown = useMemo(() => index + 1 < elementList.length, [element, elementList, index]);
   // Render only if any arrow should be shown
   if (!showUp && !showDown) {
     return null;
