@@ -31,7 +31,7 @@ import { getHeaderButtonsProps } from "./utils";
 
 export const ResultView: FC = () => {
   const { form, countDistributions, formElementList, selectedFormElement, setSelectedFormElement } = useResult();
-  const { toggleModal } = useGlobal();
+  const { toggleModal, isTablet } = useGlobal();
 
   const handleChangeSelectedFormElement = (e: SelectChangeEvent<number>) => {
     const selectedFormElementId = e.target.value;
@@ -76,12 +76,26 @@ export const ResultView: FC = () => {
     </Stack>,
   ];
 
+  const getSelect = () => (
+    <Stack direction="row" alignItems="center" gap={2} width={isTablet ? "100%" : "40%"} minWidth={0}>
+      <Typography>{t("formulaire.goTo")}</Typography>
+      <Select sx={selectStyle} value={selectedFormElement?.id || ""} onChange={handleChangeSelectedFormElement}>
+        {formElementList.map((formElement, index) => (
+          <MenuItem key={formElement.id} value={formElement.id ?? 0}>
+            {`${index + 1}. ${formElement.title}`}
+          </MenuItem>
+        ))}
+      </Select>
+    </Stack>
+  );
+
   return (
     <Stack width="100%">
       <Header items={headerItems} buttons={buttons} displaySeparator />
       {countDistributions ? (
-        <Stack margin={"2rem 8rem 4rem 8rem"}>
+        <Stack margin={isTablet ? "2rem 1rem 4rem 1rem" : "2rem 8rem 4rem 8rem"}>
           {selectedFormElement ? <FormElementResult formElement={selectedFormElement} /> : <Loader />}
+          {isTablet && <Box mt={3}>{getSelect()}</Box>}
           <Stack direction="row" justifyContent="space-between" mt={3} alignItems="center">
             <Box>
               <Button
@@ -92,16 +106,7 @@ export const ResultView: FC = () => {
                 {t("formulaire.prev")}
               </Button>
             </Box>
-            <Stack direction="row" alignItems="center" gap={2} width="40%" minWidth={0}>
-              <Typography>{t("formulaire.goTo")}</Typography>
-              <Select sx={selectStyle} value={selectedFormElement?.id || ""} onChange={handleChangeSelectedFormElement}>
-                {formElementList.map((formElement, index) => (
-                  <MenuItem key={formElement.id} value={formElement.id ?? 0}>
-                    {`${index + 1}. ${formElement.title}`}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Stack>
+            {!isTablet && getSelect()}
             <Box>
               <Button
                 onClick={handleNext}
