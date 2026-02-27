@@ -10,12 +10,14 @@ import {
   Stack,
   Typography,
 } from "@cgi-learning-hub/ui";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { FC } from "react";
 
 import { Header } from "~/components/Header";
 import { EmptyResult } from "~/components/SVG/EmptyResult";
 import { ModalType } from "~/core/enums";
 import { FRONT_ROUTES } from "~/core/frontRoutes";
+import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { ComponentVariant } from "~/core/style/themeProps";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
@@ -64,9 +66,19 @@ export const ResultView: FC = () => {
       )
     : [];
 
+  const headerItems = [
+    <Stack direction="row" gap={2} alignItems="center">
+      <Typography fontSize="2.4rem">{form.title}</Typography>
+      <Box color={TEXT_SECONDARY_COLOR}>
+        <NavigateNextIcon sx={{ height: "2.4rem" }} />
+      </Box>
+      <Typography fontSize="2.4rem">{t("formulaire.results")}</Typography>
+    </Stack>,
+  ];
+
   return (
     <Stack width="100%">
-      <Header items={[form.title, t("formulaire.results")]} buttons={buttons} displaySeparator />
+      <Header items={headerItems} buttons={buttons} displaySeparator />
       {countDistributions ? (
         <Stack margin={"2rem 8rem 4rem 8rem"}>
           {selectedFormElement ? <FormElementResult formElement={selectedFormElement} /> : <Loader />}
