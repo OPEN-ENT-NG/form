@@ -6,6 +6,7 @@ import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
 import { ChangeEvent, FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
+import { CreationQuestionWrapper } from "~/containers/creation/CreationQuestionWrapper";
 import { questionAlertStyle } from "~/containers/creation/CreationQuestionWrapper/style";
 import { DeleteConfirmationModal } from "~/containers/creation/DeleteConfirmationModal";
 import { UndoConfirmationModal } from "~/containers/creation/UndoConfirmationModal";
@@ -13,6 +14,7 @@ import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
 import { EditorMode, ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { isSection, isValidFormElement } from "~/core/models/formElement/utils";
+import { IQuestion } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
 import { AlertSeverityVariant, ComponentVariant } from "~/core/style/themeProps";
 import { isEnterPressed } from "~/core/utils";
@@ -205,6 +207,9 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                 focus={false}
               />
             </Box>
+            {section.questions.map((question: IQuestion) => (
+              <CreationQuestionWrapper key={question.id} question={question} isRoot={false} />
+            ))}
             {!!form && !hasFormResponses(form) && !showTreeFormUpdate && (
               <Box sx={sectionFooterStyle}>
                 <Button
