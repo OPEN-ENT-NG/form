@@ -30,7 +30,11 @@ export const intersects = (
   return 0 < lambda && lambda < 1 && 0 < gamma && gamma < 1;
 };
 
-export const getEditIcon = (id: number): string =>
-  `<svg class="tree-edit-icon" data-element-id="${id}" focusable="false" viewBox="0 0 24 24" style="width:20.5px;height:19.5px;fill:currentColor;opacity:0.5;cursor:pointer;flex-shrink:0;margin-left:auto;margin-right:8px;outline:none;border:none;">
-    <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
-  </svg>`;
+export const getEditIcon = (id: number, isQuestion: boolean): string =>
+  `<button class="tree-edit-icon tree-edit-icon--${
+    isQuestion ? "question" : "section"
+  }" data-element-id="${id}" title="Éditer">
+    <svg focusable="false" viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/>
+    </svg>
+  </button>`;
