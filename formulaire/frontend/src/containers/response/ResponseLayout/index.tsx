@@ -125,10 +125,19 @@ export const ResponseLayout: FC = () => {
       )}
       {getFormElementContent()}
       <StyledButtonsWrapper displayPrev={!isFirstElement || !!form?.description || form?.rgpd}>
-        {(form?.description || form?.rgpd) && (
+        {(!isFirstElement || form?.description || form?.rgpd) && (
           <Button
             variant={ComponentVariant.OUTLINED}
             onClick={() => {
+              if (isFirstElement) {
+                if (form?.description) {
+                  setPageType(ResponsePageType.DESCRIPTION);
+                  return;
+                } else if (form?.rgpd) {
+                  setPageType(ResponsePageType.RGPD);
+                  return;
+                }
+              }
               void goPreviousElement();
             }}
           >

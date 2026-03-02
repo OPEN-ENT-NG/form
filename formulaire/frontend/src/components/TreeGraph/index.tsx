@@ -11,13 +11,13 @@ import { getNextFormElement as getNextFormElementSection } from "~/core/models/s
 import { t } from "~/i18n";
 import { getFollowingFormElement } from "~/providers/CreationProvider/utils";
 import "./tree.scss";
-import { IArrow, IFormTreeViewHandle, IFormTreeViewProps, ILine } from "./types";
+import { IArrow, ITreeGraphHandle, ITreeGraphProps, ILine } from "./types";
 import { displayTypeIcon, getEditIcon, intersects, shuffle } from "./utils";
 
-export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
+export const TreeGraph = forwardRef<ITreeGraphHandle, ITreeGraphProps>(
   ({ form, formElements, onZoomChange, onEditElement }, ref) => {
     const mainGraphRef = useRef<any>(null);
-    const zoomRef = useRef<d3.ZoomBehavior<Element, unknown> | null>(null);
+    const zoomRef = useRef<d3.ZoomBehavior<SVGSVGElement, unknown> | null>(null);
     const svgRef = useRef<any>(null);
     const innerRef = useRef<any>(null);
 
@@ -53,8 +53,8 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
       initD3Dagre(isFirstInit);
 
       const handleResize = () => {
-        const svg = d3.select("#tree-svg");
-        const zoom = d3.zoom().on("zoom", (e: any) => {
+        const svg = d3.select<SVGSVGElement, unknown>("#tree-svg");
+        const zoom = d3.zoom<SVGSVGElement, unknown>().on("zoom", (e: any) => {
           innerRef.current?.attr("transform", e.transform);
           onZoomChange?.(Math.round(e.transform.k * 100));
         });
@@ -64,9 +64,10 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
       return () => window.removeEventListener("resize", handleResize);
     }, [formElements]);
 
-    const centerGraph = (svg: any, zoom: d3.ZoomBehavior<Element, unknown>): void => {
+    const centerGraph = (svg: any, zoom: d3.ZoomBehavior<SVGSVGElement, unknown>): void => {
       const treeView = d3.select(".tree-view");
-      const treeViewWidth = treeView.node()?.offsetWidth ?? 0;
+      const node = treeView.node() as HTMLElement | null;
+      const treeViewWidth = node?.offsetWidth ?? 0;
       const vh = window.innerHeight - (window.innerHeight * 25) / 100;
       const initialScale = INITIAL_TREE_SCALE / 100;
       svg.attr("width", treeViewWidth).attr("height", vh);
@@ -84,10 +85,10 @@ export const FormTreeView = forwardRef<IFormTreeViewHandle, IFormTreeViewProps>(
       const nodes = initNodes();
       const edgeList = initEdgeList();
       const render = new dagreD3.render();
-      const svg = d3.select("#tree-svg");
+      const svg = d3.select<SVGSVGElement, unknown>("#tree-svg");
       const inner = svg.select("g");
 
-      const zoom = d3.zoom().on("zoom", (e: any) => {
+      const zoom = d3.zoom<SVGSVGElement, unknown>().on("zoom", (e) => {
         inner.attr("transform", e.transform);
         onZoomChange?.(Math.round(e.transform.k * 100));
       });

@@ -3,6 +3,7 @@ import "react-toastify/dist/ReactToastify.css";
 
 import { ThemeProvider as ThemeProviderCGI, ThemeProviderProps } from "@cgi-learning-hub/theme";
 import { GlobalStyles } from "@cgi-learning-hub/ui";
+import { ERROR_CODE } from "@edifice.io/client";
 import { EdificeClientProvider, EdificeThemeProvider } from "@edifice.io/react";
 import { QueryCache, QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
@@ -12,12 +13,11 @@ import { Provider } from "react-redux";
 import { RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
-import { t } from "~/i18n";
-
 import { DEFAULT_THEME, TOAST_CONFIG } from "./core/constants";
 import { globalOverrideStyles } from "./core/style/global";
 import { getOptions } from "./core/style/theme";
 import { useTheme } from "./hook/useTheme";
+import { t } from "./i18n";
 import { GlobalProvider } from "./providers/GlobalProvider";
 import { router } from "./routes";
 import { store } from "./store";
@@ -40,8 +40,15 @@ if (process.env.NODE_ENV !== "production") {
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
-    onError: (error: unknown) => {
-      if (error === "0090") window.location.replace("/auth/login");
+    onError: (error) => {
+      if (typeof error === "string") {
+        if (error === ERROR_CODE.NOT_LOGGED_IN) {
+          if (!window.location.pathname.includes("formulaire-public")) {
+            window.location.replace("/auth/login");
+            return;
+          }
+        }
+      }
     },
   }),
   defaultOptions: {
@@ -72,8 +79,8 @@ const App = () => {
         >
           <EdificeThemeProvider>
             <ThemeProviderCGI
-              themeId={isTheme1D ? "ent1D" : themePlatform ?? "default"}
-              options={getOptions(isTheme1D)}
+                themeId={isTheme1D ? "ent1D" : themePlatform ?? "default"}
+                options={getOptions(isTheme1D)}
             >
               <GlobalProvider>
                 <GlobalStyles styles={globalOverrideStyles} />

@@ -8,13 +8,12 @@ import { FORMULAIRE } from "~/core/constants";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
-import { isEnterPressed } from "~/core/utils";
 import { useCreation } from "~/providers/CreationProvider";
 import { useGlobal } from "~/providers/GlobalProvider";
 
-import { ITreeEditDialogProps } from "./types";
+import { ITreeEditModalProps } from "./types";
 
-export const TreeEditDialog: FC<ITreeEditDialogProps> = ({ onClose, onSave, onNavigateToQuestion }) => {
+export const TreeEditModal: FC<ITreeEditModalProps> = ({ onClose, onSave, onNavigateToQuestion }) => {
   const { t } = useTranslation(FORMULAIRE);
   const { currentEditingElement } = useCreation();
   const {
@@ -27,12 +26,6 @@ export const TreeEditDialog: FC<ITreeEditDialogProps> = ({ onClose, onSave, onNa
       onClose={onClose}
       maxWidth={BreakpointVariant.MD}
       fullWidth
-      onKeyDown={(e) => {
-        if (isEnterPressed(e) && !e.shiftKey) {
-          e.preventDefault();
-          onSave();
-        }
-      }}
     >
       <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
         {currentEditingElement !== null &&

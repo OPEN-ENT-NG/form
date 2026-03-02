@@ -4,9 +4,9 @@ import { useTranslation } from "react-i18next";
 
 import { Header } from "~/components/Header";
 import { EmptyForm } from "~/components/SVG/EmptyForm";
-import { TreeEditDialog } from "~/components/TreeEditDialog";
-import { FormTreeView } from "~/components/TreeGraph";
-import { IFormTreeViewHandle } from "~/components/TreeGraph/types";
+import { TreeEditModal } from "~/components/TreeEditModal";
+import { TreeGraph } from "~/components/TreeGraph";
+import { ITreeGraphHandle } from "~/components/TreeGraph/types";
 import { useElementHeight } from "~/containers/home/HomeView/utils";
 import { FORMULAIRE, MAX_TREE_ZOOM, MIN_TREE_ZOOM, STEPS_TREE_ZOOM } from "~/core/constants";
 import { ClickAwayDataType, ModalType } from "~/core/enums";
@@ -37,7 +37,7 @@ export const TreeView: FC = () => {
   const { navigateToHome, navigateToFormEdit } = useFormulaireNavigation();
   const saveFormElement = useSaveFormElement();
 
-  const treeRef = useRef<IFormTreeViewHandle>(null);
+  const treeRef = useRef<ITreeGraphHandle>(null);
   const originalEditingElementRef = useRef<typeof currentEditingElement>(null);
   const [frozenFormElements, setFrozenFormElements] = useState(formElementsList);
   const [treeKey, setTreeKey] = useState(0);
@@ -154,7 +154,7 @@ export const TreeView: FC = () => {
           </Box>
           {form && (
             <>
-              <FormTreeView
+              <TreeGraph
                 key={treeKey}
                 ref={treeRef}
                 formElements={frozenFormElements}
@@ -166,7 +166,7 @@ export const TreeView: FC = () => {
                   setCurrentEditingElement(formElement);
                 }}
               />
-              <TreeEditDialog
+              <TreeEditModal
                 onClose={handleCloseModal}
                 onSave={() => void handleRegisterAndCloseModal()}
                 onNavigateToQuestion={navigateToQuestion}
