@@ -73,7 +73,7 @@
     }
   }
 
-  svg {
+  > svg {
     width: 100%;
     border: 1px solid #ddd;
     .node rect {
@@ -109,11 +109,15 @@
   height: 34px;
   flex-shrink: 0;
   margin-right: 4px;
+  padding: 7px;
+  border: none;
   border-radius: 50%;
+  background-color: transparent;
   cursor: pointer;
-  color: var(--theme-palette-primary-main);
-  fill: var(--theme-palette-primary-main);
   transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  outline: none;
+  position: relative;
+  z-index: 1;
 
   svg {
     width: 20px;
@@ -122,11 +126,32 @@
     pointer-events: none;
   }
 
-  &:hover {
-    background-color: rgba(25, 118, 210, 0.04);
+  &:focus-visible {
+    outline: 2px solid var(--theme-palette-primary-main);
+    outline-offset: 2px;
   }
 
-  &:active {
-    background-color: rgba(25, 118, 210, 0.12);
+  &--question {
+    color: var(--theme-palette-primary-main);
+    fill: var(--theme-palette-primary-main);
+
+    &:hover {
+      background-color: rgba(25, 118, 210, 0.04);
+    }
+    &:active {
+      background-color: rgba(25, 118, 210, 0.12);
+    }
+  }
+
+  &--section {
+    color: white;
+    fill: white;
+
+    &:hover {
+      background-color: rgba(255, 255, 255, 0.08);
+    }
+    &:active {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
   }
 }
