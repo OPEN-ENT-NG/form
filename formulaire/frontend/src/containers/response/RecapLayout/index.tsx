@@ -65,23 +65,23 @@ export const RecapLayout: FC = () => {
             {isSection(formElement) && <RespondSectionWrapper section={formElement} />}
           </Box>
         ))}
+        {!form?.editable && distribution?.status === DistributionStatus.FINISHED ? (
+          <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
+            <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
+              {t("formulaire.quit")}
+            </Button>
+          </Stack>
+        ) : (
+          <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
+            <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
+              {t("formulaire.saveAndQuit")}
+            </Button>
+            <Button variant={ComponentVariant.CONTAINED} onClick={handleSendForm}>
+              {t("formulaire.end")}
+            </Button>
+          </Stack>
+        )}
       </Stack>
-      {!form?.editable && distribution?.status === DistributionStatus.FINISHED ? (
-        <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
-          <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
-            {t("formulaire.quit")}
-          </Button>
-        </Stack>
-      ) : (
-        <Stack direction="row" justifyContent="flex-end" gap={2} mt={4}>
-          <Button variant={ComponentVariant.OUTLINED} onClick={saveAndQuit}>
-            {t("formulaire.saveAndQuit")}
-          </Button>
-          <Button variant={ComponentVariant.CONTAINED} onClick={handleSendForm}>
-            {t("formulaire.end")}
-          </Button>
-        </Stack>
-      )}
       {showSendForm && distribution && (
         <SendFormModal
           isOpen={showSendForm}
