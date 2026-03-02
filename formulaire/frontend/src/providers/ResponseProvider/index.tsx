@@ -42,7 +42,7 @@ export const useResponse = () => {
 
 export const ResponseProvider: FC<IResponseProviderProps> = ({ children, previewMode = false, initialPageType }) => {
   const { formId, distributionId } = useParams();
-  const { navigateToError403, navigateToFormResponse } = useFormulaireNavigation();
+  const { navigateToError403, navigateToError404, navigateToFormResponse } = useFormulaireNavigation();
   const { user } = useEdificeClient();
   const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
@@ -123,11 +123,20 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
 
     // Si distributionId est "new", on tente d'en trouver une existante ou en créer une nouvelle le cas échéant
     if (distributionId === "new") {
+      // Si il n'y a pas de distrib ni TODO ni FINISHED, on ne devrait pas être là
+      if (formUserDistributionsDatas.length <= 0) {
+        navigateToError404();
+        return;
+      }
       const toDoDistrib = formUserDistributionsDatas.find((d) => d.status == DistributionStatus.TO_DO);
       const finishedDistribs = formUserDistributionsDatas.filter((d) => d.status == DistributionStatus.FINISHED);
       if ((form && form.multiple) || finishedDistribs.length == 0) {
-        if (toDoDistrib) setDistribution(toDoDistrib);
-        if (formUserDistributionsDatas.length <= 0) return;
+        // If a TODO distrib exists, we use it
+        if (toDoDistrib) {
+          setDistribution(toDoDistrib);
+          return;
+        }
+        // Else we create a new one by copying on existing one
         void addDistribution(formUserDistributionsDatas[0].id)
           .unwrap()
           .then((newDistribution) => {

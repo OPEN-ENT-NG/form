@@ -97,7 +97,6 @@ export const ResponseLayout: FC = () => {
     }
 
     // We got an element for the next position
-    //TODO check if we need that later : unloadLastResponses();
     await saveResponses(currentElement);
 
     const nextElement = formElementsList.find((fe) => fe.position === nextPosition);
