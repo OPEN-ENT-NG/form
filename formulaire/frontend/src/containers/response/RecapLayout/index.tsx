@@ -37,11 +37,14 @@ export const RecapLayout: FC = () => {
         fe.id && progress.historicFormElementIds.length ? progress.historicFormElementIds.includes(fe.id) : true,
       )
       .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
-    const sortedFormElementsToDisplayIds = sortedFormElementsToDisplay.map((fe) => fe.id).filter((id) => id != null);
 
+    console.log("sortedFormElementsToDisplay : ", sortedFormElementsToDisplay);
+    setAnsweredFormElements(sortedFormElementsToDisplay);
+
+    if (progress.historicFormElementIds.length) return;
+    const sortedFormElementsToDisplayIds = sortedFormElementsToDisplay.map((fe) => fe.id).filter((id) => id != null);
     const newProgress = buildProgressObject(sortedFormElementsToDisplayIds, 0);
     setProgress(newProgress);
-    setAnsweredFormElements(sortedFormElementsToDisplay);
   }, [formElementsList, responses]);
 
   const saveAndQuit = () => {
