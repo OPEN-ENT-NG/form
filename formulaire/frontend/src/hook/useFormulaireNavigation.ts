@@ -37,8 +37,13 @@ export const useFormulaireNavigation = () => {
     navigateToError401: () => {
       navigate(FRONT_ROUTES.error401.build());
     },
+
     navigateToError403: () => {
       navigate(FRONT_ROUTES.error403.build());
+    },
+
+    navigateToError404: () => {
+      navigate(FRONT_ROUTES.error404.build());
     },
   };
 };
