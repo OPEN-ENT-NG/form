@@ -121,7 +121,7 @@ export const useClickAwayEditingElement = (
     dontSetActive?: boolean,
   ) => {
     e.stopPropagation();
-    if (!currentEditingElement && targetedElement && isQuestion(targetedElement)) {
+    if (!currentEditingElement && targetedElement && isQuestion(targetedElement) && !dontSetActive) {
       setCurrentEditingElement(targetedElement);
       return;
     }
@@ -134,7 +134,7 @@ export const useClickAwayEditingElement = (
       if (newChoiceValue) setNewChoiceValue("");
 
       const updatedQuestion = preventEmptyValues(question);
-      setCurrentEditingElement(updatedQuestion);
+      if (!dontSetActive) setCurrentEditingElement(updatedQuestion);
       updatedFormElement = updatedQuestion;
     }
 
