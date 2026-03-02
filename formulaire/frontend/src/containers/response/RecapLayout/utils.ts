@@ -8,8 +8,9 @@ export const checkMandatoryQuestions = (formElements: IFormElement[], responses:
   const hasInvalidQuestion = mandatoryQuestions.some((question) => {
     if (question.questionType === QuestionTypes.MATRIX) {
       question.children?.forEach((child) => {
-        if (!responses.some((r) => r.questionId === child.id && r.answer)) return false;
+        if (!responses.some((r) => r.questionId === child.id && r.answer)) return true;
       });
+      return false;
     }
 
     return !responses.some((r) => r.questionId === question.id && isResponseStringValid(r));
