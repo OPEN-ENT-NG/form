@@ -45,5 +45,9 @@ export const useFormulaireNavigation = () => {
     navigateToError404: () => {
       navigate(FRONT_ROUTES.error404.build());
     },
+
+    navigateToError409: () => {
+      navigate(FRONT_ROUTES.error409.build());
+    },
   };
 };

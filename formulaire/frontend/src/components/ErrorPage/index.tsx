@@ -20,6 +20,8 @@ export const ErrorPage: FC<IErrorCodeProps> = ({ errorCode }) => {
       case 401:
       case 403:
         return "formulaire.error.403";
+      case 409:
+        return "formulaire.error.409";
       default:
         return "formulaire.error.404";
     }
