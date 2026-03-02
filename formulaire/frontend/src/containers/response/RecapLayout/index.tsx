@@ -38,7 +38,6 @@ export const RecapLayout: FC = () => {
       )
       .sort((a, b) => (a.position ?? 0) - (b.position ?? 0));
 
-    console.log("sortedFormElementsToDisplay : ", sortedFormElementsToDisplay);
     setAnsweredFormElements(sortedFormElementsToDisplay);
 
     if (progress.historicFormElementIds.length) return;
