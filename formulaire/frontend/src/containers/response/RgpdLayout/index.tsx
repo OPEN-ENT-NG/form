@@ -27,7 +27,12 @@ export const RgpdLayout: FC = () => {
   }, [form]);
 
   const delegatesParam = useMemo(() => {
-    if (!form || !form.rgpd_goal) return {} as IRGPDData;
+    if (!form || !form.rgpd_goal)
+      return {
+        finalite: form?.rgpd_goal ?? "",
+        expirationDate: rgpdExpirationDate,
+        delegates: [],
+      } as IRGPDData;
     return buildDelegatesParam(delegatesDatas ?? null, form.rgpd_goal, rgpdExpirationDate);
   }, [delegatesDatas, rgpdExpirationDate]);
 
