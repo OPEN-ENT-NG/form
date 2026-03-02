@@ -10,13 +10,15 @@ import {
   Stack,
   Typography,
 } from "@cgi-learning-hub/ui";
+import NavigateNextIcon from "@mui/icons-material/NavigateNext";
 import { FC } from "react";
 
 import { Header } from "~/components/Header";
 import { EmptyResult } from "~/components/SVG/EmptyResult";
 import { ModalType } from "~/core/enums";
-import { FRONT_ROUTES } from "~/core/frontRoutes";
+import { TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { ComponentVariant } from "~/core/style/themeProps";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResult } from "~/providers/ResultProvider";
@@ -29,7 +31,8 @@ import { getHeaderButtonsProps } from "./utils";
 
 export const ResultView: FC = () => {
   const { form, countDistributions, formElementList, selectedFormElement, setSelectedFormElement } = useResult();
-  const { toggleModal } = useGlobal();
+  const { toggleModal, isTablet } = useGlobal();
+  const { navigateToHome } = useFormulaireNavigation();
 
   const handleChangeSelectedFormElement = (e: SelectChangeEvent<number>) => {
     const selectedFormElementId = e.target.value;
@@ -64,12 +67,36 @@ export const ResultView: FC = () => {
       )
     : [];
 
+  const headerItems = [
+    <Stack direction="row" gap={2} alignItems="center">
+      <Typography fontSize="2.4rem">{form.title}</Typography>
+      <Box color={TEXT_SECONDARY_COLOR}>
+        <NavigateNextIcon sx={{ height: "2.4rem" }} />
+      </Box>
+      <Typography fontSize="2.4rem">{t("formulaire.results")}</Typography>
+    </Stack>,
+  ];
+
+  const getSelect = () => (
+    <Stack direction="row" alignItems="center" gap={2} width={isTablet ? "100%" : "40%"} minWidth={0}>
+      <Typography>{t("formulaire.goTo")}</Typography>
+      <Select sx={selectStyle} value={selectedFormElement?.id || ""} onChange={handleChangeSelectedFormElement}>
+        {formElementList.map((formElement, index) => (
+          <MenuItem key={formElement.id} value={formElement.id ?? 0}>
+            {`${index + 1}. ${formElement.title}`}
+          </MenuItem>
+        ))}
+      </Select>
+    </Stack>
+  );
+
   return (
     <Stack width="100%">
-      <Header items={[form.title, t("formulaire.results")]} buttons={buttons} displaySeparator />
+      <Header items={headerItems} buttons={buttons} displaySeparator />
       {countDistributions ? (
-        <Stack margin={"2rem 8rem 4rem 8rem"}>
+        <Stack margin={isTablet ? "2rem 1rem 4rem 1rem" : "2rem 8rem 4rem 8rem"}>
           {selectedFormElement ? <FormElementResult formElement={selectedFormElement} /> : <Loader />}
+          {isTablet && <Box mt={3}>{getSelect()}</Box>}
           <Stack direction="row" justifyContent="space-between" mt={3} alignItems="center">
             <Box>
               <Button
@@ -80,16 +107,7 @@ export const ResultView: FC = () => {
                 {t("formulaire.prev")}
               </Button>
             </Box>
-            <Stack direction="row" alignItems="center" gap={2} width="40%" minWidth={0}>
-              <Typography>{t("formulaire.goTo")}</Typography>
-              <Select sx={selectStyle} value={selectedFormElement?.id || ""} onChange={handleChangeSelectedFormElement}>
-                {formElementList.map((formElement, index) => (
-                  <MenuItem key={formElement.id} value={formElement.id ?? 0}>
-                    {`${index + 1}. ${formElement.title}`}
-                  </MenuItem>
-                ))}
-              </Select>
-            </Stack>
+            {!isTablet && getSelect()}
             <Box>
               <Button
                 onClick={handleNext}
@@ -111,7 +129,12 @@ export const ResultView: FC = () => {
             color="primary.main"
             imageHeight={250}
           />
-          <Link href={FRONT_ROUTES.home.path} color="primary">
+          <Link
+            onClick={() => {
+              navigateToHome();
+            }}
+            color="primary"
+          >
             {t("formulaire.error.backToMenu")}
           </Link>
         </Stack>

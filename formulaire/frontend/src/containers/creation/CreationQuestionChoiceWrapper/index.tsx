@@ -160,31 +160,33 @@ export const CreationQuestionChoiceWrapper: FC<ICreationQuestionChoiceWrapperPro
               />
             ))}
             {/* New empty choice */}
-            <NewChoiceWrapper key="newChoice" hasImage={hasImageType(type)}>
-              <CreationQuestionChoice
-                index={choices.length}
-                type={type}
-                displayedIndex={customChoice ? choices.length - 1 : choices.length}
-              >
-                <TextField
-                  inputRef={(el: HTMLInputElement | null) => (inputRefs.current[newChoiceRefName] = el)}
-                  value={newChoiceValue}
-                  variant={ComponentVariant.STANDARD}
-                  placeholder={getPlaceholder()}
-                  fullWidth
-                  onFocus={selectAllTextInput}
-                  onBlur={() => {
-                    handleNewChoice(false, newChoiceValue);
-                    setNewChoiceValue("");
-                  }}
-                  onChange={(e) => {
-                    setNewChoiceValue(e.target.value);
-                  }}
-                  onKeyDown={handleKeyDownNewChoice}
-                  sx={newChoiceInputStyle}
-                />
-              </CreationQuestionChoice>
-            </NewChoiceWrapper>
+            {!!form && !hasFormResponses(form) && (
+              <NewChoiceWrapper key="newChoice" hasImage={hasImageType(type)}>
+                <CreationQuestionChoice
+                  index={choices.length}
+                  type={type}
+                  displayedIndex={customChoice ? choices.length - 1 : choices.length}
+                >
+                  <TextField
+                    inputRef={(el: HTMLInputElement | null) => (inputRefs.current[newChoiceRefName] = el)}
+                    value={newChoiceValue}
+                    variant={ComponentVariant.STANDARD}
+                    placeholder={getPlaceholder()}
+                    fullWidth
+                    onFocus={selectAllTextInput}
+                    onBlur={() => {
+                      handleNewChoice(false, newChoiceValue);
+                      setNewChoiceValue("");
+                    }}
+                    onChange={(e) => {
+                      setNewChoiceValue(e.target.value);
+                    }}
+                    onKeyDown={handleKeyDownNewChoice}
+                    sx={newChoiceInputStyle}
+                  />
+                </CreationQuestionChoice>
+              </NewChoiceWrapper>
+            )}
 
             {/* Custom choice */}
             {customChoice &&
