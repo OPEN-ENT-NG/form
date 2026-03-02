@@ -1,4 +1,4 @@
-import { Box, Button, EmptyState, Typography, ZoomControl } from "@cgi-learning-hub/ui";
+import { Box, Button, EmptyState, Loader, Typography, ZoomControl } from "@cgi-learning-hub/ui";
 import { FC, useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 
@@ -177,6 +177,8 @@ export const TreeView: FC = () => {
       </Box>
     </>
   );
+
+  if (!form) return <Loader />;
 
   return <Box sx={creationViewStyle(isTheme1D)}>{selectView()}</Box>;
 };
