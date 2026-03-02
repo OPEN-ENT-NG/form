@@ -9,6 +9,7 @@ import { ResponsePageType } from "~/core/enums";
 import { emptyStateWrapper } from "~/core/style/boxStyles";
 import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { DescriptionLayout } from "../DescriptionLayout";
@@ -21,6 +22,7 @@ import { RgpdLayout } from "../RgpdLayout";
 export const ResponseView: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
   const { form, formElementsList, isInPreviewMode, pageType } = useResponse();
+  const { isMobile } = useGlobal();
   const headerButtons = useGetResponseHeaderButtons(form?.id, isInPreviewMode, pageType);
   const isNotReady = !form || formElementsList.length <= 0;
 
@@ -65,7 +67,14 @@ export const ResponseView: FC = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", height: "100%", paddingX: "10%", ...(isNotReady && { margin: "auto" }) }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        ...(!isMobile && { paddingX: "10%" }),
+        ...(isNotReady && { margin: "auto" }),
+      }}
+    >
       {form && !isNotReady && <Header items={[form.title]} buttons={getHeaderButtons()} form={form} displaySeparator />}
       {displayRightPage()}
     </Box>
