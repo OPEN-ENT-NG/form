@@ -15,7 +15,7 @@ import DeleteRoundedIcon from "@mui/icons-material/DeleteRounded";
 import DragIndicatorRoundedIcon from "@mui/icons-material/DragIndicatorRounded";
 import FileCopyRoundedIcon from "@mui/icons-material/FileCopyRounded";
 import UndoRoundedIcon from "@mui/icons-material/UndoRounded";
-import { ChangeEvent, FC, useEffect, useMemo, useRef, useState } from "react";
+import { ChangeEvent, FC, KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
@@ -38,6 +38,7 @@ import {
 import { flexStartBoxStyle } from "~/core/style/boxStyles";
 import { ERROR_MAIN_COLOR, TEXT_PRIMARY_COLOR, TEXT_SECONDARY_COLOR } from "~/core/style/colors";
 import { AlertSeverityVariant, BoxComponentType, ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { isEnterPressed } from "~/core/utils";
 import { DndElementType } from "~/hook/dnd-hooks/useCreationDnd/enum";
 import { useCreation } from "~/providers/CreationProvider";
 import { useClickAwayEditingElement } from "~/providers/CreationProvider/hook/useClickAwayEditingElement";
@@ -45,6 +46,7 @@ import {
   getFollowingFormElement,
   isCurrentEditingElement,
   preventPropagation,
+  updateElementInList,
 } from "~/providers/CreationProvider/utils";
 import { useGlobal } from "~/providers/GlobalProvider";
 
@@ -85,7 +87,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     setNewChoiceValue,
   } = useCreation();
   const {
-    displayModals: { showQuestionUndo, showQuestionDelete },
+    displayModals: { showQuestionUndo, showQuestionDelete, showTreeFormUpdate },
     toggleModal,
     selectAllTextInput,
   } = useGlobal();
@@ -124,7 +126,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     setMatrixType(question.children?.[0]?.questionType ?? QuestionTypes.SINGLEANSWERRADIO);
   }, [question.children]);
 
-  const { handleClickAway } = useClickAwayEditingElement(
+  const { saveFormElement, handleClickAway } = useClickAwayEditingElement(
     handleDeleteFormElement,
     setCurrentEditingElement,
     formElementsList,
@@ -208,6 +210,17 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
     }
   };
 
+  const onEnterPressed = async (e: KeyboardEvent<HTMLDivElement>) => {
+    if (isEnterPressed(e) && !e.shiftKey) {
+      e.preventDefault();
+      if (currentEditingElement) {
+        const updatedList = updateElementInList(formElementsList, currentEditingElement);
+        await saveFormElement(currentEditingElement, updatedList);
+      }
+      if (showTreeFormUpdate) toggleModal(ModalType.TREE_FORM_UPDATE);
+    }
+  };
+
   return (
     <Box
       style={style}
@@ -231,6 +244,9 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
                 value={currentQuestionTitle}
                 onFocus={selectAllTextInput}
                 onChange={handleTitleChange}
+                onKeyDown={(e) => {
+                  void onEnterPressed(e);
+                }}
               />
               {form && !hasFormResponses(form) && question.questionType === QuestionTypes.MATRIX && (
                 <Select

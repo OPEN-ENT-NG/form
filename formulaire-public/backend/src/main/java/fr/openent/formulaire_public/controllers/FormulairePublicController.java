@@ -37,7 +37,6 @@ public class FormulairePublicController extends ControllerHelper {
         UserUtils.getUserInfos(eb, request, user -> {
             JsonObject safeConfig = config.copy();
             JsonObject params = new JsonObject()
-                .put(NOT_LOGGED_IN, user == null)
                 .put(HOST, safeConfig.getString(HOST, null))
                 .put(THEME_PLATFORM, safeConfig.getString(THEME_PLATFORM, "default"));
             if ("angular".equals(view)) {

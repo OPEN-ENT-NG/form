@@ -142,6 +142,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
       void saveFormElement(updated, formElementsList);
     }
     setCurrentEditingElement(null);
+    if (showTreeFormUpdate) toggleModal(ModalType.TREE_FORM_UPDATE);
   };
 
   return (
