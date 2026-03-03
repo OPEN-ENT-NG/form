@@ -97,7 +97,7 @@ public class FormulaireApplicationStorage extends PostgresqlApplicationStorage {
         UserInfos user = new UserInfos();
         user.setUserId(userId);
         user.setUsername(userName);
-        String formResultsUri = "/formulaire#/form/" + form.getInteger(ID) + "/results/1";
+        String formResultsUri = "/formulaire#/form/" + form.getInteger(ID) + "/results";
 
         JsonObject params = new JsonObject()
                 .put(ANONYMOUS, form.getBoolean(ANONYMOUS))

@@ -38,7 +38,11 @@ export const RespondQuestionFile: FC<IRespondQuestionTypesProps> = ({ question }
 
     if (!associatedResponse) return;
     updateQuestionResponses(question, [
-      { ...associatedResponse, files: newFiles.slice(0, MAX_FILES_SAVE), answer: t("formulaire.response.file.send") },
+      {
+        ...associatedResponse,
+        files: newFiles.slice(0, MAX_FILES_SAVE),
+        answer: newFiles.length ? t("formulaire.response.file.send") : "",
+      },
     ]);
   };
 
