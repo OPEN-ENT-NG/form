@@ -134,6 +134,7 @@ export const ResultView: FC = () => {
               navigateToHome();
             }}
             color="primary"
+            sx={{ "&:hover": { cursor: "pointer" } }}
           >
             {t("formulaire.error.backToMenu")}
           </Link>

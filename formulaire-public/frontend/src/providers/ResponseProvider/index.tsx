@@ -56,7 +56,16 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
       const parsedFormDatas = parseFormDatas(formDatas);
       setForm(parsedFormDatas);
       setFormElementsList(parsedFormDatas.formElements);
-      setPageType(ResponsePageType.RGPD);
+      // Display right page
+      if (formDatas.rgpd) {
+        setPageType(ResponsePageType.RGPD);
+        return;
+      }
+      if (formDatas.description) {
+        setPageType(ResponsePageType.DESCRIPTION);
+        return;
+      }
+      setPageType(ResponsePageType.FORM_ELEMENT);
     }
   }, [formDatas]);
 
