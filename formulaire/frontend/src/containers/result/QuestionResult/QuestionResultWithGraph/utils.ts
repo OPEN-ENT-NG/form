@@ -64,5 +64,5 @@ export const getDisplayedResponseStat = (
 export const getAverage = (allResponses: ICompleteResponse[]) => {
   if (allResponses.length === 0) return 0;
   const sum = allResponses.reduce((acc, response) => acc + Number(response.answer), 0);
-  return sum / allResponses.length;
+  return (sum / allResponses.length).toFixed(2);
 };
