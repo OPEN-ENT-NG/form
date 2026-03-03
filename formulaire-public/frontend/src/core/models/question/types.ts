@@ -14,7 +14,7 @@ export interface IQuestionDTO extends IFormElementDTO {
   choices: IQuestionChoiceDTO[] | null;
   placeholder: string | null;
   children: IQuestionDTO[] | null;
-  specific_fields: IQuestionSpecificFields | null;
+  specific_fields: IQuestionSpecificFieldsDTO | null;
 }
 
 // Model Interfaces
@@ -74,6 +74,16 @@ export interface IQuestionSpecificFields {
   cursorStep: number;
   cursorMinLabel: string;
   cursorMaxLabel: string;
+}
+
+export interface IQuestionSpecificFieldsDTO {
+  id: number;
+  question_id: number;
+  cursor_min_val: number;
+  cursor_max_val: number;
+  cursor_step: number;
+  cursor_min_label: string | null;
+  cursor_max_label: string | null;
 }
 
 export interface IQuestionSpecificFieldsPayload {
