@@ -33,4 +33,5 @@ export const FRONT_ROUTES = {
   error401: defineRoute("/401"),
   error403: defineRoute("/403"),
   error404: defineRoute("/404"),
+  error409: defineRoute("/409"),
 } as const;

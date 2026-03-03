@@ -42,7 +42,8 @@ export const useResponse = () => {
 
 export const ResponseProvider: FC<IResponseProviderProps> = ({ children, previewMode = false, initialPageType }) => {
   const { formId, distributionId } = useParams();
-  const { navigateToError403, navigateToError404, navigateToFormResponse } = useFormulaireNavigation();
+  const { navigateToError403, navigateToError404, navigateToError409, navigateToFormResponse } =
+    useFormulaireNavigation();
   const { user } = useEdificeClient();
   const { initUserWorfklowRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
@@ -130,6 +131,11 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       }
       const toDoDistrib = formUserDistributionsDatas.find((d) => d.status == DistributionStatus.TO_DO);
       const finishedDistribs = formUserDistributionsDatas.filter((d) => d.status == DistributionStatus.FINISHED);
+      // If form is not multiple and it exists at least one finished distrib => go 409
+      if (!form?.multiple && !!finishedDistribs.length) {
+        navigateToError409();
+        return;
+      }
       if ((form && form.multiple) || finishedDistribs.length == 0) {
         // If a TODO distrib exists, we use it
         if (toDoDistrib) {

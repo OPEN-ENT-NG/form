@@ -87,6 +87,10 @@ const routes = [
         element: <ErrorPage errorCode={403} />,
       },
       {
+        path: FRONT_ROUTES.error409.path,
+        element: <ErrorPage errorCode={409} />,
+      },
+      {
         path: "*",
         element: <ErrorPage errorCode={404} />,
       },
