@@ -33,7 +33,7 @@ export const getResponseStatsMap = (choices: IQuestionChoice[], distributionMap:
 
     acc.set(choice.id, {
       nbResponses,
-      percentage: (nbResponses / total) * 100,
+      percentage: total > 0 ? (nbResponses / total) * 100 : 0,
     });
 
     return acc;
@@ -43,7 +43,7 @@ export const getResponseStatsMap = (choices: IQuestionChoice[], distributionMap:
 
   result.set(CHOICE_ID_FOR_NO_RESPONSE, {
     nbResponses: emptyCount,
-    percentage: (emptyCount / total) * 100,
+    percentage: total > 0 ? (emptyCount / total) * 100 : 0,
   });
 
   return result;
