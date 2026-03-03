@@ -17,10 +17,10 @@ import { ResponseLayout } from "../ResponseLayout";
 import { RgpdLayout } from "../RgpdLayout";
 
 export const ResponseView: FC = () => {
-  const { form, formElementsList, pageType } = useResponse();
+  const { form, formElementsList, pageType, isFormFetchError } = useResponse();
   const isNotReady = useMemo(() => {
-    return !form || formElementsList.length <= 0;
-  }, [form, formElementsList]);
+    return (!form || formElementsList.length <= 0) && !isFormFetchError;
+  }, [form, formElementsList, isFormFetchError]);
 
   const errorPage = (
     <Box sx={emptyStateWrapper}>
@@ -28,7 +28,7 @@ export const ResponseView: FC = () => {
         image={<ErrorPreview />}
         color={SECONDARY_MAIN_COLOR}
         title=""
-        description={t("formulaire.public.end.404")}
+        description={t("formulaire.public.end.sorry")}
         imageHeight={300}
         slotProps={{ title: { variant: TypographyVariant.H4 }, description: { variant: TypographyVariant.BODY2 } }}
       />

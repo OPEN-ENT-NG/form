@@ -28,6 +28,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
   const { formKey } = useParams();
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
   const [form, setForm] = useState<IForm | null>(null);
+  const [isFormFetchError, setIsFormFetchError] = useState<boolean>(false);
   const [formElementsList, setFormElementsList] = useState<IFormElement[]>([]);
   const [longestPathsMap, setLongestPathsMap] = useState<Map<string, number>>(new Map<string, number>());
   const [progress, setProgress] = useState<IProgressProps>({
@@ -48,7 +49,13 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
   if (formKey === undefined) throw new Error("formKey is undefined");
 
   // Fetching data
-  const { data: formDatas } = useGetPublicFormQuery(formKey);
+  const { data: formDatas, error } = useGetPublicFormQuery(formKey);
+
+  useEffect(() => {
+    if (error) {
+      setIsFormFetchError(true);
+    }
+  }, [error]);
 
   // Fill sessionStorage with fetched datas
   useEffect(() => {
@@ -135,6 +142,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
       formKey,
       flattenResponses,
       setFlattenResponses,
+      isFormFetchError,
     }),
     [
       form,
@@ -152,6 +160,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
       scrollToQuestionId,
       formKey,
       flattenResponses,
+      isFormFetchError,
     ],
   );
 

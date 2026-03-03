@@ -16,7 +16,17 @@ export const formApi = emptySplitFormulairePublicApi.injectEndpoints({
         try {
           await queryFulfilled;
         } catch (err) {
-          handleGetFormError(err, "formulaire.public.error.formService.get");
+          if (
+            typeof err === "object" &&
+            err !== null &&
+            "error" in err &&
+            typeof err.error === "object" &&
+            err.error !== null &&
+            "status" in err.error &&
+            err.error.status !== 403
+          ) {
+            handleGetFormError(err, "formulaire.public.error.formService.get");
+          }
         }
       },
     }),
