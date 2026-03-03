@@ -56,7 +56,7 @@ export const useRespondFormElement = (
         if (!q.id) return;
         const response = localResponsesMap.get(q.id)?.[0];
         if (!response) return;
-        if (!response.id) responsesToCreate.push(response);
+        (response.id ? responsesToUpdate : responsesToCreate).push(response);
         response.files.forEach((f) => {
           if (!f.fileContent) return;
           const file = createNewFile(f.fileContent, response.id, q.id!, isFormAnonymous, user);
