@@ -79,8 +79,8 @@ const App = () => {
         >
           <EdificeThemeProvider>
             <ThemeProviderCGI
-                themeId={isTheme1D ? "ent1D" : themePlatform ?? "default"}
-                options={getOptions(isTheme1D)}
+              themeId={isTheme1D ? "ent1D" : themePlatform ?? "default"}
+              options={getOptions(isTheme1D)}
             >
               <GlobalProvider>
                 <GlobalStyles styles={globalOverrideStyles} />
