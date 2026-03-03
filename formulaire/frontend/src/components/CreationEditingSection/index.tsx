@@ -13,7 +13,7 @@ import { UndoConfirmationModal } from "~/containers/creation/UndoConfirmationMod
 import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
 import { EditorMode, ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
-import { isSection, isValidFormElement } from "~/core/models/formElement/utils";
+import { isValidFormElement } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
 import { AlertSeverityVariant, ComponentVariant } from "~/core/style/themeProps";
@@ -110,21 +110,9 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     toggleModal(ModalType.SECTION_UNDO);
   };
 
-  const handleAddNewQuestion = async () => {
-    const targetSection = await getOrCreateTargetSection();
+  const handleAddNewQuestion = (targetSection: ISection) => {
     setQuestionModalSection(targetSection);
     toggleModal(ModalType.QUESTION_CREATE);
-  };
-
-  const getOrCreateTargetSection = async (): Promise<ISection> => {
-    if (currentEditingElement && isSection(currentEditingElement) && currentEditingElement.isNew) {
-      const sectionToCreate: ISection = {
-        ...currentEditingElement,
-        title: t("formulaire.section.title.default"),
-      } as ISection;
-      return await createSection(sectionToCreate).unwrap();
-    }
-    return section;
   };
 
   const updateSection = () => {
@@ -136,15 +124,35 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
     return updated;
   };
 
-  const updateAndSaveSection = () => {
+  const updateAndSaveSection = async (): Promise<ISection> => {
     const updated = updateSection();
-    if (currentEditingElement?.isNew) {
-      void createSection(updated).unwrap();
-    } else {
-      void saveFormElement(updated, formElementsList);
+
+    if (updated.isNew) {
+      const created = await createSection(updated).unwrap();
+      setCurrentEditingElement(null);
+
+      if (showTreeFormUpdate) toggleModal(ModalType.TREE_FORM_UPDATE);
+
+      return created;
     }
+
+    await saveFormElement(updated, formElementsList);
+
     setCurrentEditingElement(null);
+
     if (showTreeFormUpdate) toggleModal(ModalType.TREE_FORM_UPDATE);
+
+    return updated;
+  };
+
+  const handleAddQuestionClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+    preventPropagation(e);
+
+    void (async () => {
+      const sectionToUpdate = currentEditingElement ? await updateAndSaveSection() : section;
+
+      handleAddNewQuestion(sectionToUpdate);
+    })();
   };
 
   return (
@@ -164,7 +172,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                   onChange={handleTitleChange}
                   onFocus={selectAllTextInput}
                   onKeyDown={(e) => {
-                    if (isEnterPressed(e) && currentEditingElement) updateAndSaveSection();
+                    if (isEnterPressed(e) && currentEditingElement) void updateAndSaveSection();
                   }}
                 />
               </Box>
@@ -187,7 +195,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                 <IconButtonTooltiped
                   icon={<CheckCircleRoundedIcon sx={sectionButtonIconStyle} />}
                   onClick={() => {
-                    if (currentEditingElement) updateAndSaveSection();
+                    if (currentEditingElement) void updateAndSaveSection();
                   }}
                   tooltipI18nKey={"formulaire.validate"}
                   ariaLabel="save"
@@ -212,14 +220,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
             ))}
             {!!form && !hasFormResponses(form) && !showTreeFormUpdate && (
               <Box sx={sectionFooterStyle}>
-                <Button
-                  onClick={(e) => {
-                    preventPropagation(e);
-                    if (currentEditingElement) updateAndSaveSection();
-                    void handleAddNewQuestion();
-                  }}
-                  variant="text"
-                >
+                <Button onClick={handleAddQuestionClick} variant="text">
                   <Typography color="secondary">{t("formulaire.section.new.question")}</Typography>
                 </Button>
               </Box>
