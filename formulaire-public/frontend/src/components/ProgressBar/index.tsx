@@ -2,7 +2,7 @@ import { Step, StepLabel, Stepper } from "@cgi-learning-hub/ui";
 import CircleRoundedIcon from "@mui/icons-material/CircleRounded";
 import { FC } from "react";
 
-import { GREY_MAIN_COLOR, PRIMARY_LIGHT_COLOR, PRIMARY_MAIN_COLOR } from "~/core/style/colors";
+import { PRIMARY_LIGHT_COLOR, PRIMARY_MAIN_COLOR } from "~/core/style/colors";
 
 import { IProgressBarProps } from "./types";
 
@@ -23,9 +23,9 @@ export const ProgressBar: FC<IProgressBarProps> = ({ nbActiveSteps, nbRemainingS
             slots={{ stepIcon: SafeCircleRoundedIcon }} // avoid CircleIcon with checked symbol inside
             slotProps={{ stepIcon: { sx: { color: "inherit" } } }}
             sx={{
-              color: GREY_MAIN_COLOR, // color when step not completed neither active
+              color: PRIMARY_LIGHT_COLOR, // color when step not completed neither active
               ">.Mui-completed": { color: PRIMARY_MAIN_COLOR }, // color when step is completed
-              ">.Mui-active": { color: PRIMARY_LIGHT_COLOR }, // color when step is active
+              ">.Mui-active": { color: PRIMARY_MAIN_COLOR }, // color when step is active
               ".MuiStepIcon-text ": { display: "none" }, // we hide the text inside
             }}
           ></StepLabel>
