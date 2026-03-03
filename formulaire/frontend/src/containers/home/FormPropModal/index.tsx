@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import RGPDInfoBox from "~/components/RgpdInfoBox";
-import { FORMULAIRE, IMAGE_PICKER_INFO } from "~/core/constants";
+import { FORMULAIRE, IMAGE_PICKER_INFO, PROTECTED_VISIBILITY, PUBLIC_VISIBILITY } from "~/core/constants";
 import { buildFormPayload } from "~/core/models/form/utils";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { GREY_DARK_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
@@ -253,6 +253,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
               onImageChange={handleImageChange}
               initialSrc={formPropInputValue[FormPropField.PICTURE]}
               isMobile={isMobile}
+              visibility={isPublic ? PUBLIC_VISIBILITY : PROTECTED_VISIBILITY}
             />
           </Box>
           {isMobile && formTitleLabelAndInput}

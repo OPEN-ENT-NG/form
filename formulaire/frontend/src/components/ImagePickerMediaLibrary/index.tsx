@@ -40,6 +40,7 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
   height = "160px",
   initialSrc = null,
   isMobile = false,
+  visibility = PROTECTED_VISIBILITY,
 }) => {
   const [currentSrc, setCurrentSrc] = useState<string | null>(initialSrc);
   const [isMediaLibraryOpen, setIsMediaLibraryOpen] = useState(false);
@@ -188,7 +189,7 @@ export const ImagePickerMediaLibrary: FC<IImagePickerMediaLibraryProps> = ({
               onSuccess={handleMediaLibrarySuccess}
               appCode={appCode}
               multiple={false}
-              visibility={PROTECTED_VISIBILITY}
+              visibility={visibility}
             />
           </Box>,
           portalElement,
