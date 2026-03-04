@@ -8,6 +8,7 @@ import { emptyStateWrapper } from "~/core/style/boxStyles";
 import { SECONDARY_MAIN_COLOR } from "~/core/style/colors";
 import { TypographyVariant } from "~/core/style/themeProps";
 import { t } from "~/i18n";
+import { useGlobal } from "~/providers/GlobalProvider";
 import { useResponse } from "~/providers/ResponseProvider";
 
 import { CaptchaLayout } from "../CaptchaLayout";
@@ -18,6 +19,7 @@ import { RgpdLayout } from "../RgpdLayout";
 
 export const ResponseView: FC = () => {
   const { form, formElementsList, pageType } = useResponse();
+  const { isMobile } = useGlobal();
   const isNotReady = useMemo(() => {
     return !form || formElementsList.length <= 0;
   }, [form, formElementsList]);
@@ -54,7 +56,14 @@ export const ResponseView: FC = () => {
   };
 
   return (
-    <Box sx={{ width: "100%", height: "100%", paddingX: "10%", ...(isNotReady && { margin: "auto" }) }}>
+    <Box
+      sx={{
+        width: "100%",
+        height: "100%",
+        ...(!isMobile && { paddingX: "10%" }),
+        ...(isNotReady && { margin: "auto" }),
+      }}
+    >
       {form && !isNotReady && <Header items={[form.title]} form={form} displaySeparator />}
       {displayRightPage()}
     </Box>

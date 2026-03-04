@@ -20,6 +20,7 @@ import {
   IQuestionDTO,
   IQuestionPayload,
   IQuestionSpecificFields,
+  IQuestionSpecificFieldsDTO,
   IQuestionSpecificFieldsPayload,
 } from "./types";
 
@@ -58,7 +59,7 @@ export const transformQuestion = (raw: IQuestionDTO): IQuestion => {
     choices: raw.choices?.map(transformQuestionChoice) ?? [],
     placeholder: raw.placeholder,
     children: raw.children?.map(transformQuestion) ?? [],
-    specificFields: raw.specific_fields,
+    specificFields: transformSpecificFields(raw.specific_fields),
     stableId: raw.id,
     formElementType: FormElementType.QUESTION,
   };
@@ -179,6 +180,19 @@ export const buildQuestionChoicePayload = (choice: IQuestionChoice): IQuestionCh
     is_custom: choice.isCustom,
     nbResponses: choice.nbResponses,
     image: choice.image ?? null,
+  };
+};
+
+export const transformSpecificFields = (raw: IQuestionSpecificFieldsDTO | null): IQuestionSpecificFields => {
+  if (!raw) return {} as IQuestionSpecificFields;
+  return {
+    id: raw.id,
+    questionId: raw.question_id,
+    cursorMinVal: raw.cursor_min_val,
+    cursorMaxVal: raw.cursor_max_val,
+    cursorStep: raw.cursor_step,
+    cursorMinLabel: raw.cursor_min_label ?? "",
+    cursorMaxLabel: raw.cursor_max_label ?? "",
   };
 };
 
