@@ -94,7 +94,8 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
     if (formDatas) {
       setForm(formDatas);
       const userSharedRights = initUserSharedRights(user, sharingRights, formDatas);
-      if (!userSharedRights.CONTRIB && !userSharedRights.MANAGE) navigateToError403();
+      if (!userSharedRights.CONTRIB && !userSharedRights.MANAGE && user?.userId !== formDatas.owner_id)
+        navigateToError403();
       return;
     }
     return;
