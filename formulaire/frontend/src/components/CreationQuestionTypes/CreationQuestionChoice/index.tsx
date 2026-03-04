@@ -7,8 +7,8 @@ import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { IMAGE_PICKER_INFO, PROTECTED_VISIBILITY, PUBLIC_VISIBILITY } from "~/core/constants";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { ComponentSize } from "~/core/style/themeProps";
-
 import { useCreation } from "~/providers/CreationProvider";
+
 import {
   choiceIconStyle,
   choiceInputStyle,
@@ -29,7 +29,7 @@ export const CreationQuestionChoice: FC<ICreationQuestionChoiceProps> = ({
   image = "",
   displayedIndex,
 }) => {
-  const {form} = useCreation();
+  const { form } = useCreation();
   const [showMediaLibrary, setShowMediaLibrary] = useState(!!image);
 
   const handleImageChange = useCallback(
