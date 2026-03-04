@@ -1,5 +1,9 @@
 import { WorkspaceElement } from "@edifice.io/client";
 
+import { PROTECTED_VISIBILITY, PUBLIC_VISIBILITY } from "~/core/constants";
+
+export type ImageVisibility = typeof PUBLIC_VISIBILITY | typeof PROTECTED_VISIBILITY;
+
 export interface IImagePickerMediaLibraryProps {
   information?: string;
   onImageChange?: (src: string | null) => void;
@@ -7,6 +11,7 @@ export interface IImagePickerMediaLibraryProps {
   height?: string;
   initialSrc?: string;
   isMobile?: boolean;
+  visibility?: ImageVisibility;
 }
 
 export interface IContainerProps {

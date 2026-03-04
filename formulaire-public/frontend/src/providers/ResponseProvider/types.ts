@@ -33,6 +33,7 @@ export type ResponseProviderContextType = {
   formKey: string;
   flattenResponses: IResponse[];
   setFlattenResponses: Dispatch<SetStateAction<IResponse[]>>;
+  isFormFetchError: boolean;
 };
 
 export interface IFormElementIdType {

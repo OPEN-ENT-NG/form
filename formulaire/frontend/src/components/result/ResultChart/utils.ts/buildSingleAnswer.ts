@@ -37,6 +37,9 @@ export const getSingleAnswerChartProps = (
 
   const options: ApexOptions = {
     labels,
+    legend: {
+      width: 400,
+    },
     colors: GRAPH_COLORS,
   };
 
