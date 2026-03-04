@@ -4,9 +4,10 @@ import ImageRoundedIcon from "@mui/icons-material/ImageRounded";
 import { FC, ReactNode, useCallback, useState } from "react";
 
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
-import { IMAGE_PICKER_INFO } from "~/core/constants";
+import { IMAGE_PICKER_INFO, PROTECTED_VISIBILITY, PUBLIC_VISIBILITY } from "~/core/constants";
 import { QuestionTypes } from "~/core/models/question/enum";
 import { ComponentSize } from "~/core/style/themeProps";
+import { useCreation } from "~/providers/CreationProvider";
 
 import {
   choiceIconStyle,
@@ -28,6 +29,7 @@ export const CreationQuestionChoice: FC<ICreationQuestionChoiceProps> = ({
   image = "",
   displayedIndex,
 }) => {
+  const { form } = useCreation();
   const [showMediaLibrary, setShowMediaLibrary] = useState(!!image);
 
   const handleImageChange = useCallback(
@@ -70,6 +72,7 @@ export const CreationQuestionChoice: FC<ICreationQuestionChoiceProps> = ({
             information={IMAGE_PICKER_INFO}
             onImageChange={handleImageChange}
             initialSrc={image}
+            visibility={form?.is_public ? PUBLIC_VISIBILITY : PROTECTED_VISIBILITY}
           />
           {isEditing && (
             <IconButton
