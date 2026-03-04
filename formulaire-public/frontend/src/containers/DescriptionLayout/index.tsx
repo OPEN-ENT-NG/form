@@ -31,7 +31,7 @@ export const DescriptionLayout: FC = () => {
       <Box sx={{ ...(form?.rgpd ? spaceBetweenBoxStyle : flexEndBoxStyle) }}>
         {form?.rgpd && (
           <Button variant={ComponentVariant.OUTLINED} onClick={goRgpd}>
-            {t("formulaire.prev")}
+            {t("formulaire.public.prev")}
           </Button>
         )}
         <Button variant={ComponentVariant.CONTAINED} onClick={goFirstFormElement}>

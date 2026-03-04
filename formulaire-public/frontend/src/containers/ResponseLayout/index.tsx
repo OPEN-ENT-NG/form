@@ -38,9 +38,6 @@ export const ResponseLayout: FC = () => {
   useEffect(() => {
     if (currentElement?.position) {
       setIsFirstElement(currentElement.position === 1);
-      if (!progress.historicFormElementIds.length && currentElement.id) {
-        updateProgress(currentElement, [currentElement.id]);
-      }
 
       // Scroll when arriving from recap page
       if (!scrollToQuestionId) {
@@ -58,6 +55,15 @@ export const ResponseLayout: FC = () => {
   }, [currentElement, scrollToQuestionId]);
 
   const goPreviousElement = () => {
+    if (isFirstElement) {
+      if (form?.description) {
+        setPageType(ResponsePageType.DESCRIPTION);
+        return;
+      } else if (form?.rgpd) {
+        setPageType(ResponsePageType.RGPD);
+        return;
+      }
+    }
     if (!currentElement) return;
     const prevId = progress.historicFormElementIds[progress.historicFormElementIds.length - 2];
     const prevElement = formElementsList.find((fe) => fe.id === prevId);
