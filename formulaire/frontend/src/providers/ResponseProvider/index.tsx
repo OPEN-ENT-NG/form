@@ -106,8 +106,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       if (
         !previewMode &&
         (formDatas.archived ||
-          (formDatas.date_opening && formDatas.date_opening > new Date()) ||
-          (formDatas.date_ending && formDatas.date_ending < new Date()))
+          (formDatas.date_opening && new Date(formDatas.date_opening) > new Date()) ||
+          (formDatas.date_ending && new Date(formDatas.date_ending) < new Date()))
       ) {
         navigateToError403();
         return;
