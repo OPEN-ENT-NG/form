@@ -61,10 +61,6 @@ export const HomeProvider: FC<IHomeProviderProps> = ({ children }) => {
   const { data: distributionsDatas } = useGetAllMyDistributionsQuery();
   const { data: sentFormsDatas } = useGetSentFormsQuery();
 
-  useEffect(() => {
-    console.log("niko", currentFolder);
-  }, [currentFolder]);
-
   const toggleTab = useCallback((tab: HomeTabState) => {
     setTab(tab);
     resetSelected();
