@@ -22,9 +22,9 @@ public class DefaultNotifyService implements NotifyService {
                 .put(PARAM_FORM_URI, "/formulaire#/form/" + form.getInteger(ID) + "/edit")
                 .put(PARAM_FORM_NAME, form.getString(TITLE))
                 .put(PARAM_FORM_RESULTS_URI, formResultsUri)
-                .put(PARAM_PUSH_NOTIF, new JsonObject().put(TITLE, "push.notif.formulaire.public.response").put(BODY, ""))
+                .put(PARAM_PUSH_NOTIF, new JsonObject().put(TITLE, "push.notif.formulaire.response").put(BODY, ""))
                 .put(PARAM_RESOURCE_URI, formResultsUri);
 
-        timelineHelper.notifyTimeline(request, "formulaire.response_notification", null, managers.getList(), params);
+        timelineHelper.notifyTimeline(request, "formulaire.response_public_notification", null, managers.getList(), params);
     }
 }

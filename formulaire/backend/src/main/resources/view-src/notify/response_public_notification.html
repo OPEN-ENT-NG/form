@@ -1,0 +1,15 @@
+<span>{{#i18n}}timeline.formulaire.new.notification{{/i18n}}</span> :
+
+<br/>
+
+<span>{{#i18n}}timeline.formulaire.lambda.sender{{/i18n}}{{#i18n}}timeline.formulaire.responded{{/i18n}}</span>
+{{#formUri}}
+ {{#formName}}
+  <a href="{{#host}}{{formUri}}{{/host}}">{{formName}}</a>
+ {{/formName}}
+{{/formUri}}
+
+{{#formResultsUri}}
+ <span>{{#i18n}}timeline.formulaire.see{{/i18n}}</span>
+ <a href="{{#host}}{{formResultsUri}}{{/host}}">{{#i18n}}timeline.formulaire.results{{/i18n}}</a>.
+{{/formResultsUri}}
