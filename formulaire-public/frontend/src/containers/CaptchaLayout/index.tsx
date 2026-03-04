@@ -10,9 +10,12 @@ import { ModalType, ResponsePageType, TagName } from "~/core/enums";
 import { ICaptcha } from "~/core/models/captcha/types";
 import { DistributionStatus } from "~/core/models/distribution/enums";
 import { transformDistribution } from "~/core/models/distribution/utils";
+import { getAllQuestionsAndChildren } from "~/core/models/formElement/utils";
+import { IResponse } from "~/core/models/response/type";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { COMMON_WHITE_COLOR } from "~/core/style/colors";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { isEnterPressed } from "~/core/utils";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResponse } from "~/providers/ResponseProvider";
@@ -30,7 +33,7 @@ import {
 import { SendingConfirmationModal } from "../SendingConfirmationModal";
 
 export const CaptchaLayout: FC = () => {
-  const { formKey, form, setPageType, flattenResponses } = useResponse();
+  const { formKey, form, setPageType, progress, formElementsList, flattenResponses } = useResponse();
   const {
     displayModals: { showSendingConfirmation },
     toggleModal,
@@ -75,11 +78,13 @@ export const CaptchaLayout: FC = () => {
 
   const sendForm = async () => {
     if (!form?.distribution_key || !flattenResponses.length) return;
+
+    const cleanedResponses = cleanResponses(flattenResponses);
     const { data: distributionData } = await sendResponses({
       formKey,
       distributionKey: form.distribution_key,
       captchaResponse,
-      responses: flattenResponses,
+      responses: cleanedResponses,
     });
 
     toggleModal(ModalType.SENDING_CONFIRMATION);
@@ -95,6 +100,14 @@ export const CaptchaLayout: FC = () => {
 
     toast.error(t("formulaire.public.error.captcha"));
     reloadCaptcha();
+  };
+
+  const cleanResponses = (responses: IResponse[]) => {
+    const validatedElements = formElementsList.filter(
+      (e) => e.id && progress.historicFormElementIds.indexOf(e.id) >= 0,
+    );
+    const validatedQuestionIds = getAllQuestionsAndChildren(validatedElements).map((q) => q.id);
+    return responses.filter((r) => validatedQuestionIds.indexOf(r.questionId) < 0);
   };
 
   return (
@@ -124,6 +137,12 @@ export const CaptchaLayout: FC = () => {
                 variant={ComponentVariant.OUTLINED}
                 fullWidth
                 placeholder={t("formulaire.public.captcha.placeholder")}
+                onKeyDown={(e) => {
+                  if (isEnterPressed(e)) {
+                    e.preventDefault();
+                    openSendingFormConfirmationModal();
+                  }
+                }}
               />
             </Stack>
           </Box>

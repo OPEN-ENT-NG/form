@@ -17,7 +17,7 @@ public class DefaultNotifyService implements NotifyService {
 
     @Override
     public void notifyResponse(HttpServerRequest request, JsonObject form, JsonArray managers) {
-        String formResultsUri = "/formulaire#/form/" + form.getInteger(ID) + "/results";
+        String formResultsUri = "/formulaire#/form/" + form.getInteger(ID) + "/result";
         JsonObject params = new JsonObject()
                 .put(PARAM_FORM_URI, "/formulaire#/form/" + form.getInteger(ID) + "/edit")
                 .put(PARAM_FORM_NAME, form.getString(TITLE))
