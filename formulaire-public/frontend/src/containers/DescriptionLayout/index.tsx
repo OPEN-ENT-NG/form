@@ -26,12 +26,12 @@ export const DescriptionLayout: FC = () => {
     <Box sx={descriptionLayoutStyle}>
       <Stack component={Paper} sx={descriptionStackStyle}>
         <Typography variant={TypographyVariant.H6}>{form?.title}</Typography>
-        <Typography>{form?.description}</Typography>
+        <Typography whiteSpace="pre-line">{form?.description}</Typography>
       </Stack>
       <Box sx={{ ...(form?.rgpd ? spaceBetweenBoxStyle : flexEndBoxStyle) }}>
         {form?.rgpd && (
           <Button variant={ComponentVariant.OUTLINED} onClick={goRgpd}>
-            {t("formulaire.prev")}
+            {t("formulaire.public.prev")}
           </Button>
         )}
         <Button variant={ComponentVariant.CONTAINED} onClick={goFirstFormElement}>

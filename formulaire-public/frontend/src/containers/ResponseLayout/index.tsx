@@ -58,6 +58,15 @@ export const ResponseLayout: FC = () => {
   }, [currentElement, scrollToQuestionId]);
 
   const goPreviousElement = () => {
+    if (isFirstElement) {
+      if (form?.description) {
+        setPageType(ResponsePageType.DESCRIPTION);
+        return;
+      } else if (form?.rgpd) {
+        setPageType(ResponsePageType.RGPD);
+        return;
+      }
+    }
     if (!currentElement) return;
     const prevId = progress.historicFormElementIds[progress.historicFormElementIds.length - 2];
     const prevElement = formElementsList.find((fe) => fe.id === prevId);
