@@ -9,7 +9,7 @@ import { IForm } from "~/core/models/form/types";
 import { IFormElement } from "~/core/models/formElement/types";
 import { getAllQuestionsAndChildren, getStringifiedFormElementIdType } from "~/core/models/formElement/utils";
 import { IResponse } from "~/core/models/response/type";
-import { workflowRights } from "~/core/rights";
+import { sharingRights, workflowRights } from "~/core/rights";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import {
   useAddDistributionMutation,
@@ -45,7 +45,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   const { navigateToError403, navigateToError404, navigateToError409, navigateToFormResponse } =
     useFormulaireNavigation();
   const { user } = useEdificeClient();
-  const { initUserWorfklowRights } = useGlobal();
+  const { initUserWorfklowRights, initUserSharedRights } = useGlobal();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
   const [responses, setResponses] = useState<IResponse[]>([]);
@@ -98,6 +98,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
   useEffect(() => {
     if (formDatas) {
       setForm(formDatas);
+
+      const userSharedRights = initUserSharedRights(user, sharingRights, formDatas);
+      if (previewMode && !userSharedRights.CONTRIB && !userSharedRights.MANAGE) navigateToError403();
 
       // Checks form validity if not preview mode
       if (

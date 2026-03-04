@@ -8,8 +8,9 @@ import { IFormElement } from "~/core/models/formElement/types";
 import { isQuestion, isSection } from "~/core/models/formElement/utils";
 import { IQuestion } from "~/core/models/question/types";
 import { ISection } from "~/core/models/section/types";
-import { workflowRights } from "~/core/rights";
+import { sharingRights, workflowRights } from "~/core/rights";
 import { getQuestionRootById, getQuestionSectionById } from "~/hook/dnd-hooks/useCreationDnd/utils";
+import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
 import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
@@ -35,7 +36,8 @@ export const useCreation = () => {
 export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   const { formId } = useParams();
   const { user } = useEdificeClient();
-  const { initUserWorfklowRights } = useGlobal();
+  const { initUserWorfklowRights, initUserSharedRights } = useGlobal();
+  const { navigateToError403 } = useFormulaireNavigation();
   const userWorkflowRights = initUserWorfklowRights(user, workflowRights);
   const rootFolders = useRootFolders();
   const [currentFolder, setCurrentFolder] = useState<IFolder>(rootFolders[0]);
@@ -91,6 +93,8 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   useEffect(() => {
     if (formDatas) {
       setForm(formDatas);
+      const userSharedRights = initUserSharedRights(user, sharingRights, formDatas);
+      if (!userSharedRights.CONTRIB && !userSharedRights.MANAGE) navigateToError403();
       return;
     }
     return;
