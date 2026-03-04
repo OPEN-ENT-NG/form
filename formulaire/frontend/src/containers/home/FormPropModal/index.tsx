@@ -182,16 +182,26 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
 
   useEffect(() => {
     if (isEndingDateEditable) {
-      const openingDate = new Date(dateOpening);
+      if (!selectedForms[0]?.date_ending) {
+        const openingDate = new Date(dateOpening);
 
-      const endingDate = new Date(openingDate);
-      endingDate.setFullYear(openingDate.getFullYear() + 1);
+        const endingDate = new Date(openingDate);
+        endingDate.setFullYear(openingDate.getFullYear() + 1);
 
-      handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
-      return;
+        handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
+        return;
+      } else {
+        const savingEndingDate = new Date(selectedForms[0]?.date_ending);
+        const currentOpeningDate = formPropInputValue[FormPropField.DATE_OPENING];
+        const currendOpeningDatePlusOneDay = new Date(currentOpeningDate);
+        currendOpeningDatePlusOneDay.setDate(currendOpeningDatePlusOneDay.getDate() + 1);
+        const endingDate = currentOpeningDate >= savingEndingDate ? currendOpeningDatePlusOneDay : savingEndingDate;
+        handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
+        return;
+      }
     }
     handleFormPropInputValueChange(FormPropField.DATE_ENDING, null);
-  }, [isEndingDateEditable, dateOpening, handleFormPropInputValueChange]);
+  }, [isEndingDateEditable, handleFormPropInputValueChange]);
 
   useEffect(() => {
     if (!isDescriptionDisplay) {
@@ -280,6 +290,11 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                     },
                   }}
                   minDate={dayjs()}
+                  maxDate={
+                    formPropInputValue[FormPropField.DATE_ENDING]
+                      ? dayjs(formPropInputValue[FormPropField.DATE_ENDING]).subtract(1, "day")
+                      : undefined
+                  }
                   value={dayjs(formPropInputValue[FormPropField.DATE_OPENING])}
                   onChange={(value) => {
                     handleDateChange(FormPropField.DATE_OPENING, value as Dayjs);
