@@ -100,7 +100,8 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       setForm(formDatas);
 
       const userSharedRights = initUserSharedRights(user, sharingRights, formDatas);
-      if (previewMode && !userSharedRights.CONTRIB && !userSharedRights.MANAGE) navigateToError403();
+      if (previewMode && !userSharedRights.CONTRIB && !userSharedRights.MANAGE && user?.userId !== formDatas.owner_id)
+        navigateToError403();
 
       // Checks form validity if not preview mode
       if (
