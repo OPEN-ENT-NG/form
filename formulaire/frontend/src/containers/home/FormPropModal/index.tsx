@@ -23,7 +23,7 @@ import { useTranslation } from "react-i18next";
 import { ImagePickerMediaLibrary } from "~/components/ImagePickerMediaLibrary";
 import { ResponsiveDialog } from "~/components/ResponsiveDialog";
 import RGPDInfoBox from "~/components/RgpdInfoBox";
-import { FORMULAIRE, IMAGE_PICKER_INFO } from "~/core/constants";
+import { FORMULAIRE, IMAGE_PICKER_INFO, PROTECTED_VISIBILITY, PUBLIC_VISIBILITY } from "~/core/constants";
 import { buildFormPayload } from "~/core/models/form/utils";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { GREY_DARK_COLOR, TEXT_PRIMARY_COLOR } from "~/core/style/colors";
@@ -182,16 +182,26 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
 
   useEffect(() => {
     if (isEndingDateEditable) {
-      const openingDate = new Date(dateOpening);
+      if (!selectedForms[0]?.date_ending) {
+        const openingDate = new Date(dateOpening);
 
-      const endingDate = new Date(openingDate);
-      endingDate.setFullYear(openingDate.getFullYear() + 1);
+        const endingDate = new Date(openingDate);
+        endingDate.setFullYear(openingDate.getFullYear() + 1);
 
-      handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
-      return;
+        handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
+        return;
+      } else {
+        const savingEndingDate = new Date(selectedForms[0]?.date_ending);
+        const currentOpeningDate = formPropInputValue[FormPropField.DATE_OPENING];
+        const currendOpeningDatePlusOneDay = new Date(currentOpeningDate);
+        currendOpeningDatePlusOneDay.setDate(currendOpeningDatePlusOneDay.getDate() + 1);
+        const endingDate = currentOpeningDate >= savingEndingDate ? currendOpeningDatePlusOneDay : savingEndingDate;
+        handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
+        return;
+      }
     }
     handleFormPropInputValueChange(FormPropField.DATE_ENDING, null);
-  }, [isEndingDateEditable, dateOpening, handleFormPropInputValueChange]);
+  }, [isEndingDateEditable, handleFormPropInputValueChange]);
 
   useEffect(() => {
     if (!isDescriptionDisplay) {
@@ -253,6 +263,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
               onImageChange={handleImageChange}
               initialSrc={formPropInputValue[FormPropField.PICTURE]}
               isMobile={isMobile}
+              visibility={isPublic ? PUBLIC_VISIBILITY : PROTECTED_VISIBILITY}
             />
           </Box>
           {isMobile && formTitleLabelAndInput}
@@ -279,6 +290,11 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
                     },
                   }}
                   minDate={dayjs()}
+                  maxDate={
+                    formPropInputValue[FormPropField.DATE_ENDING]
+                      ? dayjs(formPropInputValue[FormPropField.DATE_ENDING]).subtract(1, "day")
+                      : undefined
+                  }
                   value={dayjs(formPropInputValue[FormPropField.DATE_OPENING])}
                   onChange={(value) => {
                     handleDateChange(FormPropField.DATE_OPENING, value as Dayjs);

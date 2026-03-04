@@ -55,6 +55,7 @@ export const COMMENT_RIGHT: RightStringified = "comment";
 
 //MEDIA LIBRARY
 export const PROTECTED_VISIBILITY = "protected";
+export const PUBLIC_VISIBILITY = "public";
 
 //FILE EXTENSIONS
 export const IMAGE_CONTENT_TYPE = "image/*";

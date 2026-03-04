@@ -1,5 +1,7 @@
 import { Layout, LoadingScreen, useEdificeClient } from "@edifice.io/react";
 import { Outlet } from "react-router-dom";
+
+import { HomeProvider } from "~/providers/HomeProvider";
 function Root() {
   const { init } = useEdificeClient();
 
@@ -7,7 +9,9 @@ function Root() {
 
   return (
     <Layout>
-      <Outlet />
+      <HomeProvider>
+        <Outlet />
+      </HomeProvider>
     </Layout>
   );
 }
