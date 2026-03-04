@@ -15,6 +15,7 @@ import { IResponse } from "~/core/models/response/type";
 import { spaceBetweenBoxStyle } from "~/core/style/boxStyles";
 import { COMMON_WHITE_COLOR } from "~/core/style/colors";
 import { ComponentVariant, TypographyVariant } from "~/core/style/themeProps";
+import { isEnterPressed } from "~/core/utils";
 import { t } from "~/i18n";
 import { useGlobal } from "~/providers/GlobalProvider";
 import { useResponse } from "~/providers/ResponseProvider";
@@ -136,6 +137,12 @@ export const CaptchaLayout: FC = () => {
                 variant={ComponentVariant.OUTLINED}
                 fullWidth
                 placeholder={t("formulaire.public.captcha.placeholder")}
+                onKeyDown={(e) => {
+                  if (isEnterPressed(e)) {
+                    e.preventDefault();
+                    openSendingFormConfirmationModal();
+                  }
+                }}
               />
             </Stack>
           </Box>
