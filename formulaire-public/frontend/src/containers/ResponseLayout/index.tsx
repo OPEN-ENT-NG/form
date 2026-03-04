@@ -38,6 +38,9 @@ export const ResponseLayout: FC = () => {
   useEffect(() => {
     if (currentElement?.position) {
       setIsFirstElement(currentElement.position === 1);
+      if (!progress.historicFormElementIds.length && currentElement.id) {
+        updateProgress(currentElement, [currentElement.id]);
+      }
 
       // Scroll when arriving from recap page
       if (!scrollToQuestionId) {
