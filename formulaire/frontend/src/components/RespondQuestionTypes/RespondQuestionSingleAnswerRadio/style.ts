@@ -10,7 +10,7 @@ export const ChoicesRadioGroup = styled(RadioGroup, {
   flexDirection: hasOneChoiceWithImage ? "row" : "column",
   display: "flex",
   flexFlow: hasOneChoiceWithImage ? "wrap" : "column",
-  justifyContent: "space-evenly",
+  justifyContent: "space-between",
   gap: hasOneChoiceWithImage ? "1rem" : "0",
 }));
 

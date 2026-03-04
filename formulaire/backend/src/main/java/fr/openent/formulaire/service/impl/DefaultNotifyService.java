@@ -80,7 +80,7 @@ public class DefaultNotifyService implements NotifyService {
                 return;
             }
 
-            String formResultsUri = "/formulaire#/form/" + form.getInteger(ID) + "/results";
+            String formResultsUri = "/formulaire#/form/" + form.getInteger(ID) + "/result";
 
             JsonObject params = new JsonObject()
                     .put(ANONYMOUS, form.getBoolean(ANONYMOUS))
