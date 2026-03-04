@@ -28,7 +28,7 @@ export const DescriptionLayout: FC = () => {
     <Box sx={descriptionLayoutStyle}>
       <Stack component={Paper} sx={descriptionStackStyle}>
         <Typography variant={TypographyVariant.H6}>{form?.title}</Typography>
-        <Typography>{form?.description}</Typography>
+        <Typography whiteSpace="pre-line">{form?.description}</Typography>
       </Stack>
       <Box sx={{ ...(form?.rgpd ? spaceBetweenBoxStyle : flexEndBoxStyle) }}>
         {form?.rgpd && (
