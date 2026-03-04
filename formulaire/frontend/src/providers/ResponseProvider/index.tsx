@@ -200,7 +200,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     const newLongestPathsMap = getLongestPathsMap(formElementsList);
     setLongestPathsMap(newLongestPathsMap);
 
-    updateProgress(firstElement, [firstElement.id], newLongestPathsMap);
+    updateProgress(firstElement, [], newLongestPathsMap);
   }, [formElementsList]);
 
   // Initialize responses map and currentElement
