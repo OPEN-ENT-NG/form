@@ -138,7 +138,9 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
                           </>
                         )}
                       </Box>
-                      {choice.image && <ChoiceImage src={choice.image} alt={choice.value} />}
+                      {choice.image && (
+                        <ChoiceImage src={choice.image.replace("/document", "/pub/document")} alt={choice.value} />
+                      )}
                     </Box>
                   }
                 />
