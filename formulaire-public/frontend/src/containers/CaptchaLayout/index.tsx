@@ -107,7 +107,7 @@ export const CaptchaLayout: FC = () => {
       (e) => e.id && progress.historicFormElementIds.indexOf(e.id) >= 0,
     );
     const validatedQuestionIds = getAllQuestionsAndChildren(validatedElements).map((q) => q.id);
-    return responses.filter((r) => validatedQuestionIds.indexOf(r.questionId) < 0);
+    return responses.filter((r) => validatedQuestionIds.includes(r.questionId));
   };
 
   return (
