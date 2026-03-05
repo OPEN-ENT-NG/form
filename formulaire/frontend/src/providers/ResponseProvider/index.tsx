@@ -1,4 +1,6 @@
 import { useEdificeClient } from "@edifice.io/react";
+import dayjs from "dayjs";
+import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import { createContext, FC, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -29,6 +31,8 @@ import { useRespondQuestion } from "./hook/useRespondQuestion";
 import { buildProgressObject, getLongestPathsMap } from "./progressBarUtils";
 import { IProgressProps, IResponseProviderProps, ResponseMap, ResponseProviderContextType } from "./types";
 import { fillResponseMapWithRepsonses, initResponsesMap } from "./utils";
+
+dayjs.extend(isSameOrBefore);
 
 const ResponseProviderContext = createContext<ResponseProviderContextType | null>(null);
 
@@ -100,16 +104,18 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
       setForm(formDatas);
 
       const userSharedRights = initUserSharedRights(user, sharingRights, formDatas);
-      if (previewMode && !userSharedRights.CONTRIB && !userSharedRights.MANAGE && user?.userId !== formDatas.owner_id)
-        navigateToError403();
 
-      // Checks form validity if not preview mode
-      if (
-        !previewMode &&
-        (formDatas.archived ||
-          (formDatas.date_opening && new Date(formDatas.date_opening) > new Date()) ||
-          (formDatas.date_ending && new Date(formDatas.date_ending) < new Date()))
-      ) {
+      if (previewMode && !userSharedRights.CONTRIB && !userSharedRights.MANAGE && user?.userId !== formDatas.owner_id) {
+        navigateToError403();
+      }
+
+      const today = dayjs();
+
+      const isNotOpened = formDatas.date_opening && dayjs(formDatas.date_opening).isAfter(today, "day");
+
+      const isClosed = formDatas.date_ending && dayjs(formDatas.date_ending).isSameOrBefore(today, "day");
+
+      if (!previewMode && (formDatas.archived || isNotOpened || isClosed)) {
         navigateToError403();
         return;
       }
