@@ -13,7 +13,7 @@ import { buildProgressObject } from "~/providers/ResponseProvider/progressBarUti
 
 import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
 import { RespondSectionWrapper } from "../RespondSectionWrapper";
-import { checkMandatoryQuestions, getResponses } from "./utils";
+import { getResponses, hasMissingMandatoryResponses } from "./utils";
 
 export const RecapLayout: FC = () => {
   const { formElementsList, responsesMap, progress, setProgress, setPageType, flattenResponses, setFlattenResponses } =
@@ -39,7 +39,7 @@ export const RecapLayout: FC = () => {
   const handleFinishForm = () => {
     if (!flattenResponses.length) return;
 
-    if (!checkMandatoryQuestions(answeredFormElements, flattenResponses)) {
+    if (hasMissingMandatoryResponses(answeredFormElements, flattenResponses)) {
       toast.error(t("formulaire.public.warning.send.missing.responses.missing"));
       return;
     }
