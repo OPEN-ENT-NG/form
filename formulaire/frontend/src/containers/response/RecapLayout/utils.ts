@@ -3,20 +3,15 @@ import { getAllQuestions, isQuestion, isSection } from "~/core/models/formElemen
 import { QuestionTypes } from "~/core/models/question/enum";
 import { IResponse } from "~/core/models/response/type";
 
-export const checkMandatoryQuestions = (formElements: IFormElement[], responses: IResponse[]): boolean => {
+export const hasMissingMandatoryResponses = (formElements: IFormElement[], responses: IResponse[]): boolean => {
   const mandatoryQuestions = getAllQuestions(formElements).filter((q) => q.mandatory);
-  const hasInvalidQuestion = mandatoryQuestions.some((question) => {
+  return mandatoryQuestions.some((question) => {
     if (question.questionType === QuestionTypes.MATRIX) {
-      question.children?.forEach((child) => {
-        if (!responses.some((r) => r.questionId === child.id && r.answer)) return true;
-      });
-      return false;
+      return question.children?.some((child) => !responses.some((r) => r.questionId === child.id && r.answer));
     }
 
     return !responses.some((r) => r.questionId === question.id && isResponseStringValid(r));
   });
-
-  return !hasInvalidQuestion;
 };
 
 const isResponseStringValid = (response: IResponse): boolean => {

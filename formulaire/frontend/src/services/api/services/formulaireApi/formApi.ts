@@ -8,6 +8,7 @@ import {
   IFormPayload,
   IFormReminderPayload,
   IFormRight,
+  IFormRightDTO,
 } from "~/core/models/form/types.ts";
 import { handleErrorApi } from "~/core/utils.ts";
 import { t } from "~/i18n";
@@ -31,6 +32,7 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+
     getForm: builder.query<IForm, { formId: string }>({
       query: ({ formId }) => ({
         url: `forms/${formId}`,
@@ -45,6 +47,24 @@ export const formApi = emptySplitFormulaireApi.injectEndpoints({
         }
       },
     }),
+
+    getMyFormRights: builder.query<string[], string | number>({
+      query: (formId) => ({
+        url: `forms/${formId}/rights`,
+        method: QueryMethod.GET,
+      }),
+      transformResponse: (rawDatas: IFormRightDTO[]) => {
+        return rawDatas.map((data) => data.action);
+      },
+      async onQueryStarted(_, { queryFulfilled }) {
+        try {
+          await queryFulfilled;
+        } catch (err) {
+          handleErrorApi(err, "formulaire.error.formService.get");
+        }
+      },
+    }),
+
     getSentForms: builder.query<IForm[], void>({
       query: () => ({
         url: `forms/sent`,
@@ -262,6 +282,7 @@ export const {
   useDeleteFormMutation,
   useGetFormsQuery,
   useGetFormQuery,
+  useGetMyFormRightsQuery,
   useGetSentFormsQuery,
   useDuplicateFormsMutation,
   useMoveFormsMutation,

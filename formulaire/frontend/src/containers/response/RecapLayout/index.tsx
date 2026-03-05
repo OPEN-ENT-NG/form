@@ -17,7 +17,7 @@ import { buildProgressObject } from "~/providers/ResponseProvider/progressBarUti
 import { RespondQuestionWrapper } from "../RespondQuestionWrapper";
 import { RespondSectionWrapper } from "../RespondSectionWrapper";
 import { SendFormModal } from "../SendFormModal";
-import { checkMandatoryQuestions, getFormElementsToDisplay } from "./utils";
+import { getFormElementsToDisplay, hasMissingMandatoryResponses } from "./utils";
 
 export const RecapLayout: FC = () => {
   const { t } = useTranslation(FORMULAIRE);
@@ -51,7 +51,7 @@ export const RecapLayout: FC = () => {
   };
 
   const handleSendForm = () => {
-    if (!checkMandatoryQuestions(answeredFormElements, responses)) {
+    if (hasMissingMandatoryResponses(answeredFormElements, responses)) {
       toast.error(t("formulaire.warning.send.missing.responses.missing"));
       return;
     }

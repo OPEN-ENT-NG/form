@@ -10,7 +10,7 @@ import { CreationQuestionWrapper } from "~/containers/creation/CreationQuestionW
 import { questionAlertStyle } from "~/containers/creation/CreationQuestionWrapper/style";
 import { DeleteConfirmationModal } from "~/containers/creation/DeleteConfirmationModal";
 import { UndoConfirmationModal } from "~/containers/creation/UndoConfirmationModal";
-import { EDITOR_CONTENT_HTML, FORMULAIRE } from "~/core/constants";
+import { EDITOR_CONTENT_HTML, FORMULAIRE, PROTECTED_VISIBILITY, PUBLIC_VISIBILITY } from "~/core/constants";
 import { EditorMode, ModalType } from "~/core/enums";
 import { hasFormResponses } from "~/core/models/form/utils";
 import { isValidFormElement } from "~/core/models/formElement/utils";
@@ -213,6 +213,7 @@ export const CreationEditingSection: FC<ICreationEditingSectionProps> = ({ secti
                 ref={editorRef}
                 onContentChange={updateSection}
                 focus={false}
+                visibility={form?.is_public ? PUBLIC_VISIBILITY : PROTECTED_VISIBILITY}
               />
             </Box>
             {section.questions.map((question: IQuestion) => (

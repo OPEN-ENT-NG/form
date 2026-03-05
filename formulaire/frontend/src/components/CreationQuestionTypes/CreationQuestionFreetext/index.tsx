@@ -1,7 +1,7 @@
 import { Editor, EditorRef } from "@edifice.io/react/editor";
 import { FC, useEffect, useRef } from "react";
 
-import { EDITOR_CONTENT_HTML } from "~/core/constants";
+import { EDITOR_CONTENT_HTML, PROTECTED_VISIBILITY, PUBLIC_VISIBILITY } from "~/core/constants";
 import { EditorMode, EditorVariant } from "~/core/enums";
 import { useCreation } from "~/providers/CreationProvider";
 import { isCurrentEditingElement } from "~/providers/CreationProvider/utils";
@@ -11,7 +11,7 @@ import { ICreationQuestionFreetextProps } from "./types";
 
 export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ question, questionTitleRef }) => {
   const editorRef = useRef<EditorRef>(null);
-  const { currentEditingElement, setCurrentEditingElement } = useCreation();
+  const { form, currentEditingElement, setCurrentEditingElement } = useCreation();
   const initialQuestionStatement = useRef(question.statement);
 
   // As Editor component automatically take the focus, we wait to take it back
@@ -46,6 +46,7 @@ export const CreationQuestionFreetext: FC<ICreationQuestionFreetextProps> = ({ q
           onContentChange={updateStatement}
           mode={EditorMode.EDIT}
           variant={EditorVariant.OUTLINE}
+          visibility={form?.is_public ? PUBLIC_VISIBILITY : PROTECTED_VISIBILITY}
         />
       ) : (
         <Editor content={question.statement} ref={editorRef} mode={EditorMode.READ} variant={EditorVariant.GHOST} />
