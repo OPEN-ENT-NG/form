@@ -79,3 +79,7 @@ export interface IFormReminderPayload {
   formId: string;
   mail: { link: string; subject: string; body: string };
 }
+
+export interface IFormRightDTO {
+  action: string;
+};

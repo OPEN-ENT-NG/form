@@ -26,7 +26,6 @@ export const hasWorkflow = (user: IUserInfo | undefined, workflowName: string): 
 
 export const hasSharedRight = (user: IUserInfo | undefined, sharedRightName: string, form: IForm): boolean => {
   if (user === undefined) return false;
-  if (!(sharedRightName in sharingRights)) return false;
 
   switch (sharedRightName) {
     case sharingRights.manager:

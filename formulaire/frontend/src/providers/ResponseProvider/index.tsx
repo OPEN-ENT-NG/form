@@ -18,7 +18,7 @@ import {
   useGetDistributionQuery,
   useGetMyFormDistributionsQuery,
 } from "~/services/api/services/formulaireApi/distributionApi";
-import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
+import { useGetFormQuery, useGetMyFormRightsQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetDistributionResponsesQuery } from "~/services/api/services/formulaireApi/responseApi";
 import { useGetQuestionFilesQuery } from "~/services/api/services/formulaireApi/responseFileApi";
@@ -84,6 +84,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     { formId },
     { skip: previewMode ? !userWorkflowRights.CREATION : !userWorkflowRights.RESPONSE },
   );
+  const { data: formRightsDatas } = useGetMyFormRightsQuery(formId, { skip: !userWorkflowRights.CREATION });
   const { data: questionsDatas, isFetching: isQuestionsFetching } = useGetQuestionsQuery({ formId });
   const { data: sectionsDatas, isFetching: isSectionsFetching } = useGetSectionsQuery({ formId });
   const { data: distributionData } = useGetDistributionQuery(distributionId ?? "", {
@@ -100,12 +101,12 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
 
   // Set form value
   useEffect(() => {
-    if (formDatas) {
+    if (formDatas && formRightsDatas && user) {
       setForm(formDatas);
 
-      const userSharedRights = initUserSharedRights(user, sharingRights, formDatas);
-
-      if (previewMode && !userSharedRights.CONTRIB && !userSharedRights.MANAGE && user?.userId !== formDatas.owner_id) {
+      const form = {...formDatas, rights: formRightsDatas};
+      const userSharedRights = initUserSharedRights(user, sharingRights, form);
+      if (previewMode && !userSharedRights.CONTRIB && !userSharedRights.MANAGE && user.userId !== formDatas.owner_id) {
         navigateToError403();
       }
 
@@ -120,7 +121,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
         return;
       }
     }
-  }, [formDatas]);
+  }, [formDatas, formRightsDatas, user]);
 
   // Set distribution value
   useEffect(() => {
