@@ -8,6 +8,7 @@ import {
   IFormPayload,
   IFormReminderPayload,
   IFormRight,
+  IFormRightDTO,
 } from "~/core/models/form/types.ts";
 import { handleErrorApi } from "~/core/utils.ts";
 import { t } from "~/i18n";

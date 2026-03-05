@@ -82,4 +82,4 @@ export interface IFormReminderPayload {
 
 export interface IFormRightDTO {
   action: string;
-};
+}

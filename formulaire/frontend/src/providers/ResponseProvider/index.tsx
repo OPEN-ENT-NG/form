@@ -104,7 +104,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     if (formDatas && formRightsDatas && user) {
       setForm(formDatas);
 
-      const form = {...formDatas, rights: formRightsDatas};
+      const form = { ...formDatas, rights: formRightsDatas };
       const userSharedRights = initUserSharedRights(user, sharingRights, form);
       if (previewMode && !userSharedRights.CONTRIB && !userSharedRights.MANAGE && user.userId !== formDatas.owner_id) {
         navigateToError403();
