@@ -12,7 +12,7 @@ import { sharingRights, workflowRights } from "~/core/rights";
 import { getQuestionRootById, getQuestionSectionById } from "~/hook/dnd-hooks/useCreationDnd/utils";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useGetFoldersQuery } from "~/services/api/services/formulaireApi/folderApi";
-import { useGetFormQuery } from "~/services/api/services/formulaireApi/formApi";
+import { useGetFormQuery, useGetMyFormRightsQuery } from "~/services/api/services/formulaireApi/formApi";
 import { useGetQuestionsQuery } from "~/services/api/services/formulaireApi/questionApi";
 import { useGetSectionsQuery } from "~/services/api/services/formulaireApi/sectionApi";
 
@@ -59,6 +59,7 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   //DATA
   const { data: foldersDatas } = useGetFoldersQuery(undefined, { skip: !userWorkflowRights.CREATION });
   const { data: formDatas } = useGetFormQuery({ formId }, { skip: !userWorkflowRights.CREATION });
+  const { data: formRightsDatas } = useGetMyFormRightsQuery(formId, { skip: !userWorkflowRights.CREATION });
   const { data: questionsDatas, isFetching: isQuestionsFetching } = useGetQuestionsQuery(
     { formId },
     { skip: isUpdating },
@@ -91,15 +92,17 @@ export const CreationProvider: FC<ICreationProviderProps> = ({ children }) => {
   }, [foldersDatas, rootFolders]);
 
   useEffect(() => {
-    if (formDatas) {
+    if (formDatas && formRightsDatas && user) {
       setForm(formDatas);
-      const userSharedRights = initUserSharedRights(user, sharingRights, formDatas);
-      if (!userSharedRights.CONTRIB && !userSharedRights.MANAGE && user?.userId !== formDatas.owner_id)
+
+      const form = { ...formDatas, rights: formRightsDatas };
+      const userSharedRights = initUserSharedRights(user, sharingRights, form);
+      if (!userSharedRights.CONTRIB && !userSharedRights.MANAGE && user.userId !== formDatas.owner_id)
         navigateToError403();
       return;
     }
     return;
-  }, [formDatas]);
+  }, [formDatas, formRightsDatas, user]);
 
   useEffect(() => {
     setFormElementsList(completeList);

@@ -11,8 +11,6 @@ const flexContainerStyles: SxProps<Theme> = {
 };
 
 export const editorWrapperStyle: SxProps<Theme> = {
-  userSelect: "none",
-  pointerEvents: "none",
   "> :first-child": {
     [`> :nth-child(1)`]: {
       "> :first-child": flexContainerStyles,
