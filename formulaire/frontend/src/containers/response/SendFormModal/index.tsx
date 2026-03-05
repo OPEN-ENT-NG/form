@@ -23,6 +23,7 @@ import { getAllQuestionsAndChildren } from "~/core/models/formElement/utils";
 import { buildResponsesPayload } from "~/core/models/response/utils";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
+import { isEnterPressed } from "~/core/utils";
 import { preventPropagation } from "~/providers/CreationProvider/utils";
 import { useResponse } from "~/providers/ResponseProvider";
 import {
@@ -76,7 +77,15 @@ export const SendFormModal: FC<ISendFormModalProps> = ({ isOpen, handleClose, di
   };
 
   return (
-    <Dialog open={isOpen} onClose={handleClose} onClick={preventPropagation} maxWidth={BreakpointVariant.MD}>
+    <Dialog
+      open={isOpen}
+      onClose={handleClose}
+      onClick={preventPropagation}
+      maxWidth={BreakpointVariant.MD}
+      onKeyDown={(e) => {
+        if (isEnterPressed(e)) void send();
+      }}
+    >
       <DialogTitle color={TEXT_PRIMARY_COLOR} variant={TypographyVariant.H2} fontWeight={TypographyFontStyle.BOLD}>
         {t("formulaire.responses.send.title")}
       </DialogTitle>
