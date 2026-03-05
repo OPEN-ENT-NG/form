@@ -124,14 +124,18 @@ public class Formulaire extends BaseServer {
 		addController(new UtilsController(storage));
 
 		// CRON
+		RgpdCron rgpdCron = new RgpdCron(storage);
+		NotifyCron notifyCron = new NotifyCron(timelineHelper);
+		// Enable RGPD and notification tasks to be triggered via API
+		addController(new TaskController(rgpdCron, notifyCron));
+		// Schedule RGPD and notification tasks from cron expression
 		try {
-			RgpdCron rgpdCron = new RgpdCron(storage);
 			new CronTrigger(vertx, config.getString(RGPD_CRON, "0 0 0 */1 * ? *")).schedule(rgpdCron);
-			NotifyCron notifyCron = new NotifyCron(timelineHelper);
 			new CronTrigger(vertx, config.getString(NOTIFY_CRON, "0 0 0 */1 * ? *")).schedule(notifyCron);
 		} catch (ParseException e) {
 			return Future.failedFuture(e);
 		}
+
 		return Future.succeededFuture();
 	}
 }
