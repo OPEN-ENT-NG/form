@@ -118,7 +118,7 @@ export const CreationQuestionWrapper: FC<ICreationQuestionWrapperProps> = ({ que
 
   useEffect(() => {
     if (isEditing && inputRef.current) {
-      inputRef.current.focus();
+      inputRef.current.focus({ preventScroll: true });
     }
   }, [isEditing]);
 
