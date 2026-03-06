@@ -53,9 +53,9 @@ const calculateResponseValue = (
   return responses.find((response) => response.selected) ?? null;
 };
 
-export const saveResponses = (progress: IProgressProps, responsesMap: ResponseMap): void => {
-  sessionStorage.setItem("progress", JSON.stringify(progress));
-  sessionStorage.setItem("responsesMap", serializeMap(responsesMap));
+export const saveResponses = (progress: IProgressProps, responsesMap: ResponseMap, formKey: string): void => {
+  sessionStorage.setItem("progress-" + formKey, JSON.stringify(progress));
+  sessionStorage.setItem("responsesMap-" + formKey, serializeMap(responsesMap));
 };
 
 const serializeMap = (responsesMap: ResponseMap): string => {

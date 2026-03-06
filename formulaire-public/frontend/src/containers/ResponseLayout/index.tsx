@@ -26,6 +26,7 @@ export const ResponseLayout: FC = () => {
     getQuestionResponses,
     responsesMap,
     scrollToQuestionId,
+    formKey,
   } = useResponse();
   const [isFirstElement, setIsFirstElement] = useState<boolean>(false);
 
@@ -73,7 +74,7 @@ export const ResponseLayout: FC = () => {
 
     if (!prevElement) return;
 
-    saveResponses(progress, responsesMap);
+    saveResponses(progress, responsesMap, formKey);
     setCurrentElement(prevElement);
     updateProgress(prevElement, progress.historicFormElementIds.slice(0, -1));
   };
@@ -90,13 +91,13 @@ export const ResponseLayout: FC = () => {
 
     // It's the end of the form
     if (nextPosition === null || (nextPosition && nextPosition > formElementsList.length)) {
-      saveResponses(progress, responsesMap);
+      saveResponses(progress, responsesMap, formKey);
       if (form?.id) setPageType(ResponsePageType.RECAP);
       return;
     }
 
     // We got an element for the next position
-    saveResponses(progress, responsesMap);
+    saveResponses(progress, responsesMap, formKey);
 
     const nextElement = formElementsList.find((fe) => fe.position === nextPosition);
     if (!nextElement || !nextElement.id) return;
