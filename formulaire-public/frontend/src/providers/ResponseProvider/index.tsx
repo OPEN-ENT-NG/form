@@ -88,7 +88,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, formKey
   useEffect(() => {
     if (!hasInitializedRsponsesMap.current && formElementsList.length > 0) {
       // If a responsesMap exists in sessionStorage we take this one
-      const storedResponsesMap = sessionStorage.getItem("responsesMap");
+      const storedResponsesMap = sessionStorage.getItem("responsesMap-" + formKey);
       if (storedResponsesMap) {
         const existingResponseMap = deserializeMap(storedResponsesMap);
         setResponsesMap(existingResponseMap);
@@ -100,7 +100,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, formKey
       setResponsesMap(initializedResponsesMap);
       hasInitializedRsponsesMap.current = true;
     }
-  }, [formElementsList]);
+  }, [formElementsList, formKey]);
 
   const updateProgress = (
     element: IFormElement,
