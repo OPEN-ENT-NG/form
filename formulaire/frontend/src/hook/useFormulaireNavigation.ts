@@ -1,12 +1,17 @@
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
+import { TagName } from "~/core/enums";
 import { FRONT_ROUTES } from "~/core/frontRoutes";
+import { formApi } from "~/services/api/services/formulaireApi/formApi";
 
 export const useFormulaireNavigation = () => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   return {
     navigateToHome: () => {
+      dispatch(formApi.util.invalidateTags([TagName.FORMS]));
       navigate(FRONT_ROUTES.home.build());
     },
 
