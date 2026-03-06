@@ -13,26 +13,25 @@ import { choiceBoxStyle, ChoicesRadioGroup, customAnswerStyle, formControlLabelS
 
 export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const { getQuestionResponses, updateQuestionResponses, isPageTypeRecap } = useResponse();
-  const [selectedValue, setSelectedValue] = useState<string>("");
+
+  const [selectedChoiceId, setSelectedChoiceId] = useState<number | null>(null);
   const [customAnswer, setCustomAnswer] = useState<string>("");
 
   useEffect(() => {
     const associatedResponses = getQuestionResponses(question);
-
     const selectedResponse = associatedResponses.find((response) => response.selected);
-    if (!selectedResponse) return; // Si il n'y a pas de réponse selected
+
+    if (!selectedResponse) return;
+
     const customChoice = question.choices?.find((choice) => choice.isCustom);
 
-    // Si on trouve un custom choice et qu'il match la réponse selected, on se base dessus
     if (customChoice && selectedResponse.choiceId === customChoice.id) {
-      setSelectedValue(customChoice.value);
+      setSelectedChoiceId(customChoice.id);
       setCustomAnswer(selectedResponse.customAnswer ?? "");
       return;
     }
 
-    // Sinon c'est que c'est une réponse classique (pas custom)
-    const existingAnswer = selectedResponse.answer ?? "";
-    if (typeof existingAnswer === "string") setSelectedValue(existingAnswer);
+    setSelectedChoiceId(selectedResponse.choiceId ?? null);
   }, [question, getQuestionResponses]);
 
   const hasOneChoiceWithImage = useMemo(() => {
@@ -40,114 +39,124 @@ export const RespondQuestionSingleAnswerRadio: FC<IRespondQuestionTypesProps> = 
   }, [question.choices]);
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const value = event.target.value;
-    setSelectedValue(value);
+    const value = Number(event.target.value);
+    setSelectedChoiceId(value);
 
     const associatedResponses = getQuestionResponses(question);
-    const newResponses: IResponse[] = associatedResponses.map((response) => {
-      return { ...response, selected: response.answer === value };
-    });
+
+    const newResponses: IResponse[] = associatedResponses.map((response) => ({
+      ...response,
+      selected: response.choiceId === value,
+    }));
 
     updateQuestionResponses(question, newResponses);
   };
 
-  const handleClick = (value: string) => {
-    if (value === selectedValue) {
-      setSelectedValue("");
+  const handleClick = (value: number) => {
+    if (value === selectedChoiceId) {
+      setSelectedChoiceId(null);
 
       const associatedResponses = getQuestionResponses(question);
+
       const newResponses: IResponse[] = associatedResponses.map((response) => ({
         ...response,
         selected: false,
       }));
+
       updateQuestionResponses(question, newResponses);
     }
   };
 
   const handleCustomResponseChange = (e: ChangeEvent<HTMLInputElement>) => {
     const newCustomAnswer = e.target.value;
-    const existingResponses = getQuestionResponses(question);
+    setCustomAnswer(newCustomAnswer);
 
+    const existingResponses = getQuestionResponses(question);
     const customChoiceId = question.choices?.find((choice) => choice.isCustom)?.id;
+
     if (!customChoiceId) return;
+
+    setSelectedChoiceId(customChoiceId);
 
     const updatedResponses = existingResponses.map((response) => {
       if (response.choiceId === customChoiceId) {
-        if (response.answer) setSelectedValue(response.answer.toString());
-        setCustomAnswer(newCustomAnswer);
         return {
           ...response,
           customAnswer: newCustomAnswer,
           selected: newCustomAnswer.trim() !== "",
         };
       }
-      return { ...response, selected: false };
+
+      return {
+        ...response,
+        selected: false,
+      };
     });
 
     updateQuestionResponses(question, updatedResponses);
   };
 
-  return isPageTypeRecap && !selectedValue ? (
+  return isPageTypeRecap && !selectedChoiceId ? (
     <Typography fontStyle={"italic"}>{t("formulaire.public.response.missing")}</Typography>
   ) : (
-    <>
-      <FormControl disabled={isPageTypeRecap}>
-        <ChoicesRadioGroup
-          hasOneChoiceWithImage={hasOneChoiceWithImage}
-          value={selectedValue || ""}
-          onChange={handleChange}
-        >
-          {question.choices
-            ?.sort((a, b) => a.position - b.position)
-            .map((choice) => (
-              <Box key={choice.id} sx={choiceBoxStyle}>
-                <FormControlLabel
-                  value={choice.value}
-                  sx={formControlLabelStyle}
-                  control={
-                    <Radio
-                      onClick={() => {
-                        handleClick(choice.value);
-                      }}
-                    />
-                  }
-                  label={
-                    <Box sx={customAnswerStyle}>
-                      <Box sx={labelStyle}>
-                        <Typography color={TEXT_PRIMARY_COLOR}>{choice.value}</Typography>
-                        {choice.isCustom && (
-                          <>
-                            <Typography>:</Typography>
-                            <TextField
-                              variant="standard"
-                              value={
-                                isPageTypeRecap && !customAnswer
-                                  ? t("formulaire.public.response.missing")
-                                  : customAnswer
-                              }
-                              placeholder={t("formulaire.public.response.custom.write")}
-                              onChange={handleCustomResponseChange}
-                              disabled={isPageTypeRecap}
-                              sx={{
-                                ...(isPageTypeRecap && {
-                                  "& .Mui-disabled": { WebkitTextFillColor: `${CSS_TEXT_PRIMARY_COLOR} !important` },
-                                  ...(!customAnswer && { fontStyle: "italic" }),
-                                }),
-                              }}
-                            ></TextField>
-                          </>
-                        )}
-                      </Box>
-                      {choice.image && (
-                        <ChoiceImage src={choice.image.replace("/document", "/pub/document")} alt={choice.value} />
+    <FormControl disabled={isPageTypeRecap}>
+      <ChoicesRadioGroup
+        hasOneChoiceWithImage={hasOneChoiceWithImage}
+        value={selectedChoiceId?.toString() || ""}
+        onChange={handleChange}
+      >
+        {question.choices
+          ?.sort((a, b) => a.position - b.position)
+          .map((choice) => (
+            <Box key={choice.id} sx={choiceBoxStyle}>
+              <FormControlLabel
+                value={choice.id?.toString() || ""}
+                sx={formControlLabelStyle}
+                control={
+                  <Radio
+                    onClick={() => {
+                      handleClick(choice.id ?? -1);
+                    }}
+                  />
+                }
+                label={
+                  <Box sx={customAnswerStyle}>
+                    <Box sx={labelStyle}>
+                      <Typography color={TEXT_PRIMARY_COLOR}>{choice.value}</Typography>
+
+                      {choice.isCustom && (
+                        <>
+                          <Typography>:</Typography>
+                          <TextField
+                            variant="standard"
+                            value={
+                              isPageTypeRecap && !customAnswer ? t("formulaire.public.response.missing") : customAnswer
+                            }
+                            placeholder={t("formulaire.public.response.custom.write")}
+                            onChange={handleCustomResponseChange}
+                            disabled={isPageTypeRecap}
+                            sx={{
+                              ...(isPageTypeRecap && {
+                                "& .Mui-disabled": {
+                                  WebkitTextFillColor: `${CSS_TEXT_PRIMARY_COLOR} !important`,
+                                },
+                                ...(!customAnswer && { fontStyle: "italic" }),
+                              }),
+                            }}
+                          />
+                        </>
                       )}
                     </Box>
-                  }
-                />
-              </Box>
-            ))}
-        </ChoicesRadioGroup>
-      </FormControl>
-    </>
+
+                    {choice.image && (
+                      <ChoiceImage src={choice.image.replace("/document", "/pub/document")} alt={choice.value} />
+                    )}
+                  </Box>
+                }
+              />
+            </Box>
+          ))}
+      </ChoicesRadioGroup>
+    </FormControl>
   );
 };
