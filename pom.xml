@@ -46,7 +46,7 @@
     </modules>
 
     <properties>
-        <revision>2.0-SNAPSHOT</revision>
+        <revision>3.0.0-rc+32</revision>
         <webUtilsVersion>3.2-SNAPSHOT</webUtilsVersion>
         <entCoreVersion>6.11-SNAPSHOT</entCoreVersion>
         <toolsVersion>2.0.0-final</toolsVersion>
