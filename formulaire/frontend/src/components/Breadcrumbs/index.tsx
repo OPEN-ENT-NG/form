@@ -1,12 +1,15 @@
 import { Box, EllipsisWithTooltip, IconButton } from "@cgi-learning-hub/ui";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import { FC } from "react";
+import { useDispatch } from "react-redux";
 import { Link as RouterLink } from "react-router-dom";
 
+import { TagName } from "~/core/enums";
 import { FRONT_ROUTES } from "~/core/frontRoutes";
 import { FORM_COLOR, GREY_DARKER_COLOR } from "~/core/style/colors";
 import { CSS_TEXT_PRIMARY_COLOR } from "~/core/style/cssColors";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
+import { formApi } from "~/services/api/services/formulaireApi/formApi";
 
 import { StyledBreadCrumb, StyledBreadCrumbItemWrapper } from "./style";
 import { IFormBreadcrumbsProps } from "./types";
@@ -21,7 +24,10 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
 }) => {
   const textColor = isHeader ? FORM_COLOR : CSS_TEXT_PRIMARY_COLOR;
   const { navigateToHome } = useFormulaireNavigation();
+  const dispatch = useDispatch();
   const maxItemsBeforeCollaspse = 2;
+
+  const reloadForms = () => dispatch(formApi.util.invalidateTags([TagName.FORMS]));
 
   return (
     <StyledBreadCrumb
@@ -38,6 +44,7 @@ export const FormBreadcrumbs: FC<IFormBreadcrumbsProps> = ({
         <IconButton
           component={RouterLink}
           to={FRONT_ROUTES.home.build()}
+          onClick={reloadForms}
           disableRipple
           sx={{ flexShrink: 0, color: FORM_COLOR }}
         >
