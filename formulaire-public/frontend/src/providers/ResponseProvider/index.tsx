@@ -1,5 +1,4 @@
 import { createContext, FC, useContext, useEffect, useMemo, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
 
 import { deserializeMap } from "~/containers/ResponseLayout/utils";
 import { ResponsePageType } from "~/core/enums";
@@ -24,8 +23,7 @@ export const useResponse = () => {
   return context;
 };
 
-export const ResponseProvider: FC<IResponseProviderProps> = ({ children }) => {
-  const { formKey } = useParams();
+export const ResponseProvider: FC<IResponseProviderProps> = ({ children, formKey }) => {
   const [responsesMap, setResponsesMap] = useState<ResponseMap>(new Map());
   const [form, setForm] = useState<IForm | null>(null);
   const [isFormFetchError, setIsFormFetchError] = useState<boolean>(false);
