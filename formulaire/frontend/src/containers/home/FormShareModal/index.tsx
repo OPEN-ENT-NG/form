@@ -23,6 +23,7 @@ export const FormShareModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       shareOptions={shareOptions}
       onCancel={handleClose}
       onSuccess={handleShareSuccess}
+      form={selectedForms[0]}
     />
   );
 };

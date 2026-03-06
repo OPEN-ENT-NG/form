@@ -27,6 +27,7 @@ import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 
 import { COMMON, FORMULAIRE } from "~/core/constants";
+import { IForm } from "~/core/models/form/types";
 import { flexStartBoxStyle } from "~/core/style/boxStyles";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import {
@@ -88,6 +89,7 @@ interface IShareResourceModalProps {
    */
   onCancel: () => void;
   appCode: string;
+  form: IForm;
 }
 
 export default function ShareResourceModal({
@@ -98,6 +100,7 @@ export default function ShareResourceModal({
   onSuccess,
   onCancel,
   appCode,
+  form,
 }: IShareResourceModalProps) {
   const { resourceId, resourceCreatorId, resourceRights } = shareOptions;
   const { userFormsRights } = useShareModal();
@@ -213,7 +216,10 @@ export default function ShareResourceModal({
                     <VisuallyHidden>{tEdifice("explorer.modal.share.search.placeholder")}</VisuallyHidden>
                   </Box>
                   {shareRightActions
-                    .filter((shareRightAction) => shareRightAction.id !== "read")
+                    .filter(
+                      (shareRightAction) =>
+                        shareRightAction.id !== "read" && (!form.is_public || shareRightAction.id !== "comment"),
+                    )
                     .map((shareRightAction) => (
                       <th key={shareRightAction.displayName} scope="col" className="text-center text-white">
                         {tForm("formulaire." + shareRightAction.displayName)}
@@ -236,7 +242,10 @@ export default function ShareResourceModal({
                   </Box>
                   <Box component={BoxComponentType.TD}>{tEdifice("share.me")}</Box>
                   {shareRightActions
-                    .filter((shareRightAction) => shareRightAction.id !== "read")
+                    .filter(
+                      (shareRightAction) =>
+                        shareRightAction.id !== "read" && (!form.is_public || shareRightAction.id !== "comment"),
+                    )
                     .map((shareRightAction) => (
                       <Box
                         component={BoxComponentType.TD}
@@ -262,6 +271,7 @@ export default function ShareResourceModal({
                   onDeleteRow={handleDeleteRow}
                   toggleRight={toggleRight}
                   toggleBookmark={toggleBookmark}
+                  form={form}
                 />
               </Box>
             </Box>
