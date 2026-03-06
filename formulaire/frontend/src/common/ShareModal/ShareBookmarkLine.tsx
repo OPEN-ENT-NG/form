@@ -4,6 +4,7 @@ import { Avatar, Button, Checkbox, IconButton } from "@edifice.io/react";
 import { IconBookmark, IconClose, IconRafterDown } from "@edifice.io/react/icons";
 import { useTranslation } from "react-i18next";
 
+import { IForm } from "~/core/models/form/types";
 import { BoxComponentType } from "~/core/style/themeProps";
 
 import { hasRight, showShareRightLine } from "./utils";
@@ -15,6 +16,7 @@ export const ShareBookmarkLine = ({
   shareRightActions,
   toggleRight,
   onDeleteRow,
+  form,
 }: {
   shareRights: ShareRightWithVisibles;
   shareRightActions: ShareRightAction[];
@@ -22,6 +24,7 @@ export const ShareBookmarkLine = ({
   toggleRight: (shareRight: ShareRight, actionName: ShareRightActionDisplayName) => void;
   toggleBookmark: () => void;
   onDeleteRow: (shareRight: ShareRight) => void;
+  form: IForm;
 }) => {
   const { t } = useTranslation();
   return shareRights.rights.map((shareRight: ShareRight) => {
@@ -72,7 +75,10 @@ export const ShareBookmarkLine = ({
             </Box>
           </Box>
           {shareRightActions
-            .filter((shareRightAction) => shareRightAction.id !== "read")
+            .filter(
+              (shareRightAction) =>
+                shareRightAction.id !== "read" && (!form.is_public || shareRightAction.id !== "comment"),
+            )
             .map((shareRightAction) => (
               <Box
                 component={BoxComponentType.TD}
