@@ -50,7 +50,7 @@ public class Formulaire extends BaseServer {
 				.compose(init -> {
                     eb = getEventBus(vertx);
 					timelineHelper = new TimelineHelper(vertx, eb, config);
-                    return StorageFactory.build(vertx, config, new FormulaireApplicationStorage(timelineHelper, eb));
+                    return StorageFactory.build(vertx, config, new FormulaireApplicationStorage(timelineHelper));
 				})
 				.compose(storageFactory -> SharedDataHelper.getInstance().getMulti("server", "archiveConfig")
 						.map(formulaireConfigMap -> Pair.of(storageFactory, formulaireConfigMap)))
