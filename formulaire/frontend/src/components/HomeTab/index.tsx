@@ -5,6 +5,7 @@ import { HomeTabState } from "~/providers/HomeProvider/enums";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { useHome } from "~/providers/HomeProvider";
+import { tabStyle } from "./style";
 
 export const HomeTabs: FC<IHomeTabsProps> = ({ value, setValue }) => {
   const { userWorkflowRights } = useHome();
@@ -16,8 +17,10 @@ export const HomeTabs: FC<IHomeTabsProps> = ({ value, setValue }) => {
 
   return (
     <Tabs value={value} onChange={handleChange}>
-      {userWorkflowRights.CREATION && <Tab value={HomeTabState.FORMS} label={t("formulaire.tab.list")} />}
-      {userWorkflowRights.RESPONSE && <Tab value={HomeTabState.RESPONSES} label={t("formulaire.tab.responses")} />}
+      {userWorkflowRights.CREATION && <Tab value={HomeTabState.FORMS} label={t("formulaire.tab.list")} sx={tabStyle} />}
+      {userWorkflowRights.RESPONSE && (
+        <Tab value={HomeTabState.RESPONSES} label={t("formulaire.tab.responses")} sx={tabStyle} />
+      )}
     </Tabs>
   );
 };

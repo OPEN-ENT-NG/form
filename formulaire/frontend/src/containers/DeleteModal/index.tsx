@@ -69,6 +69,9 @@ export const DeleteModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       if (currentFolder.id !== TRASH_FOLDER_ID) {
         toast.success(t("formulaire.success.forms.archive"));
       }
+      if (currentFolder.id === TRASH_FOLDER_ID) {
+        toast.success(t("formulaire.success.forms.delete", { ns: FORMULAIRE }));
+      }
 
       resetSelected();
       handleClose();

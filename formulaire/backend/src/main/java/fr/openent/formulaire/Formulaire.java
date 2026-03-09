@@ -129,7 +129,7 @@ public class Formulaire extends BaseServer {
 		try {
 			RgpdCron rgpdCron = new RgpdCron(storage);
 			new CronTrigger(vertx, config.getString(RGPD_CRON, "0 0 0 */1 * ? *")).schedule(rgpdCron);
-			NotifyCron notifyCron = new NotifyCron(timelineHelper);
+			NotifyCron notifyCron = new NotifyCron(timelineHelper, formulaireConfigMap);
 			new CronTrigger(vertx, config.getString(NOTIFY_CRON, "0 0 0 */1 * ? *")).schedule(notifyCron);
 		} catch (ParseException e) {
 			return Future.failedFuture(e);

@@ -6,6 +6,7 @@ import { useTranslation } from "react-i18next";
 
 import { BookmarkProps } from "./hooks/useShareBookmark";
 import { Box } from "@cgi-learning-hub/ui";
+import { COMMON } from "~/core/constants";
 export const ShareBookmark = ({
   bookmark,
   refBookmark,
@@ -17,7 +18,7 @@ export const ShareBookmark = ({
   onBookmarkChange: () => void;
   onSave: () => void;
 }) => {
-  const { t } = useTranslation();
+  const { t } = useTranslation(COMMON);
 
   return (
     <Box className="mt-16">
