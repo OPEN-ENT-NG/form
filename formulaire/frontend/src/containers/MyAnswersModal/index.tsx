@@ -1,6 +1,15 @@
 import { FC } from "react";
 import { IModalProps } from "~/core/types";
-import { Box, Dialog, DialogActions, DialogContent, DialogTitle, Button, IconButton } from "@cgi-learning-hub/ui";
+import {
+  Box,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Button,
+  IconButton,
+  Tooltip,
+} from "@cgi-learning-hub/ui";
 import { useTranslation } from "react-i18next";
 import { FORMULAIRE } from "~/core/constants";
 import { BoxComponentType, ComponentVariant, TypographyFont, TypographyVariant } from "~/core/style/themeProps";
@@ -33,14 +42,16 @@ export const MyAnswersModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
               <Box component={BoxComponentType.LI} key={distribution.id}>
                 <Box display="flex" alignItems="center">
                   <Box>{formatDateWithTime(distribution.dateSending, "formulaire.responded.date")}</Box>
-                  <IconButton
-                    sx={{ color: SECONDARY_MAIN_COLOR }}
-                    onClick={() => {
-                      window.location.href = getRecapFormPath(distribution.formId, distribution.id);
-                    }}
-                  >
-                    <VisibilityIcon />
-                  </IconButton>
+                  <Tooltip title={t("formulaire.response.open")} key={distribution.id} placement="top" arrow>
+                    <IconButton
+                      sx={{ color: SECONDARY_MAIN_COLOR }}
+                      onClick={() => {
+                        window.location.href = getRecapFormPath(distribution.formId, distribution.id);
+                      }}
+                    >
+                      <VisibilityIcon />
+                    </IconButton>
+                  </Tooltip>
                 </Box>
               </Box>
             ))}

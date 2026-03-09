@@ -72,6 +72,7 @@ interface IShareResourceModalProps {
    * onCancel handler to close ShareModal
    */
   onCancel: () => void;
+  appCode: string;
 }
 
 export default function ShareResourceModal({
@@ -81,6 +82,7 @@ export default function ShareResourceModal({
   children,
   onSuccess,
   onCancel,
+  appCode,
 }: IShareResourceModalProps) {
   const { resourceId, resourceCreatorId, resourceRights } = shareOptions;
   const { userFormsRights } = useShareModal();
@@ -95,6 +97,7 @@ export default function ShareResourceModal({
     toggleRight,
     handleDeleteRow,
   } = useShare({
+    appCode,
     resourceId,
     resourceCreatorId,
     resourceRights,
@@ -112,6 +115,7 @@ export default function ShareResourceModal({
     handleSearchInputChange,
     handleSearchResultsChange,
   } = useSearch({
+    appCode,
     resourceId,
     resourceCreatorId,
     shareRights,

@@ -22,8 +22,9 @@ import { IForm } from "~/core/models/form/types";
 import dayjs from "dayjs";
 import { DateFormat } from "~/core/enums";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
-import { iconBoxStyle, tablePaginationStyle } from "./style";
+import { iconBoxStyle, tableCheckboxStyle, tableContainerStyle, tablePaginationStyle } from "./style";
 import { IHomeMainFormsTableProps } from "./types";
+import { ColumnId } from "./enums";
 
 export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   const { selectedForms, setSelectedForms } = useHome();
@@ -34,6 +35,7 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   const displayedForms = getPageForms(forms, tablePaginationProps);
   const { getIcons } = useFormItemsIcons();
   const { limit, page } = tablePaginationProps;
+  const [isAllSelected, setAllSelected] = useState<boolean>(false);
 
   const isSelected = (formId: number) => selectedForms.some((form) => form.id === formId);
 
@@ -54,6 +56,21 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
     setTablePaginationProps({ limit: newLimit, page: 0 });
   };
 
+  const handleSelectAllClick = (event: ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      setSelectedForms(displayedForms);
+      return;
+    }
+    setSelectedForms([]);
+  };
+
+  useEffect(() => {
+    const allSelected = displayedForms.every((form) =>
+      selectedForms.some((selectedForm) => selectedForm.id === form.id),
+    );
+    setAllSelected(allSelected);
+  }, [selectedForms, page]);
+
   useEffect(() => {
     const maxPage = Math.ceil(totalCount / limit) - 1;
     if (page > maxPage) {
@@ -65,12 +82,21 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
   }, [totalCount, limit, page]);
 
   return (
-    <Box>
+    <Box sx={tableContainerStyle}>
       <TableContainer>
         <TableHead>
           <TableRow>
             {columns.map((column) => (
               <TableCell key={column.id} align="center" style={{ width: column.width }}>
+                {column.id === ColumnId.SELECT && (
+                  <Checkbox
+                    checked={isAllSelected}
+                    sx={tableCheckboxStyle}
+                    onChange={(e) => {
+                      handleSelectAllClick(e);
+                    }}
+                  />
+                )}
                 <Typography variant={TypographyVariant.BODY1}>{column.label}</Typography>
               </TableCell>
             ))}
@@ -92,7 +118,7 @@ export const HomeMainFormsTable: FC<IHomeMainFormsTableProps> = ({ forms }) => {
                 }}
                 sx={{ cursor: "pointer" }}
               >
-                <TableCell sx={{ padding: 0 }} padding="checkbox">
+                <TableCell sx={tableCheckboxStyle} padding="checkbox" align="center">
                   <Checkbox
                     checked={isItemSelected}
                     onChange={() => {

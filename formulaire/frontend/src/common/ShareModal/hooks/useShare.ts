@@ -8,10 +8,11 @@ import {
   type ShareRightActionDisplayName,
   type ShareRightWithVisibles,
 } from "@edifice.io/client";
-import { useUser, useToast, useEdificeClient } from "@edifice.io/react";
+import { useUser, useToast } from "@edifice.io/react";
 import { useTranslation } from "react-i18next";
 
 import { ShareOptions, ShareResourceMutation } from "../ShareModal";
+import { COMMON } from "~/core/constants";
 
 interface IUseShareResourceModalProps {
   /**
@@ -29,6 +30,7 @@ interface IUseShareResourceModalProps {
   shareResource?: ShareResourceMutation;
   onSuccess: () => void;
   setIsLoading: (value: boolean) => void;
+  appCode: string;
 }
 
 type State = {
@@ -73,6 +75,7 @@ function reducer(state: State, action: ShareAction) {
 }
 
 export default function useShare({
+  appCode,
   resourceId,
   resourceRights,
   resourceCreatorId,
@@ -80,11 +83,10 @@ export default function useShare({
   setIsLoading,
   onSuccess,
 }: IUseShareResourceModalProps) {
-  const { appCode } = useEdificeClient();
   const { user, avatar } = useUser();
 
   const toast = useToast();
-  const { t } = useTranslation();
+  const { t } = useTranslation(COMMON);
 
   const [state, dispatch] = useReducer(reducer, initialState);
 

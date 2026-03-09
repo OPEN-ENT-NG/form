@@ -18,8 +18,10 @@ import io.vertx.core.logging.LoggerFactory;
 import org.entcore.common.controller.ControllerHelper;
 import org.entcore.common.notification.TimelineHelper;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.Map;
 
 import static fr.openent.form.core.constants.ConfigFields.DAYS_BEFORE_NOTIF_CLOSING;
 import static fr.openent.form.core.constants.ConfigFields.DEFAULT_DAYS_BEFORE_NOTIF_CLOSING;
@@ -30,11 +32,13 @@ public class NotifyCron extends ControllerHelper implements Handler<Long> {
     private final FormService formService;
     private final DistributionService distributionService;
     private final NotifyService notifyService;
+    private final Map<String, Object> formConfig;
 
-    public NotifyCron(TimelineHelper timelineHelper) {
+    public NotifyCron(TimelineHelper timelineHelper, Map<String, Object> config) {
         this.formService = new DefaultFormService();
         this.distributionService = new DefaultDistributionService();
         this.notifyService = new DefaultNotifyService(timelineHelper, eb);
+        this.formConfig = config;
     }
 
     @Override
@@ -53,9 +57,11 @@ public class NotifyCron extends ControllerHelper implements Handler<Long> {
     }
 
     public void launchNotifications(Handler<Either<String, JsonObject>> handler) {
-        notifyNewFormFrom()
-            .compose(voidResult -> notifyClosingForm())
-            .onSuccess(voidResult -> handler.handle(new Either.Right<>(new JsonObject())))
+        Future<Void> newFormFuture = notifyNewFormFrom();
+        Future<Void> closingFormFuture = notifyClosingForm();
+
+        Future.all(newFormFuture, closingFormFuture)
+            .onSuccess((future) -> handler.handle(new Either.Right<>(new JsonObject())))
             .onFailure(err -> {
                 String errorMessage = "Failed to send notifications from notify CRON";
                 LogHelper.logError(this, "launchNotifications", errorMessage, err.getMessage());
@@ -89,19 +95,23 @@ public class NotifyCron extends ControllerHelper implements Handler<Long> {
 
     public Future<Void> notifyClosingForm() {
         Promise<Void> promise = Promise.promise();
-        JsonObject composeInfos = new JsonObject();
-        Integer nbDaysBeforeClosing = config.getInteger(DAYS_BEFORE_NOTIF_CLOSING, DEFAULT_DAYS_BEFORE_NOTIF_CLOSING);
+        List<Form> closingForms = new ArrayList<>();
+        Object confNbDaysBeforeClosing = formConfig.get(DAYS_BEFORE_NOTIF_CLOSING);
+        Integer nbDaysBeforeClosing = DEFAULT_DAYS_BEFORE_NOTIF_CLOSING;
+
+        if (confNbDaysBeforeClosing != null && !confNbDaysBeforeClosing.toString().isEmpty()) {
+            nbDaysBeforeClosing = Integer.valueOf(confNbDaysBeforeClosing.toString());
+        }
 
         formService.listFormsClosingSoon(nbDaysBeforeClosing)
             .compose(forms -> {
-                composeInfos.put(FORMS, forms);
+                closingForms.addAll(forms);
                 List<Number> formIds = forms.stream().map(Form::getId).collect(Collectors.toList());
                 return distributionService.listByForms(new JsonArray(formIds));
             })
             .onSuccess(distributionsJson -> {
                 List<Distribution> distributions = IModelHelper.toList(distributionsJson, Distribution.class);
-                List<Form> forms = IModelHelper.toList(composeInfos.getJsonArray(FORMS), Form.class);
-                forms.forEach(form -> {
+                closingForms.forEach(form -> {
                     List<String> respondersIds = distributions.stream()
                             .filter(distrib -> distrib.getFormId().equals(form.getId()))
                             .map(Distribution::getResponderId)

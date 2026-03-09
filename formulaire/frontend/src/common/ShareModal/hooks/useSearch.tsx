@@ -9,12 +9,13 @@ import {
   User,
   odeServices,
 } from "@edifice.io/client";
-import { OptionListItemType, useDebounce, useEdificeClient, useIsAdml } from "@edifice.io/react";
+import { OptionListItemType, useDebounce, useIsAdml } from "@edifice.io/react";
 import { IconBookmark } from "@edifice.io/react/icons";
 import { useTranslation } from "react-i18next";
 
 import { ShareAction } from "./useShare";
 import { ShareOptions } from "../ShareModal";
+import { COMMON } from "~/core/constants";
 
 type State = {
   searchInputValue: string;
@@ -69,24 +70,25 @@ const defaultActions: ShareRightAction[] = [
 ];
 
 export const useSearch = ({
+  appCode,
   resourceId,
   resourceCreatorId,
   shareRights,
   shareDispatch,
 }: {
+  appCode: string;
   resourceId: ShareOptions["resourceCreatorId"];
   resourceCreatorId: ShareOptions["resourceCreatorId"];
   shareRights: ShareRightWithVisibles;
   shareDispatch: Dispatch<ShareAction>;
 }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const { appCode } = useEdificeClient();
 
   const debouncedSearchInputValue = useDebounce<string>(state.searchInputValue, 500);
 
   const { isAdml } = useIsAdml();
 
-  const { t } = useTranslation();
+  const { t } = useTranslation(COMMON);
 
   useEffect(() => {
     void search(debouncedSearchInputValue);

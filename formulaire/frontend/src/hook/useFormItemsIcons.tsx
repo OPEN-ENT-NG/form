@@ -107,7 +107,6 @@ export const useFormItemsIcons = () => {
           <EllipsisWithTooltip
             typographyProps={{
               color: isFormFilled(form, distributions) ? SUCCESS_MAIN_COLOR : ERROR_MAIN_COLOR,
-              fontWeight: 700,
             }}
           >
             {getFormStatusText(form, distributions, formatDateWithTime)}
