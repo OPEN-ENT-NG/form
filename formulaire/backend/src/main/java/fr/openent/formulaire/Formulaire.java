@@ -50,6 +50,7 @@ public class Formulaire extends BaseServer {
 				.compose(init -> {
                     eb = getEventBus(vertx);
 					timelineHelper = new TimelineHelper(vertx, eb, config);
+					ServiceFactory.initialize(securedActions);
                     return StorageFactory.build(vertx, config, new FormulaireApplicationStorage(timelineHelper));
 				})
 				.compose(storageFactory -> SharedDataHelper.getInstance().getMulti("server", "archiveConfig")
@@ -59,7 +60,6 @@ public class Formulaire extends BaseServer {
 	}
 
 	public Future<Void> initFormulaire(StorageFactory storageFactory, Map<String, Object> formulaireConfigMap) {
-        ServiceFactory.initialize(securedActions);
         Constants.MAX_RESPONSES_EXPORT_PDF = config.getInteger(MAX_RESPONSE_EXPORT_PDF, 100);
 		Constants.MAX_USERS_SHARING = config.getInteger(MAX_USERS_SHARING, 65000);
 
