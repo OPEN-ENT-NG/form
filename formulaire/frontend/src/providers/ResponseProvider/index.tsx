@@ -84,7 +84,7 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
     { formId },
     { skip: previewMode ? !userWorkflowRights.CREATION : !userWorkflowRights.RESPONSE },
   );
-  const { data: formRightsDatas } = useGetMyFormRightsQuery(formId, { skip: !userWorkflowRights.CREATION });
+  const { data: formRightsDatas } = useGetMyFormRightsQuery(formId);
   const { data: questionsDatas, isFetching: isQuestionsFetching } = useGetQuestionsQuery({ formId });
   const { data: sectionsDatas, isFetching: isSectionsFetching } = useGetSectionsQuery({ formId });
   const { data: distributionData } = useGetDistributionQuery(distributionId ?? "", {
