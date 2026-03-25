@@ -36,7 +36,12 @@ export const ResponseView: FC = () => {
         imageHeight={300}
         slotProps={{ title: { variant: TypographyVariant.H4 }, description: { variant: TypographyVariant.BODY2 } }}
       />
-      <Button variant={ComponentVariant.CONTAINED} onClick={headerButtons[0].action}>
+      <Button
+        variant={ComponentVariant.CONTAINED}
+        onClick={() => {
+          void headerButtons[0].action();
+        }}
+      >
         {t("formulaire.return")}
       </Button>
     </Box>
