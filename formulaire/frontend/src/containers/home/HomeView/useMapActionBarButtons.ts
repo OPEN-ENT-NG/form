@@ -157,7 +157,10 @@ export const useMapActionBarButtons = () => {
           }
           if (hasForms && tab === HomeTabState.FORMS) {
             if (isTablet) toggleModal(ModalType.FORM_OPEN_BLOCKED);
-            else navigateToFormEdit(selectedForms[0].id);
+            else {
+              navigateToFormEdit(selectedForms[0].id);
+              unselectAll();
+            }
           }
           return openFormResponseAction();
         },
@@ -222,6 +225,7 @@ export const useMapActionBarButtons = () => {
         label: t("formulaire.results"),
         action: () => {
           navigateToFormResult(selectedForms[0].id);
+          unselectAll();
         },
       },
       [ActionBarButtonType.REMIND]: {
