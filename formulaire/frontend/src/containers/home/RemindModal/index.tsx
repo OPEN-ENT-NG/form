@@ -275,7 +275,7 @@ export const RemindModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
             key={button.title}
             variant={button.variant ?? ComponentVariant.CONTAINED}
             onClick={() => {
-              button.action();
+              void button.action();
             }}
             sx={buttonStyle}
           >
