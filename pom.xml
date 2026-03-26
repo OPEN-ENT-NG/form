@@ -41,8 +41,8 @@
         <module>formulaire-public/backend</module>
   </modules>
   <properties>
-        <revision>3.0-separation-SNAPSHOT</revision>
-        <entCoreVersion>6.14-separation-SNAPSHOT</entCoreVersion>
+    <revision>3.0-separation-SNAPSHOT</revision>
+    <entCoreVersion>6.14-separation-SNAPSHOT</entCoreVersion>
     <toolsVersion>2.0.0-final</toolsVersion>
     <junitVersion>5.1.0</junitVersion>
     <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
@@ -69,7 +69,7 @@
     <dependency>
       <groupId>org.entcore</groupId>
       <artifactId>common</artifactId>
-      <version>${entCoreVersion}</version>
+      <version>${entCoreLibsVersion}</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
