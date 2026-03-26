@@ -56,8 +56,7 @@ public class DefaultNotifyService implements NotifyService {
     }
 
     private void notifyNewFormMain(HttpServerRequest request, JsonObject form, JsonArray responders, UserInfos user) {
-        String endPath = form.getBoolean(RGPD) ? RGPD : NEW;
-        String formUri = "/formulaire#/form/" + form.getInteger(ID) + "/" + endPath;
+        String formUri = "/formulaire#/form/" + form.getInteger(ID) + "/" + NEW;
 
         JsonObject params = new JsonObject()
                 .put(PARAM_USER_URI, "/userbook/annuaire#" + user.getUserId())
@@ -102,8 +101,7 @@ public class DefaultNotifyService implements NotifyService {
         HttpServerRequest request = new JsonHttpServerRequest(new JsonObject());
         UserInfos user = new UserInfos();
 
-        String endPath = form.getRgpd() ? RGPD : NEW;
-        String formUri = "/formulaire#/form/" + form.getId() + "/" + endPath;
+        String formUri = "/formulaire#/form/" + form.getId() + "/" + NEW;
 
         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, I18n.getLocale(I18n.acceptLanguage(request)));
         String formatedDateEnding = df.format(form.getDateEnding());

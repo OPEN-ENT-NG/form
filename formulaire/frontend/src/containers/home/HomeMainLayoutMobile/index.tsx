@@ -5,7 +5,7 @@ import AddCircleRoundedIcon from "@mui/icons-material/AddCircleRounded";
 import ChevronRightRoundedIcon from "@mui/icons-material/ChevronRightRounded";
 import { Typography, useTheme } from "@mui/material";
 import IconButton from "@mui/material/IconButton";
-import { FC, useState } from "react";
+import { FC, useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 
 import { HomeTabs } from "~/components/HomeTab";
@@ -49,9 +49,7 @@ export const HomeMainLayoutMobile: FC = () => {
   const [selectedMenuItem, setSelectedMenuItem] = useState<IMenuItemProps>();
   const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
   const userId = user?.userId;
-
   const treeViewItems = buildFolderTree(folders);
-
   const { handleSearch, filteredFolders, hasFilteredFolders, filteredForms, hasFilteredForms } = useSearchAndOrganize(
     folders,
     forms,
@@ -63,6 +61,20 @@ export const HomeMainLayoutMobile: FC = () => {
     tab,
     selectedMenuItem,
   );
+
+  // Moove Helper floating button
+  useEffect(() => {
+    const helperIFrame = document.getElementById("launcher");
+    if (!helperIFrame) return;
+    helperIFrame.style.right = "60px";
+    helperIFrame.style.bottom = "12px";
+
+    // Replace Helper floating button when leaving this view
+    return () => {
+      helperIFrame.style.right = "0px";
+      helperIFrame.style.bottom = "0px";
+    };
+  }, []);
 
   const handleMenuClick = () => {
     setIsSidebarOpen(true);
