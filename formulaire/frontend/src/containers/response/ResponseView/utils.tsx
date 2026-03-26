@@ -18,7 +18,7 @@ export const useGetResponseHeaderButtons = (
     {
       title: t(getButtonTitleKey(isInPreviewMode, pageType)),
       variant: ComponentVariant.OUTLINED,
-      action: () => {
+      action: async () => {
         if (!formId) return;
 
         if (isInPreviewMode) {
@@ -26,7 +26,7 @@ export const useGetResponseHeaderButtons = (
           return;
         }
 
-        if (currentElement) void saveResponses(currentElement);
+        if (currentElement) await saveResponses(currentElement);
         window.location.href = FRONT_ROUTES.homeResponses.build();
       },
     },

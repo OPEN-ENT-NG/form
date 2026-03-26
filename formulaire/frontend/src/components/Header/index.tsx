@@ -52,7 +52,7 @@ export const Header: FC<IHeaderProps> = ({
             key={button.title}
             variant={button.variant ?? ComponentVariant.CONTAINED}
             onClick={() => {
-              button.action();
+              void button.action();
             }}
             startIcon={button.startIcon}
             disabled={button.disabled ?? false}
