@@ -15,5 +15,7 @@ export const responseLayoutStyle: SxProps<Theme> = {
 export const StyledButtonsWrapper = styled(Box, {
   shouldForwardProp: blockProps("displayPrev"),
 })<IButtonsWrapperProps>(({ displayPrev = false }) => {
-  return !displayPrev ? { ...flexEndBoxStyle } : { ...spaceBetweenBoxStyle };
+  return !displayPrev
+    ? { ...flexEndBoxStyle, paddingBottom: "4rem" }
+    : { ...spaceBetweenBoxStyle, paddingBottom: "4rem" };
 });
