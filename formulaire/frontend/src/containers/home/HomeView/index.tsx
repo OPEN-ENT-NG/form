@@ -52,12 +52,10 @@ export const HomeView: FC = () => {
   const { leftButtons, rightButtons, unselectAll } = useMapActionBarButtons();
   const [headerRef, headerHeight] = useElementHeight<HTMLDivElement>();
 
-  const actionBarMobileSlotProps = {
-    ...(isMobile && {
-      root: { flexWrap: "wrap" as const },
-      leftActionsContainer: { flexWrap: "wrap" as const },
-      rightActionsContainer: { flexWrap: "wrap" as const, justifyContent: "flex-start" as const },
-    }),
+  const actionBarSlotProps = {
+    root: { flexWrap: "wrap" as const },
+    leftActionsContainer: { width: "unset" as const, flexWrap: "wrap" as const },
+    rightActionsContainer: { width: "unset" as const, flexWrap: "wrap" as const },
   };
 
   return (
@@ -177,7 +175,7 @@ export const HomeView: FC = () => {
         />
       )}
       {isActionBarOpen && (
-        <ActionBar leftActions={leftButtons} rightActions={rightButtons} slotProps={actionBarMobileSlotProps} />
+        <ActionBar leftActions={leftButtons} rightActions={rightButtons} slotProps={actionBarSlotProps} />
       )}
     </Box>
   );

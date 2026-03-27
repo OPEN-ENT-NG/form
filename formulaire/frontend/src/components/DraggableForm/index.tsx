@@ -8,11 +8,13 @@ import { dragActiveStyle } from "~/core/style/dndStyle";
 import { useFormItemsIcons } from "~/hook/useFormItemsIcons";
 import { useFormulaireNavigation } from "~/hook/useFormulaireNavigation";
 import { useGlobal } from "~/providers/GlobalProvider";
+import { useHome } from "~/providers/HomeProvider";
 
 import { IDraggableFormProps } from "./types";
 
 export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSelect, dragActive = false }) => {
   const { isMobile } = useGlobal();
+  const { resetSelected } = useHome();
   const { attributes, listeners, setNodeRef } = useDraggable({
     id: `draggable-form-${form.id.toString()}`,
     data: { type: DraggableType.FORM, form },
@@ -41,6 +43,7 @@ export const DraggableForm: FC<IDraggableFormProps> = ({ form, isSelected, onSel
             return;
           }
           navigateToFormEdit(form.id);
+          resetSelected();
         }}
         propertyItems={getFormPropertyItems(form)}
         infoIcons={getIcons(form)}
