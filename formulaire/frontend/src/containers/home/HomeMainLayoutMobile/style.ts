@@ -53,7 +53,7 @@ export const subTextStyle: SxProps<Theme> = {
 
 export const iconButtonStyle: SxProps<Theme> = {
   position: "fixed",
-  bottom: "24px",
+  bottom: "72px",
   right: "16px",
   padding: 0,
 };
