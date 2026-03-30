@@ -13,18 +13,21 @@ import { respondQuestionLongAnswerStyle } from "./style";
 export const RespondQuestionLongAnswer: FC<IRespondQuestionTypesProps> = ({ question }) => {
   const editorRef = useRef<EditorRef>(null);
   const { getQuestionResponse, updateQuestionResponses, isPageTypeRecap } = useResponse();
-  const [answer, setAnswer] = useState<string>("");
-
-  const associatedResponse = getQuestionResponse(question);
-  const currentAnswer = useRef<string>(typeof associatedResponse?.answer === "string" ? associatedResponse.answer : "");
+  const [initialAnswer, setInitialAnswer] = useState<string>("");
+  const initialized = useRef(false);
 
   useEffect(() => {
+    initialized.current = false;
+  }, [question]);
+
+  useEffect(() => {
+    if (initialized.current) return;
     const associatedResponse = getQuestionResponse(question);
     if (!associatedResponse) return;
     const existingAnswer = associatedResponse.answer;
-    if (typeof existingAnswer === "string") {
-      setAnswer(existingAnswer);
-      currentAnswer.current = existingAnswer;
+    if (typeof existingAnswer === "string" && existingAnswer != initialAnswer) {
+      setInitialAnswer(existingAnswer);
+      initialized.current = true;
     }
   }, [question, getQuestionResponse]);
 
@@ -32,18 +35,17 @@ export const RespondQuestionLongAnswer: FC<IRespondQuestionTypesProps> = ({ ques
     const associatedResponse = getQuestionResponse(question);
     if (!question.id || !associatedResponse) return;
     const value = editorRef.current?.getContent(EDITOR_CONTENT_HTML) as string;
-    setAnswer(value);
     associatedResponse.answer = value;
     updateQuestionResponses(question, [associatedResponse]);
   };
 
-  return isPageTypeRecap && !answer ? (
+  return isPageTypeRecap && !initialAnswer ? (
     <Typography fontStyle={"italic"}>{t("formulaire.response.missing")}</Typography>
   ) : (
     <Box sx={{ ...(!isPageTypeRecap && respondQuestionLongAnswerStyle) }}>
       <Editor
         onContentChange={handleResponseChange}
-        content={isPageTypeRecap ? answer : currentAnswer.current}
+        content={initialAnswer}
         ref={editorRef}
         mode={isPageTypeRecap ? EditorMode.READ : EditorMode.EDIT}
         variant={isPageTypeRecap ? EditorVariant.GHOST : EditorVariant.OUTLINE}
