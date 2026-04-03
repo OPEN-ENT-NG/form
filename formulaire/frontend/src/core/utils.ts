@@ -97,3 +97,5 @@ export const getOwnerNameWithUnderscore = (firstName: string, lastName: string):
 export const getOwnerName = (firstName: string, lastName: string): string => {
   return firstName + lastName;
 };
+
+export const sleep = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms));

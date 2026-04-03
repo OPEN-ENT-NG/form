@@ -16,6 +16,7 @@ import { FORMULAIRE } from "~/core/constants";
 import { TEXT_PRIMARY_COLOR } from "~/core/style/colors";
 import { BreakpointVariant, ComponentVariant, TypographyFontStyle, TypographyVariant } from "~/core/style/themeProps";
 import { IModalProps } from "~/core/types";
+import { sleep } from "~/core/utils";
 import { useHome } from "~/providers/HomeProvider";
 import { useVerifyExportAndDownloadZipMutation } from "~/services/api/services/archiveApi/importExportApi";
 import { useExportZipMutation, useLazyExportPdfFormQuery } from "~/services/api/services/formulaireApi/formApi";
@@ -42,7 +43,9 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       if (selectedFormat === ExportFormat.ZIP) {
         const formIds = selectedForms.map((form) => form.id);
         const exportId = await exportZip(formIds).unwrap();
+
         if (exportId) {
+          await sleep(5000);
           await verifyExportAndDownloadZip(exportId).unwrap();
         }
       }
@@ -54,7 +57,6 @@ export const ExportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       console.error("Error exporting form:", error);
     }
     setIsLoading(false);
-
     handleClose();
   };
 
