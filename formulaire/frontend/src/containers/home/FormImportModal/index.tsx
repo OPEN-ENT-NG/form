@@ -137,6 +137,7 @@ export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           onClick={() => {
             void handleImport();
           }}
+          disabled={customFiles.length === 0}
         >
           {t("formulaire.import")}
         </Button>
