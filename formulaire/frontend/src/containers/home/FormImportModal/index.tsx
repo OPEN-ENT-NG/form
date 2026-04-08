@@ -35,6 +35,7 @@ export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
   const dispatch = useDispatch();
   const [customFiles, setCustomFiles] = useState<CustomFile[]>([]);
   const [formData, setFormData] = useState<FormData>(new FormData());
+  const [isImporting, setIsImporting] = useState<boolean>(false);
 
   const [uploadImportForms, { data: uploadedForms = {} as IImportUploadResponse, isSuccess: isUploadSuccess }] =
     useUploadImportFormsMutation();
@@ -67,6 +68,7 @@ export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
       if (isLaunchOk) {
         dispatch(emptySplitFormulaireApi.util.invalidateTags([TagName.FORMS]));
         toast.success(t("formulaire.success.forms.import"));
+        setIsImporting(false);
         handleClose();
       }
     };
@@ -87,9 +89,11 @@ export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
 
   const handleImport = async () => {
     try {
+      setIsImporting(true);
       await uploadImportForms(formData);
     } catch (error) {
       console.error("Error from import:", error);
+      setIsImporting(false);
     }
   };
 
@@ -137,6 +141,7 @@ export const FormImportModal: FC<IModalProps> = ({ isOpen, handleClose }) => {
           onClick={() => {
             void handleImport();
           }}
+          loading={isImporting}
           disabled={customFiles.length === 0}
         >
           {t("formulaire.import")}
