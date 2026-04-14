@@ -44,6 +44,7 @@
     <powerMockVersion>2.0.2</powerMockVersion>
     <mockitoVersion>[2.0,3.0)</mockitoVersion>
     <gatlingHighchartsVersion>2.2.2</gatlingHighchartsVersion>
+    <modPostgresVersion>2.1-separation-SNAPSHOT</modPostgresVersion>
     <modJsonSchemaValidatorVersion>2.1-SNAPSHOT</modJsonSchemaValidatorVersion>
     <entCoreLibsVersion>6.14-separation-SNAPSHOT</entCoreLibsVersion>
     <modMongoVersion>4.1-separation-SNAPSHOT</modMongoVersion>
@@ -151,6 +152,13 @@
       <groupId>com.opendigitaleducation</groupId>
       <artifactId>mod-json-schema-validator</artifactId>
       <version>${modJsonSchemaValidatorVersion}</version>
+      <scope>runtime</scope>
+      <classifier>fat</classifier>
+    </dependency>
+    <dependency>
+      <groupId>fr.wseduc</groupId>
+      <artifactId>mod-postgresql</artifactId>
+      <version>${modPostgresVersion}</version>
       <scope>runtime</scope>
       <classifier>fat</classifier>
     </dependency>
