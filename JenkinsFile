@@ -2,50 +2,55 @@
 
 pipeline {
   agent any
-    stages {
-      stage("Initialization") {
-        steps {
-          script {
-            def revision = sh(returnStdout: true, script: 'mvn help:evaluate -Dexpression=revision -q -DforceStdout').trim()
-            buildName("${env.GIT_BRANCH.replace('origin/', '')}@${revision}")
-          }
-        }
-      }
 
-      stage('Checkout') {
-        steps {
-          checkout scm
-        }
-      }
-
-      stage('Build all') {
-        steps {
-            sh 'chmod +x build.sh && ./build.sh clean install'
-        }
-      }
-
-      // stage('Build image') {
-      //  steps {
-         // sh 'edifice image --archs=linux/amd64 --force'
-      //  }
-     // }
-
-      stage('Publish') {
-        steps {
-          checkout scm
-          sh './build.sh publish'
+  environment {
+    TIPTAP_PRO_TOKEN = credentials('tiptap-pro-token')
+  }
+  
+  stages {
+    stage("Initialization") {
+      steps {
+        script {
+          def revision = sh(returnStdout: true, script: 'mvn help:evaluate -Dexpression=revision -q -DforceStdout').trim()
+          buildName("${env.GIT_BRANCH.replace('origin/', '')}@${revision}")
         }
       }
     }
 
-    post {
-      cleanup {
-        sh 'cd formulaire/backend && docker-compose down && cd ../..'
-        sh 'cd formulaire/frontend && docker-compose down && cd ../..'
-        sh 'cd formulaire/angular && docker-compose down && cd ../..'
-        sh 'cd formulaire-public/backend && docker-compose down && cd ../..'
-        sh 'cd formulaire-public/frontend && docker-compose down && cd ../..'
-        sh 'cd formulaire-public/angular && docker-compose down && cd ../..'
+    stage('Checkout') {
+      steps {
+        checkout scm
       }
     }
+
+    stage('Build all') {
+      steps {
+          sh 'chmod +x build.sh && ./build.sh clean install'
+      }
+    }
+
+    // stage('Build image') {
+    //  steps {
+       // sh 'edifice image --archs=linux/amd64 --force'
+    //  }
+   // }
+
+    stage('Publish') {
+      steps {
+        checkout scm
+        sh './build.sh publish'
+      }
+    }
+  }
+
+  post {
+    cleanup {
+      sh 'cd formulaire/backend && docker-compose down && cd ../..'
+      sh 'cd formulaire/frontend && docker-compose down && cd ../..'
+      sh 'cd formulaire/angular && docker-compose down && cd ../..'
+      sh 'cd formulaire-public/backend && docker-compose down && cd ../..'
+      sh 'cd formulaire-public/frontend && docker-compose down && cd ../..'
+      sh 'cd formulaire-public/angular && docker-compose down && cd ../..'
+    }
+  }
 }
