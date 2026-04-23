@@ -46,8 +46,8 @@
     </modules>
 
     <properties>
-        <revision>3.0-CGI-SNAPSHOT</revision>
-        <entCoreVersion>6.14-SNAPSHOT</entCoreVersion>
+        <revision>3.0.0</revision>
+        <entCoreVersion>6.14.13</entCoreVersion>
         <toolsVersion>2.0.0-final</toolsVersion>
         <junitVersion>5.1.0</junitVersion>
         <vertxCronTimerVersion>3.0.0</vertxCronTimerVersion>
