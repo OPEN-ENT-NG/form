@@ -38,7 +38,7 @@ pipeline {
 
     stage('Build image') {
       steps {
-        sh './edifice image --archs=linux/amd64 --rebuild=false'
+        sh './edifice image --archs=linux/amd64 --rebuild=false --project-type=entcore'
       }
     }
   }
