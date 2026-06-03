@@ -41,7 +41,7 @@
         <module>formulaire-public/backend</module>
   </modules>
   <properties>
-    <revision>3.1.0</revision>
+    <revision>3.1.0.0</revision>
     <entCoreVersion>6.15.0</entCoreVersion>
     <toolsVersion>2.0.0-final</toolsVersion>
     <junitVersion>5.1.0</junitVersion>
