@@ -50,8 +50,7 @@ public class NotifyCron extends ControllerHelper implements Handler<Long> {
                 LogHelper.logError(this, "handle", errorMessage, notificationsEvt.left().getValue());
             }
             else {
-                String errorMessage = "Notify cron launch successful";
-                LogHelper.logError(this, "handle", errorMessage, notificationsEvt.left().getValue());
+                LogHelper.logInfo(this, "handle", "Notify cron launch successful");
             }
         });
     }
