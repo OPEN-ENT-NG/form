@@ -25,7 +25,7 @@ pipeline {
 
     stage('Build all') {
       steps {
-          sh 'chmod +x build.sh && ./build.sh clean install'
+          sh 'chmod +x build.sh && ./build.sh init clean install'
       }
     }
 
