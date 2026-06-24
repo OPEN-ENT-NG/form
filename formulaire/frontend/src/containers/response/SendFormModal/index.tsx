@@ -45,7 +45,7 @@ export const SendFormModal: FC<ISendFormModalProps> = ({ isOpen, handleClose, di
 
   useEffect(() => {
     if (user && user.structures.length && user.structures.length === user.structureNames.length)
-      setSelectedStructure(user.structures[0]);
+      setSelectedStructure(user.structureNames[0]);
   }, [user]);
 
   const handleChange = (event: SelectChangeEvent) => {
@@ -90,13 +90,13 @@ export const SendFormModal: FC<ISendFormModalProps> = ({ isOpen, handleClose, di
         {t("formulaire.responses.send.title")}
       </DialogTitle>
       <DialogContent>
-        {user && selectedStructure && user.structures.length > 1 && (
+        {user && selectedStructure && user.structureNames.length > 1 && (
           <Stack direction="row" gap={2} alignItems={"center"} sx={{ mb: 4 }}>
             <Typography sx={{ flexShrink: 0 }}>{t("formulaire.responses.send.selectStructure")}</Typography>
             <FormControl>
               <Select value={selectedStructure} onChange={handleChange}>
                 {user.structureNames.map((structure, index) => (
-                  <MenuItem key={structure} value={user.structures[index]}>
+                  <MenuItem key={structure} value={user.structureNames[index]}>
                     {structure}
                   </MenuItem>
                 ))}
