@@ -112,17 +112,20 @@ export const isOverSectionBottom = (overDndElementType: DndElementType | null): 
 
 export const isOverQuestionSection = (
   overDndElementType: DndElementType | null,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   over: IFormElement,
 ): over is IQuestion => {
   return overDndElementType === DndElementType.QUESTION_SECTION;
 };
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export const isOverSection = (overDndElementType: DndElementType | null, over: IFormElement): over is ISection => {
   return overDndElementType === DndElementType.SECTION;
 };
 
 export const isOverQuestionRoot = (
   overDndElementType: DndElementType | null,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   over: IFormElement,
 ): over is IQuestion => {
   return overDndElementType === DndElementType.QUESTION_ROOT;
