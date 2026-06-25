@@ -35,9 +35,11 @@ export const ResultAnswer: FC<IResultAnswerProps> = ({ completeResponse, questio
   const answer = completeResponse.customAnswer ?? completeResponse.answer;
   if (!answer) return DEFAULT_DISPLAY_ANSWER_VALUE;
 
-  const parsedDate = dayjs(answer);
-  if (parsedDate.isValid()) {
-    return parsedDate.format(DateFormat.DAY_MONTH_YEAR);
+  if (questionType === QuestionTypes.DATE) {
+    const parsedDate = dayjs(answer);
+    if (parsedDate.isValid()) {
+      return parsedDate.format(DateFormat.DAY_MONTH_YEAR);
+    }
   }
 
   if (questionType === QuestionTypes.LONGANSWER) {
