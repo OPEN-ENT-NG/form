@@ -222,7 +222,7 @@ public class FormController extends ControllerHelper {
 
                 // Check if the user has right to create a public form
                 boolean isFormPublic = form.getBoolean(IS_PUBLIC);
-                if (isFormPublic && !WorkflowActionUtils.hasRight(user, WorkflowActions.CREATION_RIGHT.toString())) {
+                if (isFormPublic && !WorkflowActionUtils.hasRight(user, WorkflowActions.CREATION_PUBLIC_RIGHT.toString())) {
                     String message = "[Formulaire@createForm] You are not authorized to create a public form.";
                     log.error(message);
                     unauthorized(request, message);
