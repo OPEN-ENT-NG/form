@@ -64,6 +64,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
     selectedForms,
     currentFolder: { id: currentFolderId },
     rootFolders,
+    userWorkflowRights,
   } = useHome();
   const { isMobile, selectAllTextInput } = useGlobal();
   const {
@@ -96,10 +97,16 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
   );
 
   const formCheckBoxPropsReadyList = useMemo(() => {
-    return isRgpdPossible
-      ? formCheckBoxProps
-      : formCheckBoxProps.filter((item) => item.field !== FormPropField.HAS_RGPD);
-  }, [isRgpdPossible]);
+    let filteredFormCheckBoxProps = [...formCheckBoxProps];
+
+    if (!userWorkflowRights.CREATION_PUBLIC)
+      filteredFormCheckBoxProps = filteredFormCheckBoxProps.filter((item) => item.field !== FormPropField.IS_PUBLIC);
+
+    if (!isRgpdPossible)
+      filteredFormCheckBoxProps = filteredFormCheckBoxProps.filter((item) => item.field !== FormPropField.HAS_RGPD);
+
+    return filteredFormCheckBoxProps;
+  }, [isRgpdPossible, formCheckBoxProps, userWorkflowRights]);
 
   const rgpdExpirationDate = useMemo(() => {
     return dayjs(dateOpening).add(rgpdLifeTime, "month");
