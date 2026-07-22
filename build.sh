@@ -36,24 +36,10 @@ init() {
   if [ -z "$CLI_VERSION" ]; then
     CLI_VERSION="latest"
   fi
-  # Create a build.compose.yaml file from following template
-  cat <<EOF > build.compose.yaml
-services:
-  edifice-cli:
-    image: opendigitaleducation/edifice-cli:$CLI_VERSION
-    user: "$DEFAULT_DOCKER_USER"
-EOF
-  # Copy /root/edifice from edifice-cli container to host machine
-  docker compose -f build.compose.yaml create edifice-cli
-  docker compose -f build.compose.yaml cp edifice-cli:/root/edifice ./edifice
-  docker compose -f build.compose.yaml rm -fsv edifice-cli
-  rm -f build.compose.yaml
-  chmod +x edifice
-  ./edifice version $EDIFICE_CLI_DEBUG_OPTION
 }
 
 clean () {
-  docker-compose run --rm maven mvn $MVN_OPT clean
+  docker compose run --rm maven mvn $MVN_OPT clean
 }
 
 test () {
@@ -109,6 +95,12 @@ formulaire() {
   cp -R formulaire/angular/src/mdi/* formulaire/backend/src/main/resources/public/mdi
   cp -R formulaire/angular/src/template/* formulaire/backend/src/main/resources/public/template
   cp -R formulaire/angular/src/view/* formulaire/backend/src/main/resources/view
+  # Copy view-src to view
+  find formulaire/backend/src/main/resources/view-src -type f \( -name "*.html" -o -name "*.json" \) | while read -r file; do
+    dest="formulaire/backend/src/main/resources/view/${file#formulaire/backend/src/main/resources/view-src/}"
+    mkdir -p "$(dirname "$dest")"
+    cp "$file" "$dest"
+  done
 
   ## Copy '.html' files in 'ts' folder
   cd formulaire/angular/src/ts # Need to be in targeted directory for rsync command to work
@@ -174,11 +166,11 @@ formulairePublic() {
 }
 
 formulaire:buildMaven() {
-  docker-compose run --rm maven mvn $MVN_OPTS -pl formulaire/backend -am install -DskipTests
+  docker compose run --rm maven mvn $MVN_OPTS -pl formulaire/backend -am install -DskipTests
 }
 
 formulairePublic:buildMaven() {
-  docker-compose run --rm maven mvn $MVN_OPTS -pl formulaire-public/backend -am install -DskipTests
+  docker compose run --rm maven mvn $MVN_OPTS -pl formulaire-public/backend -am install -DskipTests
 }
 
 publishNexus() {
