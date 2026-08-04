@@ -4,6 +4,7 @@
   "formulaire.infected_file_notification": "Notification d'une tentative d'upload d'un fichier infecté",
   "formulaire.new_form_notification": "Notification de nouveau formulaire à répondre",
   "formulaire.response_notification": "Notification de réponse à un formulaire",
+  "formulaire.response_public_notification": "Notification de réponse à un formulaire (public)",
   "push.notif.formulaire.closingForm": "Nouvelle notification Formulaire",
   "push.notif.formulaire.infectedFile": "Nouvelle notification Formulaire",
   "push.notif.formulaire.newForm": "Nouvelle notification Formulaire",
