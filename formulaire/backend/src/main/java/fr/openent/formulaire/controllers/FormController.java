@@ -135,15 +135,17 @@ public class FormController extends ControllerHelper {
             if (user.getGroupsIds() != null) {
                 groupsAndUserIds.addAll(user.getGroupsIds());
             }
-            formService.list(groupsAndUserIds, user)
-                    .onSuccess(forms -> {
-                        Renders.renderJson(request, forms);
-                    })
-                    .onFailure(error -> {
-                        String errorMessage = "[Formulaire@listForms] Failed retrieving the forms : " + error.getMessage();
-                        log.error(errorMessage);
-                        Renders.renderJson(request, new JsonObject().put("error", errorMessage), 400);
-                    });
+            // Use the handler based overload : it is the one enriching each form with its normalized shares ("rights"),
+            // which the frontend needs to open the share modal.
+            formService.list(groupsAndUserIds, user, formsEvt -> {
+                if (formsEvt.isLeft()) {
+                    String errorMessage = "[Formulaire@listForms] Failed retrieving the forms : " + formsEvt.left().getValue();
+                    log.error(errorMessage);
+                    Renders.renderJson(request, new JsonObject().put("error", errorMessage), 400);
+                    return;
+                }
+                Renders.renderJson(request, formsEvt.right().getValue());
+            });
         });
     }
 
