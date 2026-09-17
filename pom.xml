@@ -41,8 +41,8 @@
         <module>formulaire-public/backend</module>
   </modules>
   <properties>
-    <revision>3.1-SNAPSHOT</revision>
-    <entCoreVersion>6.16-SNAPSHOT</entCoreVersion>
+    <revision>3.1-develop-axios-SNAPSHOT</revision>
+    <entCoreVersion>6.16-develop-axios-SNAPSHOT</entCoreVersion>
     <toolsVersion>2.0.0-final</toolsVersion>
     <junitVersion>5.1.0</junitVersion>
     <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
