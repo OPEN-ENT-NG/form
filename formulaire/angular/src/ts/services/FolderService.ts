@@ -1,5 +1,5 @@
 import {idiom, ng, notify} from 'entcore';
-import http from 'axios';
+import {http} from 'entcore-toolkit';
 import {Folder} from '../models';
 import {DataUtils} from "@common/utils";
 

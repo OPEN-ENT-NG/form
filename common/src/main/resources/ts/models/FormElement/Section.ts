@@ -81,8 +81,6 @@ export class Section extends FormElement {
 }
 
 export class Sections extends Selection<Section> {
-    all: Section[];
-
     constructor() {
         super([]);
     }

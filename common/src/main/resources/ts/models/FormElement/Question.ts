@@ -307,7 +307,6 @@ export class Question extends FormElement {
 }
 
 export class Questions extends Selection<Question> {
-    all: Question[];
     sorted: boolean;
 
     constructor() {

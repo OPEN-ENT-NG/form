@@ -1,5 +1,5 @@
 import {idiom, ng, notify} from 'entcore';
-import http from 'axios';
+import {http} from 'entcore-toolkit';
 import {Distribution} from '../models';
 import {DataUtils} from "../utils";
 import {Mix} from "entcore-toolkit";
@@ -108,7 +108,7 @@ export const distributionService: DistributionService = {
 
     async add(distributionId: number) : Promise<any> {
         try {
-            return DataUtils.getData(await http.post(`/formulaire/distributions/${distributionId}/add`));
+            return DataUtils.getData(await http.post(`/formulaire/distributions/${distributionId}/add`, {}));
         } catch (err) {
             notify.error(idiom.translate('formulaire.error.distributionService.create'));
             throw err;
@@ -117,7 +117,7 @@ export const distributionService: DistributionService = {
 
     async duplicateWithResponses(distributionId: number) : Promise<any> {
         try {
-            return DataUtils.getData(await http.post(`/formulaire/distributions/${distributionId}/duplicate`));
+            return DataUtils.getData(await http.post(`/formulaire/distributions/${distributionId}/duplicate`, {}));
         } catch (err) {
             notify.error(idiom.translate('formulaire.error.distributionService.create'));
             throw err;

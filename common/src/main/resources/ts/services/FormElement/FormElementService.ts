@@ -2,7 +2,7 @@ import {idiom, ng, notify} from 'entcore';
 import {FormElement, FormElementPayload, Question, QuestionPayload, Section, SectionPayload} from "../../models";
 import {questionService, sectionService} from "../../services";
 import {DataUtils, FormElementUtils} from "../../utils";
-import http from "axios";
+import {http} from "entcore-toolkit";
 
 export interface FormElementService {
     countFormElements(formId: number) : Promise<any>;

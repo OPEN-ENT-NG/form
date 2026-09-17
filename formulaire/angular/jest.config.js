@@ -9,7 +9,6 @@ module.exports = {
         "js"
     ],
     "moduleNameMapper": {
-        '^axios$': require.resolve('axios'),
         "^@common(.*)$": "/common/src/main/resources/ts$1"
     },
     "testPathIgnorePatterns": [
