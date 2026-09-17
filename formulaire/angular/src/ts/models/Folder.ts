@@ -37,7 +37,6 @@ export class Folder implements Selectable {
 }
 
 export class Folders extends Selection<Folder> {
-    all: Folder[];
     myFormsFolder?: Folder;
     sharedFormsFolder?: Folder;
     archivedFormsFolder?: Folder;

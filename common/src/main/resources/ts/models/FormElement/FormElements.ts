@@ -7,8 +7,6 @@ import {Types} from "@common/models";
 import {questionService, sectionService} from "@common/services";
 
 export class FormElements extends Selection<FormElement> {
-    all: FormElement[];
-
     constructor() {
         super([]);
     }

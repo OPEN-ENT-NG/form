@@ -1,8 +1,7 @@
 import {idiom, ng, notify} from 'entcore';
-import http, {CancelTokenSource, CancelTokenStatic} from 'axios';
+import {http} from 'entcore-toolkit';
 import {Form} from '../models';
 import {DataUtils} from "../utils";
-import Axios from "axios";
 
 export interface FormService {
     list() : Promise<any>;
@@ -190,9 +189,8 @@ export const formService: FormService = {
 
     async import(zipFile: FormData) : Promise<any> {
         try {
-            const CancelToken: CancelTokenStatic = Axios.CancelToken;
-            let source: CancelTokenSource = CancelToken.source();
-            let { data } = await http.post(`/archive/import/upload`, zipFile, { headers: { 'Content-Type': 'multipart/form-data' }, cancelToken: source.token });
+            const controller: AbortController = new AbortController();
+            let { data } = await http.post(`/archive/import/upload`, zipFile, { headers: { 'Content-Type': 'multipart/form-data' }, signal: controller.signal });
             let importId: string = data.importId;
 
             try {
