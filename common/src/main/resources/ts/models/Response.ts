@@ -82,7 +82,6 @@ export class Response implements Selectable {
 }
 
 export class Responses extends Selection<Response> {
-    all: Response[];
     hasLoaded: boolean;
 
     constructor() {

@@ -248,7 +248,6 @@ export class Form implements Selectable, Shareable  {
 }
 
 export class Forms extends Selection<Form> {
-    all: Form[];
     visibles: Form[];
 
     order = {
