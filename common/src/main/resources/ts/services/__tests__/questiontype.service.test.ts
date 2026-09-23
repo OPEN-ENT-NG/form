@@ -1,12 +1,16 @@
-import axios from 'axios';
-import MockAdapter from "axios-mock-adapter";
+import {http} from 'entcore-toolkit';
 import {questionTypeService} from "../QuestionTypeService";
+import {mockHttpResponse} from "../../test-utils/httpMock";
+
+jest.mock('entcore-toolkit', () => ({
+   ...jest.requireActual('entcore-toolkit'),
+   http: {get: jest.fn(), post: jest.fn(), put: jest.fn(), delete: jest.fn(), postFile: jest.fn(), putFile: jest.fn()}
+}));
 
 describe('QuestionTypeService', () => {
    test('returns data in list when retrieve is correctly called', done => {
-      const mock = new MockAdapter(axios);
       const data = {response: true};
-      mock.onGet('/formulaire/types').reply(200, data);
+      (http.get as jest.Mock).mockResolvedValueOnce(mockHttpResponse(data));
       questionTypeService.list().then(response => {
          expect(response).toEqual(data);
          done();
@@ -14,9 +18,9 @@ describe('QuestionTypeService', () => {
    });
 
    test('return data in list when retrieve is correctly called other method', done => {
-      let spy = jest.spyOn(axios, "get");
-      questionTypeService.list().then(response => {
-         expect(spy).toHaveBeenCalledWith('/formulaire/types');
+      (http.get as jest.Mock).mockResolvedValueOnce(mockHttpResponse({}));
+      questionTypeService.list().then(() => {
+         expect(http.get).toHaveBeenCalledWith('/formulaire/types');
          done();
       });
    });
