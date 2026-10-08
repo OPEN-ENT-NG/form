@@ -1,6 +1,6 @@
 {
   "name": "Formulaire",
-  "version": "3.1.10-dev.0",
+  "version": "3.1.0-develop-pedago.0",
   "description": "Formulaire",
   "main": "gulpfile.js",
   "scripts": {
@@ -28,7 +28,7 @@
   "dependencies": {
     "awesome-typescript-loader": "3.2.1",
     "core-js": "2.4.1",
-    "entcore": "dev",
+    "entcore": "develop-pedago",
     "entcore-toolkit": "dev",
     "gulp": "3.9.1",
     "gulp-clean": "^0.3.2",
