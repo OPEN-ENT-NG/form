@@ -133,7 +133,7 @@ public class Formulaire extends BaseServer {
 			addController(new TaskController(rgpdCron, notifyCron));
 			// Schedule RGPD and notification tasks from cron expression
 			new CronTrigger(vertx, config.getString(RGPD_CRON, "0 0 0 */1 * ? *")).schedule(rgpdCron);
-			new CronTrigger(vertx, config.getString(NOTIFY_CRON, "0 0 0 */1 * ? *")).schedule(notifyCron);
+			new CronTrigger(vertx, config.getString(NOTIFY_CRON, "0 0 9 */1 * ? *")).schedule(notifyCron);
 		} catch (ParseException e) {
 			return Future.failedFuture(e);
 		}

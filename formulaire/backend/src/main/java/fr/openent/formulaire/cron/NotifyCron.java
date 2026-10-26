@@ -20,11 +20,13 @@ import org.entcore.common.notification.TimelineHelper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.Map;
 
 import static fr.openent.form.core.constants.ConfigFields.DAYS_BEFORE_NOTIF_CLOSING;
 import static fr.openent.form.core.constants.ConfigFields.DEFAULT_DAYS_BEFORE_NOTIF_CLOSING;
+import static fr.openent.form.core.constants.DistributionStatus.FINISHED;
 import static fr.openent.form.core.constants.Fields.*;
 
 public class NotifyCron extends ControllerHelper implements Handler<Long> {
@@ -78,9 +80,20 @@ public class NotifyCron extends ControllerHelper implements Handler<Long> {
                 JsonArray formIds = UtilsHelper.getIds(forms);
                 return distributionService.listByForms(formIds);
             })
-            .onSuccess(distributions -> {
-                JsonArray respondersIds = UtilsHelper.getByProp(distributions, RESPONDER_ID);
-                composeInfos.getJsonArray(FORMS).stream().forEach(form -> notifyService.notifyNewFormFromCRON((JsonObject)form, respondersIds));
+            .onSuccess(distributionsJson -> {
+                List<Distribution> distributions = IModelHelper.toList(distributionsJson, Distribution.class);
+                composeInfos.getJsonArray(FORMS).stream().forEach(formJson -> {
+                    Form form = new Form((JsonObject) formJson);
+                    JsonArray respondersIds = new JsonArray(distributions.stream()
+                            .filter(distrib -> distrib.getFormId().equals(form.getId().longValue()))
+                            .filter(distrib -> distrib.getDateSending() == null || distrib.getDateSending().before(form.getDateOpening()))
+                            .map(Distribution::getResponderId)
+                            .distinct()
+                            .collect(Collectors.toList()));
+                    if (!respondersIds.isEmpty()) {
+                        notifyService.notifyNewFormFromCRON((JsonObject) formJson, respondersIds);
+                    }
+                });
                 promise.complete();
             })
             .onFailure(err -> {
@@ -111,11 +124,21 @@ public class NotifyCron extends ControllerHelper implements Handler<Long> {
             .onSuccess(distributionsJson -> {
                 List<Distribution> distributions = IModelHelper.toList(distributionsJson, Distribution.class);
                 closingForms.forEach(form -> {
-                    List<String> respondersIds = distributions.stream()
-                            .filter(distrib -> distrib.getFormId().equals(form.getId()))
-                            .map(Distribution::getResponderId)
+                    List<Distribution> formDistributions = distributions.stream()
+                            .filter(distrib -> distrib.getFormId().equals(form.getId().longValue()))
                             .collect(Collectors.toList());
-                    notifyService.notifyClosingFormCRON(form, respondersIds);
+                    Set<String> alreadyAnsweredIds = formDistributions.stream()
+                            .filter(distrib -> FINISHED.equals(distrib.getStatus()))
+                            .map(Distribution::getResponderId)
+                            .collect(Collectors.toSet());
+                    List<String> respondersIds = formDistributions.stream()
+                            .map(Distribution::getResponderId)
+                            .filter(responderId -> !alreadyAnsweredIds.contains(responderId))
+                            .distinct()
+                            .collect(Collectors.toList());
+                    if (!respondersIds.isEmpty()) {
+                        notifyService.notifyClosingFormCRON(form, respondersIds);
+                    }
                 });
                 promise.complete();
             })

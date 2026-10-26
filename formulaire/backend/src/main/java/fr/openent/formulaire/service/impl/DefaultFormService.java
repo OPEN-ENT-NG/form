@@ -211,8 +211,8 @@ public class DefaultFormService implements FormService {
 
         String query = "SELECT * FROM " + FORM_TABLE +
                 " WHERE sent = ? " +
-                "AND date_ending >= TO_CHAR(NOW(), 'YYYY-MM-DD')::date " +
-                "AND date_ending <= TO_CHAR(NOW() + (? * INTERVAL '1 day'), 'YYYY-MM-DD')::date";
+                "AND date_ending >= NOW() " +
+                "AND date_ending < TO_CHAR(NOW() + ((? + 1) * INTERVAL '1 day'), 'YYYY-MM-DD')::date";
         JsonArray params = new JsonArray()
                 .add(true)
                 .add(nbDaysBeforeClosing);
