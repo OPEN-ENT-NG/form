@@ -112,9 +112,9 @@ export const ResponseProvider: FC<IResponseProviderProps> = ({ children, preview
 
       const today = dayjs();
 
-      const isNotOpened = formDatas.date_opening && dayjs(formDatas.date_opening).isAfter(today, "day");
+      const isNotOpened = formDatas.date_opening && dayjs(formDatas.date_opening).isAfter(today);
 
-      const isClosed = formDatas.date_ending && dayjs(formDatas.date_ending).isSameOrBefore(today, "day");
+      const isClosed = formDatas.date_ending && dayjs(formDatas.date_ending).isSameOrBefore(today);
 
       if (!previewMode && (formDatas.archived || isNotOpened || isClosed)) {
         navigateToError403();

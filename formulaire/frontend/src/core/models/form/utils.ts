@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 import { FormPropField } from "~/containers/home/FormPropModal/enums";
 import { IFormPropInputValueState } from "~/containers/home/FormPropModal/types";
 import { t } from "~/i18n";
@@ -17,9 +19,11 @@ export const buildFormPayload = (
     archived: form?.archived ?? false,
     collab: form?.collab ?? false,
     date_creation: form?.date_creation ?? null,
-    date_ending: formPropValue[FormPropField.DATE_ENDING]?.toISOString() ?? null,
+    date_ending: formPropValue[FormPropField.DATE_ENDING]
+      ? dayjs(formPropValue[FormPropField.DATE_ENDING]).endOf("day").toISOString()
+      : null,
     date_modification: form?.date_modification ?? null,
-    date_opening: formPropValue[FormPropField.DATE_OPENING].toISOString(),
+    date_opening: dayjs(formPropValue[FormPropField.DATE_OPENING]).startOf("day").toISOString(),
     description: formPropValue[FormPropField.DESCRIPTION],
     editable: formPropValue[FormPropField.IS_EDITABLE],
     folder_id: folderId,
