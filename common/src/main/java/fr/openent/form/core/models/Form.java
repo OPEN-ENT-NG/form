@@ -53,8 +53,8 @@ public class Form implements IModel<Form> {
         this.picture = form.getString(PICTURE, null);
         this.ownerId = form.getString(OWNER_ID, null);
         this.ownerName = form.getString(OWNER_NAME, null);
-        this.dateOpening = DateHelper.formatDateToModel(form.getString(DATE_OPENING, null), YYYY_MM_DD_T_HH_MM_SS_SSS);
-        this.dateEnding =  DateHelper.formatDateToModel(form.getString(DATE_ENDING, null), YYYY_MM_DD_T_HH_MM_SS_SSS);
+        this.dateOpening = DateHelper.formatIsoDateToModel(form.getString(DATE_OPENING, null));
+        this.dateEnding = DateHelper.formatIsoDateToModel(form.getString(DATE_ENDING, null));
         this.multiple = form.getBoolean(MULTIPLE, false);
         this.anonymous = form.getBoolean(ANONYMOUS, false);
         this.reminded = form.getBoolean(REMINDED, false);

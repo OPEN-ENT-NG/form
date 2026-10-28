@@ -5,12 +5,14 @@ import fr.openent.form.core.constants.DateFormats;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
 import java.util.TimeZone;
 
 import static fr.openent.form.core.constants.DateFormats.DD_MM_YYYY;
+import static fr.openent.form.core.constants.DateFormats.YYYY_MM_DD_T_HH_MM_SS_SSS;
 
 public class DateHelper {
 
@@ -60,5 +62,15 @@ public class DateHelper {
         }
         catch (ParseException e) { e.printStackTrace(); }
         return result;
+    }
+
+    public static Date formatIsoDateToModel(String inputDateStr) {
+        if (inputDateStr == null) return null;
+        try {
+            return Date.from(OffsetDateTime.parse(inputDateStr).toInstant());
+        }
+        catch (DateTimeParseException e) {
+            return formatDateToModel(inputDateStr, YYYY_MM_DD_T_HH_MM_SS_SSS);
+        }
     }
 }
