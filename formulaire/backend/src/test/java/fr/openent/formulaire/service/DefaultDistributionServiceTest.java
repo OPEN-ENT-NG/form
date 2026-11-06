@@ -15,6 +15,9 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static fr.openent.form.core.constants.Constants.NB_NEW_LINES;
 import static fr.openent.form.core.constants.DistributionStatus.FINISHED;
 import static fr.openent.form.core.constants.EbFields.FORMULAIRE_ADDRESS;
@@ -250,6 +253,132 @@ public class DefaultDistributionServiceTest {
         defaultDistributionService.deleteByForm(24)
             .onSuccess(result -> async.complete());
 
+        async.awaitSuccess(10000);
+    }
+
+    private static final String INSERT_DISTRIBUTIONS = "INSERT INTO " + DISTRIBUTION_TABLE + " (form_id, sender_id, sender_name, " +
+            "responder_id, responder_name, status, date_sending, active) VALUES ";
+    private static final String DISTRIBUTION_ROW = "(?, ?, ?, ?, ?, ?, ?, ?)";
+
+    private UserInfos sender() {
+        UserInfos user = new UserInfos();
+        user.setUserId("sender-id");
+        user.setUsername("PRUDON Nathalie");
+        return user;
+    }
+
+    private List<JsonObject> responders(int count) {
+        List<JsonObject> responders = new ArrayList<>();
+        for (int i = 0; i < count; i++) responders.add(new JsonObject().put(ID, "r" + i).put(USERNAME, "name" + i));
+        return responders;
+    }
+
+    private List<String> responderIds(int count) {
+        List<String> ids = new ArrayList<>();
+        for (int i = 0; i < count; i++) ids.add("r" + i);
+        return ids;
+    }
+
+    @Test
+    public void testCreateMultiple_OneMultiRowInsertWithoutDuplicatesNorEmpty(TestContext ctx) {
+        Async async = ctx.async();
+        List<JsonObject> responders = responders(2);
+        responders.add(new JsonObject().put(ID, "r0").put(USERNAME, "name0"));
+        responders.add(new JsonObject());
+
+        String expectedQuery = INSERT_DISTRIBUTIONS + DISTRIBUTION_ROW + ", " + DISTRIBUTION_ROW + ";";
+        JsonArray expectedParams = new JsonArray()
+                .add("1").add("sender-id").add("PRUDON Nathalie").add("r0").add("name0").add(DistributionStatus.TO_DO).add("NOW()").add(true)
+                .add("1").add("sender-id").add("PRUDON Nathalie").add("r1").add("name1").add(DistributionStatus.TO_DO).add("NOW()").add(true);
+
+        vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
+            JsonObject body = (JsonObject) message.body();
+            ctx.assertEquals(TRANSACTION, body.getString(ACTION));
+            JsonArray statements = body.getJsonArray(STATEMENTS);
+            ctx.assertEquals(1, statements.size());
+            ctx.assertEquals(expectedQuery, statements.getJsonObject(0).getString(STATEMENT));
+            ctx.assertEquals(expectedParams.toString(), statements.getJsonObject(0).getJsonArray(VALUES).toString());
+            async.complete();
+        });
+
+        defaultDistributionService.createMultiple("1", sender(), responders, result -> {});
+        async.awaitSuccess(10000);
+    }
+
+    @Test
+    public void testCreateMultiple_SplitsInBatchesOf1000(TestContext ctx) {
+        Async async = ctx.async();
+
+        vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
+            JsonArray statements = ((JsonObject) message.body()).getJsonArray(STATEMENTS);
+            ctx.assertEquals(2, statements.size());
+            ctx.assertEquals(1000 * 8, statements.getJsonObject(0).getJsonArray(VALUES).size());
+            ctx.assertEquals(INSERT_DISTRIBUTIONS + DISTRIBUTION_ROW + ";", statements.getJsonObject(1).getString(STATEMENT));
+            async.complete();
+        });
+
+        defaultDistributionService.createMultiple("1", sender(), responders(1001), result -> {});
+        async.awaitSuccess(10000);
+    }
+
+    @Test
+    public void testCreateMultiple_EmptyDoesNotQuery(TestContext ctx) {
+        Async async = ctx.async();
+        vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> ctx.fail("No SQL expected"));
+
+        defaultDistributionService.createMultiple("1", sender(), new ArrayList<>(), result -> {
+            ctx.assertTrue(result.isRight());
+            async.complete();
+        });
+        async.awaitSuccess(10000);
+    }
+
+    @Test
+    public void testSetActiveValue_OneUpdateWithInList(TestContext ctx) {
+        Async async = ctx.async();
+        String expectedQuery = "UPDATE " + DISTRIBUTION_TABLE + " SET active = ? WHERE form_id = ? AND responder_id IN (?,?,?);";
+        JsonArray expectedParams = new JsonArray().add(false).add("1").add("r0").add("r1").add("r2");
+
+        vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
+            JsonObject body = (JsonObject) message.body();
+            ctx.assertEquals(TRANSACTION, body.getString(ACTION));
+            JsonArray statements = body.getJsonArray(STATEMENTS);
+            ctx.assertEquals(1, statements.size());
+            ctx.assertEquals(expectedQuery, statements.getJsonObject(0).getString(STATEMENT));
+            ctx.assertEquals(expectedParams.toString(), statements.getJsonObject(0).getJsonArray(VALUES).toString());
+            async.complete();
+        });
+
+        defaultDistributionService.setActiveValue(false, "1", responderIds(3), result -> {});
+        async.awaitSuccess(10000);
+    }
+
+    @Test
+    public void testSetActiveValue_SplitsInBatchesOf1000(TestContext ctx) {
+        Async async = ctx.async();
+
+        vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> {
+            JsonArray statements = ((JsonObject) message.body()).getJsonArray(STATEMENTS);
+            ctx.assertEquals(2, statements.size());
+            ctx.assertEquals(2 + 1000, statements.getJsonObject(0).getJsonArray(VALUES).size());
+            ctx.assertEquals(new JsonArray().add(true).add("1").add("r1000").toString(),
+                    statements.getJsonObject(1).getJsonArray(VALUES).toString());
+            async.complete();
+        });
+
+        defaultDistributionService.setActiveValue(true, "1", responderIds(1001), result -> {});
+        async.awaitSuccess(10000);
+    }
+
+    @Test
+    public void testSetActiveValue_EmptyDoesNotQuery(TestContext ctx) {
+        Async async = ctx.async();
+        vertx.eventBus().consumer(FORMULAIRE_ADDRESS, message -> ctx.fail("No SQL expected"));
+
+        defaultDistributionService.setActiveValue(true, "1", new ArrayList<>(), result -> {
+            ctx.assertTrue(result.isRight());
+            async.complete();
+        });
         async.awaitSuccess(10000);
     }
 }
