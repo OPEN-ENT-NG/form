@@ -57,7 +57,7 @@ import {
 } from "./style";
 import { IFormCheckBoxProp, IFormPropModalProps } from "./types";
 import { useFormPropInputValueState } from "./useFormPropValueState";
-import { buildDelegatesParam, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";
+import { buildDelegatesParam, computeEndingDate, formCheckBoxProps, rgpdGoalDurationOptions } from "./utils";
 
 export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mode, isRgpdPossible }) => {
   const {
@@ -73,6 +73,7 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
     formPropInputValue: { dateOpening, isPublic, description, hasRgpd, rgpdGoal, rgpdLifeTime, title },
     handleFormPropInputValueChange,
     handleDateChange,
+    updateFormPropInputValue,
   } = useFormPropInputValueState(mode);
   const { t } = useTranslation(FORMULAIRE);
   const [isEndingDateEditable, setIsEndingDateEditable] = useState<boolean>(
@@ -188,27 +189,17 @@ export const FormPropModal: FC<IFormPropModalProps> = ({ isOpen, handleClose, mo
   };
 
   useEffect(() => {
-    if (isEndingDateEditable) {
-      if (!selectedForms[0]?.date_ending) {
-        const openingDate = new Date(dateOpening);
-
-        const endingDate = new Date(openingDate);
-        endingDate.setFullYear(openingDate.getFullYear() + 1);
-
-        handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
-        return;
-      } else {
-        const savingEndingDate = new Date(selectedForms[0]?.date_ending);
-        const currentOpeningDate = formPropInputValue[FormPropField.DATE_OPENING];
-        const currendOpeningDatePlusOneDay = new Date(currentOpeningDate);
-        currendOpeningDatePlusOneDay.setDate(currendOpeningDatePlusOneDay.getDate() + 1);
-        const endingDate = currentOpeningDate >= savingEndingDate ? currendOpeningDatePlusOneDay : savingEndingDate;
-        handleFormPropInputValueChange(FormPropField.DATE_ENDING, endingDate);
-        return;
-      }
+    if (!isEndingDateEditable) {
+      handleFormPropInputValueChange(FormPropField.DATE_ENDING, null);
+      return;
     }
-    handleFormPropInputValueChange(FormPropField.DATE_ENDING, null);
-  }, [isEndingDateEditable, handleFormPropInputValueChange]);
+    const savedEndingDate = mode === FormPropModalMode.UPDATE ? selectedForms[0]?.date_ending : null;
+    // Functional update: read the current opening date, not the stale one captured at first render
+    updateFormPropInputValue((prev) => ({
+      ...prev,
+      [FormPropField.DATE_ENDING]: computeEndingDate(prev[FormPropField.DATE_OPENING], savedEndingDate),
+    }));
+  }, [isEndingDateEditable, handleFormPropInputValueChange, updateFormPropInputValue]);
 
   useEffect(() => {
     if (!isDescriptionDisplay) {

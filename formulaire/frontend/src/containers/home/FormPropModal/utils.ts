@@ -88,3 +88,20 @@ export const buildDelegatesParam = (
     delegates: delegatesParams,
   };
 };
+
+// Compute the ending date to display in the modal, compared to the form's opening date
+export const computeEndingDate = (openingDate: Date, savedEndingDate?: Date | string | null): Date => {
+  if (!savedEndingDate) {
+    const oneYearAfterOpening = new Date(openingDate);
+    oneYearAfterOpening.setFullYear(oneYearAfterOpening.getFullYear() + 1);
+    return oneYearAfterOpening;
+  }
+
+  const savedDate = new Date(savedEndingDate);
+  // A closed form keeps its real (past) ending date
+  if (savedDate > openingDate) return savedDate;
+
+  const dayAfterOpening = new Date(openingDate);
+  dayAfterOpening.setDate(dayAfterOpening.getDate() + 1);
+  return dayAfterOpening;
+};
