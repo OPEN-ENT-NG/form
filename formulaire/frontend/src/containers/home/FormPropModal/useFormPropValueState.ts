@@ -58,5 +58,6 @@ export const useFormPropInputValueState = (mode: FormPropModalMode) => {
     formPropInputValue,
     handleFormPropInputValueChange,
     handleDateChange,
+    updateFormPropInputValue: setFormPropInputValue,
   };
 };
