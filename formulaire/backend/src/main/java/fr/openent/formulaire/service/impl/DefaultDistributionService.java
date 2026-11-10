@@ -27,6 +27,7 @@ import static fr.openent.form.core.constants.Tables.*;
 
 public class DefaultDistributionService implements DistributionService {
     private static final Logger log = LoggerFactory.getLogger(DefaultDistributionService.class);
+    private static final int SQL_BATCH_SIZE = 1000;
     private final Sql sql = Sql.getInstance();
 
     @Override
@@ -285,23 +286,24 @@ public class DefaultDistributionService implements DistributionService {
 
         if (!respondersArray.isEmpty()) {
             SqlStatementsBuilder s = new SqlStatementsBuilder();
-            String query = "INSERT INTO " + DISTRIBUTION_TABLE + " (form_id, sender_id, sender_name, responder_id, " +
-                    "responder_name, status, date_sending, active) VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
-
-            s.raw(TRANSACTION_BEGIN_QUERY);
-            for (JsonObject responder : respondersArray) {
-                JsonArray params = new JsonArray()
-                        .add(formId)
-                        .add(user.getUserId())
-                        .add(user.getUsername())
-                        .add(responder.getString(ID, ""))
-                        .add(responder.getString(USERNAME, ""))
-                        .add(TO_DO)
-                        .add("NOW()")
-                        .add(true);
+            for (List<JsonObject> batch : partition(respondersArray)) {
+                List<String> rows = new ArrayList<>();
+                JsonArray params = new JsonArray();
+                for (JsonObject responder : batch) {
+                    rows.add("(?, ?, ?, ?, ?, ?, ?, ?)");
+                    params.add(formId)
+                            .add(user.getUserId())
+                            .add(user.getUsername())
+                            .add(responder.getString(ID, ""))
+                            .add(responder.getString(USERNAME, ""))
+                            .add(TO_DO)
+                            .add("NOW()")
+                            .add(true);
+                }
+                String query = "INSERT INTO " + DISTRIBUTION_TABLE + " (form_id, sender_id, sender_name, responder_id, " +
+                        "responder_name, status, date_sending, active) VALUES " + String.join(", ", rows) + ";";
                 s.prepared(query, params);
             }
-            s.raw(TRANSACTION_COMMIT_QUERY);
 
             sql.transaction(s.build(), SqlResult.validUniqueResultHandler(handler));
         }
@@ -314,20 +316,31 @@ public class DefaultDistributionService implements DistributionService {
     public void setActiveValue(boolean active, String formId, List<String> responder_ids, Handler<Either<String, JsonObject>> handler) {
         if (!responder_ids.isEmpty()) {
             SqlStatementsBuilder s = new SqlStatementsBuilder();
-            String query = "UPDATE " + DISTRIBUTION_TABLE + " SET active = ? WHERE form_id = ? AND responder_id = ?;";
-
-            s.raw(TRANSACTION_BEGIN_QUERY);
-            for (String responder_id : responder_ids) {
-                JsonArray params = new JsonArray().add(active).add(formId).add(responder_id);
+            for (List<String> batch : partition(responder_ids)) {
+                String query = "UPDATE " + DISTRIBUTION_TABLE + " SET active = ? WHERE form_id = ? AND responder_id IN " +
+                        Sql.listPrepared(batch) + ";";
+                JsonArray params = new JsonArray().add(active).add(formId);
+                batch.forEach(params::add);
                 s.prepared(query, params);
             }
-            s.raw(TRANSACTION_COMMIT_QUERY);
 
             sql.transaction(s.build(), SqlResult.validUniqueResultHandler(handler));
         }
         else {
             handler.handle(new Either.Right<>(new JsonObject()));
         }
+    }
+
+    /**
+     * Splits a list in batches of SQL_BATCH_SIZE: one multi-row statement per batch keeps a single network
+     * round-trip per batch while staying far below the PostgreSQL bind parameters limit.
+     */
+    private static <T> List<List<T>> partition(List<T> list) {
+        List<List<T>> batches = new ArrayList<>();
+        for (int i = 0; i < list.size(); i += SQL_BATCH_SIZE) {
+            batches.add(list.subList(i, Math.min(i + SQL_BATCH_SIZE, list.size())));
+        }
+        return batches;
     }
 
     @Override
