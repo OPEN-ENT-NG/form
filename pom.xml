@@ -41,8 +41,8 @@
         <module>formulaire-public/backend</module>
   </modules>
   <properties>
-    <revision>3.1-SNAPSHOT</revision>
-    <entCoreVersion>6.18-SNAPSHOT</entCoreVersion>
+    <revision>3.1-develop-orga-SNAPSHOT</revision>
+    <entCoreVersion>6.17-SNAPSHOT</entCoreVersion>
     <toolsVersion>2.0.0-final</toolsVersion>
     <junitVersion>5.1.0</junitVersion>
     <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
