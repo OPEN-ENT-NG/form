@@ -104,7 +104,7 @@ public class DefaultNotifyService implements NotifyService {
         String formUri = "/formulaire#/form/" + form.getId() + "/" + NEW;
 
         DateFormat df = DateFormat.getDateInstance(DateFormat.FULL, I18n.getLocale(I18n.acceptLanguage(request)));
-        String formatedDateEnding = df.format(form.getDateEnding());
+        String formatedDateEnding = df.format(Date.from(form.getDateEnding().toInstant()));
 
         JsonObject params = new JsonObject()
                 .put(PARAM_FORM_URI, formUri)

@@ -86,7 +86,7 @@ public class NotifyCron extends ControllerHelper implements Handler<Long> {
                     Form form = new Form((JsonObject) formJson);
                     JsonArray respondersIds = new JsonArray(distributions.stream()
                             .filter(distrib -> distrib.getFormId().equals(form.getId().longValue()))
-                            .filter(distrib -> distrib.getDateSending() == null || distrib.getDateSending().before(form.getDateOpening()))
+                            .filter(distrib -> distrib.getDateSending() == null || distrib.getDateSending().toInstant().isBefore(form.getDateOpening().toInstant()))
                             .map(Distribution::getResponderId)
                             .distinct()
                             .collect(Collectors.toList()));
