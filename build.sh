@@ -81,16 +81,16 @@ formulaire() {
 
   # build react front
   cd formulaire/frontend
+  rm -rf dist
   ./build.sh installDeps build
   cd ../..
 
   # build backend
   ## clear before adding static content
-  rm -rf formulaire/backend/src/main/resources/public/css
-  rm -rf formulaire/backend/src/main/resources/public/img
-  rm -rf formulaire/backend/src/main/resources/public/js
-  rm -rf formulaire/backend/src/main/resources/public/mdi
-  rm -rf formulaire/backend/src/main/resources/public/template
+  ## NB: wipe the whole 'public' directory, not just its sub-folders. The Vite
+  ## chunks are emitted flat at its root with content-hashed names, so keeping it
+  ## piles up one full generation of chunks per build on a reused workspace.
+  rm -rf formulaire/backend/src/main/resources/public
   rm -rf formulaire/backend/src/main/resources/view
 
   ## Create view directory and copy HTML files into Backend
@@ -137,16 +137,16 @@ formulairePublic() {
 
   # build react front
   cd formulaire-public/frontend
+  rm -rf dist
   ./build.sh installDeps build
   cd ../..
 
   # build backend
   ## clear before adding static content
-  rm -rf formulaire-public/backend/src/main/resources/public/css
-  rm -rf formulaire-public/backend/src/main/resources/public/img
-  rm -rf formulaire-public/backend/src/main/resources/public/js
-  rm -rf formulaire-public/backend/src/main/resources/public/mdi
-  rm -rf formulaire-public/backend/src/main/resources/public/template
+  ## NB: wipe the whole 'public' directory, not just its sub-folders. The Vite
+  ## chunks are emitted flat at its root with content-hashed names, so keeping it
+  ## piles up one full generation of chunks per build on a reused workspace.
+  rm -rf formulaire-public/backend/src/main/resources/public
   rm -rf formulaire-public/backend/src/main/resources/view
 
   ## Create view directory and copy HTML files into Backend
