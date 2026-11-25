@@ -42,7 +42,7 @@
   </modules>
   <properties>
     <revision>3.1-develop-b2school-SNAPSHOT</revision>
-    <entCoreVersion>6.18-develop-b2school-SNAPSHOT</entCoreVersion>
+    <entCoreVersion>7.0-develop-b2school-SNAPSHOT</entCoreVersion>
     <toolsVersion>2.0.0-final</toolsVersion>
     <junitVersion>5.1.0</junitVersion>
     <vertxCronTimerVersion>3.0-SNAPSHOT</vertxCronTimerVersion>
